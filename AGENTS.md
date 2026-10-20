@@ -111,21 +111,15 @@ Ways to port the renderer, in order of preference:
 Option 1 is implemented for the frontend in `host/w32_renderer.asm`
 (`docs/renderer-sdl.md`); the full API is in `docs/renderer-api.md`.
 
-## Game files (`gta2/`)
+## Game files (`data.pak`)
 
-- The full game (92 MB) sits at `gta2/` in the repository root. It is git-ignored
-  (`/gta2/` in `.gitignore`). **Never commit anything from it, and never commit any
-  binary.**
-- The canonical copy is in the main checkout:
-  `/Users/arsenyp/src-shared-2/gta2-resurrected/gta2`. It is **read-only**: never
-  modify, rename or delete anything in the main checkout.
-- `.dev3/config.json` has `"clonePaths": ["gta2"]`, so every new dev3 task
-  worktree gets its **own** copy at `<worktree>/gta2`. dev3 copies it with
-  copy-on-write APFS clones, so the copy costs no disk space until a file changes.
-  Inside a task worktree you may modify your copy freely, e.g. to patch the exe for
-  an experiment. Verified 2026-10-20: a fresh task worktree started on this config
-  got the full `gta2/` (92 MB, `gta2.exe` — now `gta2.ebin` — SHA-256 matching). The
-  config only takes effect for tasks whose base branch contains `.dev3/config.json`.
+- The full game (92 MB) is **committed** as `data.pak` in the repository root: a zip
+  with zero compression (every entry Stored) of the old `gta2/` folder, paths relative
+  to it (`gta2.ebin`, `data/audio/fstyle.raw`, …). Every worktree gets it through git
+  checkout, so `clonePaths` is empty. The user chose to commit it (2026-10-21); it is
+  the only binary allowed in git. Never modify or re-pack it without the user's word.
+- For an experiment that needs loose files, unpack it into your worktree
+  (`unzip -q data.pak -d gta2`; `/gta2/` stays git-ignored) and never commit the result.
 - Contents, for orientation: game data in `data/`, plugin DLLs (`d3ddll.dll`,
   `dmavideo.dll`, `mss32.dll`, `binkw32.dll`, glide DLLs), and dgVoodoo wrappers
   (`DDraw.dll`, `D3DImm.dll`, `dgVoodoo.conf`). The dgVoodoo files are a Windows-only
@@ -259,9 +253,10 @@ the assembly side.
 
 - **Run builds, tests and programs in a visible tmux pane next to you** (`dev3 pane run "<cmd>" --label <name>`, read it with `dev3 pane logs <id>`, close it with `dev3 pane close <id>`), so the user watches the logs live. Quick read-only commands (grep, cat, git status) may stay inline.
 - Never commit game files, extracted assets, or any binary (`*.exe`, `*.dll`, `*.o`,
-  built hosts). Build output must be git-ignored.
-- Never modify the main checkout or the Ghidra projects. Your worktree's `gta2/`
-  copy is yours to change.
+  built hosts); the one exception is `data.pak` (see "Game files"). Build output must
+  be git-ignored.
+- Never modify the main checkout or the Ghidra projects. An unpacked `gta2/` in your
+  worktree is yours to change.
 - Addresses are always virtual addresses for ImageBase `0x3F0000` (11.44). Cite
   where an address came from (seuko-mod file, Ghidra, own analysis) when you add
   one to the code.
