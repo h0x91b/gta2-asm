@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "ghidra": {
+      "command": "sh",
+      "args": ["-c", "exec \"$HOME/.local/share/ghidra-mcp/run-bridge.sh\""],
+      "env": { "GHIDRA_MCP_URL": "http://127.0.0.1:8089" }
+    }
+  }
+}
