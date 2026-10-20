@@ -30,7 +30,7 @@ functions: 15/15 checks passed
   [w32] GetProcAddress(KERNEL32, GetProcessHeap) -> 0x1000487a (shim)
   [w32] GetProcAddress(KERNEL32, IsProcessorFeaturePresent) -> 0x10004884 (shim)
   [ods] Perf: Clock speed = 250 MHz
-  [w32] GetFileVersionInfoSizeA(GTA2.EXE): no version resources -> 0
+  [w32] GetFileVersionInfoSizeA(GTA2.EXE): fake VS_FIXEDFILEINFO, version 23.31
   [w32] CreateFileA(data\j.gxt) -> not found
   [w32] RegisterClassA(WinMain) wndproc 0x4d0a00
   [w32] CreateWindowExA(GTA2) 100x100 -> hwnd 0xab0000 (SDL window), wndproc 0x4d0a00
@@ -224,7 +224,7 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
 |---|---|
 | WINMM timeGetTime | = GetTickCount |
 | ole32 CoInitialize ✓ / CoUninitialize / CoCreateInstance | S_OK / – / no COM servers: `REGDB_E_CLASSNOTREG`, CLSID logged |
-| VERSION GetFileVersionInfoSizeA ✓, GetFileVersionInfoA ✓, VerQueryValueA | no version resources → 0 (the game asks about `GTA2.EXE` and carries on) |
+| VERSION GetFileVersionInfoSizeA ✓, GetFileVersionInfoA ✓, VerQueryValueA ✓ | a fake version block that is just a `VS_FIXEDFILEINFO` carrying **our port's version** (see "Game version" below); only the root `\\` query answers |
 | SHELL32 ShellExecuteA | logged, error |
 | DPLAYX DirectPlayCreate, DirectPlayLobbyCreateW | `E_FAIL` (network play is out of scope) |
 | DINPUT8 DirectInput8Create ✓ | **must succeed** (failure is fatal, `0x44BA2B` → error handler `0x450530`): fake IDirectInput8A |
@@ -248,3 +248,26 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
   `AIL_startup`-style calls as fatal, those need real "no device" answers.
 - **Not done**: SEH dispatch (`RtlUnwind`), WM_TIMER, dialogs, INI files, registry
   persistence, x87 control word (still macOS' default, not Windows' `0x27F`).
+
+## Game version (`GTA2_VERSION_MAJOR` / `GTA2_VERSION_MINOR`)
+
+The main menu's bottom line ("GTA2 V23.31") is our port's version, set by two
+constants at the top of the VERSION shims in `host/w32_misc.asm`:
+
+```nasm
+GTA2_VERSION_MAJOR equ 23
+GTA2_VERSION_MINOR equ 31
+```
+
+Bump them there and nowhere else. How the game uses them (Ghidra, read-only):
+
+- `WinMain2` calls `GetGameVersion(&major, &minor)` (`0x4D0920`, call at `0x4D11C7`).
+- It runs `GetFileVersionInfoSizeA("GTA2.EXE")` → `GetFileVersionInfoA` →
+  `VerQueryValueA(block, "\\")` and takes `major = HIWORD(dwProductVersionMS)`
+  (`VS_FIXEDFILEINFO + 0x12`), `minor = LOWORD(dwProductVersionMS)` (`+ 0x10`).
+  `dwFileVersion*` is not read; the shim fills it with the same value anyway.
+- The menu formats them with `"v%d.%d"` (`0x5738F4`, also `"Coop v%d.%d"` at
+  `0x573A98`); the frontend font is upper-case only, hence "V". Minor is printed
+  without padding: `5` renders "V23.5", not "V23.05".
+- The vanilla exe's own resource carries ProductVersion `11.44` (`0x000B002C`);
+  without the shims the game shows "V0.0".

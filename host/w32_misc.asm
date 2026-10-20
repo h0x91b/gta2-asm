@@ -62,10 +62,22 @@ shl_ShellExecuteA:          ; (hwnd, op, file, params, dir, show) -> <= 32 = err
     mov eax, 2                      ; SE_ERR_FNF
     HRET
 
-ver_GetFileVersionInfoSizeA:    ; (file, handle*): no version resources -> 0
+; Our port's version, shown at the bottom of the main menu as "v<major>.<minor>".
+; GetGameVersion (0x4D0920, re/functions.csv) reads VS_FIXEDFILEINFO of GTA2.EXE
+; and takes major = HIWORD(dwProductVersionMS), minor = LOWORD(dwProductVersionMS);
+; the menu prints them with "v%d.%d" (0x5738F4), so minor 5 reads "v23.5", not
+; "v23.05". Vanilla's own resource says 11.44. Bump these two to re-version.
+GTA2_VERSION_MAJOR equ 23
+GTA2_VERSION_MINOR equ 31
+
+VS_FFI_SIZE equ 0x34                ; sizeof(VS_FIXEDFILEINFO)
+
+ver_GetFileVersionInfoSizeA:    ; (file, handle*) -> size of our fake version block
     HENTER
     lea rdi, [fmt_verinfo]
     mov esi, ARG(0)
+    mov edx, GTA2_VERSION_MAJOR
+    mov ecx, GTA2_VERSION_MINOR
     xor eax, eax
     call _printf
     mov eax, ARG(1)
@@ -73,7 +85,47 @@ ver_GetFileVersionInfoSizeA:    ; (file, handle*): no version resources -> 0
     jz .r
     mov dword [rax], 0
 .r:
-    mov dword [last_error], ERROR_FILE_NOT_FOUND
+    mov eax, VS_FFI_SIZE
+    HRET
+
+; (file, handle, len, data): the block is just a VS_FIXEDFILEINFO
+ver_GetFileVersionInfoA:
+    HENTER
+    mov edi, ARG(3)
+    test edi, edi
+    jz .fail
+    mov ecx, ARG(2)
+    cmp ecx, VS_FFI_SIZE
+    jb .fail
+    lea rsi, [ver_fixedinfo]
+    mov ecx, VS_FFI_SIZE
+    rep movsb
+    mov eax, 1
+    HRET
+.fail:
+    mov dword [last_error], ERROR_INSUFFICIENT_BUFFER
+    xor eax, eax
+    HRET
+
+; (block, subblock, buffer**, len*): only the root "\\" (VS_FIXEDFILEINFO) exists
+ver_VerQueryValueA:
+    HENTER
+    mov eax, ARG(1)
+    cmp word [rax], 0x005C          ; "\\" = backslash, NUL
+    jne .fail
+    mov eax, ARG(2)
+    mov ecx, ARG(0)
+    mov [rax], ecx
+    mov eax, ARG(3)
+    test eax, eax
+    jz .ok
+    mov dword [rax], VS_FFI_SIZE
+.ok:
+    mov eax, 1
+    HRET
+.fail:
+    mov eax, ARG(2)
+    mov dword [rax], 0
     xor eax, eax
     HRET
 
@@ -86,8 +138,8 @@ shimtab_winmm:
 shimtab_version:
     dq s_version
     SHIM "GetFileVersionInfoSizeA", 8, ver_GetFileVersionInfoSizeA
-    SHIM "GetFileVersionInfoA", 16, h_ret0
-    SHIM "VerQueryValueA", 16, h_ret0
+    SHIM "GetFileVersionInfoA", 16, ver_GetFileVersionInfoA
+    SHIM "VerQueryValueA", 16, ver_VerQueryValueA
     dq 0
 shimtab_ole32:
     dq s_ole32
@@ -119,5 +171,13 @@ s_dinput8: db "DINPUT8", 0
 s_dplayx:  db "DPLAYX", 0
 fmt_cocreate: db "  [w32] CoCreateInstance({%08x-%04x-%04x-...}): no COM servers -> REGDB_E_CLASSNOTREG (from 0x%x)", 10, 0
 fmt_shellexec: db "  [w32] ShellExecuteA(%s, %s): not supported -> error", 10, 0
-fmt_verinfo: db "  [w32] GetFileVersionInfoSizeA(%s): no version resources -> 0", 10, 0
+fmt_verinfo: db "  [w32] GetFileVersionInfoSizeA(%s): fake VS_FIXEDFILEINFO, version %d.%d", 10, 0
+align 4
+ver_fixedinfo:                      ; VS_FIXEDFILEINFO
+    dd 0xFEEF04BD, 0x00010000       ; dwSignature, dwStrucVersion
+    dd (GTA2_VERSION_MAJOR << 16) | GTA2_VERSION_MINOR, 0   ; dwFileVersionMS/LS
+    dd (GTA2_VERSION_MAJOR << 16) | GTA2_VERSION_MINOR, 0   ; dwProductVersionMS/LS
+    dd 0x3F, 0                      ; dwFileFlagsMask, dwFileFlags
+    dd 0x00040004, 1, 0             ; dwFileOS (NT_WINDOWS32), dwFileType (APP), dwFileSubtype
+    dd 0, 0                         ; dwFileDateMS/LS
 section .text
