@@ -395,36 +395,36 @@ gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_NEXT_WEAPON,256,SAM
 gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_SPECIAL,512,SAME,,KEYBOARD_STATE_SPECIAL,
 gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_SPECIAL2,1024,SAME,,KEYBOARD_STATE_SPECIAL2,
 gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_SPECIAL3,2048,SAME,,KEYBOARD_STATE_SPECIAL3,
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_INCR_COP_LEVEL,5,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_INCR_RESPECT_GANG1,2,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_INCR_RESPECT_GANG2,3,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_INCR_RESPECT_GANG3,4,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_PAUSE,64,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_INCR_COP_LEVEL,5,SAME,,KEY_INCR_COP_LEVEL,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_INCR_RESPECT_GANG1,2,SAME,,KEY_INCR_RESPECT_GANG1,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_INCR_RESPECT_GANG2,3,SAME,,KEY_INCR_RESPECT_GANG2,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_INCR_RESPECT_GANG3,4,SAME,,KEY_INCR_RESPECT_GANG3,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_PAUSE,64,SAME,,KEY_PAUSE,
 gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_QUIT,1,CONFLICT,naming,QUIT,"same value, different name (similar)"
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_RESET_COP_LEVEL,6,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_SHOW_PED_INFO,46,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_3b,59,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_3c,60,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_47,71,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_48,72,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_49,73,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_4a,74,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_4b,75,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_4c,76,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_4d,77,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_4e,78,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_4f,79,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_50,80,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_52,82,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_53,83,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_57,87,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_58,88,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_b5,181,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_c7,199,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_c9,201,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_d1,209,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_VOLUME_MINUS,61,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_VOLUME_PLUS,62,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_RESET_COP_LEVEL,6,SAME,,KEY_RESET_COP_LEVEL,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_SHOW_PED_INFO,46,SAME,,KEY_SHOW_PED_INFO,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_3b,59,SAME,,KEY_UNK_3b,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_3c,60,SAME,,KEY_UNK_3c,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_47,71,SAME,,KEY_UNK_DEBUG_47,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_48,72,SAME,,KEY_UNK_DEBUG_48,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_49,73,SAME,,KEY_UNK_DEBUG_49,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_4a,74,SAME,,KEY_UNK_DEBUG_4a,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_4b,75,SAME,,KEY_UNK_DEBUG_4b,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_4c,76,SAME,,KEY_UNK_DEBUG_4c,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_4d,77,SAME,,KEY_UNK_DEBUG_4d,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_4e,78,SAME,,KEY_UNK_DEBUG_4e,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_4f,79,SAME,,KEY_UNK_DEBUG_4f,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_50,80,SAME,,KEY_UNK_DEBUG_50,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_52,82,SAME,,KEY_UNK_DEBUG_52,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_53,83,SAME,,KEY_UNK_DEBUG_53,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_57,87,SAME,,KEY_UNK_DEBUG_57,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_58,88,SAME,,KEY_UNK_DEBUG_58,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_b5,181,SAME,,KEY_UNK_DEBUG_b5,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_c7,199,SAME,,KEY_UNK_DEBUG_c7,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_c9,201,SAME,,KEY_UNK_DEBUG_c9,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_UNK_DEBUG_d1,209,SAME,,KEY_UNK_DEBUG_d1,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_VOLUME_MINUS,61,SAME,,KEY_VOLUME_MINUS,
+gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_VOLUME_PLUS,62,SAME,,KEY_VOLUME_PLUS,
 gta2-seuko-mod,src/game/gta2.h,MAIN_MENU_SOUND,BACK_SOUND,5,SAME,,BACK_SOUND,
 gta2-seuko-mod,src/game/gta2.h,MAIN_MENU_SOUND,CHEAT_SOUND,9,SAME,,CHEAT_SOUND,
 gta2-seuko-mod,src/game/gta2.h,MAIN_MENU_SOUND,ENTER_SOUND,6,SAME,,ENTER_SOUND,
@@ -695,17 +695,17 @@ gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_CODE_OBJ_REMAP,5,SAME,,
 gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_MAP_OBJ_REMAP,6,SAME,,PALETTE_BASE_MAP_OBJ_REMAP,
 gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_USER_REMAP,7,SAME,,PALETTE_BASE_USER_REMAP,
 gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_FONT_REMAP,8,SAME,,PALETTE_BASE_FONT_REMAP,
-gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_INVISIBLE,33554432,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_INVISIBLE,33554432,SAME,,PED_BIT_STATE_INVISIBLE,
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_ARMED,128,SAME,,_ARMED,enum-name prefix dropped
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_FIRING_FROM_GUN,2048,SAME,,FIRING_FROM_GUN,enum-name prefix dropped
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_FOLLOW_CAR_TO_GET_IN,65536,SAME,,FOLLOW_CAR_TO_GET_IN,enum-name prefix dropped
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_GETING_IN_OR_OUT_CAR,134217728,SAME,,GETING_IN_OR_OUT_CAR,enum-name prefix dropped
-gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_HAS_GUN_BUT_NOT_PISTOL,268435456,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_HAS_GUN_BUT_NOT_PISTOL,268435456,SAME,,PED_BIT_STATE_HAS_GUN_BUT_NOT_PISTOL,
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_TOGGLED_ON_WHEN_FIRST_TIME_ATTACK_A_PED,4,SAME,,TOGGLED_ON_WHEN_FIRST_TIME_ATTACK_A_PED,enum-name prefix dropped
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_UNARMED,512,SAME,,_UNARMED,enum-name prefix dropped
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_UNK_1_ALWAYS1,1,SAME,,UNK_1_ALWAYS1,enum-name prefix dropped
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_UNK_2000,8192,SAME,,UNK_2000,enum-name prefix dropped
-gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_UNK_400,1024,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_UNK_400,1024,SAME,,PED_BIT_STATE_UNK_400,
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_ZERO_ON_START_GAME_BUT_TOGGLED_ON_FIRST_CAR_ENTER,32768,SAME,,ZERO_ON_START_GAME_BUT_TOGGLED_ON_FIRST_CAR_ENTER,enum-name prefix dropped
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE2,PED_BIT_STATE2_3_COP_RELATED,3,SAME,,PED_BIT_STATE2_3_COP_RELATED,
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE2,PED_BIT_STATE2_CARTHIEF,6,CONFLICT,semantic,UNK_6,"same value, different name"
@@ -983,237 +983,237 @@ gta2-seuko-mod,src/game/gta2.h,SAVE_SLOT_UNCLEAR_UI_OR_SCRIPTS_VALUE_ID,"/* Mayb
 gta2-seuko-mod,src/game/gta2.h,SAVE_SLOT_UNCLEAR_UI_OR_SCRIPTS_VALUE_ID,PLAYER_LIVES,115,SAME,,PLAYER_LIVES,
 gta2-seuko-mod,src/game/gta2.h,SAVE_SLOT_UNCLEAR_UI_OR_SCRIPTS_VALUE_ID,PLAYER_MONEY,158,SAME,,PLAYER_MONEY,
 gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_0,0,CONFLICT,semantic,CMD_ZERO,"same value, different name"
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_1,1,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_2,2,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_3,3,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_4,4,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ADD_GROUP,153,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ADD_NEW_BLOCK,182,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ADD_PATROL_POINT,205,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ADD_SCORE1,141,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ALT_WANTED_LEVEL,164,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_AND,72,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ANSWER_PHONE,168,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ARROW_COLOUR,115,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ARROW_DEC,23,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_DAMAGE_POS,200,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_DEC,9,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_DECSET_2D,10,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_DECSET_2D_STR,12,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_DECSET_3D,11,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_DECSET_3D_STR,13,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_DRIVE_AWAY,175,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_IN_AIR,191,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_SUNK,190,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_WRECK_IN_LOCATION,189,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHANGE_BLOCK_LID,186,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHANGE_BLOCK_SIDE,185,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHANGE_BLOCK_TYPE,187,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHANGE_CAR_REMAP,155,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHANGE_CHAR_REMAP,156,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHANGE_COLOUR,221,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHANGE_INTENSITY,220,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHANGE_RADIUS,222,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHAR_DEC,6,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHAR_DECSET_2D,7,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHAR_DECSET_3D,8,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHAR_IN_AIR,202,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHAR_SUNK,203,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHAR_TO_BACKDOOR,171,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHAR_TO_DRIVE_CAR,167,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_BOTH,159,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_DAMAGE,129,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_DRIVER,130,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_MODEL,157,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_REMAP,158,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_SPEED,208,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_HEALTH,126,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_MULT,196,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_NUM_LIVES,192,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_PHONE,227,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_PHONETIMER,228,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_RESPECT_GREATER,198,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_RESPECT_IS,231,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_RESPECT_LESS,199,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_SCORE,194,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CLEAR_NO_COLLIDE,174,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CLEAR_TIMERS,120,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CLEAR_WANTED_LEVEL,163,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CLOSE_DOOR,178,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CONVEYOR_DEC,25,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CONVEYOR_DECSET1,26,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CONVEYOR_DECSET2,27,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_COUNTER,21,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_COUNTER_SET,22,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CRANE2TARGET_DEC,39,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CRANE_BASIC_DEC,37,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CRANE_DEC,36,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CRANE_TARGET_DEC,38,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_CAR_2D,43,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_CAR_2D_STR,45,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_CAR_3D,44,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_CAR_3D_STR,46,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_CHAR_2D,41,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_CHAR_3D,42,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_CONVEYOR_2D,53,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_CONVEYOR_3D,54,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_DESTRUCTOR_2D,57,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_DESTRUCTOR_3D,58,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_GENERATOR_2D,55,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_GENERATOR_3D,56,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_LIGHT1,219,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_2D,47,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_2D_INT,50,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_2D_STR,52,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_3D,48,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_3D_INT,49,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_3D_STR,51,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_THREAD,61,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CRUSHER_BASIC,40,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DECREMENT,97,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DELAY,162,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DELAY_HERE,161,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DELETE_ITEM,140,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DESTRUCTOR_DEC,33,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DESTRUCTOR_DECSET1,34,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DESTRUCTOR_DECSET2,35,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DISABLE_THREAD,216,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DISPLAY_BRIEF,118,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DISPLAY_MESSAGE,117,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DISPLAY_TIMER,119,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DO_WHILE,66,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DRIVER_OUT_CAR,166,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ELSE,76,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ENABLE_THREAD,215,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_EXPLODE,142,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_EXPLODE_BUILDING,143,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_EXPLODE_ITEM,144,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_FORWARD_DECLARE,99,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_FOR_LOOP,65,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_FUNCTION,67,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DEC,28,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DECSET1,29,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DECSET2,30,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DECSET3,31,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DECSET4,32,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GET_CAR_FROM_CRANE,188,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GET_CAR_SPEED,206,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GET_CHAR_CAR_SPEED,207,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GET_MAX_SPEED,209,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GET_MULT,197,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GET_NUM_LIVES,193,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GET_PASSENGER_NUM,201,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GET_SCORE,195,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GIVE_DRIVER_BRAKE,170,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GIVE_WEAPON1,138,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GOSUB,78,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GOTO,77,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_HAS_CHAR_DIED,127,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IF,74,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IF_JUMP,98,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_INCREMENT,96,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CAR_IN_BLOCK,139,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CAR_WRECKED,154,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_FIRE_ONSCREEN,165,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_FIRING_AREA,176,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_IN_ANY_CAR,123,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_IN_CAR,121,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_IN_MODEL,122,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_OBJ_FAIL,135,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_OBJ_PASS,134,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_STOPPED,124,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_STUNNED,125,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_ITEM_ONSCREEN,160,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_I_MINUS_S,83,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_I_PLUS_S,80,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LAST_WEAPON_HIT,204,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LEVELEND,60,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_1,1,SAME,,SCRCMD_1,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_2,2,SAME,,SCRCMD_2,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_3,3,SAME,,SCRCMD_3,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_4,4,SAME,,SCRCMD_4,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ADD_GROUP,153,SAME,,SCRCMD_ADD_GROUP,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ADD_NEW_BLOCK,182,SAME,,SCRCMD_ADD_NEW_BLOCK,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ADD_PATROL_POINT,205,SAME,,SCRCMD_ADD_PATROL_POINT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ADD_SCORE1,141,SAME,,SCRCMD_ADD_SCORE1,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ALT_WANTED_LEVEL,164,SAME,,SCRCMD_ALT_WANTED_LEVEL,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_AND,72,SAME,,SCRCMD_AND,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ANSWER_PHONE,168,SAME,,SCRCMD_ANSWER_PHONE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ARROW_COLOUR,115,SAME,,SCRCMD_ARROW_COLOUR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ARROW_DEC,23,SAME,,SCRCMD_ARROW_DEC,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_DAMAGE_POS,200,SAME,,SCRCMD_CAR_DAMAGE_POS,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_DEC,9,SAME,,SCRCMD_CAR_DEC,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_DECSET_2D,10,SAME,,SCRCMD_CAR_DECSET_2D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_DECSET_2D_STR,12,SAME,,SCRCMD_CAR_DECSET_2D_STR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_DECSET_3D,11,SAME,,SCRCMD_CAR_DECSET_3D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_DECSET_3D_STR,13,SAME,,SCRCMD_CAR_DECSET_3D_STR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_DRIVE_AWAY,175,SAME,,SCRCMD_CAR_DRIVE_AWAY,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_IN_AIR,191,SAME,,SCRCMD_CAR_IN_AIR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_SUNK,190,SAME,,SCRCMD_CAR_SUNK,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CAR_WRECK_IN_LOCATION,189,SAME,,SCRCMD_CAR_WRECK_IN_LOCATION,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHANGE_BLOCK_LID,186,SAME,,SCRCMD_CHANGE_BLOCK_LID,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHANGE_BLOCK_SIDE,185,SAME,,SCRCMD_CHANGE_BLOCK_SIDE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHANGE_BLOCK_TYPE,187,SAME,,SCRCMD_CHANGE_BLOCK_TYPE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHANGE_CAR_REMAP,155,SAME,,SCRCMD_CHANGE_CAR_REMAP,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHANGE_CHAR_REMAP,156,SAME,,SCRCMD_CHANGE_CHAR_REMAP,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHANGE_COLOUR,221,SAME,,SCRCMD_CHANGE_COLOUR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHANGE_INTENSITY,220,SAME,,SCRCMD_CHANGE_INTENSITY,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHANGE_RADIUS,222,SAME,,SCRCMD_CHANGE_RADIUS,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHAR_DEC,6,SAME,,SCRCMD_CHAR_DEC,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHAR_DECSET_2D,7,SAME,,SCRCMD_CHAR_DECSET_2D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHAR_DECSET_3D,8,SAME,,SCRCMD_CHAR_DECSET_3D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHAR_IN_AIR,202,SAME,,SCRCMD_CHAR_IN_AIR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHAR_SUNK,203,SAME,,SCRCMD_CHAR_SUNK,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHAR_TO_BACKDOOR,171,SAME,,SCRCMD_CHAR_TO_BACKDOOR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHAR_TO_DRIVE_CAR,167,SAME,,SCRCMD_CHAR_TO_DRIVE_CAR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_BOTH,159,SAME,,SCRCMD_CHECK_CAR_BOTH,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_DAMAGE,129,SAME,,SCRCMD_CHECK_CAR_DAMAGE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_DRIVER,130,SAME,,SCRCMD_CHECK_CAR_DRIVER,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_MODEL,157,SAME,,SCRCMD_CHECK_CAR_MODEL,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_REMAP,158,SAME,,SCRCMD_CHECK_CAR_REMAP,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_SPEED,208,SAME,,SCRCMD_CHECK_CAR_SPEED,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_HEALTH,126,SAME,,SCRCMD_CHECK_HEALTH,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_MULT,196,SAME,,SCRCMD_CHECK_MULT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_NUM_LIVES,192,SAME,,SCRCMD_CHECK_NUM_LIVES,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_PHONE,227,SAME,,SCRCMD_CHECK_PHONE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_PHONETIMER,228,SAME,,SCRCMD_CHECK_PHONETIMER,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_RESPECT_GREATER,198,SAME,,SCRCMD_CHECK_RESPECT_GREATER,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_RESPECT_IS,231,SAME,,SCRCMD_CHECK_RESPECT_IS,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_RESPECT_LESS,199,SAME,,SCRCMD_CHECK_RESPECT_LESS,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CHECK_SCORE,194,SAME,,SCRCMD_CHECK_SCORE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CLEAR_NO_COLLIDE,174,SAME,,SCRCMD_CLEAR_NO_COLLIDE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CLEAR_TIMERS,120,SAME,,SCRCMD_CLEAR_TIMERS,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CLEAR_WANTED_LEVEL,163,SAME,,SCRCMD_CLEAR_WANTED_LEVEL,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CLOSE_DOOR,178,SAME,,SCRCMD_CLOSE_DOOR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CONVEYOR_DEC,25,SAME,,SCRCMD_CONVEYOR_DEC,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CONVEYOR_DECSET1,26,SAME,,SCRCMD_CONVEYOR_DECSET1,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CONVEYOR_DECSET2,27,SAME,,SCRCMD_CONVEYOR_DECSET2,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_COUNTER,21,SAME,,SCRCMD_COUNTER,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_COUNTER_SET,22,SAME,,SCRCMD_COUNTER_SET,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CRANE2TARGET_DEC,39,SAME,,SCRCMD_CRANE2TARGET_DEC,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CRANE_BASIC_DEC,37,SAME,,SCRCMD_CRANE_BASIC_DEC,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CRANE_DEC,36,SAME,,SCRCMD_CRANE_DEC,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CRANE_TARGET_DEC,38,SAME,,SCRCMD_CRANE_TARGET_DEC,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_CAR_2D,43,SAME,,SCRCMD_CREATE_CAR_2D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_CAR_2D_STR,45,SAME,,SCRCMD_CREATE_CAR_2D_STR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_CAR_3D,44,SAME,,SCRCMD_CREATE_CAR_3D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_CAR_3D_STR,46,SAME,,SCRCMD_CREATE_CAR_3D_STR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_CHAR_2D,41,SAME,,SCRCMD_CREATE_CHAR_2D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_CHAR_3D,42,SAME,,SCRCMD_CREATE_CHAR_3D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_CONVEYOR_2D,53,SAME,,SCRCMD_CREATE_CONVEYOR_2D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_CONVEYOR_3D,54,SAME,,SCRCMD_CREATE_CONVEYOR_3D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_DESTRUCTOR_2D,57,SAME,,SCRCMD_CREATE_DESTRUCTOR_2D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_DESTRUCTOR_3D,58,SAME,,SCRCMD_CREATE_DESTRUCTOR_3D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_GENERATOR_2D,55,SAME,,SCRCMD_CREATE_GENERATOR_2D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_GENERATOR_3D,56,SAME,,SCRCMD_CREATE_GENERATOR_3D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_LIGHT1,219,SAME,,SCRCMD_CREATE_LIGHT1,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_2D,47,SAME,,SCRCMD_CREATE_OBJ_2D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_2D_INT,50,SAME,,SCRCMD_CREATE_OBJ_2D_INT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_2D_STR,52,SAME,,SCRCMD_CREATE_OBJ_2D_STR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_3D,48,SAME,,SCRCMD_CREATE_OBJ_3D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_3D_INT,49,SAME,,SCRCMD_CREATE_OBJ_3D_INT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_3D_STR,51,SAME,,SCRCMD_CREATE_OBJ_3D_STR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CREATE_THREAD,61,SAME,,SCRCMD_CREATE_THREAD,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_CRUSHER_BASIC,40,SAME,,SCRCMD_CRUSHER_BASIC,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DECREMENT,97,SAME,,SCRCMD_DECREMENT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DELAY,162,SAME,,SCRCMD_DELAY,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DELAY_HERE,161,SAME,,SCRCMD_DELAY_HERE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DELETE_ITEM,140,SAME,,SCRCMD_DELETE_ITEM,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DESTRUCTOR_DEC,33,SAME,,SCRCMD_DESTRUCTOR_DEC,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DESTRUCTOR_DECSET1,34,SAME,,SCRCMD_DESTRUCTOR_DECSET1,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DESTRUCTOR_DECSET2,35,SAME,,SCRCMD_DESTRUCTOR_DECSET2,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DISABLE_THREAD,216,SAME,,SCRCMD_DISABLE_THREAD,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DISPLAY_BRIEF,118,SAME,,SCRCMD_DISPLAY_BRIEF,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DISPLAY_MESSAGE,117,SAME,,SCRCMD_DISPLAY_MESSAGE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DISPLAY_TIMER,119,SAME,,SCRCMD_DISPLAY_TIMER,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DO_WHILE,66,SAME,,SCRCMD_DO_WHILE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_DRIVER_OUT_CAR,166,SAME,,SCRCMD_DRIVER_OUT_CAR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ELSE,76,SAME,,SCRCMD_ELSE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ENABLE_THREAD,215,SAME,,SCRCMD_ENABLE_THREAD,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_EXPLODE,142,SAME,,SCRCMD_EXPLODE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_EXPLODE_BUILDING,143,SAME,,SCRCMD_EXPLODE_BUILDING,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_EXPLODE_ITEM,144,SAME,,SCRCMD_EXPLODE_ITEM,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_FORWARD_DECLARE,99,SAME,,SCRCMD_FORWARD_DECLARE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_FOR_LOOP,65,SAME,,SCRCMD_FOR_LOOP,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_FUNCTION,67,SAME,,SCRCMD_FUNCTION,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DEC,28,SAME,,SCRCMD_GENERATOR_DEC,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DECSET1,29,SAME,,SCRCMD_GENERATOR_DECSET1,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DECSET2,30,SAME,,SCRCMD_GENERATOR_DECSET2,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DECSET3,31,SAME,,SCRCMD_GENERATOR_DECSET3,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DECSET4,32,SAME,,SCRCMD_GENERATOR_DECSET4,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GET_CAR_FROM_CRANE,188,SAME,,SCRCMD_GET_CAR_FROM_CRANE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GET_CAR_SPEED,206,SAME,,SCRCMD_GET_CAR_SPEED,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GET_CHAR_CAR_SPEED,207,SAME,,SCRCMD_GET_CHAR_CAR_SPEED,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GET_MAX_SPEED,209,SAME,,SCRCMD_GET_MAX_SPEED,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GET_MULT,197,SAME,,SCRCMD_GET_MULT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GET_NUM_LIVES,193,SAME,,SCRCMD_GET_NUM_LIVES,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GET_PASSENGER_NUM,201,SAME,,SCRCMD_GET_PASSENGER_NUM,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GET_SCORE,195,SAME,,SCRCMD_GET_SCORE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GIVE_DRIVER_BRAKE,170,SAME,,SCRCMD_GIVE_DRIVER_BRAKE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GIVE_WEAPON1,138,SAME,,SCRCMD_GIVE_WEAPON1,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GOSUB,78,SAME,,SCRCMD_GOSUB,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_GOTO,77,SAME,,SCRCMD_GOTO,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_HAS_CHAR_DIED,127,SAME,,SCRCMD_HAS_CHAR_DIED,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IF,74,SAME,,SCRCMD_IF,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IF_JUMP,98,SAME,,SCRCMD_IF_JUMP,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_INCREMENT,96,SAME,,SCRCMD_INCREMENT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CAR_IN_BLOCK,139,SAME,,SCRCMD_IS_CAR_IN_BLOCK,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CAR_WRECKED,154,SAME,,SCRCMD_IS_CAR_WRECKED,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_FIRE_ONSCREEN,165,SAME,,SCRCMD_IS_CHAR_FIRE_ONSCREEN,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_FIRING_AREA,176,SAME,,SCRCMD_IS_CHAR_FIRING_AREA,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_IN_ANY_CAR,123,SAME,,SCRCMD_IS_CHAR_IN_ANY_CAR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_IN_CAR,121,SAME,,SCRCMD_IS_CHAR_IN_CAR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_IN_MODEL,122,SAME,,SCRCMD_IS_CHAR_IN_MODEL,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_OBJ_FAIL,135,SAME,,SCRCMD_IS_CHAR_OBJ_FAIL,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_OBJ_PASS,134,SAME,,SCRCMD_IS_CHAR_OBJ_PASS,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_STOPPED,124,SAME,,SCRCMD_IS_CHAR_STOPPED,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_STUNNED,125,SAME,,SCRCMD_IS_CHAR_STUNNED,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_IS_ITEM_ONSCREEN,160,SAME,,SCRCMD_IS_ITEM_ONSCREEN,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_I_MINUS_S,83,SAME,,SCRCMD_I_MINUS_S,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_I_PLUS_S,80,SAME,,SCRCMD_I_PLUS_S,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LAST_WEAPON_HIT,204,SAME,,SCRCMD_LAST_WEAPON_HIT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LEVELEND,60,SAME,,SCRCMD_LEVELEND,
 gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LEVELSTART,59,SAME,,SCRCMD_LEVELSTART,
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LIGHT_DEC,217,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LIGHT_DECSET1,218,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LOCATE_CHAR_ANY,145,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LOCATE_CHAR_BY_CAR,147,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LOCATE_CHAR_ONFOOT,146,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LOWER_LEVEL,184,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_MAKE_CAR_DUMMY,100,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_MAP_ZONE1,101,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_MAP_ZONE_SET,102,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_NOT,71,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OBJ_DEC,14,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_2D,15,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_2D_INT,17,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_2D_STR,19,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_3D,16,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_3D_INT,18,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_3D_STR,20,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OPEN_DOOR,177,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OR,73,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LIGHT_DEC,217,SAME,,SCRCMD_LIGHT_DEC,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LIGHT_DECSET1,218,SAME,,SCRCMD_LIGHT_DECSET1,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LOCATE_CHAR_ANY,145,SAME,,SCRCMD_LOCATE_CHAR_ANY,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LOCATE_CHAR_BY_CAR,147,SAME,,SCRCMD_LOCATE_CHAR_BY_CAR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LOCATE_CHAR_ONFOOT,146,SAME,,SCRCMD_LOCATE_CHAR_ONFOOT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_LOWER_LEVEL,184,SAME,,SCRCMD_LOWER_LEVEL,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_MAKE_CAR_DUMMY,100,SAME,,SCRCMD_MAKE_CAR_DUMMY,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_MAP_ZONE1,101,SAME,,SCRCMD_MAP_ZONE1,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_MAP_ZONE_SET,102,SAME,,SCRCMD_MAP_ZONE_SET,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_NOT,71,SAME,,SCRCMD_NOT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OBJ_DEC,14,SAME,,SCRCMD_OBJ_DEC,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_2D,15,SAME,,SCRCMD_OBJ_DECSET_2D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_2D_INT,17,SAME,,SCRCMD_OBJ_DECSET_2D_INT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_2D_STR,19,SAME,,SCRCMD_OBJ_DECSET_2D_STR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_3D,16,SAME,,SCRCMD_OBJ_DECSET_3D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_3D_INT,18,SAME,,SCRCMD_OBJ_DECSET_3D_INT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_3D_STR,20,SAME,,SCRCMD_OBJ_DECSET_3D_STR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OPEN_DOOR,177,SAME,,SCRCMD_OPEN_DOOR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_OR,73,SAME,,SCRCMD_OR,
 gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_PLAYER_PED,5,SAME,,SCRCMD_PLAYER_PED,
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_PLAY_SOUND,172,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_POINT_ARROW_3D,114,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_POINT_ARROW_AT,113,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_REMOVE_ARROW,116,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_REMOVE_BLOCK,183,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_RETURN,68,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ROAD_ON_OFF,181,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SEND_CAR_TO_BLOCK,169,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SEND_CHAR_CAR,137,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SEND_CHAR_FOOT,136,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET,85,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_AMBIENT,226,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_BAD_CAR,105,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_CARTHIEF,109,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_CAR_DENSITY,103,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_CHAR_OBJ1,131,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_CHAR_OBJ2,132,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_CHAR_OBJ3,133,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_CHAR_RESPECT,225,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_DOOR_AUTO,179,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_DOOR_INFO,230,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_DOOR_MANUAL,180,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_ELVIS,110,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_GANG,111,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_GANG_INFO1,223,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_GANG_RESPECT,224,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_GOOD_CAR,104,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_MUGGER,108,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_NO_COLLIDE,173,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_PED_DENSITY,107,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_POLICE_CAR,106,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_POLICE_PED,112,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_THREAT_REACT,152,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_THREAT_SEARCH,151,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_START_EXEC,63,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_STOP_EXEC,64,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_STOP_LOCATE_CHAR_ANY,148,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_STOP_LOCATE_CHAR_CAR,150,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_STOP_LOCATE_CHAR_FOOT,149,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_STOP_PHONE_RING,229,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_STOP_THREAD,62,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_STORE_CAR_INFO,128,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_EQUAL_I,94,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_EQUAL_S,95,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_GEQUAL_I,92,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_GEQUAL_S,93,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_GREATER_I,90,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_GREATER_S,91,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_LEQUAL_I,88,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_LEQUAL_S,89,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_LESS_I,86,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_LESS_S,87,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_MINUS_I,82,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_MINUS_S,84,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_PLUS_I,79,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_PLUS_S,81,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_THEN,75,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE1,210,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE2,211,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE3,212,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE4,213,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE5,214,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_THREAD_ID,24,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_WHILE,69,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_WHILE_EXEC,70,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_PLAY_SOUND,172,SAME,,SCRCMD_PLAY_SOUND,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_POINT_ARROW_3D,114,SAME,,SCRCMD_POINT_ARROW_3D,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_POINT_ARROW_AT,113,SAME,,SCRCMD_POINT_ARROW_AT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_REMOVE_ARROW,116,SAME,,SCRCMD_REMOVE_ARROW,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_REMOVE_BLOCK,183,SAME,,SCRCMD_REMOVE_BLOCK,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_RETURN,68,SAME,,SCRCMD_RETURN,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_ROAD_ON_OFF,181,SAME,,SCRCMD_ROAD_ON_OFF,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SEND_CAR_TO_BLOCK,169,SAME,,SCRCMD_SEND_CAR_TO_BLOCK,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SEND_CHAR_CAR,137,SAME,,SCRCMD_SEND_CHAR_CAR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SEND_CHAR_FOOT,136,SAME,,SCRCMD_SEND_CHAR_FOOT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET,85,SAME,,SCRCMD_SET,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_AMBIENT,226,SAME,,SCRCMD_SET_AMBIENT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_BAD_CAR,105,SAME,,SCRCMD_SET_BAD_CAR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_CARTHIEF,109,SAME,,SCRCMD_SET_CARTHIEF,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_CAR_DENSITY,103,SAME,,SCRCMD_SET_CAR_DENSITY,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_CHAR_OBJ1,131,SAME,,SCRCMD_SET_CHAR_OBJ1,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_CHAR_OBJ2,132,SAME,,SCRCMD_SET_CHAR_OBJ2,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_CHAR_OBJ3,133,SAME,,SCRCMD_SET_CHAR_OBJ3,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_CHAR_RESPECT,225,SAME,,SCRCMD_SET_CHAR_RESPECT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_DOOR_AUTO,179,SAME,,SCRCMD_SET_DOOR_AUTO,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_DOOR_INFO,230,SAME,,SCRCMD_SET_DOOR_INFO,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_DOOR_MANUAL,180,SAME,,SCRCMD_SET_DOOR_MANUAL,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_ELVIS,110,SAME,,SCRCMD_SET_ELVIS,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_GANG,111,SAME,,SCRCMD_SET_GANG,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_GANG_INFO1,223,SAME,,SCRCMD_SET_GANG_INFO1,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_GANG_RESPECT,224,SAME,,SCRCMD_SET_GANG_RESPECT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_GOOD_CAR,104,SAME,,SCRCMD_SET_GOOD_CAR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_MUGGER,108,SAME,,SCRCMD_SET_MUGGER,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_NO_COLLIDE,173,SAME,,SCRCMD_SET_NO_COLLIDE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_PED_DENSITY,107,SAME,,SCRCMD_SET_PED_DENSITY,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_POLICE_CAR,106,SAME,,SCRCMD_SET_POLICE_CAR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_POLICE_PED,112,SAME,,SCRCMD_SET_POLICE_PED,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_THREAT_REACT,152,SAME,,SCRCMD_SET_THREAT_REACT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_SET_THREAT_SEARCH,151,SAME,,SCRCMD_SET_THREAT_SEARCH,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_START_EXEC,63,SAME,,SCRCMD_START_EXEC,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_STOP_EXEC,64,SAME,,SCRCMD_STOP_EXEC,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_STOP_LOCATE_CHAR_ANY,148,SAME,,SCRCMD_STOP_LOCATE_CHAR_ANY,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_STOP_LOCATE_CHAR_CAR,150,SAME,,SCRCMD_STOP_LOCATE_CHAR_CAR,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_STOP_LOCATE_CHAR_FOOT,149,SAME,,SCRCMD_STOP_LOCATE_CHAR_FOOT,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_STOP_PHONE_RING,229,SAME,,SCRCMD_STOP_PHONE_RING,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_STOP_THREAD,62,SAME,,SCRCMD_STOP_THREAD,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_STORE_CAR_INFO,128,SAME,,SCRCMD_STORE_CAR_INFO,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_EQUAL_I,94,SAME,,SCRCMD_S_EQUAL_I,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_EQUAL_S,95,SAME,,SCRCMD_S_EQUAL_S,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_GEQUAL_I,92,SAME,,SCRCMD_S_GEQUAL_I,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_GEQUAL_S,93,SAME,,SCRCMD_S_GEQUAL_S,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_GREATER_I,90,SAME,,SCRCMD_S_GREATER_I,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_GREATER_S,91,SAME,,SCRCMD_S_GREATER_S,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_LEQUAL_I,88,SAME,,SCRCMD_S_LEQUAL_I,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_LEQUAL_S,89,SAME,,SCRCMD_S_LEQUAL_S,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_LESS_I,86,SAME,,SCRCMD_S_LESS_I,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_LESS_S,87,SAME,,SCRCMD_S_LESS_S,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_MINUS_I,82,SAME,,SCRCMD_S_MINUS_I,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_MINUS_S,84,SAME,,SCRCMD_S_MINUS_S,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_PLUS_I,79,SAME,,SCRCMD_S_PLUS_I,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_S_PLUS_S,81,SAME,,SCRCMD_S_PLUS_S,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_THEN,75,SAME,,SCRCMD_THEN,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE1,210,SAME,,SCRCMD_THREAD_DECLARE1,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE2,211,SAME,,SCRCMD_THREAD_DECLARE2,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE3,212,SAME,,SCRCMD_THREAD_DECLARE3,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE4,213,SAME,,SCRCMD_THREAD_DECLARE4,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE5,214,SAME,,SCRCMD_THREAD_DECLARE5,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_THREAD_ID,24,SAME,,SCRCMD_THREAD_ID,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_WHILE,69,SAME,,SCRCMD_WHILE,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_WHILE_EXEC,70,SAME,,SCRCMD_WHILE_EXEC,
 gta2-seuko-mod,src/game/gta2.h,SCR_STRING_DATA_TYPE,FILE_NAME_MISSIONS,21,SAME,,FILE_NAME_MISSIONS,
 gta2-seuko-mod,src/game/gta2.h,SCR_STRING_DATA_TYPE,GANG_NAME,17,SAME,,GANG_NAME,
 gta2-seuko-mod,src/game/gta2.h,SCR_STRING_DATA_TYPE,ZONE_NAME,10,SAME,,ZONE_NAME,
@@ -1601,36 +1601,36 @@ gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_MOVE_FORWARD,1,CON
 gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_ROTATE_LEFT,4,CONFLICT,semantic,KEYBOARD_STATE_LEFT,"same value, different name"
 gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_ROTATE_RIGHT,8,CONFLICT,semantic,KEYBOARD_STATE_RIGHT,"same value, different name"
 gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_TAB,512,CONFLICT,semantic,KEYBOARD_STATE_SPECIAL,"same value, different name"
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_INCR_COP_LEVEL,5,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_INCR_RESPECT_GANG1,2,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_INCR_RESPECT_GANG2,3,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_INCR_RESPECT_GANG3,4,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_PAUSE,64,NEW,,,constant not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_INCR_COP_LEVEL,5,SAME,,KEY_INCR_COP_LEVEL,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_INCR_RESPECT_GANG1,2,SAME,,KEY_INCR_RESPECT_GANG1,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_INCR_RESPECT_GANG2,3,SAME,,KEY_INCR_RESPECT_GANG2,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_INCR_RESPECT_GANG3,4,SAME,,KEY_INCR_RESPECT_GANG3,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_PAUSE,64,SAME,,KEY_PAUSE,
 gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_QUIT,1,CONFLICT,naming,QUIT,"same value, different name (similar)"
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_RESET_COP_LEVEL,6,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_SHOW_PED_INFO,46,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_3b,59,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_3c,60,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_47,71,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_48,72,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_49,73,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_4a,74,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_4b,75,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_4c,76,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_4d,77,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_4e,78,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_4f,79,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_50,80,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_52,82,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_53,83,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_57,87,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_58,88,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_b5,181,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_c7,199,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_c9,201,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_d1,209,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_VOLUME_MINUS,61,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_VOLUME_PLUS,62,NEW,,,constant not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_RESET_COP_LEVEL,6,SAME,,KEY_RESET_COP_LEVEL,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_SHOW_PED_INFO,46,SAME,,KEY_SHOW_PED_INFO,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_3b,59,SAME,,KEY_UNK_3b,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_3c,60,SAME,,KEY_UNK_3c,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_47,71,SAME,,KEY_UNK_DEBUG_47,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_48,72,SAME,,KEY_UNK_DEBUG_48,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_49,73,SAME,,KEY_UNK_DEBUG_49,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_4a,74,SAME,,KEY_UNK_DEBUG_4a,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_4b,75,SAME,,KEY_UNK_DEBUG_4b,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_4c,76,SAME,,KEY_UNK_DEBUG_4c,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_4d,77,SAME,,KEY_UNK_DEBUG_4d,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_4e,78,SAME,,KEY_UNK_DEBUG_4e,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_4f,79,SAME,,KEY_UNK_DEBUG_4f,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_50,80,SAME,,KEY_UNK_DEBUG_50,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_52,82,SAME,,KEY_UNK_DEBUG_52,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_53,83,SAME,,KEY_UNK_DEBUG_53,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_57,87,SAME,,KEY_UNK_DEBUG_57,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_58,88,SAME,,KEY_UNK_DEBUG_58,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_b5,181,SAME,,KEY_UNK_DEBUG_b5,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_c7,199,SAME,,KEY_UNK_DEBUG_c7,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_c9,201,SAME,,KEY_UNK_DEBUG_c9,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_UNK_DEBUG_d1,209,SAME,,KEY_UNK_DEBUG_d1,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_VOLUME_MINUS,61,SAME,,KEY_VOLUME_MINUS,
+gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_VOLUME_PLUS,62,SAME,,KEY_VOLUME_PLUS,
 gta2-mouse,gta2.segments.fixed.exe.h,MAIN_MENU_SOUND,BACK_SOUND,5,SAME,,BACK_SOUND,
 gta2-mouse,gta2.segments.fixed.exe.h,MAIN_MENU_SOUND,CHEAT_SOUND,9,SAME,,CHEAT_SOUND,
 gta2-mouse,gta2.segments.fixed.exe.h,MAIN_MENU_SOUND,ENTER_SOUND,6,SAME,,ENTER_SOUND,
@@ -1762,237 +1762,237 @@ gta2-mouse,gta2.segments.fixed.exe.h,SAVE_SLOT_UNCLEAR_UI_OR_SCRIPTS_VALUE_ID,"/
 gta2-mouse,gta2.segments.fixed.exe.h,SAVE_SLOT_UNCLEAR_UI_OR_SCRIPTS_VALUE_ID,PLAYER_LIVES,115,SAME,,PLAYER_LIVES,
 gta2-mouse,gta2.segments.fixed.exe.h,SAVE_SLOT_UNCLEAR_UI_OR_SCRIPTS_VALUE_ID,PLAYER_MONEY,158,SAME,,PLAYER_MONEY,
 gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_0,0,CONFLICT,semantic,CMD_ZERO,"same value, different name"
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_1,1,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_2,2,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_3,3,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_4,4,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ADD_GROUP,153,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ADD_NEW_BLOCK,182,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ADD_PATROL_POINT,205,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ADD_SCORE1,141,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ALT_WANTED_LEVEL,164,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_AND,72,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ANSWER_PHONE,168,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ARROW_COLOUR,115,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ARROW_DEC,23,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_DAMAGE_POS,200,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_DEC,9,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_DECSET_2D,10,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_DECSET_2D_STR,12,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_DECSET_3D,11,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_DECSET_3D_STR,13,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_DRIVE_AWAY,175,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_IN_AIR,191,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_SUNK,190,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_WRECK_IN_LOCATION,189,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHANGE_BLOCK_LID,186,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHANGE_BLOCK_SIDE,185,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHANGE_BLOCK_TYPE,187,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHANGE_CAR_REMAP,155,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHANGE_CHAR_REMAP,156,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHANGE_COLOUR,221,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHANGE_INTENSITY,220,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHANGE_RADIUS,222,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHAR_DEC,6,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHAR_DECSET_2D,7,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHAR_DECSET_3D,8,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHAR_IN_AIR,202,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHAR_SUNK,203,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHAR_TO_BACKDOOR,171,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHAR_TO_DRIVE_CAR,167,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_BOTH,159,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_DAMAGE,129,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_DRIVER,130,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_MODEL,157,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_REMAP,158,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_SPEED,208,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_HEALTH,126,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_MULT,196,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_NUM_LIVES,192,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_PHONE,227,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_PHONETIMER,228,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_RESPECT_GREATER,198,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_RESPECT_IS,231,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_RESPECT_LESS,199,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_SCORE,194,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CLEAR_NO_COLLIDE,174,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CLEAR_TIMERS,120,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CLEAR_WANTED_LEVEL,163,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CLOSE_DOOR,178,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CONVEYOR_DEC,25,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CONVEYOR_DECSET1,26,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CONVEYOR_DECSET2,27,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_COUNTER,21,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_COUNTER_SET,22,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CRANE2TARGET_DEC,39,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CRANE_BASIC_DEC,37,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CRANE_DEC,36,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CRANE_TARGET_DEC,38,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_CAR_2D,43,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_CAR_2D_STR,45,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_CAR_3D,44,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_CAR_3D_STR,46,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_CHAR_2D,41,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_CHAR_3D,42,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_CONVEYOR_2D,53,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_CONVEYOR_3D,54,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_DESTRUCTOR_2D,57,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_DESTRUCTOR_3D,58,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_GENERATOR_2D,55,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_GENERATOR_3D,56,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_LIGHT1,219,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_2D,47,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_2D_INT,50,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_2D_STR,52,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_3D,48,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_3D_INT,49,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_3D_STR,51,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_THREAD,61,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CRUSHER_BASIC,40,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DECREMENT,97,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DELAY,162,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DELAY_HERE,161,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DELETE_ITEM,140,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DESTRUCTOR_DEC,33,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DESTRUCTOR_DECSET1,34,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DESTRUCTOR_DECSET2,35,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DISABLE_THREAD,216,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DISPLAY_BRIEF,118,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DISPLAY_MESSAGE,117,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DISPLAY_TIMER,119,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DO_WHILE,66,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DRIVER_OUT_CAR,166,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ELSE,76,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ENABLE_THREAD,215,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_EXPLODE,142,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_EXPLODE_BUILDING,143,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_EXPLODE_ITEM,144,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_FORWARD_DECLARE,99,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_FOR_LOOP,65,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_FUNCTION,67,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DEC,28,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DECSET1,29,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DECSET2,30,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DECSET3,31,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DECSET4,32,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GET_CAR_FROM_CRANE,188,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GET_CAR_SPEED,206,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GET_CHAR_CAR_SPEED,207,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GET_MAX_SPEED,209,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GET_MULT,197,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GET_NUM_LIVES,193,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GET_PASSENGER_NUM,201,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GET_SCORE,195,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GIVE_DRIVER_BRAKE,170,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GIVE_WEAPON1,138,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GOSUB,78,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GOTO,77,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_HAS_CHAR_DIED,127,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IF,74,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IF_JUMP,98,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_INCREMENT,96,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CAR_IN_BLOCK,139,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CAR_WRECKED,154,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_FIRE_ONSCREEN,165,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_FIRING_AREA,176,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_IN_ANY_CAR,123,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_IN_CAR,121,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_IN_MODEL,122,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_OBJ_FAIL,135,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_OBJ_PASS,134,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_STOPPED,124,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_STUNNED,125,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_ITEM_ONSCREEN,160,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_I_MINUS_S,83,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_I_PLUS_S,80,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LAST_WEAPON_HIT,204,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LEVELEND,60,NEW,,,constant not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_1,1,SAME,,SCRCMD_1,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_2,2,SAME,,SCRCMD_2,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_3,3,SAME,,SCRCMD_3,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_4,4,SAME,,SCRCMD_4,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ADD_GROUP,153,SAME,,SCRCMD_ADD_GROUP,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ADD_NEW_BLOCK,182,SAME,,SCRCMD_ADD_NEW_BLOCK,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ADD_PATROL_POINT,205,SAME,,SCRCMD_ADD_PATROL_POINT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ADD_SCORE1,141,SAME,,SCRCMD_ADD_SCORE1,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ALT_WANTED_LEVEL,164,SAME,,SCRCMD_ALT_WANTED_LEVEL,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_AND,72,SAME,,SCRCMD_AND,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ANSWER_PHONE,168,SAME,,SCRCMD_ANSWER_PHONE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ARROW_COLOUR,115,SAME,,SCRCMD_ARROW_COLOUR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ARROW_DEC,23,SAME,,SCRCMD_ARROW_DEC,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_DAMAGE_POS,200,SAME,,SCRCMD_CAR_DAMAGE_POS,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_DEC,9,SAME,,SCRCMD_CAR_DEC,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_DECSET_2D,10,SAME,,SCRCMD_CAR_DECSET_2D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_DECSET_2D_STR,12,SAME,,SCRCMD_CAR_DECSET_2D_STR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_DECSET_3D,11,SAME,,SCRCMD_CAR_DECSET_3D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_DECSET_3D_STR,13,SAME,,SCRCMD_CAR_DECSET_3D_STR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_DRIVE_AWAY,175,SAME,,SCRCMD_CAR_DRIVE_AWAY,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_IN_AIR,191,SAME,,SCRCMD_CAR_IN_AIR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_SUNK,190,SAME,,SCRCMD_CAR_SUNK,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CAR_WRECK_IN_LOCATION,189,SAME,,SCRCMD_CAR_WRECK_IN_LOCATION,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHANGE_BLOCK_LID,186,SAME,,SCRCMD_CHANGE_BLOCK_LID,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHANGE_BLOCK_SIDE,185,SAME,,SCRCMD_CHANGE_BLOCK_SIDE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHANGE_BLOCK_TYPE,187,SAME,,SCRCMD_CHANGE_BLOCK_TYPE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHANGE_CAR_REMAP,155,SAME,,SCRCMD_CHANGE_CAR_REMAP,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHANGE_CHAR_REMAP,156,SAME,,SCRCMD_CHANGE_CHAR_REMAP,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHANGE_COLOUR,221,SAME,,SCRCMD_CHANGE_COLOUR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHANGE_INTENSITY,220,SAME,,SCRCMD_CHANGE_INTENSITY,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHANGE_RADIUS,222,SAME,,SCRCMD_CHANGE_RADIUS,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHAR_DEC,6,SAME,,SCRCMD_CHAR_DEC,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHAR_DECSET_2D,7,SAME,,SCRCMD_CHAR_DECSET_2D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHAR_DECSET_3D,8,SAME,,SCRCMD_CHAR_DECSET_3D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHAR_IN_AIR,202,SAME,,SCRCMD_CHAR_IN_AIR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHAR_SUNK,203,SAME,,SCRCMD_CHAR_SUNK,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHAR_TO_BACKDOOR,171,SAME,,SCRCMD_CHAR_TO_BACKDOOR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHAR_TO_DRIVE_CAR,167,SAME,,SCRCMD_CHAR_TO_DRIVE_CAR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_BOTH,159,SAME,,SCRCMD_CHECK_CAR_BOTH,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_DAMAGE,129,SAME,,SCRCMD_CHECK_CAR_DAMAGE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_DRIVER,130,SAME,,SCRCMD_CHECK_CAR_DRIVER,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_MODEL,157,SAME,,SCRCMD_CHECK_CAR_MODEL,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_REMAP,158,SAME,,SCRCMD_CHECK_CAR_REMAP,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_CAR_SPEED,208,SAME,,SCRCMD_CHECK_CAR_SPEED,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_HEALTH,126,SAME,,SCRCMD_CHECK_HEALTH,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_MULT,196,SAME,,SCRCMD_CHECK_MULT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_NUM_LIVES,192,SAME,,SCRCMD_CHECK_NUM_LIVES,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_PHONE,227,SAME,,SCRCMD_CHECK_PHONE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_PHONETIMER,228,SAME,,SCRCMD_CHECK_PHONETIMER,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_RESPECT_GREATER,198,SAME,,SCRCMD_CHECK_RESPECT_GREATER,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_RESPECT_IS,231,SAME,,SCRCMD_CHECK_RESPECT_IS,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_RESPECT_LESS,199,SAME,,SCRCMD_CHECK_RESPECT_LESS,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CHECK_SCORE,194,SAME,,SCRCMD_CHECK_SCORE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CLEAR_NO_COLLIDE,174,SAME,,SCRCMD_CLEAR_NO_COLLIDE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CLEAR_TIMERS,120,SAME,,SCRCMD_CLEAR_TIMERS,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CLEAR_WANTED_LEVEL,163,SAME,,SCRCMD_CLEAR_WANTED_LEVEL,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CLOSE_DOOR,178,SAME,,SCRCMD_CLOSE_DOOR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CONVEYOR_DEC,25,SAME,,SCRCMD_CONVEYOR_DEC,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CONVEYOR_DECSET1,26,SAME,,SCRCMD_CONVEYOR_DECSET1,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CONVEYOR_DECSET2,27,SAME,,SCRCMD_CONVEYOR_DECSET2,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_COUNTER,21,SAME,,SCRCMD_COUNTER,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_COUNTER_SET,22,SAME,,SCRCMD_COUNTER_SET,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CRANE2TARGET_DEC,39,SAME,,SCRCMD_CRANE2TARGET_DEC,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CRANE_BASIC_DEC,37,SAME,,SCRCMD_CRANE_BASIC_DEC,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CRANE_DEC,36,SAME,,SCRCMD_CRANE_DEC,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CRANE_TARGET_DEC,38,SAME,,SCRCMD_CRANE_TARGET_DEC,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_CAR_2D,43,SAME,,SCRCMD_CREATE_CAR_2D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_CAR_2D_STR,45,SAME,,SCRCMD_CREATE_CAR_2D_STR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_CAR_3D,44,SAME,,SCRCMD_CREATE_CAR_3D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_CAR_3D_STR,46,SAME,,SCRCMD_CREATE_CAR_3D_STR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_CHAR_2D,41,SAME,,SCRCMD_CREATE_CHAR_2D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_CHAR_3D,42,SAME,,SCRCMD_CREATE_CHAR_3D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_CONVEYOR_2D,53,SAME,,SCRCMD_CREATE_CONVEYOR_2D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_CONVEYOR_3D,54,SAME,,SCRCMD_CREATE_CONVEYOR_3D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_DESTRUCTOR_2D,57,SAME,,SCRCMD_CREATE_DESTRUCTOR_2D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_DESTRUCTOR_3D,58,SAME,,SCRCMD_CREATE_DESTRUCTOR_3D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_GENERATOR_2D,55,SAME,,SCRCMD_CREATE_GENERATOR_2D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_GENERATOR_3D,56,SAME,,SCRCMD_CREATE_GENERATOR_3D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_LIGHT1,219,SAME,,SCRCMD_CREATE_LIGHT1,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_2D,47,SAME,,SCRCMD_CREATE_OBJ_2D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_2D_INT,50,SAME,,SCRCMD_CREATE_OBJ_2D_INT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_2D_STR,52,SAME,,SCRCMD_CREATE_OBJ_2D_STR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_3D,48,SAME,,SCRCMD_CREATE_OBJ_3D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_3D_INT,49,SAME,,SCRCMD_CREATE_OBJ_3D_INT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_OBJ_3D_STR,51,SAME,,SCRCMD_CREATE_OBJ_3D_STR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CREATE_THREAD,61,SAME,,SCRCMD_CREATE_THREAD,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_CRUSHER_BASIC,40,SAME,,SCRCMD_CRUSHER_BASIC,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DECREMENT,97,SAME,,SCRCMD_DECREMENT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DELAY,162,SAME,,SCRCMD_DELAY,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DELAY_HERE,161,SAME,,SCRCMD_DELAY_HERE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DELETE_ITEM,140,SAME,,SCRCMD_DELETE_ITEM,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DESTRUCTOR_DEC,33,SAME,,SCRCMD_DESTRUCTOR_DEC,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DESTRUCTOR_DECSET1,34,SAME,,SCRCMD_DESTRUCTOR_DECSET1,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DESTRUCTOR_DECSET2,35,SAME,,SCRCMD_DESTRUCTOR_DECSET2,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DISABLE_THREAD,216,SAME,,SCRCMD_DISABLE_THREAD,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DISPLAY_BRIEF,118,SAME,,SCRCMD_DISPLAY_BRIEF,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DISPLAY_MESSAGE,117,SAME,,SCRCMD_DISPLAY_MESSAGE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DISPLAY_TIMER,119,SAME,,SCRCMD_DISPLAY_TIMER,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DO_WHILE,66,SAME,,SCRCMD_DO_WHILE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_DRIVER_OUT_CAR,166,SAME,,SCRCMD_DRIVER_OUT_CAR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ELSE,76,SAME,,SCRCMD_ELSE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ENABLE_THREAD,215,SAME,,SCRCMD_ENABLE_THREAD,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_EXPLODE,142,SAME,,SCRCMD_EXPLODE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_EXPLODE_BUILDING,143,SAME,,SCRCMD_EXPLODE_BUILDING,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_EXPLODE_ITEM,144,SAME,,SCRCMD_EXPLODE_ITEM,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_FORWARD_DECLARE,99,SAME,,SCRCMD_FORWARD_DECLARE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_FOR_LOOP,65,SAME,,SCRCMD_FOR_LOOP,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_FUNCTION,67,SAME,,SCRCMD_FUNCTION,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DEC,28,SAME,,SCRCMD_GENERATOR_DEC,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DECSET1,29,SAME,,SCRCMD_GENERATOR_DECSET1,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DECSET2,30,SAME,,SCRCMD_GENERATOR_DECSET2,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DECSET3,31,SAME,,SCRCMD_GENERATOR_DECSET3,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GENERATOR_DECSET4,32,SAME,,SCRCMD_GENERATOR_DECSET4,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GET_CAR_FROM_CRANE,188,SAME,,SCRCMD_GET_CAR_FROM_CRANE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GET_CAR_SPEED,206,SAME,,SCRCMD_GET_CAR_SPEED,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GET_CHAR_CAR_SPEED,207,SAME,,SCRCMD_GET_CHAR_CAR_SPEED,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GET_MAX_SPEED,209,SAME,,SCRCMD_GET_MAX_SPEED,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GET_MULT,197,SAME,,SCRCMD_GET_MULT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GET_NUM_LIVES,193,SAME,,SCRCMD_GET_NUM_LIVES,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GET_PASSENGER_NUM,201,SAME,,SCRCMD_GET_PASSENGER_NUM,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GET_SCORE,195,SAME,,SCRCMD_GET_SCORE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GIVE_DRIVER_BRAKE,170,SAME,,SCRCMD_GIVE_DRIVER_BRAKE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GIVE_WEAPON1,138,SAME,,SCRCMD_GIVE_WEAPON1,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GOSUB,78,SAME,,SCRCMD_GOSUB,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_GOTO,77,SAME,,SCRCMD_GOTO,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_HAS_CHAR_DIED,127,SAME,,SCRCMD_HAS_CHAR_DIED,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IF,74,SAME,,SCRCMD_IF,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IF_JUMP,98,SAME,,SCRCMD_IF_JUMP,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_INCREMENT,96,SAME,,SCRCMD_INCREMENT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CAR_IN_BLOCK,139,SAME,,SCRCMD_IS_CAR_IN_BLOCK,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CAR_WRECKED,154,SAME,,SCRCMD_IS_CAR_WRECKED,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_FIRE_ONSCREEN,165,SAME,,SCRCMD_IS_CHAR_FIRE_ONSCREEN,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_FIRING_AREA,176,SAME,,SCRCMD_IS_CHAR_FIRING_AREA,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_IN_ANY_CAR,123,SAME,,SCRCMD_IS_CHAR_IN_ANY_CAR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_IN_CAR,121,SAME,,SCRCMD_IS_CHAR_IN_CAR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_IN_MODEL,122,SAME,,SCRCMD_IS_CHAR_IN_MODEL,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_OBJ_FAIL,135,SAME,,SCRCMD_IS_CHAR_OBJ_FAIL,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_OBJ_PASS,134,SAME,,SCRCMD_IS_CHAR_OBJ_PASS,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_STOPPED,124,SAME,,SCRCMD_IS_CHAR_STOPPED,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_CHAR_STUNNED,125,SAME,,SCRCMD_IS_CHAR_STUNNED,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_IS_ITEM_ONSCREEN,160,SAME,,SCRCMD_IS_ITEM_ONSCREEN,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_I_MINUS_S,83,SAME,,SCRCMD_I_MINUS_S,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_I_PLUS_S,80,SAME,,SCRCMD_I_PLUS_S,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LAST_WEAPON_HIT,204,SAME,,SCRCMD_LAST_WEAPON_HIT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LEVELEND,60,SAME,,SCRCMD_LEVELEND,
 gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LEVELSTART,59,SAME,,SCRCMD_LEVELSTART,
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LIGHT_DEC,217,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LIGHT_DECSET1,218,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LOCATE_CHAR_ANY,145,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LOCATE_CHAR_BY_CAR,147,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LOCATE_CHAR_ONFOOT,146,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LOWER_LEVEL,184,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_MAKE_CAR_DUMMY,100,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_MAP_ZONE1,101,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_MAP_ZONE_SET,102,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_NOT,71,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OBJ_DEC,14,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_2D,15,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_2D_INT,17,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_2D_STR,19,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_3D,16,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_3D_INT,18,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_3D_STR,20,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OPEN_DOOR,177,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OR,73,NEW,,,constant not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LIGHT_DEC,217,SAME,,SCRCMD_LIGHT_DEC,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LIGHT_DECSET1,218,SAME,,SCRCMD_LIGHT_DECSET1,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LOCATE_CHAR_ANY,145,SAME,,SCRCMD_LOCATE_CHAR_ANY,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LOCATE_CHAR_BY_CAR,147,SAME,,SCRCMD_LOCATE_CHAR_BY_CAR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LOCATE_CHAR_ONFOOT,146,SAME,,SCRCMD_LOCATE_CHAR_ONFOOT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_LOWER_LEVEL,184,SAME,,SCRCMD_LOWER_LEVEL,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_MAKE_CAR_DUMMY,100,SAME,,SCRCMD_MAKE_CAR_DUMMY,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_MAP_ZONE1,101,SAME,,SCRCMD_MAP_ZONE1,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_MAP_ZONE_SET,102,SAME,,SCRCMD_MAP_ZONE_SET,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_NOT,71,SAME,,SCRCMD_NOT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OBJ_DEC,14,SAME,,SCRCMD_OBJ_DEC,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_2D,15,SAME,,SCRCMD_OBJ_DECSET_2D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_2D_INT,17,SAME,,SCRCMD_OBJ_DECSET_2D_INT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_2D_STR,19,SAME,,SCRCMD_OBJ_DECSET_2D_STR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_3D,16,SAME,,SCRCMD_OBJ_DECSET_3D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_3D_INT,18,SAME,,SCRCMD_OBJ_DECSET_3D_INT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OBJ_DECSET_3D_STR,20,SAME,,SCRCMD_OBJ_DECSET_3D_STR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OPEN_DOOR,177,SAME,,SCRCMD_OPEN_DOOR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_OR,73,SAME,,SCRCMD_OR,
 gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_PLAYER_PED,5,SAME,,SCRCMD_PLAYER_PED,
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_PLAY_SOUND,172,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_POINT_ARROW_3D,114,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_POINT_ARROW_AT,113,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_REMOVE_ARROW,116,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_REMOVE_BLOCK,183,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_RETURN,68,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ROAD_ON_OFF,181,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SEND_CAR_TO_BLOCK,169,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SEND_CHAR_CAR,137,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SEND_CHAR_FOOT,136,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET,85,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_AMBIENT,226,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_BAD_CAR,105,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_CARTHIEF,109,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_CAR_DENSITY,103,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_CHAR_OBJ1,131,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_CHAR_OBJ2,132,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_CHAR_OBJ3,133,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_CHAR_RESPECT,225,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_DOOR_AUTO,179,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_DOOR_INFO,230,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_DOOR_MANUAL,180,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_ELVIS,110,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_GANG,111,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_GANG_INFO1,223,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_GANG_RESPECT,224,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_GOOD_CAR,104,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_MUGGER,108,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_NO_COLLIDE,173,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_PED_DENSITY,107,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_POLICE_CAR,106,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_POLICE_PED,112,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_THREAT_REACT,152,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_THREAT_SEARCH,151,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_START_EXEC,63,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_STOP_EXEC,64,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_STOP_LOCATE_CHAR_ANY,148,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_STOP_LOCATE_CHAR_CAR,150,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_STOP_LOCATE_CHAR_FOOT,149,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_STOP_PHONE_RING,229,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_STOP_THREAD,62,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_STORE_CAR_INFO,128,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_EQUAL_I,94,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_EQUAL_S,95,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_GEQUAL_I,92,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_GEQUAL_S,93,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_GREATER_I,90,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_GREATER_S,91,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_LEQUAL_I,88,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_LEQUAL_S,89,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_LESS_I,86,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_LESS_S,87,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_MINUS_I,82,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_MINUS_S,84,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_PLUS_I,79,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_PLUS_S,81,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_THEN,75,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE1,210,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE2,211,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE3,212,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE4,213,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE5,214,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_THREAD_ID,24,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_WHILE,69,NEW,,,constant not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_WHILE_EXEC,70,NEW,,,constant not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_PLAY_SOUND,172,SAME,,SCRCMD_PLAY_SOUND,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_POINT_ARROW_3D,114,SAME,,SCRCMD_POINT_ARROW_3D,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_POINT_ARROW_AT,113,SAME,,SCRCMD_POINT_ARROW_AT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_REMOVE_ARROW,116,SAME,,SCRCMD_REMOVE_ARROW,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_REMOVE_BLOCK,183,SAME,,SCRCMD_REMOVE_BLOCK,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_RETURN,68,SAME,,SCRCMD_RETURN,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_ROAD_ON_OFF,181,SAME,,SCRCMD_ROAD_ON_OFF,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SEND_CAR_TO_BLOCK,169,SAME,,SCRCMD_SEND_CAR_TO_BLOCK,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SEND_CHAR_CAR,137,SAME,,SCRCMD_SEND_CHAR_CAR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SEND_CHAR_FOOT,136,SAME,,SCRCMD_SEND_CHAR_FOOT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET,85,SAME,,SCRCMD_SET,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_AMBIENT,226,SAME,,SCRCMD_SET_AMBIENT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_BAD_CAR,105,SAME,,SCRCMD_SET_BAD_CAR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_CARTHIEF,109,SAME,,SCRCMD_SET_CARTHIEF,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_CAR_DENSITY,103,SAME,,SCRCMD_SET_CAR_DENSITY,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_CHAR_OBJ1,131,SAME,,SCRCMD_SET_CHAR_OBJ1,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_CHAR_OBJ2,132,SAME,,SCRCMD_SET_CHAR_OBJ2,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_CHAR_OBJ3,133,SAME,,SCRCMD_SET_CHAR_OBJ3,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_CHAR_RESPECT,225,SAME,,SCRCMD_SET_CHAR_RESPECT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_DOOR_AUTO,179,SAME,,SCRCMD_SET_DOOR_AUTO,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_DOOR_INFO,230,SAME,,SCRCMD_SET_DOOR_INFO,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_DOOR_MANUAL,180,SAME,,SCRCMD_SET_DOOR_MANUAL,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_ELVIS,110,SAME,,SCRCMD_SET_ELVIS,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_GANG,111,SAME,,SCRCMD_SET_GANG,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_GANG_INFO1,223,SAME,,SCRCMD_SET_GANG_INFO1,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_GANG_RESPECT,224,SAME,,SCRCMD_SET_GANG_RESPECT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_GOOD_CAR,104,SAME,,SCRCMD_SET_GOOD_CAR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_MUGGER,108,SAME,,SCRCMD_SET_MUGGER,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_NO_COLLIDE,173,SAME,,SCRCMD_SET_NO_COLLIDE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_PED_DENSITY,107,SAME,,SCRCMD_SET_PED_DENSITY,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_POLICE_CAR,106,SAME,,SCRCMD_SET_POLICE_CAR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_POLICE_PED,112,SAME,,SCRCMD_SET_POLICE_PED,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_THREAT_REACT,152,SAME,,SCRCMD_SET_THREAT_REACT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_SET_THREAT_SEARCH,151,SAME,,SCRCMD_SET_THREAT_SEARCH,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_START_EXEC,63,SAME,,SCRCMD_START_EXEC,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_STOP_EXEC,64,SAME,,SCRCMD_STOP_EXEC,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_STOP_LOCATE_CHAR_ANY,148,SAME,,SCRCMD_STOP_LOCATE_CHAR_ANY,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_STOP_LOCATE_CHAR_CAR,150,SAME,,SCRCMD_STOP_LOCATE_CHAR_CAR,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_STOP_LOCATE_CHAR_FOOT,149,SAME,,SCRCMD_STOP_LOCATE_CHAR_FOOT,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_STOP_PHONE_RING,229,SAME,,SCRCMD_STOP_PHONE_RING,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_STOP_THREAD,62,SAME,,SCRCMD_STOP_THREAD,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_STORE_CAR_INFO,128,SAME,,SCRCMD_STORE_CAR_INFO,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_EQUAL_I,94,SAME,,SCRCMD_S_EQUAL_I,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_EQUAL_S,95,SAME,,SCRCMD_S_EQUAL_S,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_GEQUAL_I,92,SAME,,SCRCMD_S_GEQUAL_I,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_GEQUAL_S,93,SAME,,SCRCMD_S_GEQUAL_S,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_GREATER_I,90,SAME,,SCRCMD_S_GREATER_I,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_GREATER_S,91,SAME,,SCRCMD_S_GREATER_S,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_LEQUAL_I,88,SAME,,SCRCMD_S_LEQUAL_I,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_LEQUAL_S,89,SAME,,SCRCMD_S_LEQUAL_S,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_LESS_I,86,SAME,,SCRCMD_S_LESS_I,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_LESS_S,87,SAME,,SCRCMD_S_LESS_S,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_MINUS_I,82,SAME,,SCRCMD_S_MINUS_I,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_MINUS_S,84,SAME,,SCRCMD_S_MINUS_S,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_PLUS_I,79,SAME,,SCRCMD_S_PLUS_I,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_S_PLUS_S,81,SAME,,SCRCMD_S_PLUS_S,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_THEN,75,SAME,,SCRCMD_THEN,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE1,210,SAME,,SCRCMD_THREAD_DECLARE1,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE2,211,SAME,,SCRCMD_THREAD_DECLARE2,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE3,212,SAME,,SCRCMD_THREAD_DECLARE3,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE4,213,SAME,,SCRCMD_THREAD_DECLARE4,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_THREAD_DECLARE5,214,SAME,,SCRCMD_THREAD_DECLARE5,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_THREAD_ID,24,SAME,,SCRCMD_THREAD_ID,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_WHILE,69,SAME,,SCRCMD_WHILE,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_TYPE,SCRCMD_WHILE_EXEC,70,SAME,,SCRCMD_WHILE_EXEC,
 gta2-mouse,gta2.segments.fixed.exe.h,SCR_STRING_DATA_TYPE,FILE_NAME_MISSIONS,21,SAME,,FILE_NAME_MISSIONS,
 gta2-mouse,gta2.segments.fixed.exe.h,SCR_STRING_DATA_TYPE,GANG_NAME,17,SAME,,GANG_NAME,
 gta2-mouse,gta2.segments.fixed.exe.h,SCR_STRING_DATA_TYPE,ZONE_NAME,10,SAME,,ZONE_NAME,
