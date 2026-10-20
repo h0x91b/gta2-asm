@@ -229,7 +229,7 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
 | WINMM timeGetTime | = GetTickCount |
 | ole32 CoInitialize ✓ / CoUninitialize / CoCreateInstance | S_OK / – / no COM servers: `REGDB_E_CLASSNOTREG`, CLSID logged |
 | VERSION GetFileVersionInfoSizeA ✓, GetFileVersionInfoA ✓, VerQueryValueA ✓ | a fake version block that is just a `VS_FIXEDFILEINFO` carrying **our port's version** (see "Game version" below); only the root `\\` query answers |
-| SHELL32 ShellExecuteA | logged, error |
+| SHELL32 ShellExecuteA | `gta2manager.exe` (OPTIONS) → logged `suppressed`, returns 42 (success) and posts `WM_ACTIVATE(WA_ACTIVE)`, see "OPTIONS" below; anything else logged, `SE_ERR_FNF` |
 | DPLAYX DirectPlayCreate, DirectPlayLobbyCreateW | `E_FAIL` (network play is out of scope) |
 | DINPUT8 DirectInput8Create ✓ | **must succeed** (failure is fatal, `0x44BA2B` → error handler `0x450530`) |
 | IDirectInput8A (11 methods) | CreateDevice ✓ → device (kind = GUID.Data1: keyboard/mouse); EnumDevices enumerates nothing (no joysticks); most others DI_OK |
@@ -333,12 +333,27 @@ input selftest: 0 failures
 End to end with the renderer (`--entry --keys=... --frames=N --shot=...`, 2026-10-20):
 frame 300 without keys shows PLAY selected; `200:DOWN` → OPTIONS, `200:DOWN,240:DOWN` →
 QUIT, `200:RETURN` → the PLAY submenu (player MUCHCASH, START PLAY IN AREA),
-`200:RETURN,280:ESCAPE` → back to the main menu. RETURN on OPTIONS makes the game
-`ShellExecuteA` `gta2manager.exe` (vanilla: options live in a separate program); the
-shim refuses, the game shows "Failed to launch 'GTA2 Manager' correctly" and exits —
-game behaviour, not an input problem. A real key (System Events `key code 125`) was
+`200:RETURN,280:ESCAPE` → back to the main menu. RETURN on OPTIONS: see "OPTIONS" below — the game stays in the menu
+(`150:DOWN,200:RETURN,300:UP` ends on PLAY). A real key (System Events `key code 125`) was
 seen once in `--input-test` (SDL → `DIK_DOWN` → the in-game buffer); automating real
 keys needs the test window frontmost, which `osascript` cannot hold reliably.
+
+### OPTIONS (`gta2manager.exe`)
+
+Vanilla keeps its settings in a separate program. RETURN on OPTIONS calls
+`0x4D0820` (named `WinMain` in Ghidra; own analysis), which does
+`ShowWindow(main, SW_SHOWMINNOACTIVE)`, then — if `OpenMutexA("GBH_BOB_MUTEX")` finds no
+running manager (ours never does) — `PostMessageA(main, WM_ACTIVATE, WA_INACTIVE)` and
+`ShellExecuteA(0, 0, "gta2manager.exe", 0, cwd, SW_SHOWNORMAL)`; a result `<= 32` is
+`DisplayError` "Failed to launch 'GTA2 Manager' correctly" and the game exits.
+
+The shim answers `gta2manager.exe` (basename, case-insensitive) with 42 and logs
+`[w32] ShellExecuteA(gta2manager.exe) suppressed`; nothing is launched. On its own that
+leaves the menu dead: the self-posted `WA_INACTIVE` mutes the frontend's keys until the
+window is activated again (measured: `150:DOWN,200:RETURN,300:UP` stayed on OPTIONS).
+So the shim also posts `WM_ACTIVATE(WA_ACTIVE)` right behind it — the user returning
+from a manager that closed at once. `ShowWindow(7)` is harmless here: our `ShowWindow`
+never minimizes. Our own options screen replaces this later.
 
 ## What the game needs next (notes for later work)
 

@@ -48,15 +48,51 @@ section .text
     COM_FAIL dpl_DirectPlayCreate, 1, "DirectPlayCreate: no DirectPlay -> E_FAIL"
     COM_FAIL dpl_DirectPlayLobbyCreateW, 1, "DirectPlayLobbyCreateW: no DirectPlay -> E_FAIL"
 
+; The frontend's OPTIONS entry runs gta2manager.exe (vanilla keeps its settings in
+; that separate program; caller 0x4D0820, Ghidra "WinMain", own analysis): it is
+; reported as launched so the game stays in the menu. Every other target is refused.
 shl_ShellExecuteA:          ; (hwnd, op, file, params, dir, show) -> <= 32 = error
     HENTER
+    mov r12d, ARG(2)
+    test r12d, r12d
+    jz .refuse
+    mov rdi, r12
+    mov esi, '\'
+    call _strrchr                   ; strip any directory part
+    lea r13, [rax + 1]
+    test rax, rax
+    cmovz r13, r12
+    mov rdi, r13
+    lea rsi, [s_gta2manager]
+    call _strcasecmp
+    test eax, eax
+    jnz .refuse
+    lea rdi, [fmt_shellexec_ok]
+    mov rsi, r13
+    xor eax, eax
+    call _printf
+    ; the caller has just posted itself WM_ACTIVATE(WA_INACTIVE), which mutes the
+    ; frontend's keys until the window is activated again (the user coming back
+    ; from the manager): queue that return right behind it
+    mov edi, [main_hwnd]
+    mov esi, WM_ACTIVATE
+    mov edx, 1                      ; WA_ACTIVE
+    xor ecx, ecx
+    call post_msg
+    mov eax, 42                     ; any HINSTANCE > 32 = success
+    HRET
+.refuse:
     lea rdi, [fmt_shellexec]
     mov esi, ARG(1)
-    mov edx, ARG(2)
+    mov edx, r12d
     test esi, esi
     jnz .p
     lea rsi, [s_empty_str]
 .p:
+    test edx, edx
+    jnz .q
+    lea rdx, [s_empty_str]
+.q:
     xor eax, eax
     call _printf
     mov eax, 2                      ; SE_ERR_FNF
@@ -170,6 +206,8 @@ s_shell32: db "SHELL32", 0
 s_dinput8: db "DINPUT8", 0
 s_dplayx:  db "DPLAYX", 0
 fmt_cocreate: db "  [w32] CoCreateInstance({%08x-%04x-%04x-...}): no COM servers -> REGDB_E_CLASSNOTREG (from 0x%x)", 10, 0
+fmt_shellexec_ok: db "  [w32] ShellExecuteA(%s) suppressed", 10, 0
+s_gta2manager: db "gta2manager.exe", 0
 fmt_shellexec: db "  [w32] ShellExecuteA(%s, %s): not supported -> error", 10, 0
 fmt_verinfo: db "  [w32] GetFileVersionInfoSizeA(%s): fake VS_FIXEDFILEINFO, version %d.%d", 10, 0
 align 4
