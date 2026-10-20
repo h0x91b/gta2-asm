@@ -401,8 +401,8 @@ name yet; addresses that already carried a name kept it, so in Ghidra (and `re/`
 slots `d3ddll_<export>` / `dmavideo_<export>` (not `pgbh_*` / `pVid_*`), `SVideoPtr` (type
 `SVideo *`, = `VidCtx`, 0x4c4 B) for `g_VidCtx`, `ptrToMainWindow` / `hInstance` (now typed),
 `rendername` / `dmavideo.dll` (now `char[256]`), `GBHGraphicsError`, `InitVideoDll` (=
-LoadDmaVideo), `ApplyGammaAndWindowSize` (= SetVideoMode), `fullScreenProbably`,
-`ResizeWindow`, `d3ddll_ConvertColourBank` (function at 0x4caeb0), `d3d` (= BeginFrame2D),
+LoadDmaVideo), `ApplyGammaAndWindowSize` (= SetVideoMode), `SetFullscreenMode`,
+`SetWindowedMode`, `d3ddll_ConvertColourBank` (function at 0x4caeb0), `d3d` (= BeginFrame2D),
 `SetGamma` / `gamma`, `DrawGTAText` (seuko name, = DrawText2D), `relToGBHGraphic`,
 `eachFrame`, `draw`. `g_GbhStats` is typed `void *` (GbhGlobals is not modelled yet).
 

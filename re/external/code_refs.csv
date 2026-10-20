@@ -29,7 +29,7 @@ gta2-seuko-mod,src/events/try-shoot-weapon.cpp:21,1,0x004452f6,tryShootWeaponHoo
 gta2-seuko-mod,src/events/keyboard-get-data.cpp:38,1,0x0044c1c9,keyboardGetDataHook,hook_site,JumpHook,NEW,,,,opcode 89,"0x0044c1c9,"
 gta2-seuko-mod,src/events/keyboard-get-data.cpp:24,1,0x0044c1d7,KeyboardGetDataHookReturnAddress,code_ref,,NEW,,,,opcode a1,static DWORD KeyboardGetDataHookReturnAddress = 0x0044c1d7;
 gta2-seuko-mod,src/events/after-debug-flags.cpp:29,1,0x00451f4f,afterDebugFlagsHook,hook_site,JumpHook,NEW,,,HiddenDebugFlags+0x61f,call 0x004b5ae0 (GetSettingBooleanWithDefaultValue),"0x00451f4f,"
-gta2-seuko-mod,src/events/draw-ui.cpp:32,1,0x0045a61f,drawHook,hook_site,FunctionCallHook,NEW,,,eachFrame+0x7f,call 0x004ca440 (drawScene),"0x0045a61f,"
+gta2-seuko-mod,src/events/draw-ui.cpp:32,1,0x0045a61f,drawHook,hook_site,FunctionCallHook,NEW,,,eachFrame+0x7f,call 0x004ca440 (DrawUI),"0x0045a61f,"
 gta2-seuko-mod,src/events/game-pause.cpp:27,1,0x0045a6e6,gamePauseHook,hook_site,JumpHook,NEW,,,,opcode c7,"0x0045a6e6,"
 gta2-seuko-mod,src/events/game-unpause.cpp:28,1,0x0045baaa,gameUnpauseHook,hook_site,JumpHook,NEW,,,ToggleGamePause+0xa,jmp 0x0045ba60 (UnpauseGame),"0x0045baaa,"
 gta2-seuko-mod,src/events/game-tick.cpp:32,1,0x0045c3e9,gameTickHook,hook_site,FunctionMultiCallHook,NEW,,,,call 0x0045c1f0 (GameTick),"std::vector<DWORD>{ 0x0045c3f2, 0x0045c3e9 },"
@@ -81,13 +81,13 @@ gta2-seuko-mod,src/events/wsfix-z-update.cpp:90,1,0x004a80d7,wsfixZUpdateHook2,h
 gta2-seuko-mod,src/events/scale-shadow.cpp:26,1,0x004be394,scaleShadowHook,hook_site,FunctionCallHook,NEW,,,,call 0x00401bd0 (ScaleScrf),"0x004be394,"
 gta2-seuko-mod,src/modules/ui/utils/align.cpp:9,1,0x004c72ab,transformAddress,code_ref,,NEW,,,,opcode b1,volatile DWORD transformAddress = *(DWORD*)0x004c72ab;
 gta2-seuko-mod,src/events/draw-player-name.cpp:33,1,0x004c7966,drawPlayerNameHook,hook_site,FunctionCallHook,NEW,,,,call 0x0040cfc0 (WorldPointToScreen),"0x004c7966,"
-gta2-seuko-mod,src/events/hide-cursor.cpp:28,1,0x004cb639,hideCursorHook,hook_site,FunctionCallHook,NEW,,,fullScreenProbably+0xc9,call 0x004cb530 (HideMouseCursor),"0x004cb639,"
-gta2-seuko-mod,src/events/mouse-exclusive-init.cpp:28,1,0x004cb689,mouseExclusiveInitHook,hook_site,FunctionCallHook,NEW,,,fullScreenProbably+0x119,call 0x004cad30 (InitMouseExclusive),"0x004cb689,"
+gta2-seuko-mod,src/events/hide-cursor.cpp:28,1,0x004cb639,hideCursorHook,hook_site,FunctionCallHook,NEW,,,SetFullscreenMode+0xc9,call 0x004cb530 (HideMouseCursor),"0x004cb639,"
+gta2-seuko-mod,src/events/mouse-exclusive-init.cpp:28,1,0x004cb689,mouseExclusiveInitHook,hook_site,FunctionCallHook,NEW,,,SetFullscreenMode+0x119,call 0x004cad30 (InitMouseExclusive),"0x004cb689,"
 gta2-seuko-mod,src/events/show-cursor.cpp:28,1,0x004cb863,showCursorHook,hook_site,FunctionCallHook,NEW,,,,call 0x004cb550 (ShowMouseCursor),"0x004cb863,"
 gta2-seuko-mod,src/events/show-cursor.h:6,1,0x004cb8ae,,code_ref,,NEW,,,ShutdownVideo+0x1e,jmp 0x004cb550 (ShowMouseCursor),"Note: a call at 0x004cb8ae won't fire the event, because it is related to SVideo cleanup."
 gta2-seuko-mod,src/events/renderer.cpp:25,1,0x004cc778,rendererLoadHook,hook_site,FunctionCallHook,NEW,,,InitVideo+0xa8,call 0x004cae50 (InitRenderer),"0x004cc778,"
 gta2-seuko-mod,src/events/is-ammo-kf-call.cpp:28,1,0x004cca3c,isAmmoKfCallHook,hook_site,FunctionMultiCallHook,NEW,,,ShotX10Ammo+0xc,call 0x004a4fa0 (IsInfinityAmmoOrKillFranzy),"0x004cca3c,"
-gta2-seuko-mod,src/events/is-ammo-kf-call.cpp:29,1,0x004cca63,isAmmoKfCallHook,hook_site,FunctionMultiCallHook,NEW,,,shootFromCarSMG+0x3,call 0x004a4fa0 (IsInfinityAmmoOrKillFranzy),"0x004cca63,"
+gta2-seuko-mod,src/events/is-ammo-kf-call.cpp:29,1,0x004cca63,isAmmoKfCallHook,hook_site,FunctionMultiCallHook,NEW,,,DecrementAmmo+0x3,call 0x004a4fa0 (IsInfinityAmmoOrKillFranzy),"0x004cca63,"
 gta2-seuko-mod,src/events/window-focus-change.cpp:24,1,0x004d09d0,windowFocusChangeHook,hook_site,JumpHook,NEW,,,,opcode 8a,"0x004d09d0,"
 gta2-seuko-mod,src/events/window-focus-change.cpp:10,1,0x004d09d6,WindowFocusChangeReturnAddress,code_ref,,NEW,,,,opcode 84,static DWORD WindowFocusChangeReturnAddress = 0x004d09d6;
 gta2-seuko-mod,src/events/wnd-proc.cpp:38,1,0x004d0a00,tryShootWeaponHook,hook_site,JumpHook,NEW,,is ours function start WndProc,WndProc+0x0,opcode 83,"0x004d0a00,"

@@ -188,16 +188,16 @@ gta2-resurection.gzf,gzf/globals.csv:45,1,0x005ead60,do_police_1,global,/undefin
 gta2-resurection.gzf,gzf/globals.csv:46,1,0x005ead61,do_infinite_lives,global,/undefined1,,.data,SAME,,,do_infinite_lives,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:47,1,0x005ead63,log_random,global,/undefined1,,.data,SAME,,,log_random,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:48,1,0x005ead64,skip_user,global,/undefined1,,.data,SAME,,,skip_user,/undefined1,
-gta2-resurection.gzf,gzf/globals.csv:49,1,0x005ead65,double_damage,global,/undefined1,,.data,CONFLICT,semantic,name,CHEAT_SCHURULZ,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:49,1,0x005ead65,double_damage,global,/undefined1,,.data,CONFLICT,naming,name (similar),CHEAT_SCHURULZ_double_damage,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:50,1,0x005ead66,do_miss_logging,global,/undefined1,,.data,SAME,,,do_miss_logging,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:51,1,0x005ead67,skip_left,global,/undefined1,,.data,SAME,,,skip_left,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:52,1,0x005ead68,do_corner_window,global,/undefined1,,.data,SAME,,,do_corner_window,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:53,1,0x005ead69,skip_dummies,global,/undefined1,,.data,SAME,,,skip_dummies,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:54,1,0x005ead6b,skip_ambulance,global,/undefined1,,.data,SAME,,,skip_ambulance,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:55,1,0x005ead6c,skip_window_check,global,/undefined,,.data,SAME,,,skip_window_check,/undefined,
-gta2-resurection.gzf,gzf/globals.csv:56,1,0x005ead6e,give_basic_weapons,global,/undefined1,,.data,CONFLICT,semantic,name,CHEAT_DAVEMOON,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:56,1,0x005ead6e,give_basic_weapons,global,/undefined1,,.data,CONFLICT,semantic,name,CHEAT_DAVEMOON_basic_weapons,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:57,1,0x005ead6f,do_show_imaginary,global,/undefined1,,.data,SAME,,,do_show_imaginary,/undefined1,
-gta2-resurection.gzf,gzf/globals.csv:58,1,0x005ead70,give_electric_gun,global,/undefined1,,.data,CONFLICT,semantic,name,CHEAT_VOLTFEST,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:58,1,0x005ead70,give_electric_gun,global,/undefined1,,.data,CONFLICT,semantic,name,CHEAT_VOLTFEST_electro_gun,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:59,1,0x005ead71,do_invulnerable,global,/undefined1,,.data,SAME,,,do_invulnerable,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:60,1,0x005ead72,skip_audio,global,/bool,,.data,SAME,,,skip_audio,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:61,1,0x005ead74,get_all_weapons,global,/undefined1,,.data,SAME,,,get_all_weapons,/undefined1,
@@ -224,16 +224,16 @@ gta2-resurection.gzf,gzf/globals.csv:81,1,0x005ead8a,MADEMAN,global,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:82,1,0x005ead8b,skip_fire_engines,global,/undefined1,,.data,SAME,,,skip_fire_engines,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:83,1,0x005ead8c,skip_top,global,/undefined1,,.data,SAME,,,skip_top,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:84,1,0x005ead8d,do_iain_test,global,/undefined1,,.data,SAME,,,do_iain_test,/undefined1,
-gta2-resurection.gzf,gzf/globals.csv:85,1,0x005ead8f,health99,global,/undefined1,,.data,CONFLICT,semantic,name,CHEAT_CUTIE1,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:85,1,0x005ead8f,health99,global,/undefined1,,.data,CONFLICT,naming,name (similar),CHEAT_CUTIE1_health99,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:86,1,0x005ead90,skip_tiles,global,/undefined1,,.data,SAME,,,skip_tiles,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:87,1,0x005ead91,log_input,global,/undefined1,,.data,SAME,,,log_input,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:88,1,0x005ead94,dont_get_car_back,global,/undefined1,,.data,SAME,,,dont_get_car_back,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:89,1,0x005ead95,do_show_counters,global,/undefined1,,.data,SAME,,,do_show_counters,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:90,1,0x005ead96,do_show_traffic_lights_info,global,/undefined1,,.data,SAME,,,do_show_traffic_lights_info,/undefined1,
-gta2-resurection.gzf,gzf/globals.csv:91,1,0x005ead97,giveMoneyOnstart,global,/bool,,.data,CONFLICT,semantic,name,CHEAT_DANISGOD,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:91,1,0x005ead97,giveMoneyOnstart,global,/bool,,.data,CONFLICT,semantic,name,CHEAT_DANISGOD_start_money,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:92,1,0x005ead99,log_routefinder,global,/undefined1,,.data,SAME,,,log_routefinder,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:93,1,0x005ead9a,do_text_id_test,global,/undefined1,,.data,SAME,,,do_text_id_test,/undefined1,
-gta2-resurection.gzf,gzf/globals.csv:94,1,0x005ead9b,give_flame_thrower,global,/undefined1,,.data,CONFLICT,semantic,name,CHEAT_FLAMEON,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:94,1,0x005ead9b,give_flame_thrower,global,/undefined1,,.data,CONFLICT,semantic,name,CHEAT_FLAMEON_flamethrower,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:95,1,0x005ead9c,skip_lid,global,/undefined1,,.data,SAME,,,skip_lid,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:96,1,0x005ead9d,do_police_2,global,/undefined1,,.data,SAME,,,do_police_2,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:97,1,0x005ead9e,keep_weapons_after_death,global,/undefined1,,.data,SAME,,,keep_weapons_after_death,/undefined1,
@@ -257,10 +257,10 @@ gta2-resurection.gzf,gzf/globals.csv:114,1,0x005eb160,pFrontend,global,/_my/Fron
 gta2-resurection.gzf,gzf/globals.csv:115,1,0x005eb4fc,pGame,global,/_my/Game *,,.data,SAME,,,ptrToGame,/_game/Game *,
 gta2-resurection.gzf,gzf/globals.csv:116,1,0x00662128,pKeyboard,global,/_my/SKeyboard *,,.data,CONFLICT,semantic,ours has this name at 0x005ecac8,,,
 gta2-resurection.gzf,gzf/globals.csv:117,1,0x00662748,tickCounts,global,/undefined4,,.data,CONFLICT,semantic,name,lastFrameTime,/undefined4,
-gta2-resurection.gzf,gzf/globals.csv:118,1,0x00662c08,DAT_00662c08_maybeTrafficRelated,global,/undefined4,,.data,CONFLICT,semantic,name,relToCounters,/_scripts/SCR_STRING_HEADER *,
+gta2-resurection.gzf,gzf/globals.csv:118,1,0x00662c08,DAT_00662c08_maybeTrafficRelated,global,/undefined4,,.data,CONFLICT,semantic,name,ptrToMapBlocks,/imported/seuko-mod/MapBlocks *,
 gta2-resurection.gzf,gzf/globals.csv:119,1,0x00663de4,pAmbulance,global,/undefined4,,.data,SAME,,,pAmbulance,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:120,1,0x006644bc,pS8,global,/_my/S8 *,,.data,CONFLICT,semantic,name,ptrToS15_script,/undefined4,
-gta2-resurection.gzf,gzf/globals.csv:121,1,0x0066ab7c,pCarsS2,global,/_my/CarsS2 *,,.data,CONFLICT,semantic,name,ptrToMaybeCarEngineHolder,/_car/MaybeCarEngineHolder *,
+gta2-resurection.gzf,gzf/globals.csv:121,1,0x0066ab7c,pCarsS2,global,/_my/CarsS2 *,,.data,CONFLICT,semantic,name,ptrToCarPhysicsPool,/_car/MaybeCarEngineHolder *,
 gta2-resurection.gzf,gzf/globals.csv:122,1,0x0066b7a0,pPolice,global,/_my/Police_s5 *,,.data,CONFLICT,naming,name (similar),ptrToSPolice,/auto_structs/SPolice *,
 gta2-resurection.gzf,gzf/globals.csv:123,1,0x00670684,pS7,global,/_my/S7 *,,.data,CONFLICT,semantic,name,ptrToS3,/_STY/Style_S3 *,
 gta2-resurection.gzf,gzf/globals.csv:124,1,0x00671550,textResources,global,/undefined4,,.data,CONFLICT,semantic,name,ptrToS1_2_LOCALES,/auto_structs/LocaleSettings *,
@@ -310,13 +310,13 @@ gta2-seuko-mod,src/game/memory.h:60,1,0x005e8f5c,ControlsAsArray,global,KeyCode,
 gta2-seuko-mod,src/game/memory.h:19,1,0x005e8f8c,KeyPressCode,global,KeyCode,,.data,SAME,,,KeyPressCode,/undefined4,object at address
 gta2-seuko-mod,src/game/memory.h:55,1,0x005e8f8c,DirectInputDeviceObjectData,global,DirectInput_DeviceObjectData,,.data,CONFLICT,semantic,name; ours labels inside: KeyPressState@+0x4=data,KeyPressCode,/undefined4,object at address
 gta2-seuko-mod,src/game/memory.h:20,1,0x005e8f90,KeyPressState,global,uint,,.data,SAME,,,KeyPressState,/uint,object at address
-gta2-seuko-mod,src/game/memory.h:23,1,0x005ead51,Cheats,global,Cheats,,.data,SAME,,"ours names its first field (doBlood); ours labels inside: CHEAT_BUCKFAST@+0x42=aggresivePeds, CHEAT_CUTIE1@+0x3e=health99, CHEAT_DANISGOD@+0x46=give200000, CHEAT_DAVEMOON@+0x1d=giveBasicWeapons, CHEAT_FLAMEON@+0x4a=giveFlamethrower, CHEAT_IAMDAVEJ@+0x55=give9000000, CHEAT_LASVEGAS@+0x4e=onlyElvisPeds, CHEAT_MADEMAN@+0x39=maxRespect, CHEAT_NEKKID@+0x4f=nekkidPeds, CHEAT_SCHURULZ@+0x14=doubleDamage, CHEAT_UKGAMER@+0xb=unlockAllLevels, CHEAT_VOLTFEST@+0x1f=giveElectricGun …",do_blood,/undefined1,object at address
+gta2-seuko-mod,src/game/memory.h:23,1,0x005ead51,Cheats,global,Cheats,,.data,SAME,,"ours names its first field (doBlood); ours labels inside: CHEAT_BUCKFAST@+0x42=aggresivePeds, CHEAT_CUTIE1_health99@+0x3e=health99, CHEAT_DANISGOD_start_money@+0x46=give200000, CHEAT_DAVEMOON_basic_weapons@+0x1d=giveBasicWeapons, CHEAT_FLAMEON_flamethrower@+0x4a=giveFlamethrower, CHEAT_IAMDAVEJ@+0x55=give9000000, CHEAT_LASVEGAS@+0x4e=onlyElvisPeds, CHEAT_MADEMAN@+0x39=maxRespect, CHEAT_NEKKID@+0x4f=nekkidPeds, CHEAT_SCHURULZ_double_damage@+0x14=doubleDamage, CHEAT_UKGAMER@+0xb=unlockAllLevels, CHEAT_VOLTFEST_electro_gun@+0x1f=giveElectricGun …",do_blood,/undefined1,object at address
 gta2-seuko-mod,src/events/after-debug-flags.cpp:19,1,0x005ead76,,global,written by hook asm,,.data,SAME,,,show_player_names,/undefined1,"mov ds : [0x005ead76], al"
 gta2-seuko-mod,src/game/memory.h:9,1,0x005eb4fc,Game,global,Game*,,.data,SAME,,,ptrToGame,/_game/Game *,holds a pointer
 gta2-seuko-mod,src/game/memory.h:24,1,0x005eb898,GangRespectContainer,global,GangRespectContainer*,,.data,CONFLICT,naming,name (similar),ptrToGangRespect,/undefined4,holds a pointer
 gta2-seuko-mod,src/game/memory.h:27,1,0x005ec070,Menu,global,Menu,,.data,SAME,,,ptrToMenu,/_game/Menu,object at address
 gta2-seuko-mod,src/game/memory.h:57,1,0x005ecac8,Keyboard,global,Keyboard,,.data,SAME,,ours labels inside: playerMovementState@+0x4=state,?keyboard,/undefined,object at address
-gta2-seuko-mod,src/game/memory.h:45,1,0x00662c08,MapBlocks,global,MapBlocks*,,.data,CONFLICT,semantic,name,relToCounters,/_scripts/SCR_STRING_HEADER *,holds a pointer
+gta2-seuko-mod,src/game/memory.h:45,1,0x00662c08,MapBlocks,global,MapBlocks*,,.data,SAME,,,ptrToMapBlocks,/imported/seuko-mod/MapBlocks *,holds a pointer
 gta2-seuko-mod,src/game/memory.h:44,1,0x006633a0,CurrentlyDrawnMapLayerIndex,global,int,,.data,SAME,,,CurrentlyDrawnMapLayerIndex,/int,object at address
 gta2-seuko-mod,src/game/memory.h:63,1,0x006644b8,S17Mission,global,S17_Mission*,,.data,SAME,,,ptrToS17Mission,/undefined4,holds a pointer
 gta2-seuko-mod,src/game/memory.h:26,1,0x006644bc,S15,global,S15_Script*,,.data,CONFLICT,naming,name (similar),ptrToS15_script,/undefined4,holds a pointer

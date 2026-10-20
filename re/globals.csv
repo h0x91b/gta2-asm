@@ -182,7 +182,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005ead61,do_infinite_lives,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead63,log_random,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead64,skip_user,,USER_DEFINED,.data.exp,,/undefined1,1
-0x005ead65,CHEAT_SCHURULZ,,USER_DEFINED,.data.exp,,/undefined1,1
+0x005ead65,CHEAT_SCHURULZ_double_damage,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead66,do_miss_logging,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead67,skip_left,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead68,do_corner_window,,USER_DEFINED,.data.exp,,/undefined1,1
@@ -191,9 +191,9 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005ead6b,skip_ambulance,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead6c,skip_window_check,,USER_DEFINED,.data.exp,,/undefined,1
 0x005ead6d,relToCheats,,USER_DEFINED,.data.exp,,/undefined1,1
-0x005ead6e,CHEAT_DAVEMOON,,USER_DEFINED,.data.exp,,/undefined1,1
+0x005ead6e,CHEAT_DAVEMOON_basic_weapons,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead6f,do_show_imaginary,,USER_DEFINED,.data.exp,,/undefined1,1
-0x005ead70,CHEAT_VOLTFEST,,USER_DEFINED,.data.exp,,/undefined1,1
+0x005ead70,CHEAT_VOLTFEST_electro_gun,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead71,do_invulnerable,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead72,skip_audio,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead73,relatedToGXTFiles,,USER_DEFINED,.data.exp,,/undefined1,1
@@ -224,18 +224,18 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005ead8c,skip_top,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead8d,do_iain_test,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead8e,relToCheats2,,USER_DEFINED,.data.exp,,/undefined1,1
-0x005ead8f,CHEAT_CUTIE1,,USER_DEFINED,.data.exp,,/undefined1,1
+0x005ead8f,CHEAT_CUTIE1_health99,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead90,skip_tiles,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead91,log_input,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead93,CHEAT_BUCKFAST,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead94,dont_get_car_back,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead95,do_show_counters,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead96,do_show_traffic_lights_info,,USER_DEFINED,.data.exp,,/undefined1,1
-0x005ead97,CHEAT_DANISGOD,,USER_DEFINED,.data.exp,,/undefined1,1
+0x005ead97,CHEAT_DANISGOD_start_money,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead98,theSecretCheat,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead99,log_routefinder,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead9a,do_text_id_test,,USER_DEFINED,.data.exp,,/undefined1,1
-0x005ead9b,CHEAT_FLAMEON,,USER_DEFINED,.data.exp,,/undefined1,1
+0x005ead9b,CHEAT_FLAMEON_flamethrower,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead9c,skip_lid,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead9d,do_police_2,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead9e,keep_weapons_after_death,,USER_DEFINED,.data.exp,,/undefined1,1
@@ -278,7 +278,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00662740,relatedToTime,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00662748,lastFrameTime,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00662786,relToPlayReplay,,USER_DEFINED,.data.exp,,/undefined1,1
-0x00662c08,relToCounters,,USER_DEFINED,.data.exp,,/_scripts/SCR_STRING_HEADER *,4
+0x00662c08,ptrToMapBlocks,,USER_DEFINED,.data.exp,,/imported/seuko-mod/MapBlocks *,4
 0x006633a0,CurrentlyDrawnMapLayerIndex,,USER_DEFINED,.data.exp,,/int,4
 0x006633c8,ptrToS12,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00663764,eq_0,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -304,7 +304,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x0066a3b9,relToS24_unk34,,USER_DEFINED,.data.exp,,/undefined,1
 0x0066a3bc,nextSpriteId,,USER_DEFINED,.data.exp,,/uint,4
 0x0066a480,playerPedX?,,USER_DEFINED,.data.exp,,/undefined4,4
-0x0066ab7c,ptrToMaybeCarEngineHolder,,USER_DEFINED,.data.exp,,/_car/MaybeCarEngineHolder *,4
+0x0066ab7c,ptrToCarPhysicsPool,,USER_DEFINED,.data.exp,,/_car/MaybeCarEngineHolder *,4
 0x0066b404,ptrToS28PlayerData,,USER_DEFINED,.data.exp,,/auto_structs/S28 *,4
 0x0066b7a0,ptrToSPolice,,USER_DEFINED,.data.exp,,/auto_structs/SPolice *,4
 0x0066bb50,ptrToStructRelatedToBusesAndTrains,,USER_DEFINED,.data.exp,,/undefined4,4

@@ -707,10 +707,10 @@ gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_UNK_1_ALWAYS1,1,SAME,
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_UNK_2000,8192,SAME,,UNK_2000,enum-name prefix dropped
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_UNK_400,1024,NEW,,,constant not in ours
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_ZERO_ON_START_GAME_BUT_TOGGLED_ON_FIRST_CAR_ENTER,32768,SAME,,ZERO_ON_START_GAME_BUT_TOGGLED_ON_FIRST_CAR_ENTER,enum-name prefix dropped
-gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE2,PED_BIT_STATE2_3_COP_RELATED,3,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE2,PED_BIT_STATE2_3_COP_RELATED,3,SAME,,PED_BIT_STATE2_3_COP_RELATED,
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE2,PED_BIT_STATE2_CARTHIEF,6,CONFLICT,semantic,UNK_6,"same value, different name"
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE2,PED_BIT_STATE2_FIRING_FROM_GUN,2,SAME,,FIRING_FROM_GUN,enum-name prefix dropped
-gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE2,PED_BIT_STATE2_UNK_5,5,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE2,PED_BIT_STATE2_UNK_5,5,SAME,,PED_BIT_STATE2_UNK_5,
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE2,PED_BIT_STATE2_UNK_MUGGER,4,CONFLICT,semantic,UNK_4_POLICE,"same value, different name"
 gta2-seuko-mod,src/game/gta2.h,PED_GRAPHIC_TYPE,PED_GRAPHIC_TYPE_DUMMY,0,SAME,,PED_GRAPHIC_TYPE_DUMMY,
 gta2-seuko-mod,src/game/gta2.h,PED_GRAPHIC_TYPE,PED_GRAPHIC_TYPE_GANG,1,SAME,,PED_GRAPHIC_TYPE_GANG,
@@ -884,40 +884,40 @@ gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_50,50,SAME,,PED_REMAP_D
 gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_51,51,SAME,,PED_REMAP_DUMMY_51,
 gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_52,52,SAME,,PED_REMAP_DUMMY_52,
 gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_WALKING,0,CONFLICT,naming,WALK,"same value, different name (similar)"
-gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_UNKNOWN_1,1,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_UNKNOWN_1,1,SAME,,PED_STATE_UNKNOWN_1,
 gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_GOING_TO_TARGET,2,CONFLICT,semantic,GOING_TO_CAR,"same value, different name"
 gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_UNKNOWN_3,3,CONFLICT,semantic,ENTERING_INTO_CAR,"same value, different name"
 gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_LEAVING_CAR,4,CONFLICT,semantic,GETTING_OUT_FROM_CAR,"same value, different name"
-gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_UNKNOWN_5,5,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_UNKNOWN_6,6,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_UNKNOWN_5,5,SAME,,PED_STATE_UNKNOWN_5,
+gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_UNKNOWN_6,6,SAME,,PED_STATE_UNKNOWN_6,
 gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_STAYING,7,SAME,,STAYING,enum-name prefix dropped
 gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_FALLEN_ON_THE_GROUND,8,CONFLICT,semantic,FALL_ON_GROUND,"same value, different name"
 gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_WASTED,9,SAME,,WASTED,enum-name prefix dropped
 gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_DRIVING_CAR,10,CONFLICT,naming,DRIVING_A_CAR,"same value, different name (similar)"
-gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_INITIAL,11,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_UNKNOWN_12,12,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_UNKNOWN_13,13,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_UNKNOWN_14,14,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_SHOT_ON_THE_GROUND,15,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_FALL_ON_GROUND_FROM_HOOK,22,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_INITIAL,11,SAME,,PED_STATE_INITIAL,
+gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_UNKNOWN_12,12,SAME,,PED_STATE_UNKNOWN_12,
+gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_UNKNOWN_13,13,SAME,,PED_STATE_UNKNOWN_13,
+gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_UNKNOWN_14,14,SAME,,PED_STATE_UNKNOWN_14,
+gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_SHOT_ON_THE_GROUND,15,SAME,,PED_STATE_SHOT_ON_THE_GROUND,
+gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_FALL_ON_GROUND_FROM_HOOK,22,SAME,,PED_STATE_FALL_ON_GROUND_FROM_HOOK,
 gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_WALKING,0,SAME,,WALKING,enum-name prefix dropped
-gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_ELECTROCUTED_1,1,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_ELECTROCUTED_2,2,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_UNKNOWN_3,3,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_ELECTROCUTED_1,1,SAME,,PED_STATE2_ELECTROCUTED_1,
+gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_ELECTROCUTED_2,2,SAME,,PED_STATE2_ELECTROCUTED_2,
+gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_UNKNOWN_3,3,SAME,,PED_STATE2_UNKNOWN_3,
 gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_FOLLOWING_CAR,4,CONFLICT,naming,FOLLOWING_A_CAR,"same value, different name (similar)"
-gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_UNKNOWN_5,5,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_UNKNOWN_5,5,SAME,,PED_STATE2_UNKNOWN_5,
 gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_ENTERING_CAR,6,CONFLICT,naming,ENTERING_TO_CAR,"same value, different name (similar)"
 gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_LEAVING_CAR,7,CONFLICT,semantic,GETTING_OUT_FROM_CAR,"same value, different name"
 gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_UNKNOWN_6,6,CONFLICT,semantic,ENTERING_TO_CAR,"same value, different name"
 gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_UNKNOWN_7,7,CONFLICT,semantic,GETTING_OUT_FROM_CAR,"same value, different name"
-gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_UNKNOWN_8,8,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_UNKNOWN_9,9,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_UNKNOWN_8,8,SAME,,PED_STATE2_UNKNOWN_8,
+gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_UNKNOWN_9,9,SAME,,PED_STATE2_UNKNOWN_9,
 gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_DRIVING,10,SAME,,DRIVING,enum-name prefix dropped
-gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_WAITING_FOR_BUS,11,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_UNKNOWN_12,12,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_UNKNOWN_13,13,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_WAITING_FOR_BUS,11,SAME,,PED_STATE2_WAITING_FOR_BUS,
+gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_UNKNOWN_12,12,SAME,,PED_STATE2_UNKNOWN_12,
+gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_UNKNOWN_13,13,SAME,,PED_STATE2_UNKNOWN_13,
 gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_STAYING,14,SAME,,STAYING,enum-name prefix dropped
-gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_SMOKING,26,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_SMOKING,26,SAME,,PED_STATE2_SMOKING,
 gta2-seuko-mod,src/game/gta2.h,PED_STATE4,PED_STATE4_IDLE_STAYING,2,SAME,,PED_STATE4_IDLE_STAYING,
 gta2-seuko-mod,src/game/gta2.h,PED_STATE4,PED_STATE4_PROBABLY_JUMPING,3,SAME,,PED_STATE4_PROBABLY_JUMPING,
 gta2-seuko-mod,src/game/gta2.h,PED_STATE4,PED_STATE4_UNK1,1,SAME,,PED_STATE4_UNK1,
@@ -1318,26 +1318,26 @@ gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_MOLOTOV_COCTAIL,4,CONFLICT,na
 gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_GRENADE,5,CONFLICT,naming,GRENADE,"same value, different name (similar)"
 gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_SHOTGUN,6,CONFLICT,semantic,UNK_WEAPON_6,"same value, different name"
 gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_ELECTROBATON,7,CONFLICT,semantic,UNK_WEAPON_7,"same value, different name"
-gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_FLAMETHROWER,8,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_FLAMETHROWER,8,SAME,,WEAPON_FLAMETHROWER,
 gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_SILENCED_S_UZI,9,CONFLICT,semantic,CAR_SMG,"same value, different name"
-gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_DUAL_PISTOL,10,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_11,11,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_12,12,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_13,13,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_14,14,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_BOMB,15,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_OIL_SLICK,16,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_MINE,17,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_MACHINE_GUN,18,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_DUAL_PISTOL,10,SAME,,WEAPON_DUAL_PISTOL,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_11,11,SAME,,WEAPON_11,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_12,12,SAME,,WEAPON_12,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_13,13,SAME,,WEAPON_13,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_14,14,SAME,,WEAPON_14,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_BOMB,15,SAME,,WEAPON_VEHICLE_BOMB,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_OIL_SLICK,16,SAME,,WEAPON_VEHICLE_OIL_SLICK,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_MINE,17,SAME,,WEAPON_VEHICLE_MINE,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_MACHINE_GUN,18,SAME,,WEAPON_VEHICLE_MACHINE_GUN,
 gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_TANK_CANNON,19,CONFLICT,semantic,TANK_MAIN_GUN,"same value, different name"
 gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_WATER_CANNON,20,CONFLICT,semantic,FIRE_TRUCK_GUN,"same value, different name"
-gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_FLAMETHROWER,21,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_FLAMETHROWER,21,SAME,,WEAPON_VEHICLE_FLAMETHROWER,
 gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_JEEP_TURRET,22,CONFLICT,semantic,ARMY_GUN_JEEP,"same value, different name"
-gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_INSTANT_BOMB,23,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_WEAPON_24,24,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_WEAPON_25,25,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_WEAPON_26,26,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_WEAPON_27,27,NEW,,,constant not in ours
+gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_INSTANT_BOMB,23,SAME,,WEAPON_VEHICLE_INSTANT_BOMB,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_WEAPON_24,24,SAME,,WEAPON_VEHICLE_WEAPON_24,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_WEAPON_25,25,SAME,,WEAPON_VEHICLE_WEAPON_25,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_WEAPON_26,26,SAME,,WEAPON_VEHICLE_WEAPON_26,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_WEAPON_27,27,SAME,,WEAPON_VEHICLE_WEAPON_27,
 gta2-resurection,gta2-resurection/gta2.h,CAR_TYPE,CAR_FIRE_TRUCK,17,SAME,,CAR_FIRE_TRUCK,
 gta2-resurection,gta2-resurection/gta2.h,CAR_TYPE,CAR_GT24640,19,SAME,,CAR_GT24640,
 gta2-resurection,gta2-resurection/gta2.h,CAR_TYPE,CAR_GUNJEEP,22,SAME,,CAR_GUNJEEP,
@@ -1689,7 +1689,7 @@ gta2-mouse,gta2.segments.fixed.exe.h,PED_BIT_STATE,UNK_2000,8192,SAME,,UNK_2000,
 gta2-mouse,gta2.segments.fixed.exe.h,PED_BIT_STATE,ZERO_ON_START_GAME_BUT_TOGGLED_ON_FIRST_CAR_ENTER,32768,SAME,,ZERO_ON_START_GAME_BUT_TOGGLED_ON_FIRST_CAR_ENTER,
 gta2-mouse,gta2.segments.fixed.exe.h,PED_BIT_STATE2,PED_BIT_STATE2_FIRING_FROM_GUN,2,SAME,,FIRING_FROM_GUN,enum-name prefix dropped
 gta2-mouse,gta2.segments.fixed.exe.h,PED_BIT_STATE2,PED_BIT_STATE2_UNK_4_POLICE,4,SAME,,UNK_4_POLICE,enum-name prefix dropped
-gta2-mouse,gta2.segments.fixed.exe.h,PED_BIT_STATE2,PED_BIT_STATE2_UNK_5,5,NEW,,,constant not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,PED_BIT_STATE2,PED_BIT_STATE2_UNK_5,5,SAME,,PED_BIT_STATE2_UNK_5,
 gta2-mouse,gta2.segments.fixed.exe.h,PED_BIT_STATE2,PED_BIT_STATE2_UNK_6,6,SAME,,UNK_6,enum-name prefix dropped
 gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE,PED_STATE_DRIVING_A_CAR,10,SAME,,DRIVING_A_CAR,enum-name prefix dropped
 gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE,PED_STATE_ENTERING_INTO_CAR,3,SAME,,ENTERING_INTO_CAR,enum-name prefix dropped
@@ -2058,7 +2058,7 @@ gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_INDEX,ARMY_GUN_JEEP,22,SAME,,ARMY_GU
 gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_INDEX,CAR_SMG,9,SAME,,CAR_SMG,
 gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_INDEX,ELECTRO_BATTON,7,CONFLICT,semantic,UNK_WEAPON_7,"same value, different name"
 gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_INDEX,FIRE_TRUCK_GUN,20,SAME,,FIRE_TRUCK_GUN,
-gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_INDEX,FLAMETHROWER,8,NEW,,,constant not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_INDEX,FLAMETHROWER,8,SAME,,FLAMETHROWER,
 gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_INDEX,GRENADE,5,SAME,,GRENADE,
 gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_INDEX,MOLOTOV,4,SAME,,MOLOTOV,
 gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_INDEX,PISTOL,0,SAME,,PISTOL,
