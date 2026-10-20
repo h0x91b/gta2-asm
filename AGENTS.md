@@ -145,8 +145,9 @@ their absolute addresses apply 1:1. How this was checked:
 - Also present, status unclear (which one is current is not established):
   `/Users/arsenyp/ghidra/gta-2.rep` (+ `gta-2.gpr`, recently locked) and
   `/Users/arsenyp/ghidra/gta2-ghidra-proj.zip` (42 MB, 2020).
-- TODO: exporting symbols, types and function maps out of it into a text form this
-  repo can use is separate work, not done yet.
+- **Grep `re/` instead of opening Ghidra**: named functions, globals, imports, comments
+  (CSV), structs as C header + NASM `struc`, and `re/gta2_addresses.inc`. Addresses are
+  1:1 vanilla gta2.exe VAs. Regenerate with `re/tools/export.sh`; see `re/README.md`.
 
 ## Toolchain
 

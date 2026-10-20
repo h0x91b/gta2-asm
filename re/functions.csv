@@ -1,0 +1,734 @@
+address,name,namespace,name_source,calling_convention,signature_source,size,thunk_to,signature
+0x003f1380,appendToFile,,USER_DEFINED,__stdcall,USER_DEFINED,74,,"void __stdcall appendToFile(char * fileName, undefined4 param_2, int * param_3)"
+0x003f13cc,RegGet,,USER_DEFINED,__stdcall,ANALYSIS,73,,uint __stdcall RegGet(LPCSTR param_1)
+0x003f1458,RegSet,,USER_DEFINED,__stdcall,ANALYSIS,54,,"undefined __stdcall RegSet(LPCSTR param_1, undefined4 param_2, undefined4 param_3)"
+0x00401af0,bitShiftLeft14,,USER_DEFINED,default,USER_DEFINED,14,,"void bitShiftLeft14(uint piParm1, int param_2, uint * out)"
+0x00402200,someMath,,USER_DEFINED,unknown,DEFAULT,406,,"undefined someMath(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4)"
+0x00402980,fread,,USER_DEFINED,__cdecl,USER_DEFINED,19,,"size_t __cdecl fread(void * _DstBuf, size_t _ElementSize, size_t _Count, FILE * _File)"
+0x00402eb0,fclose,,USER_DEFINED,__cdecl,USER_DEFINED,58,,int __cdecl fclose(FILE * _File)
+0x00402f30,error,,USER_DEFINED,__stdcall,ANALYSIS,41,,"undefined __stdcall error(GTA_ERROR_CODE param_1, char * param_2, int param_3, undefined4 param_4, undefined4 param_5)"
+0x00402fb0,fread,,USER_DEFINED,__cdecl,USER_DEFINED,74,,"size_t __cdecl fread(void * _DstBuf, size_t _ElementSize, size_t _Count, FILE * _File)"
+0x00403000,readChunkHeader,,USER_DEFINED,__stdcall,USER_DEFINED,64,,"uint __stdcall readChunkHeader(ChunkHeader * buf, FILE * hFile, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6, undefined4 param_7)"
+0x00403040,partOfLoadScript,,USER_DEFINED,__stdcall,USER_DEFINED,236,,"undefined __stdcall partOfLoadScript(void * dest, uint * param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6, undefined4 param_7)"
+0x00403160,fopen,,USER_DEFINED,__cdecl,USER_DEFINED,82,,"FILE * __cdecl fopen(char * _Filename, char * _Mode)"
+0x004031c0,LoadDirectInputFuncs,,USER_DEFINED,__stdcall,ANALYSIS,979,,"undefined __stdcall LoadDirectInputFuncs(undefined4 * param_1, undefined4 * param_2)"
+0x00403890,RecycleOldestPed,,USER_DEFINED,__fastcall,USER_DEFINED,34,,Ped * __fastcall RecycleOldestPed(PedManager_S25 * param_1)
+0x00403920,setPedState2,,USER_DEFINED,__stdcall,USER_DEFINED,13,,"void __stdcall setPedState2(Ped * this, PED_BIT_STATE2 iParm1, undefined4 param_3)"
+0x00403970,SetPedOcupation,,USER_DEFINED,__fastcall,USER_DEFINED,13,,"void __fastcall SetPedOcupation(Ped * ped, OCUPATION ocupation, undefined4 param_3)"
+0x00403980,GetPedOccupation,,USER_DEFINED,__fastcall,USER_DEFINED,7,,OCUPATION __fastcall GetPedOccupation(Ped * param_1)
+0x004039a0,SetPedHealth,,USER_DEFINED,__stdcall,USER_DEFINED,15,,"void __stdcall SetPedHealth(Ped * ped, short health)"
+0x00403a00,CopyXFromPed,,USER_DEFINED,default,USER_DEFINED,15,,"void CopyXFromPed(Ped * this, int * out)"
+0x00403a10,CopyYFromPed,,USER_DEFINED,default,USER_DEFINED,15,,"void CopyYFromPed(Ped * this, int * out)"
+0x00403b60,IsWasted,,USER_DEFINED,__fastcall,USER_DEFINED,11,,bool __fastcall IsWasted(Ped * param_1)
+0x00403b80,IsCurrentCar,,USER_DEFINED,__fastcall,USER_DEFINED,12,,bool __fastcall IsCurrentCar(Ped * param_1)
+0x00403fb0,ElvisHandling,,USER_DEFINED,__thiscall,USER_DEFINED,354,,"void __thiscall ElvisHandling(Ped * this, Ped * leader, int param_3)"
+0x004059b0,malloc,,USER_DEFINED,__cdecl,USER_DEFINED,49,,void * __cdecl malloc(size_t _Size)
+0x004059f0,malloc,,USER_DEFINED,__cdecl,USER_DEFINED,69,,void * __cdecl malloc(size_t _Size)
+0x0040d120,showJunkIds,,USER_DEFINED,unknown,DEFAULT,292,,undefined showJunkIds()
+0x0040e510,ftol,,USER_DEFINED,__fastcall,USER_DEFINED,26,,long __fastcall ftol(float val)
+0x0040e570,relToPlayerPosZ,,USER_DEFINED,default,USER_DEFINED,22,,"uint relToPlayerPosZ(void * this, int * piParm1, int * param_3)"
+0x00410530,fff1,,USER_DEFINED,__stdcall,USER_DEFINED,10,,void __stdcall fff1(MaybeWeaponStruct * param_1)
+0x00410540,relatedToS6,,USER_DEFINED,__stdcall,ANALYSIS,10,,"undefined __stdcall relatedToS6(uint param_1, uint param_2)"
+0x00410550,LoadSty,,USER_DEFINED,__stdcall,USER_DEFINED,451,,undefined __stdcall LoadSty(char * styFile)
+0x00410560,NoSkipAudio,,USER_DEFINED,__stdcall,ANALYSIS,203,,undefined __stdcall NoSkipAudio(void)
+0x004105b0,PlayVocal,,USER_DEFINED,__stdcall,USER_DEFINED,38,,undefined __stdcall PlayVocal(VOCAL param_1)
+0x00410670,RelatedToAudio,,USER_DEFINED,__stdcall,ANALYSIS,10,,undefined __stdcall RelatedToAudio(void)
+0x004106d0,Init3Fields,,USER_DEFINED,__fastcall,USER_DEFINED,18,,void __fastcall Init3Fields(MaybeWeaponStruct * puParm1)
+0x00410730,relatedToWeaponInit,,USER_DEFINED,__fastcall,USER_DEFINED,19,,MaybeWeaponStruct * __fastcall relatedToWeaponInit(MaybeWeaponStruct * param_1)
+0x00410750,returnPtrToNewWeapon,,USER_DEFINED,__stdcall,USER_DEFINED,54,,"MaybeWeaponStruct * __stdcall returnPtrToNewWeapon(MaybeWeaponStruct * param_1, MaybeWeaponStruct * param_2, uint param_3)"
+0x00410ba0,decodeFloat,,USER_DEFINED,__fastcall,USER_DEFINED,9,,float __fastcall decodeFloat(int * encodedFloat)
+0x004112a0,IsHasCarEmergnecyLights,,USER_DEFINED,__fastcall,USER_DEFINED,11,,bool __fastcall IsHasCarEmergnecyLights(CarInfo * car)
+0x004118f0,IsFireTruck,,USER_DEFINED,__fastcall,USER_DEFINED,11,,bool __fastcall IsFireTruck(Car * param_1)
+0x00411900,IsTank,,USER_DEFINED,__fastcall,USER_DEFINED,11,,bool __fastcall IsTank(Car * param_1)
+0x00411910,IsArmyGunJeep,,USER_DEFINED,__fastcall,USER_DEFINED,11,,bool __fastcall IsArmyGunJeep(Car * param_1)
+0x00411920,IsCarFBICar,,USER_DEFINED,__fastcall,USER_DEFINED,11,,bool __fastcall IsCarFBICar(Car * param_1)
+0x00414f20,IsCarHasEmergencyLights,,USER_DEFINED,__fastcall,USER_DEFINED,49,,bool __fastcall IsCarHasEmergencyLights(Car * car2)
+0x00416570,strrchr,,USER_DEFINED,__cdecl,USER_DEFINED,105,,"char * __cdecl strrchr(char * _Str, int _Ch)"
+0x00416750,ff2,,USER_DEFINED,__stdcall,USER_DEFINED,45,,"void __stdcall ff2(int inc, int param_2, S6 * s6)"
+0x00416b60,GetCurrentCar,,USER_DEFINED,__fastcall,USER_DEFINED,7,,Car * __fastcall GetCurrentCar(Ped * param_1)
+0x00416bc0,IsGamePaused,,USER_DEFINED,__fastcall,USER_DEFINED,7,,bool __fastcall IsGamePaused(Game * param_1)
+0x00416c00,InitS5,,USER_DEFINED,__fastcall,USER_DEFINED,3,,S5 * __fastcall InitS5(S5 * uParm1)
+0x00416c10,relatedToS6,,USER_DEFINED,__thiscall,USER_DEFINED,282,,"void __thiscall relatedToS6(S6 * s6, uint pcParm1, uint param_3)"
+0x00417db0,ff1,,USER_DEFINED,__stdcall,USER_DEFINED,238,,"uint __stdcall ff1(MaybeWeaponStruct * weapon, S6 * s6)"
+0x0041b0a0,DoesPlayerHaveWeapons,,USER_DEFINED,__fastcall,USER_DEFINED,12,,bool __fastcall DoesPlayerHaveWeapons(Ped * param_1)
+0x0041c1f0,?getSpriteId,,USER_DEFINED,__fastcall,USER_DEFINED,5,,ushort __fastcall ?getSpriteId(Sprite * param_1)
+0x0041cff0,IsRotationNotEqual,,USER_DEFINED,__thiscall,USER_DEFINED,20,,"bool __thiscall IsRotationNotEqual(Position * position, int rotation)"
+0x0041d020,GetPlayerPed2,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined4 __fastcall GetPlayerPed2(SaveSlot * param_1)
+0x0041d0b0,SomeSwitch,,USER_DEFINED,__stdcall,ANALYSIS,419,,undefined __stdcall SomeSwitch(uint param_1)
+0x0041dc30,GetValueFromAnimatedStructure,,USER_DEFINED,__fastcall,USER_DEFINED,3,,int __fastcall GetValueFromAnimatedStructure(SaveSlotAnimatedValue * param_1)
+0x0041dc40,GiveMoney,,USER_DEFINED,default,USER_DEFINED,35,,"void GiveMoney(SaveSlot * this, int money)"
+0x0041dc70,getField0FromSaveSlot,,USER_DEFINED,__fastcall,USER_DEFINED,3,,undefined __fastcall getField0FromSaveSlot(SaveSlot * param_1)
+0x0041f7d0,carUpgradeCost,,USER_DEFINED,__stdcall,USER_DEFINED,68,,int __stdcall carUpgradeCost(CAR_UPGRADE param_1)
+0x0041f860,relToCar,,USER_DEFINED,__fastcall,USER_DEFINED,19,,"int __fastcall relToCar(Car * param_1, undefined param_2, byte param_3)"
+0x0041fbb0,HowManyPassangersHasCar,,USER_DEFINED,__fastcall,USER_DEFINED,31,,uint __fastcall HowManyPassangersHasCar(Car * param_1)
+0x0041fea0,IsArticCab,,USER_DEFINED,__fastcall,USER_DEFINED,11,,bool __fastcall IsArticCab(CarInfo * param_1)
+0x0041ff00,IsCollideOver,,USER_DEFINED,__fastcall,USER_DEFINED,11,,bool __fastcall IsCollideOver(CarInfo * param_1)
+0x004205a0,InitPositionStruct,,USER_DEFINED,__fastcall,USER_DEFINED,85,,undefined __fastcall InitPositionStruct(Position * param_1)
+0x00420600,SetPosition,,USER_DEFINED,__thiscall,USER_DEFINED,89,,"void __thiscall SetPosition(Position * position, int x, int y, int z)"
+0x00420690,SetRotation,,USER_DEFINED,__thiscall,USER_DEFINED,36,,"void __thiscall SetRotation(Position * position, short rotation)"
+0x00420760,getUpgradeType,,USER_DEFINED,__stdcall,USER_DEFINED,46,,CAR_UPGRADE __stdcall getUpgradeType(int param_1)
+0x00420840,IncrementCarCounter,,USER_DEFINED,__thiscall,USER_DEFINED,122,,"void __thiscall IncrementCarCounter(void * this, CAR_COUNTER param_1)"
+0x00420b90,IncrementCarCounter,,USER_DEFINED,default,USER_DEFINED,71,,"void IncrementCarCounter(CarManager * this, CAR_COUNTER param_2)"
+0x00420ce0,CarIsLimitHitForType?,,USER_DEFINED,__thiscall,USER_DEFINED,117,,"bool __thiscall CarIsLimitHitForType?(CarManager * this, CAR_UNK_TYPE type)"
+0x00420dc0,TogglesEmergencyLightsAndBrakes,,USER_DEFINED,__thiscall,USER_DEFINED,20,,"void __thiscall TogglesEmergencyLightsAndBrakes(void * this, undefined4 * param_1)"
+0x00420e90,ResetIntPtr,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall ResetIntPtr(int * param_1)
+0x00420f80,InitMaybeCarEngineHolder,,USER_DEFINED,__fastcall,USER_DEFINED,74,,MaybeCarEngineHolder * __fastcall InitMaybeCarEngineHolder(MaybeCarEngineHolder * param_1)
+0x00420fd0,CreateMaybeCarEngine,,USER_DEFINED,__fastcall,USER_DEFINED,19,,MaybeCarEngine * __fastcall CreateMaybeCarEngine(MaybeCarEngineHolder * param_1)
+0x00421000,GetNewFreePositionStruct,,USER_DEFINED,__fastcall,USER_DEFINED,19,,Position * __fastcall GetNewFreePositionStruct(PositionsArray_S21 * param_1)
+0x00421260,ResetField92,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall ResetField92(MaybeCarEngine * param_1)
+0x00421620,IsArticCab,,USER_DEFINED,__fastcall,USER_DEFINED,25,,void __fastcall IsArticCab(Car * param_1)
+0x00421640,IsTrailer,,USER_DEFINED,__fastcall,USER_DEFINED,36,,bool __fastcall IsTrailer(Car * param_1)
+0x00421660,HasRoofLights,,USER_DEFINED,__fastcall,USER_DEFINED,36,,bool __fastcall HasRoofLights(Car * param_1)
+0x00421680,HasRoofDecal,,USER_DEFINED,__fastcall,USER_DEFINED,36,,bool __fastcall HasRoofDecal(Car * param_1)
+0x004216a0,HasRearEmergnecyLights,,USER_DEFINED,__fastcall,USER_DEFINED,36,,bool __fastcall HasRearEmergnecyLights(Car * param_1)
+0x004216c0,HasForhireLights,,USER_DEFINED,__fastcall,USER_DEFINED,36,,bool __fastcall HasForhireLights(Car * param_1)
+0x004216e0,IsCollideOver,,USER_DEFINED,__fastcall,USER_DEFINED,25,,void __fastcall IsCollideOver(Car * param_1)
+0x00421700,IsPopup,,USER_DEFINED,__fastcall,USER_DEFINED,36,,bool __fastcall IsPopup(Car * param_1)
+0x00421990,ChangeMoney,,USER_DEFINED,default,USER_DEFINED,11,,"void ChangeMoney(SaveSlot * save, int iParm1, int iParm2)"
+0x004219d0,$FUN_004219d0,,USER_DEFINED,__fastcall,USER_DEFINED,4,,undefined __fastcall $FUN_004219d0(SaveSlot * param_1)
+0x004219e0,GetSaveSlot,,USER_DEFINED,default,USER_DEFINED,16,,"undefined4 GetSaveSlot(Game * game, int iParm1, uint param_3)"
+0x00422d20,SirenOn,,USER_DEFINED,__fastcall,USER_DEFINED,82,,void __fastcall SirenOn(Car * param_1)
+0x004234a0,relToCarWidth,,USER_DEFINED,__thiscall,USER_DEFINED,98,,"undefined4 __thiscall relToCarWidth(Car * this, undefined4 param_2)"
+0x00423a50,CreateIfNeededMaybeCarEngine,,USER_DEFINED,__fastcall,USER_DEFINED,26,,undefined __fastcall CreateIfNeededMaybeCarEngine(Car * param_1)
+0x00424470,NotEnoughMoney,,USER_DEFINED,__stdcall,USER_DEFINED,41,,undefined __stdcall NotEnoughMoney(int cost)
+0x004244a0,CarUpgrade,,USER_DEFINED,__thiscall,USER_DEFINED,361,,"void __thiscall CarUpgrade(void * this, CAR_UPGRADE upgradeType)"
+0x00425480,NotCollideOver,,USER_DEFINED,__fastcall,USER_DEFINED,28,,Car * __fastcall NotCollideOver(int * param_1)
+0x004254a0,CollideOver,,USER_DEFINED,__fastcall,USER_DEFINED,67,,Car * __fastcall CollideOver(int * param_1)
+0x00425590,relToEmergencyCarLights,,USER_DEFINED,__fastcall,ANALYSIS,183,,undefined __fastcall relToEmergencyCarLights(Car * param_1)
+0x00425e30,relToSirenStateAndAlarm,,USER_DEFINED,__fastcall,ANALYSIS,33,,undefined __fastcall relToSirenStateAndAlarm(Car * param_1)
+0x00425e60,turnOffEngine,,USER_DEFINED,__fastcall,ANALYSIS,33,,undefined __fastcall turnOffEngine(Car * param_1)
+0x00426030,HandleCarEngineState,,USER_DEFINED,__fastcall,USER_DEFINED,136,,undefined __fastcall HandleCarEngineState(Car * car)
+0x00426ac0,relToCarColliding,,USER_DEFINED,__stdcall,USER_DEFINED,682,,"undefined __stdcall relToCarColliding(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, CAR_MODEL carModel, undefined4 param_6)"
+0x00426db0,initRelToCars,,USER_DEFINED,__fastcall,USER_DEFINED,79,,undefined __fastcall initRelToCars(SRelToCars * param_1)
+0x00426e00,EngineOn,,USER_DEFINED,__fastcall,ANALYSIS,15,,undefined __fastcall EngineOn(Car * param_1)
+0x00427d10,CarEntersToShop,,USER_DEFINED,__thiscall,ANALYSIS,79,,"undefined __thiscall CarEntersToShop(void * this, uint param_1)"
+0x00428fa0,InitCarManager,,USER_DEFINED,__fastcall,USER_DEFINED,676,,undefined __fastcall InitCarManager(CarManager * car)
+0x00429250,freeStructs,,USER_DEFINED,__fastcall,ANALYSIS,150,,undefined __fastcall freeStructs(int param_1)
+0x00429e50,relToCar,,USER_DEFINED,__fastcall,USER_DEFINED,1789,,uint __fastcall relToCar(SaveSlot * save)
+0x00433270,SetState,,USER_DEFINED,__thiscall,USER_DEFINED,53,,"void __thiscall SetState(Ped * this, PED_STATE iParm1, int param_3)"
+0x004332b0,SetState2,,USER_DEFINED,__thiscall,USER_DEFINED,80,,"void __thiscall SetState2(Ped * this, PED_STATE2 iParm1, int param_3)"
+0x004333a0,CheckBitState2,,USER_DEFINED,__thiscall,USER_DEFINED,18,,"bool __thiscall CheckBitState2(Ped * this, PED_BIT_STATE2 param_2)"
+0x004337d0,setBit,,USER_DEFINED,__thiscall,USER_DEFINED,19,,"void __thiscall setBit(Position * this, int iParm1, byte param_3, char param_4)"
+0x00433800,getBits,,USER_DEFINED,__fastcall,USER_DEFINED,5,,void __fastcall getBits(void * param_1)
+0x00433820,IsCarGun,,USER_DEFINED,__stdcall,USER_DEFINED,11,,bool __stdcall IsCarGun(WEAPON_INDEX id)
+0x00433a30,SetOnSpriteField40,,USER_DEFINED,__thiscall,USER_DEFINED,12,,"void __thiscall SetOnSpriteField40(Sprite * this, undefined2 param_2)"
+0x00433b70,getPlayerHealth,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined2 __fastcall getPlayerHealth(SaveSlot * param_1)
+0x00433c00,SetOnSpriteField40,,USER_DEFINED,__thiscall,USER_DEFINED,11,,"void __thiscall SetOnSpriteField40(Ped * this, short param_2)"
+0x00434530,relToMissionArrows,,USER_DEFINED,unknown,DEFAULT,427,,undefined relToMissionArrows()
+0x00434b10,relToArgumentsPassedToEXE,,USER_DEFINED,__stdcall,ANALYSIS,6,,undefined __stdcall relToArgumentsPassedToEXE(void)
+0x00434d70,getSelectedWeapon,,USER_DEFINED,__fastcall,USER_DEFINED,227,,WEAPON_STRUCT * __fastcall getSelectedWeapon(Ped * ped)
+0x00435530,GetLastPed,,USER_DEFINED,__fastcall,USER_DEFINED,4,,undefined4 __fastcall GetLastPed(PedManager_S25 * param_1)
+0x004355a0,GetSprite,,USER_DEFINED,__fastcall,USER_DEFINED,19,,Sprite * __fastcall GetSprite(int * * param_1)
+0x004355e0,InitS30,,USER_DEFINED,__fastcall,USER_DEFINED,41,,S30 * __fastcall InitS30(S30 * param_1)
+0x00435720,InitPed,,USER_DEFINED,__fastcall,USER_DEFINED,1118,,void __fastcall InitPed(Ped * ped)
+0x00435b80,recyclePed,,USER_DEFINED,__fastcall,ANALYSIS,109,,void __fastcall recyclePed(Ped * param_1)
+0x00435eb0,mask,,USER_DEFINED,__fastcall,USER_DEFINED,50,,void __fastcall mask(Ped * ptr)
+0x0043ae10,GetPedById,,USER_DEFINED,__stdcall,USER_DEFINED,42,,Ped * __stdcall GetPedById(int id)
+0x0043ae70,InitPeds,,USER_DEFINED,__fastcall,USER_DEFINED,109,,undefined __fastcall InitPeds(undefined param_1)
+0x0043de10,RecyclePedDriver,,USER_DEFINED,__stdcall,ANALYSIS,158,,Ped * __stdcall RecyclePedDriver(void)
+0x0043df60,RecycleOldestPedAndGiveHim100Health,,USER_DEFINED,__fastcall,USER_DEFINED,27,,Ped * __fastcall RecycleOldestPedAndGiveHim100Health(void)
+0x0043e0e0,InitPedManager,,USER_DEFINED,__fastcall,USER_DEFINED,85,,undefined __fastcall InitPedManager(PedManager_S25 * param_1)
+0x0043e650,Ocupation2,,USER_DEFINED,__fastcall,ANALYSIS,461,,undefined __fastcall Ocupation2(Ped * param_1)
+0x0043f180,updateXYZOfPed,,USER_DEFINED,__fastcall,USER_DEFINED,433,,void __fastcall updateXYZOfPed(Ped * ped)
+0x004404e0,do_iain_test,,USER_DEFINED,__stdcall,ANALYSIS,10,,undefined __stdcall do_iain_test(void)
+0x004411b0,AttachPedToGame,,USER_DEFINED,__fastcall,USER_DEFINED,593,,void __fastcall AttachPedToGame(Ped * ped)
+0x004415e0,noSkipDummies,,USER_DEFINED,__stdcall,ANALYSIS,193,,undefined __stdcall noSkipDummies(void)
+0x004416b0,InitS24,,USER_DEFINED,__fastcall,USER_DEFINED,686,,undefined __fastcall InitS24(S24 * param_1)
+0x004419e0,damageToPlayer,,USER_DEFINED,__thiscall,USER_DEFINED,78,,"void __thiscall damageToPlayer(Ped * this, int damage, short param_3)"
+0x00443c30,?GetOutFromCar,,USER_DEFINED,default,USER_DEFINED,1204,,void ?GetOutFromCar(Ped * ped)
+0x00449f90,relToS26,,USER_DEFINED,__fastcall,USER_DEFINED,17,,undefined __fastcall relToS26(S26 * param_1)
+0x0044a030,InitS21_1,,USER_DEFINED,__fastcall,USER_DEFINED,43,,void __fastcall InitS21_1(S29_1 * param_1)
+0x0044a0e0,InitS29,,USER_DEFINED,__fastcall,USER_DEFINED,41,,S29 * __fastcall InitS29(S29 * param_1)
+0x0044a1f0,initS29,,USER_DEFINED,__fastcall,USER_DEFINED,12,,undefined __fastcall initS29(S29 * param_1)
+0x0044a200,DoSomethingRelatedToPedOcupation,,USER_DEFINED,__stdcall,USER_DEFINED,155,,"void __stdcall DoSomethingRelatedToPedOcupation(S29 * s29, uint param_2, Ped * ped)"
+0x0044aa90,showCycle,,USER_DEFINED,__fastcall,ANALYSIS,113,,undefined __fastcall showCycle(undefined4 * param_1)
+0x0044b000,InitS23,,USER_DEFINED,__fastcall,USER_DEFINED,184,,undefined __fastcall InitS23(S23 * param_1)
+0x0044b220,SetMinMaxOfAnimatedValue,,USER_DEFINED,default,USER_DEFINED,59,,"void SetMinMaxOfAnimatedValue(SaveSlotAnimatedValue * ptr, short min, int max, SAVE_SLOT_UNCLEAR_UI_OR_SCRIPTS_VALUE_ID id)"
+0x0044b2c0,AddToAnimatedValue,,USER_DEFINED,__stdcall,USER_DEFINED,57,,"void __stdcall AddToAnimatedValue(int howMuchToAdd, int param_2, SaveSlotAnimatedValue * val)"
+0x0044b8f0,InitS13,,USER_DEFINED,__fastcall,USER_DEFINED,122,,undefined __fastcall InitS13(S13 * param_1)
+0x0044ba40,relatedToDInput8,,USER_DEFINED,__stdcall,ANALYSIS,26,,undefined __stdcall relatedToDInput8(void)
+0x0044bb30,directInputUtils,,USER_DEFINED,__stdcall,ANALYSIS,261,,uint __stdcall directInputUtils(void)
+0x0044bed0,DirectInput8CreateIfEmpty,,USER_DEFINED,__fastcall,ANALYSIS,89,,undefined4 __fastcall DirectInput8CreateIfEmpty(undefined4 param_1)
+0x0044bf30,regGet,,USER_DEFINED,__stdcall,ANALYSIS,54,,undefined __stdcall regGet(void)
+0x0044bf70,ReturnHandleOfDirectInput,,USER_DEFINED,__stdcall,ANALYSIS,52,,undefined __stdcall ReturnHandleOfDirectInput(undefined4 param_1)
+0x0044c840,unclear,,USER_DEFINED,__fastcall,USER_DEFINED,28,,void __fastcall unclear(void * param_1)
+0x0044dbb0,copyScriptNameToBuffer,,USER_DEFINED,__stdcall,USER_DEFINED,24,,void __stdcall copyScriptNameToBuffer(char * fPath)
+0x0044dc50,DisplayError2,,USER_DEFINED,__stdcall,USER_DEFINED,8851,,"void __stdcall DisplayError2(GTA_ERROR_CODE code, undefined4 param_2, undefined4 param_3, undefined4 param_4, int param_5, undefined4 param_6)"
+0x00450530,DisplayError,,USER_DEFINED,__stdcall,USER_DEFINED,448,,"void __stdcall DisplayError(GTA_ERROR_CODE code, char * param_2, undefined4 param_3, char * param_4, int param_5, int param_6, undefined4 param_7, undefined4 param_8, undefined4 param_9, undefined4 param_10, undefined4 param_11)"
+0x004512d0,relToFiremans,,USER_DEFINED,__fastcall,ANALYSIS,41,,undefined __fastcall relToFiremans(int param_1)
+0x00451800,CheckIFGXTexists,,USER_DEFINED,__stdcall,ANALYSIS,294,,int __stdcall CheckIFGXTexists(void)
+0x00451930,HiddenDebugFlags,,USER_DEFINED,__stdcall,ANALYSIS,1615,,undefined __stdcall HiddenDebugFlags(void)
+0x00451fe0,dInput,,USER_DEFINED,__fastcall,ANALYSIS,29,,undefined __fastcall dInput(int param_1)
+0x00452490,copyPlayerName,,USER_DEFINED,__fastcall,ANALYSIS,47,,undefined __fastcall copyPlayerName(int param_1)
+0x00452990,IntroMovieBik,,USER_DEFINED,__stdcall,USER_DEFINED,35,,char * __stdcall IntroMovieBik(void)
+0x00452e60,isLanguageEqToJ,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall isLanguageEqToJ(LocaleSettings * param_1)
+0x00453d80,dInput8,,USER_DEFINED,__thiscall,ANALYSIS,145,,"undefined __thiscall dInput8(void * this, undefined4 param_1)"
+0x00455850,notAScryptLoading,,USER_DEFINED,__fastcall,ANALYSIS,715,,undefined __fastcall notAScryptLoading(int param_1)
+0x00456a60,InitFrontend,,USER_DEFINED,__fastcall,USER_DEFINED,814,,undefined __fastcall InitFrontend(FrontEnd * frontend)
+0x00457830,Init,,USER_DEFINED,__stdcall,ANALYSIS,196,,undefined __stdcall Init(void)
+0x004587b0,?Intro,,USER_DEFINED,__stdcall,USER_DEFINED,2355,,"void __stdcall ?Intro(FrontEnd * this, ushort doPlayMovies)"
+0x004590f0,ApplyCheats,,USER_DEFINED,default,USER_DEFINED,1102,,"void ApplyCheats(FrontEnd * frontEnd, WCHAR * profileName, wchar_t * param_3)"
+0x00459760,relatedToAudio,,USER_DEFINED,__stdcall,ANALYSIS,82,,undefined __stdcall relatedToAudio(void)
+0x0045a460,nextFrameDeltaTime,,USER_DEFINED,__fastcall,USER_DEFINED,28,,int __fastcall nextFrameDeltaTime(Game * game)
+0x0045a4b0,quitGame,,USER_DEFINED,__thiscall,ANALYSIS,20,,"undefined __thiscall quitGame(void * this, int param_1, int param_2)"
+0x0045a5a0,eachFrame,,USER_DEFINED,__fastcall,USER_DEFINED,163,,void __fastcall eachFrame(Game * param_1)
+0x0045a8d0,GetSaveSlot,,USER_DEFINED,__fastcall,USER_DEFINED,64,,undefined4 __fastcall GetSaveSlot(Game * param_1)
+0x0045a910,getSaveSlot,,USER_DEFINED,__fastcall,USER_DEFINED,67,,undefined4 __fastcall getSaveSlot(Game * param_1)
+0x0045a960,InitInteger,,USER_DEFINED,__fastcall,USER_DEFINED,16,,int * __fastcall InitInteger(int * param_1)
+0x0045acf0,ret1,,USER_DEFINED,__stdcall,ANALYSIS,3,,undefined __stdcall ret1(void)
+0x0045ad30,carsCount,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined2 __fastcall carsCount(void * param_1)
+0x0045ad40,InitNightArray,,USER_DEFINED,__fastcall,USER_DEFINED,74,,void * * __fastcall InitNightArray(SRelateToNight * param_1)
+0x0045b050,InitS12,,USER_DEFINED,__fastcall,USER_DEFINED,69,,undefined __fastcall InitS12(S12 * s12)
+0x0045b0a0,GetAccuracyCount,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall GetAccuracyCount(SaveSlotAnimatedValue * param_1)
+0x0045b0c0,ReturnBoolFieldFromSaveSlot,,USER_DEFINED,__fastcall,USER_DEFINED,12,,bool __fastcall ReturnBoolFieldFromSaveSlot(SaveSlot * param_1)
+0x0045b0d0,SetGameStatusToRun,,USER_DEFINED,__fastcall,USER_DEFINED,4,,void __fastcall SetGameStatusToRun(Game * game)
+0x0045b0e0,relS14_init_vec2i,,USER_DEFINED,__fastcall,USER_DEFINED,14,,void __fastcall relS14_init_vec2i(int * param_1)
+0x0045b0f0,initS14_sub1,,USER_DEFINED,__fastcall,USER_DEFINED,24,,S14 * __fastcall initS14_sub1(S14_sub1 * param_1)
+0x0045b110,InitS18_sub,,USER_DEFINED,__fastcall,USER_DEFINED,22,,void __fastcall InitS18_sub(S18_sub * param_1)
+0x0045b3d0,initStructRelToNight,,USER_DEFINED,__fastcall,USER_DEFINED,65,,undefined __fastcall initStructRelToNight(SRelateToNight * param_1)
+0x0045b469,LoadGMP_and_STY_Files,,USER_DEFINED,__stdcall,ANALYSIS,387,,undefined __stdcall LoadGMP_and_STY_Files(void)
+0x0045b5f0,startGame,,USER_DEFINED,default,USER_DEFINED,430,,"void startGame(Game * game, int iParm1, undefined4 uParm2, undefined4 uParm3, undefined4 uParm4, undefined4 uParm5, undefined4 uParm6)"
+0x0045b750,ShowCounters,,USER_DEFINED,__stdcall,ANALYSIS,690,,undefined __stdcall ShowCounters(void)
+0x0045ba10,counters,,USER_DEFINED,__fastcall,ANALYSIS,73,,undefined __fastcall counters(int param_1)
+0x0045bab0,GetSaveSlotFromGameStruct,,USER_DEFINED,__fastcall,USER_DEFINED,65,,SaveSlot * __fastcall GetSaveSlotFromGameStruct(Game * game)
+0x0045bc10,relToSaveSlotFromGame,,USER_DEFINED,__fastcall,USER_DEFINED,118,,uint __fastcall relToSaveSlotFromGame(Game * game)
+0x0045bc90,relToGame,,USER_DEFINED,default,USER_DEFINED,108,,"uint relToGame(Game * game, int iParm1, undefined4 param_3)"
+0x0045bf50,night,,USER_DEFINED,__fastcall,ANALYSIS,141,,undefined __fastcall night(undefined4 * param_1)
+0x0045bfe0,InitS18,,USER_DEFINED,__fastcall,USER_DEFINED,63,,undefined __fastcall InitS18(S18 * param_1)
+0x0045c030,relS14_init_vec2i,,USER_DEFINED,__fastcall,USER_DEFINED,12,,int * __fastcall relS14_init_vec2i(int * param_1)
+0x0045c040,InitS14,,USER_DEFINED,__fastcall,USER_DEFINED,103,,undefined __fastcall InitS14(S14 * param_1)
+0x0045c150,initPoliceStruct,,USER_DEFINED,__fastcall,USER_DEFINED,138,,int __fastcall initPoliceStruct(SPolice * param_1)
+0x0045c4d0,initGame,,USER_DEFINED,__stdcall,USER_DEFINED,3709,,"Game * __stdcall initGame(Game * game, undefined4 * saveSlot, char zero, undefined param_4, undefined4 * param_5)"
+0x0045d3d0,destruct,,USER_DEFINED,__fastcall,ANALYSIS,1208,,undefined __fastcall destruct(int param_1)
+0x0045d960,InitGangRespect,,USER_DEFINED,__fastcall,USER_DEFINED,113,,void __fastcall InitGangRespect(GangRespect * param_1)
+0x0045e4e0,getGmpPath,,USER_DEFINED,__fastcall,USER_DEFINED,3,,char * __fastcall getGmpPath(Menu * param_1)
+0x0045e4f0,GetStyFilePath,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall GetStyFilePath(Menu * param_1)
+0x0045e500,GetStyPath2,,USER_DEFINED,__fastcall,USER_DEFINED,7,,char * __fastcall GetStyPath2(Menu * param_1)
+0x0045e7c0,$FUN_0045e7c0,,USER_DEFINED,default,USER_DEFINED,34,,"void $FUN_0045e7c0(Menu * this, uint param_2, int param_3)"
+0x0045f780,input.cpp_PLayReplay,,USER_DEFINED,__thiscall,USER_DEFINED,381,,"void __thiscall input.cpp_PLayReplay(void * this, undefined * puParm1, undefined4 param_3)"
+0x0045f990,showInput,,USER_DEFINED,__fastcall,ANALYSIS,74,,undefined __fastcall showInput(int param_1)
+0x00460ec0,CheckVersion,,USER_DEFINED,__thiscall,USER_DEFINED,31,,"void __thiscall CheckVersion(void * this, short param_1, short param_2)"
+0x00460ee0,CheckMagicBytes,,USER_DEFINED,__stdcall,USER_DEFINED,40,,"void __stdcall CheckMagicBytes(char * magicbytes, char * param_2)"
+0x004612a0,memsetBuf,,USER_DEFINED,__stdcall,ANALYSIS,45,,undefined __stdcall memsetBuf(void)
+0x004612f0,InitSNightArray,,USER_DEFINED,__fastcall,USER_DEFINED,101,,undefined __fastcall InitSNightArray(SNightArray * param_1)
+0x00461690,do_miss_logging,,USER_DEFINED,__thiscall,ANALYSIS,97,,"undefined __thiscall do_miss_logging(void * this, LPCSTR param_1, int param_2)"
+0x00461810,parseArguments,,USER_DEFINED,__thiscall,ANALYSIS,282,,"undefined __thiscall parseArguments(void * this, char * param_1)"
+0x00461960,draw,,USER_DEFINED,__stdcall,ANALYSIS,99,,undefined __stdcall draw(void)
+0x004619e0,getTime,,USER_DEFINED,__stdcall,ANALYSIS,19,,undefined __stdcall getTime(void)
+0x00461de0,MainMenu,,ANALYSIS,__stdcall,ANALYSIS,635,,undefined __stdcall MainMenu(void)
+0x00462a30,drawAndLimitFrames,,USER_DEFINED,__stdcall,ANALYSIS,346,,uint __stdcall drawAndLimitFrames(void)
+0x004630a0,relS11,,USER_DEFINED,__fastcall,USER_DEFINED,13,,void __fastcall relS11(void * ptr)
+0x00464590,MOBJ_section,,USER_DEFINED,__thiscall,ANALYSIS,83,,"undefined __thiscall MOBJ_section(void * this, size_t param_1, int param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6, undefined4 param_7)"
+0x004645f0,LGHT_section,,USER_DEFINED,__thiscall,ANALYSIS,76,,"undefined __thiscall LGHT_section(void * this, size_t param_1, int param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6, undefined4 param_7)"
+0x00464640,ZONE_section,,USER_DEFINED,__thiscall,ANALYSIS,46,,"undefined __thiscall ZONE_section(void * this, size_t param_1)"
+0x00464670,ANIM_section,,USER_DEFINED,__thiscall,ANALYSIS,46,,"undefined __thiscall ANIM_section(void * this, size_t param_1)"
+0x004646a0,DMAP_section,,USER_DEFINED,__thiscall,ANALYSIS,470,,"undefined __thiscall DMAP_section(void * this, undefined4 param_1, undefined4 param_2, undefined4 param_3)"
+0x00464880,RGEN_section,,USER_DEFINED,__stdcall,ANALYSIS,327,,undefined __stdcall RGEN_section(void)
+0x00464890,mapSegment,,USER_DEFINED,__thiscall,ANALYSIS,240,,"undefined __thiscall mapSegment(void * this, char * param_1, size_t param_2, undefined4 param_3)"
+0x00464980,processS11,,USER_DEFINED,__fastcall,USER_DEFINED,5,FUN_00464330,void __fastcall processS11(S11 * s11)
+0x00464990,LoadMAP_GMPFile,,USER_DEFINED,default,USER_DEFINED,166,,"void LoadMAP_GMPFile(S11 * s11, char * path, char * param_3)"
+0x00464a40,InitS11,,USER_DEFINED,__fastcall,USER_DEFINED,240,,undefined __fastcall InitS11(S11 * param_1)
+0x00465250,GetDensity,,USER_DEFINED,__thiscall,ANALYSIS,45,,"int __thiscall GetDensity(void * this, undefined4 param_1, undefined4 param_2)"
+0x0046b620,relS12,,USER_DEFINED,__thiscall,USER_DEFINED,233,,"void __thiscall relS12(S12 * s12, int iParm1, byte param_3)"
+0x00472570,CountOfDigitsInNumber,,USER_DEFINED,__stdcall,USER_DEFINED,50,,undefined __stdcall CountOfDigitsInNumber(int * max)
+0x00472640,setSomethingTo1,,USER_DEFINED,__stdcall,ANALYSIS,9,,undefined __stdcall setSomethingTo1(void)
+0x00472e00,random,,USER_DEFINED,unknown,DEFAULT,136,,undefined random(undefined4 param_1)
+0x00473010,Ocupation17,,USER_DEFINED,__thiscall,ANALYSIS,294,,"uint __thiscall Ocupation17(void * this, Ped * param_1)"
+0x004740b0,relToAmbulance,,USER_DEFINED,__thiscall,ANALYSIS,49,,"undefined __thiscall relToAmbulance(void * this, undefined4 param_1, undefined4 param_2)"
+0x00474100,relInitS14,,USER_DEFINED,__fastcall,USER_DEFINED,15,,void __fastcall relInitS14(S14 * param_1)
+0x004741a0,nothing,,USER_DEFINED,__stdcall,USER_DEFINED,1,,void __stdcall nothing(S14 * param_1)
+0x00474530,do_mike,,USER_DEFINED,__stdcall,ANALYSIS,1580,,undefined __stdcall do_mike(void)
+0x00474e50,initS17_mission,,USER_DEFINED,__fastcall,USER_DEFINED,37,,undefined __fastcall initS17_mission(S17_mission * param_1)
+0x00474fa0,InitVec2i,,USER_DEFINED,__fastcall,USER_DEFINED,13,,void __fastcall InitVec2i(Vec2i * param_1)
+0x00475a20,?isPlayerAlive,,USER_DEFINED,__fastcall,USER_DEFINED,7,,bool __fastcall ?isPlayerAlive(S15_script * param_1)
+0x00475ba0,constructorForS16Vector,,USER_DEFINED,__fastcall,USER_DEFINED,98,,undefined __fastcall constructorForS16Vector(S16_sub1 * param_1)
+0x00475d30,ParseStrings,,USER_DEFINED,default,USER_DEFINED,208,,"void ParseStrings(S15_script * this, void * ptrToEndOfStrings, uint param_3)"
+0x00475e00,nothing,,USER_DEFINED,__fastcall,USER_DEFINED,86,,void __fastcall nothing(S15_script * param_1)
+0x00476070,loadSubScripts,,USER_DEFINED,__fastcall,USER_DEFINED,381,,void __fastcall loadSubScripts(S15_script * s15)
+0x00476200,ScriptBasePointerToActualPointer,,USER_DEFINED,default,USER_DEFINED,42,,"SCR_CMD_HEADER * ScriptBasePointerToActualPointer(S15_script * this, ushort pointerIndex, uint param_3)"
+0x004767a0,relToMissions,,USER_DEFINED,__fastcall,USER_DEFINED,24,,undefined4 __fastcall relToMissions(S16 * param_1)
+0x00477140,SCRCMD_PLAYER_PED,,USER_DEFINED,__stdcall,USER_DEFINED,333,,undefined __stdcall SCRCMD_PLAYER_PED(SCR_PLAYER_PED * cmd)
+0x004784d0,StartMapPlaySound,,USER_DEFINED,__fastcall,ANALYSIS,37,,undefined __fastcall StartMapPlaySound(void * param_1)
+0x0047a620,relToMissions,,USER_DEFINED,__thiscall,ANALYSIS,425,,"undefined __thiscall relToMissions(void * this, undefined4 param_1, undefined4 param_2, undefined4 param_3)"
+0x0047f230,FindScrCmdByType,,USER_DEFINED,__thiscall,USER_DEFINED,80,,"SCR_CMD_HEADER * __thiscall FindScrCmdByType(void * this, SCR_CMD_TYPE cmdType, ushort totalCommands)"
+0x0047f280,loadScript,,USER_DEFINED,default,USER_DEFINED,189,,"void loadScript(S15_script * s15, size_t len, char * param_3)"
+0x0047f550,JobFailed,,USER_DEFINED,__fastcall,ANALYSIS,442,,undefined __fastcall JobFailed(void * param_1)
+0x00481310,InitS16,,USER_DEFINED,__fastcall,USER_DEFINED,111,,undefined __fastcall InitS16(S16 * s16)
+0x00481890,ScriptLevelStart,,USER_DEFINED,__thiscall,ANALYSIS,99,,"undefined __thiscall ScriptLevelStart(void * this, undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5)"
+0x00481900,relToMissions,,USER_DEFINED,__stdcall,ANALYSIS,85,,undefined __stdcall relToMissions(void)
+0x00481960,InitS15,,USER_DEFINED,__fastcall,USER_DEFINED,681,,undefined __fastcall InitS15(S15_script * s15)
+0x00481d10,f1,,USER_DEFINED,__stdcall,ANALYSIS,18,,undefined __stdcall f1(void)
+0x00481f20,PlayMovie,,USER_DEFINED,__stdcall,USER_DEFINED,303,,"undefined __stdcall PlayMovie(char * moviePath, undefined4 flags)"
+0x00482080,mask,,USER_DEFINED,__fastcall,USER_DEFINED,11,,void __fastcall mask(Ped * param_1)
+0x00491ce0,relToParticles,,USER_DEFINED,__stdcall,ANALYSIS,152,,undefined __stdcall relToParticles(void)
+0x00493520,ResetVals,,USER_DEFINED,__stdcall,ANALYSIS,18,,undefined __stdcall ResetVals(void)
+0x0049ddf0,IsEngineAccelerates,,USER_DEFINED,__fastcall,USER_DEFINED,66,,bool __fastcall IsEngineAccelerates(MaybeCarEngine * param_1)
+0x0049f010,show_instruments,,USER_DEFINED,__fastcall,ANALYSIS,344,,undefined __fastcall show_instruments(void * param_1)
+0x004a1da0,show_physics,,USER_DEFINED,__fastcall,ANALYSIS,829,,undefined __fastcall show_physics(void * param_1)
+0x004a4760,toggleDisplayDebugPedInfo,,USER_DEFINED,__fastcall,USER_DEFINED,9,,void __fastcall toggleDisplayDebugPedInfo(bool * param_1)
+0x004a4870,getLastWeaponPtr,,USER_DEFINED,__fastcall,USER_DEFINED,27,,WEAPON_STRUCT * __fastcall getLastWeaponPtr(WEAPON_PLAYER_LIST * param_1)
+0x004a49c0,KeyUp,,USER_DEFINED,default,USER_DEFINED,108,,"void KeyUp(SaveSlot * this, int iParm1, uint param_3)"
+0x004a4cb0,doDebugKeys,,USER_DEFINED,__fastcall,USER_DEFINED,64,,void __fastcall doDebugKeys(SaveSlot * save)
+0x004a4e10,DeathReasonLocaleKey,,USER_DEFINED,__fastcall,USER_DEFINED,42,,char * __fastcall DeathReasonLocaleKey(SaveSlot * save)
+0x004a4fa0,IsInfinityAmmoOrKillFranzy,,USER_DEFINED,__fastcall,USER_DEFINED,9,,undefined __fastcall IsInfinityAmmoOrKillFranzy(WEAPON_STRUCT * param_1)
+0x004a5130,GetPlayerPed2Or0x68,,USER_DEFINED,__fastcall,USER_DEFINED,20,,undefined4 __fastcall GetPlayerPed2Or0x68(SaveSlot * param_1)
+0x004a5640,RelWeapons,,USER_DEFINED,__fastcall,USER_DEFINED,71,,void __fastcall RelWeapons(WEAPON_PLAYER_LIST * param_1)
+0x004a59a0,relToBonusesCounters,,USER_DEFINED,__fastcall,USER_DEFINED,174,,void __fastcall relToBonusesCounters(SaveSlot * save)
+0x004a5b40,CloseToPlayerCreate,,USER_DEFINED,__stdcall,USER_DEFINED,266,,"void __stdcall CloseToPlayerCreate(SaveSlot * save, Ped * ped, uint param_3)"
+0x004a5e90,DebugLabels,,USER_DEFINED,default,USER_DEFINED,436,,"void DebugLabels(SaveSlot * save, int iParm1, char param_3)"
+0x004a7010,OnKeyPress,,USER_DEFINED,default,USER_DEFINED,1431,,"void OnKeyPress(SaveSlot * save, KEY_NAME param_2)"
+0x004a7910,death,,USER_DEFINED,__fastcall,USER_DEFINED,596,,void __fastcall death(SaveSlot * save)
+0x004a7e80,frameGameLogic,,USER_DEFINED,__fastcall,USER_DEFINED,974,,void __fastcall frameGameLogic(SaveSlot * save)
+0x004a83c0,InitSaveSlot,,USER_DEFINED,__stdcall,USER_DEFINED,552,,"SaveSlot * __stdcall InitSaveSlot(SaveSlot * save, undefined * puParm1, undefined param_3, undefined4 param_4)"
+0x004a9290,InitS28,,USER_DEFINED,__fastcall,USER_DEFINED,275,,undefined __fastcall InitS28(S28 * param_1)
+0x004a9500,PolicePedHandling,,USER_DEFINED,__thiscall,USER_DEFINED,140,,"uint __thiscall PolicePedHandling(Ped * this, int iParm1, uint param_3)"
+0x004a96d0,InitPoliceVector,,USER_DEFINED,__fastcall,USER_DEFINED,72,,undefined __fastcall InitPoliceVector(SPoliceSub * param_1)
+0x004aef70,relToPolice,,USER_DEFINED,__fastcall,ANALYSIS,181,,undefined __fastcall relToPolice(SPolice * param_1)
+0x004afe20,BusesAndTrains,,USER_DEFINED,__fastcall,ANALYSIS,2675,,undefined __fastcall BusesAndTrains(uint param_1)
+0x004b08a0,relToTrainsAndBuses,,USER_DEFINED,__fastcall,ANALYSIS,1036,,undefined __fastcall relToTrainsAndBuses(void * param_1)
+0x004b5000,regGet,,USER_DEFINED,__stdcall,ANALYSIS,105,,"uint __stdcall regGet(LPCSTR param_1, undefined4 param_2, undefined4 param_3)"
+0x004b5180,regSet,,USER_DEFINED,__stdcall,ANALYSIS,110,,"undefined __stdcall regSet(LPCSTR param_1, undefined4 param_2)"
+0x004b53b0,RegGet,,USER_DEFINED,__stdcall,ANALYSIS,108,,"uint __stdcall RegGet(LPCSTR param_1, undefined4 param_2, undefined4 param_3)"
+0x004b5420,regGet,,USER_DEFINED,__stdcall,ANALYSIS,102,,"undefined __stdcall regGet(LPCSTR param_1, LPBYTE param_2, uint param_3, undefined4 param_4, undefined4 param_5)"
+0x004b5490,regGet,,USER_DEFINED,__stdcall,USER_DEFINED,103,,"void __stdcall regGet(LPCSTR name, HKEY out, uint param_3)"
+0x004b5500,regGet,,USER_DEFINED,__stdcall,ANALYSIS,157,,"undefined4 __stdcall regGet(LPCSTR param_1, int param_2, undefined4 param_3, undefined4 param_4)"
+0x004b55a0,regGet,,USER_DEFINED,__stdcall,ANALYSIS,188,,"int __stdcall regGet(uint param_1, int param_2, undefined4 param_3)"
+0x004b5660,regSet,,USER_DEFINED,__stdcall,ANALYSIS,157,,"undefined4 __stdcall regSet(LPCSTR param_1, int param_2, undefined4 param_3, undefined4 param_4)"
+0x004b5700,RegSet,,USER_DEFINED,__thiscall,ANALYSIS,101,,"undefined __thiscall RegSet(void * this, LPCSTR param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6)"
+0x004b5c60,RegGet,,USER_DEFINED,__stdcall,ANALYSIS,165,,"char * __stdcall RegGet(LPCSTR param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4)"
+0x004b6860,close_stream,,USER_DEFINED,__thiscall,ANALYSIS,42,,"undefined __thiscall close_stream(void * this, int param_1)"
+0x004b72b0,RelatedToAudio,,USER_DEFINED,__thiscall,ANALYSIS,307,,"uint __thiscall RelatedToAudio(void * this, byte * param_1)"
+0x004b7660,ChangeMoney2,,USER_DEFINED,default,USER_DEFINED,51,,"void ChangeMoney2(SaveSlotAnimatedValue * pMoney, int howMuchToAdd)"
+0x004b7770,switchRelatedToMoney,,USER_DEFINED,__fastcall,USER_DEFINED,1495,,void __fastcall switchRelatedToMoney(SaveSlot * save)
+0x004b7eb0,RelToMoneyWhenKillingAPed,,USER_DEFINED,__thiscall,USER_DEFINED,1626,,"void __thiscall RelToMoneyWhenKillingAPed(void * this, Ped * ped, Ped * ped2)"
+0x004b98b0,relToExploding,,USER_DEFINED,__fastcall,ANALYSIS,31,,undefined __fastcall relToExploding(int param_1)
+0x004b9cd0,initPosition,,USER_DEFINED,__fastcall,USER_DEFINED,122,,void __fastcall initPosition(Position * param_1)
+0x004bc900,Init_S22_1,,USER_DEFINED,__fastcall,USER_DEFINED,37,,int __fastcall Init_S22_1(S22_1 * param_1)
+0x004bc9a0,InitS22,,USER_DEFINED,__fastcall,ANALYSIS,66,,void * * __fastcall InitS22(void * * param_1)
+0x004bca20,InitS21,,USER_DEFINED,__fastcall,USER_DEFINED,66,,undefined __fastcall InitS21(PositionsArray_S21 * param_1)
+0x004be5b0,InitS20,,USER_DEFINED,__fastcall,USER_DEFINED,352,,undefined __fastcall InitS20(S20 * param_1)
+0x004bf1f0,GetCarInfoById,,USER_DEFINED,__stdcall,USER_DEFINED,18,,"CarInfo * __stdcall GetCarInfoById(byte carId, uint param_2, Style_S3 * s3)"
+0x004bf210,getCarRemap,,USER_DEFINED,__stdcall,USER_DEFINED,27,,"int __stdcall getCarRemap(int carId, uint param_2, Style_S3 * s3)"
+0x004bf4e0,return_i8_and_mask,,USER_DEFINED,__stdcall,USER_DEFINED,31,,"int __stdcall return_i8_and_mask(Style_S3 * s3, int iParm1, uint param_3)"
+0x004bf740,return_short6,,USER_DEFINED,__fastcall,USER_DEFINED,5,,undefined2 __fastcall return_short6(Style_S3 * iParm1)
+0x004bfa60,delta_index,,USER_DEFINED,__thiscall,ANALYSIS,69,,"undefined __thiscall delta_index(void * this, size_t param_1)"
+0x004bfab0,delta_store,,USER_DEFINED,__thiscall,ANALYSIS,31,,"undefined __thiscall delta_store(void * this, size_t param_1)"
+0x004bfad0,tiles,,USER_DEFINED,__thiscall,ANALYSIS,42,,"undefined __thiscall tiles(void * this, size_t param_1)"
+0x004bfb00,UNK_OVLY,,USER_DEFINED,__stdcall,ANALYSIS,13,FUN_00402f60,"undefined __stdcall UNK_OVLY(long * param_1, int param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6, undefined4 param_7)"
+0x004bfb10,PSX_tiles,,USER_DEFINED,__stdcall,ANALYSIS,13,FUN_00402f60,"undefined __stdcall PSX_tiles(long * param_1, int param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6, undefined4 param_7)"
+0x004bfb20,sprite_graphics,,USER_DEFINED,__thiscall,USER_DEFINED,35,,"void __thiscall sprite_graphics(Style_S3 * this, size_t param_2)"
+0x004bfb50,physical_palettes,,USER_DEFINED,__thiscall,USER_DEFINED,46,,"void __thiscall physical_palettes(Style_S3 * this, size_t size)"
+0x004bfb80,palette_index,,USER_DEFINED,default,USER_DEFINED,96,,"void palette_index(Style_S3 * this, char * param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6)"
+0x004bfbe0,map_object_info,,USER_DEFINED,__thiscall,USER_DEFINED,113,,"void __thiscall map_object_info(Style_S3 * this, int iParm1, size_t sParm2, undefined4 uParm3, undefined4 uParm4, undefined4 uParm5, undefined4 uParm6, undefined4 uParm7, undefined4 uParm8, undefined4 uParm9, char * pcParm10, undefined4 uParm11, char * pcParm12, uint uParm13, int iParm14, undefined4 uParm15, undefined4 uParm16, undefined4 uParm17, undefined4 uParm18, undefined4 uParm19)"
+0x004bfc60,sprite_index,,USER_DEFINED,default,USER_DEFINED,86,,"void sprite_index(Style_S3 * s3, uint param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6)"
+0x004bfdd0,font_base,,USER_DEFINED,__thiscall,USER_DEFINED,158,,"void __thiscall font_base(Style_S3 * this, int iParm1, char * pcParm2, undefined4 uParm3, undefined4 uParm4)"
+0x004bfe70,sprites_bases,,USER_DEFINED,__thiscall,USER_DEFINED,163,,"void __thiscall sprites_bases(Style_S3 * this, char * param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6)"
+0x004bff20,palette_base,,USER_DEFINED,default,USER_DEFINED,181,,"void palette_base(undefined2 * puParm1, char * pcParm2, undefined4 uParm3, undefined4 uParm4, undefined4 uParm5)"
+0x004c0010,car_recycling_info,,USER_DEFINED,__thiscall,ANALYSIS,40,,"undefined __thiscall car_recycling_info(void * this, size_t param_1)"
+0x004c00a0,UNK_SPEC,,USER_DEFINED,__fastcall,ANALYSIS,84,,undefined __fastcall UNK_SPEC(void * param_1)
+0x004c03d0,S3FillArray,,USER_DEFINED,__fastcall,USER_DEFINED,21,,void * __fastcall S3FillArray(int * param_1)
+0x004c03f0,FillZeroesAllCarsInfoStruct,,USER_DEFINED,__fastcall,ANALYSIS,25,,undefined4 * __fastcall FillZeroesAllCarsInfoStruct(undefined4 * param_1)
+0x004c0410,parseCarInfoChunk,,USER_DEFINED,default,USER_DEFINED,368,,"void parseCarInfoChunk(Style_S3 * s3, int iParm1, undefined4 uParm2)"
+0x004c0580,car_info,,USER_DEFINED,default,USER_DEFINED,43,,"void car_info(Style_S3 * this, size_t size)"
+0x004c05b0,readChunk,,USER_DEFINED,__stdcall,USER_DEFINED,610,,"void __stdcall readChunk(ChunkHeader * header, void * chunk_size)"
+0x004c0820,LoadSty,,USER_DEFINED,__stdcall,USER_DEFINED,166,,undefined __stdcall LoadSty(char * styFileName)
+0x004c08d0,InitS3,,USER_DEFINED,__fastcall,USER_DEFINED,112,,undefined __fastcall InitS3(Style_S3 * s3)
+0x004c20e0,compareFunction,,USER_DEFINED,__cdecl,ANALYSIS,62,,"int __cdecl compareFunction(byte * param_1, int param_2)"
+0x004c2120,FindLocale,,USER_DEFINED,default,USER_DEFINED,44,,"wchar_t * FindLocale(LocaleSettings * s1, char * key, void * param_3)"
+0x004c2280,getStringFromUnicode,,USER_DEFINED,__stdcall,USER_DEFINED,65,,undefined __stdcall getStringFromUnicode(wchar_t * param_1)
+0x004c2330,parseChunk,,USER_DEFINED,__thiscall,ANALYSIS,98,,"undefined __thiscall parseChunk(void * this, char * param_1, uint param_2, undefined4 param_3)"
+0x004c23b0,FindLocale,,USER_DEFINED,__thiscall,ANALYSIS,19,,"undefined __thiscall FindLocale(void * this, char * param_1)"
+0x004c23f0,S1_f1,,USER_DEFINED,__fastcall,USER_DEFINED,16,,void __fastcall S1_f1(LocaleSettings * param_1)
+0x004c2420,S2_f1,,USER_DEFINED,__fastcall,USER_DEFINED,16,,void __fastcall S2_f1(S2 * param_1)
+0x004c2540,LoadGXT,,USER_DEFINED,__fastcall,USER_DEFINED,446,,void __fastcall LoadGXT(LocaleSettings * s1)
+0x004c2620,initS1,,USER_DEFINED,__fastcall,USER_DEFINED,152,,undefined __fastcall initS1(LocaleSettings * s1)
+0x004c30a0,relToGBHGraphic,,USER_DEFINED,__fastcall,USER_DEFINED,238,,void __fastcall relToGBHGraphic(S4 * param_1)
+0x004c3190,InitS4,,USER_DEFINED,__fastcall,USER_DEFINED,165,,S4 * __fastcall InitS4(S4 * s4)
+0x004c36a0,fillzero,,USER_DEFINED,__fastcall,USER_DEFINED,13,,void __fastcall fillzero(int * param_1)
+0x004c36c0,do_show_timing,,USER_DEFINED,__fastcall,ANALYSIS,63,,undefined __fastcall do_show_timing(int param_1)
+0x004c3700,InitS19,,USER_DEFINED,__fastcall,USER_DEFINED,78,,undefined __fastcall InitS19(S19 * s19)
+0x004c4a60,relToTraficLights,,USER_DEFINED,__fastcall,ANALYSIS,324,,"undefined __fastcall relToTraficLights(int param_1, uint param_2)"
+0x004c4b00,no_skip_traffic_lights,,USER_DEFINED,__fastcall,ANALYSIS,60,,undefined __fastcall no_skip_traffic_lights(void * param_1)
+0x004c5f60,quitGameConfirm,,USER_DEFINED,__stdcall,ANALYSIS,14,,undefined __stdcall quitGameConfirm(int param_1)
+0x004c6060,ShowBigOnScreenLabel,,ANALYSIS,default,USER_DEFINED,71,,"void ShowBigOnScreenLabel(char * pcParm1, undefined4 param_2, int param_3, wchar_t * text)"
+0x004c6690,showMessageToPlayer,,USER_DEFINED,__stdcall,USER_DEFINED,178,,"void __stdcall showMessageToPlayer(int param_1, char * messageCode, undefined4 param_3)"
+0x004c6dc0,get_text_speed,,USER_DEFINED,__fastcall,USER_DEFINED,28,,void __fastcall get_text_speed(S10 * param_1)
+0x004c7370,nm,,USER_DEFINED,__stdcall,ANALYSIS,16,,undefined __stdcall nm(void)
+0x004c83d0,relToMisArrows,,USER_DEFINED,default,USER_DEFINED,121,,void relToMisArrows(void)
+0x004c8c20,showDebugLabel,,ANALYSIS,__thiscall,ANALYSIS,87,,"wchar_t * __thiscall showDebugLabel(void * this, short * param_1, ushort param_2, ushort param_3, ushort param_4, int param_5)"
+0x004ca440,drawScene,,USER_DEFINED,__fastcall,ANALYSIS,575,,undefined __fastcall drawScene(char * param_1)
+0x004ca520,relToLang,,USER_DEFINED,__stdcall,ANALYSIS,175,,undefined __stdcall relToLang(void)
+0x004ca910,relatedToScriptParsing,,USER_DEFINED,__thiscall,ANALYSIS,365,,"undefined __thiscall relatedToScriptParsing(void * this, undefined1 * param_1, undefined * param_2, int param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6, undefined4 param_7, undefined4 param_8)"
+0x004cac30,relToMissionsLoad,,USER_DEFINED,__stdcall,USER_DEFINED,171,,void __stdcall relToMissionsLoad(S10 * s10)
+0x004cac60,InitS10,,USER_DEFINED,__fastcall,USER_DEFINED,199,,S10 * __fastcall InitS10(S10 * iParm1)
+0x004cada0,not_matter,,USER_DEFINED,__stdcall,ANALYSIS,16,,undefined __stdcall not_matter(void)
+0x004caeb0,d3ddll_ConvertColourBank,,USER_DEFINED,__stdcall,ANALYSIS,116,,undefined __stdcall d3ddll_ConvertColourBank(void)
+0x004caec0,d3d,,USER_DEFINED,__stdcall,ANALYSIS,130,,undefined __stdcall d3d(void)
+0x004cb150,time_and_window_size,,USER_DEFINED,__stdcall,ANALYSIS,119,,undefined __stdcall time_and_window_size(void)
+0x004cb1d0,loadRenderSettings1,,USER_DEFINED,__cdecl,ANALYSIS,182,,undefined __cdecl loadRenderSettings1(undefined4 param_1)
+0x004cb290,loadRenderSettings2,,USER_DEFINED,__stdcall,ANALYSIS,308,,uint __stdcall loadRenderSettings2(void)
+0x004cb570,fullScreenProbably,,USER_DEFINED,__stdcall,ANALYSIS,336,,undefined __stdcall fullScreenProbably(void)
+0x004cb730,ResizeWindow,,USER_DEFINED,__stdcall,ANALYSIS,16,,uint __stdcall ResizeWindow(void)
+0x004cb880,d3dStuff,,USER_DEFINED,__stdcall,ANALYSIS,10,,undefined __stdcall d3dStuff(void)
+0x004cb930,SetGamma,,USER_DEFINED,__stdcall,ANALYSIS,96,,int __stdcall SetGamma(int param_1)
+0x004cb990,gamma,,USER_DEFINED,__cdecl,ANALYSIS,38,,undefined __cdecl gamma(undefined4 param_1)
+0x004cc580,GetWindowRect,,USER_DEFINED,__stdcall,USER_DEFINED,53,,"BOOL __stdcall GetWindowRect(HWND hWnd, LPRECT lpRect)"
+0x004cc5c0,ApplyGammaAndWindowSize,,USER_DEFINED,__cdecl,ANALYSIS,216,,"undefined __cdecl ApplyGammaAndWindowSize(undefined4 param_1, undefined4 param_2)"
+0x004cc6a0,loadRenderSettings,,USER_DEFINED,__cdecl,ANALYSIS,45,,undefined __cdecl loadRenderSettings(undefined4 param_1)
+0x004cc990,MaxAmmo,,USER_DEFINED,__stdcall,USER_DEFINED,13,,byte __stdcall MaxAmmo(uint weapon)
+0x004cc9b0,GetFirstWeapon,,USER_DEFINED,__fastcall,USER_DEFINED,4,,WEAPON_STRUCT * __fastcall GetFirstWeapon(WeaponRelStruct * param_1)
+0x004cca30,ShotX10Ammo,,USER_DEFINED,__fastcall,USER_DEFINED,33,,void __fastcall ShotX10Ammo(WEAPON_STRUCT * pToAmmo)
+0x004cca60,shootFromCarSMG,,USER_DEFINED,__fastcall,USER_DEFINED,17,,void __fastcall shootFromCarSMG(ushort * param_1)
+0x004cca80,$FUN_004cca80,,USER_DEFINED,default,USER_DEFINED,10,,"void $FUN_004cca80(WEAPON_STRUCT * this, byte iParm1, undefined param_3)"
+0x004ccad0,maskMustBeMoreThen3c,,USER_DEFINED,__fastcall,USER_DEFINED,14,,uint __fastcall maskMustBeMoreThen3c(WEAPON_PLAYER_LIST * param_1)
+0x004ccae0,getBitMask,,USER_DEFINED,__fastcall,USER_DEFINED,4,,undefined4 __fastcall getBitMask(WEAPON_PLAYER_LIST * param_1)
+0x004ccb00,DoSomethingWithBitmask,,USER_DEFINED,__fastcall,USER_DEFINED,9,,uint __fastcall DoSomethingWithBitmask(WEAPON_PLAYER_LIST * param_1)
+0x004cd7f0,getWeaponPtrFromCarByIndex,,USER_DEFINED,__stdcall,ANALYSIS,45,,"WEAPON_STRUCT * __stdcall getWeaponPtrFromCarByIndex(int param_1, WEAPON_INDEX param_2)"
+0x004d0530,FireFromGun,,USER_DEFINED,__fastcall,USER_DEFINED,6478,,void __fastcall FireFromGun(WEAPON_STRUCT * gun)
+0x004d0820,WinMain,,USER_DEFINED,__cdecl,ANALYSIS,217,,"undefined __cdecl WinMain(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5)"
+0x004d0900,AlertBox,,USER_DEFINED,__stdcall,ANALYSIS,28,,undefined __stdcall AlertBox(LPCSTR param_1)
+0x004d0920,GetGameVersion,,USER_DEFINED,__stdcall,USER_DEFINED,127,,"void __stdcall GetGameVersion(uint * major, uint * minor)"
+0x004d09c0,relToQuitGame,,USER_DEFINED,__fastcall,USER_DEFINED,4,,undefined4 __fastcall relToQuitGame(Game * param_1)
+0x004d1170,WinMain,,USER_DEFINED,__stdcall,USER_DEFINED,62,,"int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)"
+0x004d11b8,WinMain2,,USER_DEFINED,__stdcall,USER_DEFINED,1491,,"WPARAM __stdcall WinMain2(undefined4 param_1, undefined4 param_2, int param_3, int param_4, int param_5, int param_6, int param_7, int param_8, int param_9, int param_10, undefined4 lpMsg, UINT param_12, WPARAM param_13)"
+0x004d35c0,GBHGraphicsError,,USER_DEFINED,__stdcall,ANALYSIS,36,,undefined __stdcall GBHGraphicsError(void)
+0x004d5ce1,__heap_alloc,,ANALYSIS,__cdecl,USER_DEFINED,70,,void * __cdecl __heap_alloc(size_t _Size)
+0x004d5d27,__nh_malloc,,ANALYSIS,__cdecl,USER_DEFINED,44,,"void * __cdecl __nh_malloc(size_t _Size, int _NhFlag)"
+0x004d5d53,_malloc,,ANALYSIS,__cdecl,IMPORTED,18,,void * __cdecl _malloc(size_t _Size)
+0x004d5dca,operator_new,,ANALYSIS,__cdecl,IMPORTED,14,,void * __cdecl operator_new(uint param_1)
+0x004d5dd8,_JumpToContinuation,,ANALYSIS,__stdcall,IMPORTED,43,,"void __stdcall _JumpToContinuation(void * param_1, EHRegistrationNode * param_2)"
+0x004d5e08,_CallMemberFunction0,,ANALYSIS,__stdcall,IMPORTED,7,,"void __stdcall _CallMemberFunction0(void * param_1, void * param_2)"
+0x004d5e0f,FID_conflict:CallMemberFunction1,,ANALYSIS,__stdcall,ANALYSIS,7,,"undefined __stdcall FID_conflict:CallMemberFunction1(undefined4 param_1, undefined * param_2)"
+0x004d5e16,FID_conflict:CallMemberFunction1,,ANALYSIS,__stdcall,ANALYSIS,7,,"undefined __stdcall FID_conflict:CallMemberFunction1(undefined4 param_1, undefined * param_2)"
+0x004d5e1d,_UnwindNestedFrames,,ANALYSIS,__stdcall,IMPORTED,82,,"void __stdcall _UnwindNestedFrames(EHRegistrationNode * param_1, EHExceptionRecord * param_2)"
+0x004d5e6f,___CxxFrameHandler,,ANALYSIS,unknown,DEFAULT,54,,"undefined ___CxxFrameHandler(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4)"
+0x004d5f54,_GetRangeOfTrysToCheck,,ANALYSIS,__cdecl,IMPORTED,122,,"_s_TryBlockMapEntry * __cdecl _GetRangeOfTrysToCheck(_s_FuncInfo * param_1, int param_2, int param_3, uint * param_4, uint * param_5)"
+0x004d5fce,_CreateFrameInfo,,ANALYSIS,__cdecl,IMPORTED,25,,"FrameInfo * __cdecl _CreateFrameInfo(FrameInfo * param_1, void * param_2)"
+0x004d6002,_FindAndUnlinkFrame,,ANALYSIS,__cdecl,IMPORTED,57,,void __cdecl _FindAndUnlinkFrame(FrameInfo * param_1)
+0x004d613c,__global_unwind2,,ANALYSIS,__cdecl,ANALYSIS,32,,undefined __cdecl __global_unwind2(PVOID param_1)
+0x004d617e,__local_unwind2,,ANALYSIS,__cdecl,ANALYSIS,104,,"undefined __cdecl __local_unwind2(int param_1, int param_2)"
+0x004d61e6,__abnormal_termination,,ANALYSIS,__cdecl,USER_DEFINED,35,,int __cdecl __abnormal_termination(void)
+0x004d6209,__NLG_Notify1,,ANALYSIS,unknown,DEFAULT,23,,undefined __NLG_Notify1()
+0x004d6212,__NLG_Notify,,ANALYSIS,__stdcall,USER_DEFINED,10,,void __stdcall __NLG_Notify(ulong param_1)
+0x004d6230,__allshr,,ANALYSIS,unknown,DEFAULT,33,,undefined __allshr()
+0x004d6260,__alldiv,,ANALYSIS,__stdcall,ANALYSIS,170,,"undefined8 __stdcall __alldiv(uint param_1, uint param_2, uint param_3, uint param_4)"
+0x004d630a,_free,,ANALYSIS,__cdecl,USER_DEFINED,56,,void __cdecl _free(void * _Memory)
+0x004d6342,__onexit,,ANALYSIS,__cdecl,USER_DEFINED,130,,_onexit_t __cdecl __onexit(_onexit_t _Func)
+0x004d63c4,_atexit,,ANALYSIS,__cdecl,USER_DEFINED,18,,int __cdecl _atexit(void * param_1)
+0x004d63fe,FID_conflict:__fread_lk,,ANALYSIS,__cdecl,IMPORTED,233,,"size_t __cdecl FID_conflict:__fread_lk(void * _DstBuf, size_t _ElementSize, size_t _Count, FILE * _File)"
+0x004d64e7,FID_conflict:__fwrite_lk,,ANALYSIS,__cdecl,USER_DEFINED,263,,"size_t __cdecl FID_conflict:__fwrite_lk(void * _Str, size_t _Size, size_t _Count, FILE * _File)"
+0x004d65ee,_fseek,,ANALYSIS,__cdecl,USER_DEFINED,142,,"int __cdecl _fseek(FILE * _File, long _Offset, int _Origin)"
+0x004d667c,_ftell,,ANALYSIS,__cdecl,USER_DEFINED,345,,long __cdecl _ftell(FILE * _File)
+0x004d67d5,sprintf,,USER_DEFINED,__cdecl,USER_DEFINED,88,,"int __cdecl sprintf(char * _Dest, char * _Format, ...)"
+0x004d685e,_fclose,,ANALYSIS,__cdecl,IMPORTED,86,,int __cdecl _fclose(FILE * _File)
+0x004d68b4,__fsopen,,ANALYSIS,__cdecl,USER_DEFINED,42,,"FILE * __cdecl __fsopen(char * _Filename, char * _Mode, int _ShFlag)"
+0x004d68de,fopen,,USER_DEFINED,__cdecl,USER_DEFINED,19,,"FILE * __cdecl fopen(char * _Filename, char * _Mode)"
+0x004d68f1,FID_conflict:_getc,,ANALYSIS,__cdecl,USER_DEFINED,26,,int __cdecl FID_conflict:_getc(FILE * _File)
+0x004d6925,eh_vector_constructor_iterator,,USER_DEFINED,__stdcall,USER_DEFINED,74,,"void __stdcall eh_vector_constructor_iterator(void * param_1, uint size, size_t elements, FuncDef5 * cb1, FuncDef6 * cb2)"
+0x004d6999,__ArrayUnwind,,ANALYSIS,__stdcall,IMPORTED,47,,"void __stdcall __ArrayUnwind(void * param_1, uint param_2, int param_3, FuncDef7 * param_4)"
+0x004d69f7,`eh_vector_destructor_iterator',,ANALYSIS,__stdcall,IMPORTED,72,,"void __stdcall `eh_vector_destructor_iterator'(void * param_1, uint param_2, int param_3, FuncDef8 * param_4)"
+0x004d6a60,__chkstk,,ANALYSIS,unknown,DEFAULT,61,,undefined __chkstk(undefined1 param_1)
+0x004d6ae3,__stricmp,,ANALYSIS,__cdecl,USER_DEFINED,67,,"int __cdecl __stricmp(char * _Str1, char * _Str2)"
+0x004d6bc2,_atol,,ANALYSIS,__cdecl,USER_DEFINED,88,,long __cdecl _atol(char * _Str)
+0x004d6c98,_sscanf,,ANALYSIS,__cdecl,USER_DEFINED,52,,"int __cdecl _sscanf(char * _Src, char * _Format, ...)"
+0x004d6cd1,getLenOfUnicodeString,,USER_DEFINED,__cdecl,ANALYSIS,22,,int __cdecl getLenOfUnicodeString(short * param_1)
+0x004d6cec,_wcsncpy,,ANALYSIS,__cdecl,USER_DEFINED,61,,"wchar_t * __cdecl _wcsncpy(wchar_t * _Dest, wchar_t * _Source, size_t _Count)"
+0x004d6d29,_wcscmp,,ANALYSIS,__cdecl,USER_DEFINED,50,,"int __cdecl _wcscmp(wchar_t * _Str1, wchar_t * _Str2)"
+0x004d6d5b,wsprintf,,USER_DEFINED,__stdcall,USER_DEFINED,111,,"undefined4 __stdcall wsprintf(wchar_t * param_1, wchar_t * param_2, ...)"
+0x004d6dfc,__ftol2,,ANALYSIS,unknown,DEFAULT,117,,undefined __ftol2()
+0x004d6e80,_strrchr,,ANALYSIS,__cdecl,IMPORTED,45,,"char * __cdecl _strrchr(char * _Str, int _Ch)"
+0x004d6eb0,_memmove,,ANALYSIS,__cdecl,USER_DEFINED,524,,"void * __cdecl _memmove(void * _Dst, void * _Src, size_t _Size)"
+0x004d71ed,setSomethingTo1,,USER_DEFINED,__cdecl,ANALYSIS,10,,undefined __cdecl setSomethingTo1(undefined4 param_1)
+0x004d71f7,random32,,USER_DEFINED,__stdcall,ANALYSIS,35,,uint __stdcall random32(void)
+0x004d73b8,__exit,,ANALYSIS,__cdecl,USER_DEFINED,17,,void __cdecl __exit(int _Code)
+0x004d7425,__itoa,,ANALYSIS,__cdecl,USER_DEFINED,42,,"char * __cdecl __itoa(int _Value, char * _Dest, int _Radix)"
+0x004d744f,__ltoa,,ANALYSIS,__cdecl,USER_DEFINED,39,,"char * __cdecl __ltoa(long _Value, char * _Dest, int _Radix)"
+0x004d7568,___timet_from_ft,,ANALYSIS,__cdecl,ANALYSIS,100,,int __cdecl ___timet_from_ft(FILETIME * param_1)
+0x004d78e0,copySomething,,USER_DEFINED,__stdcall,USER_DEFINED,292,,"uint * __stdcall copySomething(char * path, uint * param_2, uint length)"
+0x004d7a04,__strnicmp,,ANALYSIS,__cdecl,USER_DEFINED,85,,"int __cdecl __strnicmp(char * _Str1, char * _Str2, size_t _MaxCount)"
+0x004d7a59,FID_conflict:__wctime,,ANALYSIS,__cdecl,USER_DEFINED,25,,char * __cdecl FID_conflict:__wctime(time_t * _Time)
+0x004d7a72,FID_conflict:__time32,,ANALYSIS,__cdecl,USER_DEFINED,57,,time_t __cdecl FID_conflict:__time32(time_t * _Time)
+0x004d7ab0,_strncmp,,ANALYSIS,__cdecl,USER_DEFINED,57,,"int __cdecl _strncmp(char * _Str1, char * _Str2, size_t _MaxCount)"
+0x004d7ae9,__strupr,,ANALYSIS,__cdecl,USER_DEFINED,235,,char * __cdecl __strupr(char * _String)
+0x004d7be4,___dtoxmode,,ANALYSIS,__cdecl,ANALYSIS,189,,"uint __cdecl ___dtoxmode(uint param_1, uchar * param_2)"
+0x004d7ca1,_IsRootUNCName,,ANALYSIS,__stdcall,ANALYSIS,109,,undefined4 __stdcall _IsRootUNCName(void)
+0x004d8110,appendMissionNameToBuf,,USER_DEFINED,__stdcall,USER_DEFINED,309,,"char * __stdcall appendMissionNameToBuf(char * buf, char * missionName, byte missionNameLen)"
+0x004d8245,_rewind,,ANALYSIS,__cdecl,USER_DEFINED,85,,void __cdecl _rewind(FILE * _File)
+0x004d829a,_bsearch,,ANALYSIS,__cdecl,USER_DEFINED,140,,"void * __cdecl _bsearch(void * _Key, void * _Base, size_t _NumOfElements, size_t _SizeOfElements, _PtFuncCompare * _PtFuncCompare)"
+0x004d8447,__getcwd,,ANALYSIS,__cdecl,USER_DEFINED,19,,"char * __cdecl __getcwd(char * _DstBuf, int _SizeInBytes)"
+0x004d845a,__amsg_exit,,ANALYSIS,__cdecl,USER_DEFINED,34,,void __cdecl __amsg_exit(int param_1)
+0x004d84f9,entry,,IMPORTED,__stdcall,ANALYSIS,5,FUN_0056dcda,int __stdcall entry(void)
+0x004d878f,__flush,,ANALYSIS,__cdecl,USER_DEFINED,93,,int __cdecl __flush(FILE * _File)
+0x004d87ec,_fflush,,ANALYSIS,__cdecl,USER_DEFINED,59,,int __cdecl _fflush(FILE * _File)
+0x004d8827,_flsall,,ANALYSIS,__cdecl,ANALYSIS,109,,int __cdecl _flsall(int param_1)
+0x004d8894,__flushall,,ANALYSIS,__cdecl,USER_DEFINED,9,,int __cdecl __flushall(void)
+0x004d8960,_strlen,,ANALYSIS,__cdecl,USER_DEFINED,139,,size_t __cdecl _strlen(char * _Str)
+0x004d8a9e,__lseek,,ANALYSIS,__cdecl,USER_DEFINED,140,,"long __cdecl __lseek(int _FileHandle, long _Offset, int _Origin)"
+0x004d9400,_memcpy,,ANALYSIS,__cdecl,USER_DEFINED,524,,"void * __cdecl _memcpy(void * _Dst, void * _Src, size_t _Size)"
+0x004d973d,___heap_select,,ANALYSIS,__stdcall,ANALYSIS,26,,undefined4 __stdcall ___heap_select(void)
+0x004d9757,__heap_init,,ANALYSIS,__cdecl,USER_DEFINED,81,,int __cdecl __heap_init(void)
+0x004d983c,___sbh_heap_init,,ANALYSIS,__cdecl,ANALYSIS,72,,undefined4 __cdecl ___sbh_heap_init(undefined4 param_1)
+0x004d9884,___sbh_find_block,,ANALYSIS,__cdecl,ANALYSIS,43,,uint __cdecl ___sbh_find_block(int param_1)
+0x004d98af,___sbh_free_block,,ANALYSIS,__cdecl,ANALYSIS,792,,"undefined __cdecl ___sbh_free_block(uint * param_1, int param_2)"
+0x004d9bc7,___sbh_alloc_new_region,,ANALYSIS,__stdcall,ANALYSIS,183,,undefined4 * __stdcall ___sbh_alloc_new_region(void)
+0x004d9c7e,___sbh_alloc_new_group,,ANALYSIS,__cdecl,ANALYSIS,262,,int __cdecl ___sbh_alloc_new_group(int param_1)
+0x004d9d84,___sbh_resize_block,,ANALYSIS,__cdecl,ANALYSIS,735,,"undefined4 __cdecl ___sbh_resize_block(uint * param_1, int param_2, int param_3)"
+0x004da134,___sbh_heap_check,,ANALYSIS,__stdcall,ANALYSIS,793,,undefined4 __stdcall ___sbh_heap_check(void)
+0x004da4a8,___sbh_alloc_block,,ANALYSIS,__cdecl,ANALYSIS,764,,int * __cdecl ___sbh_alloc_block(uint * param_1)
+0x004da7ba,__callnewh,,ANALYSIS,__cdecl,USER_DEFINED,27,,int __cdecl __callnewh(size_t _Size)
+0x004da7d5,__forcdecpt,,ANALYSIS,__cdecl,USER_DEFINED,88,,void __cdecl __forcdecpt(char * _Buf)
+0x004da892,__fassign,,ANALYSIS,__cdecl,USER_DEFINED,62,,"void __cdecl __fassign(int flag, char * argument, char * number)"
+0x004dabb1,__cfltcvt,,ANALYSIS,__cdecl,USER_DEFINED,81,,"errno_t __cdecl __cfltcvt(double * arg, char * buffer, size_t sizeInBytes, int format, int precision, int caps)"
+0x004dac14,__ms_p5_test_fdiv,,ANALYSIS,__stdcall,ANALYSIS,64,,undefined4 __stdcall __ms_p5_test_fdiv(void)
+0x004dac54,__ms_p5_mp_test_fdiv,,ANALYSIS,__stdcall,ANALYSIS,41,,undefined __stdcall __ms_p5_mp_test_fdiv(void)
+0x004dac7d,TypeMatch,,ANALYSIS,__cdecl,IMPORTED,79,,"int __cdecl TypeMatch(_s_HandlerType * param_1, _s_CatchableType * param_2, _s_ThrowInfo * param_3)"
+0x004dace5,___FrameUnwindToState,,ANALYSIS,__cdecl,ANALYSIS,142,,"undefined __cdecl ___FrameUnwindToState(int param_1, undefined4 param_2, int param_3, int param_4)"
+0x004dadc8,___DestructExceptionObject,,ANALYSIS,__cdecl,ANALYSIS,52,,undefined __cdecl ___DestructExceptionObject(int param_1)
+0x004dafa7,CallCatchBlock,,ANALYSIS,__cdecl,IMPORTED,140,,"void * __cdecl CallCatchBlock(EHExceptionRecord * param_1, EHRegistrationNode * param_2, _CONTEXT * param_3, _s_FuncInfo * param_4, void * param_5, int param_6, ulong param_7)"
+0x004db13d,BuildCatchObject,,ANALYSIS,__cdecl,IMPORTED,368,,"void __cdecl BuildCatchObject(EHExceptionRecord * param_1, void * param_2, _s_HandlerType * param_3, _s_CatchableType * param_4)"
+0x004db3af,CatchIt,,ANALYSIS,__cdecl,IMPORTED,103,,"void __cdecl CatchIt(EHExceptionRecord * param_1, EHRegistrationNode * param_2, _CONTEXT * param_3, void * param_4, _s_FuncInfo * param_5, _s_HandlerType * param_6, _s_CatchableType * param_7, _s_TryBlockMapEntry * param_8, int param_9, EHRegistrationNode * param_10, uchar param_11)"
+0x004db6af,___InternalCxxFrameHandler,,ANALYSIS,__cdecl,ANALYSIS,162,,"undefined4 __cdecl ___InternalCxxFrameHandler(int * param_1, int param_2, EHRegistrationNode * param_3, _CONTEXT * param_4, _s_FuncInfo * param_5, _s_FuncInfo * param_6, _s_HandlerType * param_7, byte param_8)"
+0x004db78e,_inconsistency,,ANALYSIS,__cdecl,IMPORTED,38,,void __cdecl _inconsistency(void)
+0x004db7c0,__CallSettingFrame@12,,ANALYSIS,__stdcall,ANALYSIS,76,,"undefined __stdcall __CallSettingFrame@12(undefined4 param_1, undefined4 param_2, int param_3)"
+0x004db80c,_realloc,,ANALYSIS,__cdecl,USER_DEFINED,354,,"void * __cdecl _realloc(void * _Memory, size_t _NewSize)"
+0x004db96e,__msize,,ANALYSIS,__cdecl,USER_DEFINED,56,,size_t __cdecl __msize(void * _Memory)
+0x004db9a6,__filbuf,,ANALYSIS,__cdecl,USER_DEFINED,222,,int __cdecl __filbuf(FILE * _File)
+0x004dba84,__flsbuf,,ANALYSIS,__cdecl,USER_DEFINED,278,,"int __cdecl __flsbuf(int _Ch, FILE * _File)"
+0x004dbb9a,_write_char,,ANALYSIS,unknown,DEFAULT,51,,undefined _write_char()
+0x004dbbcd,_write_multi_char,,ANALYSIS,unknown,DEFAULT,36,,"undefined _write_multi_char(undefined1 param_1, undefined4 param_2, undefined4 param_3)"
+0x004dbbf1,_write_string,,ANALYSIS,unknown,DEFAULT,55,,undefined _write_string(undefined4 param_1)
+0x004dc3dc,__freebuf,,ANALYSIS,__cdecl,USER_DEFINED,43,,void __cdecl __freebuf(FILE * _File)
+0x004dc407,__openfile,,ANALYSIS,__cdecl,USER_DEFINED,360,,"FILE * __cdecl __openfile(char * _Filename, char * _Mode, int _ShFlag, FILE * _File)"
+0x004dc56f,__getstream,,ANALYSIS,__cdecl,USER_DEFINED,114,,FILE * __cdecl __getstream(void)
+0x004dc5e4,__SEH_prolog,,ANALYSIS,__cdecl,ANALYSIS,59,,"undefined __cdecl __SEH_prolog(undefined4 param_1, int param_2)"
+0x004dc61f,__SEH_epilog,,ANALYSIS,__stdcall,ANALYSIS,17,,undefined __stdcall __SEH_epilog(void)
+0x004dc710,___ascii_stricmp,,ANALYSIS,__cdecl,USER_DEFINED,78,,"int __cdecl ___ascii_stricmp(char * _Str1, char * _Str2)"
+0x004dc75e,__dosmaperr,,ANALYSIS,__cdecl,USER_DEFINED,95,,void __cdecl __dosmaperr(ulong param_1)
+0x004dc7bd,__mbctoupper,,ANALYSIS,__cdecl,USER_DEFINED,120,,uint __cdecl __mbctoupper(uint _Ch)
+0x004dc866,@__security_check_cookie@4,,ANALYSIS,__fastcall,ANALYSIS,56,,undefined __fastcall @__security_check_cookie@4(int param_1)
+0x004dc874,__ismbcspace,,ANALYSIS,__cdecl,USER_DEFINED,144,,int __cdecl __ismbcspace(uint _Ch)
+0x004dc910,__allmul,,ANALYSIS,__stdcall,ANALYSIS,52,,"ulonglong __stdcall __allmul(uint param_1, uint param_2, uint param_3, uint param_4)"
+0x004dc944,__hextodec,,ANALYSIS,unknown,DEFAULT,50,,undefined __hextodec()
+0x004dc976,__inc,,ANALYSIS,__fastcall,ANALYSIS,22,,"uint __fastcall __inc(undefined4 param_1, FILE * param_2)"
+0x004dd550,_write_char,,ANALYSIS,unknown,DEFAULT,37,,undefined _write_char(undefined4 param_1)
+0x004dd575,_write_multi_char,,ANALYSIS,unknown,DEFAULT,37,,"undefined _write_multi_char(undefined4 param_1, undefined4 param_2, undefined4 param_3)"
+0x004dd59a,_write_string,,ANALYSIS,unknown,DEFAULT,61,,undefined _write_string(undefined4 param_1)
+0x004dde50,__aulldvrm,,ANALYSIS,__stdcall,ANALYSIS,149,,"undefined8 __stdcall __aulldvrm(uint param_1, uint param_2, uint param_3, uint param_4)"
+0x004ddee5,___loctotime_t,,ANALYSIS,__cdecl,ANALYSIS,270,,"int __cdecl ___loctotime_t(int param_1, int param_2, int param_3, int param_4, int param_5, int param_6, int param_7)"
+0x004de000,_strcpy,,ANALYSIS,__cdecl,USER_DEFINED,138,,"char * __cdecl _strcpy(char * _Dest, char * _Source)"
+0x004de010,_strcat,,ANALYSIS,__cdecl,USER_DEFINED,101,,"char * __cdecl _strcat(char * _Dest, char * _Source)"
+0x004de200,___ascii_strnicmp,,ANALYSIS,__cdecl,USER_DEFINED,97,,"int __cdecl ___ascii_strnicmp(char * _Str1, char * _Str2, size_t _MaxCount)"
+0x004de361,_localtime,,ANALYSIS,__cdecl,USER_DEFINED,384,,tm * __cdecl _localtime(time_t * _Time)
+0x004de4f0,__aulldiv,,ANALYSIS,__stdcall,ANALYSIS,104,,"undefined8 __stdcall __aulldiv(uint param_1, uint param_2, uint param_3, uint param_4)"
+0x004de645,___crtLCMapStringA,,ANALYSIS,__cdecl,USER_DEFINED,886,,"int __cdecl ___crtLCMapStringA(_locale_t _Plocinfo, LPCWSTR _LocaleName, DWORD _DwMapFlag, LPCSTR _LpSrcStr, int _CchSrc, LPSTR _LpDestStr, int _CchDest, int _Code_page, BOOL _BError)"
+0x004deb42,__mbsrchr,,ANALYSIS,__cdecl,USER_DEFINED,86,,"uchar * __cdecl __mbsrchr(uchar * _Str, uint _Ch)"
+0x004deb98,__fullpath,,ANALYSIS,__cdecl,USER_DEFINED,164,,"char * __cdecl __fullpath(char * _FullPath, char * _Path, size_t _SizeInBytes)"
+0x004decec,__mbctolower,,ANALYSIS,__cdecl,USER_DEFINED,120,,uint __cdecl __mbctolower(uint _Ch)
+0x004ded64,__mbspbrk,,ANALYSIS,__cdecl,USER_DEFINED,121,,"uchar * __cdecl __mbspbrk(uchar * _Str, uchar * _Control)"
+0x004def7e,__FF_MSGBANNER,,ANALYSIS,__cdecl,USER_DEFINED,57,,void __cdecl __FF_MSGBANNER(void)
+0x004defee,__XcptFilter,,ANALYSIS,__cdecl,USER_DEFINED,369,,"int __cdecl __XcptFilter(ulong _ExceptionNum, _EXCEPTION_POINTERS * _ExceptionPtr)"
+0x004df1c8,__setenvp,,ANALYSIS,__cdecl,USER_DEFINED,199,,int __cdecl __setenvp(void)
+0x004df49d,___crtGetEnvironmentStringsA,,ANALYSIS,__cdecl,USER_DEFINED,290,,LPVOID __cdecl ___crtGetEnvironmentStringsA(void)
+0x004df5c0,_strcmp,,ANALYSIS,__cdecl,USER_DEFINED,135,,"int __cdecl _strcmp(char * _Str1, char * _Str2)"
+0x004df648,__commit,,ANALYSIS,__cdecl,USER_DEFINED,87,,int __cdecl __commit(int _FileHandle)
+0x004df69f,_calloc,,ANALYSIS,__cdecl,USER_DEFINED,123,,"void * __cdecl _calloc(size_t _Count, size_t _Size)"
+0x004df80f,__set_osfhnd,,ANALYSIS,__cdecl,USER_DEFINED,119,,"int __cdecl __set_osfhnd(int param_1, intptr_t param_2)"
+0x004df886,__free_osfhnd,,ANALYSIS,__cdecl,USER_DEFINED,122,,int __cdecl __free_osfhnd(int param_1)
+0x004df900,__get_osfhandle,,ANALYSIS,__cdecl,USER_DEFINED,60,,intptr_t __cdecl __get_osfhandle(int _FileHandle)
+0x004df93c,__open_osfhandle,,ANALYSIS,__cdecl,USER_DEFINED,157,,"int __cdecl __open_osfhandle(intptr_t _OSFileHandle, int _Flags)"
+0x004df9d9,__lseeki64,,ANALYSIS,__cdecl,USER_DEFINED,159,,"longlong __cdecl __lseeki64(int _FileHandle, longlong _Offset, int _Origin)"
+0x004dfc71,__ZeroTail,,ANALYSIS,__cdecl,ANALYSIS,50,,"undefined4 __cdecl __ZeroTail(int param_1, int param_2)"
+0x004dfca3,__IncMan,,ANALYSIS,__cdecl,ANALYSIS,77,,"undefined __cdecl __IncMan(int param_1, int param_2)"
+0x004dfcf0,__RoundMan,,ANALYSIS,__cdecl,ANALYSIS,114,,"undefined4 __cdecl __RoundMan(int param_1, int param_2)"
+0x004dfd62,__CopyMan,,ANALYSIS,__cdecl,ANALYSIS,27,,"undefined __cdecl __CopyMan(int param_1, undefined4 * param_2)"
+0x004dfd89,__IsZeroMan,,ANALYSIS,__cdecl,ANALYSIS,25,,undefined4 __cdecl __IsZeroMan(int param_1)
+0x004dfda2,__ShrMan,,ANALYSIS,__cdecl,ANALYSIS,123,,"undefined __cdecl __ShrMan(int param_1, int param_2)"
+0x004dfe1d,__ld12cvt,,ANALYSIS,__cdecl,ANALYSIS,344,,"undefined4 __cdecl __ld12cvt(ushort * param_1, uint * param_2, int * param_3)"
+0x004dff75,FID_conflict:__ld12tod,,ANALYSIS,__cdecl,USER_DEFINED,22,,"INTRNCVT_STATUS __cdecl FID_conflict:__ld12tod(_LDBL12 * _Ifp, _CRT_FLOAT * _F)"
+0x004dff8b,FID_conflict:__ld12tod,,ANALYSIS,__cdecl,USER_DEFINED,22,,"INTRNCVT_STATUS __cdecl FID_conflict:__ld12tod(_LDBL12 * _Ifp, _CRT_FLOAT * _F)"
+0x004dffa1,__ld12told,,ANALYSIS,__cdecl,USER_DEFINED,124,,"INTRNCVT_STATUS __cdecl __ld12told(_LDBL12 * _Ifp, _LDOUBLE * _Ld)"
+0x004e015e,___dtold,,ANALYSIS,__cdecl,ANALYSIS,186,,"undefined __cdecl ___dtold(uint * param_1, uint * param_2)"
+0x004e0333,__abstract_cw,,ANALYSIS,__stdcall,ANALYSIS,146,,uint __stdcall __abstract_cw(void)
+0x004e03c5,__hw_cw,,ANALYSIS,__stdcall,ANALYSIS,142,,uint __stdcall __hw_cw(void)
+0x004e04b1,__control87,,ANALYSIS,__cdecl,USER_DEFINED,50,,"uint __cdecl __control87(uint _NewValue, uint _Mask)"
+0x004e04e3,__controlfp,,ANALYSIS,__cdecl,USER_DEFINED,22,,"uint __cdecl __controlfp(uint _NewValue, uint _Mask)"
+0x004e055f,FID_conflict:ValidateRead,,ANALYSIS,__cdecl,ANALYSIS,28,,"uint __cdecl FID_conflict:ValidateRead(void * param_1, UINT_PTR param_2)"
+0x004e057b,FID_conflict:ValidateRead,,ANALYSIS,__cdecl,ANALYSIS,28,,"uint __cdecl FID_conflict:ValidateRead(LPVOID param_1, UINT_PTR param_2)"
+0x004e0597,_ValidateExecute,,ANALYSIS,__cdecl,IMPORTED,24,,int __cdecl _ValidateExecute(FuncDef9 * param_1)
+0x004e05c7,__getbuf,,ANALYSIS,__cdecl,USER_DEFINED,68,,void __cdecl __getbuf(FILE * _File)
+0x004e060b,__isatty,,ANALYSIS,__cdecl,USER_DEFINED,39,,int __cdecl __isatty(int _FileHandle)
+0x004e0632,_wctomb,,ANALYSIS,__cdecl,USER_DEFINED,102,,"int __cdecl _wctomb(char * _MbCh, wchar_t _WCh)"
+0x004e075d,__seh_longjmp_unwind@4,,ANALYSIS,__stdcall,ANALYSIS,27,,undefined __stdcall __seh_longjmp_unwind@4(int param_1)
+0x004e07be,FID_conflict:_CPtoLCID,,ANALYSIS,unknown,DEFAULT,47,,undefined FID_conflict:_CPtoLCID()
+0x004e07ed,_setSBCS,,ANALYSIS,__stdcall,ANALYSIS,41,,undefined __stdcall _setSBCS(void)
+0x004e0ba4,___initmbctable,,ANALYSIS,__stdcall,ANALYSIS,30,,undefined4 __stdcall ___initmbctable(void)
+0x004e0d8e,___crtGetStringTypeA,,ANALYSIS,__cdecl,USER_DEFINED,421,,"BOOL __cdecl ___crtGetStringTypeA(_locale_t _Plocinfo, DWORD _DWInfoType, LPCSTR _LpSrcStr, int _CchSrc, LPWORD _LpCharType, int _Code_page, BOOL _BError)"
+0x004e0f48,FID_conflict:_ungetc,,ANALYSIS,__cdecl,USER_DEFINED,108,,"int __cdecl FID_conflict:_ungetc(int _Ch, FILE * _File)"
+0x004e108b,_isspace,,ANALYSIS,__cdecl,USER_DEFINED,41,,int __cdecl _isspace(int _C)
+0x004e121f,_mbtowc,,ANALYSIS,__cdecl,USER_DEFINED,200,,"int __cdecl _mbtowc(wchar_t * _DstCh, char * _SrcCh, size_t _SrcSizeInBytes)"
+0x004e13c4,__tzset,,ANALYSIS,__cdecl,USER_DEFINED,595,,void __cdecl __tzset(void)
+0x004e1617,_cvtdate,,ANALYSIS,unknown,DEFAULT,440,,"undefined _cvtdate(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6, undefined4 param_7, undefined4 param_8, undefined4 param_9)"
+0x004e1960,___tzset,,ANALYSIS,__stdcall,ANALYSIS,21,,undefined __stdcall ___tzset(void)
+0x004e1975,_gmtime,,ANALYSIS,__cdecl,USER_DEFINED,245,,tm * __cdecl _gmtime(time_t * _Time)
+0x004e1d70,_strpbrk,,ANALYSIS,__cdecl,USER_DEFINED,64,,"char * __cdecl _strpbrk(char * _Str, char * _Control)"
+0x004e1db0,___crtMessageBoxA,,ANALYSIS,__cdecl,USER_DEFINED,249,,"int __cdecl ___crtMessageBoxA(LPCSTR _LpText, LPCSTR _LpCaption, UINT _UType)"
+0x004e1fb7,___addl,,ANALYSIS,__cdecl,ANALYSIS,33,,"undefined4 __cdecl ___addl(uint param_1, uint param_2, uint * param_3)"
+0x004e1fd8,___add_12,,ANALYSIS,__cdecl,ANALYSIS,94,,"undefined __cdecl ___add_12(uint * param_1, uint * param_2)"
+0x004e2036,___shl_12,,ANALYSIS,__cdecl,ANALYSIS,46,,undefined __cdecl ___shl_12(uint * param_1)
+0x004e2064,___shr_12,,ANALYSIS,__cdecl,ANALYSIS,45,,undefined __cdecl ___shr_12(uint * param_1)
+0x004e2920,_siglookup,,ANALYSIS,__fastcall,ANALYSIS,57,,"undefined4 * __fastcall _siglookup(undefined4 param_1, int param_2)"
+0x004e2959,_signal,,ANALYSIS,__cdecl,USER_DEFINED,264,,void __cdecl _signal(int param_1)
+0x004e2a61,_raise,,ANALYSIS,__cdecl,USER_DEFINED,297,,int __cdecl _raise(int _SigNum)
+0x004e2b8a,__flswbuf,,ANALYSIS,__cdecl,USER_DEFINED,293,,"int __cdecl __flswbuf(int _Ch, FILE * _File)"
+0x004e2caf,_getenv,,ANALYSIS,__cdecl,USER_DEFINED,129,,char * __cdecl _getenv(char * _VarName)
+0x004e2ff4,__mbsnbicoll,,ANALYSIS,__cdecl,USER_DEFINED,63,,"int __cdecl __mbsnbicoll(uchar * _Str1, uchar * _Str2, size_t _MaxCount)"
+0x004e309e,_strncnt,,ANALYSIS,__cdecl,USER_DEFINED,28,,"size_t __cdecl _strncnt(char * _String, size_t _Cnt)"
+0x004e3444,_findenv,,ANALYSIS,__cdecl,ANALYSIS,77,,int __cdecl _findenv(uchar * param_1)
+0x004e3491,_copy_environ,,ANALYSIS,__stdcall,ANALYSIS,97,,char * * __stdcall _copy_environ(void)
+0x004e36a7,__strdup,,ANALYSIS,__cdecl,USER_DEFINED,43,,char * __cdecl __strdup(char * _Src)
+0x004e3980,Unwind@004e3980,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3980(void)
+0x004e398b,Unwind@004e398b,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e398b(void)
+0x004e39a0,Unwind@004e39a0,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e39a0(void)
+0x004e39c0,Unwind@004e39c0,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e39c0(void)
+0x004e39e0,Unwind@004e39e0,,ANALYSIS,__stdcall,ANALYSIS,22,,undefined __stdcall Unwind@004e39e0(void)
+0x004e3a00,Unwind@004e3a00,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3a00(void)
+0x004e3a0b,Unwind@004e3a0b,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3a0b(void)
+0x004e3a16,Unwind@004e3a16,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3a16(void)
+0x004e3a21,Unwind@004e3a21,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3a21(void)
+0x004e3a2c,Unwind@004e3a2c,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3a2c(void)
+0x004e3a50,Unwind@004e3a50,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3a50(void)
+0x004e3a70,Unwind@004e3a70,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3a70(void)
+0x004e3a90,Unwind@004e3a90,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3a90(void)
+0x004e3a9b,Unwind@004e3a9b,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3a9b(void)
+0x004e3ab0,Unwind@004e3ab0,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3ab0(void)
+0x004e3ad0,Unwind@004e3ad0,,ANALYSIS,__stdcall,ANALYSIS,19,,undefined __stdcall Unwind@004e3ad0(void)
+0x004e3af0,Unwind@004e3af0,,ANALYSIS,__stdcall,ANALYSIS,19,,undefined __stdcall Unwind@004e3af0(void)
+0x004e3b10,Unwind@004e3b10,,ANALYSIS,__stdcall,ANALYSIS,8,,undefined __stdcall Unwind@004e3b10(void)
+0x004e3b30,Unwind@004e3b30,,ANALYSIS,__stdcall,ANALYSIS,25,,undefined __stdcall Unwind@004e3b30(void)
+0x004e3b49,Unwind@004e3b49,,ANALYSIS,__stdcall,ANALYSIS,24,,undefined __stdcall Unwind@004e3b49(void)
+0x004e3b70,Unwind@004e3b70,,ANALYSIS,__stdcall,ANALYSIS,25,,undefined __stdcall Unwind@004e3b70(void)
+0x004e3b89,Unwind@004e3b89,,ANALYSIS,__stdcall,ANALYSIS,24,,undefined __stdcall Unwind@004e3b89(void)
+0x004e3bb0,Unwind@004e3bb0,,ANALYSIS,__stdcall,ANALYSIS,27,,undefined __stdcall Unwind@004e3bb0(void)
+0x004e3bcb,Unwind@004e3bcb,,ANALYSIS,__stdcall,ANALYSIS,24,,undefined __stdcall Unwind@004e3bcb(void)
+0x004e3be3,Unwind@004e3be3,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e3be3(void)
+0x004e3bf1,Unwind@004e3bf1,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3bf1(void)
+0x004e3bfc,Unwind@004e3bfc,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3bfc(void)
+0x004e3c07,Unwind@004e3c07,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3c07(void)
+0x004e3c20,Unwind@004e3c20,,ANALYSIS,__stdcall,ANALYSIS,27,,undefined __stdcall Unwind@004e3c20(void)
+0x004e3c3b,Unwind@004e3c3b,,ANALYSIS,__stdcall,ANALYSIS,24,,undefined __stdcall Unwind@004e3c3b(void)
+0x004e3c53,Unwind@004e3c53,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e3c53(void)
+0x004e3c70,Unwind@004e3c70,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3c70(void)
+0x004e3c90,Unwind@004e3c90,,ANALYSIS,__stdcall,ANALYSIS,19,,undefined __stdcall Unwind@004e3c90(void)
+0x004e3cb0,Unwind@004e3cb0,,ANALYSIS,__stdcall,ANALYSIS,22,,undefined __stdcall Unwind@004e3cb0(void)
+0x004e3cc6,Unwind@004e3cc6,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e3cc6(void)
+0x004e3ce0,Unwind@004e3ce0,,ANALYSIS,__stdcall,ANALYSIS,8,,undefined __stdcall Unwind@004e3ce0(void)
+0x004e3d00,Unwind@004e3d00,,ANALYSIS,__stdcall,ANALYSIS,8,,undefined __stdcall Unwind@004e3d00(void)
+0x004e3d20,Unwind@004e3d20,,ANALYSIS,__stdcall,ANALYSIS,24,,undefined __stdcall Unwind@004e3d20(void)
+0x004e3d50,Unwind@004e3d50,,ANALYSIS,__stdcall,ANALYSIS,22,,undefined __stdcall Unwind@004e3d50(void)
+0x004e3d66,Unwind@004e3d66,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e3d66(void)
+0x004e3d74,Unwind@004e3d74,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e3d74(void)
+0x004e3d90,Unwind@004e3d90,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3d90(void)
+0x004e3d9b,Unwind@004e3d9b,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3d9b(void)
+0x004e3da6,Unwind@004e3da6,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3da6(void)
+0x004e3db1,Unwind@004e3db1,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3db1(void)
+0x004e3dbc,Unwind@004e3dbc,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3dbc(void)
+0x004e3dc7,Unwind@004e3dc7,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3dc7(void)
+0x004e3dd2,Unwind@004e3dd2,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3dd2(void)
+0x004e3ddd,Unwind@004e3ddd,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3ddd(void)
+0x004e3de8,Unwind@004e3de8,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3de8(void)
+0x004e3df3,Unwind@004e3df3,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3df3(void)
+0x004e3dfe,Unwind@004e3dfe,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3dfe(void)
+0x004e3e09,Unwind@004e3e09,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3e09(void)
+0x004e3e14,Unwind@004e3e14,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3e14(void)
+0x004e3e1f,Unwind@004e3e1f,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3e1f(void)
+0x004e3e2a,Unwind@004e3e2a,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3e2a(void)
+0x004e3e35,Unwind@004e3e35,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3e35(void)
+0x004e3e40,Unwind@004e3e40,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3e40(void)
+0x004e3e4b,Unwind@004e3e4b,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3e4b(void)
+0x004e3e56,Unwind@004e3e56,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3e56(void)
+0x004e3e61,Unwind@004e3e61,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3e61(void)
+0x004e3e6c,Unwind@004e3e6c,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3e6c(void)
+0x004e3e77,Unwind@004e3e77,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3e77(void)
+0x004e3e82,Unwind@004e3e82,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3e82(void)
+0x004e3e8d,Unwind@004e3e8d,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3e8d(void)
+0x004e3e98,Unwind@004e3e98,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3e98(void)
+0x004e3ea3,Unwind@004e3ea3,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3ea3(void)
+0x004e3eae,Unwind@004e3eae,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3eae(void)
+0x004e3eb9,Unwind@004e3eb9,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3eb9(void)
+0x004e3ec4,Unwind@004e3ec4,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3ec4(void)
+0x004e3ecf,Unwind@004e3ecf,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3ecf(void)
+0x004e3eda,Unwind@004e3eda,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3eda(void)
+0x004e3ee5,Unwind@004e3ee5,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3ee5(void)
+0x004e3ef0,Unwind@004e3ef0,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3ef0(void)
+0x004e3efb,Unwind@004e3efb,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3efb(void)
+0x004e3f06,Unwind@004e3f06,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3f06(void)
+0x004e3f11,Unwind@004e3f11,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3f11(void)
+0x004e3f1c,Unwind@004e3f1c,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3f1c(void)
+0x004e3f27,Unwind@004e3f27,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3f27(void)
+0x004e3f32,Unwind@004e3f32,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3f32(void)
+0x004e3f3d,Unwind@004e3f3d,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3f3d(void)
+0x004e3f48,Unwind@004e3f48,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3f48(void)
+0x004e3f53,Unwind@004e3f53,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3f53(void)
+0x004e3f5e,Unwind@004e3f5e,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3f5e(void)
+0x004e3f69,Unwind@004e3f69,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3f69(void)
+0x004e3f74,Unwind@004e3f74,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3f74(void)
+0x004e3f7f,Unwind@004e3f7f,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3f7f(void)
+0x004e3f8a,Unwind@004e3f8a,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3f8a(void)
+0x004e3fa0,Unwind@004e3fa0,,ANALYSIS,__stdcall,ANALYSIS,8,,undefined __stdcall Unwind@004e3fa0(void)
+0x004e3fc0,Unwind@004e3fc0,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3fc0(void)
+0x004e3fcb,Unwind@004e3fcb,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3fcb(void)
+0x004e3fe0,Unwind@004e3fe0,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e3fe0(void)
+0x004e4000,Unwind@004e4000,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e4000(void)
+0x004e400b,Unwind@004e400b,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e400b(void)
+0x004e4016,Unwind@004e4016,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e4016(void)
+0x004e4030,Unwind@004e4030,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e4030(void)
+0x004e4050,Unwind@004e4050,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e4050(void)
+0x004e405e,Unwind@004e405e,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e405e(void)
+0x004e406c,Unwind@004e406c,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e406c(void)
+0x004e407a,Unwind@004e407a,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e407a(void)
+0x004e4088,Unwind@004e4088,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e4088(void)
+0x004e40a0,Unwind@004e40a0,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e40a0(void)
+0x004e40ae,Unwind@004e40ae,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e40ae(void)
+0x004e40bc,Unwind@004e40bc,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e40bc(void)
+0x004e40ca,Unwind@004e40ca,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e40ca(void)
+0x004e40d8,Unwind@004e40d8,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e40d8(void)
+0x004e40f0,Unwind@004e40f0,,ANALYSIS,__stdcall,ANALYSIS,27,,undefined __stdcall Unwind@004e40f0(void)
+0x004e4120,Unwind@004e4120,,ANALYSIS,__stdcall,ANALYSIS,27,,undefined __stdcall Unwind@004e4120(void)
+0x004e413b,Unwind@004e413b,,ANALYSIS,__stdcall,ANALYSIS,27,,undefined __stdcall Unwind@004e413b(void)
+0x004e4160,Unwind@004e4160,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e4160(void)
+0x004e4180,Unwind@004e4180,,ANALYSIS,__stdcall,ANALYSIS,19,,undefined __stdcall Unwind@004e4180(void)
+0x004e41a0,Unwind@004e41a0,,ANALYSIS,__stdcall,ANALYSIS,19,,undefined __stdcall Unwind@004e41a0(void)
+0x004e41c0,Unwind@004e41c0,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e41c0(void)
+0x004e41cb,Unwind@004e41cb,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e41cb(void)
+0x004e41d6,Unwind@004e41d6,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e41d6(void)
+0x004e41e1,Unwind@004e41e1,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e41e1(void)
+0x004e4200,Unwind@004e4200,,ANALYSIS,__stdcall,ANALYSIS,8,,undefined __stdcall Unwind@004e4200(void)
+0x004e4208,Unwind@004e4208,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e4208(void)
+0x004e4220,Unwind@004e4220,,ANALYSIS,__stdcall,ANALYSIS,8,,undefined __stdcall Unwind@004e4220(void)
+0x004e4240,Unwind@004e4240,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e4240(void)
+0x004e424e,Unwind@004e424e,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e424e(void)
+0x004e425c,Unwind@004e425c,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e425c(void)
+0x004e426a,Unwind@004e426a,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e426a(void)
+0x004e4278,Unwind@004e4278,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e4278(void)
+0x004e4286,Unwind@004e4286,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e4286(void)
+0x004e4294,Unwind@004e4294,,ANALYSIS,__stdcall,ANALYSIS,14,,undefined __stdcall Unwind@004e4294(void)
+0x004e42b0,Unwind@004e42b0,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e42b0(void)
+0x004e42d0,Unwind@004e42d0,,ANALYSIS,__stdcall,ANALYSIS,30,,undefined __stdcall Unwind@004e42d0(void)
+0x004e42f0,Unwind@004e42f0,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e42f0(void)
+0x004e4310,Unwind@004e4310,,ANALYSIS,__stdcall,ANALYSIS,11,,undefined __stdcall Unwind@004e4310(void)
+0x004e4325,Unwind@004e4325,,ANALYSIS,__stdcall,ANALYSIS,26,,undefined __stdcall Unwind@004e4325(void)
+0x004e433f,Unwind@004e433f,,ANALYSIS,__stdcall,ANALYSIS,10,,undefined __stdcall Unwind@004e433f(void)
+0x004e4353,Unwind@004e4353,,ANALYSIS,__stdcall,ANALYSIS,26,,undefined __stdcall Unwind@004e4353(void)
+0x004e436d,Unwind@004e436d,,ANALYSIS,__stdcall,ANALYSIS,10,,undefined __stdcall Unwind@004e436d(void)
+0x004e4377,Unwind@004e4377,,ANALYSIS,__stdcall,ANALYSIS,26,,undefined __stdcall Unwind@004e4377(void)
+0x004e438c,Unwind@004e438c,,ANALYSIS,__stdcall,ANALYSIS,26,,undefined __stdcall Unwind@004e438c(void)
+0x004e43a6,Unwind@004e43a6,,ANALYSIS,__stdcall,ANALYSIS,10,,undefined __stdcall Unwind@004e43a6(void)
+0x004e43ba,Unwind@004e43ba,,ANALYSIS,__stdcall,ANALYSIS,26,,undefined __stdcall Unwind@004e43ba(void)
+0x004e43d4,Unwind@004e43d4,,ANALYSIS,__stdcall,ANALYSIS,10,,undefined __stdcall Unwind@004e43d4(void)
+0x004e43e8,Unwind@004e43e8,,ANALYSIS,__stdcall,ANALYSIS,26,,undefined __stdcall Unwind@004e43e8(void)
+0x004e440c,Unwind@004e440c,,ANALYSIS,__stdcall,ANALYSIS,26,,undefined __stdcall Unwind@004e440c(void)
+0x004e4430,Unwind@004e4430,,ANALYSIS,__stdcall,ANALYSIS,8,,undefined __stdcall Unwind@004e4430(void)
+0x004e4442,Unwind@004e4442,,ANALYSIS,__stdcall,ANALYSIS,26,,undefined __stdcall Unwind@004e4442(void)
+0x004e4466,Unwind@004e4466,,ANALYSIS,__stdcall,ANALYSIS,26,,undefined __stdcall Unwind@004e4466(void)
+0x004e448a,Unwind@004e448a,,ANALYSIS,__stdcall,ANALYSIS,8,,undefined __stdcall Unwind@004e448a(void)
+0x004e449c,Unwind@004e449c,,ANALYSIS,__stdcall,ANALYSIS,8,,undefined __stdcall Unwind@004e449c(void)

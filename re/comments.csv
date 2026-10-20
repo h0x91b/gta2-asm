@@ -1,0 +1,1261 @@
+address,kind,function,comment
+0x0041dc54,eol,GiveMoney,pointer to money field
+0x0042077c,pre,getUpgradeType,oil
+0x00420782,pre,getUpgradeType,Gun on car
+0x00420788,pre,getUpgradeType,"paint, suicide"
+0x00461de0,plate,MainMenu,MainMenu
+0x004760ad,pre,loadSubScripts,wil_tra.mis
+0x004760b9,pre,loadSubScripts,"replase ""mis"" to ""SCR"""
+0x004a49c0,plate,KeyUp,KeyDown
+0x004b7662,eol,ChangeMoney2,current money
+0x004c6060,plate,ShowBigOnScreenLabel,ShowBigOnScreenLabel
+0x004c8c20,plate,showDebugLabel,showDebugLabel
+0x004d5ce1,plate,__heap_alloc,"Library Function - Single Match
+Name: __heap_alloc
+Library: Visual Studio 2003 Release"
+0x004d5d27,plate,__nh_malloc,"Library Function - Single Match
+Name: __nh_malloc
+Library: Visual Studio 2003 Release"
+0x004d5d53,plate,_malloc,"Library Function - Single Match
+Name: _malloc
+Library: Visual Studio 2003 Release"
+0x004d5dca,plate,operator_new,"Library Function - Single Match
+Name: ??2@YAPAXI@Z
+Library: Visual Studio 2003 Release"
+0x004d5dd8,plate,_JumpToContinuation,"Library Function - Single Match
+Name: ?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z
+Library: Visual Studio 2003 Release"
+0x004d5e08,plate,_CallMemberFunction0,"Library Function - Single Match
+Name: ?_CallMemberFunction0@@YGXPAX0@Z
+Library: Visual Studio 2003 Release"
+0x004d5e0f,plate,FID_conflict:CallMemberFunction1,"Library Function - Multiple Matches With Different Base Names
+Name: ?_CallMemberFunction1@@YGXPAX00@Z, ?_CallMemberFunction2@@YGXPAX00H@Z
+Library: Visual Studio 2003 Release"
+0x004d5e16,plate,FID_conflict:CallMemberFunction1,"Library Function - Multiple Matches With Different Base Names
+Name: ?_CallMemberFunction1@@YGXPAX00@Z, ?_CallMemberFunction2@@YGXPAX00H@Z
+Library: Visual Studio 2003 Release"
+0x004d5e1d,plate,_UnwindNestedFrames,"Library Function - Single Match
+Name: ?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z
+Library: Visual Studio 2003 Release"
+0x004d5e6f,plate,___CxxFrameHandler,"Library Function - Single Match
+Name: ___CxxFrameHandler
+Library: Visual Studio 2003 Release"
+0x004d5f54,plate,_GetRangeOfTrysToCheck,"Library Function - Single Match
+Name: ?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z
+Library: Visual Studio 2003 Release"
+0x004d5fce,plate,_CreateFrameInfo,"Library Function - Single Match
+Name: ?_CreateFrameInfo@@YAPAUFrameInfo@@PAU1@PAX@Z
+Library: Visual Studio 2003 Release"
+0x004d6002,plate,_FindAndUnlinkFrame,"Library Function - Single Match
+Name: ?_FindAndUnlinkFrame@@YAXPAUFrameInfo@@@Z
+Library: Visual Studio 2003 Release"
+0x004d613c,plate,__global_unwind2,"Library Function - Single Match
+Name: __global_unwind2
+Library: Visual Studio"
+0x004d617e,plate,__local_unwind2,"Library Function - Single Match
+Name: __local_unwind2
+Libraries: Visual Studio 1998 Debug, Visual Studio 1998 Release, Visual Studio 2003 Debug, Visual Studio 2003 Release"
+0x004d61e6,plate,__abnormal_termination,"Library Function - Single Match
+Name: __abnormal_termination
+Library: Visual Studio"
+0x004d6209,plate,__NLG_Notify1,"Library Function - Single Match
+Name: __NLG_Notify1
+Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release"
+0x004d6212,plate,__NLG_Notify,"Library Function - Single Match
+Name: __NLG_Notify
+Libraries: Visual Studio 1998 Debug, Visual Studio 1998 Release, Visual Studio 2003 Debug, Visual Studio 2003 Release"
+0x004d6230,plate,__allshr,"Library Function - Single Match
+Name: __allshr
+Library: Visual Studio"
+0x004d6260,plate,__alldiv,"Library Function - Single Match
+Name: __alldiv
+Library: Visual Studio"
+0x004d630a,plate,_free,"Library Function - Single Match
+Name: _free
+Library: Visual Studio 2003 Release"
+0x004d6342,plate,__onexit,"Library Function - Single Match
+Name: __onexit
+Library: Visual Studio 2003 Release"
+0x004d63c4,plate,_atexit,"Library Function - Single Match
+Name: _atexit
+Library: Visual Studio 2003 Release"
+0x004d63fe,plate,FID_conflict:__fread_lk,"Library Function - Multiple Matches With Different Base Names
+Name: __fread_lk, _fread
+Library: Visual Studio 2003 Release"
+0x004d64e7,plate,FID_conflict:__fwrite_lk,"Library Function - Multiple Matches With Different Base Names
+Name: __fwrite_lk, _fwrite
+Library: Visual Studio 2003 Release"
+0x004d65ee,plate,_fseek,"Library Function - Single Match
+Name: _fseek
+Library: Visual Studio 2003 Release"
+0x004d667c,plate,_ftell,"Library Function - Single Match
+Name: _ftell
+Library: Visual Studio 2003 Release"
+0x004d685e,plate,_fclose,"Library Function - Single Match
+Name: _fclose
+Library: Visual Studio 2003 Release"
+0x004d68b4,plate,__fsopen,"Library Function - Single Match
+Name: __fsopen
+Library: Visual Studio 2003 Release"
+0x004d68f1,plate,FID_conflict:_getc,"Library Function - Multiple Matches With Different Base Names
+Name: _fgetc, _getc
+Library: Visual Studio 2003 Release"
+0x004d6925,plate,eh_vector_constructor_iterator,"Library Function - Single Match
+Name: ??_L@YGXPAXIHP6EX0@Z1@Z
+Library: Visual Studio 2003 Release
+void __stdcall `eh vector constructor iterator'(void *,unsigned int,int,void (__thiscall*)(void *),void (__thiscall*)(void *))"
+0x004d6999,plate,__ArrayUnwind,"Library Function - Single Match
+Name: ?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z
+Library: Visual Studio 2003 Release"
+0x004d69f7,plate,`eh_vector_destructor_iterator',"Library Function - Single Match
+Name: ??_M@YGXPAXIHP6EX0@Z@Z
+Library: Visual Studio 2003 Release"
+0x004d6a60,plate,__chkstk,"Library Function - Single Match
+Name: __chkstk
+Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release"
+0x004d6ae3,plate,__stricmp,"Library Function - Single Match
+Name: __stricmp
+Library: Visual Studio 2003 Release"
+0x004d6bc2,plate,_atol,"Library Function - Single Match
+Name: _atol
+Library: Visual Studio 2003 Release"
+0x004d6c98,plate,_sscanf,"Library Function - Single Match
+Name: _sscanf
+Library: Visual Studio 2003 Release"
+0x004d6cec,plate,_wcsncpy,"Library Function - Single Match
+Name: _wcsncpy
+Library: Visual Studio 2003 Release"
+0x004d6d29,plate,_wcscmp,"Library Function - Single Match
+Name: _wcscmp
+Library: Visual Studio 2003 Release"
+0x004d6dfc,plate,__ftol2,"Library Function - Single Match
+Name: __ftol2
+Library: Visual Studio"
+0x004d6e80,plate,_strrchr,"Library Function - Single Match
+Name: _strrchr
+Library: Visual Studio 2003 Release"
+0x004d6eb0,plate,_memmove,"Library Function - Single Match
+Name: _memmove
+Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release"
+0x004d73b8,plate,__exit,"Library Function - Single Match
+Name: __exit
+Library: Visual Studio 2003 Release"
+0x004d7425,plate,__itoa,"Library Function - Single Match
+Name: __itoa
+Library: Visual Studio 2003 Release"
+0x004d744f,plate,__ltoa,"Library Function - Single Match
+Name: __ltoa
+Library: Visual Studio 2003 Release"
+0x004d7568,plate,___timet_from_ft,"Library Function - Single Match
+Name: ___timet_from_ft
+Library: Visual Studio 2003 Release"
+0x004d7a04,plate,__strnicmp,"Library Function - Single Match
+Name: __strnicmp
+Library: Visual Studio 2003 Release"
+0x004d7a59,plate,FID_conflict:__wctime,"Library Function - Multiple Matches With Different Base Names
+Name: __wctime, _ctime
+Library: Visual Studio 2003 Release"
+0x004d7a72,plate,FID_conflict:__time32,"Library Function - Multiple Matches With Different Base Names
+Name: __time32, _time
+Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release"
+0x004d7ab0,plate,_strncmp,"Library Function - Single Match
+Name: _strncmp
+Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release"
+0x004d7ae9,plate,__strupr,"Library Function - Single Match
+Name: __strupr
+Library: Visual Studio 2003 Release"
+0x004d7be4,plate,___dtoxmode,"Library Function - Single Match
+Name: ___dtoxmode
+Library: Visual Studio 2003 Release"
+0x004d7ca1,plate,_IsRootUNCName,"Library Function - Single Match
+Name: _IsRootUNCName
+Library: Visual Studio 2003 Release"
+0x004d8245,plate,_rewind,"Library Function - Single Match
+Name: _rewind
+Library: Visual Studio 2003 Release"
+0x004d829a,plate,_bsearch,"Library Function - Single Match
+Name: _bsearch
+Library: Visual Studio 2003 Release"
+0x004d8447,plate,__getcwd,"Library Function - Single Match
+Name: __getcwd
+Library: Visual Studio 2003 Release"
+0x004d845a,plate,__amsg_exit,"Library Function - Single Match
+Name: __amsg_exit
+Library: Visual Studio 2003 Release"
+0x004d878f,plate,__flush,"Library Function - Single Match
+Name: __flush
+Library: Visual Studio 2003 Release"
+0x004d87ec,plate,_fflush,"Library Function - Single Match
+Name: _fflush
+Library: Visual Studio 2003 Release"
+0x004d8827,plate,_flsall,"Library Function - Single Match
+Name: _flsall
+Library: Visual Studio 2003 Release"
+0x004d8894,plate,__flushall,"Library Function - Single Match
+Name: __flushall
+Library: Visual Studio 2003 Release"
+0x004d8960,plate,_strlen,"Library Function - Single Match
+Name: _strlen
+Library: Visual Studio"
+0x004d8a9e,plate,__lseek,"Library Function - Single Match
+Name: __lseek
+Library: Visual Studio 2003 Release"
+0x004d9400,plate,_memcpy,"Library Function - Single Match
+Name: _memcpy
+Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release"
+0x004d973d,plate,___heap_select,"Library Function - Single Match
+Name: ___heap_select
+Library: Visual Studio 2003 Release"
+0x004d9757,plate,__heap_init,"Library Function - Single Match
+Name: __heap_init
+Library: Visual Studio 2003 Release"
+0x004d983c,plate,___sbh_heap_init,"Library Function - Single Match
+Name: ___sbh_heap_init
+Library: Visual Studio 2003 Release"
+0x004d9884,plate,___sbh_find_block,"Library Function - Single Match
+Name: ___sbh_find_block
+Library: Visual Studio 2003 Release"
+0x004d98af,plate,___sbh_free_block,"Library Function - Single Match
+Name: ___sbh_free_block
+Library: Visual Studio 2003 Release"
+0x004d9bc7,plate,___sbh_alloc_new_region,"Library Function - Single Match
+Name: ___sbh_alloc_new_region
+Library: Visual Studio 2003 Release"
+0x004d9c7e,plate,___sbh_alloc_new_group,"Library Function - Single Match
+Name: ___sbh_alloc_new_group
+Library: Visual Studio 2003 Release"
+0x004d9d84,plate,___sbh_resize_block,"Library Function - Single Match
+Name: ___sbh_resize_block
+Library: Visual Studio 2003 Release"
+0x004da134,plate,___sbh_heap_check,"Library Function - Single Match
+Name: ___sbh_heap_check
+Library: Visual Studio 2003 Release"
+0x004da4a8,plate,___sbh_alloc_block,"Library Function - Single Match
+Name: ___sbh_alloc_block
+Library: Visual Studio 2003 Release"
+0x004da7ba,plate,__callnewh,"Library Function - Single Match
+Name: __callnewh
+Library: Visual Studio 2003 Release"
+0x004da7d5,plate,__forcdecpt,"Library Function - Single Match
+Name: __forcdecpt
+Library: Visual Studio 2003 Release"
+0x004da892,plate,__fassign,"Library Function - Single Match
+Name: __fassign
+Library: Visual Studio 2003 Release"
+0x004dabb1,plate,__cfltcvt,"Library Function - Single Match
+Name: __cfltcvt
+Library: Visual Studio 2003 Release"
+0x004dac14,plate,__ms_p5_test_fdiv,"Library Function - Single Match
+Name: __ms_p5_test_fdiv
+Library: Visual Studio 2003 Release"
+0x004dac54,plate,__ms_p5_mp_test_fdiv,"Library Function - Single Match
+Name: __ms_p5_mp_test_fdiv
+Library: Visual Studio 2003 Release"
+0x004dac7d,plate,TypeMatch,"Library Function - Single Match
+Name: ?TypeMatch@@YAHPBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_ThrowInfo@@@Z
+Library: Visual Studio 2003 Release"
+0x004dace5,plate,___FrameUnwindToState,"Library Function - Single Match
+Name: ___FrameUnwindToState
+Library: Visual Studio 2003 Release"
+0x004dadc8,plate,___DestructExceptionObject,"Library Function - Single Match
+Name: ___DestructExceptionObject
+Library: Visual Studio 2003 Release"
+0x004dafa7,plate,CallCatchBlock,"Library Function - Single Match
+Name: ?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z
+Library: Visual Studio 2003 Release"
+0x004db13d,plate,BuildCatchObject,"Library Function - Single Match
+Name: ?BuildCatchObject@@YAXPAUEHExceptionRecord@@PAXPBU_s_HandlerType@@PBU_s_CatchableType@@@Z
+Library: Visual Studio 2003 Release"
+0x004db3af,plate,CatchIt,"Library Function - Single Match
+Name: ?CatchIt@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@PBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_TryBlockMapEntry@@H1E@Z
+Library: Visual Studio 2003 Release"
+0x004db6af,plate,___InternalCxxFrameHandler,"Library Function - Single Match
+Name: ___InternalCxxFrameHandler
+Library: Visual Studio 2003 Release"
+0x004db78e,plate,_inconsistency,"Library Function - Single Match
+Name: ?_inconsistency@@YAXXZ
+Library: Visual Studio 2003 Release"
+0x004db7c0,plate,__CallSettingFrame@12,"Library Function - Single Match
+Name: __CallSettingFrame@12
+Library: Visual Studio 2003 Release"
+0x004db80c,plate,_realloc,"Library Function - Single Match
+Name: _realloc
+Library: Visual Studio 2003 Release"
+0x004db96e,plate,__msize,"Library Function - Single Match
+Name: __msize
+Library: Visual Studio 2003 Release"
+0x004db9a6,plate,__filbuf,"Library Function - Single Match
+Name: __filbuf
+Library: Visual Studio 2003 Release"
+0x004dba84,plate,__flsbuf,"Library Function - Single Match
+Name: __flsbuf
+Library: Visual Studio 2003 Release"
+0x004dbb9a,plate,_write_char,"Library Function - Single Match
+Name: _write_char
+Library: Visual Studio 2003 Release"
+0x004dbbcd,plate,_write_multi_char,"Library Function - Single Match
+Name: _write_multi_char
+Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release, Visual Studio 2008 Release, Visual Studio 2010 Release"
+0x004dbbf1,plate,_write_string,"Library Function - Single Match
+Name: _write_string
+Library: Visual Studio 2003 Release"
+0x004dc3dc,plate,__freebuf,"Library Function - Single Match
+Name: __freebuf
+Library: Visual Studio 2003 Release"
+0x004dc407,plate,__openfile,"Library Function - Single Match
+Name: __openfile
+Library: Visual Studio 2003 Release"
+0x004dc56f,plate,__getstream,"Library Function - Single Match
+Name: __getstream
+Library: Visual Studio 2003 Release"
+0x004dc5e4,plate,__SEH_prolog,"Library Function - Single Match
+Name: __SEH_prolog
+Library: Visual Studio"
+0x004dc61f,plate,__SEH_epilog,"Library Function - Single Match
+Name: __SEH_epilog
+Library: Visual Studio"
+0x004dc710,plate,___ascii_stricmp,"Library Function - Single Match
+Name: ___ascii_stricmp
+Library: Visual Studio 2003 Release"
+0x004dc75e,plate,__dosmaperr,"Library Function - Single Match
+Name: __dosmaperr
+Library: Visual Studio 2003 Release"
+0x004dc7bd,plate,__mbctoupper,"Library Function - Single Match
+Name: __mbctoupper
+Library: Visual Studio 2003 Release"
+0x004dc866,plate,@__security_check_cookie@4,"Library Function - Single Match
+Name: @__security_check_cookie@4
+Library: Visual Studio 2003 Release"
+0x004dc874,plate,__ismbcspace,"Library Function - Single Match
+Name: __ismbcspace
+Library: Visual Studio 2003 Release"
+0x004dc910,plate,__allmul,"Library Function - Single Match
+Name: __allmul
+Library: Visual Studio"
+0x004dc944,plate,__hextodec,"Library Function - Single Match
+Name: __hextodec
+Library: Visual Studio 2003 Release"
+0x004dc976,plate,__inc,"Library Function - Single Match
+Name: __inc
+Library: Visual Studio 2003 Release"
+0x004dd550,plate,_write_char,"Library Function - Single Match
+Name: _write_char
+Library: Visual Studio 2003 Release"
+0x004dd575,plate,_write_multi_char,"Library Function - Single Match
+Name: _write_multi_char
+Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release"
+0x004dd59a,plate,_write_string,"Library Function - Single Match
+Name: _write_string
+Library: Visual Studio 2003 Release"
+0x004dde50,plate,__aulldvrm,"Library Function - Single Match
+Name: __aulldvrm
+Library: Visual Studio"
+0x004ddee5,plate,___loctotime_t,"Library Function - Single Match
+Name: ___loctotime_t
+Library: Visual Studio 2003 Release"
+0x004de000,plate,_strcpy,"Library Function - Single Match
+Name: _strcpy
+Library: Visual Studio"
+0x004de010,plate,_strcat,"Library Function - Single Match
+Name: _strcat
+Library: Visual Studio"
+0x004de200,plate,___ascii_strnicmp,"Library Function - Single Match
+Name: ___ascii_strnicmp
+Library: Visual Studio 2003 Release"
+0x004de361,plate,_localtime,"Library Function - Single Match
+Name: _localtime
+Library: Visual Studio 2003 Release"
+0x004de4f0,plate,__aulldiv,"Library Function - Single Match
+Name: __aulldiv
+Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release"
+0x004de645,plate,___crtLCMapStringA,"Library Function - Single Match
+Name: ___crtLCMapStringA
+Library: Visual Studio 2003 Release"
+0x004deb42,plate,__mbsrchr,"Library Function - Single Match
+Name: __mbsrchr
+Library: Visual Studio 2003 Release"
+0x004deb98,plate,__fullpath,"Library Function - Single Match
+Name: __fullpath
+Library: Visual Studio 2003 Release"
+0x004decec,plate,__mbctolower,"Library Function - Single Match
+Name: __mbctolower
+Library: Visual Studio 2003 Release"
+0x004ded64,plate,__mbspbrk,"Library Function - Single Match
+Name: __mbspbrk
+Library: Visual Studio 2003 Release"
+0x004def7e,plate,__FF_MSGBANNER,"Library Function - Single Match
+Name: __FF_MSGBANNER
+Library: Visual Studio 2003 Release"
+0x004defee,plate,__XcptFilter,"Library Function - Single Match
+Name: __XcptFilter
+Library: Visual Studio 2003 Release"
+0x004df1c8,plate,__setenvp,"Library Function - Single Match
+Name: __setenvp
+Library: Visual Studio 2003 Release"
+0x004df49d,plate,___crtGetEnvironmentStringsA,"Library Function - Single Match
+Name: ___crtGetEnvironmentStringsA
+Library: Visual Studio 2003 Release"
+0x004df5c0,plate,_strcmp,"Library Function - Single Match
+Name: _strcmp
+Library: Visual Studio 2003 Release"
+0x004df648,plate,__commit,"Library Function - Single Match
+Name: __commit
+Library: Visual Studio 2003 Release"
+0x004df69f,plate,_calloc,"Library Function - Single Match
+Name: _calloc
+Library: Visual Studio 2003 Release"
+0x004df80f,plate,__set_osfhnd,"Library Function - Single Match
+Name: __set_osfhnd
+Library: Visual Studio 2003 Release"
+0x004df886,plate,__free_osfhnd,"Library Function - Single Match
+Name: __free_osfhnd
+Library: Visual Studio 2003 Release"
+0x004df900,plate,__get_osfhandle,"Library Function - Single Match
+Name: __get_osfhandle
+Library: Visual Studio 2003 Release"
+0x004df93c,plate,__open_osfhandle,"Library Function - Single Match
+Name: __open_osfhandle
+Library: Visual Studio 2003 Release"
+0x004df9d9,plate,__lseeki64,"Library Function - Single Match
+Name: __lseeki64
+Library: Visual Studio 2003 Release"
+0x004dfc71,plate,__ZeroTail,"Library Function - Single Match
+Name: __ZeroTail
+Library: Visual Studio 2003 Release"
+0x004dfca3,plate,__IncMan,"Library Function - Single Match
+Name: __IncMan
+Library: Visual Studio 2003 Release"
+0x004dfcf0,plate,__RoundMan,"Library Function - Single Match
+Name: __RoundMan
+Library: Visual Studio 2003 Release"
+0x004dfd62,plate,__CopyMan,"Library Function - Single Match
+Name: __CopyMan
+Library: Visual Studio 2003 Release"
+0x004dfd89,plate,__IsZeroMan,"Library Function - Single Match
+Name: __IsZeroMan
+Library: Visual Studio 2003 Release"
+0x004dfda2,plate,__ShrMan,"Library Function - Single Match
+Name: __ShrMan
+Library: Visual Studio 2003 Release"
+0x004dfe1d,plate,__ld12cvt,"Library Function - Single Match
+Name: __ld12cvt
+Library: Visual Studio 2003 Release"
+0x004dff75,plate,FID_conflict:__ld12tod,"Library Function - Multiple Matches With Different Base Names
+Name: __ld12tod, __ld12tof
+Library: Visual Studio 2003 Release"
+0x004dff8b,plate,FID_conflict:__ld12tod,"Library Function - Multiple Matches With Different Base Names
+Name: __ld12tod, __ld12tof
+Library: Visual Studio 2003 Release"
+0x004dffa1,plate,__ld12told,"Library Function - Single Match
+Name: __ld12told
+Library: Visual Studio 2003 Release"
+0x004e015e,plate,___dtold,"Library Function - Single Match
+Name: ___dtold
+Library: Visual Studio 2003 Release"
+0x004e0333,plate,__abstract_cw,"Library Function - Single Match
+Name: __abstract_cw
+Library: Visual Studio 2003 Release"
+0x004e03c5,plate,__hw_cw,"Library Function - Single Match
+Name: __hw_cw
+Library: Visual Studio 2003 Release"
+0x004e04b1,plate,__control87,"Library Function - Single Match
+Name: __control87
+Library: Visual Studio 2003 Release"
+0x004e04e3,plate,__controlfp,"Library Function - Single Match
+Name: __controlfp
+Library: Visual Studio 2003 Release"
+0x004e055f,plate,FID_conflict:ValidateRead,"Library Function - Multiple Matches With Different Base Names
+Name: ?_ValidateRead@@YAHPBXI@Z, ?_ValidateWrite@@YAHPAXI@Z
+Library: Visual Studio 2003 Release"
+0x004e057b,plate,FID_conflict:ValidateRead,"Library Function - Multiple Matches With Different Base Names
+Name: ?_ValidateRead@@YAHPBXI@Z, ?_ValidateWrite@@YAHPAXI@Z
+Library: Visual Studio 2003 Release"
+0x004e0597,plate,_ValidateExecute,"Library Function - Single Match
+Name: ?_ValidateExecute@@YAHP6GHXZ@Z
+Library: Visual Studio 2003 Release"
+0x004e05c7,plate,__getbuf,"Library Function - Single Match
+Name: __getbuf
+Library: Visual Studio 2003 Release"
+0x004e060b,plate,__isatty,"Library Function - Single Match
+Name: __isatty
+Library: Visual Studio 2003 Release"
+0x004e0632,plate,_wctomb,"Library Function - Single Match
+Name: _wctomb
+Library: Visual Studio 2003 Release"
+0x004e075d,plate,__seh_longjmp_unwind@4,"Library Function - Single Match
+Name: __seh_longjmp_unwind@4
+Libraries: Visual Studio 1998 Debug, Visual Studio 1998 Release, Visual Studio 2003 Debug, Visual Studio 2003 Release"
+0x004e07be,plate,FID_conflict:_CPtoLCID,"Library Function - Multiple Matches With Different Base Names
+Name: ?CPtoLCID@@YAHH@Z, _CPtoLCID
+Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release, Visual Studio 2008 Release, Visual Studio 2010 Release"
+0x004e07ed,plate,_setSBCS,"Library Function - Single Match
+Name: _setSBCS
+Library: Visual Studio 2003 Release"
+0x004e0ba4,plate,___initmbctable,"Library Function - Single Match
+Name: ___initmbctable
+Library: Visual Studio 2003 Release"
+0x004e0d8e,plate,___crtGetStringTypeA,"Library Function - Single Match
+Name: ___crtGetStringTypeA
+Library: Visual Studio 2003 Release"
+0x004e0f48,plate,FID_conflict:_ungetc,"Library Function - Multiple Matches With Different Base Names
+Name: __ungetc_lk, _ungetc
+Library: Visual Studio 2003 Release"
+0x004e108b,plate,_isspace,"Library Function - Single Match
+Name: _isspace
+Library: Visual Studio 2003 Release"
+0x004e121f,plate,_mbtowc,"Library Function - Single Match
+Name: _mbtowc
+Library: Visual Studio 2003 Release"
+0x004e13c4,plate,__tzset,"Library Function - Single Match
+Name: __tzset
+Library: Visual Studio 2003 Release"
+0x004e1617,plate,_cvtdate,"Library Function - Single Match
+Name: _cvtdate
+Library: Visual Studio 2003 Release"
+0x004e1960,plate,___tzset,"Library Function - Single Match
+Name: ___tzset
+Library: Visual Studio 2003 Release"
+0x004e1975,plate,_gmtime,"Library Function - Single Match
+Name: _gmtime
+Library: Visual Studio 2003 Release"
+0x004e1d70,plate,_strpbrk,"Library Function - Single Match
+Name: _strpbrk
+Library: Visual Studio 2003 Release"
+0x004e1db0,plate,___crtMessageBoxA,"Library Function - Single Match
+Name: ___crtMessageBoxA
+Library: Visual Studio 2003 Release"
+0x004e1fb7,plate,___addl,"Library Function - Single Match
+Name: ___addl
+Library: Visual Studio 2003 Release"
+0x004e1fd8,plate,___add_12,"Library Function - Single Match
+Name: ___add_12
+Library: Visual Studio 2003 Release"
+0x004e2036,plate,___shl_12,"Library Function - Single Match
+Name: ___shl_12
+Library: Visual Studio 2003 Release"
+0x004e2064,plate,___shr_12,"Library Function - Single Match
+Name: ___shr_12
+Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release"
+0x004e2920,plate,_siglookup,"Library Function - Single Match
+Name: _siglookup
+Library: Visual Studio 2003 Release"
+0x004e2959,plate,_signal,"Library Function - Single Match
+Name: _signal
+Library: Visual Studio 2003 Release"
+0x004e2a61,plate,_raise,"Library Function - Single Match
+Name: _raise
+Library: Visual Studio 2003 Release"
+0x004e2b8a,plate,__flswbuf,"Library Function - Single Match
+Name: __flswbuf
+Library: Visual Studio 2003 Release"
+0x004e2caf,plate,_getenv,"Library Function - Single Match
+Name: _getenv
+Library: Visual Studio 2003 Release"
+0x004e2ff4,plate,__mbsnbicoll,"Library Function - Single Match
+Name: __mbsnbicoll
+Library: Visual Studio 2003 Release"
+0x004e309e,plate,_strncnt,"Library Function - Single Match
+Name: _strncnt
+Library: Visual Studio 2003 Release"
+0x004e3444,plate,_findenv,"Library Function - Single Match
+Name: _findenv
+Library: Visual Studio 2003 Release"
+0x004e3491,plate,_copy_environ,"Library Function - Single Match
+Name: _copy_environ
+Library: Visual Studio 2003 Release"
+0x004e36a7,plate,__strdup,"Library Function - Single Match
+Name: __strdup
+Library: Visual Studio 2003 Release"
+0x0056e000,pre,,311  IsTextUnicode  <<not bound>>
+0x0056e004,pre,,465  RegDeleteValueA  <<not bound>>
+0x0056e008,pre,,481  RegOpenKeyExA  <<not bound>>
+0x0056e00c,pre,,289  GetUserNameA  <<not bound>>
+0x0056e010,pre,,504  RegSetValueExA  <<not bound>>
+0x0056e014,pre,,460  RegCreateKeyExA  <<not bound>>
+0x0056e018,pre,,491  RegQueryValueExA  <<not bound>>
+0x0056e01c,pre,,456  RegCloseKey  <<not bound>>
+0x0056e024,pre,,0  DirectInput8Create  <<not bound>>
+0x0056e02c,pre,,5  Ordinal_5  <<not bound>>
+0x0056e030,pre,,1  Ordinal_1  <<not bound>>
+0x0056e038,pre,,363  GetDeviceCaps  <<not bound>>
+0x0056e040,pre,,873  WideCharToMultiByte  <<not bound>>
+0x0056e044,pre,,593  MultiByteToWideChar  <<not bound>>
+0x0056e048,pre,,328  GetFileAttributesA  <<not bound>>
+0x0056e04c,pre,,389  GetPrivateProfileStringA  <<not bound>>
+0x0056e050,pre,,193  FindClose  <<not bound>>
+0x0056e054,pre,,206  FindNextFileA  <<not bound>>
+0x0056e058,pre,,197  FindFirstFileA  <<not bound>>
+0x0056e05c,pre,,446  GetTickCount  <<not bound>>
+0x0056e060,pre,,809  Sleep  <<not bound>>
+0x0056e064,pre,,70  CreateEventA  <<not bound>>
+0x0056e068,pre,,44  CloseHandle  <<not bound>>
+0x0056e06c,pre,,926  lstrlenA  <<not bound>>
+0x0056e070,pre,,568  LocalFree  <<not bound>>
+0x0056e074,pre,,224  FormatMessageA  <<not bound>>
+0x0056e078,pre,,346  GetLastError  <<not bound>>
+0x0056e07c,pre,,607  OpenMutexA  <<not bound>>
+0x0056e080,pre,,669  ReleaseMutex  <<not bound>>
+0x0056e084,pre,,87  CreateMutexA  <<not bound>>
+0x0056e088,pre,,304  GetCurrentProcessId  <<not bound>>
+0x0056e08c,pre,,306  GetCurrentThreadId  <<not bound>>
+0x0056e090,pre,,638  QueryPerformanceCounter  <<not bound>>
+0x0056e094,pre,,241  GetCPInfo  <<not bound>>
+0x0056e098,pre,,380  GetOEMCP  <<not bound>>
+0x0056e09c,pre,,235  GetACP  <<not bound>>
+0x0056e0a0,pre,,526  IsBadCodePtr  <<not bound>>
+0x0056e0a4,pre,,529  IsBadReadPtr  <<not bound>>
+0x0056e0a8,pre,,797  SetUnhandledExceptionFilter  <<not bound>>
+0x0056e0ac,pre,,415  GetStringTypeA  <<not bound>>
+0x0056e0b0,pre,,780  SetStdHandle  <<not bound>>
+0x0056e0b4,pre,,456  GetVersionExA  <<not bound>>
+0x0056e0b8,pre,,321  GetEnvironmentStringsW  <<not bound>>
+0x0056e0bc,pre,,616  OutputDebugStringA  <<not bound>>
+0x0056e0c0,pre,,319  GetEnvironmentStrings  <<not bound>>
+0x0056e0c4,pre,,227  FreeEnvironmentStringsA  <<not bound>>
+0x0056e0c8,pre,,834  UnhandledExceptionFilter  <<not bound>>
+0x0056e0cc,pre,,357  GetModuleFileNameA  <<not bound>>
+0x0056e0d0,pre,,545  LCMapStringW  <<not bound>>
+0x0056e0d4,pre,,544  LCMapStringA  <<not bound>>
+0x0056e0d8,pre,,861  VirtualQuery  <<not bound>>
+0x0056e0dc,pre,,424  GetSystemInfo  <<not bound>>
+0x0056e0e0,pre,,859  VirtualProtect  <<not bound>>
+0x0056e0e4,pre,,507  HeapSize  <<not bound>>
+0x0056e0e8,pre,,532  IsBadWritePtr  <<not bound>>
+0x0056e0ec,pre,,505  HeapReAlloc  <<not bound>>
+0x0056e0f0,pre,,853  VirtualAlloc  <<not bound>>
+0x0056e0f4,pre,,856  VirtualFree  <<not bound>>
+0x0056e0f8,pre,,497  HeapCreate  <<not bound>>
+0x0056e0fc,pre,,499  HeapDestroy  <<not bound>>
+0x0056e100,pre,,74  CreateFileA  <<not bound>>
+0x0056e104,pre,,656  ReadFile  <<not bound>>
+0x0056e108,pre,,886  WriteFile  <<not bound>>
+0x0056e10c,pre,,336  GetFileType  <<not bound>>
+0x0056e110,pre,,414  GetStdHandle  <<not bound>>
+0x0056e114,pre,,762  SetHandleCount  <<not bound>>
+0x0056e118,pre,,753  SetFilePointer  <<not bound>>
+0x0056e11c,pre,,253  GetCommandLineA  <<not bound>>
+0x0056e120,pre,,412  GetStartupInfoA  <<not bound>>
+0x0056e124,pre,,339  GetFullPathNameA  <<not bound>>
+0x0056e128,pre,,317  GetDriveTypeA  <<not bound>>
+0x0056e12c,pre,,428  GetSystemTimeAsFileTime  <<not bound>>
+0x0056e130,pre,,183  FileTimeToLocalFileTime  <<not bound>>
+0x0056e134,pre,,219  FlushFileBuffers  <<not bound>>
+0x0056e138,pre,,558  LoadLibraryA  <<not bound>>
+0x0056e13c,pre,,418  GetStringTypeW  <<not bound>>
+0x0056e140,pre,,449  GetTimeZoneInformation  <<not bound>>
+0x0056e144,pre,,349  GetLocaleInfoA  <<not bound>>
+0x0056e148,pre,,393  GetProcAddress  <<not bound>>
+0x0056e14c,pre,,228  FreeEnvironmentStringsW  <<not bound>>
+0x0056e150,pre,,229  FreeLibrary  <<not bound>>
+0x0056e154,pre,,712  SetConsoleCtrlHandler  <<not bound>>
+0x0056e158,pre,,50  CompareStringA  <<not bound>>
+0x0056e15c,pre,,744  SetEndOfFile  <<not bound>>
+0x0056e160,pre,,184  FileTimeToSystemTime  <<not bound>>
+0x0056e164,pre,,303  GetCurrentProcess  <<not bound>>
+0x0056e168,pre,,817  TerminateProcess  <<not bound>>
+0x0056e16c,pre,,359  GetModuleHandleA  <<not bound>>
+0x0056e170,pre,,171  ExitProcess  <<not bound>>
+0x0056e174,pre,,740  SetCurrentDirectoryA  <<not bound>>
+0x0056e178,pre,,301  GetCurrentDirectoryA  <<not bound>>
+0x0056e17c,pre,,745  SetEnvironmentVariableA  <<not bound>>
+0x0056e180,pre,,501  HeapFree  <<not bound>>
+0x0056e184,pre,,689  RtlUnwind  <<not bound>>
+0x0056e188,pre,,495  HeapAlloc  <<not bound>>
+0x0056e18c,pre,,51  CompareStringW  <<not bound>>
+0x0056e194,pre,,152  ShellExecuteA  <<not bound>>
+0x0056e19c,pre,,511  PostMessageA  <<not bound>>
+0x0056e1a0,pre,,228  FindWindowExA  <<not bound>>
+0x0056e1a4,pre,,96  CreateWindowExA  <<not bound>>
+0x0056e1a8,pre,,443  LoadIconA  <<not bound>>
+0x0056e1ac,pre,,439  LoadCursorA  <<not bound>>
+0x0056e1b0,pre,,534  RegisterClassA  <<not bound>>
+0x0056e1b4,pre,,349  GetSystemMetrics  <<not bound>>
+0x0056e1b8,pre,,509  PeekMessageA  <<not bound>>
+0x0056e1bc,pre,,682  TranslateMessage  <<not bound>>
+0x0056e1c0,pre,,161  DispatchMessageA  <<not bound>>
+0x0056e1c4,pre,,513  PostQuitMessage  <<not bound>>
+0x0056e1c8,pre,,599  SetForegroundWindow  <<not bound>>
+0x0056e1cc,pre,,658  ShowWindow  <<not bound>>
+0x0056e1d0,pre,,566  SendDlgItemMessageA  <<not bound>>
+0x0056e1d4,pre,,571  SendMessageA  <<not bound>>
+0x0056e1d8,pre,,273  GetDlgItem  <<not bound>>
+0x0056e1dc,pre,,595  SetDlgItemTextA  <<not bound>>
+0x0056e1e0,pre,,275  GetDlgItemTextA  <<not bound>>
+0x0056e1e4,pre,,646  SetWindowTextA  <<not bound>>
+0x0056e1e8,pre,,375  GetWindowTextA  <<not bound>>
+0x0056e1ec,pre,,476  MessageBoxA  <<not bound>>
+0x0056e1f0,pre,,196  EnableWindow  <<not bound>>
+0x0056e1f4,pre,,198  EndDialog  <<not bound>>
+0x0056e1f8,pre,,366  GetWindowLongA  <<not bound>>
+0x0056e1fc,pre,,27  CallWindowProcA  <<not bound>>
+0x0056e200,pre,,325  GetParent  <<not bound>>
+0x0056e204,pre,,272  GetDlgCtrlID  <<not bound>>
+0x0056e208,pre,,434  KillTimer  <<not bound>>
+0x0056e20c,pre,,640  SetWindowLongA  <<not bound>>
+0x0056e210,pre,,372  GetWindowRect  <<not bound>>
+0x0056e214,pre,,634  SetTimer  <<not bound>>
+0x0056e218,pre,,158  DialogBoxParamA  <<not bound>>
+0x0056e21c,pre,,153  DestroyWindow  <<not bound>>
+0x0056e220,pre,,292  GetKeyboardLayoutNameA  <<not bound>>
+0x0056e224,pre,,728  wsprintfA  <<not bound>>
+0x0056e228,pre,,654  ShowCursor  <<not bound>>
+0x0056e22c,pre,,699  UpdateWindow  <<not bound>>
+0x0056e230,pre,,643  SetWindowPos  <<not bound>>
+0x0056e234,pre,,554  ReleaseDC  <<not bound>>
+0x0056e238,pre,,268  GetDC  <<not bound>>
+0x0056e23c,pre,,255  GetClientRect  <<not bound>>
+0x0056e240,pre,,142  DefWindowProcA  <<not bound>>
+0x0056e248,pre,,0  GetFileVersionInfoA  <<not bound>>
+0x0056e24c,pre,,10  VerQueryValueA  <<not bound>>
+0x0056e250,pre,,1  GetFileVersionInfoSizeA  <<not bound>>
+0x0056e258,pre,,163  timeGetTime  <<not bound>>
+0x0056e260,pre,,34  _BinkOpenMiles@4  <<not bound>>
+0x0056e264,pre,,45  _BinkSetSoundSystem@8  <<not bound>>
+0x0056e268,pre,,41  _BinkSetIOSize@4  <<not bound>>
+0x0056e26c,pre,,32  _BinkOpen@8  <<not bound>>
+0x0056e270,pre,,7  _BinkBufferSetDDPrimary@4  <<not bound>>
+0x0056e274,pre,,49  _BinkWait@4  <<not bound>>
+0x0056e278,pre,,18  _BinkDoFrame@4  <<not bound>>
+0x0056e27c,pre,,16  _BinkCopyToBuffer@28  <<not bound>>
+0x0056e280,pre,,5  _BinkBufferLock@4  <<not bound>>
+0x0056e284,pre,,0  _BinkBufferBlit@12  <<not bound>>
+0x0056e288,pre,,12  _BinkBufferUnlock@4  <<not bound>>
+0x0056e28c,pre,,6  _BinkBufferOpen@16  <<not bound>>
+0x0056e290,pre,,31  _BinkNextFrame@4  <<not bound>>
+0x0056e294,pre,,14  _BinkClose@4  <<not bound>>
+0x0056e298,pre,,9  _BinkBufferSetOffset@12  <<not bound>>
+0x0056e29c,pre,,1  _BinkBufferCheckWinPos@12  <<not bound>>
+0x0056e2a0,pre,,2  _BinkBufferClose@4  <<not bound>>
+0x0056e2a4,pre,,23  _BinkGetSummary@8  <<not bound>>
+0x0056e2ac,pre,,59  _AIL_allocate_3D_sample_handle@4  <<not bound>>
+0x0056e2b0,pre,,285  _AIL_startup@0  <<not bound>>
+0x0056e2b4,pre,,236  _AIL_set_digital_master_volume@8  <<not bound>>
+0x0056e2b8,pre,,277  _AIL_shutdown@0  <<not bound>>
+0x0056e2bc,pre,,185  _AIL_release_3D_sample_handle@4  <<not bound>>
+0x0056e2c0,pre,,245  _AIL_set_preference@8  <<not bound>>
+0x0056e2c4,pre,,305  _AIL_waveOutOpen@16  <<not bound>>
+0x0056e2c8,pre,,122  _AIL_mem_alloc_lock@4  <<not bound>>
+0x0056e2cc,pre,,304  _AIL_waveOutClose@4  <<not bound>>
+0x0056e2d0,pre,,293  _AIL_stream_ms_position@12  <<not bound>>
+0x0056e2d4,pre,,266  _AIL_set_stream_ms_position@8  <<not bound>>
+0x0056e2d8,pre,,295  _AIL_stream_playback_rate@4  <<not bound>>
+0x0056e2dc,pre,,268  _AIL_set_stream_playback_rate@8  <<not bound>>
+0x0056e2e0,pre,,300  _AIL_stream_volume@4  <<not bound>>
+0x0056e2e4,pre,,79  _AIL_delay@4  <<not bound>>
+0x0056e2e8,pre,,71  _AIL_close_stream@4  <<not bound>>
+0x0056e2ec,pre,,133  _AIL_open_stream@12  <<not bound>>
+0x0056e2f0,pre,,265  _AIL_set_stream_loop_count@8  <<not bound>>
+0x0056e2f4,pre,,283  _AIL_start_stream@4  <<not bound>>
+0x0056e2f8,pre,,272  _AIL_set_stream_volume@8  <<not bound>>
+0x0056e2fc,pre,,298  _AIL_stream_status@4  <<not bound>>
+0x0056e300,pre,,83  _AIL_digital_handle_reacquire@4  <<not bound>>
+0x0056e304,pre,,84  _AIL_digital_handle_release@4  <<not bound>>
+0x0056e308,pre,,90  _AIL_enumerate_3D_providers@12  <<not bound>>
+0x0056e30c,pre,,69  _AIL_close_3D_provider@4  <<not bound>>
+0x0056e310,pre,,131  _AIL_open_3D_provider@4  <<not bound>>
+0x0056e314,pre,,26  _AIL_3D_provider_attribute@12  <<not bound>>
+0x0056e318,pre,,219  _AIL_set_3D_provider_preference@12  <<not bound>>
+0x0056e31c,pre,,86  _AIL_end_3D_sample@4  <<not bound>>
+0x0056e320,pre,,279  _AIL_start_3D_sample@4  <<not bound>>
+0x0056e324,pre,,34  _AIL_3D_sample_status@4  <<not bound>>
+0x0056e328,pre,,225  _AIL_set_3D_sample_loop_count@8  <<not bound>>
+0x0056e32c,pre,,224  _AIL_set_3D_sample_loop_block@12  <<not bound>>
+0x0056e330,pre,,227  _AIL_set_3D_sample_playback_rate@8  <<not bound>>
+0x0056e334,pre,,222  _AIL_set_3D_sample_float_distances@20  <<not bound>>
+0x0056e338,pre,,218  _AIL_set_3D_position@16  <<not bound>>
+0x0056e33c,pre,,229  _AIL_set_3D_sample_volume@8  <<not bound>>
+0x0056e340,pre,,223  _AIL_set_3D_sample_info@8  <<not bound>>
+0x0056e344,pre,,87  _AIL_end_sample@4  <<not bound>>
+0x0056e348,pre,,281  _AIL_start_sample@4  <<not bound>>
+0x0056e34c,pre,,203  _AIL_sample_status@4  <<not bound>>
+0x0056e350,pre,,250  _AIL_set_sample_loop_count@8  <<not bound>>
+0x0056e354,pre,,249  _AIL_set_sample_loop_block@12  <<not bound>>
+0x0056e358,pre,,253  _AIL_set_sample_playback_rate@8  <<not bound>>
+0x0056e35c,pre,,252  _AIL_set_sample_pan@8  <<not bound>>
+0x0056e360,pre,,259  _AIL_set_sample_volume@8  <<not bound>>
+0x0056e364,pre,,246  _AIL_set_sample_address@12  <<not bound>>
+0x0056e368,pre,,188  _AIL_release_sample_handle@4  <<not bound>>
+0x0056e36c,pre,,61  _AIL_allocate_sample_handle@4  <<not bound>>
+0x0056e370,pre,,110  _AIL_init_sample@4  <<not bound>>
+0x0056e374,pre,,123  _AIL_mem_free_lock@4  <<not bound>>
+0x0056e378,pre,,257  _AIL_set_sample_type@12  <<not bound>>
+0x0056e380,pre,,57  CoInitialize  <<not bound>>
+0x0056e384,pre,,101  CoUninitialize  <<not bound>>
+0x0056e388,pre,,16  CoCreateInstance  <<not bound>>
+0x005793b0,plate,,.NET PDB Info
+0x0057a0a0,plate,,IMAGE_IMPORT_DESCRIPTOR
+0x0057a0b4,plate,,IMAGE_IMPORT_DESCRIPTOR
+0x0057a0c8,plate,,IMAGE_IMPORT_DESCRIPTOR
+0x0057a0dc,plate,,IMAGE_IMPORT_DESCRIPTOR
+0x0057a0f0,plate,,IMAGE_IMPORT_DESCRIPTOR
+0x0057a104,plate,,IMAGE_IMPORT_DESCRIPTOR
+0x0057a118,plate,,IMAGE_IMPORT_DESCRIPTOR
+0x0057a12c,plate,,IMAGE_IMPORT_DESCRIPTOR
+0x0057a140,plate,,IMAGE_IMPORT_DESCRIPTOR
+0x0057a154,plate,,IMAGE_IMPORT_DESCRIPTOR
+0x0057a168,plate,,IMAGE_IMPORT_DESCRIPTOR
+0x0057a17c,plate,,IMAGE_IMPORT_DESCRIPTOR
+0x0057a1a4,eol,,IMAGE_THUNK_DATA32
+0x0057a1a8,eol,,IMAGE_THUNK_DATA32
+0x0057a1ac,eol,,IMAGE_THUNK_DATA32
+0x0057a1b0,eol,,IMAGE_THUNK_DATA32
+0x0057a1b4,eol,,IMAGE_THUNK_DATA32
+0x0057a1b8,eol,,IMAGE_THUNK_DATA32
+0x0057a1bc,eol,,IMAGE_THUNK_DATA32
+0x0057a1c0,eol,,IMAGE_THUNK_DATA32
+0x0057a1c8,eol,,IMAGE_THUNK_DATA32
+0x0057a1d0,eol,,IMAGE_THUNK_DATA32
+0x0057a1d4,eol,,IMAGE_THUNK_DATA32
+0x0057a1dc,eol,,IMAGE_THUNK_DATA32
+0x0057a1e4,eol,,IMAGE_THUNK_DATA32
+0x0057a1e8,eol,,IMAGE_THUNK_DATA32
+0x0057a1ec,eol,,IMAGE_THUNK_DATA32
+0x0057a1f0,eol,,IMAGE_THUNK_DATA32
+0x0057a1f4,eol,,IMAGE_THUNK_DATA32
+0x0057a1f8,eol,,IMAGE_THUNK_DATA32
+0x0057a1fc,eol,,IMAGE_THUNK_DATA32
+0x0057a200,eol,,IMAGE_THUNK_DATA32
+0x0057a204,eol,,IMAGE_THUNK_DATA32
+0x0057a208,eol,,IMAGE_THUNK_DATA32
+0x0057a20c,eol,,IMAGE_THUNK_DATA32
+0x0057a210,eol,,IMAGE_THUNK_DATA32
+0x0057a214,eol,,IMAGE_THUNK_DATA32
+0x0057a218,eol,,IMAGE_THUNK_DATA32
+0x0057a21c,eol,,IMAGE_THUNK_DATA32
+0x0057a220,eol,,IMAGE_THUNK_DATA32
+0x0057a224,eol,,IMAGE_THUNK_DATA32
+0x0057a228,eol,,IMAGE_THUNK_DATA32
+0x0057a22c,eol,,IMAGE_THUNK_DATA32
+0x0057a230,eol,,IMAGE_THUNK_DATA32
+0x0057a234,eol,,IMAGE_THUNK_DATA32
+0x0057a238,eol,,IMAGE_THUNK_DATA32
+0x0057a23c,eol,,IMAGE_THUNK_DATA32
+0x0057a240,eol,,IMAGE_THUNK_DATA32
+0x0057a244,eol,,IMAGE_THUNK_DATA32
+0x0057a248,eol,,IMAGE_THUNK_DATA32
+0x0057a24c,eol,,IMAGE_THUNK_DATA32
+0x0057a250,eol,,IMAGE_THUNK_DATA32
+0x0057a254,eol,,IMAGE_THUNK_DATA32
+0x0057a258,eol,,IMAGE_THUNK_DATA32
+0x0057a25c,eol,,IMAGE_THUNK_DATA32
+0x0057a260,eol,,IMAGE_THUNK_DATA32
+0x0057a264,eol,,IMAGE_THUNK_DATA32
+0x0057a268,eol,,IMAGE_THUNK_DATA32
+0x0057a26c,eol,,IMAGE_THUNK_DATA32
+0x0057a270,eol,,IMAGE_THUNK_DATA32
+0x0057a274,eol,,IMAGE_THUNK_DATA32
+0x0057a278,eol,,IMAGE_THUNK_DATA32
+0x0057a27c,eol,,IMAGE_THUNK_DATA32
+0x0057a280,eol,,IMAGE_THUNK_DATA32
+0x0057a284,eol,,IMAGE_THUNK_DATA32
+0x0057a288,eol,,IMAGE_THUNK_DATA32
+0x0057a28c,eol,,IMAGE_THUNK_DATA32
+0x0057a290,eol,,IMAGE_THUNK_DATA32
+0x0057a294,eol,,IMAGE_THUNK_DATA32
+0x0057a298,eol,,IMAGE_THUNK_DATA32
+0x0057a29c,eol,,IMAGE_THUNK_DATA32
+0x0057a2a0,eol,,IMAGE_THUNK_DATA32
+0x0057a2a4,eol,,IMAGE_THUNK_DATA32
+0x0057a2a8,eol,,IMAGE_THUNK_DATA32
+0x0057a2ac,eol,,IMAGE_THUNK_DATA32
+0x0057a2b0,eol,,IMAGE_THUNK_DATA32
+0x0057a2b4,eol,,IMAGE_THUNK_DATA32
+0x0057a2b8,eol,,IMAGE_THUNK_DATA32
+0x0057a2bc,eol,,IMAGE_THUNK_DATA32
+0x0057a2c0,eol,,IMAGE_THUNK_DATA32
+0x0057a2c4,eol,,IMAGE_THUNK_DATA32
+0x0057a2c8,eol,,IMAGE_THUNK_DATA32
+0x0057a2cc,eol,,IMAGE_THUNK_DATA32
+0x0057a2d0,eol,,IMAGE_THUNK_DATA32
+0x0057a2d4,eol,,IMAGE_THUNK_DATA32
+0x0057a2d8,eol,,IMAGE_THUNK_DATA32
+0x0057a2dc,eol,,IMAGE_THUNK_DATA32
+0x0057a2e0,eol,,IMAGE_THUNK_DATA32
+0x0057a2e4,eol,,IMAGE_THUNK_DATA32
+0x0057a2e8,eol,,IMAGE_THUNK_DATA32
+0x0057a2ec,eol,,IMAGE_THUNK_DATA32
+0x0057a2f0,eol,,IMAGE_THUNK_DATA32
+0x0057a2f4,eol,,IMAGE_THUNK_DATA32
+0x0057a2f8,eol,,IMAGE_THUNK_DATA32
+0x0057a2fc,eol,,IMAGE_THUNK_DATA32
+0x0057a300,eol,,IMAGE_THUNK_DATA32
+0x0057a304,eol,,IMAGE_THUNK_DATA32
+0x0057a308,eol,,IMAGE_THUNK_DATA32
+0x0057a30c,eol,,IMAGE_THUNK_DATA32
+0x0057a310,eol,,IMAGE_THUNK_DATA32
+0x0057a314,eol,,IMAGE_THUNK_DATA32
+0x0057a318,eol,,IMAGE_THUNK_DATA32
+0x0057a31c,eol,,IMAGE_THUNK_DATA32
+0x0057a320,eol,,IMAGE_THUNK_DATA32
+0x0057a324,eol,,IMAGE_THUNK_DATA32
+0x0057a328,eol,,IMAGE_THUNK_DATA32
+0x0057a32c,eol,,IMAGE_THUNK_DATA32
+0x0057a330,eol,,IMAGE_THUNK_DATA32
+0x0057a338,eol,,IMAGE_THUNK_DATA32
+0x0057a340,eol,,IMAGE_THUNK_DATA32
+0x0057a344,eol,,IMAGE_THUNK_DATA32
+0x0057a348,eol,,IMAGE_THUNK_DATA32
+0x0057a34c,eol,,IMAGE_THUNK_DATA32
+0x0057a350,eol,,IMAGE_THUNK_DATA32
+0x0057a354,eol,,IMAGE_THUNK_DATA32
+0x0057a358,eol,,IMAGE_THUNK_DATA32
+0x0057a35c,eol,,IMAGE_THUNK_DATA32
+0x0057a360,eol,,IMAGE_THUNK_DATA32
+0x0057a364,eol,,IMAGE_THUNK_DATA32
+0x0057a368,eol,,IMAGE_THUNK_DATA32
+0x0057a36c,eol,,IMAGE_THUNK_DATA32
+0x0057a370,eol,,IMAGE_THUNK_DATA32
+0x0057a374,eol,,IMAGE_THUNK_DATA32
+0x0057a378,eol,,IMAGE_THUNK_DATA32
+0x0057a37c,eol,,IMAGE_THUNK_DATA32
+0x0057a380,eol,,IMAGE_THUNK_DATA32
+0x0057a384,eol,,IMAGE_THUNK_DATA32
+0x0057a388,eol,,IMAGE_THUNK_DATA32
+0x0057a38c,eol,,IMAGE_THUNK_DATA32
+0x0057a390,eol,,IMAGE_THUNK_DATA32
+0x0057a394,eol,,IMAGE_THUNK_DATA32
+0x0057a398,eol,,IMAGE_THUNK_DATA32
+0x0057a39c,eol,,IMAGE_THUNK_DATA32
+0x0057a3a0,eol,,IMAGE_THUNK_DATA32
+0x0057a3a4,eol,,IMAGE_THUNK_DATA32
+0x0057a3a8,eol,,IMAGE_THUNK_DATA32
+0x0057a3ac,eol,,IMAGE_THUNK_DATA32
+0x0057a3b0,eol,,IMAGE_THUNK_DATA32
+0x0057a3b4,eol,,IMAGE_THUNK_DATA32
+0x0057a3b8,eol,,IMAGE_THUNK_DATA32
+0x0057a3bc,eol,,IMAGE_THUNK_DATA32
+0x0057a3c0,eol,,IMAGE_THUNK_DATA32
+0x0057a3c4,eol,,IMAGE_THUNK_DATA32
+0x0057a3c8,eol,,IMAGE_THUNK_DATA32
+0x0057a3cc,eol,,IMAGE_THUNK_DATA32
+0x0057a3d0,eol,,IMAGE_THUNK_DATA32
+0x0057a3d4,eol,,IMAGE_THUNK_DATA32
+0x0057a3d8,eol,,IMAGE_THUNK_DATA32
+0x0057a3dc,eol,,IMAGE_THUNK_DATA32
+0x0057a3e0,eol,,IMAGE_THUNK_DATA32
+0x0057a3e4,eol,,IMAGE_THUNK_DATA32
+0x0057a3ec,eol,,IMAGE_THUNK_DATA32
+0x0057a3f0,eol,,IMAGE_THUNK_DATA32
+0x0057a3f4,eol,,IMAGE_THUNK_DATA32
+0x0057a3fc,eol,,IMAGE_THUNK_DATA32
+0x0057a404,eol,,IMAGE_THUNK_DATA32
+0x0057a408,eol,,IMAGE_THUNK_DATA32
+0x0057a40c,eol,,IMAGE_THUNK_DATA32
+0x0057a410,eol,,IMAGE_THUNK_DATA32
+0x0057a414,eol,,IMAGE_THUNK_DATA32
+0x0057a418,eol,,IMAGE_THUNK_DATA32
+0x0057a41c,eol,,IMAGE_THUNK_DATA32
+0x0057a420,eol,,IMAGE_THUNK_DATA32
+0x0057a424,eol,,IMAGE_THUNK_DATA32
+0x0057a428,eol,,IMAGE_THUNK_DATA32
+0x0057a42c,eol,,IMAGE_THUNK_DATA32
+0x0057a430,eol,,IMAGE_THUNK_DATA32
+0x0057a434,eol,,IMAGE_THUNK_DATA32
+0x0057a438,eol,,IMAGE_THUNK_DATA32
+0x0057a43c,eol,,IMAGE_THUNK_DATA32
+0x0057a440,eol,,IMAGE_THUNK_DATA32
+0x0057a444,eol,,IMAGE_THUNK_DATA32
+0x0057a448,eol,,IMAGE_THUNK_DATA32
+0x0057a450,eol,,IMAGE_THUNK_DATA32
+0x0057a454,eol,,IMAGE_THUNK_DATA32
+0x0057a458,eol,,IMAGE_THUNK_DATA32
+0x0057a45c,eol,,IMAGE_THUNK_DATA32
+0x0057a460,eol,,IMAGE_THUNK_DATA32
+0x0057a464,eol,,IMAGE_THUNK_DATA32
+0x0057a468,eol,,IMAGE_THUNK_DATA32
+0x0057a46c,eol,,IMAGE_THUNK_DATA32
+0x0057a470,eol,,IMAGE_THUNK_DATA32
+0x0057a474,eol,,IMAGE_THUNK_DATA32
+0x0057a478,eol,,IMAGE_THUNK_DATA32
+0x0057a47c,eol,,IMAGE_THUNK_DATA32
+0x0057a480,eol,,IMAGE_THUNK_DATA32
+0x0057a484,eol,,IMAGE_THUNK_DATA32
+0x0057a488,eol,,IMAGE_THUNK_DATA32
+0x0057a48c,eol,,IMAGE_THUNK_DATA32
+0x0057a490,eol,,IMAGE_THUNK_DATA32
+0x0057a494,eol,,IMAGE_THUNK_DATA32
+0x0057a498,eol,,IMAGE_THUNK_DATA32
+0x0057a49c,eol,,IMAGE_THUNK_DATA32
+0x0057a4a0,eol,,IMAGE_THUNK_DATA32
+0x0057a4a4,eol,,IMAGE_THUNK_DATA32
+0x0057a4a8,eol,,IMAGE_THUNK_DATA32
+0x0057a4ac,eol,,IMAGE_THUNK_DATA32
+0x0057a4b0,eol,,IMAGE_THUNK_DATA32
+0x0057a4b4,eol,,IMAGE_THUNK_DATA32
+0x0057a4b8,eol,,IMAGE_THUNK_DATA32
+0x0057a4bc,eol,,IMAGE_THUNK_DATA32
+0x0057a4c0,eol,,IMAGE_THUNK_DATA32
+0x0057a4c4,eol,,IMAGE_THUNK_DATA32
+0x0057a4c8,eol,,IMAGE_THUNK_DATA32
+0x0057a4cc,eol,,IMAGE_THUNK_DATA32
+0x0057a4d0,eol,,IMAGE_THUNK_DATA32
+0x0057a4d4,eol,,IMAGE_THUNK_DATA32
+0x0057a4d8,eol,,IMAGE_THUNK_DATA32
+0x0057a4dc,eol,,IMAGE_THUNK_DATA32
+0x0057a4e0,eol,,IMAGE_THUNK_DATA32
+0x0057a4e4,eol,,IMAGE_THUNK_DATA32
+0x0057a4e8,eol,,IMAGE_THUNK_DATA32
+0x0057a4ec,eol,,IMAGE_THUNK_DATA32
+0x0057a4f0,eol,,IMAGE_THUNK_DATA32
+0x0057a4f4,eol,,IMAGE_THUNK_DATA32
+0x0057a4f8,eol,,IMAGE_THUNK_DATA32
+0x0057a4fc,eol,,IMAGE_THUNK_DATA32
+0x0057a500,eol,,IMAGE_THUNK_DATA32
+0x0057a504,eol,,IMAGE_THUNK_DATA32
+0x0057a508,eol,,IMAGE_THUNK_DATA32
+0x0057a50c,eol,,IMAGE_THUNK_DATA32
+0x0057a510,eol,,IMAGE_THUNK_DATA32
+0x0057a514,eol,,IMAGE_THUNK_DATA32
+0x0057a518,eol,,IMAGE_THUNK_DATA32
+0x0057a51c,eol,,IMAGE_THUNK_DATA32
+0x0057a524,eol,,IMAGE_THUNK_DATA32
+0x0057a528,eol,,IMAGE_THUNK_DATA32
+0x0057a52c,eol,,IMAGE_THUNK_DATA32
+0x0057a534,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a54a,plate,,IMAGE_IMPORT_DESCRIPTOR - DLL NAME
+0x0057a556,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a564,plate,,IMAGE_IMPORT_DESCRIPTOR - DLL NAME
+0x0057a56e,plate,,IMAGE_IMPORT_DESCRIPTOR - DLL NAME
+0x0057a57a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a58c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a5a2,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a5bc,plate,,IMAGE_IMPORT_DESCRIPTOR - DLL NAME
+0x0057a5c8,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a5d6,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a5e8,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a5fe,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a60e,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a61e,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a634,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a64a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a660,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a67c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a688,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a698,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a6aa,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a6ba,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a6c2,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a6d2,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a6e0,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a6ec,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a6f8,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a70a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a71a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a728,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a738,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a748,plate,,IMAGE_IMPORT_DESCRIPTOR - DLL NAME
+0x0057a756,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a764,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a77a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a78a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a798,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a7aa,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a7bc,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a7ce,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a7e0,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a7ee,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a7fe,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a80a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a81c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a82e,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a83a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a84a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a856,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a868,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a87a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a886,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a898,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a8a8,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a8c2,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a8ce,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a8dc,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a8ec,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a8fc,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a908,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a910,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a920,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a930,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a946,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a956,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a966,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a978,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a98a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a99e,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a9b2,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a9c2,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a9d6,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a9e8,plate,,IMAGE_IMPORT_BY_NAME
+0x0057a9f6,plate,,IMAGE_IMPORT_BY_NAME
+0x0057aa02,plate,,IMAGE_IMPORT_DESCRIPTOR - DLL NAME
+0x0057aa0e,plate,,IMAGE_IMPORT_BY_NAME
+0x0057aa1e,plate,,IMAGE_IMPORT_DESCRIPTOR - DLL NAME
+0x0057aa28,plate,,IMAGE_IMPORT_BY_NAME
+0x0057aa36,plate,,IMAGE_IMPORT_BY_NAME
+0x0057aa46,plate,,IMAGE_IMPORT_BY_NAME
+0x0057aa5a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057aa6c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057aa7e,plate,,IMAGE_IMPORT_BY_NAME
+0x0057aa8e,plate,,IMAGE_IMPORT_BY_NAME
+0x0057aa9e,plate,,IMAGE_IMPORT_BY_NAME
+0x0057aab0,plate,,IMAGE_IMPORT_DESCRIPTOR - DLL NAME
+0x0057aabe,plate,,IMAGE_IMPORT_BY_NAME
+0x0057aace,plate,,IMAGE_IMPORT_DESCRIPTOR - DLL NAME
+0x0057aada,plate,,IMAGE_IMPORT_BY_NAME
+0x0057aaee,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ab00,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ab10,plate,,IMAGE_IMPORT_DESCRIPTOR - DLL NAME
+0x0057ab1a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ab2a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ab3e,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ab54,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ab70,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ab8a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ab9e,plate,,IMAGE_IMPORT_BY_NAME
+0x0057abb4,plate,,IMAGE_IMPORT_BY_NAME
+0x0057abca,plate,,IMAGE_IMPORT_BY_NAME
+0x0057abde,plate,,IMAGE_IMPORT_BY_NAME
+0x0057abf6,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ac08,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ac16,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ac2c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ac48,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ac56,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ac6a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ac82,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ac96,plate,,IMAGE_IMPORT_DESCRIPTOR - DLL NAME
+0x0057aca2,plate,,IMAGE_IMPORT_BY_NAME
+0x0057acbc,plate,,IMAGE_IMPORT_BY_NAME
+0x0057acd2,plate,,IMAGE_IMPORT_BY_NAME
+0x0057acf2,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ad12,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ad30,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ad4c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ad64,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ad86,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ada6,plate,,IMAGE_IMPORT_BY_NAME
+0x0057adc6,plate,,IMAGE_IMPORT_BY_NAME
+0x0057adde,plate,,IMAGE_IMPORT_BY_NAME
+0x0057adf4,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ae08,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ae24,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ae42,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ae5c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057ae84,plate,,IMAGE_IMPORT_BY_NAME
+0x0057aeaa,plate,,IMAGE_IMPORT_BY_NAME
+0x0057aece,plate,,IMAGE_IMPORT_BY_NAME
+0x0057aef0,plate,,IMAGE_IMPORT_BY_NAME
+0x0057af0a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057af24,plate,,IMAGE_IMPORT_BY_NAME
+0x0057af3c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057af62,plate,,IMAGE_IMPORT_BY_NAME
+0x0057af82,plate,,IMAGE_IMPORT_BY_NAME
+0x0057af9c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057afb8,plate,,IMAGE_IMPORT_BY_NAME
+0x0057afda,plate,,IMAGE_IMPORT_BY_NAME
+0x0057affa,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b01c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b034,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b050,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b066,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b086,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b09c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b0b2,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b0c2,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b0da,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b0fc,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b11a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b13a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b158,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b16e,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b186,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b19c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b1b4,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b1d6,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b1e8,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b200,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b224,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b236,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b25a,plate,,IMAGE_IMPORT_DESCRIPTOR - DLL NAME
+0x0057b264,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b270,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b27c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b288,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b2a2,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b2ba,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b2d2,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b2e0,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b2f4,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b308,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b31c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b334,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b34e,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b368,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b378,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b38c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b39e,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b3b0,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b3c2,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b3d4,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b3e4,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b3f2,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b3fe,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b40a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b418,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b426,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b434,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b442,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b452,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b460,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b470,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b47c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b48e,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b49e,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b4ae,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b4be,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b4ce,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b4e4,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b500,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b51a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b532,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b54c,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b566,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b57a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b58a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b59a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b5b8,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b5c8,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b5d8,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b5e2,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b5ee,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b5fa,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b614,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b62a,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b640,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b652,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b664,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b67e,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b690,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b6a8,plate,,IMAGE_IMPORT_BY_NAME
+0x0057b6ba,plate,,IMAGE_IMPORT_BY_NAME
+0x0059534c,plate,,class ios RTTI Type Descriptor
+0x00595354,eol,,TypeDescriptor.name
+0x00595360,plate,,class ostream RTTI Type Descriptor
+0x00595368,eol,,TypeDescriptor.name
+0x00595378,plate,,class ofstream RTTI Type Descriptor
+0x00595380,eol,,TypeDescriptor.name
+0x00595390,plate,,class ostream_withassign RTTI Type Descriptor
+0x00595398,eol,,TypeDescriptor.name
+0x005953b4,plate,,class streambuf RTTI Type Descriptor
+0x005953bc,eol,,TypeDescriptor.name
+0x005953cc,plate,,class filebuf RTTI Type Descriptor
+0x005953d4,eol,,TypeDescriptor.name
+0x00595428,plate,,class type_info RTTI Type Descriptor
+0x00595430,eol,,TypeDescriptor.name
+0x006771f0,plate,,Rsrc_Icon_1_c09 Size of resource: 0x568 bytes
+0x00677758,plate,,Rsrc_Icon_2_c09 Size of resource: 0x6c8 bytes
+0x00677e20,plate,,Rsrc_Icon_3_c09 Size of resource: 0x8a8 bytes
+0x006786c8,plate,,Rsrc_Icon_4_c09 Size of resource: 0xea8 bytes
+0x00679570,plate,,Rsrc_Dialog_67_809 Size of resource: 0x4a bytes
+0x006795bc,plate,,Rsrc_Dialog_68_809 Size of resource: 0x5a bytes
+0x00679618,plate,,Rsrc_GroupIcon_65_809 Size of resource: 0x3e bytes
+0x00679658,plate,,Rsrc_Version_1_809 Size of resource: 0x34c bytes
