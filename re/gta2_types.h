@@ -158,6 +158,7 @@ typedef struct SKeyboard SKeyboard;
 typedef struct Timing Timing;
 typedef struct TrafficLights TrafficLights;
 typedef struct TrafficManagerS1 TrafficManagerS1;
+typedef struct FrontendImage FrontendImage;
 typedef struct Ambulance Ambulance;
 typedef struct AmbulanceSub AmbulanceSub;
 typedef struct BareGameObject BareGameObject;
@@ -1886,6 +1887,7 @@ typedef short Sint16;
 typedef char Sint8;
 typedef ushort Uint16;
 typedef uchar Uint8;
+typedef char CHAR;
 typedef int32_t HRESULT;
 typedef wchar_t WCHAR;
 
@@ -4079,6 +4081,13 @@ struct TrafficLights {
 struct TrafficManagerS1 {
     uint8_t _gap_0x0[0x2f];
     undefined1 field_0x2f; /* 0x2f */
+};
+
+// /imported/renderer-doc/FrontendImage  size 0x88
+struct FrontendImage {
+    CHAR path[128]; /* 0x0 */
+    uint size; /* 0x80 */
+    int handle; /* 0x84 */
 };
 
 // /imported/seuko-mod/AmbulanceSub  size 0x20

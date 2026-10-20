@@ -396,9 +396,15 @@ primitives in `gbh_BeginScene`.
 
 ## 6. gta2.exe annotations to apply later in Ghidra
 
-Collected for `gta2.segments.fixed.exe` (not applied: another task owns that
-program right now). Names follow the user's existing style; nothing here
-renames an existing user name.
+Collected for `gta2.segments.fixed.exe`. **Applied 2026-10-20** where the address had no
+name yet; addresses that already carried a name kept it, so in Ghidra (and `re/`) look for:
+slots `d3ddll_<export>` / `dmavideo_<export>` (not `pgbh_*` / `pVid_*`), `SVideoPtr` (type
+`SVideo *`, = `VidCtx`, 0x4c4 B) for `g_VidCtx`, `ptrToMainWindow` / `hInstance` (now typed),
+`rendername` / `dmavideo.dll` (now `char[256]`), `GBHGraphicsError`, `InitVideoDll` (=
+LoadDmaVideo), `ApplyGammaAndWindowSize` (= SetVideoMode), `fullScreenProbably`,
+`ResizeWindow`, `d3ddll_ConvertColourBank` (function at 0x4caeb0), `d3d` (= BeginFrame2D),
+`SetGamma` / `gamma`, `DrawGTAText` (seuko name, = DrawText2D), `relToGBHGraphic`,
+`eachFrame`, `draw`. `g_GbhStats` is typed `void *` (GbhGlobals is not modelled yet).
 
 | address | kind | proposed name / type |
 |---|---|---|

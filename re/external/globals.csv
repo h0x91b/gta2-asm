@@ -271,9 +271,9 @@ gta2-resurection.gzf,gzf/globals.csv:128,1,0x00672f40,StructRelToTextSpeed,globa
 gta2-resurection.gzf,gzf/globals.csv:129,1,0x006732e0,full_height,global,/undefined4,,.data,SAME,,,full_height,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:130,1,0x006732e4,full_width,global,/undefined4,,.data,SAME,,,full_width,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:131,1,0x006732e8,WindowY,global,/undefined4,,.data,CONFLICT,semantic,name,window_height,/undefined4,
-gta2-resurection.gzf,gzf/globals.csv:132,1,0x006732f0,dmavideo.dll,global,/pointer,,.data,SAME,,,dmavideo.dll,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:132,1,0x006732f0,dmavideo.dll,global,/pointer,,.data,SAME,,,dmavideo.dll,/char[256],
 gta2-resurection.gzf,gzf/globals.csv:133,1,0x00673470,renderdevice,global,/undefined4,,.data,SAME,,,renderdevice,/undefined,
-gta2-resurection.gzf,gzf/globals.csv:134,1,0x00673478,rendername,global,/undefined1,,.data,SAME,,,rendername,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:134,1,0x00673478,rendername,global,/undefined1,,.data,SAME,,,rendername,/char[256],
 gta2-resurection.gzf,gzf/globals.csv:135,1,0x00673578,WindowX,global,/undefined4,,.data,CONFLICT,semantic,name,window_width,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:136,1,0x0067357c,screenX,global,/int,,.data,CONFLICT,semantic,name,windowLeft,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:137,1,0x00673588,videodevice,global,/undefined4,,.data,SAME,,,videodevice,/undefined4,
@@ -282,9 +282,9 @@ gta2-resurection.gzf,gzf/globals.csv:139,1,0x00673590,screenY,global,/undefined4
 gta2-resurection.gzf,gzf/globals.csv:140,1,0x00673594,gammaRelated,global,/undefined4,,.data,CONFLICT,naming,name (similar),relatedToGamma,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:141,1,0x00673598,min_frame_rate,global,/undefined1,,.data,SAME,,,min_frame_rate,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:142,1,0x00673944,TrafficManager,global,/_my/TrafficManager *,,.data,CONFLICT,semantic,name,ptrToWeaponRelStruct,/_weapon/WeaponRelStruct *,
-gta2-resurection.gzf,gzf/globals.csv:143,1,0x00673d18,hwnd,global,/undefined4,,.data,CONFLICT,semantic,name,ptrToMainWindow,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:143,1,0x00673d18,hwnd,global,/undefined4,,.data,CONFLICT,semantic,name,ptrToMainWindow,/WinDef.h/HWND,
 gta2-resurection.gzf,gzf/globals.csv:144,1,0x00673d20,dinputrelated,global,/undefined4,,.data,CONFLICT,semantic,name,SVideoPtr,/imported/seuko-mod/SVideo *,
-gta2-resurection.gzf,gzf/globals.csv:145,1,0x00673e28,DirectInput,global,/undefined4,,.data,CONFLICT,semantic,name,hInstance,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:145,1,0x00673e28,DirectInput,global,/undefined4,,.data,CONFLICT,semantic,name,hInstance,/WinDef.h/HINSTANCE,
 gta2-resurection.gzf,gzf/globals.csv:146,1,0x00673f54,VersionMajor,global,/undefined4,,.data,SAME,,,VERSION_MAJOR,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:147,1,0x00673f58,VersionMinor,global,/undefined4,,.data,SAME,,,VERSION_MINOR,/undefined4,
 gta2-seuko-mod,src/game/memory.h:37,1,0x00595014,IsFullScreen,global,bool,,.data,CONFLICT,semantic,name,start_mode,/undefined4,object at address
@@ -334,7 +334,7 @@ gta2-seuko-mod,src/game/memory.h:41,1,0x006732e8,WindowedHeight,global,int,,.dat
 gta2-seuko-mod,src/game/memory.h:43,1,0x00673474,ScreenHeight,global,int,,.data,SAME,,,ScreenHeight,/int,object at address
 gta2-seuko-mod,src/game/memory.h:40,1,0x00673578,WindowedWidth,global,int,,.data,CONFLICT,naming,name (similar),window_width,/undefined4,object at address
 gta2-seuko-mod,src/game/memory.h:42,1,0x00673584,ScreenWidth,global,int,,.data,SAME,,,ScreenWidth,/int,object at address
-gta2-seuko-mod,src/game/memory.h:53,1,0x00673d18,GameWindow,global,HWND,,.data,CONFLICT,semantic,name,ptrToMainWindow,/undefined4,object at address
+gta2-seuko-mod,src/game/memory.h:53,1,0x00673d18,GameWindow,global,HWND,,.data,CONFLICT,semantic,name,ptrToMainWindow,/WinDef.h/HWND,object at address
 gta2-seuko-mod,src/game/memory.h:36,1,0x00673d20,SVideoPtr,global,SVideo*,,.data,SAME,,"ours labels inside: VERSION_MAJOR@+0x234, VERSION_MINOR@+0x238, cwd@+0x8=found_width, hInstance@+0x108, isMultiplayer@+0x10c",SVideoPtr,/imported/seuko-mod/SVideo *,object at address
 gta2-seuko-mod,src/game/memory.h:54,1,0x00673e2c,IsMultiplayer,global,bool,,.data,SAME,,,isMultiplayer,/undefined4,object at address
 gta2-seuko-mod,src/game/memory.h:30,1,0x00675358,IsRendererLoaded,global,bool,,.data,SAME,,,IsRendererLoaded,/bool,object at address

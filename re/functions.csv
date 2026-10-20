@@ -206,12 +206,16 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00451fe0,dInput,,USER_DEFINED,__fastcall,ANALYSIS,29,,undefined __fastcall dInput(int param_1)
 0x00452490,copyPlayerName,,USER_DEFINED,__fastcall,ANALYSIS,47,,undefined __fastcall copyPlayerName(int param_1)
 0x00452990,IntroMovieBik,,USER_DEFINED,__stdcall,USER_DEFINED,35,,char * __stdcall IntroMovieBik(void)
+0x00452d50,LoadFrontendImage,,USER_DEFINED,__stdcall,ANALYSIS,204,,"undefined __stdcall LoadFrontendImage(uint param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4)"
+0x00452e20,LoadFrontendImages,,USER_DEFINED,__stdcall,ANALYSIS,58,,undefined __stdcall LoadFrontendImages(void)
 0x00452e60,isLanguageEqToJ,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall isLanguageEqToJ(LocaleSettings * param_1)
+0x00453020,DrawFrontendBackground,,USER_DEFINED,unknown,DEFAULT,437,,undefined DrawFrontendBackground()
 0x00453d80,dInput8,,USER_DEFINED,__thiscall,ANALYSIS,145,,"undefined __thiscall dInput8(void * this, undefined4 param_1)"
 0x00453e20,MainMenu,,USER_DEFINED,__fastcall,USER_DEFINED,5702,,void __fastcall MainMenu(FrontEnd * param_1)
 0x00455850,notAScryptLoading,,USER_DEFINED,__fastcall,ANALYSIS,715,,undefined __fastcall notAScryptLoading(int param_1)
 0x00456a60,InitFrontend,,USER_DEFINED,__fastcall,USER_DEFINED,814,,undefined __fastcall InitFrontend(FrontEnd * frontend)
 0x00457830,Init,,USER_DEFINED,__stdcall,ANALYSIS,196,,undefined __stdcall Init(void)
+0x004585f0,DrawFrontendFrame,,USER_DEFINED,__thiscall,ANALYSIS,83,,"undefined __thiscall DrawFrontendFrame(void * this, undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4)"
 0x004587b0,?Intro,,USER_DEFINED,__stdcall,USER_DEFINED,2355,,"void __stdcall ?Intro(FrontEnd * this, ushort doPlayMovies)"
 0x004590f0,ApplyCheats,,USER_DEFINED,default,USER_DEFINED,1102,,"void ApplyCheats(FrontEnd * frontEnd, WCHAR * profileName, wchar_t * param_3)"
 0x00459760,relatedToAudio,,USER_DEFINED,__stdcall,ANALYSIS,82,,undefined __stdcall relatedToAudio(void)
@@ -290,6 +294,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0046b620,relS12,,USER_DEFINED,__thiscall,USER_DEFINED,233,,"void __thiscall relS12(S12 * s12, int iParm1, byte param_3)"
 0x00471f20,DrawTileBlock,,USER_DEFINED,__fastcall,USER_DEFINED,440,,"void __fastcall DrawTileBlock(S12 * s12, int param_2, int * x, int * y)"
 0x004720e0,DrawMapLayer,,USER_DEFINED,__fastcall,USER_DEFINED,47,,void __fastcall DrawMapLayer(S12 * s12)
+0x00472110,SetupFrameLighting,,USER_DEFINED,__fastcall,ANALYSIS,1108,,undefined __fastcall SetupFrameLighting(S12 * param_1)
 0x00472570,CountOfDigitsInNumber,,USER_DEFINED,__stdcall,USER_DEFINED,50,,undefined __stdcall CountOfDigitsInNumber(int * max)
 0x00472640,setSomethingTo1,,USER_DEFINED,__stdcall,ANALYSIS,9,,undefined __stdcall setSomethingTo1(void)
 0x00472e00,random,,USER_DEFINED,unknown,DEFAULT,136,,undefined random(undefined4 param_1)
@@ -297,6 +302,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00473010,Ocupation17,,USER_DEFINED,__thiscall,ANALYSIS,294,,"uint __thiscall Ocupation17(void * this, Ped * param_1)"
 0x004740b0,relToAmbulance,,USER_DEFINED,__thiscall,ANALYSIS,49,,"undefined __thiscall relToAmbulance(void * this, undefined4 param_1, undefined4 param_2)"
 0x00474100,relInitS14,,USER_DEFINED,__fastcall,USER_DEFINED,15,,void __fastcall relInitS14(S14 * param_1)
+0x00474110,DrawFlatRect2D,,USER_DEFINED,__stdcall,ANALYSIS,139,,"undefined __stdcall DrawFlatRect2D(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5)"
 0x004741a0,nothing,,USER_DEFINED,__stdcall,USER_DEFINED,1,,void __stdcall nothing(S14 * param_1)
 0x00474530,do_mike,,USER_DEFINED,__stdcall,ANALYSIS,1580,,undefined __stdcall do_mike(void)
 0x00474e50,initS17_mission,,USER_DEFINED,__fastcall,USER_DEFINED,37,,undefined __fastcall initS17_mission(S17_mission * param_1)
@@ -426,6 +432,8 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004c2420,S2_f1,,USER_DEFINED,__fastcall,USER_DEFINED,16,,void __fastcall S2_f1(S2 * param_1)
 0x004c2540,LoadGXT,,USER_DEFINED,__fastcall,USER_DEFINED,446,,void __fastcall LoadGXT(LocaleSettings * s1)
 0x004c2620,initS1,,USER_DEFINED,__fastcall,USER_DEFINED,152,,undefined __fastcall initS1(LocaleSettings * s1)
+0x004c2970,RegisterStylePalettes,,USER_DEFINED,__fastcall,ANALYSIS,69,,undefined __fastcall RegisterStylePalettes(int param_1)
+0x004c29c0,FreeStylePalettes,,USER_DEFINED,__fastcall,ANALYSIS,51,,undefined __fastcall FreeStylePalettes(int param_1)
 0x004c2ac0,GetSpriteTexture,,USER_DEFINED,__fastcall,USER_DEFINED,196,,"void * __fastcall GetSpriteTexture(S4 * s4, DWORD edx, SPRITE_TYPE spriteType, uint spriteId, PALETTE_BASE paletteBase, uint remap)"
 0x004c30a0,relToGBHGraphic,,USER_DEFINED,__fastcall,USER_DEFINED,238,,void __fastcall relToGBHGraphic(S4 * param_1)
 0x004c3190,InitS4,,USER_DEFINED,__fastcall,USER_DEFINED,165,,S4 * __fastcall InitS4(S4 * s4)
@@ -450,26 +458,34 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004cad30,InitMouseExclusive,,USER_DEFINED,__stdcall,USER_DEFINED,102,,bool __stdcall InitMouseExclusive(void)
 0x004cada0,not_matter,,USER_DEFINED,__stdcall,ANALYSIS,16,,undefined __stdcall not_matter(void)
 0x004cadb0,DeinitMouseExclusive,,USER_DEFINED,__cdecl,USER_DEFINED,37,,void __cdecl DeinitMouseExclusive(void)
-0x004cae50,LoadRenderer,,USER_DEFINED,__cdecl,ANALYSIS,49,,"undefined __cdecl LoadRenderer(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6)"
+0x004cae50,InitRenderer,,USER_DEFINED,__cdecl,ANALYSIS,49,,"undefined __cdecl InitRenderer(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6)"
+0x004caea0,InitRendererDevice,,USER_DEFINED,__stdcall,ANALYSIS,9,,undefined __stdcall InitRendererDevice(void)
 0x004caeb0,d3ddll_ConvertColourBank,,USER_DEFINED,__stdcall,ANALYSIS,116,,undefined __stdcall d3ddll_ConvertColourBank(void)
 0x004caec0,d3d,,USER_DEFINED,__stdcall,ANALYSIS,130,,undefined __stdcall d3d(void)
+0x004caf50,EndFrame2D,,USER_DEFINED,__stdcall,ANALYSIS,13,,undefined __stdcall EndFrame2D(void)
 0x004cb0c0,GetGTATextWidth,,USER_DEFINED,__stdcall,USER_DEFINED,125,,"SCR_f __stdcall GetGTATextWidth(wchar_t * text, short fontId)"
 0x004cb150,time_and_window_size,,USER_DEFINED,__stdcall,ANALYSIS,119,,undefined __stdcall time_and_window_size(void)
 0x004cb1d0,loadRenderSettings1,,USER_DEFINED,__cdecl,ANALYSIS,182,,undefined __cdecl loadRenderSettings1(undefined4 param_1)
 0x004cb290,loadRenderSettings2,,USER_DEFINED,__stdcall,ANALYSIS,308,,uint __stdcall loadRenderSettings2(void)
+0x004cb3f0,ReadRendererSettings,,USER_DEFINED,__cdecl,ANALYSIS,220,,undefined __cdecl ReadRendererSettings(undefined4 param_1)
 0x004cb520,isFullScreenMode,,USER_DEFINED,__stdcall,ANALYSIS,11,,undefined __stdcall isFullScreenMode(void)
 0x004cb530,HideMouseCursor,,USER_DEFINED,__stdcall,USER_DEFINED,17,,void __stdcall HideMouseCursor(void)
 0x004cb550,ShowMouseCursor,,USER_DEFINED,__stdcall,USER_DEFINED,17,,void __stdcall ShowMouseCursor(void)
 0x004cb570,fullScreenProbably,,USER_DEFINED,__stdcall,ANALYSIS,336,,undefined __stdcall fullScreenProbably(void)
 0x004cb6c0,GetAndReleaseHdc,,USER_DEFINED,__stdcall,ANALYSIS,46,,undefined4 __stdcall GetAndReleaseHdc(void)
+0x004cb6f0,CanRenderWindowed,,USER_DEFINED,__stdcall,ANALYSIS,35,,int __stdcall CanRenderWindowed(void)
 0x004cb730,ResizeWindow,,USER_DEFINED,__stdcall,ANALYSIS,16,,uint __stdcall ResizeWindow(void)
 0x004cb880,d3dStuff,,USER_DEFINED,__stdcall,ANALYSIS,10,,undefined __stdcall d3dStuff(void)
+0x004cb890,ShutdownVideo,,USER_DEFINED,__stdcall,ANALYSIS,35,,undefined __stdcall ShutdownVideo(void)
 0x004cb930,SetGamma,,USER_DEFINED,__stdcall,ANALYSIS,96,,int __stdcall SetGamma(int param_1)
 0x004cb990,gamma,,USER_DEFINED,__cdecl,ANALYSIS,38,,undefined __cdecl gamma(undefined4 param_1)
+0x004cba50,DrawSprite2D,,USER_DEFINED,__stdcall,ANALYSIS,857,,"undefined __stdcall DrawSprite2D(int param_1, undefined4 param_2)"
+0x004cbdb0,DrawSprite2DAt,,USER_DEFINED,__stdcall,ANALYSIS,784,,"undefined __stdcall DrawSprite2DAt(undefined4 param_1, undefined4 param_2, undefined4 param_3, uint param_4, uint param_5)"
 0x004cc100,DrawGTAText,,USER_DEFINED,__stdcall,USER_DEFINED,1149,,"void __stdcall DrawGTAText(wchar_t * str, SCR_f x, SCR_f y, short fontId, SCR_f scale, PALETTE_BASE * paletteBasePtr, int remap, SPRITE_INVISIBILITY spriteInvisibility, SCR_f param_9)"
 0x004cc580,GetWindowRect,,USER_DEFINED,__stdcall,USER_DEFINED,53,,"BOOL __stdcall GetWindowRect(HWND hWnd, LPRECT lpRect)"
 0x004cc5c0,ApplyGammaAndWindowSize,,USER_DEFINED,__cdecl,ANALYSIS,216,,"undefined __cdecl ApplyGammaAndWindowSize(undefined4 param_1, undefined4 param_2)"
 0x004cc6a0,loadRenderSettings,,USER_DEFINED,__cdecl,ANALYSIS,45,,undefined __cdecl loadRenderSettings(undefined4 param_1)
+0x004cc6d0,InitVideo,,USER_DEFINED,__cdecl,ANALYSIS,252,,"undefined __cdecl InitVideo(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5)"
 0x004cc990,MaxAmmo,,USER_DEFINED,__stdcall,USER_DEFINED,13,,byte __stdcall MaxAmmo(uint weapon)
 0x004cc9b0,GetFirstWeapon,,USER_DEFINED,__fastcall,USER_DEFINED,4,,WEAPON_STRUCT * __fastcall GetFirstWeapon(WeaponRelStruct * param_1)
 0x004cca30,ShotX10Ammo,,USER_DEFINED,__fastcall,USER_DEFINED,33,,void __fastcall ShotX10Ammo(WEAPON_STRUCT * pToAmmo)
@@ -491,8 +507,14 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004d0c39,caseD_2,switchD_004d0a32,ANALYSIS,__stdcall,ANALYSIS,117,,undefined __stdcall caseD_2(void)
 0x004d1170,WinMain,,USER_DEFINED,__stdcall,USER_DEFINED,62,,"int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)"
 0x004d11b8,WinMain2,,USER_DEFINED,__stdcall,USER_DEFINED,1491,,"WPARAM __stdcall WinMain2(undefined4 param_1, undefined4 param_2, int param_3, int param_4, int param_5, int param_6, int param_7, int param_8, int param_9, int param_10, undefined4 lpMsg, UINT param_12, WPARAM param_13)"
+0x004d2cf0,VidNotLoadedError,,USER_DEFINED,__stdcall,ANALYSIS,21,,undefined __stdcall VidNotLoadedError(void)
+0x004d2da0,UnloadDmaVideo,,USER_DEFINED,__stdcall,USER_DEFINED,171,,void __stdcall UnloadDmaVideo(SVideo * vidCtx)
 0x004d2e50,InitVideoDll,,USER_DEFINED,__stdcall,USER_DEFINED,1784,,undefined4 __stdcall InitVideoDll(LPCSTR param_1)
 0x004d35c0,GBHGraphicsError,,USER_DEFINED,__stdcall,ANALYSIS,36,,undefined __stdcall GBHGraphicsError(void)
+0x004d35f0,ResetGbhSlots,,USER_DEFINED,__stdcall,ANALYSIS,318,,undefined __stdcall ResetGbhSlots(void)
+0x004d3730,UnloadRenderDll,,USER_DEFINED,__stdcall,ANALYSIS,52,,undefined4 __stdcall UnloadRenderDll(void)
+0x004d3770,LoadRenderDllExports,,USER_DEFINED,__stdcall,USER_DEFINED,4032,,int __stdcall LoadRenderDllExports(char * dllName)
+0x004d4730,LoadRenderDll,,USER_DEFINED,__stdcall,USER_DEFINED,74,,"int __stdcall LoadRenderDll(char * dllName, SVideo * vidCtx)"
 0x004d5ce1,__heap_alloc,,ANALYSIS,__cdecl,USER_DEFINED,70,,void * __cdecl __heap_alloc(size_t _Size)
 0x004d5d27,__nh_malloc,,ANALYSIS,__cdecl,USER_DEFINED,44,,"void * __cdecl __nh_malloc(size_t _Size, int _NhFlag)"
 0x004d5d53,_malloc,,ANALYSIS,__cdecl,IMPORTED,18,,void * __cdecl _malloc(size_t _Size)

@@ -51,14 +51,15 @@ Examples: `grep -i ped re/functions.csv`, `grep -n 'struct Car ' re/gta2_types.h
 
 | | named (exported) | auto-named (skipped) |
 |---|---|---|
-| functions | **834** (500 by hand + 333 library/analysis + 1 imported) | 3789 `FUN_` (190 of them with a hand-set signature → `functions_typed_unnamed.csv`) |
-| labels/globals | **364** (356 by hand + 8 imported) | 58632 `DAT_`/`LAB_`; 11360 analysis labels (strings, switch tables) skipped; 108 `DAT_` with a user type → `globals_typed_unnamed.csv` |
-| types | **328**: 231 structs, 6 unions, 73 enums, 12 typedefs, 6 function types | Ghidra-generated PE/DOS/PDB/Demangler types and the Windows type archive (only pulled in as dependencies) |
+| functions | **856** (522 by hand + 333 library/analysis + 1 imported) | 3767 `FUN_` (190 of them with a hand-set signature → `functions_typed_unnamed.csv`) |
+| labels/globals | **370** (362 by hand + 8 imported) | 58626 `DAT_`/`LAB_`; 11360 analysis labels (strings, switch tables) skipped; 108 `DAT_` with a user type → `globals_typed_unnamed.csv` |
+| types | **329**: 232 structs, 6 unions, 73 enums, 12 typedefs, 6 function types | Ghidra-generated PE/DOS/PDB/Demangler types and the Windows type archive (only pulled in as dependencies) |
 | imports | 216 | |
 | comments | 897 | |
 
 Types under `/imported/seuko-mod`, `/imported/gzf-2021` and `/imported/gta2-mouse` were
-imported from the external sources in `re/external/` (see its README, "Imported into Ghidra").
+imported from the external sources in `re/external/` (see its README, "Imported into Ghidra");
+`/imported/renderer-doc` holds types from `docs/renderer-api.md` §6.
 
 ## Gotchas in the source data
 

@@ -19,6 +19,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00591e8b,relToS24_unk26,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00591e8c,relToS24_unk27,,USER_DEFINED,.data.exp,,/undefined,1
 0x00591f48,CHEATS_CODE,,USER_DEFINED,.data.exp,,/int[8],32
+0x00591f68,g_FrontendImages,,USER_DEFINED,.data.exp,,/imported/renderer-doc/FrontendImage[25],3400
 0x00595010,max_frame_rate,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00595011,isNight,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00595014,start_mode,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -327,12 +328,13 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x006732e0,full_height,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006732e4,full_width,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006732e8,window_height,,USER_DEFINED,.data.exp,,/undefined4,4
-0x006732f0,dmavideo.dll,,USER_DEFINED,.data.exp,,/undefined1,1
+0x006732f0,dmavideo.dll,,USER_DEFINED,.data.exp,,/char[256],256
 0x00673470,renderdevice,,USER_DEFINED,.data.exp,,/undefined,1
 0x00673474,ScreenHeight,,USER_DEFINED,.data.exp,,/int,4
-0x00673478,rendername,,USER_DEFINED,.data.exp,,/undefined1,1
+0x00673478,rendername,,USER_DEFINED,.data.exp,,/char[256],256
 0x00673578,window_width,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0067357c,windowLeft,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00673580,g_RendererKind,,USER_DEFINED,.data.exp,,/int,4
 0x00673584,ScreenWidth,,USER_DEFINED,.data.exp,,/int,4
 0x00673588,videodevice,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0067358c,lighting,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -342,17 +344,21 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x0067359c,tripple_buffer,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006735a5,relatedTod3d,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00673944,ptrToWeaponRelStruct,,USER_DEFINED,.data.exp,,/_weapon/WeaponRelStruct *,4
-0x00673d18,ptrToMainWindow,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00673d18,ptrToMainWindow,,USER_DEFINED,.data.exp,,/WinDef.h/HWND,4
 0x00673d1c,mutex,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00673d20,SVideoPtr,,USER_DEFINED,.data.exp,,/imported/seuko-mod/SVideo *,4
 0x00673d28,cwd,,USER_DEFINED,.data.exp,,/undefined,1
-0x00673e28,hInstance,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00673e28,hInstance,,USER_DEFINED,.data.exp,,/WinDef.h/HINSTANCE,4
 0x00673e2c,isMultiplayer,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00673f54,VERSION_MAJOR,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00673f58,VERSION_MINOR,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00675008,EnvironmentStrings,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006752e8,g_hDmaVideo,,USER_DEFINED,.data.exp,,/WinDef.h/HMODULE,4
+0x00675300,VidSlotTable,,USER_DEFINED,.data.exp,,/void *[22],88
 0x00675358,IsRendererLoaded,,USER_DEFINED,.data.exp,,/bool,1
 0x0067535c,d3ddll_DrawLine,,USER_DEFINED,.data.exp,,/undefined,1
+0x00675360,g_GbhStats,,USER_DEFINED,.data.exp,,/void *,4
+0x00675364,g_hRenderDll,,USER_DEFINED,.data.exp,,/WinDef.h/HMODULE,4
 0x00676704,lpCmdLine,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00676cd8,strPathToGXT,,USER_DEFINED,.data.exp,,/undefined,1
 0x006771f0,Rsrc_Icon_1_c09,,IMPORTED,.rsrc,,/IconResource,1384

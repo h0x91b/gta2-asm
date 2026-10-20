@@ -2655,6 +2655,13 @@ WEAPON.WEAPON_FLAMETHROWER equ 8
 WEAPON.WEAPON_SMG_SILENCED equ 9
 WEAPON.WEAPON_DUAL_PISTOL equ 10
 
+; /imported/renderer-doc/FrontendImage  (136 bytes)
+struc FrontendImage
+    .path                             resb 128    ; 0x0 CHAR[128]
+    .size                             resb 4      ; 0x80 uint
+    .handle                           resb 4      ; 0x84 int
+endstruc
+
 ; /imported/seuko-mod/Ambulance  (272 bytes)
 struc Ambulance
     resb 1
