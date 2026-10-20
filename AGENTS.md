@@ -13,8 +13,14 @@ the process, the memory layout and every OS/library service it expects.
 
 ## Execution model
 
-Decided, not yet proven end to end (a separate spike task is proving the 32-bit
-segment under Rosetta — do not implement the loader from this document alone).
+Proven up to the first original-code calls: `spike/` proved the 32-bit LDT segment
+under Rosetta, and `host/loader` (see `host/README.md`) maps vanilla `gta2.exe` at
+`0x3F0000`, stubs every import and calls original functions in 32-bit mode with
+checked results. No Win32 shim or game init exists yet.
+
+Loader gotcha: copy each section's raw data up to `align_up(VirtualSize, 0x1000)`,
+not just `VirtualSize` — the 11.44 patch keeps code in `.text`'s raw slack (the entry
+point jumps to `0x56DCDA`, past VirtualSize end `0x56DBC0`).
 
 - **Host**: an x86-64 Mach-O built from NASM (`-f macho64`), running under
   **Rosetta 2** on Apple Silicon.
@@ -237,6 +243,7 @@ the assembly side.
 
 ## Rules for agents
 
+- **Run builds, tests and programs in a visible tmux pane next to you** (`dev3 pane run "<cmd>" --label <name>`, read it with `dev3 pane logs <id>`, close it with `dev3 pane close <id>`), so the user watches the logs live. Quick read-only commands (grep, cat, git status) may stay inline.
 - Never commit game files, extracted assets, or any binary (`*.exe`, `*.dll`, `*.o`,
   built hosts). Build output must be git-ignored.
 - Never modify the main checkout or the Ghidra projects. Your worktree's `gta2/`
