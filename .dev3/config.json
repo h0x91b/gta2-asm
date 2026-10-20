@@ -1,6 +1,6 @@
 {
   "devScript": "host/build.sh --load --entry",
-  "clonePaths": [],
+  "clonePaths": ["data.pak"],
   "defaultBaseBranch": "master",
   "defaultCompareRefMode": "remote",
   "portCount": 0

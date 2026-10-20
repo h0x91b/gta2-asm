@@ -115,11 +115,13 @@ Option 1 is implemented for the frontend in `host/w32_renderer.asm`
 
 ## Game files (`data.pak`)
 
-- The full game (92 MB) is **committed** as `data.pak` in the repository root: a zip
-  with zero compression (every entry Stored) of the old `gta2/` folder, paths relative
-  to it (`gta2.ebin`, `data/audio/fstyle.raw`, …). Every worktree gets it through git
-  checkout, so `clonePaths` is empty. The user chose to commit it (2026-10-21); it is
-  the only binary allowed in git. Never modify or re-pack it without the user's word.
+- The full game (92 MB) is `data.pak` in the repository root: a zip with zero
+  compression (every entry Stored) of the old `gta2/` folder, paths relative to it
+  (`gta2.ebin`, `data/audio/fstyle.raw`, …). It is **git-ignored and never committed**:
+  the repository is public and the game files are Rockstar's. The canonical copy is in
+  the main checkout; `.dev3/config.json` has `"clonePaths": ["data.pak"]`, so every
+  task worktree gets its own copy-on-write clone. Never modify or re-pack it without
+  the user's word.
 - For an experiment that needs loose files, unpack it into your worktree
   (`unzip -q data.pak -d gta2`; `/gta2/` stays git-ignored) and never commit the result.
   `tools/mkpak.sh [dir [out]]` rebuilds a pak from such a folder (`zip -0 -r -X`).
@@ -263,8 +265,7 @@ the assembly side.
 
 - **Run builds, tests and programs in a visible tmux pane next to you** (`dev3 pane run "<cmd>" --label <name>`, read it with `dev3 pane logs <id>`, close it with `dev3 pane close <id>`), so the user watches the logs live. Quick read-only commands (grep, cat, git status) may stay inline.
 - Never commit game files, extracted assets, or any binary (`*.exe`, `*.dll`, `*.o`,
-  built hosts); the one exception is `data.pak` (see "Game files"). Build output must
-  be git-ignored.
+  built hosts), and never `data.pak`. Build output must be git-ignored.
 - Never modify the main checkout or the Ghidra projects. An unpacked `gta2/` in your
   worktree is yours to change.
 - Addresses are always virtual addresses for ImageBase `0x3F0000` (11.44). Cite
