@@ -13,12 +13,13 @@ the process, the memory layout and every OS/library service it expects.
 
 ## Execution model
 
-Proven up to the renderer plugin: `spike/` proved the 32-bit LDT segment under
+Proven up to the main menu: `spike/` proved the 32-bit LDT segment under
 Rosetta, `host/loader` (see `host/README.md`) maps vanilla `gta2.exe` at `0x3F0000`, and
 `--entry` runs the game from its PE entry point through NASM Win32 shims (CRT startup,
-WinMain, registry, a real SDL3 window, DirectInput) to `LoadLibraryA("dmavideo.dll")`;
-it stops at the first renderer call `dmavideo.dll!Vid_InitDLL`. Shim list, policies and
-the exact stopping point: `docs/win32-shims.md`.
+WinMain, registry, a real SDL3 window, DirectInput) and our SDL_Renderer replacements of
+`dmavideo.dll`/`d3ddll.dll` into the frontend loop, which draws the original main menu
+(no input yet). Shim list and policies: `docs/win32-shims.md`; renderer:
+`docs/renderer-sdl.md`.
 
 SDL3 is **dlopen'ed, not linked**: linked, dyld puts its frameworks in the low 4 GB and
 `mmap(0x3F0000)` fails. Do not "fix" that with a fixed zerofill Mach-O segment either:
@@ -103,8 +104,8 @@ Ways to port the renderer, in order of preference:
    Direct3D (immediate mode, DX5-era) COM vtables on SDL. Much larger surface.
 3. Patch the game's draw call sites directly. Fragile; only for odd cases.
 
-The `gbh_*` signatures are not documented here yet. Recover them from the Ghidra
-project or from the reference repos before implementing.
+Option 1 is implemented for the frontend in `host/w32_renderer.asm`
+(`docs/renderer-sdl.md`); the full API is in `docs/renderer-api.md`.
 
 ## Game files (`gta2/`)
 

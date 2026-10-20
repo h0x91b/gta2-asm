@@ -98,6 +98,7 @@ setup_user32:
     test rax, rax
     jz .no_lib
     mov rbx, rax
+    mov [sdl_lib], rax              ; w32_renderer.asm resolves its own SDL functions
 %macro SDLFN 1
     mov rdi, rbx
     lea rsi, [%%n]

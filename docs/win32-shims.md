@@ -6,6 +6,12 @@ with `%include` (one NASM unit).
 
 ## Current stopping point (2026-10-20)
 
+**Update:** with the renderer plugins implemented (`host/w32_renderer.asm`,
+[`renderer-sdl.md`](renderer-sdl.md)) the game no longer stops: it loads both plugins,
+initialises the (silent) audio, loads the frontend and **runs the frontend loop,
+drawing the main menu**, until the window is closed (or `--frames=N`). The section
+below is the record of the stop before that step.
+
 The game runs the MSVC CRT startup and WinMain, creates its window (a real SDL3
 window, 960×720), initialises DirectInput, loads its video plugin, resolves its 22
 `Vid_*` exports, and stops at the **first renderer call: `dmavideo.dll!Vid_InitDLL`,
@@ -56,6 +62,8 @@ a window titled "GTA2", 960×720 client area, black).
 | `--entry` | jump to the PE entry point after the function checks |
 | `--trace` | one line per shim call: `DLL!Name(args) = result <- caller` (+ WndProc messages, file opens) |
 | `--hold` | when the run stops, keep pumping SDL events for 5 s so the window is visible |
+| `--frames=N` | exit (status 0) after N presented frames (`renderer-sdl.md`) |
+| `--shot=PATH` | with `--frames`: save the last frame's back buffer as BMP |
 
 ## Mechanism
 
@@ -232,9 +240,8 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
 
 ## What the game needs next (notes for later work)
 
-- **Renderer**: `dmavideo.dll` first (`Vid_InitDLL` is the first call, from
-  `0x4D3505`), then presumably `d3ddll.dll`. Plugin modules are fake: add a shim table
-  named `dmavideo` / `d3ddll` (to `w32_tables.asm`) and GetProcAddress binds to it.
+- **Renderer**: done for the frontend — shim tables `dmavideo` / `d3ddll` in
+  `w32_renderer.asm`, see `renderer-sdl.md`. Gameplay drawing (tiles, lighting) is next.
 - **Input**: DirectInput devices return nothing pressed. Filling `GetDeviceState` from
   `SDL_GetKeyboardState` (SDL scancode → DIK_*) is a small step.
 - **Audio/video**: every mss32/binkw32 call returns 0. If the game treats a 0 from

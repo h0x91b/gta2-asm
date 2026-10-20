@@ -22,5 +22,7 @@ shim_tables:
     dq shimtab_mss32
     dq shimtab_binkw32
     dq shimtab_gta2
+    dq shimtab_dmavideo
+    dq shimtab_d3ddll
     dq 0
 section .text

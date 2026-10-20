@@ -1,4 +1,5 @@
 {
+  "devScript": "host/build.sh --load --entry",
   "clonePaths": ["gta2"],
   "defaultBaseBranch": "main",
   "defaultCompareRefMode": "remote",

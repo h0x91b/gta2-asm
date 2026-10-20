@@ -824,6 +824,29 @@ _main:
     mov byte [hold], 1
     jmp .arg
 .not_hold:
+    mov rdi, [rbx]                  ; --frames=N: exit after N presented frames
+    lea rsi, [arg_frames]
+    mov edx, 9
+    call _strncmp
+    test eax, eax
+    jnz .not_frames
+    mov rdi, [rbx]
+    add rdi, 9
+    call _atoi
+    mov [r_exit_frame], eax
+    jmp .arg
+.not_frames:
+    mov rdi, [rbx]                  ; --shot=PATH: save the last frame (with --frames) as BMP
+    lea rsi, [arg_shot]
+    mov edx, 7
+    call _strncmp
+    test eax, eax
+    jnz .not_shot
+    mov rax, [rbx]
+    add rax, 7
+    mov [r_shot_path], rax
+    jmp .arg
+.not_shot:
     mov rax, [rbx]
     mov [exe_path], rax
     jmp .arg
@@ -853,6 +876,7 @@ _main:
     call protect_image
     call setup_kernel32
     call setup_user32
+    call setup_renderer
     call setup_registry
 
     lea rdi, [msg_calls]
@@ -964,6 +988,8 @@ default_exe: db "gta2/gta2.exe", 0
 arg_entry:   db "--entry", 0
 arg_trace:   db "--trace", 0
 arg_hold:    db "--hold", 0
+arg_frames:  db "--frames=", 0
+arg_shot:    db "--shot=", 0
 prot_names:  db "---", 0, "r--", 0, "-w-", 0, "rw-", 0, "--x", 0, "r-x", 0, "-wx", 0, "rwx", 0
 str_pass:    db "PASS", 0
 str_fail:    db "FAIL", 0
@@ -1043,6 +1069,7 @@ enter_game_dir:
 %include "w32_misc.asm"
 %include "w32_dinput.asm"
 %include "w32_hooks.asm"
+%include "w32_renderer.asm"
 %include "w32_tables.asm"
 
 section .rodata

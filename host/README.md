@@ -10,10 +10,14 @@ host/build.sh --load --entry  # ...then run the game from its PE entry point thr
                               # shims; stops (exit 3) at the first unimplemented import
 host/build.sh --load --entry --trace   # + one log line per shim call
 host/build.sh --load --entry --hold    # + keep the SDL window up 5 s when it stops
+host/build.sh --load --entry --frames=300 --shot=/tmp/menu.bmp
+                              # run to the main menu, save frame 300 as BMP, exit 0
 ```
 
-The Win32 shim layer (`w32_*.asm`, included by `loader.asm`) and its exact stopping
-point are documented in [`docs/win32-shims.md`](../docs/win32-shims.md).
+The Win32 shim layer (`w32_*.asm`, included by `loader.asm`) is documented in
+[`docs/win32-shims.md`](../docs/win32-shims.md); the SDL3 renderer that replaces
+`dmavideo.dll`/`d3ddll.dll` (`w32_renderer.asm`) in
+[`docs/renderer-sdl.md`](../docs/renderer-sdl.md).
 
 Both are linked with `-pagezero_size 0x1000 -no_pie -image_base 0x200000000` through
 `/usr/bin/ld` (via `xcrun -f ld`), so the low 4 GB is free for the game. `loader` links
