@@ -111,7 +111,8 @@ match the 64-bit-inode struct layouts; the plain names are the legacy ABI.
 
 ## Policies (decisions with long-term impact)
 
-- **Paths.** The host `chdir`s into the directory holding `gta2.exe`; the game is told
+- **Paths.** The host `chdir`s into the directory holding `gta2.ebin` (vanilla
+  `gta2.exe` renamed on disk: no `.exe` files in the project); the game is told
   it lives in `C:\GTA2` (`GetModuleFileNameA` → `C:\GTA2\gta2.exe`,
   `GetCurrentDirectoryA` → `C:\GTA2`). `C:\GTA2\x` and relative paths map into the game
   directory, any other absolute path is refused (not found). Backslashes become `/` and

@@ -76,7 +76,7 @@ imported from the external sources in `re/external/` (see its README, "Imported 
 
 ```sh
 brew install ghidra                              # 12.1.4 used for this export
-re/tools/export.sh [~/ghidra/gta-2-recovered.gpr]  # PROGRAM=..., VANILLA=path/to/gta2.exe
+re/tools/export.sh [~/ghidra/gta-2-recovered.gpr]  # PROGRAM=..., VANILLA=path/to/gta2.ebin
 ```
 
 The script copies the project into `$TMPDIR/gta2-ghidra-work` (Ghidra 12 refuses project
@@ -85,6 +85,6 @@ current OS user (headless refuses a project owned by someone else), and opens it
 `analyzeHeadless -readOnly -noanalysis` — the original project is never opened or
 modified, and its lock (the GUI may have it open) does not matter. Only saved work is
 exported: save in the GUI first. It then dumps every memory block and checks it
-byte-for-byte against the sections of `$VANILLA` (default `gta2/gta2.exe`), and compiles a generated `_Static_assert` file (sizeof/offsetof of
+byte-for-byte against the sections of `$VANILLA` (default `gta2/gta2.ebin`), and compiles a generated `_Static_assert` file (sizeof/offsetof of
 every struct member, clang `i686-pc-windows-msvc`) and an `%if`/`%error` file for the NASM
 `struc`s, so a layout mismatch fails the export.

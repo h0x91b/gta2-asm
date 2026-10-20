@@ -1,6 +1,6 @@
 ; w32_files.asm — KERNEL32 file shims on top of the game directory.
 ;
-; Path policy: the host chdir()s into the directory holding gta2.exe, and the game is
+; Path policy: the host chdir()s into the directory holding gta2.ebin, and the game is
 ; told it lives in C:\GTA2 (GetModuleFileNameA / GetCurrentDirectoryA). win_path maps
 ;   C:\GTA2\x, \GTA2\x (any case, either slash)  -> x
 ;   relative paths                                -> relative to the game directory

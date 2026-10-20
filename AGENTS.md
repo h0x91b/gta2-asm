@@ -50,7 +50,10 @@ point jumps to `0x56DCDA`, past VirtualSize end `0x56DBC0`).
 
 ## Target binary: vanilla `gta2.exe`
 
-Lives in `gta2/gta2.exe` (see "Game files"). Facts measured from the file:
+Lives on disk as **`gta2/gta2.ebin`** (see "Game files"): every `.exe` in the game folder
+is renamed to `.ebin` (company policy: no `.exe` files in the project). Only the host-side
+file is renamed; the game still sees itself as `C:\GTA2\gta2.exe`. Facts measured from
+the file:
 
 | Property | Value |
 |---|---|
@@ -77,9 +80,9 @@ Loaded at runtime with `LoadLibraryA`/`GetProcAddress` (found as strings in the
 binary): `d3ddll.dll`, `dmavideo.dll`, `DDRAW.DLL`, `DINPUT.DLL`, `DMUSIC.DLL`,
 `3dfx.dll`, `softdll.dll`.
 
-`gta2/gta2-resurected.exe` is **not** the target. It is the user's old patched build:
-the same 11.44 image plus an extra `.h0x91b` section at `0x67A000` and a handful of
-patched bytes. Its addresses are identical to vanilla.
+`gta2-resurected.exe` (no longer in `gta2/`) is **not** the target. It is the user's old
+patched build: the same 11.44 image plus an extra `.h0x91b` section at `0x67A000` and a
+handful of patched bytes. Its addresses are identical to vanilla.
 
 ### Renderer seam
 
@@ -121,14 +124,15 @@ Option 1 is implemented for the frontend in `host/w32_renderer.asm`
   copy-on-write APFS clones, so the copy costs no disk space until a file changes.
   Inside a task worktree you may modify your copy freely, e.g. to patch the exe for
   an experiment. Verified 2026-10-20: a fresh task worktree started on this config
-  got the full `gta2/` (92 MB, `gta2.exe` SHA-256 matching). The config only takes
-  effect for tasks whose base branch contains `.dev3/config.json`.
+  got the full `gta2/` (92 MB, `gta2.exe` — now `gta2.ebin` — SHA-256 matching). The
+  config only takes effect for tasks whose base branch contains `.dev3/config.json`.
 - Contents, for orientation: game data in `data/`, plugin DLLs (`d3ddll.dll`,
   `dmavideo.dll`, `mss32.dll`, `binkw32.dll`, glide DLLs), and dgVoodoo wrappers
   (`DDraw.dll`, `D3DImm.dll`, `dgVoodoo.conf`). The dgVoodoo files are a Windows-only
   DirectX→D3D11 wrapper: not part of vanilla and irrelevant to us. Leftovers from the
   user's older mods sit alongside them (`gta2-resurection.dll`, `lua51.dll`,
-  `discord_game_sdk.dll`, `gta2-resurected.exe*`).
+  `discord_game_sdk.dll`, `gta2-resurected.exe.*`). `gta2manager.exe` (the settings
+  tool) is `gta2manager.ebin`.
 
 ## Reference material
 
@@ -137,7 +141,7 @@ their absolute addresses apply 1:1. How this was checked:
 - `gta2-seuko-mod` hard-codes the version check `11.44.0.0` (9.6 tolerated, unsupported).
 - `gta2-resurection` and `gta2-mouse` both require 11.44 in their READMEs.
 - The `gta2-resurected.exe` in gta2-resurection's installer is byte-identical to
-  `gta2/gta2-resurected.exe` (SHA-256 `c47702e4…07b4`), which differs from vanilla
+  the old `gta2/gta2-resurected.exe` (SHA-256 `c47702e4…07b4`), which differs from vanilla
   only by an appended section plus a few patched bytes.
 - Spot check: five function addresses from seuko-mod/resurection
   (`0x461DE0` InitGame, `0x462060` DeinitGame, `0x45A5A0` EachFrameDraw,

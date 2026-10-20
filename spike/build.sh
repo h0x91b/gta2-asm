@@ -1,7 +1,7 @@
 #!/bin/sh
 # Build and run the Rosetta/LDT spike. Requires: nasm (brew install nasm), Xcode CLT.
 #   ./build.sh                    build + run core spike
-#   ./build.sh path/to/gta2.exe   also map gta2.exe sections at 0x3F0000 (read-only use)
+#   ./build.sh path/to/gta2.ebin  also map gta2.exe sections at 0x3F0000 (read-only use)
 #   ./build.sh --build-only
 set -e
 cd "$(dirname "$0")"

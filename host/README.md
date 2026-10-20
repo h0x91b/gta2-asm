@@ -5,7 +5,7 @@ Two x86-64 NASM binaries (run under Rosetta 2), one build command:
 ```sh
 host/build.sh                 # builds ./host and ./loader
 host/build.sh --run [N]       # SDL3 hello window (main.asm), quit after N frames
-host/build.sh --load          # PE loader (loader.asm) on ../gta2/gta2.exe: exit 0 = all checks pass
+host/build.sh --load          # PE loader (loader.asm) on ../gta2/gta2.ebin: exit 0 = all checks pass
 host/build.sh --load --entry  # ...then run the game from its PE entry point through the Win32
                               # shims; stops (exit 3) at the first unimplemented import
 host/build.sh --load --entry --trace   # + one log line per shim call
@@ -36,8 +36,8 @@ low regions first and then `dlopen`s SDL3 (`$GTA2_SDL3_LIB`, default
 
 What it does (`loader.asm`; SDL is dlopen'ed by the shims):
 
-1. Reads `gta2.exe`, validates MZ / PE / i386 / PE32 / ImageBase `0x3F0000` (no
-   relocations, so no other base), `mmap`s SizeOfImage at `0x3F0000` (hint + verify).
+1. Reads `gta2.ebin` (vanilla `gta2.exe`, renamed on disk), validates MZ / PE / i386 /
+   PE32 / ImageBase `0x3F0000` (no relocations, so no other base), `mmap`s SizeOfImage at `0x3F0000` (hint + verify).
 2. Copies headers and every section to ImageBase+VA. Raw bytes are copied up to
    `min(SizeOfRawData, align_up(VirtualSize, 0x1000))` like the Windows loader; the rest
    of each section's pages (BSS) is zeroed explicitly. ⚠️ Copying only `VirtualSize`
@@ -80,7 +80,7 @@ Kept as the record of the loader step. The shim layer since adds a few setup lin
 runs much further — current output in `docs/win32-shims.md`.
 
 ```
-loader: read ../gta2/gta2.exe (1740800 bytes)
+loader: read ../gta2/gta2.ebin (1740800 bytes)
 PE32 i386: ImageBase=0x3f0000 SizeOfImage=0x28a000 entry=0x4d84f9 sections=4
   map .text    0x3f1000-0x56dbc0 (VirtualSize end)  copied 0x17d000 raw, zeroed tail 0x000000
   map .rdata   0x56e000-0x57b6cc (VirtualSize end)  copied 0x00e000 raw, zeroed tail 0x000000

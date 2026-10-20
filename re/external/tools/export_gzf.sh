@@ -25,6 +25,6 @@ for f in functions.csv functions_typed_unnamed.csv globals.csv globals_typed_unn
          comments.csv gta2_types.h stats.txt; do
   cp "$WORK/out/$f" "$OUT/$f"
 done
-python3 -I "$REPO/re/tools/check_mapping.py" "$REPO/gta2/gta2.exe" "$WORK/blocks" || \
+python3 -I "$REPO/re/tools/check_mapping.py" "$REPO/gta2/gta2.ebin" "$WORK/blocks" || \
   echo "note: the gzf is of the patched gta2-resurected.exe, a few differing .text/.rsrc bytes are expected" >&2
 echo "gzf exported to $OUT"

@@ -8,12 +8,12 @@
 #   re/tools/export.sh [path/to/project.gpr]
 #
 # Env: GHIDRA_HOME (dir containing support/analyzeHeadless), PROGRAM (default below),
-#      VANILLA (path to vanilla gta2.exe for the mapping check), GHIDRA_WORK.
+#      VANILLA (path to vanilla gta2.ebin for the mapping check), GHIDRA_WORK.
 set -euo pipefail
 
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"
 GPR="${1:-$HOME/ghidra/gta-2-recovered.gpr}"
-VANILLA="${VANILLA:-$REPO/gta2/gta2.exe}"
+VANILLA="${VANILLA:-$REPO/gta2/gta2.ebin}"
 PROGRAM="${PROGRAM:-gta2.segments.fixed.exe}"
 OUT="$REPO/re"
 # Ghidra 12 rejects project paths with a dot-leading element (e.g. ~/.dev3.0/...),

@@ -1,6 +1,6 @@
 """Harvest address-bearing RE facts from the external GTA2 repos and diff them against re/.
 
-    python3 -I re/external/tools/harvest.py [--ext .external] [--exe gta2/gta2.exe]
+    python3 -I re/external/tools/harvest.py [--ext .external] [--exe gta2/gta2.ebin]
 
 Reads the clones made by fetch.sh, the Ghidra export of gta2-resurection's .gzf made by
 export_gzf.sh (re/external/gzf/), and our own export in re/. Writes re/external/*.csv,
@@ -791,7 +791,7 @@ def dedupe(items):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ext", default=os.path.join(REPO, ".external"))
-    ap.add_argument("--exe", default=os.path.join(REPO, "gta2", "gta2.exe"))
+    ap.add_argument("--exe", default=os.path.join(REPO, "gta2", "gta2.ebin"))
     args = ap.parse_args()
     ext, exe = args.ext, Exe(args.exe)
     assert exe.base == IMAGE_LO, "not the 0x3F0000 gta2.exe"

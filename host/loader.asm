@@ -3,10 +3,10 @@
 ; x86-64 Mach-O (macho64), runs under Rosetta 2. Separate binary from the SDL hello
 ; window (host/main.asm); same link flags, no SDL.
 ;
-;   ./loader [gta2.exe]           map the image, stub every import, call original
+;   ./loader [gta2.ebin]          map the image, stub every import, call original
 ;                                 functions through a 32-bit LDT code segment and check
 ;                                 the results; exit 0 when every check passes
-;   ./loader [gta2.exe] --entry   same, then jump to the real PE entry point: it runs
+;   ./loader [gta2.ebin] --entry  same, then jump to the real PE entry point: it runs
 ;                                 until the first import and dies on its stub (exit 3)
 ;
 ; Exit codes: 0 ok, 1 load/setup failure, 2 a function check failed,
@@ -796,7 +796,7 @@ _main:
 
     lea rax, [default_exe]
     mov [exe_path], rax
-.arg:                           ; [gta2.exe] [--entry] [--trace], any order
+.arg:                           ; [gta2.ebin] [--entry] [--trace], any order
     dec r12d
     jle .args_done
     add rbx, 8
@@ -1055,7 +1055,7 @@ s_gta2:     db "GTA2", 0
 s_long:     db "Anywhere City: Downtown, Residential, Industrial", 0
 strs_end:
 
-default_exe: db "gta2/gta2.exe", 0
+default_exe: db "gta2/gta2.ebin", 0  ; gta2.exe renamed on disk (no .exe files policy)
 arg_entry:   db "--entry", 0
 arg_trace:   db "--trace", 0
 arg_hold:    db "--hold", 0
@@ -1113,7 +1113,7 @@ trace:       db 0
 hold:        db 0                   ; --hold: keep the SDL window up 5 s when we stop
 
 section .text
-; chdir() into the directory that holds gta2.exe (exe_path's directory part)
+; chdir() into the directory that holds gta2.ebin (exe_path's directory part)
 enter_game_dir:
     push rbx
     mov rdi, [exe_path]

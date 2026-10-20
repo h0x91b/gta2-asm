@@ -59,7 +59,7 @@ and 14 `.rsrc` bytes (the user's old patches), as expected.
 ## How it was checked
 
 - **Byte check** (`byte_check`): every NEW/CONFLICT function address in `.text` was checked against
-  `gta2/gta2.exe` bytes — a real MSVC function start follows `90`/`CC` padding, a `ret`, a `jmp`, or a
+  `gta2/gta2.ebin` bytes — a real MSVC function start follows `90`/`CC` padding, a `ret`, a `jmp`, or a
   switch jump table. 273 checked, 2 suspect, both in the 2021 DB and both explained:
   `0x004d11a6 injectBack` is the user's code cave in the patched exe (vanilla has `90` padding there)
   and `0x003f113c` is a bogus typed entry. All seuko-mod and resurection/mouse addresses pass, so

@@ -1,6 +1,6 @@
 """Compare Ghidra memory blocks (dumped by ExportGta2Re.java) with vanilla gta2.exe.
 
-usage: check_mapping.py gta2.exe <blocks-dir>
+usage: check_mapping.py gta2.ebin <blocks-dir>
 Exits non-zero unless every section's raw bytes match the block at the same VA.
 """
 import hashlib

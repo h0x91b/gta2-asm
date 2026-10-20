@@ -11,7 +11,7 @@ raised inside 32-bit code. No entitlement, no codesign, no special flag.
 ```sh
 brew install nasm                 # nasm 3.02 used here; Xcode (CLT) for ld + SDK
 spike/build.sh                    # build + run the core spike
-spike/build.sh /path/to/gta2.exe  # also map gta2.exe's sections at 0x3F0000
+spike/build.sh /path/to/gta2.ebin # also map gta2.exe's sections at 0x3F0000
 spike/build.sh --build-only
 ```
 
