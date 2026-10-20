@@ -6,8 +6,8 @@
 draws the original main menu** in the SDL3 window: background TGAs, the GTA2 logo,
 PLAY / OPTIONS / QUIT text from `fstyle.sty`, the DMA and Rockstar logos.
 
-Scope is the **frontend subset** (renderer-api.md §4.3). Gameplay drawing (tiles,
-lighting) is not done yet.
+It also draws **gameplay**: PLAY → the first level (Downtown, `wil`) with city tiles,
+slopes, peds, cars, HUD and the original per-vertex point lighting (see "Gameplay" below).
 
 ## How the game reaches it
 
@@ -29,8 +29,10 @@ renderer.
 | back buffer | a 640×480 `ARGB8888` render-target texture. All drawing goes into it. |
 | present | `Vid_FlipBuffers`: render target → window, letterboxed by `SDL_SetRenderLogicalPresentation(640, 480, LETTERBOX)` on the window target, linear scaling, vsync on. The window stays the size the game asked for (960×720 from the registry's `window_width/height`). |
 | 2D surface | a 640×480 `RGB565` CPU buffer in low memory, handed out as `ctx->surface` by `Vid_GetSurface` (Bink writes there). If the game locked it since the last upload, it is uploaded to a streaming texture and drawn into the back buffer at `gbh_BeginScene` (under the 3D primitives) or at `Vid_FlipBuffers` (Bink-only frames). `Vid_ClearScreen` clears both. |
-| textures | `gbh_RegisterTexture` allocates a real 0x20-byte `GbhTexture` in low memory (the game pokes `width/height/pixels`) plus a host cache entry (index in `GbhTexture.cache`). On draw, the 8-bit indices (pitch 256) are expanded through the palette into an `ARGB8888` SDL texture of exactly `w×h`, index 0 = alpha 0. The cache key is (pixels, width, height, palette, palette generation), and Lock/Unlock/AssignPalette mark it dirty, so retargeted textures rebuild. |
+| textures | up to 262 143 (`MAX_TEX`; `wil` registers 73 104, plus ~29 000 for the frontend, which are not freed). `gbh_RegisterTexture` allocates a real 0x20-byte `GbhTexture` in low memory (the game pokes `width/height/pixels`) plus a host cache entry (index in `GbhTexture.cache`). On draw, the 8-bit indices (pitch 256) are expanded through the palette into an `ARGB8888` SDL texture of exactly `w×h`, index 0 = alpha 0. The cache key is (pixels, width, height, palette, palette generation), and Lock/Unlock/AssignPalette mark it dirty, so retargeted textures rebuild. |
 | palettes | `gbh_RegisterPalette` copies the 256 colours (stride 64 dwords) into a host table as `0xFF000000 \| rgb`, and applies the original's in-place edits to the game's data (`pal[0] = 0`, other zeros → `0x10000`). Re-registering bumps the palette's generation. |
+| tiles | `gbh_DrawTile` (= `gbh_DrawTilePart`, d3ddll `0xe043f0`): unless `GBH_F_TILE_CUSTOM_UV`, UVs = 0.5…63.4999 of the 64×64 tile; rotate `0x20` (new[i] = old[i+3]), `0x40` (= both mirrors), `0x60` (new[i] = old[i+1]), FLIPX swaps the (u,v) of vertices 0↔1 / 2↔3, FLIPY 0↔3 / 1↔2; written back into the caller's vertices like the original; then the DrawQuad path. |
+| lighting | `GBH_F_LIGHTING` and ambient ≠ 1.0 (as the original): per vertex `c' = min(1, c · brightness/255 · Σ light.c · I · (r − d)/r + ambient)` over the type-1 lights of `gbh_AddLight` with d ≤ r; the vertex's world position is `v[i+4].x/y/z` (d3ddll `ApplyPointLightsToVertices`). `gbh_AddLight` precomputes I = packed&0xff /255, r = (packed>>8 &0xff)/255·8, r², 1/r, rgb/255; `gbh_ResetLights` empties the list (≤ 1024, logged once if exceeded). The original's table square root is `sqrtss`. |
 | quads | `gbh_DrawQuad` / `gbh_DrawTriangle` → `SDL_RenderGeometry` (fan of 4 = indices `0 1 2 0 2 3`). Fix-ups from §2.3: cull on `v[0].z <= 0`; UVs are texels → divided by the texture size; `GBH_F_SPRITE_RECT` builds the `w×h` quad from `v[0].x/y`; diffuse = brightness grey unless `GBH_F_VERTEX_COLOUR` (alpha from diffuse only in the blended modes); blend `BLEND` (opaque mode too, it doubles as the index-0 alpha test) or `ADD` for `0x200`; `NEAREST` for `GBH_F_NO_FILTER`/`SPRITE_RECT`, else `LINEAR`. `rhw` ignored (screen-space, affine). |
 | flat rects | `gbh_DrawFlatRect` → untextured geometry, alpha-blended by the colour's alpha. |
 | images | `gbh_LoadImage` parses the in-memory TGA (type 2, 16 bpp, bottom-up unless descriptor bit 5) into an `XRGB1555` texture; `gbh_BlitImage` checks the source rect like the original (−1 bad handle, −2 bad rect) and does `SDL_RenderTexture`. Never returns −10 (surface lost). |
@@ -58,15 +60,23 @@ d3ddll (all 42 resolve): real `gbh_InitDLL`, `gbh_Init`, `gbh_GetGlobals` (low-m
 stats block, `polys_drawn` counted), `gbh_SetWindow` (stored), `gbh_BeginScene`,
 `gbh_EndScene`, `gbh_RegisterPalette`, `gbh_FreePalette`, `gbh_RegisterTexture`,
 `gbh_FreeTexture`, `gbh_LockTexture`, `gbh_UnlockTexture`, `gbh_AssignPalette`,
-`gbh_DrawQuad`, `gbh_DrawTriangle`, `gbh_DrawFlatRect`, `gbh_InitImageTable`,
-`gbh_LoadImage`, `gbh_BlitImage`, `gbh_FreeImageTable`, `gbh_SetAmbient` (stored),
-`gbh_CloseScreen` (= `Vid_CloseScreen`). No-ops (as in the original or harmless):
-`ConvertColourBank`, `MakeScreenTable`, `gbh_SetColourDepth`, `gbh_CloseDLL`,
-`gbh_BeginLevel`/`EndLevel`, `gbh_Plot`, `DrawLine`, `SetShadeTableA`, `gbh_BlitBuffer`,
-`gbh_GetUsedCache` (0). **Silent stubs** (return 0, log the first call, correct pop):
-`gbh_DrawTile`, `gbh_DrawTilePart`, `gbh_DrawQuadClipped`, `gbh_AddLight`,
-`gbh_ResetLights`, `gbh_SetCamera`, `gbh_ConvertColour`, `gbh_Convert16BitGraphic`,
-`gbh_PrintBitmap`.
+`gbh_DrawQuad`, `gbh_DrawTriangle`, `gbh_DrawTile` / `gbh_DrawTilePart`,
+`gbh_DrawFlatRect`, `gbh_InitImageTable`, `gbh_LoadImage`, `gbh_BlitImage`,
+`gbh_FreeImageTable`, `gbh_SetAmbient`, `gbh_ResetLights`, `gbh_AddLight`,
+`gbh_CloseScreen` (= `Vid_CloseScreen`).
+
+**Deliberate no-ops** (the original is empty too, or nothing of ours depends on it):
+`ConvertColourBank` (empty in the original), `MakeScreenTable` (row table for the
+software `gbh_PrintBitmap`, never called), `gbh_SetColourDepth` (we always use 565),
+`gbh_CloseDLL`, `gbh_BeginLevel`/`EndLevel` (empty), `gbh_Plot`, `DrawLine`,
+`SetShadeTableA`, `gbh_BlitBuffer` (empty), `gbh_GetUsedCache` (0, debug overlay only),
+`gbh_SetCamera` (stores the 4 floats like the original; nothing in d3ddll reads them back
+for drawing).
+
+**Silent stubs** (return 0, log the first call, correct pop) remain only for exports the
+game never calls (renderer-api.md §2.2): `gbh_DrawQuadClipped`, `gbh_ConvertColour`,
+`gbh_Convert16BitGraphic`, `gbh_PrintBitmap`, `Vid_GetVersion`. None of them fired in a
+900-frame gameplay run.
 
 ## Loader flags added
 
@@ -126,6 +136,20 @@ Verified by eye: the back-buffer BMP and a `screencapture -l <window id>` of the
 black right half, GTA2 logo, PLAY highlighted red, OPTIONS, QUIT, DMA + Rockstar logos,
 `GTA2 V0.0`).
 
+## Gameplay (2026-10-21)
+
+`host/build.sh --load --entry --keys=150:RETURN,250:RETURN --frames=900 --shot=…`: the
+first RETURN opens PLAY, the second starts Downtown. The level loads (`e.gxt`, `wil.sty`,
+`wil.gmp`, `wil.RAW/SDT`, the `wil_*.SCR` scripts), and the game loop runs; exit 0 after
+900 frames (~640 of them in-game). Stats line at frame 840: 102 383 primitives drawn,
+499 blits, 295 texture uploads, 73 104 textures registered. Per in-game frame about
+150 primitives (tiles, slope triangles, peds, cars, HUD glyphs), nearly all with
+`GBH_F_LIGHTING`; the world is drawn with ambient 0.3, the HUD with 1.0.
+
+A screenshot shows the city from above, the player in the middle of the screen, peds,
+the district name banner (`AVALON`), the respect bars on the left and money, the
+multiplier and lives on the right.
+
 ## Known gaps
 
 - **Input**: none yet (DirectInput reports nothing pressed), so the menu cannot be
@@ -133,11 +157,14 @@ black right half, GTA2 logo, PLAY highlighted red, OPTIONS, QUIT, DMA + Rockstar
 - **Version string** shows `V0.0`: `GetFileVersionInfoSizeA` reports no version
   resources (`win32-shims.md`). Reading `VS_VERSION_INFO` from the exe's `.rsrc` would
   fix it.
-- **Resolution** is fixed at 640×480 (frontend layout). Gameplay at other resolutions
-  needs `Vid_SetMode` to honour the mode/window size and a matching back buffer.
-- **Gameplay drawing**: `gbh_DrawTile` (UV rotate/flip flags), lighting
-  (`GBH_F_LIGHTING`, `gbh_AddLight`/`ResetLights`/`SetCamera`/`SetAmbient`) and
-  `gbh_DrawQuadClipped` are stubs.
+- **Resolution** is fixed at 640×480 for the frontend and gameplay alike: the registry
+  shim forces `screen\window_width/height` to 640×480 (`win32-shims.md`, Registry) and
+  the SDL window shows it at 960×720. Native gameplay at the window size would need a
+  back buffer of that size during gameplay only (the frontend is hard-wired to 640×480)
+  and `Vid_SetMode` to honour it.
+- **Lighting** follows the decompiled original, but has not been compared against a
+  Windows run of the same scene; the level looks dark and greenish-tinted (ambient 0.3).
+- **Depth/z**: none (back-to-front like the original).
 - **Translucency modes** `0x80`/`0x100` use the diffuse alpha only when
   `GBH_F_VERTEX_COLOUR` is set, as derived from the original; not checked against
   gameplay sprites yet.

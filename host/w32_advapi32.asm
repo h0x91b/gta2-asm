@@ -171,6 +171,40 @@ reg_val_set:
     pop rbx
     ret
 
+; reg_force_screen: windowed play (start_mode 0) lays out the game for
+; screen\window_width x window_height, but the renderer's back buffer is 640x480
+; (docs/renderer-sdl.md), so pin both to 640x480 whatever the .reg says; the SDL window
+; is then scaled up by the window shim (u32 WIN_SCALE). The install's 960x720 otherwise
+; centres the camera at (480, 360) and crops the right/bottom of the HUD.
+reg_force_screen:
+    push rbx
+    lea rdi, [s_reg_screen]
+    call reg_key_find
+    cmp eax, -1
+    jne .have
+    lea rdi, [s_reg_screen]
+    call reg_key_add
+.have:
+    mov ebx, eax
+    mov dword [reg_data], 640
+    mov edi, ebx
+    lea rsi, [s_reg_ww]
+    mov edx, 4
+    lea rcx, [reg_data]
+    mov r8d, 4
+    call reg_val_set
+    mov dword [reg_data], 480
+    mov edi, ebx
+    lea rsi, [s_reg_wh]
+    mov edx, 4
+    lea rcx, [reg_data]
+    mov r8d, 4
+    call reg_val_set
+    lea rdi, [msg_reg_screen]
+    call _puts
+    pop rbx
+    ret
+
 ; rax = reg_path(edi = HKEY, rsi = subkey or 0) -> full path in reg_pathbuf, or 0
 reg_path:
     push rbx
@@ -469,6 +503,7 @@ setup_registry:
     mov ecx, [reg_nvals]
     xor eax, eax
     call _printf
+    call reg_force_screen
     jmp .out
 .no_file:
     lea rdi, [fmt_reg_none]
@@ -702,6 +737,10 @@ s_hklm:      db "HKEY_LOCAL_MACHINE", 0
 s_hku:       db "HKEY_USERS", 0
 s_backslash: db "\", 0
 s_regfile:   db "gta2_install.reg", 0
+s_reg_screen: db "HKEY_CURRENT_USER\Software\DMA Design Ltd\GTA2\screen", 0
+s_reg_ww:    db "window_width", 0
+s_reg_wh:    db "window_height", 0
+msg_reg_screen: db "registry: screen\window_width/height forced to 640x480 (renderer back buffer)", 0
 s_mode_r:    db "r", 0
 s_dword:     db "dword:", 0
 s_hexc:      db "hex:", 0

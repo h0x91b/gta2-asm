@@ -7,13 +7,15 @@
 ; letterboxed into the window. Next to it lives a 640x480 RGB565 CPU buffer in low memory
 ; that Vid_GetSurface hands out (ctx->surface); when the game had it locked, it is
 ; uploaded and drawn into the target at gbh_BeginScene / Vid_FlipBuffers.
-;   gbh_DrawQuad/Triangle -> SDL_RenderGeometry; 8-bit textures are expanded through
+;   gbh_DrawQuad/Triangle/Tile -> SDL_RenderGeometry (DrawTile permutes the tile UVs
+;   first; GBH_F_LIGHTING applies the gbh_AddLight point lights + ambient per vertex); 8-bit textures are expanded through
 ;   their palette to ARGB8888 (index 0 = transparent) and cached per GbhTexture, keyed
 ;   on (pixels, width, height, palette, palette generation): the game retargets
 ;   textures by poking those fields.
 ;   gbh_LoadImage/BlitImage -> one XRGB1555 texture per TGA, SDL_RenderTexture.
-; Only the frontend subset is real; the remaining exports resolve to h_silent (return 0,
-; log the first call) with the right stdcall pop.
+; Everything the game calls (frontend and gameplay) is real or a deliberate no-op; the
+; few exports it never calls resolve to h_silent (return 0, log the first call) with the
+; right stdcall pop.
 
 SDL_PIXELFORMAT_XRGB1555 equ 0x15130f02
 SDL_PIXELFORMAT_RGB565   equ 0x15151002
@@ -33,10 +35,23 @@ SDL_LOGICAL_PRESENTATION_LETTERBOX equ 2
 FB_W        equ 640             ; the frontend is laid out for 640x480 (renderer-api.md §4)
 FB_H        equ 480
 FB_PITCH    equ FB_W * 2
-MAX_TEX     equ 32768           ; texture cache entries (index 0 unused)
+MAX_TEX     equ 0x40000         ; texture cache entries (index 0 unused); wil registers 73104
 MAX_PAL     equ 16384           ; palette indices
 MAX_IMG     equ 64              ; image table slots (the game asks for 25)
 CONV_SIZE   equ 0x100000        ; conversion scratch: 256x256x4 texels or a 640x480x2 TGA
+
+MAX_LIGHTS  equ 1024            ; the original has no bound; the game adds a few dozen
+; light record (host memory), as d3ddll keeps them at 0xe459e0 (11 dwords)
+L_PACKED    equ 0
+L_I         equ 4               ; intensity / 255
+L_R         equ 8               ; radius / 255 * 8 (world units)
+L_R2        equ 12
+L_INVR      equ 16
+L_X         equ 20
+L_Y         equ 24
+L_Z         equ 28
+L_CR        equ 32              ; r, g, b / 255
+L_SIZE      equ 48
 
 ; texture cache entry (host memory; GbhTexture.cache holds its index)
 TCE_SDL      equ 0               ; SDL_Texture*
@@ -511,6 +526,7 @@ vid_FlipBuffers:
     mov edx, [r_quads]
     mov ecx, [r_blits]
     mov r8d, [r_tex_builds]
+    mov r9d, [r_texs]
     xor eax, eax
     call _printf
 .no_stats:
@@ -707,6 +723,161 @@ gbh_SetWindow:                  ; (float l, t, r, b): the cull rect; SDL clips f
 gbh_SetAmbient:                 ; (float): only lighting uses it
     mov eax, [rdi]
     mov [r_ambient], eax
+    ret
+
+gbh_SetCamera:                  ; (float l, t, r, b): the visible world rect; stored, unused
+    movups xmm0, [rdi]
+    movups [r_camera], xmm0
+    ret
+
+gbh_ResetLights:
+    mov dword [n_lights], 0
+    ret
+
+; gbh_AddLight(GbhLight *) (d3ddll 0xe01d70): packed = intensity | radius << 8 | type << 16;
+; precomputes intensity/255, r = radius/255*8, r^2, 1/r, rgb/255 like the original.
+gbh_AddLight:
+    mov eax, [n_lights]
+    cmp eax, MAX_LIGHTS
+    jae .full
+    inc dword [n_lights]
+    imul eax, eax, L_SIZE
+    lea rcx, [lights]
+    add rcx, rax
+    mov edx, [rdi]
+    mov eax, [rdx + GbhLight.packed]
+    mov [rcx + L_PACKED], eax
+    movzx r8d, al
+    cvtsi2ss xmm0, r8d
+    mulss xmm0, [f_inv255]
+    movss [rcx + L_I], xmm0
+    mov r8d, eax
+    shr r8d, 8
+    and r8d, 0xff
+    cvtsi2ss xmm0, r8d
+    mulss xmm0, [f_inv255]
+    mulss xmm0, [f_eight]
+    movss [rcx + L_R], xmm0
+    movaps xmm1, xmm0
+    mulss xmm1, xmm0
+    movss [rcx + L_R2], xmm1
+    movss xmm1, [f_one]
+    divss xmm1, xmm0
+    movss [rcx + L_INVR], xmm1
+    mov eax, [rdx + GbhLight.x]
+    mov [rcx + L_X], eax
+    mov eax, [rdx + GbhLight.y]
+    mov [rcx + L_Y], eax
+    mov eax, [rdx + GbhLight.z]
+    mov [rcx + L_Z], eax
+    mov eax, [rdx + GbhLight.rgb]
+%assign sh 16
+%assign off L_CR
+%rep 3
+    mov r8d, eax
+    shr r8d, sh
+    and r8d, 0xff
+    cvtsi2ss xmm0, r8d
+    mulss xmm0, [f_inv255]
+    movss [rcx + off], xmm0
+%assign sh sh - 8
+%assign off off + 4
+%endrep
+    ret
+.full:
+    cmp byte [lights_warned], 0
+    jne .r
+    mov byte [lights_warned], 1
+    sub rsp, 8
+    lea rdi, [msg_lights_full]
+    call _puts
+    add rsp, 8
+.r:
+    ret
+
+; apply_lights(rdi = SDL_Vertex[esi], edx = brightness, r12 = GbhVertex v[]): the
+; original's per-vertex point lighting (d3ddll ApplyPointLightsToVertices). The world
+; position of v[i] is in v[i + 4].x/y/z. Per channel c (0..1):
+;   c' = min(1, c * brightness/255 * sum(light.c * I * (r - d) / r) + ambient)
+; over lights of type 1 with d^2 <= r^2. The original's table sqrt is sqrtss here.
+apply_lights:
+    cvtsi2ss xmm8, edx
+    mulss xmm8, [f_inv255]
+    movss xmm9, [r_ambient]
+    xor r8d, r8d
+.v:
+    cmp r8d, esi
+    jae .done
+    mov eax, r8d
+    shl eax, 5
+    lea r9, [r12 + rax + 0x80]
+    lea r10, [rdi + rax]
+    xorps xmm10, xmm10
+    xorps xmm11, xmm11
+    xorps xmm12, xmm12
+    lea r11, [lights]
+    mov ecx, [n_lights]
+.l:
+    test ecx, ecx
+    jz .sum
+    mov eax, [r11 + L_PACKED]
+    and eax, 0x30000
+    cmp eax, 0x10000
+    jne .nl
+    movss xmm0, [r9]
+    subss xmm0, [r11 + L_X]
+    mulss xmm0, xmm0
+    movss xmm1, [r9 + 4]
+    subss xmm1, [r11 + L_Y]
+    mulss xmm1, xmm1
+    addss xmm0, xmm1
+    movss xmm1, [r9 + 8]
+    subss xmm1, [r11 + L_Z]
+    mulss xmm1, xmm1
+    addss xmm0, xmm1
+    comiss xmm0, [r11 + L_R2]
+    ja .nl
+    sqrtss xmm0, xmm0
+    movss xmm1, [r11 + L_R]
+    subss xmm1, xmm0
+    mulss xmm1, [r11 + L_INVR]
+    xorps xmm2, xmm2
+    comiss xmm1, xmm2
+    jbe .nl
+    mulss xmm1, [r11 + L_I]
+    movss xmm2, [r11 + L_CR]
+    mulss xmm2, xmm1
+    addss xmm10, xmm2
+    movss xmm2, [r11 + L_CR + 4]
+    mulss xmm2, xmm1
+    addss xmm11, xmm2
+    movss xmm2, [r11 + L_CR + 8]
+    mulss xmm2, xmm1
+    addss xmm12, xmm2
+.nl:
+    add r11, L_SIZE
+    dec ecx
+    jmp .l
+.sum:
+%assign off 8
+%rep 3
+    movss xmm0, [r10 + off]
+    mulss xmm0, xmm8
+  %if off == 8
+    mulss xmm0, xmm10
+  %elif off == 12
+    mulss xmm0, xmm11
+  %else
+    mulss xmm0, xmm12
+  %endif
+    addss xmm0, xmm9
+    minss xmm0, [f_one]
+    movss [r10 + off], xmm0
+%assign off off + 4
+%endrep
+    inc r8d
+    jmp .v
+.done:
     ret
 
 ; gbh_BeginScene: the original unlocks a locked 2D surface (and EndScene re-locks it);
@@ -1062,7 +1233,66 @@ tex_get:
     ret
 
 ; ---- drawing -------------------------------------------------------------------
-gbh_DrawQuad:                   ; (flags, GbhTexture*, GbhVertex v[4], u8 brightness)
+; gbh_DrawTile(flags, GbhTexture*, GbhVertex v[4], u8 brightness) (= gbh_DrawTilePart):
+; d3ddll 0xe043f0. Unless GBH_F_TILE_CUSTOM_UV, the UVs become the 64x64 tile
+; (0.5..63.4999); then the rotate/flip flags permute the (u, v) pairs between the
+; vertices, written back into the caller's array like the original, and it is a DrawQuad.
+gbh_DrawTile:
+    mov eax, [rdi + 8]              ; v
+    mov ecx, [rdi]                  ; flags
+    test ecx, GBH_F_TILE_CUSTOM_UV
+    jnz .perm
+    mov r8d, 0x3f000000             ; 0.5
+    mov r9d, 0x427dffe6             ; 63.4999
+    mov [rax + 0x00 + GbhVertex.u], r8d
+    mov [rax + 0x00 + GbhVertex.v], r8d
+    mov [rax + 0x20 + GbhVertex.u], r9d
+    mov [rax + 0x20 + GbhVertex.v], r8d
+    mov [rax + 0x40 + GbhVertex.u], r9d
+    mov [rax + 0x40 + GbhVertex.v], r9d
+    mov [rax + 0x60 + GbhVertex.u], r8d
+    mov [rax + 0x60 + GbhVertex.v], r9d
+.perm:
+    mov r8, [rax + 0x00 + GbhVertex.u]   ; (u, v) of v[0..3]
+    mov r9, [rax + 0x20 + GbhVertex.u]
+    mov r10, [rax + 0x40 + GbhVertex.u]
+    mov r11, [rax + 0x60 + GbhVertex.u]
+    mov edx, ecx
+    and edx, GBH_F_TILE_ROT_MASK
+    cmp edx, 0x20                   ; new[i] = old[i+3]
+    jne .r40
+    xchg r8, r11
+    xchg r9, r11
+    xchg r10, r11
+    jmp .flips
+.r40:
+    cmp edx, 0x40                   ; 180 degrees = both mirrors
+    jne .r60
+    xor ecx, GBH_F_TILE_FLIPX | GBH_F_TILE_FLIPY
+    jmp .flips
+.r60:
+    cmp edx, 0x60                   ; new[i] = old[i+1]
+    jne .flips
+    xchg r8, r9
+    xchg r9, r10
+    xchg r10, r11
+.flips:
+    test ecx, GBH_F_TILE_FLIPX      ; 0<->1, 2<->3
+    jz .fy
+    xchg r8, r9
+    xchg r10, r11
+.fy:
+    test ecx, GBH_F_TILE_FLIPY      ; 0<->3, 1<->2
+    jz .store
+    xchg r8, r11
+    xchg r9, r10
+.store:
+    mov [rax + 0x00 + GbhVertex.u], r8
+    mov [rax + 0x20 + GbhVertex.u], r9
+    mov [rax + 0x40 + GbhVertex.u], r10
+    mov [rax + 0x60 + GbhVertex.u], r11
+    mov [rdi], ecx                  ; DrawQuad sees the adjusted flags
+gbh_DrawQuad:                  ; (flags, GbhTexture*, GbhVertex v[4], u8 brightness)
     mov edx, 4
     jmp draw_prim
 gbh_DrawTriangle:               ; (flags, GbhTexture*, GbhVertex v[3], u8 brightness)
@@ -1175,6 +1405,15 @@ draw_prim:
     inc r8d
     jmp .v
 .vdone:
+    test ARG(0), GBH_F_LIGHTING     ; and ambient != 1.0, as the original
+    jz .lit
+    cmp dword [r_ambient], 0x3f800000
+    je .lit
+    mov rdi, rsp
+    mov esi, r14d
+    movzx edx, byte [rbx + 12]
+    call apply_lights
+.lit:
     ; GBH_F_SPRITE_RECT: only v[0].x/y/z are valid; build a w x h quad, whole texture
     test ARG(0), GBH_F_SPRITE_RECT
     jz .draw
@@ -1525,7 +1764,7 @@ shimtab_d3ddll:
     SHIM "DrawLine", 20, h_ret0
     SHIM "MakeScreenTable", 12, h_ret0
     SHIM "SetShadeTableA", 20, h_ret0
-    SHIM "gbh_AddLight", 4, h_silent
+    SHIM "gbh_AddLight", 4, gbh_AddLight
     SHIM "gbh_AssignPalette", 8, gbh_AssignPalette
     SHIM "gbh_BeginLevel", 0, h_ret0
     SHIM "gbh_BeginScene", 0, gbh_BeginScene
@@ -1538,8 +1777,8 @@ shimtab_d3ddll:
     SHIM "gbh_DrawFlatRect", 8, gbh_DrawFlatRect
     SHIM "gbh_DrawQuad", 16, gbh_DrawQuad
     SHIM "gbh_DrawQuadClipped", 20, h_silent
-    SHIM "gbh_DrawTile", 16, h_silent
-    SHIM "gbh_DrawTilePart", 16, h_silent
+    SHIM "gbh_DrawTile", 16, gbh_DrawTile
+    SHIM "gbh_DrawTilePart", 16, gbh_DrawTile
     SHIM "gbh_DrawTriangle", 16, gbh_DrawTriangle
     SHIM "gbh_EndLevel", 0, h_ret0
     SHIM "gbh_EndScene", 0, gbh_EndScene
@@ -1557,9 +1796,9 @@ shimtab_d3ddll:
     SHIM "gbh_PrintBitmap", 4, h_silent
     SHIM "gbh_RegisterPalette", 8, gbh_RegisterPalette
     SHIM "gbh_RegisterTexture", 20, gbh_RegisterTexture
-    SHIM "gbh_ResetLights", 0, h_silent
+    SHIM "gbh_ResetLights", 0, gbh_ResetLights
     SHIM "gbh_SetAmbient", 4, gbh_SetAmbient
-    SHIM "gbh_SetCamera", 16, h_silent
+    SHIM "gbh_SetCamera", 16, gbh_SetCamera
     SHIM "gbh_SetColourDepth", 0, h_ret0
     SHIM "gbh_SetWindow", 16, gbh_SetWindow
     SHIM "gbh_UnlockTexture", 4, gbh_UnlockTexture
@@ -1568,6 +1807,7 @@ shimtab_d3ddll:
 align 4
 quad_idx:   dd 0, 1, 2, 0, 2, 3     ; D3D triangle fan of 4 as two triangles
 f_one:      dd 1.0
+f_eight:    dd 8.0
 f_inv255:   dd 0x3b808081           ; 1/255
 grey_pal:
 %assign i 0
@@ -1587,13 +1827,14 @@ fmt_r_sdlerr:   db "  [vid] %s failed: %s", 10, 0
 fmt_vid_init:   db "  [vid] Vid_Init_SYS -> ctx 0x%x (1 device, mode 1 = 640x480x16 RGB565)", 10, 0
 fmt_vid_renderer: db "  [vid] SDL renderer '%s', back buffer %dx%d ARGB8888 target, letterboxed", 10, 0
 fmt_vid_setmode: db "  [vid] Vid_SetMode(mode %d, hwnd 0x%x) -> 640x480", 10, 0
-fmt_vid_flip:   db "  [vid] flip %u: %u quads, %u blits, %u texture uploads so far", 10, 0
+fmt_vid_flip:   db "  [vid] flip %u: %u quads, %u blits, %u texture uploads so far, %u textures registered", 10, 0
 fmt_vid_shot:   db "  [vid] back buffer saved to %s (frame %u)", 10, 0
 fmt_vid_exit:   db "  [vid] --frames: %u frames presented, exiting", 10, 0
 msg_gbh_init:   db "  [gbh] gbh_Init: SDL_Renderer backend", 0
 fmt_gbh_badpal: db "  [gbh] gbh_RegisterPalette: index %d out of range, ignored", 10, 0
 fmt_gbh_image:  db "  [gbh] gbh_LoadImage -> slot %d (%dx%d)", 10, 0
 fmt_gbh_badimg: db "  [gbh] gbh_LoadImage(0x%x): not a 16-bit uncompressed TGA", 10, 0
+msg_lights_full: db "  [gbh] gbh_AddLight: more than MAX_LIGHTS lights in a frame, extra ones dropped", 0
 msg_tc_full:    db "renderer: texture cache full", 0
 
 section .bss
@@ -1614,6 +1855,12 @@ r_quads:        resd 1
 r_blits:        resd 1
 r_tex_builds:   resd 1
 r_texs:         resd 1
+n_lights:       resd 1
+r_camera:       resd 4
+lights_warned:  resb 1
+alignb 16
+lights:         resb L_SIZE * MAX_LIGHTS
+alignb 8
 r_pals:         resd 1
 r_cpu_fb:       resd 1
 r_ctx:          resd 1

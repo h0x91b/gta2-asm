@@ -13,13 +13,15 @@ the process, the memory layout and every OS/library service it expects.
 
 ## Execution model
 
-Proven up to the main menu: `spike/` proved the 32-bit LDT segment under
+Proven up to gameplay: `spike/` proved the 32-bit LDT segment under
 Rosetta, `host/loader` (see `host/README.md`) maps vanilla `gta2.exe` at `0x3F0000`, and
 `--entry` runs the game from its PE entry point through NASM Win32 shims (CRT startup,
 WinMain, registry, a real SDL3 window, DirectInput) and our SDL_Renderer replacements of
 `dmavideo.dll`/`d3ddll.dll` into the frontend loop, which draws the original main menu
 and navigates it with real keyboard input (SDL3 events → DirectInput 8), with menu sound
-effects from `mss32` reimplemented on SDL3 audio (`docs/win32-shims.md`, "Audio"). Shim list and policies: `docs/win32-shims.md`; renderer:
+effects from `mss32` reimplemented on SDL3 audio (`docs/win32-shims.md`, "Audio"). PLAY
+starts the first level (Downtown, `wil`) and the game loop draws it: tiles, slopes,
+sprites, HUD and the original point lighting (`--keys=150:RETURN,250:RETURN`). Shim list and policies: `docs/win32-shims.md`; renderer:
 `docs/renderer-sdl.md`.
 
 SDL3 is **dlopen'ed, not linked**: linked, dyld puts its frameworks in the low 4 GB and

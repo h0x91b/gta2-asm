@@ -122,7 +122,12 @@ match the 64-bit-inode struct layouts; the plain names are the legacy ABI.
   `OPEN_EXISTING`/`OPEN_ALWAYS` is copied there first. The pak is read-only.
 - **Registry.** In memory, seeded from `gta2_install.reg` (overlay or pak) at startup. Writes are
   kept for the life of the process only — not persisted (later: write back to a text
-  file next to the game).
+  file next to the game). One override after seeding: `screen\window_width/height` are
+  forced to **640×480** (`reg_force_screen`), because windowed play lays the game view
+  out for that size while the renderer's back buffer is 640×480 (the install's 960×720
+  centred the camera at (480, 360) and cut off the money/lives HUD on the right). The SDL
+  window is still shown 1.5× bigger (960×720, `WIN_SCALE` in `w32_user32.asm`); the game
+  never sees that size.
 - **Threads.** None exist; sync objects are tokens. `CreateThread` is not imported.
 - **OS identity.** Windows XP SP3 (5.1.2600, NT), code page 1252 (implemented as
   Latin-1), US-English locale, 1 CPU, DirectX 8.1.
@@ -207,7 +212,7 @@ and not yet exercised by the game.
 | RegisterClassA ✓ | name + WndProc |
 | CreateWindowExA ✓ | `SDL_CreateWindow` (hidden until `ShowWindow`), sends WM_NCCREATE, WM_CREATE (CREATESTRUCTA in low memory), WM_SIZE, WM_MOVE |
 | ShowWindow ✓ | `SDL_ShowWindow`/`HideWindow`; first show sends WM_SHOWWINDOW, WM_ACTIVATEAPP, WM_NCACTIVATE, WM_ACTIVATE, WM_SETFOCUS |
-| UpdateWindow ✓, GetWindowRect ✓, GetClientRect ✓, SetWindowPos ✓ | no frame: window rect = client rect at x,y; `SetWindowPos` resizes/moves the SDL window and sends WM_SIZE/WM_MOVE |
+| UpdateWindow ✓, GetWindowRect ✓, GetClientRect ✓, SetWindowPos ✓ | no frame: window rect = client rect at x,y; `SetWindowPos` resizes/moves the SDL window and sends WM_SIZE/WM_MOVE. The SDL window is 1.5× the size the game asked for (`WIN_SCALE`); every rect the game reads is its own size |
 | DestroyWindow, SetWindowTextA, Get/SetWindowLongA, CallWindowProcA | WM_DESTROY + `SDL_DestroyWindow`; title; WNDPROC/STYLE/EXSTYLE/USERDATA; call32 |
 | PeekMessageA, DispatchMessageA, PostMessageA, SendMessageA, PostQuitMessage, TranslateMessage | posted-message queue fed by SDL events (see "Input": close → WM_CLOSE, keys → WM_(SYS)KEYDOWN/UP, focus → WM_ACTIVATE); filters ignored; no WM_CHAR (TranslateMessage is a no-op: the game never reads characters from messages) |
 | DefWindowProcA ✓ | WM_NCCREATE/WM_NCACTIVATE → TRUE, WM_CLOSE → DestroyWindow, else 0 |
