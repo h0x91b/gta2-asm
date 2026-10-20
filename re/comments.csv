@@ -3,9 +3,14 @@ address,kind,function,comment
 0x0042077c,pre,getUpgradeType,oil
 0x00420782,pre,getUpgradeType,Gun on car
 0x00420788,pre,getUpgradeType,"paint, suicide"
-0x00461de0,plate,MainMenu,MainMenu
+0x004591e0,pre,ApplyCheats,"Ваш персонаж приобретёт высшую степень уважения во всех бандах.
+"
+0x00459345,pre,ApplyCheats,give 200000 money
+0x004593e3,pre,ApplyCheats,give 10 millions
+0x00461de0,plate,InitGame,MainMenu
 0x004760ad,pre,loadSubScripts,wil_tra.mis
 0x004760b9,pre,loadSubScripts,"replase ""mis"" to ""SCR"""
+0x0047a914,pre,FUN_0047a860,save goes here
 0x004a49c0,plate,KeyUp,KeyDown
 0x004b7662,eol,ChangeMoney2,current money
 0x004c6060,plate,ShowBigOnScreenLabel,ShowBigOnScreenLabel
@@ -149,6 +154,10 @@ Library: Visual Studio 2003 Release"
 0x004d7568,plate,___timet_from_ft,"Library Function - Single Match
 Name: ___timet_from_ft
 Library: Visual Studio 2003 Release"
+0x004d78e0,plate,copySomething,"Library Function - Single Match
+ _strncpy
+
+Library: Visual Studio 2003 Release"
 0x004d7a04,plate,__strnicmp,"Library Function - Single Match
 Name: __strnicmp
 Library: Visual Studio 2003 Release"
@@ -170,6 +179,10 @@ Library: Visual Studio 2003 Release"
 0x004d7ca1,plate,_IsRootUNCName,"Library Function - Single Match
 Name: _IsRootUNCName
 Library: Visual Studio 2003 Release"
+0x004d8110,plate,appendMissionNameToBuf,"Library Function - Single Match
+ _strncat
+
+Library: Visual Studio"
 0x004d8245,plate,_rewind,"Library Function - Single Match
 Name: _rewind
 Library: Visual Studio 2003 Release"
@@ -452,6 +465,10 @@ Library: Visual Studio 2003 Release"
 0x004e015e,plate,___dtold,"Library Function - Single Match
 Name: ___dtold
 Library: Visual Studio 2003 Release"
+0x004e02a0,plate,FUN_004e02a0,"Library Function - Single Match
+ _memset
+
+Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release, Visual Studio 2019 Release"
 0x004e0333,plate,__abstract_cw,"Library Function - Single Match
 Name: __abstract_cw
 Library: Visual Studio 2003 Release"
@@ -1251,6 +1268,7 @@ Library: Visual Studio 2003 Release"
 0x005953d4,eol,,TypeDescriptor.name
 0x00595428,plate,,class type_info RTTI Type Descriptor
 0x00595430,eol,,TypeDescriptor.name
+0x005e8108,eol,,game tick
 0x006771f0,plate,,Rsrc_Icon_1_c09 Size of resource: 0x568 bytes
 0x00677758,plate,,Rsrc_Icon_2_c09 Size of resource: 0x6c8 bytes
 0x00677e20,plate,,Rsrc_Icon_3_c09 Size of resource: 0x8a8 bytes

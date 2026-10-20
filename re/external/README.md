@@ -3,7 +3,8 @@
 What three external repos know about vanilla `gta2.exe` 11.44 (ImageBase `0x3F0000`),
 diffed against our Ghidra export in `re/` (`~/ghidra/gta-2-recovered.gpr`). The aim: list
 everything those repos know that our Ghidra DB does **not**, so it can be imported later.
-Nothing here has been written to Ghidra; importing is the user's call.
+The non-conflicting part was imported into Ghidra on 2026-10-20 (see "Imported into Ghidra"
+below), so statuses now compare against the post-import DB.
 
 Everything except this README and `tools/` is generated. Regenerate, do not edit.
 
@@ -133,6 +134,30 @@ conflicts (seuko `+0x50 Sprite* sprite` vs ours `Position* position`, `+0x58 Car
 
 The 2021 DB conflicts (`gta2-resurection.gzf` rows) are mostly the user's own renames between 2021
 and now; the current name should usually win unless it is a `relTo` guess.
+
+## Imported into Ghidra (2026-10-20)
+
+Written into `gta-2-recovered` / `gta2.segments.fixed.exe` through the GhidraMCP plugin, then
+re-exported. Only NEW items without a conflict, plus three user rulings:
+
+- `0x00461de0` = `InitGame` (seuko; was Ghidra-analysis `MainMenu`), and so `0x00453e20` = `MainMenu`
+  (2021 DB); `0x00426ac0` = `SpawnCar` with seuko's `__fastcall(TrafficManager*, edx, …)` signature
+  (the function saves `ecx` on entry); `Car` = 188 bytes with seuko's fields, ours kept where seuko
+  is silent (`0x7c`, `0x80`).
+- New structs/enums go to `/imported/<source>` (seuko-mod first, then the 2021 DB, then gta2-mouse;
+  one struct per name). Skipped: the three seuko structs whose layout depends on packing
+  (`CarsManager`, `SCR_CAR_DATA_DEC`, `SImage`), `palette_base` (name clashes with enum
+  `PALETTE_BASE`), and by-value fields whose element size differs from ours (`Sprite`, `S30`, `Ped`).
+- Fields into existing structs only where that source's struct has our size, the bytes are free or a
+  default-named placeholder, and no other source names an overlapping field differently.
+- Renderer seam: every `GetProcAddress` slot named from the loader code itself (`0x4d3770` for
+  `d3ddll.dll`, `InitVideoDll` `0x4d2e50` for `dmavideo.dll`): `d3ddll_<export>` / `dmavideo_<export>`.
+- `FireFromGun`'s body had swallowed the weapon handlers it tail-jumps to; giving those handlers
+  their own functions shrank it to `0x4d0530–0x4d067c`. `0x4d0a00` was never inside it (the
+  "inside" flag came from entry+size arithmetic on a split body): it is the window procedure
+  (`WNDCLASS.lpfnWndProc` in `WinMain2`) and is now `WndProc`.
+- The `functions.csv` rows still `NEW` for `gta2-resurection.gzf` are the 2021 DB's typed but
+  unnamed functions; their signatures were applied where ours had none.
 
 ## Regenerate
 

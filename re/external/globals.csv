@@ -5,7 +5,7 @@ gta2-mouse,MainWindow.cpp:408,1,0x00672f40,,global,S10*,,.data,SAME,,,ptrToS10,/
 gta2-resurection,gta2-resurected.ct:1417,1,0x00591e84,NextPedId,global,4 Bytes,,.data,SAME,,,nextPedId,/uint,Cheat Engine entry
 gta2-resurection,gta2-resurected.ct:483,2,0x00595011,isNight,global,4 Bytes,,.data,SAME,,,isNight,/undefined1,Cheat Engine entry
 gta2-resurection,gta2-resurected.ct:458,2,0x00595014,start_mode,global,4 Bytes,,.data,SAME,,,start_mode,/undefined4,Cheat Engine entry
-gta2-resurection,gta2-resurected.ct:490,2,0x005dcbec,SFXVolume,global,Byte,,.data,NEW,,,,,Cheat Engine entry
+gta2-resurection,gta2-resurected.ct:490,2,0x005dcbec,SFXVolume,global,Byte,,.data,SAME,,,SFXVolume,/undefined1,Cheat Engine entry
 gta2-resurection,gta2-resurection/mod-settings.lua:54,1,0x005e4ca4,s9,global,struct S9_cars*,,.data,CONFLICT,semantic,name,ptrToCarManager,/_car/CarManager *,ffi.cast to struct S9_cars**
 gta2-resurection,gta2-resurected.ct:642,2,0x005e4cb8,,global,Byte,,.data,NEW,,,,,Cheat Engine entry (no description)
 gta2-resurection,gta2-resurected.ct:252,2,0x005e4db8,,global,4 Bytes,,.data,SAME,,,defaultX,/undefined4,Cheat Engine entry (no description)
@@ -153,22 +153,22 @@ gta2-resurection.gzf,gzf/globals.csv:10,1,0x00595010,max_frame_rate,global,/bool
 gta2-resurection.gzf,gzf/globals.csv:11,1,0x00595011,isNight,global,/undefined1,,.data,SAME,,,isNight,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:12,1,0x00595014,isFullScreenMode,global,/undefined4,,.data,CONFLICT,semantic,name,start_mode,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:13,1,0x005dcbc8,do_3d_sound,global,/bool,,.data,CONFLICT,semantic,name; ours has this name at 0x005ead50,ptrToS6,/auto_structs/S6 *,
-gta2-resurection.gzf,gzf/globals.csv:14,1,0x005dcbe5,soundRelated3d,global,/undefined1,,.data,NEW,,,,,
-gta2-resurection.gzf,gzf/globals.csv:15,1,0x005dcbec,SFXVolume,global,/undefined1,,.data,NEW,,,,,
-gta2-resurection.gzf,gzf/globals.csv:16,1,0x005dcbed,CDVol,global,/undefined1,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:14,1,0x005dcbe5,soundRelated3d,global,/undefined1,,.data,SAME,,,soundRelated3d,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:15,1,0x005dcbec,SFXVolume,global,/undefined1,,.data,SAME,,,SFXVolume,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:16,1,0x005dcbed,CDVol,global,/undefined1,,.data,SAME,,,CDVol,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:17,1,0x005e3cc4,pS1,global,/_my/S1 *,,.data,CONFLICT,semantic,name,ptrToGameStats,/_game/GameStats *,
-gta2-resurection.gzf,gzf/globals.csv:18,1,0x005e3f54,eq8192,global,/undefined4,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:18,1,0x005e3f54,eq8192,global,/undefined4,,.data,SAME,,,eq8192,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:19,1,0x005e4ca0,pAllCars,global,/_my/AllCars *,,.data,CONFLICT,naming,name (similar),relToCars,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:20,1,0x005e4ca4,pS9,global,/_my/S9_cars *,,.data,CONFLICT,semantic,name,ptrToCarManager,/_car/CarManager *,
 gta2-resurection.gzf,gzf/globals.csv:21,1,0x005e4db8,eq0,global,/undefined4,,.data,CONFLICT,semantic,name; ours has this name at 0x00663764,defaultX,/undefined4,
-gta2-resurection.gzf,gzf/globals.csv:22,1,0x005e508c,pCarsS4,global,/_my/CarsS4 *,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:22,1,0x005e508c,pCarsS4,global,/_my/CarsS4 *,,.data,SAME,,,pCarsS4,/imported/gzf-2021/CarsS4 *,
 gta2-resurection.gzf,gzf/globals.csv:23,1,0x005e5bbc,pedManager,global,/_my/PedsManager *,,.data,SAME,,,ptrToPedManager,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:24,1,0x005e5c60,eq0_2bytes,global,/undefined2,,.data,CONFLICT,semantic,name,defaultRotation,/short,
 gta2-resurection.gzf,gzf/globals.csv:25,1,0x005e5cfc,eq0,global,/undefined4,,.data,CONFLICT,semantic,name; ours has this name at 0x00663764,ZERO,/int,
 gta2-resurection.gzf,gzf/globals.csv:26,1,0x005e8108,cycle,global,/undefined4,,.data,CONFLICT,semantic,name,frameCounterFromBeginnigOfTheGame,/int *,
-gta2-resurection.gzf,gzf/globals.csv:27,1,0x005e9708,pTextGameResource,global,/undefined,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:27,1,0x005e9708,pTextGameResource,global,/undefined,,.data,SAME,,,pTextGameResource,/undefined,
 gta2-resurection.gzf,gzf/globals.csv:28,1,0x005e9808,WindowName,global,/undefined4,,.data,CONFLICT,semantic,name,generalCharBuf,/undefined4,
-gta2-resurection.gzf,gzf/globals.csv:29,1,0x005ea9cc,pFireEngine,global,/undefined4,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:29,1,0x005ea9cc,pFireEngine,global,/undefined4,,.data,SAME,,,pFireEngine,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:30,1,0x005ead50,do_3d_sound,global,/undefined,,.data,SAME,,,do_3d_sound,/undefined,
 gta2-resurection.gzf,gzf/globals.csv:31,1,0x005ead51,do_blood,global,/undefined1,,.data,SAME,,,do_blood,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:32,1,0x005ead52,do_show_object_ids,global,/undefined,,.data,SAME,,,do_show_object_ids,/undefined,
@@ -258,7 +258,7 @@ gta2-resurection.gzf,gzf/globals.csv:115,1,0x005eb4fc,pGame,global,/_my/Game *,,
 gta2-resurection.gzf,gzf/globals.csv:116,1,0x00662128,pKeyboard,global,/_my/SKeyboard *,,.data,CONFLICT,semantic,ours has this name at 0x005ecac8,,,
 gta2-resurection.gzf,gzf/globals.csv:117,1,0x00662748,tickCounts,global,/undefined4,,.data,CONFLICT,semantic,name,lastFrameTime,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:118,1,0x00662c08,DAT_00662c08_maybeTrafficRelated,global,/undefined4,,.data,CONFLICT,semantic,name,relToCounters,/_scripts/SCR_STRING_HEADER *,
-gta2-resurection.gzf,gzf/globals.csv:119,1,0x00663de4,pAmbulance,global,/undefined4,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:119,1,0x00663de4,pAmbulance,global,/undefined4,,.data,SAME,,,pAmbulance,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:120,1,0x006644bc,pS8,global,/_my/S8 *,,.data,CONFLICT,semantic,name,ptrToS15_script,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:121,1,0x0066ab7c,pCarsS2,global,/_my/CarsS2 *,,.data,CONFLICT,semantic,name,ptrToMaybeCarEngineHolder,/_car/MaybeCarEngineHolder *,
 gta2-resurection.gzf,gzf/globals.csv:122,1,0x0066b7a0,pPolice,global,/_my/Police_s5 *,,.data,CONFLICT,naming,name (similar),ptrToSPolice,/auto_structs/SPolice *,
@@ -271,45 +271,45 @@ gta2-resurection.gzf,gzf/globals.csv:128,1,0x00672f40,StructRelToTextSpeed,globa
 gta2-resurection.gzf,gzf/globals.csv:129,1,0x006732e0,full_height,global,/undefined4,,.data,SAME,,,full_height,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:130,1,0x006732e4,full_width,global,/undefined4,,.data,SAME,,,full_width,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:131,1,0x006732e8,WindowY,global,/undefined4,,.data,CONFLICT,semantic,name,window_height,/undefined4,
-gta2-resurection.gzf,gzf/globals.csv:132,1,0x006732f0,dmavideo.dll,global,/pointer,,.data,NEW,,,,,
-gta2-resurection.gzf,gzf/globals.csv:133,1,0x00673470,renderdevice,global,/undefined4,,.data,NEW,,,,,
-gta2-resurection.gzf,gzf/globals.csv:134,1,0x00673478,rendername,global,/undefined1,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:132,1,0x006732f0,dmavideo.dll,global,/pointer,,.data,SAME,,,dmavideo.dll,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:133,1,0x00673470,renderdevice,global,/undefined4,,.data,SAME,,,renderdevice,/undefined,
+gta2-resurection.gzf,gzf/globals.csv:134,1,0x00673478,rendername,global,/undefined1,,.data,SAME,,,rendername,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:135,1,0x00673578,WindowX,global,/undefined4,,.data,CONFLICT,semantic,name,window_width,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:136,1,0x0067357c,screenX,global,/int,,.data,CONFLICT,semantic,name,windowLeft,/undefined4,
-gta2-resurection.gzf,gzf/globals.csv:137,1,0x00673588,videodevice,global,/undefined4,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:137,1,0x00673588,videodevice,global,/undefined4,,.data,SAME,,,videodevice,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:138,1,0x0067358c,lighting,global,/_my/LIGHTING,,.data,SAME,,,lighting,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:139,1,0x00673590,screenY,global,/undefined4,,.data,CONFLICT,semantic,name,windowTop,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:140,1,0x00673594,gammaRelated,global,/undefined4,,.data,CONFLICT,naming,name (similar),relatedToGamma,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:141,1,0x00673598,min_frame_rate,global,/undefined1,,.data,SAME,,,min_frame_rate,/undefined1,
 gta2-resurection.gzf,gzf/globals.csv:142,1,0x00673944,TrafficManager,global,/_my/TrafficManager *,,.data,CONFLICT,semantic,name,ptrToWeaponRelStruct,/_weapon/WeaponRelStruct *,
 gta2-resurection.gzf,gzf/globals.csv:143,1,0x00673d18,hwnd,global,/undefined4,,.data,CONFLICT,semantic,name,ptrToMainWindow,/undefined4,
-gta2-resurection.gzf,gzf/globals.csv:144,1,0x00673d20,dinputrelated,global,/undefined4,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:144,1,0x00673d20,dinputrelated,global,/undefined4,,.data,CONFLICT,semantic,name,SVideoPtr,/imported/seuko-mod/SVideo *,
 gta2-resurection.gzf,gzf/globals.csv:145,1,0x00673e28,DirectInput,global,/undefined4,,.data,CONFLICT,semantic,name,hInstance,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:146,1,0x00673f54,VersionMajor,global,/undefined4,,.data,SAME,,,VERSION_MAJOR,/undefined4,
 gta2-resurection.gzf,gzf/globals.csv:147,1,0x00673f58,VersionMinor,global,/undefined4,,.data,SAME,,,VERSION_MINOR,/undefined4,
 gta2-seuko-mod,src/game/memory.h:37,1,0x00595014,IsFullScreen,global,bool,,.data,CONFLICT,semantic,name,start_mode,/undefined4,object at address
 gta2-seuko-mod,src/game/functions.h:60,1,0x00595044,pFlipBuffers,fnptr_slot,FlipBuffersType*,void __stdcall FlipBuffers(SVideo* sVideo),.data,CONFLICT,naming,name (similar),dmavideo_Vid_FlipBuffers,/pointer,global slot holding a pointer to the function (renderer/video DLL export)
 gta2-seuko-mod,src/game/functions.h:66,1,0x00595064,pClearScreen,fnptr_slot,ClearScreenType*,"void __stdcall ClearScreen(SVideo* sVideo, DWORD param_2, DWORD param_3, DWORD param_4, DWORD param_5, DWORD param_6, DWORD param_7, DWORD param_8)",.data,CONFLICT,naming,name (similar),dmavideo_Vid_ClearScreen,/pointer,global slot holding a pointer to the function (renderer/video DLL export)
-gta2-seuko-mod,src/game/memory.h:32,1,0x005952a8,pgbh_InitDLL,fnptr_slot,,,.data,NEW,,,,,d3ddll.dll gbh_InitDLL pointer; renderer base = it - 0x00e053f0
-gta2-seuko-mod,src/events/renderer.cpp:56,1,0x005952bc,pDrawTile,fnptr_slot,FunctionPtrHook,,.data,NEW,,,,,function-pointer slot the mod hooks (FunctionPtrHook drawTileHook)
-gta2-seuko-mod,src/game/functions.h:54,2,0x005952c4,pDrawQuad,fnptr_slot,DrawQuadType*,"void __stdcall DrawQuad(uint32_t flags, DWORD sprite, GTAVertex* verticies, uint16_t flags2)",.data,NEW,,,,,global slot holding a pointer to the function (renderer/video DLL export)
-gta2-seuko-mod,src/events/renderer.cpp:122,1,0x005952d0,pDrawTriangle,fnptr_slot,FunctionPtrHook,,.data,NEW,,,,,function-pointer slot the mod hooks (FunctionPtrHook drawTriangleHook)
+gta2-seuko-mod,src/game/memory.h:32,1,0x005952a8,pgbh_InitDLL,fnptr_slot,,,.data,CONFLICT,semantic,name,d3ddll_gbh_InitDLL,/pointer,d3ddll.dll gbh_InitDLL pointer; renderer base = it - 0x00e053f0
+gta2-seuko-mod,src/events/renderer.cpp:56,1,0x005952bc,pDrawTile,fnptr_slot,FunctionPtrHook,,.data,CONFLICT,naming,name (similar),d3ddll_gbh_DrawTile,/pointer,function-pointer slot the mod hooks (FunctionPtrHook drawTileHook)
+gta2-seuko-mod,src/game/functions.h:54,2,0x005952c4,pDrawQuad,fnptr_slot,DrawQuadType*,"void __stdcall DrawQuad(uint32_t flags, DWORD sprite, GTAVertex* verticies, uint16_t flags2)",.data,CONFLICT,naming,name (similar),d3ddll_gbh_DrawQuad,/pointer,global slot holding a pointer to the function (renderer/video DLL export)
+gta2-seuko-mod,src/events/renderer.cpp:122,1,0x005952d0,pDrawTriangle,fnptr_slot,FunctionPtrHook,,.data,CONFLICT,naming,name (similar),d3ddll_gbh_DrawTriangle,/pointer,function-pointer slot the mod hooks (FunctionPtrHook drawTriangleHook)
 gta2-seuko-mod,src/game/memory.h:29,1,0x005e3cc4,MainCamera,global,Camera*,,.data,CONFLICT,semantic,name,ptrToGameStats,/_game/GameStats *,holds a pointer
 gta2-seuko-mod,src/game/memory.h:28,1,0x005e4ca0,CarsManager,global,CarsManager*,,.data,CONFLICT,naming,name (similar),relToCars,/undefined4,holds a pointer
 gta2-seuko-mod,src/game/memory.h:51,1,0x005e4ca4,TrafficManager,global,TrafficManager*,,.data,CONFLICT,semantic,name,ptrToCarManager,/_car/CarManager *,holds a pointer
-gta2-seuko-mod,src/game/memory.h:52,1,0x005e4d4c,CarsScale,global,int,,.data,NEW,,,,,object at address
-gta2-seuko-mod,src/game/memory.h:46,1,0x005e4d64,TankCannonRoofOffsetY,global,int,,.data,NEW,,,,,object at address
-gta2-seuko-mod,src/game/memory.h:49,1,0x005e4eb8,WaterCannonRoofOffsetY,global,int,,.data,NEW,,,,,object at address
-gta2-seuko-mod,src/game/memory.h:47,1,0x005e500c,JeepGunRoofOffsetY,global,int,,.data,NEW,,,,,object at address
-gta2-seuko-mod,src/game/memory.h:48,1,0x005e5014,AntennaRoofOffsetY,global,int,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:52,1,0x005e4d4c,CarsScale,global,int,,.data,SAME,,,CarsScale,/int,object at address
+gta2-seuko-mod,src/game/memory.h:46,1,0x005e4d64,TankCannonRoofOffsetY,global,int,,.data,SAME,,,TankCannonRoofOffsetY,/int,object at address
+gta2-seuko-mod,src/game/memory.h:49,1,0x005e4eb8,WaterCannonRoofOffsetY,global,int,,.data,SAME,,,WaterCannonRoofOffsetY,/int,object at address
+gta2-seuko-mod,src/game/memory.h:47,1,0x005e500c,JeepGunRoofOffsetY,global,int,,.data,SAME,,,JeepGunRoofOffsetY,/int,object at address
+gta2-seuko-mod,src/game/memory.h:48,1,0x005e5014,AntennaRoofOffsetY,global,int,,.data,SAME,,,AntennaRoofOffsetY,/int,object at address
 gta2-seuko-mod,src/game/memory.h:64,1,0x005e5bbc,PedManager,global,PedManager_S25*,,.data,SAME,,,ptrToPedManager,/undefined4,holds a pointer
 gta2-seuko-mod,src/game/memory.h:58,1,0x005e8108,Tick,global,Tick*,,.data,CONFLICT,semantic,name,frameCounterFromBeginnigOfTheGame,/int *,holds a pointer
-gta2-seuko-mod,src/game/memory.h:56,1,0x005e8f04,DirectInputDeviceObjectDataCount,global,DWORD,,.data,NEW,,,,,object at address
-gta2-seuko-mod,src/game/memory.h:59,1,0x005e8f5c,Controls,global,Controls,,.data,NEW,,,,,object at address
-gta2-seuko-mod,src/game/memory.h:60,1,0x005e8f5c,ControlsAsArray,global,KeyCode,,.data,NEW,,,,,object at address
-gta2-seuko-mod,src/game/memory.h:19,1,0x005e8f8c,KeyPressCode,global,KeyCode,,.data,NEW,,,,,object at address
-gta2-seuko-mod,src/game/memory.h:55,1,0x005e8f8c,DirectInputDeviceObjectData,global,DirectInput_DeviceObjectData,,.data,NEW,,,,,object at address
-gta2-seuko-mod,src/game/memory.h:20,1,0x005e8f90,KeyPressState,global,uint,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:56,1,0x005e8f04,DirectInputDeviceObjectDataCount,global,DWORD,,.data,SAME,,,DirectInputDeviceObjectDataCount,/dword,object at address
+gta2-seuko-mod,src/game/memory.h:59,1,0x005e8f5c,Controls,global,Controls,,.data,SAME,,,Controls,/undefined4,object at address
+gta2-seuko-mod,src/game/memory.h:60,1,0x005e8f5c,ControlsAsArray,global,KeyCode,,.data,CONFLICT,naming,name (similar),Controls,/undefined4,object at address
+gta2-seuko-mod,src/game/memory.h:19,1,0x005e8f8c,KeyPressCode,global,KeyCode,,.data,SAME,,,KeyPressCode,/undefined4,object at address
+gta2-seuko-mod,src/game/memory.h:55,1,0x005e8f8c,DirectInputDeviceObjectData,global,DirectInput_DeviceObjectData,,.data,CONFLICT,semantic,name; ours labels inside: KeyPressState@+0x4=data,KeyPressCode,/undefined4,object at address
+gta2-seuko-mod,src/game/memory.h:20,1,0x005e8f90,KeyPressState,global,uint,,.data,SAME,,,KeyPressState,/uint,object at address
 gta2-seuko-mod,src/game/memory.h:23,1,0x005ead51,Cheats,global,Cheats,,.data,SAME,,"ours names its first field (doBlood); ours labels inside: CHEAT_BUCKFAST@+0x42=aggresivePeds, CHEAT_CUTIE1@+0x3e=health99, CHEAT_DANISGOD@+0x46=give200000, CHEAT_DAVEMOON@+0x1d=giveBasicWeapons, CHEAT_FLAMEON@+0x4a=giveFlamethrower, CHEAT_IAMDAVEJ@+0x55=give9000000, CHEAT_LASVEGAS@+0x4e=onlyElvisPeds, CHEAT_MADEMAN@+0x39=maxRespect, CHEAT_NEKKID@+0x4f=nekkidPeds, CHEAT_SCHURULZ@+0x14=doubleDamage, CHEAT_UKGAMER@+0xb=unlockAllLevels, CHEAT_VOLTFEST@+0x1f=giveElectricGun …",do_blood,/undefined1,object at address
 gta2-seuko-mod,src/events/after-debug-flags.cpp:19,1,0x005ead76,,global,written by hook asm,,.data,SAME,,,show_player_names,/undefined1,"mov ds : [0x005ead76], al"
 gta2-seuko-mod,src/game/memory.h:9,1,0x005eb4fc,Game,global,Game*,,.data,SAME,,,ptrToGame,/_game/Game *,holds a pointer
@@ -317,24 +317,24 @@ gta2-seuko-mod,src/game/memory.h:24,1,0x005eb898,GangRespectContainer,global,Gan
 gta2-seuko-mod,src/game/memory.h:27,1,0x005ec070,Menu,global,Menu,,.data,SAME,,,ptrToMenu,/_game/Menu,object at address
 gta2-seuko-mod,src/game/memory.h:57,1,0x005ecac8,Keyboard,global,Keyboard,,.data,SAME,,ours labels inside: playerMovementState@+0x4=state,?keyboard,/undefined,object at address
 gta2-seuko-mod,src/game/memory.h:45,1,0x00662c08,MapBlocks,global,MapBlocks*,,.data,CONFLICT,semantic,name,relToCounters,/_scripts/SCR_STRING_HEADER *,holds a pointer
-gta2-seuko-mod,src/game/memory.h:44,1,0x006633a0,CurrentlyDrawnMapLayerIndex,global,int,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:44,1,0x006633a0,CurrentlyDrawnMapLayerIndex,global,int,,.data,SAME,,,CurrentlyDrawnMapLayerIndex,/int,object at address
 gta2-seuko-mod,src/game/memory.h:63,1,0x006644b8,S17Mission,global,S17_Mission*,,.data,SAME,,,ptrToS17Mission,/undefined4,holds a pointer
 gta2-seuko-mod,src/game/memory.h:26,1,0x006644bc,S15,global,S15_Script*,,.data,CONFLICT,naming,name (similar),ptrToS15_script,/undefined4,holds a pointer
-gta2-seuko-mod,src/game/memory.h:66,1,0x00665784,BareGameObjectManager,global,BareGameObjectManager*,,.data,NEW,,,,,holds a pointer
+gta2-seuko-mod,src/game/memory.h:66,1,0x00665784,BareGameObjectManager,global,BareGameObjectManager*,,.data,SAME,,,BareGameObjectManager,/imported/seuko-mod/BareGameObjectManager *,holds a pointer
 gta2-seuko-mod,src/game/memory.h:50,1,0x00665788,S33,global,S33*,,.data,CONFLICT,semantic,name,ptrToUnkStruct2,/undefined4,holds a pointer
-gta2-seuko-mod,src/game/memory.h:62,1,0x00665b40,ObjectPrefabsContainer,global,ObjectPrefabsContainer*,,.data,NEW,,,,,holds a pointer
+gta2-seuko-mod,src/game/memory.h:62,1,0x00665b40,ObjectPrefabsContainer,global,ObjectPrefabsContainer*,,.data,SAME,,,ObjectPrefabsContainer,/imported/seuko-mod/ObjectPrefabsContainer *,holds a pointer
 gta2-seuko-mod,src/game/memory.h:65,1,0x0066a3b4,PedGameObjectManager,global,PedGameObjectManager*,,.data,CONFLICT,semantic,name,ptrTo_relSprites,/undefined4,holds a pointer
 gta2-seuko-mod,src/game/memory.h:61,1,0x0066b404,S28,global,S28*,,.data,CONFLICT,naming,name (similar),ptrToS28PlayerData,/auto_structs/S28 *,holds a pointer
 gta2-seuko-mod,src/game/memory.h:22,1,0x00670684,StyleS3,global,Style_S3*,,.data,CONFLICT,naming,name (similar),ptrToS3,/_STY/Style_S3 *,holds a pointer
 gta2-seuko-mod,src/game/memory.h:21,1,0x00671978,S4,global,S4*,,.data,CONFLICT,naming,name (similar),ptrToS4,/undefined4,holds a pointer
-gta2-seuko-mod,src/game/memory.h:25,1,0x00672f24,DefaultFontId,global,short,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:25,1,0x00672f24,DefaultFontId,global,short,,.data,SAME,,,DefaultFontId,/short,object at address
 gta2-seuko-mod,src/game/memory.h:39,1,0x006732e0,FullScreenHeight,global,int,,.data,CONFLICT,naming,name (similar),full_height,/undefined4,object at address
 gta2-seuko-mod,src/game/memory.h:38,1,0x006732e4,FullScreenWidth,global,int,,.data,CONFLICT,naming,name (similar),full_width,/undefined4,object at address
 gta2-seuko-mod,src/game/memory.h:41,1,0x006732e8,WindowedHeight,global,int,,.data,CONFLICT,naming,name (similar),window_height,/undefined4,object at address
-gta2-seuko-mod,src/game/memory.h:43,1,0x00673474,ScreenHeight,global,int,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:43,1,0x00673474,ScreenHeight,global,int,,.data,SAME,,,ScreenHeight,/int,object at address
 gta2-seuko-mod,src/game/memory.h:40,1,0x00673578,WindowedWidth,global,int,,.data,CONFLICT,naming,name (similar),window_width,/undefined4,object at address
-gta2-seuko-mod,src/game/memory.h:42,1,0x00673584,ScreenWidth,global,int,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:42,1,0x00673584,ScreenWidth,global,int,,.data,SAME,,,ScreenWidth,/int,object at address
 gta2-seuko-mod,src/game/memory.h:53,1,0x00673d18,GameWindow,global,HWND,,.data,CONFLICT,semantic,name,ptrToMainWindow,/undefined4,object at address
-gta2-seuko-mod,src/game/memory.h:36,1,0x00673d20,SVideoPtr,global,SVideo*,,.data,NEW,,"ours labels inside: VERSION_MAJOR@+0x234, VERSION_MINOR@+0x238, cwd@+0x8=found_width, hInstance@+0x108, isMultiplayer@+0x10c",,,object at address
+gta2-seuko-mod,src/game/memory.h:36,1,0x00673d20,SVideoPtr,global,SVideo*,,.data,SAME,,"ours labels inside: VERSION_MAJOR@+0x234, VERSION_MINOR@+0x238, cwd@+0x8=found_width, hInstance@+0x108, isMultiplayer@+0x10c",SVideoPtr,/imported/seuko-mod/SVideo *,object at address
 gta2-seuko-mod,src/game/memory.h:54,1,0x00673e2c,IsMultiplayer,global,bool,,.data,SAME,,,isMultiplayer,/undefined4,object at address
-gta2-seuko-mod,src/game/memory.h:30,1,0x00675358,IsRendererLoaded,global,bool,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:30,1,0x00675358,IsRendererLoaded,global,bool,,.data,SAME,,,IsRendererLoaded,/bool,object at address

@@ -15,6 +15,18 @@ struc C1
     .s5Arr1020                        resb 4080   ; 0x1488 S5 *[1020]
 endstruc
 
+; /GTAVertex  (32 bytes)
+struc GTAVertex
+    .x                                resb 4      ; 0x0 float
+    .y                                resb 4      ; 0x4 float
+    .z                                resb 4      ; 0x8 float
+    .z2                               resb 4      ; 0xc float
+    .flags                            resb 4      ; 0x10 uint
+    resb 4
+    .u                                resb 4      ; 0x18 float
+    .v                                resb 4      ; 0x1c float
+endstruc
+
 ; /IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct  (8 bytes)
 struc IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct
     .OffsetToDirectory                resb 4      ; 0x0 dword
@@ -114,12 +126,12 @@ struc SpriteBase
     .font                             resb 2      ; 0xa ushort
 endstruc
 
-; /_STY/SpriteEntry  (22 bytes)
+; /_STY/SpriteEntry  (8 bytes)
 struc SpriteEntry
     .ptr                              resb 4      ; 0x0 void *
     .w                                resb 1      ; 0x4 UINT8
     .h                                resb 1      ; 0x5 UINT8
-    .pad                              resb 16     ; 0x6 uint16
+    .pad                              resb 2      ; 0x6 ushort
 endstruc
 
 ; /_STY/StyleFileHeader  (6 bytes)
@@ -337,42 +349,50 @@ CAR_UPGRADE.UPGRADE_10k_OIL equ 16
 CAR_UPGRADE.UPGRADE_50k equ 17
 CAR_UPGRADE.UPGRADE_25k_GUN equ 18
 
-; /_car/Car  (168 bytes)
+; /_car/Car  (188 bytes)
 struc Car
-    resb 8
-    .carLights                        resb 4      ; 0x8 CAR_LIGHTS_AND_DOORS_BITSTATE
-    resb 24
-    .bitMask2                         resb 4      ; 0x24 uint
-    resb 20
-    .field54_0x3c                     resb 4      ; 0x3c int
-    resb 12
-    .field67_0x4c                     resb 4      ; 0x4c int
-    .position                         resb 4      ; 0x50 Position *
+    .roof                             resb 4      ; 0x0 Roof *
+    .lastPassenger                    resb 4      ; 0x4 Passenger *
+    .deltasBitstate                   resb 4      ; 0x8 CAR_DELTAS_BITSTATE
+    .carDoor                          resb 64     ; 0xc CarDoor[4]
+    .lastCar                          resb 4      ; 0x4c Car *
+    .sprite                           resb 4      ; 0x50 Sprite *
     .driver                           resb 4      ; 0x54 Ped *
-    .maybeEngine                      resb 4      ; 0x58 MaybeCarEngine *
-    resb 8
-    .field79_0x64                     resb 4      ; 0x64 void *
-    resb 8
-    .driverPedId                      resb 4      ; 0x70 int
-    resb 1
-    .carDamagePercent                 resb 1      ; 0x75 byte
-    resb 2
-    .bitMask                          resb 1      ; 0x78 byte
-    resb 3
-    .field97_0x7c                     resb 4      ; 0x7c int
-    .field98_0x80                     resb 1      ; 0x80 bool
-    resb 3
-    .carModel                         resb 1      ; 0x84 CAR_MODEL
-    resb 3
-    .field106_0x88                    resb 4      ; 0x88 int
-    resb 12
-    .locksDoor                        resb 1      ; 0x98 byte
-    resb 3
-    .engineState                      resb 4      ; 0x9c CAR_ENGINE_STATE
+    .physics                          resb 4      ; 0x58 CarPhysics *
+    .notEngineStruct                  resb 4      ; 0x5c CarManager4_S1 *
     resb 4
-    .sirenState                       resb 1      ; 0xa4 CAR_SIREN_STATE
+    .trailerController                resb 4      ; 0x64 TrailerController *
+    .scale                            resb 4      ; 0x68 uint
+    .id                               resb 4      ; 0x6c uint
+    .latelyShot                       resb 1      ; 0x70 bool
+    resb 3
+    .carDamage                        resb 2      ; 0x74 short
     resb 2
+    .physicsBitmask                   resb 2      ; 0x78 short
+    resb 2
+    .field_0x7c                       resb 4      ; 0x7c int
+    .field_0x80                       resb 1      ; 0x80 bool
+    resb 3
+    .carModel                         resb 4      ; 0x84 CAR_MODEL4
+    .mask                             resb 4      ; 0x88 uint
+    .fireState                        resb 1      ; 0x8c byte
+    resb 1
+    .alarmTimer                       resb 1      ; 0x8e byte
+    resb 1
+    .latelyShotBulletType             resb 4      ; 0x90 int
+    .latelyShotTimer                  resb 1      ; 0x94 byte
+    resb 3
+    .lockState                        resb 4      ; 0x98 CAR_LOCK_STATE
+    .engineState                      resb 4      ; 0x9c CAR_ENGINE_STATE
+    .trafficCarType                   resb 4      ; 0xa0 TRAFFIC_CAR_TYPE
+    .lightsBitstate                   resb 1      ; 0xa4 CAR_LIGHTS_BITSTATE
+    .sirenPhase                       resb 1      ; 0xa5 byte
+    resb 1
     .horn                             resb 1      ; 0xa7 HORN
+    resb 12
+    .currentUpgradeSound              resb 1      ; 0xb4 byte
+    .isTurretBeingRotated             resb 1      ; 0xb5 bool
+    resb 6
 endstruc
 
 ; /_car/CarManager  (106 bytes)
@@ -724,9 +744,9 @@ struc Game
     resb 3
     .field11_0x28                     resb 4      ; 0x28 int
     .relatedToQuitGame                resb 4      ; 0x2c int
-    .field13_0x30                     resb 1      ; 0x30 byte
+    .compensationFPSTime              resb 1      ; 0x30 byte
     resb 3
-    .field17_0x34                     resb 4      ; 0x34 int
+    .relToSkipPoliceEnum              resb 4      ; 0x34 int
     .CurrentSaveSlot                  resb 4      ; 0x38 SaveSlot *
     .skip_police                      resb 1      ; 0x3c bool
     resb 3
@@ -1006,20 +1026,25 @@ struc Ped
     .field1_0x1                       resb 1      ; 0x1 byte
     resb 42
     .elvisSomething                   resb 4      ; 0x2c Ped *
-    resb 252
-    .field297_0x12c                   resb 2      ; 0x12c short
-    .field298_0x12e                   resb 2      ; 0x12e short
-    .field299_0x130                   resb 2      ; 0x130 short
+    resb 1
+    .lenOfForPedsArray                resb 1      ; 0x31 byte
+    resb 82
+    .carToEnterMaybe                  resb 4      ; 0x84 Car *
+    .someCar                          resb 4      ; 0x88 Car *
+    resb 160
+    .field291_0x12c                   resb 2      ; 0x12c short
+    .field292_0x12e                   resb 2      ; 0x12e short
+    .field293_0x130                   resb 2      ; 0x130 short
     resb 2
-    .field302_0x134                   resb 2      ; 0x134 short
+    .field296_0x134                   resb 2      ; 0x134 short
     resb 10
-    .field313_0x140                   resb 4      ; 0x140 int
-    .field314_0x144                   resb 4      ; 0x144 int
-    .field315_0x148                   resb 4      ; 0x148 int
-    .field316_0x14c                   resb 4      ; 0x14c int
-    .field317_0x150                   resb 4      ; 0x150 int
-    .field318_0x154                   resb 4      ; 0x154 Car *
-    .field319_0x158                   resb 4      ; 0x158 int
+    .refCar                           resb 4      ; 0x140 int
+    .field308_0x144                   resb 4      ; 0x144 int
+    .objectiveTargetPed               resb 4      ; 0x148 int
+    .field310_0x14c                   resb 4      ; 0x14c int
+    .field311_0x150                   resb 4      ; 0x150 int
+    .field312_0x154                   resb 4      ; 0x154 Car *
+    .field313_0x158                   resb 4      ; 0x158 int
     .playerWeapons                    resb 4      ; 0x15c WEAPON_PLAYER_LIST *
     .nextPed                          resb 4      ; 0x160 Ped *
     .ElvisOrTarget                    resb 4      ; 0x164 Ped *
@@ -1027,77 +1052,81 @@ struc Ped
     .currentCar                       resb 4      ; 0x16c Car *
     .selectedWeapon                   resb 4      ; 0x170 WEAPON_STRUCT *
     .ptrToWeapon                      resb 4      ; 0x174 void *
-    .field327_0x178                   resb 4      ; 0x178 int
-    .field328_0x17c                   resb 4      ; 0x17c int
-    .field329_0x180                   resb 4      ; 0x180 int
+    .field321_0x178                   resb 4      ; 0x178 int
+    .field322_0x17c                   resb 4      ; 0x17c int
+    .pedRef2                          resb 4      ; 0x180 int
     resb 8
-    .field338_0x18c                   resb 4      ; 0x18c int
-    .field339_0x190                   resb 4      ; 0x190 int
-    .field340_0x194                   resb 4      ; 0x194 int
-    resb 12
-    .field353_0x1a4                   resb 4      ; 0x1a4 int
+    .field332_0x18c                   resb 4      ; 0x18c int
+    .field333_0x190                   resb 4      ; 0x190 int
+    .field334_0x194                   resb 4      ; 0x194 int
+    resb 8
+    .objectiveTargetObject            resb 4      ; 0x1a0 void *
+    .field344_0x1a4                   resb 4      ; 0x1a4 int
     .elvisLeader                      resb 4      ; 0x1a8 Ped *
     .x                                resb 4      ; 0x1ac int
     .y                                resb 4      ; 0x1b0 int
     .z                                resb 4      ; 0x1b4 int
-    .field358_0x1b8                   resb 4      ; 0x1b8 Ped *
-    .field359_0x1bc                   resb 4      ; 0x1bc Ped *
-    .field360_0x1c0                   resb 4      ; 0x1c0 Ped *
-    .field361_0x1c4                   resb 4      ; 0x1c4 Ped *
-    .field362_0x1c8                   resb 4      ; 0x1c8 Ped *
-    .field363_0x1cc                   resb 4      ; 0x1cc Ped *
-    .field364_0x1d0                   resb 4      ; 0x1d0 void *
-    .field365_0x1d4                   resb 4      ; 0x1d4 void *
-    .field366_0x1d8                   resb 4      ; 0x1d8 void *
-    resb 36
+    .field349_0x1b8                   resb 4      ; 0x1b8 Ped *
+    .field350_0x1bc                   resb 4      ; 0x1bc Ped *
+    .field351_0x1c0                   resb 4      ; 0x1c0 Ped *
+    .field352_0x1c4                   resb 4      ; 0x1c4 Ped *
+    .field353_0x1c8                   resb 4      ; 0x1c8 Ped *
+    .field354_0x1cc                   resb 4      ; 0x1cc Ped *
+    .field355_0x1d0                   resb 4      ; 0x1d0 void *
+    .field356_0x1d4                   resb 4      ; 0x1d4 void *
+    .field357_0x1d8                   resb 4      ; 0x1d8 void *
+    .objectiveTargetPosition          resb 12     ; 0x1dc SCR_Vector3
+    resb 24
     .id                               resb 4      ; 0x200 int
-    .field404_0x204                   resb 4      ; 0x204 int
+    .somePedId                        resb 4      ; 0x204 int
     .Invulnerability                  resb 2      ; 0x208 ushort
     .CopLevel                         resb 2      ; 0x20a short
-    .field407_0x20c                   resb 2      ; 0x20c short
-    .field408_0x20e                   resb 2      ; 0x20e short
-    resb 6
+    .field387_0x20c                   resb 2      ; 0x20c short
+    .field388_0x20e                   resb 2      ; 0x20e short
+    resb 2
+    .eq_100                           resb 2      ; 0x212 undefined2
+    resb 2
     .health                           resb 2      ; 0x216 short
-    .field416_0x218                   resb 2      ; 0x218 short
-    .field417_0x21a                   resb 2      ; 0x21a short
+    .field395_0x218                   resb 2      ; 0x218 short
+    .field396_0x21a                   resb 2      ; 0x21a short
     .bitStateInvisOnFireEtc           resb 4      ; 0x21c PED_BIT_STATE
     resb 5
-    .field424_0x225                   resb 1      ; 0x225 byte
-    .field425_0x226                   resb 1      ; 0x226 byte
-    .field426_0x227                   resb 1      ; 0x227 byte
-    .field427_0x228                   resb 1      ; 0x228 byte
+    .relatedToTimerToAction           resb 1      ; 0x225 byte
+    .field404_0x226                   resb 1      ; 0x226 byte
+    .field405_0x227                   resb 1      ; 0x227 byte
+    .field406_0x228                   resb 1      ; 0x228 byte
     resb 3
-    .field431_0x22c                   resb 4      ; 0x22c int
-    .field432_0x230                   resb 4      ; 0x230 int
+    .field410_0x22c                   resb 4      ; 0x22c int
+    .field411_0x230                   resb 4      ; 0x230 int
     .eq99                             resb 1      ; 0x234 byte
     resb 3
     .bitState2                        resb 4      ; 0x238 uint
-    .field438_0x23c                   resb 1      ; 0x23c byte
+    .field417_0x23c                   resb 1      ; 0x23c byte
     resb 3
     .occupation                       resb 4      ; 0x240 OCUPATION
-    .field443_0x244                   resb 1      ; 0x244 byte
+    .field422_0x244                   resb 1      ; 0x244 byte
     resb 3
-    .field447_0x248                   resb 4      ; 0x248 int
-    .field448_0x24c                   resb 1      ; 0x24c byte
+    .enterCarAsPassenger              resb 4      ; 0x248 int
+    .targetCarDoor                    resb 1      ; 0x24c byte
     resb 11
-    .field460_0x258                   resb 4      ; 0x258 int
-    .field461_0x25c                   resb 4      ; 0x25c int
+    .field439_0x258                   resb 4      ; 0x258 int
+    .field440_0x25c                   resb 4      ; 0x25c int
     resb 1
-    .field463_0x261                   resb 1      ; 0x261 byte
-    .field464_0x262                   resb 1      ; 0x262 byte
-    .field465_0x263                   resb 1      ; 0x263 byte
-    .field466_0x264                   resb 1      ; 0x264 byte
-    .field467_0x265                   resb 1      ; 0x265 byte
+    .field442_0x261                   resb 1      ; 0x261 byte
+    .field443_0x262                   resb 1      ; 0x262 byte
+    .field444_0x263                   resb 1      ; 0x263 byte
+    .field445_0x264                   resb 1      ; 0x264 byte
+    .field446_0x265                   resb 1      ; 0x265 byte
     resb 6
-    .field474_0x26c                   resb 4      ; 0x26c int
-    .field475_0x270                   resb 4      ; 0x270 int
+    .graphicType                      resb 4      ; 0x26c int
+    .field454_0x270                   resb 4      ; 0x270 int
     resb 4
     .state                            resb 4      ; 0x278 PED_STATE
     .state2                           resb 4      ; 0x27c PED_STATE2
     .state1_2                         resb 4      ; 0x280 PED_STATE
     .state2_2                         resb 4      ; 0x284 PED_STATE2
-    .field484_0x288                   resb 4      ; 0x288 int
-    .field485_0x28c                   resb 4      ; 0x28c int
+    .field463_0x288                   resb 4      ; 0x288 int
+    .threatReaction                   resb 4      ; 0x28c int
     .relToMultiplayer                 resb 4      ; 0x290 int
 endstruc
 
@@ -1243,28 +1272,34 @@ endstruc
 
 ; /_weapon/WeaponRelStruct  (4096 bytes)
 struc WeaponRelStruct
-    resb 4
+    .ptr                              resb 4      ; 0x0 WEAPON_STRUCT *
     .weapons                          resb 1056   ; 0x4 WEAPON_STRUCT[22]
     resb 3036
 endstruc
 
 ; /auto_structs/GangRespect  (324 bytes)
 struc GangRespect
-    resb 260
-    .field260_0x104                   resb 4      ; 0x104 undefined4
-    .field261_0x108                   resb 4      ; 0x108 undefined4
-    .field262_0x10c                   resb 4      ; 0x10c undefined4
+    .present                          resb 1      ; 0x0 bool
+    .id                               resb 1      ; 0x1 char
+    .gangName                         resb 10     ; 0x2 char[10]
+    resb 248
+    .field251_0x104                   resb 4      ; 0x104 undefined4
+    .field252_0x108                   resb 4      ; 0x108 undefined4
+    .field253_0x10c                   resb 4      ; 0x10c undefined4
     resb 12
     .respect                          resb 4      ; 0x11c int
-    .field276_0x120                   resb 2      ; 0x120 undefined2
-    resb 26
-    .field303_0x13c                   resb 4      ; 0x13c undefined4
+    .field267_0x120                   resb 2      ; 0x120 undefined2
+    resb 22
+    .spritesOffset                    resb 1      ; 0x138 byte
+    .shouldDraw                       resb 1      ; 0x139 bool
+    resb 2
+    .field294_0x13c                   resb 4      ; 0x13c undefined4
     resb 4
 endstruc
 
 ; /auto_structs/GangRespectContainer  (3240 bytes)
 struc GangRespectContainer
-    .field0_0x0                       resb 3240   ; 0x0 GangRespect[10]
+    .gang                             resb 3240   ; 0x0 GangRespect[10]
 endstruc
 
 ; /auto_structs/LocaleSettings  (17 bytes)
@@ -1312,11 +1347,15 @@ struc S10
     .field46_0x2e                     resb 1      ; 0x2e char
     resb 29
     .field76_0x4c                     resb 4      ; 0x4c void *
-    resb 10000
-    .field10077_0x2760                resb 4      ; 0x2760 void *
+    resb 148
+    .txtMessage                       resb 1796   ; 0xe4 S10_TxtMessage
+    resb 8056
+    .field8282_0x2760                 resb 4      ; 0x2760 void *
     resb 81
     .displayDebugPedInfo              resb 1      ; 0x27b5 undefined1
-    resb 830
+    resb 158
+    .ptrToSomeStructRelToBIG_LABEL    resb 4      ; 0x2854 undefined4
+    resb 668
     .text_speed                       resb 4      ; 0x2af4 int
 endstruc
 
@@ -1375,9 +1414,9 @@ struc S12
     .field16_0x19                     resb 1      ; 0x19 byte
     .field17_0x1a                     resb 1      ; 0x1a byte
     .field18_0x1b                     resb 1      ; 0x1b byte
-    resb 12000
-    .field12019_0x2efc                resb 4      ; 0x2efc int
-    .field12020_0x2f00                resb 4      ; 0x2f00 int
+    .renderDistanceArr                resb 12000  ; 0x1c RenderDistanceArrayItem[1500]
+    .currentDrawLayerSize             resb 4      ; 0x2efc int
+    .tilesCount                       resb 4      ; 0x2f00 int
 endstruc
 
 ; /auto_structs/S13  (28 bytes)
@@ -1435,7 +1474,7 @@ struc S15_script
     .field47_0x338                    resb 4      ; 0x338 undefined4
     .field48_0x33c                    resb 4      ; 0x33c undefined4
     .field49_0x340                    resb 4      ; 0x340 undefined4
-    .field50_0x344                    resb 4      ; 0x344 undefined4
+    .missionPtrMaybe                  resb 4      ; 0x344 DWORD *
     .field51_0x348                    resb 4      ; 0x348 undefined4
     .field52_0x34c                    resb 4      ; 0x34c undefined4
     .field53_0x350                    resb 4      ; 0x350 undefined4
@@ -1554,7 +1593,7 @@ endstruc
 
 ; /auto_structs/S22  (382360 bytes)
 struc S22
-    .field0_0x0                       resb 4      ; 0x0 int
+    .last                             resb 4      ; 0x0 int
     resb 382356
 endstruc
 
@@ -1674,16 +1713,26 @@ endstruc
 struc S6
     resb 1
     .IsGamePaused                     resb 1      ; 0x1 bool
-    resb 5238
+    resb 5222
+    .gameCameraPos                    resb 8      ; 0x1468 SCR_Vector2
+    .pedZ                             resb 4      ; 0x1470 SCR_f
+    .rotation                         resb 2      ; 0x1474 ushort
+    resb 2
     .length                           resb 4      ; 0x1478 uint
     resb 12
     .arrS5_1020                       resb 12240  ; 0x1488 S5[1020]
-    resb 4240
-    .field9494_0x54e8                 resb 2      ; 0x54e8 short
-    resb 30
-    .field9525_0x5508                 resb 4      ; 0x5508 int
+    resb 4088
+    .relToAudio                       resb 4      ; 0x5450 int
     resb 16
-    .field9542_0x551c                 resb 4      ; 0x551c int
+    .vocal                            resb 4      ; 0x5464 VOCAL
+    resb 16
+    .someArray                        resb 1      ; 0x5478 undefined1
+    resb 111
+    .field9477_0x54e8                 resb 2      ; 0x54e8 short
+    resb 30
+    .field9508_0x5508                 resb 4      ; 0x5508 int
+    resb 16
+    .field9525_0x551c                 resb 4      ; 0x551c int
     resb 32
 endstruc
 
@@ -1745,7 +1794,7 @@ struc SPolice
     .field7_0x658                     resb 1      ; 0x658 byte
     .field8_0x659                     resb 1      ; 0x659 byte
     resb 2
-    .field11_0x65c                    resb 4      ; 0x65c int
+    .relToAi                          resb 4      ; 0x65c int
     resb 333
     .numPolicePedsInRangeScreen       resb 1      ; 0x7ad byte
     resb 10
@@ -1806,10 +1855,12 @@ struc Sprite
     resb 32
     ._id                              resb 2      ; 0x24 ushort
     resb 26
-    .field60_0x40                     resb 2      ; 0x40 short
-    resb 54
+    .spriteRotation                   resb 2      ; 0x40 short
+    resb 22
+    .bit1                             resb 4      ; 0x58 uint
+    resb 28
     .next_                            resb 4      ; 0x78 Sprite *
-    resb 4
+    .ped                              resb 4      ; 0x7c Ped *
     .actualPosition                   resb 4      ; 0x80 Position *
     resb 124
 endstruc
@@ -1868,6 +1919,2633 @@ define__M_IX86._M_IX86 equ 300
 
 ; enum /defines/define___WORDSIZE  (8 bytes)
 define___WORDSIZE.__WORDSIZE equ 32
+
+; enum /imported/gta2-mouse/CAR_TYPE_COUNTER  (4 bytes)
+CAR_TYPE_COUNTER.COUNTER_RECYCLED_CAR equ 1
+CAR_TYPE_COUNTER.COUNTER_PROT_RECYCLED_CAR equ 2
+CAR_TYPE_COUNTER.COUNTER_UNK4 equ 3
+CAR_TYPE_COUNTER.COUNTER_AMBULANCE equ 4
+CAR_TYPE_COUNTER.COUNTER_FIRETRUCK equ 5
+CAR_TYPE_COUNTER.COUNTER_UNIT_CAR equ 6
+CAR_TYPE_COUNTER.COUNTER_POLICE equ 7
+CAR_TYPE_COUNTER.COUNTER_MISSION_CAR equ 8
+CAR_TYPE_COUNTER.COUNTER_PARKED_CAR_FROM_SCRIPT equ 9
+CAR_TYPE_COUNTER.COUNTER_UNK6 equ 10
+
+; enum /imported/gta2-mouse/COP_LEVEL  (4 bytes)
+COP_LEVEL.COP_0_STARS equ 0
+COP_LEVEL.COP_1_STAR equ 600
+COP_LEVEL.COP_2_STARS equ 1600
+COP_LEVEL.COP_3_STARS equ 3000
+COP_LEVEL.COP_4_STARS equ 5000
+COP_LEVEL.COP_5_STARS equ 8000
+COP_LEVEL.COP_6_STARS equ 12000
+
+; /imported/gta2-mouse/Gang  (324 bytes)
+struc Gang
+    resb 260
+    .field_0x104                      resb 4      ; 0x104 int
+    .field_0x108                      resb 4      ; 0x108 int
+    .field_0x10c                      resb 4      ; 0x10c int
+    resb 12
+    .respect                          resb 4      ; 0x11c byte[4]
+    .field_0x120                      resb 2      ; 0x120 short
+    resb 26
+    .field_0x13c                      resb 4      ; 0x13c int
+    resb 3
+    .field_0x143                      resb 1      ; 0x143 undefined1
+endstruc
+
+; /imported/gta2-mouse/Gangs  (3240 bytes)
+struc Gangs
+    .arr                              resb 3240   ; 0x0 Gang[10]
+endstruc
+
+; /imported/gta2-mouse/Object  (92 bytes)
+struc Object
+    .field_0x0                        resb 4      ; 0x0 int
+    .field_0x4                        resb 4      ; 0x4 int
+    .field_0x8                        resb 4      ; 0x8 int
+    .field_0xc                        resb 4      ; 0xc int
+    .field_0x10                       resb 4      ; 0x10 int
+    .field_0x14                       resb 4      ; 0x14 int
+    resb 4
+    .field_0x1c                       resb 4      ; 0x1c int
+    .field_0x20                       resb 4      ; 0x20 int
+    resb 48
+    .field_0x54                       resb 4      ; 0x54 int
+    .field_0x58                       resb 4      ; 0x58 Pos *
+endstruc
+
+; enum /imported/gta2-mouse/PED_STATE3  (4 bytes)
+PED_STATE3.PED_STATE3_UNK1 equ 1
+PED_STATE3.PED_STATE3_UNK2 equ 2
+PED_STATE3.PED_STATE3_UNK3 equ 3
+PED_STATE3.PED_STATE3_UNK6 equ 6
+PED_STATE3.PED_STATE3_UNK8 equ 8
+PED_STATE3.PED_STATE3_UNKa equ 10
+PED_STATE3.PED_STATE3_UNKc equ 12
+PED_STATE3.PED_STATE3_GANG_MEMBER equ 13
+PED_STATE3.PED_STATE3_UNKe equ 14
+PED_STATE3.PED_STATE3_UNK10 equ 16
+PED_STATE3.PED_STATE3_UNK13 equ 19
+PED_STATE3.PED_STATE3_UNK14 equ 20
+PED_STATE3.PED_STATE3_UNK16 equ 22
+PED_STATE3.PED_STATE3_UNK17 equ 23
+PED_STATE3.PED_STATE3_UNK18 equ 24
+PED_STATE3.PED_STATE3_UNK19 equ 25
+PED_STATE3.PED_STATE3_UNK1a equ 26
+PED_STATE3.PED_STATE3_UNK1b equ 27
+PED_STATE3.PED_STATE3_UNK1f equ 31
+PED_STATE3.PED_STATE3_UNK20 equ 32
+PED_STATE3.PED_STATE3_UNK21 equ 33
+PED_STATE3.PED_STATE3_UNK22 equ 34
+PED_STATE3.PED_STATE3_ENTERING_TO_CAR equ 35
+PED_STATE3.PED_STATE3_GETTING_OUT_FROM_CAR equ 36
+PED_STATE3.PED_STATE3_UNK25 equ 37
+PED_STATE3.PED_STATE3_UNK26 equ 38
+PED_STATE3.PED_STATE3_UNK2a equ 42
+PED_STATE3.PED_STATE3_UNK2b equ 43
+PED_STATE3.PED_STATE3_UNK33 equ 51
+PED_STATE3.PED_STATE3_UNK34 equ 52
+PED_STATE3.PED_STATE3_COP equ 54
+PED_STATE3.PED_STATE3_UNK37 equ 55
+PED_STATE3.PED_STATE3_UNK38 equ 56
+PED_STATE3.PED_STATE3_UNK39 equ 57
+PED_STATE3.PED_STATE3_UNK3a equ 58
+PED_STATE3.PED_STATE3_UNK3b equ 59
+PED_STATE3.PED_STATE3_UNK3c equ 60
+PED_STATE3.PED_STATE3_UNK3d_REL_TO_MISSION_ARROWS equ 61
+
+; /imported/gta2-mouse/PedManager  (132412 bytes)
+struc PedManager
+    .firstPedInArray                  resb 4      ; 0x0 Ped *
+    .lastPedInArray                   resb 4      ; 0x4 Ped *
+    resb 132400
+    .MaybePedsInUse                   resb 2      ; 0x20538 short
+    resb 1
+    .field_0x2053b                    resb 1      ; 0x2053b undefined1
+endstruc
+
+; /imported/gta2-mouse/Police  (1976 bytes)
+struc Police
+    resb 4
+    .arr20                            resb 1120   ; 0x4 SPoliceSub[20]
+    .arr124_4                         resb 496    ; 0x464 byte[124][4]
+    .copLevel                         resb 4      ; 0x654 int
+    resb 4
+    .field_0x65c                      resb 4      ; 0x65c int
+    resb 333
+    .numPolicePedsInRangeScreen       resb 1      ; 0x7ad byte
+    resb 9
+    .field_0x7b7                      resb 1      ; 0x7b7 undefined1
+endstruc
+
+; /imported/gta2-mouse/Pos  (60 bytes)
+struc Pos
+    .rotation                         resb 2      ; 0x0 short
+    resb 2
+    .MaybePrev                        resb 4      ; 0x4 Pos *
+    .field_0x8                        resb 4      ; 0x8 int
+    .s22_1                            resb 4      ; 0xc S22_1 *
+    .ptrRelToPos                      resb 4      ; 0x10 void *
+    .x                                resb 4      ; 0x14 int
+    .y                                resb 4      ; 0x18 int
+    .z                                resb 4      ; 0x1c int
+    .incFromS20                       resb 2      ; 0x20 short
+    .field_0x22                       resb 2      ; 0x22 short
+    .field_0x24                       resb 2      ; 0x24 short
+    resb 2
+    .field_0x28                       resb 4      ; 0x28 int
+    resb 4
+    .field_0x30                       resb 4      ; 0x30 int
+    .field_0x34                       resb 4      ; 0x34 int
+    resb 3
+    .field_0x3b                       resb 1      ; 0x3b undefined1
+endstruc
+
+; /imported/gta2-mouse/S22_2  (8 bytes)
+struc S22_2
+    resb 7
+    .field_0x7                        resb 1      ; 0x7 undefined1
+endstruc
+
+; /imported/gta2-mouse/S31  (168312 bytes)
+struc S31
+    .last                             resb 4      ; 0x0 S32 *
+    .field_0x4                        resb 4      ; 0x4 int
+    .arrS32                           resb 168300 ; 0x8 S32[3825]
+    .field_0x29174                    resb 2      ; 0x29174 short
+    resb 1
+    .field_0x29177                    resb 1      ; 0x29177 undefined1
+endstruc
+
+; /imported/gta2-mouse/S32  (44 bytes)
+struc S32
+    .field_0x0                        resb 4      ; 0x0 int
+    .s22_1_ex                         resb 4      ; 0x4 S22_1 *
+    resb 4
+    .s22_1                            resb 4      ; 0xc S22_1 *
+    .pos                              resb 4      ; 0x10 Pos *
+    .field_0x14                       resb 4      ; 0x14 int
+    .field_0x18                       resb 4      ; 0x18 int
+    resb 4
+    .field_0x20                       resb 4      ; 0x20 int
+    resb 7
+    .field_0x2b                       resb 1      ; 0x2b undefined1
+endstruc
+
+; /imported/gta2-mouse/S34  (8 bytes)
+struc S34
+    .ref1                             resb 4      ; 0x0 S34 *
+    .field_0x4                        resb 2      ; 0x4 short
+    resb 1
+    .field_0x7                        resb 1      ; 0x7 undefined1
+endstruc
+
+; /imported/gta2-mouse/S35  (23104 bytes)
+struc S35
+    .last                             resb 4      ; 0x0 S36 *
+    .arr                              resb 23100  ; 0x4 S36[385]
+endstruc
+
+; /imported/gta2-mouse/S36  (60 bytes)
+struc S36
+    resb 4
+    .pos                              resb 4      ; 0x4 Pos *
+    .ref1                             resb 4      ; 0x8 S36 *
+    .ref2                             resb 4      ; 0xc S36 *
+    .field_0x10                       resb 4      ; 0x10 int
+    resb 4
+    .ref3                             resb 4      ; 0x18 S36 *
+    .field_0x1c                       resb 4      ; 0x1c int
+    .field_0x20                       resb 4      ; 0x20 int
+    .field_0x24                       resb 4      ; 0x24 int
+    .field_0x28                       resb 2      ; 0x28 short
+    .field_0x2a                       resb 2      ; 0x2a short
+    .field_0x2c                       resb 2      ; 0x2c short
+    resb 6
+    .field_0x34                       resb 4      ; 0x34 int
+    resb 3
+    .field_0x3b                       resb 1      ; 0x3b undefined1
+endstruc
+
+; /imported/gta2-mouse/S37  (36008 bytes)
+struc S37
+    .index                            resb 2      ; 0x0 ushort
+    resb 2
+    .arr                              resb 34800  ; 0x4 S38[300]
+    resb 1200
+    .someShort                        resb 2      ; 0x8ca4 short
+    resb 1
+    .field_0x8ca7                     resb 1      ; 0x8ca7 undefined1
+endstruc
+
+; /imported/gta2-mouse/S38  (116 bytes)
+struc S38
+    .field_0x0                        resb 4      ; 0x0 int
+    .field_0x4                        resb 4      ; 0x4 int
+    .field_0x8                        resb 4      ; 0x8 int
+    .field_0xc                        resb 4      ; 0xc int
+    .field_0x10                       resb 4      ; 0x10 int
+    .field_0x14                       resb 4      ; 0x14 int
+    .field_0x18                       resb 4      ; 0x18 int
+    .field_0x1c                       resb 2      ; 0x1c short
+    .field_0x1e                       resb 2      ; 0x1e short
+    resb 4
+    .field_0x24                       resb 4      ; 0x24 int
+    .field_0x28                       resb 4      ; 0x28 int
+    .field_0x2c                       resb 4      ; 0x2c int
+    .field_0x30                       resb 4      ; 0x30 int
+    .field_0x34                       resb 4      ; 0x34 int
+    .field_0x38                       resb 4      ; 0x38 int
+    .field_0x3c                       resb 4      ; 0x3c int
+    .field_0x40                       resb 4      ; 0x40 int
+    .field_0x44                       resb 4      ; 0x44 int
+    .field_0x48                       resb 4      ; 0x48 int
+    .field_0x4c                       resb 4      ; 0x4c int
+    .field_0x50                       resb 4      ; 0x50 int
+    .field_0x54                       resb 4      ; 0x54 int
+    .field_0x58                       resb 4      ; 0x58 int
+    .field_0x5c                       resb 4      ; 0x5c int
+    resb 8
+    .field_0x68                       resb 4      ; 0x68 int
+    resb 4
+    .field_0x70                       resb 4      ; 0x70 int
+endstruc
+
+; /imported/gta2-mouse/SCR_CMD_SIX_PARAMS  (22 bytes)
+struc SCR_CMD_SIX_PARAMS
+    resb 10
+    .params12                         resb 4      ; 0xa U_SCR_TWO_PARAMS
+    .params34                         resb 4      ; 0xe U_SCR_TWO_PARAMS
+    .params56                         resb 4      ; 0x12 U_SCR_TWO_PARAMS
+endstruc
+
+; /imported/gta2-mouse/SCR_TWO_SHORTS  (4 bytes)
+struc SCR_TWO_SHORTS
+    .s1                               resb 2      ; 0x0 short
+    .s2                               resb 2      ; 0x2 short
+endstruc
+
+; /imported/gta2-mouse/Save  (2344 bytes)
+struc Save
+    resb 4
+    .keyboardKeys                     resb 4      ; 0x4 KEYBOARD_STATE
+    .field_0x8                        resb 2      ; 0x8 short
+    .field_0xa                        resb 2      ; 0xa short
+    .field_0xc                        resb 4      ; 0xc int
+    .playerPed3                       resb 4      ; 0x10 Ped *
+    .field_0x14                       resb 2      ; 0x14 short
+    .field_0x16                       resb 2      ; 0x16 short
+    .field_0x18                       resb 2      ; 0x18 short
+    resb 16
+    .field_0x2a                       resb 2      ; 0x2a short
+    .field_0x2c                       resb 2      ; 0x2c short
+    .saveSlotIndex                    resb 1      ; 0x2e byte
+    resb 5
+    .field_0x34                       resb 4      ; 0x34 int
+    .field_0x38                       resb 4      ; 0x38 int
+    .field_0x3c                       resb 4      ; 0x3c int
+    resb 4
+    .deathReason                      resb 4      ; 0x44 DEATH_REASON
+    resb 12
+    .lastCars                         resb 12     ; 0x54 Car *[3]
+    .field_0x60                       resb 4      ; 0x60 int
+    resb 4
+    .someState                        resb 4      ; 0x68 int
+    .field_0x6c                       resb 4      ; 0x6c int
+    resb 6
+    .debugKey1                        resb 1      ; 0x76 byte
+    .debugKey2                        resb 1      ; 0x77 byte
+    resb 24
+    .xyz                              resb 256    ; 0x90 XYZ
+    .playerPed                        resb 4      ; 0x190 Ped *
+    resb 96
+    .encodedCameraX                   resb 4      ; 0x1f4 int
+    .encodedCameraY                   resb 4      ; 0x1f8 int
+    .encodedCameraZ                   resb 4      ; 0x1fc int
+    resb 24
+    .xyz2                             resb 256    ; 0x218 XYZ
+    resb 84
+    .auxGameCameraX                   resb 4      ; 0x36c int
+    .auxGameCameraY                   resb 4      ; 0x370 int
+    .auxGameCameraZ                   resb 4      ; 0x374 int
+    resb 24
+    .playerPed2                       resb 4      ; 0x390 Ped *
+    .pedRelTo_fieldx68                resb 4      ; 0x394 Ped *
+    .field_0x2cc                      resb 4      ; 0x398 int
+    resb 4
+    .animatedValues_firstMoney        resb 840    ; 0x3a0 SaveSlotAnimatedValue[15]
+    resb 40
+    .field_0x644                      resb 4      ; 0x710 S26 *
+    resb 48
+    .field_0x678                      resb 4      ; 0x744 int
+    .field_0x67c                      resb 4      ; 0x748 int
+    .incToBe100                       resb 2      ; 0x74c ushort
+    .eq_1000                          resb 2      ; 0x74e short
+    .lives                            resb 56     ; 0x750 SaveSlotAnimatedValue
+    .moneyMultiplier                  resb 56     ; 0x788 SaveSlotAnimatedValue
+    resb 8
+    .field_0x6fc                      resb 2      ; 0x7c8 short
+    resb 2
+    .bonus1                           resb 2      ; 0x7cc short
+    .bonus2                           resb 2      ; 0x7ce short
+    .bonus3                           resb 2      ; 0x7d0 short
+    .bonus4                           resb 2      ; 0x7d2 short
+    resb 2
+    .bonus5                           resb 2      ; 0x7d6 short
+    resb 12
+    .iArr28                           resb 112    ; 0x7e4 int[28]
+    .field_0x788                      resb 2      ; 0x854 short
+    resb 2
+    .field_0x78c                      resb 4      ; 0x858 int
+    .field_0x790                      resb 2      ; 0x85c short
+    resb 170
+    .field_0x83c                      resb 2      ; 0x908 short
+    resb 29
+    .field_0x927                      resb 1      ; 0x927 undefined1
+endstruc
+
+; /imported/gta2-mouse/ScriptFunctionsAddrTable  (772 bytes)
+struc ScriptFunctionsAddrTable
+    resb 771
+    .field_0x303                      resb 1      ; 0x303 undefined1
+endstruc
+
+; union /imported/gta2-mouse/U_SCR_TWO_PARAMS  (4 bytes)
+U_SCR_TWO_PARAMS.shorts equ 0 ; SCR_TWO_SHORTS (4 bytes)
+U_SCR_TWO_PARAMS.i32val equ 0 ; int (4 bytes)
+U_SCR_TWO_PARAMS_size equ 4
+
+; /imported/gzf-2021/AllCars  (57540 bytes)
+struc AllCars
+    .field0_0x0                       resb 4      ; 0x0 Car *
+    .firstCar                         resb 4      ; 0x4 Car *
+    .cars                             resb 57528  ; 0x8 Car[306]
+    resb 3
+    .field_0xe0c3                     resb 1      ; 0xe0c3 undefined1
+endstruc
+
+; enum /imported/gzf-2021/CAR_TYPE  (4 bytes)
+CAR_TYPE.CAR_FIRE_TRUCK equ 17
+CAR_TYPE.CAR_GT24640 equ 19
+CAR_TYPE.CAR_GUNJEEP equ 22
+CAR_TYPE.CAR_TANK equ 54
+CAR_TYPE.CAR_TAXI equ 56
+CAR_TYPE.CAR_TRUCK equ 63
+
+; enum /imported/gzf-2021/CHEAT_ENUM  (4 bytes)
+CHEAT_ENUM.CUTIE1 equ 211561
+CHEAT_ENUM.MADEMAN equ 267793
+CHEAT_ENUM.FLAMEON equ 286402
+CHEAT_ENUM.DAVEMOON equ 287647
+CHEAT_ENUM.IAMDAVEJ equ 288557
+CHEAT_ENUM.RSJABBER equ 293115
+CHEAT_ENUM.ARSESTAR equ 293617
+CHEAT_ENUM.GOURANGA equ 299874
+CHEAT_ENUM.GODOFGTA equ 300913
+CHEAT_ENUM.MUCHCASH equ 301620
+CHEAT_ENUM.SCHURULZ equ 316868
+CHEAT_ENUM.VOLTFEST equ 318071
+
+; /imported/gzf-2021/CarS1  (16 bytes)
+struc CarS1
+    resb 15
+    .field_0xf                        resb 1      ; 0xf undefined1
+endstruc
+
+; /imported/gzf-2021/CarSprite  (38 bytes)
+struc CarSprite
+    resb 20
+    .x                                resb 4      ; 0x14 int
+    .y                                resb 4      ; 0x18 int
+    .z                                resb 4      ; 0x1c int
+    resb 4
+    .color                            resb 2      ; 0x24 ushort
+endstruc
+
+; /imported/gzf-2021/CarsS2  (53860 bytes)
+struc CarsS2
+    resb 4
+    .arr                              resb 53856  ; 0x4 CarsS3[306]
+endstruc
+
+; /imported/gzf-2021/CarsS3  (176 bytes)
+struc CarsS3
+    .field0_0x0                       resb 4      ; 0x0 int *
+    .field1_0x4                       resb 4      ; 0x4 int *
+    resb 4
+    .next                             resb 4      ; 0xc int
+    .arr                              resb 4      ; 0x10 int
+    resb 4
+    .field9_0x18                      resb 4      ; 0x18 int
+    resb 4
+    .field14_0x20                     resb 4      ; 0x20 int
+    resb 4
+    .field19_0x28                     resb 4      ; 0x28 int
+    resb 4
+    .field24_0x30                     resb 4      ; 0x30 int
+    resb 4
+    .field29_0x38                     resb 4      ; 0x38 int
+    resb 4
+    .field34_0x40                     resb 4      ; 0x40 int
+    resb 24
+    .field58_0x5c                     resb 4      ; 0x5c int
+    resb 79
+    .field_0xaf                       resb 1      ; 0xaf undefined1
+endstruc
+
+; /imported/gzf-2021/CarsS4  (36724 bytes)
+struc CarsS4
+    .field0_0x0                       resb 4      ; 0x0 int *
+    .arr                              resb 36720  ; 0x4 CarsS5[306]
+endstruc
+
+; /imported/gzf-2021/CarsS5  (120 bytes)
+struc CarsS5
+    resb 36
+    .field14_0x24                     resb 4      ; 0x24 uint
+    resb 79
+    .field_0x77                       resb 1      ; 0x77 undefined1
+endstruc
+
+; /imported/gzf-2021/FrontendS1  (3018 bytes)
+struc FrontendS1
+    resb 4
+    .arr                              resb 1300   ; 0x4 FrontendS1S1[10]
+    .arr2                             resb 1650   ; 0x518 FrontendS1S2[15]
+    .arr3                             resb 50     ; 0xb8a FrontendS1S3[10]
+    resb 13
+    .field_0xbc9                      resb 1      ; 0xbc9 undefined1
+endstruc
+
+; /imported/gzf-2021/FrontendS1S1  (130 bytes)
+struc FrontendS1S1
+    resb 2
+    .x                                resb 2      ; 0x2 undefined2
+    .y                                resb 2      ; 0x4 undefined2
+    .label                            resb 4      ; 0x6 WCHAR *
+    resb 119
+    .field_0x81                       resb 1      ; 0x81 undefined1
+endstruc
+
+; /imported/gzf-2021/FrontendS1S2  (110 bytes)
+struc FrontendS1S2
+    resb 109
+    .field_0x6d                       resb 1      ; 0x6d undefined1
+endstruc
+
+; /imported/gzf-2021/FrontendS1S3  (5 bytes)
+struc FrontendS1S3
+    resb 4
+    .field_0x4                        resb 1      ; 0x4 undefined1
+endstruc
+
+; enum /imported/gzf-2021/LIGHTING  (4 bytes)
+LIGHTING.LIGHTING_DAY equ 0
+LIGHTING.LIGHTING_NIGHT equ 32768
+
+; enum /imported/gzf-2021/PED_STATE_CAR  (4 bytes)
+PED_STATE_CAR.PED_STATE_CAR_DO_NOTHING equ 0
+PED_STATE_CAR.PED_STATE_CAR_ENTER_CAR equ 35
+PED_STATE_CAR.PED_STATE_CAR_LEAVE_CAR equ 36
+PED_STATE_CAR.PED_STATE_CAR_25 equ 37
+
+; /imported/gzf-2021/PedS1  (144 bytes)
+struc PedS1
+    resb 8
+    .field8_0x8                       resb 4      ; 0x8 int
+    resb 52
+    .rotation                         resb 2      ; 0x40 short
+    resb 42
+    .field98_0x6c                     resb 4      ; 0x6c int
+    resb 16
+    .sprite                           resb 4      ; 0x80 PedSprite *
+    .car                              resb 4      ; 0x84 Car *
+    resb 7
+    .field_0x8f                       resb 1      ; 0x8f undefined1
+endstruc
+
+; /imported/gzf-2021/PedSprite  (32 bytes)
+struc PedSprite
+    .readonlyRotation                 resb 2      ; 0x0 undefined2
+    resb 18
+    .x                                resb 4      ; 0x14 undefined4
+    .y                                resb 4      ; 0x18 undefined4
+    .z                                resb 4      ; 0x1c undefined4
+endstruc
+
+; /imported/gzf-2021/PedsManager  (132012 bytes)
+struc PedsManager
+    .firstPed                         resb 4      ; 0x0 Ped *
+    ._lastPed                         resb 4      ; 0x4 undefined4
+    .peds                             resb 132000 ; 0x8 Ped[200]
+    ._length                          resb 2      ; 0x203a8 undefined2
+    resb 1
+    .field_0x203ab                    resb 1      ; 0x203ab undefined1
+endstruc
+
+; /imported/gzf-2021/PlayerS1  (36 bytes)
+struc PlayerS1
+    .x                                resb 4      ; 0x0 int
+    .y                                resb 4      ; 0x4 int
+    .z                                resb 4      ; 0x8 int
+    .field3_0xc                       resb 4      ; 0xc int
+    .field4_0x10                      resb 4      ; 0x10 int
+    .vec                              resb 12     ; 0x14 PlayerS2
+    resb 3
+    .field_0x23                       resb 1      ; 0x23 undefined1
+endstruc
+
+; /imported/gzf-2021/PlayerS2  (12 bytes)
+struc PlayerS2
+    .x                                resb 4      ; 0x0 int
+    .y                                resb 4      ; 0x4 int
+    .z                                resb 4      ; 0x8 int
+endstruc
+
+; /imported/gzf-2021/PlayerWeapon  (40 bytes)
+struc PlayerWeapon
+    .ammo                             resb 2      ; 0x0 short
+    resb 2
+    .field3_0x4                       resb 4      ; 0x4 int
+    resb 12
+    .field16_0x14                     resb 4      ; 0x14 int
+    resb 4
+    .field21_0x1c                     resb 4      ; 0x1c int
+    resb 4
+    .field26_0x24                     resb 4      ; 0x24 Ped *
+endstruc
+
+; /imported/gzf-2021/Player_S4  (1938 bytes)
+struc Player_S4
+    .somethingRelToAudio              resb 1      ; 0x0 bool
+    resb 3
+    .keyState                         resb 4      ; 0x4 uint
+    resb 16
+    .field18_0x18                     resb 2      ; 0x18 short
+    resb 2
+    .field20_0x1c                     resb 4      ; 0x1c int
+    .field21_0x20                     resb 4      ; 0x20 Car *
+    .field22_0x24                     resb 4      ; 0x24 uint
+    resb 9
+    .field32_0x31                     resb 1      ; 0x31 bool
+    resb 58
+    .field79_0x6c                     resb 4      ; 0x6c int
+    resb 8
+    .forward                          resb 1      ; 0x78 bool
+    .backward                         resb 1      ; 0x79 bool
+    .rotateLeft                       resb 1      ; 0x7a bool
+    .rotateRight                      resb 1      ; 0x7b bool
+    .attack                           resb 1      ; 0x7c bool
+    .enter                            resb 1      ; 0x7d bool
+    .jump                             resb 1      ; 0x7e bool
+    .nextWeaponZ                      resb 1      ; 0x7f bool
+    .prevWeaponX                      resb 1      ; 0x80 bool
+    .tab                              resb 1      ; 0x81 bool
+    .unknownKey400                    resb 1      ; 0x82 bool
+    .unknownKey800                    resb 1      ; 0x83 bool
+    .field100_0x84                    resb 1      ; 0x84 bool
+    .field101_0x85                    resb 1      ; 0x85 bool
+    .field102_0x86                    resb 1      ; 0x86 bool
+    .field103_0x87                    resb 1      ; 0x87 bool
+    .field104_0x88                    resb 1      ; 0x88 bool
+    .field105_0x89                    resb 1      ; 0x89 bool
+    .field106_0x8a                    resb 1      ; 0x8a bool
+    .field107_0x8b                    resb 1      ; 0x8b bool
+    .field108_0x8c                    resb 1      ; 0x8c bool
+    .attackIsChanged                  resb 1      ; 0x8d bool
+    .field110_0x8e                    resb 1      ; 0x8e bool
+    resb 1
+    .ps1                              resb 36     ; 0x90 PlayerS1
+    resb 116
+    .field229_0x128                   resb 4      ; 0x128 int
+    .field230_0x12c                   resb 4      ; 0x12c int
+    .field231_0x130                   resb 4      ; 0x130 int
+    resb 176
+    .field261_0x1e4                   resb 4      ; 0x1e4 int
+    .field262_0x1e8                   resb 4      ; 0x1e8 int
+    .field263_0x1ec                   resb 4      ; 0x1ec int
+    resb 176
+    .field265_0x2a0                   resb 4      ; 0x2a0 int
+    .field266_0x2a4                   resb 4      ; 0x2a4 int
+    .field267_0x2a8                   resb 4      ; 0x2a8 int
+    resb 24
+    .ped                              resb 4      ; 0x2c4 Ped *
+    .field293_0x2c8                   resb 4      ; 0x2c8 Ped *
+    resb 8
+    .money                            resb 4      ; 0x2d4 int
+    resb 940
+    .lives                            resb 4      ; 0x684 int
+    resb 52
+    .moneyMultiplier                  resb 4      ; 0x6bc int
+    resb 88
+    .weapons                          resb 44     ; 0x718 PlayerWeapon *[11]
+    resb 68
+    .selectedWeapon                   resb 2      ; 0x788 short
+    resb 7
+    .field_0x791                      resb 1      ; 0x791 undefined1
+endstruc
+
+; /imported/gzf-2021/Police_s5  (1973 bytes)
+struc Police_s5
+    resb 32
+    .field32_0x20                     resb 4      ; 0x20 int
+    resb 1088
+    .targetPed                        resb 4      ; 0x464 Ped *
+    .field1122_0x468                  resb 4      ; 0x468 Ped *
+    .field1123_0x46c                  resb 4      ; 0x46c Ped *
+    .field1124_0x470                  resb 2      ; 0x470 short
+    resb 2
+    .field1127_0x474                  resb 4      ; 0x474 Ped *
+    .field1128_0x478                  resb 4      ; 0x478 Ped *
+    resb 8
+    .field1137_0x484                  resb 4      ; 0x484 Ped *
+    resb 86
+    .field1223_0x4de                  resb 2      ; 0x4de ushort
+    resb 372
+    .field1596_0x654                  resb 4      ; 0x654 Ped *
+    resb 1
+    .field1598_0x659                  resb 1      ; 0x659 bool
+    resb 342
+    .field1941_0x7b0                  resb 4      ; 0x7b0 int
+    .field_0x7b4                      resb 1      ; 0x7b4 undefined1
+endstruc
+
+; /imported/gzf-2021/S1  (393 bytes)
+struc S1
+    resb 52
+    .playerPed                        resb 4      ; 0x34 Ped *
+    resb 320
+    .playerPed2                       resb 4      ; 0x178 Ped *
+    resb 12
+    .field_0x188                      resb 1      ; 0x188 undefined1
+endstruc
+
+; /imported/gzf-2021/S3  (336 bytes)
+struc S3
+    resb 332
+    .s1                               resb 4      ; 0x14c S1 *
+endstruc
+
+; /imported/gzf-2021/S3Bytes  (3 bytes)
+struc S3Bytes
+    .a                                resb 1      ; 0x0 undefined1
+    .b                                resb 1      ; 0x1 undefined1
+    .c                                resb 1      ; 0x2 undefined1
+endstruc
+
+; /imported/gzf-2021/S8  (794280 bytes)
+struc S8
+    resb 824
+    .field47_0x338                    resb 4      ; 0x338 uint *
+    resb 793328
+    .field79_0xc1e2c                  resb 1      ; 0xc1e2c bool
+    resb 122
+    .field_0xc1ea7                    resb 1      ; 0xc1ea7 undefined1
+endstruc
+
+; /imported/gzf-2021/S9_cars  (108 bytes)
+struc S9_cars
+    resb 105
+    .do_free_shopping                 resb 1      ; 0x69 bool
+    resb 1
+    .field_0x6b                       resb 1      ; 0x6b undefined1
+endstruc
+
+; /imported/gzf-2021/SKeyboard  (1028 bytes)
+struc SKeyboard
+    resb 1027
+    .field_0x403                      resb 1      ; 0x403 undefined1
+endstruc
+
+; /imported/gzf-2021/Timing  (24 bytes)
+struc Timing
+    resb 8
+    .fps1                             resb 4      ; 0x8 undefined4
+    resb 8
+    .fps2                             resb 4      ; 0x14 undefined4
+endstruc
+
+; /imported/gzf-2021/TrafficLights  (404 bytes)
+struc TrafficLights
+    resb 400
+    .field400_0x190                   resb 2      ; 0x190 ushort
+    .phase                            resb 1      ; 0x192 byte
+    .timer                            resb 1      ; 0x193 byte
+endstruc
+
+; /imported/gzf-2021/TrafficManagerS1  (48 bytes)
+struc TrafficManagerS1
+    resb 47
+    .field_0x2f                       resb 1      ; 0x2f undefined1
+endstruc
+
+; enum /imported/gzf-2021/WEAPON  (4 bytes)
+WEAPON.WEAPON_PISTOL equ 0
+WEAPON.WEAPON_SMG equ 1
+WEAPON.WEAPON_RPG equ 2
+WEAPON.WEAPON_ELECTRIC_GUN equ 3
+WEAPON.WEAPON_MOLOTOV equ 4
+WEAPON.WEAPON_GRENADE equ 5
+WEAPON.WEAPON_SHOTGUN equ 6
+WEAPON.WEAPON_VIBRATOR equ 7
+WEAPON.WEAPON_FLAMETHROWER equ 8
+WEAPON.WEAPON_SMG_SILENCED equ 9
+WEAPON.WEAPON_DUAL_PISTOL equ 10
+
+; /imported/seuko-mod/Ambulance  (272 bytes)
+struc Ambulance
+    resb 1
+    .maybeIndex                       resb 1      ; 0x1 byte
+    resb 206
+    .arr                              resb 64     ; 0xd0 AmbulanceSub[2]
+endstruc
+
+; /imported/seuko-mod/AmbulanceSub  (32 bytes)
+struc AmbulanceSub
+    resb 4
+    .field_0x4                        resb 4      ; 0x4 int
+    .field_0x8                        resb 4      ; 0x8 int
+    .field_0xc                        resb 4      ; 0xc int
+    .field_0x10                       resb 4      ; 0x10 int
+    resb 2
+    .field_0x16                       resb 2      ; 0x16 short
+    .field_0x18                       resb 4      ; 0x18 int
+    resb 3
+    .field_0x1f                       resb 1      ; 0x1f undefined1
+endstruc
+
+; /imported/seuko-mod/BareGameObject  (44 bytes)
+struc BareGameObject
+    .next                             resb 4      ; 0x0 BareGameObject *
+    .sprite2                          resb 4      ; 0x4 Sprite *
+    .state1                           resb 4      ; 0x8 void *
+    .state2                           resb 4      ; 0xc undefined4 *
+    .relToId                          resb 4      ; 0x10 uint
+    .id                               resb 4      ; 0x14 int
+    .type                             resb 4      ; 0x18 OBJECT_TYPE
+    .probablyPhysics                  resb 4      ; 0x1c void *
+    .field8_0x20                      resb 4      ; 0x20 int
+    .probablyRemap                    resb 2      ; 0x24 ushort
+    resb 5
+    .field_0x2b                       resb 1      ; 0x2b undefined1
+endstruc
+
+; /imported/seuko-mod/BareGameObjectManager  (168312 bytes)
+struc BareGameObjectManager
+    .nextFree                         resb 4      ; 0x0 BareGameObject *
+    .someObject                       resb 4      ; 0x4 BareGameObject *
+    .objects                          resb 168300 ; 0x8 BareGameObject[3825]
+    resb 3
+    .field_0x29177                    resb 1      ; 0x29177 undefined1
+endstruc
+
+; /imported/seuko-mod/BitMap  (20 bytes)
+struc BitMap
+    .field_0x0                        resb 2      ; 0x0 short
+    .field_0x2                        resb 2      ; 0x2 short
+    .field_0x4                        resb 2      ; 0x4 short
+    .field_0x6                        resb 2      ; 0x6 short
+    .field_0x8                        resb 2      ; 0x8 short
+    .field_0xa                        resb 2      ; 0xa short
+    resb 4
+    .field_0x10                       resb 4      ; 0x10 int
+endstruc
+
+; /imported/seuko-mod/BusAndTrains  (52 bytes)
+struc BusAndTrains
+    resb 51
+    .field_0x33                       resb 1      ; 0x33 undefined1
+endstruc
+
+; /imported/seuko-mod/BusAndTrains2  (88 bytes)
+struc BusAndTrains2
+    resb 87
+    .field_0x57                       resb 1      ; 0x57 undefined1
+endstruc
+
+; /imported/seuko-mod/BusAndTrainsHolder  (6172 bytes)
+struc BusAndTrainsHolder
+    .arr                              resb 5200   ; 0x0 BusAndTrains[100]
+    .arr2                             resb 880    ; 0x1450 BusAndTrains2[10]
+    resb 91
+    .field_0x181b                     resb 1      ; 0x181b undefined1
+endstruc
+
+; enum /imported/seuko-mod/CAMERA_FOLLOW_STATE  (4 bytes)
+CAMERA_FOLLOW_STATE.CAMERA_FOLLOW_STATE_NO_FOLLOW equ 0
+CAMERA_FOLLOW_STATE.CAMERA_FOLLOW_STATE_FOLLOW equ 1
+CAMERA_FOLLOW_STATE.CAMERA_FOLLOW_STATE_TELEPORT equ 2
+CAMERA_FOLLOW_STATE.CAMERA_FOLLOW_STATE_190 equ 400
+CAMERA_FOLLOW_STATE.CAMERA_FOLLOW_STATE_258 equ 600
+
+; enum /imported/seuko-mod/CAMERA_MOVEMENT  (4 bytes)
+CAMERA_MOVEMENT.CAMERA_MOVEMENT_DO_NOTHING equ 0
+CAMERA_MOVEMENT.CAMERA_MOVEMENT_FORWARD equ 1
+CAMERA_MOVEMENT.CAMERA_MOVEMENT_UNK2 equ 2
+CAMERA_MOVEMENT.CAMERA_MOVEMENT_BACKWARD equ 256
+CAMERA_MOVEMENT.CAMERA_MOVEMENT_LEFT equ 65536
+CAMERA_MOVEMENT.CAMERA_MOVEMENT_RIGHT equ 16777216
+
+; enum /imported/seuko-mod/CAR_DELTAS_BITSTATE  (4 bytes)
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_LIGHT_BROKEN_RR equ 1
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_LIGHT_BROKEN_RL equ 2
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_LIGHT_BROKEN_FL equ 4
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_LIGHT_BROKEN_FR equ 8
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_FRONT_GLASS_BROKEN equ 16
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_LIGHT_ON_RL equ 32
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_LIGHT_ON_FL equ 64
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_DOOR_FL_1 equ 128
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_DOOR_FL_2 equ 256
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_DOOR_FL_3 equ 512
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_DOOR_FL_4 equ 1024
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_DOOR_RL_1 equ 2048
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_DOOR_RL_2 equ 4096
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_DOOR_RL_3 equ 8192
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_DOOR_RL_4 equ 16384
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_EMERG_LIGHT_FR equ 32768
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_EMERG_LIGHT_FL equ 65536
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_EMERG_LIGHT_RR equ 131072
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_EMERG_LIGHT_RL equ 262144
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_UNK_19 equ 524288
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_UNK_20 equ 1048576
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_UNK_21 equ 2097152
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_LIGHT_ON_RR equ 4194304
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_LIGHT_ON_FR equ 8388608
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_DOOR_FR_1 equ 16777216
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_DOOR_FR_2 equ 33554432
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_DOOR_FR_3 equ 67108864
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_DOOR_FR_4 equ 134217728
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_DOOR_RR_1 equ 268435456
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_DOOR_RR_2 equ 536870912
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_DOOR_RR_3 equ 1073741824
+CAR_DELTAS_BITSTATE.CAR_DELTAS_BITSTATE_DOOR_RR_4 equ 2147483648
+
+; enum /imported/seuko-mod/CAR_DELTAS_INDEX  (4 bytes)
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_LIGHT_BROKEN_RR equ 0
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_LIGHT_BROKEN_RL equ 1
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_LIGHT_BROKEN_FL equ 2
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_LIGHT_BROKEN_FR equ 3
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_FRONT_GLASS_BROKEN equ 4
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_LIGHT_ON_RL equ 5
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_LIGHT_ON_FL equ 6
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_FL_1 equ 7
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_FL_2 equ 8
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_FL_3 equ 9
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_FL_4 equ 10
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_RL_1 equ 11
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_RL_2 equ 12
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_RL_3 equ 13
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_RL_4 equ 14
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_EMERG_LIGHT_FR equ 15
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_EMERG_LIGHT_FL equ 16
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_EMERG_LIGHT_RR equ 17
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_EMERG_LIGHT_RL equ 18
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_UNK_19 equ 19
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_UNK_20 equ 20
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_UNK_21 equ 21
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_LIGHT_ON_RR equ 22
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_LIGHT_ON_FR equ 23
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_FR_1 equ 24
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_FR_2 equ 25
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_FR_3 equ 26
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_FR_4 equ 27
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_RR_1 equ 28
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_RR_2 equ 29
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_RR_3 equ 30
+CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_RR_4 equ 31
+
+; enum /imported/seuko-mod/CAR_DOOR_STATE  (4 bytes)
+CAR_DOOR_STATE.CAR_DOOR_STATE_LOCKED equ 1
+CAR_DOOR_STATE.CAR_DOOR_STATE_UNLOCKED equ 2
+CAR_DOOR_STATE.CAR_DOOR_STATE_INITIAL_UNK3 equ 3
+
+; enum /imported/seuko-mod/CAR_LIGHTS_BITSTATE  (1 bytes)
+CAR_LIGHTS_BITSTATE.CAR_LIGHTS_BITSTATE_BRAKE_LIGHTS_ON equ 1
+CAR_LIGHTS_BITSTATE.CAR_LIGHTS_BITSTATE_LIGHTS_ON equ 2
+CAR_LIGHTS_BITSTATE.CAR_LIGHTS_BITSTATE_SIREN_ON equ 4
+CAR_LIGHTS_BITSTATE.CAR_LIGHTS_BITSTATE_ALARM_ON equ 8
+
+; enum /imported/seuko-mod/CAR_LOCK_STATE  (4 bytes)
+CAR_LOCK_STATE.CAR_LOCK_STATE_NO_LOCK equ 0
+CAR_LOCK_STATE.CAR_LOCK_STATE_LOCKED equ 1
+CAR_LOCK_STATE.CAR_LOCK_STATE_LOCKOUT_THIEF equ 2
+CAR_LOCK_STATE.CAR_LOCK_STATE_UNLOCKED equ 3
+CAR_LOCK_STATE.CAR_LOCK_STATE_LOCKED_PERMANENTLY equ 4
+CAR_LOCK_STATE.CAR_LOCK_STATE_LOCKOUT_PLAYER equ 5
+
+; enum /imported/seuko-mod/CAR_MODEL4  (4 bytes)
+CAR_MODEL4.CAR_MODEL4_ALFA equ 0
+CAR_MODEL4.CAR_MODEL4_ALLARD equ 1
+CAR_MODEL4.CAR_MODEL4_AMDB4 equ 2
+CAR_MODEL4.CAR_MODEL4_APC equ 3
+CAR_MODEL4.CAR_MODEL4_BANKVAN equ 4
+CAR_MODEL4.CAR_MODEL4_BMW equ 5
+CAR_MODEL4.CAR_MODEL4_BOXCAR equ 6
+CAR_MODEL4.CAR_MODEL4_BOXTRUCK equ 7
+CAR_MODEL4.CAR_MODEL4_BUG equ 8
+CAR_MODEL4.CAR_MODEL4_CAR9 equ 9
+CAR_MODEL4.CAR_MODEL4_BUICK equ 10
+CAR_MODEL4.CAR_MODEL4_BUS equ 11
+CAR_MODEL4.CAR_MODEL4_COPCAR equ 12
+CAR_MODEL4.CAR_MODEL4_DART equ 13
+CAR_MODEL4.CAR_MODEL4_EDSEL equ 14
+CAR_MODEL4.CAR_MODEL4_CAR15 equ 15
+CAR_MODEL4.CAR_MODEL4_FIAT equ 16
+CAR_MODEL4.CAR_MODEL4_FIRETRUCK equ 17
+CAR_MODEL4.CAR_MODEL4_GRAHAM equ 18
+CAR_MODEL4.CAR_MODEL4_GT24640 equ 19
+CAR_MODEL4.CAR_MODEL4_CAR20 equ 20
+CAR_MODEL4.CAR_MODEL4_GTRUCK equ 21
+CAR_MODEL4.CAR_MODEL4_GUNJEEP equ 22
+CAR_MODEL4.CAR_MODEL4_HOTDOG equ 23
+CAR_MODEL4.CAR_MODEL4_HOTDOG_D1 equ 24
+CAR_MODEL4.CAR_MODEL4_HOTDOG_D2 equ 25
+CAR_MODEL4.CAR_MODEL4_HOTDOG_D3 equ 26
+CAR_MODEL4.CAR_MODEL4_ICECREAM equ 27
+CAR_MODEL4.CAR_MODEL4_ISETLIMO equ 28
+CAR_MODEL4.CAR_MODEL4_ISETTA equ 29
+CAR_MODEL4.CAR_MODEL4_JEEP equ 30
+CAR_MODEL4.CAR_MODEL4_JEFFREY equ 31
+CAR_MODEL4.CAR_MODEL4_LIMO equ 32
+CAR_MODEL4.CAR_MODEL4_LIMO2 equ 33
+CAR_MODEL4.CAR_MODEL4_MEDICAR equ 34
+CAR_MODEL4.CAR_MODEL4_MERC equ 35
+CAR_MODEL4.CAR_MODEL4_MESSER equ 36
+CAR_MODEL4.CAR_MODEL4_MIURA equ 37
+CAR_MODEL4.CAR_MODEL4_MONSTER equ 38
+CAR_MODEL4.CAR_MODEL4_MORGAN equ 39
+CAR_MODEL4.CAR_MODEL4_MORRIS equ 40
+CAR_MODEL4.CAR_MODEL4_PICKUP equ 41
+CAR_MODEL4.CAR_MODEL4_RTYPE equ 42
+CAR_MODEL4.CAR_MODEL4_CAR43 equ 43
+CAR_MODEL4.CAR_MODEL4_SPIDER equ 44
+CAR_MODEL4.CAR_MODEL4_SPRITE equ 45
+CAR_MODEL4.CAR_MODEL4_STINGRAY equ 46
+CAR_MODEL4.CAR_MODEL4_STRATOS equ 47
+CAR_MODEL4.CAR_MODEL4_STRATOSB equ 48
+CAR_MODEL4.CAR_MODEL4_STRIPETB equ 49
+CAR_MODEL4.CAR_MODEL4_STYPE equ 50
+CAR_MODEL4.CAR_MODEL4_STYPECAB equ 51
+CAR_MODEL4.CAR_MODEL4_SWATVAN equ 52
+CAR_MODEL4.CAR_MODEL4_T2000GT equ 53
+CAR_MODEL4.CAR_MODEL4_TANK equ 54
+CAR_MODEL4.CAR_MODEL4_TANKER equ 55
+CAR_MODEL4.CAR_MODEL4_TAXI equ 56
+CAR_MODEL4.CAR_MODEL4_TBIRD equ 57
+CAR_MODEL4.CAR_MODEL4_TOWTRUCK equ 58
+CAR_MODEL4.CAR_MODEL4_TRAIN equ 59
+CAR_MODEL4.CAR_MODEL4_TRAINCAB equ 60
+CAR_MODEL4.CAR_MODEL4_TRAINFB equ 61
+CAR_MODEL4.CAR_MODEL4_TRANCEAM equ 62
+CAR_MODEL4.CAR_MODEL4_TRUKCAB1 equ 63
+CAR_MODEL4.CAR_MODEL4_TRUKCAB2 equ 64
+CAR_MODEL4.CAR_MODEL4_TRUKCONT equ 65
+CAR_MODEL4.CAR_MODEL4_TRUKTRNS equ 66
+CAR_MODEL4.CAR_MODEL4_TVVAN equ 67
+CAR_MODEL4.CAR_MODEL4_VAN equ 68
+CAR_MODEL4.CAR_MODEL4_VESPA equ 69
+CAR_MODEL4.CAR_MODEL4_VTYPE equ 70
+CAR_MODEL4.CAR_MODEL4_WBTWIN equ 71
+CAR_MODEL4.CAR_MODEL4_WRECK0 equ 72
+CAR_MODEL4.CAR_MODEL4_WRECK1 equ 73
+CAR_MODEL4.CAR_MODEL4_WRECK2 equ 74
+CAR_MODEL4.CAR_MODEL4_WRECK3 equ 75
+CAR_MODEL4.CAR_MODEL4_WRECK4 equ 76
+CAR_MODEL4.CAR_MODEL4_WRECK5 equ 77
+CAR_MODEL4.CAR_MODEL4_WRECK6 equ 78
+CAR_MODEL4.CAR_MODEL4_WRECK7 equ 79
+CAR_MODEL4.CAR_MODEL4_WRECK8 equ 80
+CAR_MODEL4.CAR_MODEL4_WRECK9 equ 81
+CAR_MODEL4.CAR_MODEL4_XK120 equ 82
+CAR_MODEL4.CAR_MODEL4_ZCX5 equ 83
+CAR_MODEL4.CAR_MODEL4_EDSELFBI equ 84
+CAR_MODEL4.CAR_MODEL4_HOTDOG_D4 equ 85
+CAR_MODEL4.CAR_MODEL4_KRSNABUS equ 86
+
+; enum /imported/seuko-mod/CAR_PHYSICS_BITMASK  (4 bytes)
+CAR_PHYSICS_BITMASK.CAR_PHYSICS_BITMASK_0x1 equ 1
+CAR_PHYSICS_BITMASK.CAR_PHYSICS_BITMASK_DONT_SLOW_ON_COLLISION equ 2
+CAR_PHYSICS_BITMASK.CAR_PHYSICS_BITMASK_0x4 equ 4
+CAR_PHYSICS_BITMASK.CAR_PHYSICS_BITMASK_NO_COLLISION_DAMAGE equ 8
+CAR_PHYSICS_BITMASK.CAR_PHYSICS_BITMASK_NO_COLLISION equ 16
+CAR_PHYSICS_BITMASK.CAR_PHYSICS_BITMASK_0x20 equ 32
+CAR_PHYSICS_BITMASK.CAR_PHYSICS_BITMASK_TRAIN_RELATED equ 64
+CAR_PHYSICS_BITMASK.CAR_PHYSICS_BITMASK_HAS_ALARM equ 128
+CAR_PHYSICS_BITMASK.CAR_PHYSICS_BITMASK_BULLETPROOF equ 256
+CAR_PHYSICS_BITMASK.CAR_PHYSICS_BITMASK_ROCKETPROOF equ 512
+CAR_PHYSICS_BITMASK.CAR_PHYSICS_BITMASK_FLAMEPROOF equ 1024
+CAR_PHYSICS_BITMASK.CAR_PHYSICS_BITMASK_TANK_RELATED equ 2048
+CAR_PHYSICS_BITMASK.CAR_PHYSICS_BITMASK_JAMMED equ 4096
+CAR_PHYSICS_BITMASK.CAR_PHYSICS_BITMASK_0x2000 equ 8192
+
+; enum /imported/seuko-mod/CAR_SURFACE  (4 bytes)
+CAR_SURFACE.CAR_SURFACE_FLAT equ 0
+CAR_SURFACE.CAR_SURFACE_SLOPE_UP equ 1
+CAR_SURFACE.CAR_SURFACE_SLOPE_DOWN equ 2
+CAR_SURFACE.CAR_SURFACE_SLOPE_LEFT equ 3
+CAR_SURFACE.CAR_SURFACE_SLOPE_RIGHT equ 4
+CAR_SURFACE.CAR_SURFACE_5 equ 5
+CAR_SURFACE.CAR_SURFACE_6 equ 6
+CAR_SURFACE.CAR_SURFACE_IN_AIR equ 6
+CAR_SURFACE.CAR_SURFACE_IN_WATER equ 8
+CAR_SURFACE.CAR_SURFACE_WET equ 9
+
+; enum /imported/seuko-mod/CAR_SURFACE2  (4 bytes)
+CAR_SURFACE2.CAR_SURFACE2_AIR_OR_SLOPE equ 0
+CAR_SURFACE2.CAR_SURFACE2_CONCRETE equ 1
+CAR_SURFACE2.CAR_SURFACE2_GRASS equ 2
+CAR_SURFACE2.CAR_SURFACE2_3 equ 3
+CAR_SURFACE2.CAR_SURFACE2_WET equ 4
+CAR_SURFACE2.CAR_SURFACE2_5 equ 5
+CAR_SURFACE2.CAR_SURFACE2_6 equ 6
+CAR_SURFACE2.CAR_SURFACE2_7 equ 7
+CAR_SURFACE2.CAR_SURFACE2_METAL equ 8
+
+; enum /imported/seuko-mod/CAR_WEAPON_INDEX  (4 bytes)
+CAR_WEAPON_INDEX.CAR_WEAP_0 equ 0
+CAR_WEAPON_INDEX.CAR_WEAP_BOMB equ 15
+CAR_WEAPON_INDEX.CAR_WEAP_OIL equ 16
+CAR_WEAPON_INDEX.CAR_WEAP_MINE equ 17
+CAR_WEAPON_INDEX.CAR_WEAP_GUN equ 18
+CAR_WEAPON_INDEX.CAR_WEAP_TANKTURRET equ 19
+CAR_WEAPON_INDEX.CAR_WEAP_WATERGUN equ 20
+CAR_WEAPON_INDEX.CAR_WEAP_FLAMETHROWER equ 21
+CAR_WEAPON_INDEX.CAR_WEAP_JEEPGUN equ 22
+CAR_WEAPON_INDEX.CAR_WEAP_INSTANTBOMB equ 23
+CAR_WEAPON_INDEX.CAR_WEAP_LETTER_J equ 24
+CAR_WEAPON_INDEX.CAR_WEAP_LETTER_K equ 25
+CAR_WEAPON_INDEX.CAR_WEAP_LETTER_L equ 26
+CAR_WEAPON_INDEX.CAR_WEAP_LETTER_M equ 27
+
+; /imported/seuko-mod/Camera  (188 bytes)
+struc Camera
+    .cameraPosTarget2                 resb 16     ; 0x0 CameraPos
+    .cameraPosTarget                  resb 16     ; 0x10 CameraPos
+    .cameraBoundaries                 resb 16     ; 0x20 WorldRect
+    .movementBitmask                  resb 4      ; 0x30 CAMERA_MOVEMENT
+    .ped                              resb 4      ; 0x34 Ped *
+    resb 4
+    .followState                      resb 4      ; 0x3c CAMERA_FOLLOW_STATE
+    .targetElevation                  resb 4      ; 0x40 int
+    .flyTimerMaybe                    resb 4      ; 0x44 int
+    .altMovingPosition                resb 8      ; 0x48 SCR_Vector2
+    .altMovingStateUp                 resb 4      ; 0x50 SCR_f
+    .altMovingStateDown               resb 4      ; 0x54 SCR_f
+    .altMovingStateLeft               resb 4      ; 0x58 SCR_f
+    .altMovingStateRight              resb 4      ; 0x5c SCR_f
+    .field_0x60                       resb 4      ; 0x60 SCR_f
+    resb 2
+    .altMovingLimit                   resb 2      ; 0x66 short
+    .screenPxWidth                    resb 4      ; 0x68 int
+    .screenPxHeight                   resb 4      ; 0x6c int
+    .screenPxCenterX                  resb 4      ; 0x70 int
+    .screenPxCenterY                  resb 4      ; 0x74 int
+    .cameraBoundariesNonNegative      resb 16     ; 0x78 WorldRect
+    .cameraPos2                       resb 16     ; 0x88 CameraPos
+    .cameraPos                        resb 16     ; 0x98 CameraPos
+    .uiScale                          resb 4      ; 0xa8 SCR_f
+    .cameraVelocity                   resb 16     ; 0xac CameraPos
+endstruc
+
+; /imported/seuko-mod/CameraPos  (16 bytes)
+struc CameraPos
+    .x                                resb 4      ; 0x0 SCR_f
+    .y                                resb 4      ; 0x4 SCR_f
+    .z                                resb 4      ; 0x8 SCR_f
+    .zoom                             resb 4      ; 0xc int
+endstruc
+
+; /imported/seuko-mod/CarDoor  (16 bytes)
+struc CarDoor
+    .animationFrame                   resb 1      ; 0x0 byte
+    resb 1
+    .deltaID                          resb 1      ; 0x2 byte
+    resb 1
+    .doorState                        resb 4      ; 0x4 uint
+    .pedInDoor                        resb 4      ; 0x8 Ped *
+    resb 3
+    .field_0xf                        resb 1      ; 0xf undefined1
+endstruc
+
+; /imported/seuko-mod/CarEngineData  (72 bytes)
+struc CarEngineData
+    .model                            resb 1      ; 0x0 byte
+    .turbo                            resb 1      ; 0x1 bool
+    .value                            resb 1      ; 0x2 byte
+    resb 1
+    .mass                             resb 4      ; 0x4 undefined4
+    .front_drive_bias                 resb 4      ; 0x8 undefined4
+    .front_mass_bias                  resb 4      ; 0xc undefined4
+    .brake_friction                   resb 4      ; 0x10 undefined4
+    .turn_in                          resb 4      ; 0x14 undefined4
+    .turn_ratio                       resb 4      ; 0x18 undefined4
+    .rear_end_stability               resb 4      ; 0x1c undefined4
+    .handbrake_slide_value            resb 4      ; 0x20 undefined4
+    .thrust                           resb 4      ; 0x24 undefined4
+    .max_speed                        resb 4      ; 0x28 undefined4
+    .anti_strength                    resb 4      ; 0x2c undefined4
+    .skid_threshhold                  resb 4      ; 0x30 undefined4
+    .gear1_multiplier                 resb 4      ; 0x34 undefined4
+    .gear2_multiplier                 resb 4      ; 0x38 undefined4
+    .gear3_multiplier                 resb 4      ; 0x3c undefined4
+    .gear2_speed                      resb 4      ; 0x40 undefined4
+    .gear3_speed                      resb 4      ; 0x44 undefined4
+endstruc
+
+; /imported/seuko-mod/CarEnginePrefab  (53860 bytes)
+struc CarEnginePrefab
+    .first                            resb 4      ; 0x0 CarPhysics *
+    .arr306                           resb 53856  ; 0x4 CarPhysics[306]
+endstruc
+
+; /imported/seuko-mod/CarInfoChunk  (1028 bytes)
+struc CarInfoChunk
+    .last                             resb 4      ; 0x0 CarInfo *
+    .carInfoArray                     resb 1024   ; 0x4 CarInfo *[256]
+endstruc
+
+; /imported/seuko-mod/CarManager4  (36724 bytes)
+struc CarManager4
+    .last                             resb 4      ; 0x0 CarManager4_S1 *
+    .arr306                           resb 36720  ; 0x4 CarManager4_S1[306]
+endstruc
+
+; /imported/seuko-mod/CarManager4_S1  (120 bytes)
+struc CarManager4_S1
+    .parentCar                        resb 4      ; 0x0 Car *
+    resb 8
+    .prev                             resb 4      ; 0xc CarManager4_S1 *
+    resb 20
+    .field_0x24                       resb 4      ; 0x24 uint
+    resb 72
+    .ptr                              resb 4      ; 0x70 void *
+    resb 3
+    .field_0x77                       resb 1      ; 0x77 undefined1
+endstruc
+
+; /imported/seuko-mod/CarManager5  (164 bytes)
+struc CarManager5
+    .field_0x0                        resb 4      ; 0x0 int *
+    .arr10                            resb 160    ; 0x4 CarManager5_S1[10]
+endstruc
+
+; /imported/seuko-mod/CarManager5_S1  (16 bytes)
+struc CarManager5_S1
+    resb 15
+    .field_0xf                        resb 1      ; 0xf undefined1
+endstruc
+
+; /imported/seuko-mod/CarPhysics  (176 bytes)
+struc CarPhysics
+    .xVelocityReadOnly                resb 4      ; 0x0 int
+    .yVelocityReadOnly                resb 4      ; 0x4 int
+    .totalDamageMaybe                 resb 4      ; 0x8 int
+    .next                             resb 4      ; 0xc CarPhysics *
+    .rrSkid                           resb 8      ; 0x10 SCR_Vector2
+    .rlSkid                           resb 8      ; 0x18 SCR_Vector2
+    .frSkid                           resb 8      ; 0x20 SCR_Vector2
+    .flSkid                           resb 8      ; 0x28 SCR_Vector2
+    .position                         resb 8      ; 0x30 SCR_Vector2
+    .positionReadOnly                 resb 8      ; 0x38 SCR_Vector2
+    .velocity                         resb 8      ; 0x40 SCR_Vector2
+    .jumpFromEdgeForce                resb 8      ; 0x48 SCR_Vector2
+    resb 8
+    .rotation                         resb 2      ; 0x58 short
+    resb 2
+    .prev                             resb 4      ; 0x5c CarPhysics *
+    .gasPedal                         resb 4      ; 0x60 int
+    .alsoRefToAnotherEngine           resb 4      ; 0x64 CarPhysics *
+    .zVelocityRelated                 resb 4      ; 0x68 int
+    .zPos                             resb 4      ; 0x6c SCR_f
+    .zVelocityReadOnly                resb 4      ; 0x70 int
+    .rotationForce                    resb 4      ; 0x74 int
+    .pointingAngle                    resb 4      ; 0x78 int
+    resb 8
+    .frontSkid                        resb 4      ; 0x84 uint
+    .rearSkid                         resb 4      ; 0x88 uint
+    resb 4
+    .timerSinceLastMove               resb 1      ; 0x90 byte
+    .isBrakeOn                        resb 1      ; 0x91 byte
+    .isHandbrakeOn                    resb 1      ; 0x92 byte
+    .isForwardGasOn                   resb 1      ; 0x93 byte
+    .isBackwardGasOn                  resb 1      ; 0x94 byte
+    resb 3
+    .surfaceType                      resb 4      ; 0x98 CAR_SURFACE
+    .surfaceType2                     resb 4      ; 0x9c CAR_SURFACE2
+    resb 5
+    .currentSlopeLength               resb 1      ; 0xa5 byte
+    .currentSlopeLeftTiles            resb 1      ; 0xa6 byte
+    .currentTileZ                     resb 1      ; 0xa7 byte
+    .handbrakeForce                   resb 1      ; 0xa8 byte
+    .carModel                         resb 1      ; 0xa9 CAR_MODEL
+    resb 2
+    .driveWheelsLockedProbably        resb 1      ; 0xac byte
+    .steering                         resb 1      ; 0xad char
+    resb 1
+    .field_0xaf                       resb 1      ; 0xaf undefined1
+endstruc
+
+; /imported/seuko-mod/CarPhysicsData  (44 bytes)
+struc CarPhysicsData
+    resb 4
+    .front_wheel_offset               resb 4      ; 0x4 undefined4
+    .rear_wheel_offset                resb 4      ; 0x8 undefined4
+    resb 8
+    .thrust1                          resb 4      ; 0x14 undefined4
+    .thrust2                          resb 4      ; 0x18 undefined4
+    resb 8
+    .skid_threshhold1                 resb 4      ; 0x24 SCR_f
+    .skid_threshhold2                 resb 4      ; 0x28 SCR_f
+endstruc
+
+; /imported/seuko-mod/Collide  (12 bytes)
+struc Collide
+    .ptr1                             resb 4      ; 0x0 Sprite *
+    .ptr2                             resb 4      ; 0x4 void *
+    .ptr3                             resb 4      ; 0x8 Collide *
+endstruc
+
+; /imported/seuko-mod/Collide1  (32772 bytes)
+struc Collide1
+    resb 32771
+    .field_0x8003                     resb 1      ; 0x8003 undefined1
+endstruc
+
+; /imported/seuko-mod/Collide2  (72004 bytes)
+struc Collide2
+    resb 72003
+    .field_0x11943                    resb 1      ; 0x11943 undefined1
+endstruc
+
+; /imported/seuko-mod/CollideArray256  (1024 bytes)
+struc CollideArray256
+    resb 1023
+    .field_0x3ff                      resb 1      ; 0x3ff undefined1
+endstruc
+
+; /imported/seuko-mod/CollideTopLevel  (12 bytes)
+struc CollideTopLevel
+    .length                           resb 4      ; 0x0 uint
+    .someIncrement                    resb 4      ; 0x4 uint
+    resb 3
+    .field_0xb                        resb 1      ; 0xb undefined1
+endstruc
+
+; /imported/seuko-mod/CollisionBox  (44 bytes)
+struc CollisionBox
+    .xsize                            resb 4      ; 0x0 uint
+    .ysize                            resb 4      ; 0x4 uint
+    .zsize_maybe                      resb 4      ; 0x8 uint
+    .brCorner                         resb 8      ; 0xc SCR_Vector2
+    .blCorner                         resb 8      ; 0x14 SCR_Vector2
+    .flCorner                         resb 8      ; 0x1c SCR_Vector2
+    .frCorner                         resb 8      ; 0x24 SCR_Vector2
+endstruc
+
+; /imported/seuko-mod/D3DContext_s1  (100 bytes)
+struc D3DContext_s1
+    .field_0x0                        resb 4      ; 0x0 SVideo *
+    resb 12
+    .field_0x10                       resb 4      ; 0x10 int
+    resb 12
+    .gbh_CloseScreen                  resb 4      ; 0x20 void *
+    .Vid_SetMode                      resb 4      ; 0x24 void *
+    resb 24
+    .Vid_GetSurface                   resb 4      ; 0x40 void *
+    .Vid_FreeSurface                  resb 4      ; 0x44 void *
+    resb 27
+    .field_0x63                       resb 1      ; 0x63 undefined1
+endstruc
+
+; /imported/seuko-mod/DirectInput_DeviceObjectData  (20 bytes)
+struc DirectInput_DeviceObjectData
+    .ofs                              resb 4      ; 0x0 dword
+    .data                             resb 4      ; 0x4 dword
+    .timeStamp                        resb 4      ; 0x8 dword
+    .sequence                         resb 4      ; 0xc dword
+    .appData                          resb 4      ; 0x10 void *
+endstruc
+
+; enum /imported/seuko-mod/EXPLOSION_SIZE  (4 bytes)
+EXPLOSION_SIZE.EXPLOSION_SIZE_NONE equ 17
+EXPLOSION_SIZE.EXPLOSION_SIZE_SMALL equ 18
+EXPLOSION_SIZE.EXPLOSION_SIZE_MEDIUM equ 19
+EXPLOSION_SIZE.EXPLOSION_SIZE_LARGE equ 20
+
+; /imported/seuko-mod/EnginesDataHolder  (2056 bytes)
+struc EnginesDataHolder
+    .maybeAlsoCars                    resb 4      ; 0x0 void *
+    .physicsArray                     resb 1024   ; 0x4 CarPhysicsData *[256]
+    .engineArray                      resb 1024   ; 0x404 CarEngineData *[256]
+    .counter2                         resb 4      ; 0x804 undefined4
+endstruc
+
+; /imported/seuko-mod/Game2  (3484 bytes)
+struc Game2
+    resb 40
+    .car                              resb 4      ; 0x28 Car *
+    resb 3439
+    .field_0xd9b                      resb 1      ; 0xd9b undefined1
+endstruc
+
+; /imported/seuko-mod/Game2Holder  (34844 bytes)
+struc Game2Holder
+    .arr                              resb 34840  ; 0x0 Game2[10]
+    .last                             resb 4      ; 0x8818 Game2 *
+endstruc
+
+; /imported/seuko-mod/GameObject  (180 bytes)
+struc GameObject
+    resb 4
+    .someBitstate                     resb 4      ; 0x4 int
+    .state1                           resb 4      ; 0x8 PED_STATE
+    .state2                           resb 4      ; 0xc PED_STATE2
+    .relToId                          resb 4      ; 0x10 uint
+    .id                               resb 4      ; 0x14 int
+    .type                             resb 4      ; 0x18 OBJECT_TYPE
+    .probablyPhysics                  resb 4      ; 0x1c Camera *
+    resb 4
+    .probablyRemap                    resb 2      ; 0x24 ushort
+    resb 18
+    .speed                            resb 4      ; 0x38 int
+    .field_0x3c                       resb 4      ; 0x3c int
+    .spriteRotation                   resb 2      ; 0x40 short
+    .field_0x42                       resb 2      ; 0x42 short
+    resb 2
+    .field_0x46                       resb 2      ; 0x46 short
+    resb 2
+    .cigaretteIdleTimer               resb 2      ; 0x4a short
+    resb 12
+    .bit1                             resb 1      ; 0x58 SPRITE_BIT1
+    resb 19
+    .field_0x6c                       resb 4      ; 0x6c int
+    resb 8
+    .nextMaybe                        resb 4      ; 0x78 GameObject *
+    .ped                              resb 4      ; 0x7c Ped *
+    .sprite                           resb 4      ; 0x80 Sprite *
+    resb 12
+    .field_0x90                       resb 4      ; 0x90 int
+    resb 4
+    .deltaX                           resb 4      ; 0x98 SCR_f
+    .deltaY                           resb 4      ; 0x9c SCR_f
+    resb 4
+    .teleportX                        resb 4      ; 0xa4 undefined4
+    .teleportY                        resb 4      ; 0xa8 undefined4
+    .teleportZ                        resb 4      ; 0xac undefined4
+    .field_0xb0                       resb 4      ; 0xb0 int
+endstruc
+
+; /imported/seuko-mod/GlobalSettings  (100 bytes)
+struc GlobalSettings
+    .do_3d_sound                      resb 1      ; 0x0 bool
+    .do_blood                         resb 1      ; 0x1 bool
+    .do_show_object_ids               resb 1      ; 0x2 bool
+    .skip_traffic_lights              resb 1      ; 0x3 bool
+    .skip_buses                       resb 1      ; 0x4 bool
+    .do_show_instruments              resb 1      ; 0x5 bool
+    .skip_particles                   resb 1      ; 0x6 bool
+    .skip_trains                      resb 1      ; 0x7 bool
+    .do_show_input                    resb 1      ; 0x8 bool
+    .skip_right                       resb 1      ; 0x9 bool
+    .show_hidden_faces                resb 1      ; 0xa bool
+    .skip_recycling                   resb 1      ; 0xb bool
+    .field_0xc                        resb 1      ; 0xc bool
+    .exploding_on                     resb 1      ; 0xd bool
+    .skip_police                      resb 1      ; 0xe bool
+    .skip_bottom                      resb 1      ; 0xf bool
+    .do_police_1                      resb 1      ; 0x10 bool
+    .do_infinite_lives                resb 1      ; 0x11 bool
+    resb 1
+    .log_random                       resb 1      ; 0x13 bool
+    .skip_user                        resb 1      ; 0x14 bool
+    resb 1
+    .do_miss_logging                  resb 1      ; 0x16 bool
+    .skip_left                        resb 1      ; 0x17 bool
+    .do_corner_window                 resb 1      ; 0x18 bool
+    .skip_dummies                     resb 1      ; 0x19 bool
+    resb 1
+    .skip_ambulance                   resb 1      ; 0x1b bool
+    .skip_window_check                resb 1      ; 0x1c bool
+    resb 2
+    .do_show_imaginary                resb 1      ; 0x1f bool
+    resb 1
+    .do_invulnerable                  resb 1      ; 0x21 bool
+    .skip_audio                       resb 1      ; 0x22 bool
+    .relatedToGXTFiles                resb 1      ; 0x23 bool
+    .get_all_weapons                  resb 1      ; 0x24 bool
+    .no_annoying_chars                resb 1      ; 0x25 bool
+    .show_player_names                resb 1      ; 0x26 bool
+    .log_directinput                  resb 1      ; 0x27 bool
+    .skip_slopes                      resb 1      ; 0x28 bool
+    .do_show_timing                   resb 1      ; 0x29 bool
+    .log_random_extra                 resb 1      ; 0x2a bool
+    resb 1
+    .skip_frontend                    resb 1      ; 0x2c bool
+    .do_brian_test                    resb 1      ; 0x2d bool
+    .do_load_savegame                 resb 1      ; 0x2e bool
+    .do_show_horn                     resb 1      ; 0x2f bool
+    .do_test                          resb 1      ; 0x30 bool
+    .do_mike                          resb 1      ; 0x31 bool
+    .do_show_camera                   resb 1      ; 0x32 bool
+    resb 1
+    .do_free_shopping                 resb 1      ; 0x34 bool
+    .do_show_physics                  resb 1      ; 0x35 bool
+    .ignore_replay_header             resb 1      ; 0x36 bool
+    .do_debug_keys                    resb 1      ; 0x37 bool
+    .skip_draw                        resb 1      ; 0x38 bool
+    .do_show_junc_ids                 resb 1      ; 0x39 bool
+    resb 1
+    .skip_fire_engines                resb 1      ; 0x3b bool
+    .skip_top                         resb 1      ; 0x3c bool
+    .do_iain_test                     resb 1      ; 0x3d bool
+    resb 2
+    .skip_tiles                       resb 1      ; 0x40 bool
+    .log_input                        resb 1      ; 0x41 bool
+    resb 2
+    .dont_get_car_back                resb 1      ; 0x44 bool
+    .do_show_counters                 resb 1      ; 0x45 bool
+    .do_show_traffic_lights_info      resb 1      ; 0x46 bool
+    resb 2
+    .log_routefinder                  resb 1      ; 0x49 bool
+    resb 2
+    .skip_lid                         resb 1      ; 0x4c bool
+    .do_police_2                      resb 1      ; 0x4d bool
+    .keep_weapons_after_death         resb 1      ; 0x4e bool
+    .spawn_only_elvis                 resb 1      ; 0x4f bool
+    resb 1
+    .do_show_ids                      resb 1      ; 0x51 bool
+    .jail_key                         resb 1      ; 0x52 bool
+    resb 1
+    .skip_replay_sync_check           resb 1      ; 0x54 bool
+    .show_brief_number                resb 1      ; 0x55 bool
+    resb 1
+    .show_cycle                       resb 1      ; 0x57 bool
+    .do_sync_check                    resb 1      ; 0x58 bool
+    .do_police_3                      resb 1      ; 0x59 bool
+    .play_replay                      resb 1      ; 0x5a bool
+    .skip_quit_confirm                resb 1      ; 0x5b bool
+    .limit_recycling                  resb 1      ; 0x5c byte
+    .do_exit_after_replay             resb 1      ; 0x5d bool
+    .skip_mission                     resb 1      ; 0x5e bool
+    .skip_skidmarks                   resb 1      ; 0x5f bool
+    .log_collisions                   resb 1      ; 0x60 bool
+    .do_show_collision_box            resb 1      ; 0x61 bool
+    .show_all_arrows                  resb 1      ; 0x62 bool
+    .do_kill_phones_on_answer         resb 1      ; 0x63 bool
+endstruc
+
+; /imported/seuko-mod/GtaString  (24 bytes)
+struc GtaString
+    resb 2
+    .field_0x2                        resb 2      ; 0x2 ushort
+    resb 2
+    .field_0x6                        resb 2      ; 0x6 short
+    resb 2
+    .decr                             resb 2      ; 0xa undefined2
+    resb 6
+    .id                               resb 2      ; 0x12 ushort
+    .prev                             resb 4      ; 0x14 GtaString *
+endstruc
+
+; /imported/seuko-mod/GtaStringsHolder  (1212 bytes)
+struc GtaStringsHolder
+    .last                             resb 4      ; 0x0 GtaString *
+    .first                            resb 4      ; 0x4 GtaString *
+    .arr50                            resb 1200   ; 0x8 GtaString[50]
+    .total                            resb 2      ; 0x4b8 undefined2
+    resb 1
+    .field_0x4bb                      resb 1      ; 0x4bb undefined1
+endstruc
+
+; enum /imported/seuko-mod/KEYBOARD_STATE  (4 bytes)
+KEYBOARD_STATE.KEYBOARD_STATE_FORWARD equ 1
+KEYBOARD_STATE.KEYBOARD_STATE_BACKWARD equ 2
+KEYBOARD_STATE.KEYBOARD_STATE_LEFT equ 4
+KEYBOARD_STATE.KEYBOARD_STATE_RIGHT equ 8
+KEYBOARD_STATE.KEYBOARD_STATE_ATTACK equ 16
+KEYBOARD_STATE.KEYBOARD_STATE_ENTER_CAR equ 32
+KEYBOARD_STATE.KEYBOARD_STATE_JUMP equ 64
+KEYBOARD_STATE.KEYBOARD_STATE_PREV_WEAPON equ 128
+KEYBOARD_STATE.KEYBOARD_STATE_NEXT_WEAPON equ 256
+KEYBOARD_STATE.KEYBOARD_STATE_SPECIAL equ 512
+KEYBOARD_STATE.KEYBOARD_STATE_SPECIAL2 equ 1024
+KEYBOARD_STATE.KEYBOARD_STATE_SPECIAL3 equ 2048
+
+; /imported/seuko-mod/Keyboard  (480070 bytes)
+struc Keyboard
+    .directInputCleanedMaybe          resb 1      ; 0x0 undefined1
+    resb 3
+    .state                            resb 4      ; 0x4 KEYBOARD_STATE
+    .controls                         resb 48     ; 0x8 KEYBOARD_STATE[12]
+    .replayStatus                     resb 4      ; 0x38 REPLAY_STATUS
+    .allEvents                        resb 480000 ; 0x3c KeyboardEvent[40000]
+    .replayEventCount                 resb 4      ; 0x7533c uint
+    .eventCount                       resb 4      ; 0x75340 uint
+    .lastFocusEventLParam             resb 1      ; 0x75344 undefined1
+    .field_0x75345                    resb 1      ; 0x75345 undefined1
+endstruc
+
+; /imported/seuko-mod/KeyboardEvent  (12 bytes)
+struc KeyboardEvent
+    .tick                             resb 4      ; 0x0 uint
+    .state                            resb 4      ; 0x4 KEYBOARD_STATE
+    .random                           resb 4      ; 0x8 uint
+endstruc
+
+; /imported/seuko-mod/LocaleSingle  (12 bytes)
+struc LocaleSingle
+    .text                             resb 4      ; 0x0 WCHAR *
+    .id                               resb 8      ; 0x4 char[8]
+endstruc
+
+; /imported/seuko-mod/MapBlocks  (880 bytes)
+struc MapBlocks
+    .field_0x0                        resb 4      ; 0x0 int
+    resb 808
+    .len                              resb 4      ; 0x32c int
+    .ptrRelToMap                      resb 4      ; 0x330 void *
+    .probablyArray                    resb 4      ; 0x334 void *
+    resb 44
+    .lenOrCounter                     resb 2      ; 0x364 ushort
+    resb 9
+    .field_0x36f                      resb 1      ; 0x36f undefined1
+endstruc
+
+; enum /imported/seuko-mod/OBJECT_TYPE  (4 bytes)
+OBJECT_TYPE.OBJECT_TYPE_BIN_LID equ 1
+OBJECT_TYPE.OBJECT_TYPE_BOLLARD equ 2
+OBJECT_TYPE.OBJECT_TYPE_CONE equ 3
+OBJECT_TYPE.OBJECT_TYPE_BOXES equ 4
+OBJECT_TYPE.OBJECT_TYPE_BLASTER equ 5
+OBJECT_TYPE.OBJECT_TYPE_RUBBISH equ 6
+OBJECT_TYPE.OBJECT_TYPE_BIN equ 7
+OBJECT_TYPE.OBJECT_TYPE_ANIMATING_OIL equ 8
+OBJECT_TYPE.OBJECT_TYPE_OIL equ 9
+OBJECT_TYPE.OBJECT_TYPE_MINE equ 10
+OBJECT_TYPE.OBJECT_TYPE_BUSH equ 11
+OBJECT_TYPE.OBJECT_TYPE_CRATE equ 12
+OBJECT_TYPE.OBJECT_TYPE_FOOTY equ 13
+OBJECT_TYPE.OBJECT_TYPE_HARDBOX equ 14
+OBJECT_TYPE.OBJECT_TYPE_NEWSDIS equ 15
+OBJECT_TYPE.OBJECT_TYPE_OILDRUM equ 16
+OBJECT_TYPE.OBJECT_TYPE_TYRE equ 17
+OBJECT_TYPE.OBJECT_TYPE_HYDRANT_LID equ 18
+OBJECT_TYPE.OBJECT_TYPE_HYDRANT equ 19
+OBJECT_TYPE.OBJECT_TYPE_HYDRANT_UNLID equ 20
+OBJECT_TYPE.OBJECT_TYPE_ROADBLOCK equ 21
+OBJECT_TYPE.OBJECT_TYPE_BENCH equ 22
+OBJECT_TYPE.OBJECT_TYPE_PACKAGE equ 23
+OBJECT_TYPE.OBJECT_TYPE_TOWER equ 25
+OBJECT_TYPE.OBJECT_TYPE_MOVING_PACKAGE equ 43
+OBJECT_TYPE.OBJECT_TYPE_DEAD_PACKAGE equ 44
+OBJECT_TYPE.OBJECT_TYPE_MOVING_BENCH equ 45
+OBJECT_TYPE.OBJECT_TYPE_DEAD_BENCH equ 46
+OBJECT_TYPE.OBJECT_TYPE_MOVING_ROADBLOCK equ 47
+OBJECT_TYPE.OBJECT_TYPE_DEAD_ROADBLOCK equ 48
+OBJECT_TYPE.OBJECT_TYPE_MOVING_HYDRANT_LID equ 49
+OBJECT_TYPE.OBJECT_TYPE_ANIMATING_CRATE equ 50
+OBJECT_TYPE.OBJECT_TYPE_DEAD_CRATE equ 51
+OBJECT_TYPE.OBJECT_TYPE_DEAD_BOXES equ 52
+OBJECT_TYPE.OBJECT_TYPE_DEAD_CONE equ 53
+OBJECT_TYPE.OBJECT_TYPE_DEAD_BLASTER equ 54
+OBJECT_TYPE.OBJECT_TYPE_DEAD_BUSH equ 55
+OBJECT_TYPE.OBJECT_TYPE_MOVING_FOOTY equ 56
+OBJECT_TYPE.OBJECT_TYPE_MOVING_HARDBOX equ 57
+OBJECT_TYPE.OBJECT_TYPE_DEAD_HARDBOX equ 58
+OBJECT_TYPE.OBJECT_TYPE_MOVING_NEWSDIS equ 59
+OBJECT_TYPE.OBJECT_TYPE_DEAD_NEWSDIS equ 60
+OBJECT_TYPE.OBJECT_TYPE_MOVING_OILDRUM equ 61
+OBJECT_TYPE.OBJECT_TYPE_DEAD_OILDRUM equ 62
+OBJECT_TYPE.OBJECT_TYPE_MOVING_TYRE equ 63
+OBJECT_TYPE.___moving_collectables_____OBJECT_TYPE_MOVING_COLLECT_00_PISTOL equ 64
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_01_S_UZI equ 65
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_02_ROCKET_LAUNCHER equ 66
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_03_ELECTROGUN equ 67
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_04_MOLOTOV_COCTAIL equ 68
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_05_GRENADE equ 69
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_06_SHOTGUN equ 70
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_07_ELECTROBATON equ 71
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_08_FLAMETHROWER equ 72
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_09_SILENCED_S_UZI equ 73
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_10_DUAL_PISTOL equ 74
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_11_LETTER_L equ 75
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_12_LETTER_M equ 76
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_13_LETTER_N equ 77
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_14_LETTER_O equ 78
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_15_VEHICLE_BOMB equ 79
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_16_VEHICLE_OIL_SLICK equ 80
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_17_VEHICLE_MINE equ 81
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_18_VEHICLE_MACHINE_GUN equ 82
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_19_TANK_CANNON equ 83
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_20_WATER_CANNON equ 84
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_21_VEHICLE_FLAMETHROWER equ 85
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_22_JEEP_TURRET equ 86
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_23_INSTANT_VEHICLE_BOMB equ 87
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_24_LETTER_J equ 88
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_25_LETTER_K equ 89
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_26_LETTER_L equ 90
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_27_LETTER_M equ 91
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_28_MULTIPLIER_PLUS_1 equ 92
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_29_LIFE_PLUS_1 equ 93
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_30_HEALTH equ 94
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_31_ARMOR equ 95
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_32_GET_OUTTA_JAIL_FREE_CARD equ 96
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_33_COP_BRIBE equ 97
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_34_INVULNERABILITY equ 98
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_35_DOUBLE_DAMAGE equ 99
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_36_FAST_RELOAD equ 100
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_37_ELECTROFINGERS equ 101
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_38_RESPECT equ 102
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_39_INVISIBILITY equ 103
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_40_INSTANT_GANG equ 104
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_41_LETTER_N equ 105
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_42_LETTER_O equ 106
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_43_LETTER_P equ 107
+OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_44_LETTER_Q equ 108
+OBJECT_TYPE.OBJECT_TYPE_SMALL_ARROW equ 109
+OBJECT_TYPE.OBJECT_TYPE_VEHICLE_CONE equ 110
+OBJECT_TYPE.OBJECT_TYPE_BLOOD_SPARK equ 111
+OBJECT_TYPE.OBJECT_TYPE_WHITE_DOT equ 112
+OBJECT_TYPE.OBJECT_TYPE_PARTICLE_SYSTEM equ 113
+OBJECT_TYPE.OBJECT_TYPE_FIREJET equ 114
+OBJECT_TYPE.OBJECT_TYPE_SMALL_BROWN_SKID equ 116
+OBJECT_TYPE.OBJECT_TYPE_SMALL_GREY_SKID equ 117
+OBJECT_TYPE.OBJECT_TYPE_SMALL_RED_SKID equ 118
+OBJECT_TYPE.OBJECT_TYPE_MEDIUM_BROWN_SKID equ 119
+OBJECT_TYPE.OBJECT_TYPE_MEDIUM_GREY_SKID equ 120
+OBJECT_TYPE.OBJECT_TYPE_MEDIUM_RED_SKID equ 121
+OBJECT_TYPE.OBJECT_TYPE_CAR_CROSSING equ 122
+OBJECT_TYPE.OBJECT_TYPE_MOVING_BUSH equ 123
+OBJECT_TYPE.OBJECT_TYPE_BIG_WHITE_SKID equ 124
+OBJECT_TYPE.OBJECT_TYPE_MEDIUM_WHITE_SKID equ 125
+OBJECT_TYPE.OBJECT_TYPE_SMALL_WHITE_SKID equ 126
+OBJECT_TYPE.OBJECT_TYPE_ANIMATING_CONE equ 127
+OBJECT_TYPE.OBJECT_TYPE_ROCKET equ 128
+OBJECT_TYPE.OBJECT_TYPE_BUS_STOP_MARKER equ 129
+OBJECT_TYPE.OBJECT_TYPE_CAR_SHOP equ 130
+OBJECT_TYPE.OBJECT_TYPE_BUSY_CAR_SHOP equ 131
+OBJECT_TYPE.OBJECT_TYPE_CAR_BOMB equ 132
+OBJECT_TYPE.OBJECT_TYPE_CRANE_WIRE equ 134
+OBJECT_TYPE.OBJECT_TYPE_CRANE_BASE equ 135
+OBJECT_TYPE.OBJECT_TYPE_CRANE_HEAD_A equ 136
+OBJECT_TYPE.OBJECT_TYPE_UNK_137 equ 137
+OBJECT_TYPE.OBJECT_TYPE_MOLOTOV_MOVING equ 138
+OBJECT_TYPE.OBJECT_TYPE_CONVEYOR_BELT equ 139
+OBJECT_TYPE.OBJECT_TYPE_CRANE_PART_A equ 140
+OBJECT_TYPE.OBJECT_TYPE_CONVEYOR_BELT_END equ 141
+OBJECT_TYPE.OBJECT_TYPE_CAR_CRUSHER equ 142
+OBJECT_TYPE.OBJECT_TYPE_UNK_143 equ 143
+OBJECT_TYPE.OBJECT_TYPE_HUGE_RED_SKID equ 144
+OBJECT_TYPE.OBJECT_TYPE_HUGE_WHITE_SKID equ 145
+OBJECT_TYPE.OBJECT_TYPE_HUGE_BROWN_SKID equ 146
+OBJECT_TYPE.OBJECT_TYPE_HUGE_GREY_SKID equ 147
+OBJECT_TYPE.OBJECT_TYPE_TANKTOP equ 148
+OBJECT_TYPE.OBJECT_TYPE_ANTENNA equ 149
+OBJECT_TYPE.OBJECT_TYPE_ANIMATING_RUBBISH equ 151
+OBJECT_TYPE.OBJECT_TYPE_DEAD_RUBBISH equ 152
+OBJECT_TYPE.OBJECT_TYPE_FLAMETHROWER_FLAME equ 154
+OBJECT_TYPE.OBJECT_TYPE_MOVING_CONE equ 155
+OBJECT_TYPE.OBJECT_TYPE_MOVING_BLASTER equ 156
+OBJECT_TYPE.OBJECT_TYPE_MOVING_BIN equ 157
+OBJECT_TYPE.OBJECT_TYPE_MOVING_BIN_LID equ 158
+OBJECT_TYPE.OBJECT_TYPE_UNK_ROCKET equ 159
+OBJECT_TYPE.OBJECT_TYPE_SAVE_POINT equ 161
+OBJECT_TYPE.OBJECT_TYPE_PHONE equ 163
+OBJECT_TYPE.OBJECT_TYPE_PHONE_RINGING equ 164
+OBJECT_TYPE.OBJECT_TYPE_DEAD_MINE equ 165
+OBJECT_TYPE.OBJECT_TYPE_UNK_166 equ 166
+OBJECT_TYPE.OBJECT_TYPE_UNK_167 equ 167
+OBJECT_TYPE.OBJECT_TYPE_UNK_168 equ 168
+OBJECT_TYPE.OBJECT_TYPE_UNK_169 equ 169
+OBJECT_TYPE.OBJECT_TYPE_TRAFFIC_LIGHT_CASING equ 170
+OBJECT_TYPE.OBJECT_TYPE_UNK_171 equ 171
+OBJECT_TYPE.OBJECT_TYPE_UNK_172 equ 172
+OBJECT_TYPE.OBJECT_TYPE_UNK_173 equ 173
+OBJECT_TYPE.OBJECT_TYPE_PHONE_DEAD equ 174
+OBJECT_TYPE.OBJECT_TYPE_BRIEFCASE equ 175
+OBJECT_TYPE.OBJECT_TYPE_RED_PHONE equ 176
+OBJECT_TYPE.OBJECT_TYPE_RED_PHONE_RINGING equ 177
+OBJECT_TYPE.OBJECT_TYPE_YELLOW_PHONE equ 178
+OBJECT_TYPE.OBJECT_TYPE_YELLOW_PHONE_RINGING equ 179
+OBJECT_TYPE.OBJECT_TYPE_GREEN_PHONE equ 180
+OBJECT_TYPE.OBJECT_TYPE_GREEN_PHONE_RINGING equ 181
+OBJECT_TYPE.OBJECT_TYPE_GRENADE equ 182
+OBJECT_TYPE.OBJECT_TYPE_MOVING_GRENADE equ 183
+OBJECT_TYPE.OBJECT_TYPE_PHONE_CALL_END equ 184
+OBJECT_TYPE.OBJECT_TYPE_PHONE_CALL equ 185
+OBJECT_TYPE.OBJECT_TYPE_RED_PHONE_CALL_END equ 186
+OBJECT_TYPE.OBJECT_TYPE_RED_PHONE_CALL equ 187
+OBJECT_TYPE.OBJECT_TYPE_YELLOW_PHONE_CALL_END equ 188
+OBJECT_TYPE.OBJECT_TYPE_YELLOW_PHONE_CALL equ 189
+OBJECT_TYPE.OBJECT_TYPE_GREEN_PHONE_CALL_END equ 190
+OBJECT_TYPE.OBJECT_TYPE_GREEN_PHONE_CALL equ 191
+OBJECT_TYPE.OBJECT_TYPE_SHOT equ 192
+OBJECT_TYPE.OBJECT_TYPE_UNK_193 equ 193
+OBJECT_TYPE.OBJECT_TYPE_FLAMING_BULLET equ 194
+OBJECT_TYPE.OBJECT_TYPE_UNK_SHOT_195 equ 195
+OBJECT_TYPE.OBJECT_TYPE_FIRE equ 197
+OBJECT_TYPE.OBJECT_TYPE_WATER_BULLET equ 198
+OBJECT_TYPE.OBJECT_TYPE_UNK_199 equ 199
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_00_PISTOL equ 200
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_01_S_UZI equ 201
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_02_ROCKET_LAUNCHER equ 202
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_03_ELECTROGUN equ 203
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_04_MOLOTOV_COCTAIL equ 204
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_05_GRENADE equ 205
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_06_SHOTGUN equ 206
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_07_ELECTROBATON equ 207
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_08_FLAMETHROWER equ 208
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_09_SILENCED_S_UZI equ 209
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_10_DUAL_PISTOL equ 210
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_11_LETTER_L equ 211
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_12_LETTER_M equ 212
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_13_LETTER_N equ 213
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_14_LETTER_O equ 214
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_15_VEHICLE_BOMB equ 215
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_16_VEHICLE_OIL_SLICK equ 216
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_17_VEHICLE_MINE equ 217
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_18_VEHICLE_MACHINE_GUN equ 218
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_19_TANK_CANNON equ 219
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_20_WATER_CANNON equ 220
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_21_VEHICLE_FLAMETHROWER equ 221
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_22_JEEP_TURRET equ 222
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_23_INSTANT_VEHICLE_BOMB equ 223
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_24_LETTER_J equ 224
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_25_LETTER_K equ 225
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_26_LETTER_L equ 226
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_27_LETTER_M equ 227
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_28_MULTIPLIER_PLUS_1 equ 228
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_29_LIFE_PLUS_1 equ 229
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_30_HEALTH equ 230
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_31_ARMOR equ 231
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_32_GET_OUTTA_JAIL_FREE_CARD equ 232
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_33_COP_BRIBE equ 233
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_34_INVULNERABILITY equ 234
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_35_DOUBLE_DAMAGE equ 235
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_36_FAST_RELOAD equ 236
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_37_ELECTROFINGERS equ 237
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_38_RESPECT equ 238
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_39_INVISIBILITY equ 239
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_40_INSTANT_GANG equ 240
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_41_LETTER_N equ 241
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_42_LETTER_O equ 242
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_43_LETTER_P equ 243
+OBJECT_TYPE.OBJECT_TYPE_COLLECT_44_LETTER_Q equ 244
+OBJECT_TYPE.OBJECT_TYPE_BOMB equ 247
+OBJECT_TYPE.OBJECT_TYPE_GUNJEEP_TURRET equ 248
+OBJECT_TYPE.OBJECT_TYPE_BIG_BROWN_SKID equ 249
+OBJECT_TYPE.OBJECT_TYPE_BIG_GREY_SKID equ 250
+OBJECT_TYPE.OBJECT_TYPE_UNK_251 equ 251
+OBJECT_TYPE.OBJECT_TYPE_CRANE_PART_B equ 252
+OBJECT_TYPE.OBJECT_TYPE_BIG_RED_SKID equ 253
+OBJECT_TYPE.OBJECT_TYPE_BULLET equ 254
+OBJECT_TYPE.OBJECT_TYPE_TRAFFIC_LIGHT equ 255
+OBJECT_TYPE.OBJECT_TYPE_RED_FOOTPRINTS equ 256
+OBJECT_TYPE.OBJECT_TYPE_BLOOD equ 257
+OBJECT_TYPE.OBJECT_TYPE_CROSSING equ 258
+OBJECT_TYPE.OBJECT_TYPE_SPARK equ 259
+OBJECT_TYPE.OBJECT_TYPE_CRANE_PART_C equ 260
+OBJECT_TYPE.OBJECT_TYPE_CRANE_PART_D equ 261
+OBJECT_TYPE.OBJECT_TYPE_CRANE_PART_E equ 262
+OBJECT_TYPE.OBJECT_TYPE_CRANE_HEAD_B equ 263
+OBJECT_TYPE.OBJECT_TYPE_PISTOL_BULLET equ 265
+OBJECT_TYPE.OBJECT_TYPE_BONUS_TOKEN equ 266
+OBJECT_TYPE.OBJECT_TYPE_TASSER_BULLET equ 277
+OBJECT_TYPE.OBJECT_TYPE_UNK_278 equ 278
+OBJECT_TYPE.OBJECT_TYPE_SOUND_INSTANT equ 279
+OBJECT_TYPE.OBJECT_TYPE_INVISIBLE_TARGET equ 280
+OBJECT_TYPE.OBJECT_TYPE_POWERGEN equ 281
+OBJECT_TYPE.OBJECT_TYPE_POWERGEN_DEAD equ 282
+OBJECT_TYPE.OBJECT_TYPE_INVISIBLE_DESTRUCTIBLE equ 283
+OBJECT_TYPE.OBJECT_TYPE_GENLITE equ 284
+OBJECT_TYPE.OBJECT_TYPE_INVISIBLE_DEAD equ 285
+OBJECT_TYPE.OBJECT_TYPE_KILL_FRENZY equ 286
+OBJECT_TYPE.OBJECT_TYPE_GANG_DECAL_LOONIES equ 287
+OBJECT_TYPE.OBJECT_TYPE_GANG_DECAL_YAKUZA equ 288
+OBJECT_TYPE.OBJECT_TYPE_GANG_DECAL_ZAIBATSU equ 289
+OBJECT_TYPE.OBJECT_TYPE_GANG_DECAL_REDNECKS equ 290
+OBJECT_TYPE.OBJECT_TYPE_GANG_DECAL_SCIENTISTS equ 291
+OBJECT_TYPE.OBJECT_TYPE_GANG_DECAL_KRISHNA equ 292
+OBJECT_TYPE.OBJECT_TYPE_GANG_DECAL_RUSSIAN equ 293
+OBJECT_TYPE.OBJECT_TYPE_TUNNEL_BLOCKER equ 294
+OBJECT_TYPE.OBJECT_TYPE_REMOTE equ 295
+
+; /imported/seuko-mod/ObjectPrefab  (116 bytes)
+struc ObjectPrefab
+    resb 28
+    .remap                            resb 2      ; 0x1c short
+    .defaultSpriteId                  resb 2      ; 0x1e short
+    resb 8
+    .defaultSpriteType                resb 4      ; 0x28 SPRITE_TYPE
+    resb 4
+    .paletteBase                      resb 4      ; 0x30 PALETTE_BASE
+    resb 12
+    .showImaginary                    resb 4      ; 0x40 S32_SHOW_IMAGINARY
+    resb 44
+    .field89_0x70                     resb 4      ; 0x70 int
+endstruc
+
+; /imported/seuko-mod/ObjectPrefabsContainer  (36008 bytes)
+struc ObjectPrefabsContainer
+    .length                           resb 2      ; 0x0 short
+    resb 34802
+    .objectPrefabArr                  resb 1200   ; 0x87f4 ObjectPrefab *[300]
+    .eq99OnInit                       resb 4      ; 0x8ca4 uint
+endstruc
+
+; enum /imported/seuko-mod/PALETTE_BASE  (4 bytes)
+PALETTE_BASE.PALETTE_BASE_TILE equ 1
+PALETTE_BASE.PALETTE_BASE_SPRITE equ 2
+PALETTE_BASE.PALETTE_BASE_CAR_REMAP equ 3
+PALETTE_BASE.PALETTE_BASE_PED_REMAP equ 4
+PALETTE_BASE.PALETTE_BASE_CODE_OBJ_REMAP equ 5
+PALETTE_BASE.PALETTE_BASE_MAP_OBJ_REMAP equ 6
+PALETTE_BASE.PALETTE_BASE_USER_REMAP equ 7
+PALETTE_BASE.PALETTE_BASE_FONT_REMAP equ 8
+
+; enum /imported/seuko-mod/PED_GRAPHIC_TYPE  (4 bytes)
+PED_GRAPHIC_TYPE.PED_GRAPHIC_TYPE_DUMMY equ 0
+PED_GRAPHIC_TYPE.PED_GRAPHIC_TYPE_GANG equ 1
+PED_GRAPHIC_TYPE.PED_GRAPHIC_TYPE_EMERG equ 2
+
+; enum /imported/seuko-mod/PED_OBJECTIVE  (4 bytes)
+PED_OBJECTIVE.PED_OBJECTIVE_NO_OBJ equ 0
+PED_OBJECTIVE.PED_OBJECTIVE_FLEE_ON_FOOT_TILL_SAFE equ 1
+PED_OBJECTIVE.PED_OBJECTIVE_FLEE_CHAR_ON_FOOT_TILL_SAFE equ 2
+PED_OBJECTIVE.PED_OBJECTIVE_FLEE_CHAR_ON_FOOT_ALWAYS equ 3
+PED_OBJECTIVE.PED_OBJECTIVE_FLEE_CHAR_ANY_MEANS_TILL_SAFE equ 4
+PED_OBJECTIVE.PED_OBJECTIVE_FLEE_CHAR_ANY_MEANS_ALWAYS equ 5
+PED_OBJECTIVE.PED_OBJECTIVE_FLEE_CHAR_ALWAYS_ONCE_CAR_STOPPED equ 6
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_7 equ 7
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_8 equ 8
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_9 equ 9
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_10 equ 10
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_11 equ 11
+PED_OBJECTIVE.PED_OBJECTIVE_GO_TO_AREA_ON_FOOT equ 12
+PED_OBJECTIVE.PED_OBJECTIVE_GO_TO_AREA_ANY_MEANS equ 13
+PED_OBJECTIVE.PED_OBJECTIVE_GO_TO_AREA_IN_CAR equ 14
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_15 equ 15
+PED_OBJECTIVE.PED_OBJECTIVE_GO_TO_CHAR_ON_FOOT equ 16
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_17 equ 17
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_18 equ 18
+PED_OBJECTIVE.PED_OBJECTIVE_KILL_CHAR_ANY_MEANS equ 19
+PED_OBJECTIVE.PED_OBJECTIVE_KILL_CHAR_ON_FOOT equ 20
+PED_OBJECTIVE.PED_OBJECTIVE_KILL_CHAR_IN_CAR equ 21
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_22 equ 22
+PED_OBJECTIVE.PED_OBJECTIVE_BEAT_OR_ROB_CHAR equ 23
+PED_OBJECTIVE.PED_OBJECTIVE_GUARD_SPOT equ 24
+PED_OBJECTIVE.PED_OBJECTIVE_GUARD_AREA equ 25
+PED_OBJECTIVE.PED_OBJECTIVE_WAIT_ON_FOOT equ 26
+PED_OBJECTIVE.PED_OBJECTIVE_WAIT_IN_CAR equ 27
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_28 equ 28
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_29 equ 29
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_30 equ 30
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_31 equ 31
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_32 equ 32
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_33 equ 33
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_34 equ 34
+PED_OBJECTIVE.PED_OBJECTIVE_ENTER_CAR equ 35
+PED_OBJECTIVE.PED_OBJECTIVE_LEAVE_CAR equ 36
+PED_OBJECTIVE.PED_OBJECTIVE_ENTER_TRAIN equ 37
+PED_OBJECTIVE.PED_OBJECTIVE_LEAVE_TRAIN equ 38
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_39 equ 39
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_40 equ 40
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_41 equ 41
+PED_OBJECTIVE.PED_OBJECTIVE_PATROL_ON_FOOT equ 42
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_43 equ 43
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_44 equ 44
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_45 equ 45
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_46 equ 46
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_47 equ 47
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_48 equ 48
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_49 equ 49
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_50 equ 50
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_51 equ 51
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_52 equ 52
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_53 equ 53
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_54 equ 54
+PED_OBJECTIVE.PED_OBJECTIVE_FOLLOW_CAR_IN_CAR equ 55
+PED_OBJECTIVE.PED_OBJECTIVE_FOLLOW_CAR_ON_FOOT_WITH_OFFSET equ 56
+PED_OBJECTIVE.PED_OBJECTIVE_FIRE_AT_OBJECT_FROM_VEHICLE equ 57
+PED_OBJECTIVE.PED_OBJECTIVE_DESTROY_OBJECT equ 58
+PED_OBJECTIVE.PED_OBJECTIVE_DESTROY_CAR equ 59
+PED_OBJECTIVE.PED_OBJECTIVE_PUT_OUT_CAR_FIRE equ 60
+PED_OBJECTIVE.PED_OBJECTIVE_UNKNOWN_61 equ 61
+
+; enum /imported/seuko-mod/PED_OCCUPATION  (4 bytes)
+PED_OCCUPATION.PED_OCCUPATION_PLAYER equ 0
+PED_OCCUPATION.PED_OCCUPATION_EMPTY equ 1
+PED_OCCUPATION.PED_OCCUPATION_UNKNOWN_2 equ 2
+PED_OCCUPATION.PED_OCCUPATION_DUMMY equ 3
+PED_OCCUPATION.PED_OCCUPATION_MISSION_DRIVER equ 4
+PED_OCCUPATION.PED_OCCUPATION_DRIVER equ 5
+PED_OCCUPATION.PED_OCCUPATION_UNKNOWN_6 equ 6
+PED_OCCUPATION.PED_OCCUPATION_UNKNOWN_7 equ 7
+PED_OCCUPATION.PED_OCCUPATION_BUS_PASSENGER equ 8
+PED_OCCUPATION.PED_OCCUPATION_TRAIN_PASSENGER equ 9
+PED_OCCUPATION.PED_OCCUPATION_DRIVER2 equ 10
+PED_OCCUPATION.PED_OCCUPATION_UNKNOWN_11 equ 11
+PED_OCCUPATION.PED_OCCUPATION_UNKNOWN_12 equ 12
+PED_OCCUPATION.PED_OCCUPATION_ANGRY_DRIVER equ 13
+PED_OCCUPATION.PED_OCCUPATION_PSYCHO equ 14
+PED_OCCUPATION.PED_OCCUPATION_MUGGER equ 15
+PED_OCCUPATION.PED_OCCUPATION_CARTHIEF equ 16
+PED_OCCUPATION.PED_OCCUPATION_BANK_ROBBER equ 17
+PED_OCCUPATION.PED_OCCUPATION_CRIMINAL equ 18
+PED_OCCUPATION.PED_OCCUPATION_GANG_MEMBER equ 19
+PED_OCCUPATION.PED_OCCUPATION_UNKNOWN_20 equ 20
+PED_OCCUPATION.PED_OCCUPATION_UNKNOWN_21 equ 21
+PED_OCCUPATION.PED_OCCUPATION_ELVIS equ 22
+PED_OCCUPATION.PED_OCCUPATION_MEDIC equ 23
+PED_OCCUPATION.PED_OCCUPATION_POLICE equ 24
+PED_OCCUPATION.PED_OCCUPATION_SWAT equ 25
+PED_OCCUPATION.PED_OCCUPATION_FBI equ 26
+PED_OCCUPATION.PED_OCCUPATION_ARMY_IN_JEEP equ 27
+PED_OCCUPATION.PED_OCCUPATION_GUARD equ 28
+PED_OCCUPATION.PED_OCCUPATION_POLICE_ON_FOOT equ 29
+PED_OCCUPATION.PED_OCCUPATION_UNK_30 equ 30
+PED_OCCUPATION.PED_OCCUPATION_ARMY_ON_FOOT equ 31
+PED_OCCUPATION.PED_OCCUPATION_GUARD_AGAINST_PLAYER equ 32
+PED_OCCUPATION.PED_OCCUPATION_CRIMINAL_TYPE1 equ 33
+PED_OCCUPATION.PED_OCCUPATION_CRIMINAL_TYPE2 equ 34
+PED_OCCUPATION.PED_OCCUPATION_SPECIAL_GROUP_MEMBER equ 35
+PED_OCCUPATION.PED_OCCUPATION_TANK_DRIVER equ 36
+PED_OCCUPATION.PED_OCCUPATION_ROAD_BLOCK_FBI equ 37
+PED_OCCUPATION.PED_OCCUPATION_FIREMAN equ 38
+PED_OCCUPATION.PED_OCCUPATION_ROAD_BLOCK_TANK_MAN equ 39
+PED_OCCUPATION.PED_OCCUPATION_UNKNOWN_40 equ 40
+PED_OCCUPATION.PED_OCCUPATION_DRONE equ 41
+PED_OCCUPATION.PED_OCCUPATION_DRIVER_GET_OUTTA_MY_CAR equ 42
+PED_OCCUPATION.PED_OCCUPATION_STAND_STILL_BLOKE equ 43
+PED_OCCUPATION.PED_OCCUPATION_ELVIS_LEADER equ 44
+PED_OCCUPATION.PED_OCCUPATION_REFUGEES equ 45
+PED_OCCUPATION.PED_OCCUPATION_ANY_LAW_ENFORCEMENT equ 46
+PED_OCCUPATION.PED_OCCUPATION_ANY_EMERGENCY_SERVICE_MAN equ 47
+PED_OCCUPATION.PED_OCCUPATION_ANY_GANG_MEMBER equ 48
+PED_OCCUPATION.PED_OCCUPATION_ANY_ELVIS equ 49
+PED_OCCUPATION.PED_OCCUPATION_DRIVER3 equ 50
+PED_OCCUPATION.PED_OCCUPATION_NO_OCCUPATION equ 51
+
+; enum /imported/seuko-mod/PED_REMAP  (1 bytes)
+PED_REMAP.PED_REMAP_BLUE_POLICE equ 0
+PED_REMAP.PED_REMAP_GREEN_POLICE equ 1
+PED_REMAP.PED_REMAP_RED_POLICE equ 2
+PED_REMAP.PED_REMAP_YELLOW_POLICE equ 3
+PED_REMAP.PED_REMAP_KHAKI_POLICE equ 4
+PED_REMAP.PED_REMAP_RED_HEAD_REDNECK equ 5
+PED_REMAP.PED_REMAP_BLOND_HEAD_REDNECK equ 6
+PED_REMAP.PED_REMAP_YELLOW_SCIENTIST equ 7
+PED_REMAP.PED_REMAP_ZAIBATSU equ 8
+PED_REMAP.PED_REMAP_KRISTNA equ 9
+PED_REMAP.PED_REMAP_RUSSIAN equ 10
+PED_REMAP.PED_REMAP_LOONY equ 11
+PED_REMAP.PED_REMAP_ELVIS equ 12
+PED_REMAP.PED_REMAP_YAKUZA equ 13
+PED_REMAP.PED_REMAP_FIREMAN equ 14
+PED_REMAP.PED_REMAP_GREEN_SHORTS_PED equ 15
+PED_REMAP.PED_REMAP_MEDIC equ 16
+PED_REMAP.PED_REMAP_MUGGER equ 17
+PED_REMAP.PED_REMAP_BLUE_DUMMY equ 18
+PED_REMAP.PED_REMAP_LIGHT_BLUE_DUMMY equ 19
+PED_REMAP.PED_REMAP_TSHIRT_AND_SHORTS_DUMMY equ 20
+PED_REMAP.PED_REMAP_SHORT_SLEEVED_SHIRT_AND_TROUSERS_DUMMY equ 21
+PED_REMAP.PED_REMAP_PRISON_UNIFORM equ 22
+PED_REMAP.PED_REMAP_HULK1 equ 23
+PED_REMAP.PED_REMAP_HULK2 equ 24
+PED_REMAP.PED_REMAP_PLAYER equ 25
+PED_REMAP.PED_REMAP_NAKED equ 26
+PED_REMAP.PED_REMAP_DUMMY_27 equ 27
+PED_REMAP.PED_REMAP_DUMMY_28 equ 28
+PED_REMAP.PED_REMAP_DUMMY_29 equ 29
+PED_REMAP.PED_REMAP_DUMMY_30 equ 30
+PED_REMAP.PED_REMAP_DUMMY_31 equ 31
+PED_REMAP.PED_REMAP_DUMMY_32 equ 32
+PED_REMAP.PED_REMAP_DUMMY_33 equ 33
+PED_REMAP.PED_REMAP_DUMMY_34 equ 34
+PED_REMAP.PED_REMAP_DUMMY_35 equ 35
+PED_REMAP.PED_REMAP_DUMMY_36 equ 36
+PED_REMAP.PED_REMAP_DUMMY_37 equ 37
+PED_REMAP.PED_REMAP_DUMMY_38 equ 38
+PED_REMAP.PED_REMAP_DUMMY_39 equ 39
+PED_REMAP.PED_REMAP_DUMMY_40 equ 40
+PED_REMAP.PED_REMAP_DUMMY_41 equ 41
+PED_REMAP.PED_REMAP_DUMMY_42 equ 42
+PED_REMAP.PED_REMAP_DUMMY_43 equ 43
+PED_REMAP.PED_REMAP_DUMMY_44 equ 44
+PED_REMAP.PED_REMAP_DUMMY_45 equ 45
+PED_REMAP.PED_REMAP_DUMMY_46 equ 46
+PED_REMAP.PED_REMAP_DUMMY_47 equ 47
+PED_REMAP.PED_REMAP_DUMMY_48 equ 48
+PED_REMAP.PED_REMAP_DUMMY_49 equ 49
+PED_REMAP.PED_REMAP_DUMMY_50 equ 50
+PED_REMAP.PED_REMAP_DUMMY_51 equ 51
+PED_REMAP.PED_REMAP_DUMMY_52 equ 52
+PED_REMAP.PED_REMAP_DEFAULT equ 255
+
+; enum /imported/seuko-mod/PED_STATE4  (4 bytes)
+PED_STATE4.PED_STATE4_UNK1 equ 1
+PED_STATE4.PED_STATE4_IDLE_STAYING equ 2
+PED_STATE4.PED_STATE4_PROBABLY_JUMPING equ 3
+PED_STATE4.PED_STATE4_UNK4 equ 4
+PED_STATE4.PED_STATE4_UNK5 equ 5
+PED_STATE4.PED_STATE4_UNK6 equ 6
+
+; enum /imported/seuko-mod/PED_THREAT_REACTION  (4 bytes)
+PED_THREAT_REACTION.PED_THREAT_REACTION_NO_REACTION equ 0
+PED_THREAT_REACTION.PED_THREAT_REACTION_REACT_AS_EMERGENCY equ 1
+PED_THREAT_REACTION.PED_THREAT_REACTION_REACT_AS_NORMAL equ 2
+PED_THREAT_REACTION.PED_THREAT_REACTION_RUN_AWAY equ 3
+
+; enum /imported/seuko-mod/PED_THREAT_SEARCH  (4 bytes)
+PED_THREAT_SEARCH.PED_THREAT_SEARCH_NO_THREATS equ 0
+PED_THREAT_SEARCH.PED_THREAT_SEARCH_LINE_OF_SIGHT equ 1
+PED_THREAT_SEARCH.PED_THREAT_SEARCH_AREA equ 2
+PED_THREAT_SEARCH.PED_THREAT_SEARCH_AREA_PLAYER_THREAT_ONLY equ 3
+PED_THREAT_SEARCH.PED_THREAT_SEARCH_LINE_OF_SIGHT_PLAYER_THREAT_ONLY equ 4
+PED_THREAT_SEARCH.PED_THREAT_SEARCH_AREA_PLAYER_ONLY equ 5
+PED_THREAT_SEARCH.PED_THREAT_SEARCH_LINE_OF_SIGHT_PLAYER_ONLY equ 6
+
+; enum /imported/seuko-mod/PLAYER_CONTROL_STATE  (4 bytes)
+PLAYER_CONTROL_STATE.PLAYER_CONTROL_STATE_DEFAULT equ 0
+PLAYER_CONTROL_STATE.PLAYER_CONTROL_STATE_FREECAM equ 1
+PLAYER_CONTROL_STATE.PLAYER_CONTROL_STATE_AUX_PED equ 2
+PLAYER_CONTROL_STATE.PLAYER_CONTROL_STATE_NO_CONTROL_AUX_CAM equ 3
+PLAYER_CONTROL_STATE.PLAYER_CONTROL_STATE_NO_CONTROL_STOPPED_CAMERA equ 4
+
+; enum /imported/seuko-mod/POWERUP_TYPE  (4 bytes)
+POWERUP_TYPE.POWERUP_TYPE_MULTIPLIER equ 0
+POWERUP_TYPE.POWERUP_TYPE_LIFE equ 1
+POWERUP_TYPE.POWERUP_TYPE_HEALTH equ 2
+POWERUP_TYPE.POWERUP_TYPE_ARMOR equ 3
+POWERUP_TYPE.POWERUP_TYPE_GET_OUTTA_JAIL_FREE_CARD equ 4
+POWERUP_TYPE.POWERUP_TYPE_COP_BRIBE equ 5
+POWERUP_TYPE.POWERUP_TYPE_INVULNERABILITY equ 6
+POWERUP_TYPE.POWERUP_TYPE_DOUBLE_DAMAGE equ 7
+POWERUP_TYPE.POWERUP_TYPE_FAST_RELOAD equ 8
+POWERUP_TYPE.POWERUP_TYPE_ELECTROFINGERS equ 9
+POWERUP_TYPE.POWERUP_TYPE_RESPECT equ 10
+POWERUP_TYPE.___doesn_t_seem_to_work_with_fnGivePowerUp_____POWERUP_TYPE_INVISIBILITY equ 11
+POWERUP_TYPE.POWERUP_TYPE_INSTANT_GANG equ 12
+POWERUP_TYPE.POWERUP_TYPE_13 equ 13
+POWERUP_TYPE.POWERUP_TYPE_14 equ 14
+POWERUP_TYPE.POWERUP_TYPE_15 equ 15
+POWERUP_TYPE.POWERUP_TYPE_16 equ 16
+
+; /imported/seuko-mod/Passenger  (8 bytes)
+struc Passenger
+    .ped                              resb 4      ; 0x0 Ped *
+    .prev                             resb 4      ; 0x4 Passenger *
+endstruc
+
+; /imported/seuko-mod/PedGameObjectManager  (72004 bytes)
+struc PedGameObjectManager
+    .nextFreeMaybe                    resb 4      ; 0x0 GameObject *
+    .objects                          resb 72000  ; 0x4 GameObject[400]
+endstruc
+
+; /imported/seuko-mod/PedGroup  (55 bytes)
+struc PedGroup
+    resb 52
+    .membersCount                     resb 1      ; 0x34 byte
+    resb 1
+    .field_0x36                       resb 1      ; 0x36 undefined1
+endstruc
+
+; /imported/seuko-mod/PhysicalPalette  (1024 bytes)
+struc PhysicalPalette
+    resb 1023
+    .field_0x3ff                      resb 1      ; 0x3ff undefined1
+endstruc
+
+; /imported/seuko-mod/Player  (2140 bytes)
+struc Player
+    .f0                               resb 2      ; 0x0 undefined2
+    resb 2
+    .keyboardKeys                     resb 4      ; 0x4 KEYBOARD_STATE
+    .field_0x8                        resb 2      ; 0x8 short
+    .field_0xa                        resb 2      ; 0xa short
+    .field_0xc                        resb 4      ; 0xc int
+    .playerPed3                       resb 4      ; 0x10 Ped *
+    .field_0x14                       resb 2      ; 0x14 short
+    .field_0x16                       resb 2      ; 0x16 short
+    .field_0x18                       resb 2      ; 0x18 short
+    resb 16
+    .field_0x2a                       resb 2      ; 0x2a short
+    .field_0x2c                       resb 2      ; 0x2c short
+    .gangsRespectIndex                resb 1      ; 0x2e byte
+    resb 5
+    .field_0x34                       resb 4      ; 0x34 int
+    .field_0x38                       resb 4      ; 0x38 int
+    .field_0x3c                       resb 4      ; 0x3c int
+    resb 4
+    .deathReason                      resb 4      ; 0x44 DEATH_REASON
+    resb 12
+    .lastCars                         resb 12     ; 0x54 Car *[3]
+    .field_0x60                       resb 4      ; 0x60 int
+    resb 4
+    .controlState                     resb 4      ; 0x68 PLAYER_CONTROL_STATE
+    .teleportMode                     resb 4      ; 0x6c int
+    .up                               resb 1      ; 0x70 byte
+    .down                             resb 1      ; 0x71 byte
+    .left                             resb 1      ; 0x72 byte
+    .right                            resb 1      ; 0x73 byte
+    .prevWeapon                       resb 1      ; 0x74 byte
+    .nextWeapon                       resb 1      ; 0x75 byte
+    .debugKey1                        resb 1      ; 0x76 byte
+    .debugKey2                        resb 1      ; 0x77 byte
+    .keyUp                            resb 1      ; 0x78 bool
+    .keyDown                          resb 1      ; 0x79 bool
+    .keyLeft                          resb 1      ; 0x7a bool
+    .keyRight                         resb 1      ; 0x7b bool
+    .keyAttack                        resb 1      ; 0x7c bool
+    .keyEnter                         resb 1      ; 0x7d bool
+    .keySpace                         resb 1      ; 0x7e bool
+    .keyPrevWeapon                    resb 1      ; 0x7f bool
+    .keyNexWeapon                     resb 1      ; 0x80 bool
+    .keySpecial                       resb 1      ; 0x81 bool
+    .keySpecial2                      resb 1      ; 0x82 bool
+    resb 13
+    .ph1                              resb 188    ; 0x90 Camera
+    .ph2                              resb 188    ; 0x14c Camera
+    .ph3                              resb 188    ; 0x208 Camera
+    .ped                              resb 4      ; 0x2c4 Ped *
+    .ped2                             resb 4      ; 0x2c8 Ped *
+    resb 8
+    .animatedMoney                    resb 56     ; 0x2d4 SaveSlotAnimatedValue
+    resb 824
+    .field_0x644                      resb 4      ; 0x644 S26 *
+    resb 48
+    .field_0x678                      resb 4      ; 0x678 int
+    .field_0x67c                      resb 4      ; 0x67c int
+    .incToBe100                       resb 2      ; 0x680 ushort
+    .eq_1000                          resb 2      ; 0x682 short
+    .lives                            resb 56     ; 0x684 SaveSlotAnimatedValue
+    .moneyMultiplier                  resb 56     ; 0x6bc SaveSlotAnimatedValue
+    resb 6
+    .armor                            resb 2      ; 0x6fa ushort
+    .field_0x6fc                      resb 2      ; 0x6fc short
+    resb 2
+    .bonus1                           resb 2      ; 0x700 short
+    .bonus2                           resb 2      ; 0x702 short
+    .bonus3                           resb 2      ; 0x704 short
+    .bonus4                           resb 2      ; 0x706 short
+    resb 2
+    .bonus5                           resb 2      ; 0x70a short
+    resb 12
+    .iArr28                           resb 112    ; 0x718 int[28]
+    .field_0x788                      resb 2      ; 0x788 short
+    resb 2
+    .field_0x78c                      resb 4      ; 0x78c int
+    .field_0x790                      resb 2      ; 0x790 short
+    resb 2
+    .isChatOpen                       resb 1      ; 0x794 bool
+    resb 167
+    .field_0x83c                      resb 2      ; 0x83c short
+    resb 29
+    .field_0x85b                      resb 1      ; 0x85b undefined1
+endstruc
+
+; enum /imported/seuko-mod/REPLAY_STATUS  (4 bytes)
+REPLAY_STATUS.REPLAY_STATUS_NOT_PLAYING equ 0
+REPLAY_STATUS.REPLAY_STATUS_PLAYING equ 1
+REPLAY_STATUS.REPLAY_STATUS_NOT_PLAYING_NO_CONTROL equ 2
+REPLAY_STATUS.REPLAY_STATUS_PLAYING_EXIT_ON_KEYPRESS equ 3
+
+; /imported/seuko-mod/RenderDistanceArrayItem  (8 bytes)
+struc RenderDistanceArrayItem
+    .position                         resb 8      ; 0x0 SCR_Vector2
+endstruc
+
+; /imported/seuko-mod/Roof  (24 bytes)
+struc Roof
+    .sprite                           resb 4      ; 0x0 Sprite *
+    .next                             resb 4      ; 0x4 Roof *
+    .xOffset                          resb 4      ; 0x8 int
+    .yOffset                          resb 4      ; 0xc int
+    .rotation                         resb 2      ; 0x10 short
+    resb 5
+    .field_0x17                       resb 1      ; 0x17 undefined1
+endstruc
+
+; /imported/seuko-mod/RoofSpritesHolder  (7204 bytes)
+struc RoofSpritesHolder
+    .last                             resb 4      ; 0x0 Roof *
+    .arr                              resb 7200   ; 0x4 Roof[300]
+endstruc
+
+; /imported/seuko-mod/S10_TxtMessage  (1796 bytes)
+struc S10_TxtMessage
+    .message                          resb 1280   ; 0x0 WCHAR[640]
+    resb 36
+    .field_0x524                      resb 4      ; 0x524 int *
+    resb 464
+    .prev                             resb 4      ; 0x6f8 S10_TxtMessage *
+    .field_0x6fc                      resb 4      ; 0x6fc int
+    .messageCode                      resb 4      ; 0x700 char *
+endstruc
+
+; /imported/seuko-mod/S21  (367267 bytes)
+struc S21
+    .last                             resb 4      ; 0x0 Sprite *
+    resb 367262
+    .field_0x59aa2                    resb 1      ; 0x59aa2 undefined1
+endstruc
+
+; /imported/seuko-mod/S21_1  (60 bytes)
+struc S21_1
+    resb 59
+    .field_0x3b                       resb 1      ; 0x3b undefined1
+endstruc
+
+; /imported/seuko-mod/S24_char  (12 bytes)
+struc S24_char
+    .PedCapacity                      resb 2      ; 0x0 short
+    .dummy_chars                      resb 1      ; 0x2 byte
+    resb 5
+    .position                         resb 4      ; 0x8 Sprite *
+endstruc
+
+; enum /imported/seuko-mod/S32_SHOW_IMAGINARY  (4 bytes)
+S32_SHOW_IMAGINARY.UNK_0 equ 0
+S32_SHOW_IMAGINARY.SHOW equ 1
+S32_SHOW_IMAGINARY.DONT_SHOW equ 2
+S32_SHOW_IMAGINARY.UNK_3 equ 3
+
+; /imported/seuko-mod/S33  (213 bytes)
+struc S33
+    resb 212
+    .field_0xd4                       resb 1      ; 0xd4 undefined1
+endstruc
+
+; /imported/seuko-mod/S4_1  (12 bytes)
+struc S4_1
+    resb 11
+    .field_0xb                        resb 1      ; 0xb undefined1
+endstruc
+
+; /imported/seuko-mod/S4_2  (8 bytes)
+struc S4_2
+    resb 6
+    .field_0x6                        resb 2      ; 0x6 short
+endstruc
+
+; /imported/seuko-mod/S4_SUBS1  (20 bytes)
+struc S4_SUBS1
+    .field_0x0                        resb 4      ; 0x0 int
+    resb 2
+    .field_0x6                        resb 2      ; 0x6 short
+    resb 11
+    .field_0x13                       resb 1      ; 0x13 undefined1
+endstruc
+
+; /imported/seuko-mod/SCR_Vector2  (8 bytes)
+struc SCR_Vector2
+    .x                                resb 4      ; 0x0 SCR_f
+    .y                                resb 4      ; 0x4 SCR_f
+endstruc
+
+; /imported/seuko-mod/SCR_Vector3  (12 bytes)
+struc SCR_Vector3
+    .x                                resb 4      ; 0x0 SCR_f
+    .y                                resb 4      ; 0x4 SCR_f
+    .z                                resb 4      ; 0x8 SCR_f
+endstruc
+
+; /imported/seuko-mod/SDevice  (48 bytes)
+struc SDevice
+    .id                               resb 4      ; 0x0 dword
+    .flags                            resb 4      ; 0x4 dword
+    .name                             resb 4      ; 0x8 char *
+    .desc                             resb 4      ; 0xc char *
+    .next_ptr                         resb 4      ; 0x10 SDevice *
+    .pDeviceGuid                      resb 4      ; 0x14 GUID *
+    .guid                             resb 16     ; 0x18 GUID
+    .dwVidMemTotal                    resb 4      ; 0x28 dword
+    .end_buffer                       resb 4      ; 0x2c dword
+endstruc
+
+; /imported/seuko-mod/SDisplayMode  (64 bytes)
+struc SDisplayMode
+    .display_mode_idx                 resb 4      ; 0x0 undefined4
+    .deviceId                         resb 4      ; 0x4 undefined4
+    .width                            resb 4      ; 0x8 undefined4
+    .height                           resb 4      ; 0xc undefined4
+    .pitch                            resb 4      ; 0x10 undefined4
+    .rgb_bit_count                    resb 4      ; 0x14 undefined4
+    resb 32
+    .pnext                            resb 4      ; 0x38 SDisplayMode *
+    resb 3
+    .field_0x3f                       resb 1      ; 0x3f undefined1
+endstruc
+
+; /imported/seuko-mod/SGlobals  (256 bytes)
+struc SGlobals
+    .mNumPolysDrawn                   resb 4      ; 0x0 int
+    .mNumTextureSwaps                 resb 4      ; 0x4 int
+    .mNumBatchFlushes                 resb 4      ; 0x8 int
+    .mSceneTime_2B93EAC               resb 4      ; 0xc dword
+    .gCacheSizes_dword_43EB0          resb 48     ; 0x10 dword[12]
+    .gCacheSizes_word_10810           resb 48     ; 0x40 dword[12]
+    .gCacheHitRates_dword_E43F10      resb 48     ; 0x70 dword[12]
+    .gCacheUnknown_107F8              resb 48     ; 0xa0 dword[12]
+    .cache_12_array_dword_E13D80      resb 48     ; 0xd0 void *[12]
+endstruc
+
+; /imported/seuko-mod/SLight  (20 bytes)
+struc SLight
+    resb 4
+    .position                         resb 12     ; 0x4 SCR_Vector3
+    .rgba                             resb 4      ; 0x10 dword
+endstruc
+
+; /imported/seuko-mod/SMission  (768 bytes)
+struc SMission
+    resb 360
+    .ptrToStructRel2Bonus2            resb 4      ; 0x168 SMission *
+    .field_0x16c                      resb 4      ; 0x16c int
+    resb 60
+    .x                                resb 1      ; 0x1ac undefined1
+    resb 3
+    .y                                resb 1      ; 0x1b0 undefined1
+    resb 107
+    .mask                             resb 4      ; 0x21c uint
+    resb 40
+    .field_0x248                      resb 4      ; 0x248 int
+    resb 179
+    .field_0x2ff                      resb 1      ; 0x2ff undefined1
+endstruc
+
+; enum /imported/seuko-mod/SPRITE_BIT1  (1 bytes)
+SPRITE_BIT1.SPRITE_BIT1_1 equ 1
+
+; enum /imported/seuko-mod/SPRITE_INVISIBILITY  (1 bytes)
+SPRITE_INVISIBILITY.SPRITE_INVISIBILITY_VISIBLE equ 0
+SPRITE_INVISIBILITY.SPRITE_INVISIBILITY_INVISIBLE equ 1
+SPRITE_INVISIBILITY.SPRITE_INVISIBILITY_MULTIPLY equ 2
+SPRITE_INVISIBILITY.SPRITE_INVISIBILITY_NO_TRANSPARENCY equ 3
+SPRITE_INVISIBILITY.SPRITE_INVISIBILITY_GHOST equ 65
+
+; enum /imported/seuko-mod/SPRITE_TYPE  (4 bytes)
+SPRITE_TYPE.SPRITE_TYPE_INVISIBLE equ 1
+SPRITE_TYPE.SPRITE_TYPE_CAR equ 2
+SPRITE_TYPE.SPRITE_TYPE_PED equ 3
+SPRITE_TYPE.SPRITE_TYPE_CODE_OBJ equ 4
+SPRITE_TYPE.SPRITE_TYPE_MAP_OBJ equ 5
+SPRITE_TYPE.SPRITE_TYPE_USER equ 6
+SPRITE_TYPE.SPRITE_TYPE_FONT equ 7
+
+; /imported/seuko-mod/STexture  (32 bytes)
+struc STexture
+    .id                               resb 2      ; 0x0 ushort
+    resb 2
+    .pal_is_trans                     resb 2      ; 0x4 undefined2
+    .pal_size                         resb 2      ; 0x6 ushort
+    .locked_pixels_ptr                resb 4      ; 0x8 void *
+    resb 2
+    .width                            resb 2      ; 0xe ushort
+    .height                           resb 2      ; 0x10 ushort
+    .bPalIsValid                      resb 1      ; 0x12 byte
+    .flags                            resb 1      ; 0x13 byte
+    .original_pixel_data_ptr          resb 4      ; 0x14 byte *
+    .pPaltData                        resb 4      ; 0x18 WORD *
+    .cachePtr                         resb 4      ; 0x1c void *
+endstruc
+
+; /imported/seuko-mod/SVideo  (1220 bytes)
+struc SVideo
+    resb 4
+    .mask1                            resb 4      ; 0x4 uint
+    .found_width                      resb 4      ; 0x8 undefined4
+    .found_height                     resb 4      ; 0xc undefined4
+    .found_rgb_bit_count              resb 4      ; 0x10 undefined4
+    .display_mode_count_2_q           resb 4      ; 0x14 undefined4
+    .num_guids                        resb 4      ; 0x18 undefined4
+    .num_display_modes                resb 4      ; 0x1c undefined4
+    .num_enums                        resb 4      ; 0x20 undefined4
+    .head_ptr                         resb 4      ; 0x24 SDisplayMode *
+    .display_mode_array               resb 4      ; 0x28 SDisplayMode *
+    .device_info_head_ptr             resb 4      ; 0x2c SDevice *
+    .device_info_last                 resb 4      ; 0x30 SDevice *
+    .active_device_id                 resb 4      ; 0x34 dword
+    resb 4
+    .current_enum_ptr                 resb 4      ; 0x3c SDisplayMode *
+    .full_screen                      resb 4      ; 0x40 undefined4
+    resb 4
+    .rect_right                       resb 4      ; 0x48 dword
+    .rect_bottom                      resb 4      ; 0x4c dword
+    .surface_pixels_ptr               resb 4      ; 0x50 void *
+    .surface_pixels_pitch             resb 4      ; 0x54 undefined4
+    resb 8
+    .g                                resb 4      ; 0x60 dword
+    .r                                resb 4      ; 0x64 dword
+    .b                                resb 4      ; 0x68 dword
+    resb 16
+    .self_dll_handle                  resb 4      ; 0x7c HINSTANCE
+    resb 4
+    .Vid_GetVersion                   resb 4      ; 0x84 void *
+    .last_error                       resb 4      ; 0x88 HRESULT
+    .DirectDraw7                      resb 4      ; 0x8c void *
+    resb 144
+    .IDDraw4                          resb 4      ; 0x120 void *
+    .field_0x124                      resb 16     ; 0x124 GUID
+    .SurfacePrimary                   resb 4      ; 0x134 void *
+    .Surface                          resb 4      ; 0x138 void *
+    .DDSurfaceDesc7                   resb 124    ; 0x13c undefined1[124]
+    .clipper                          resb 4      ; 0x1b8 void *
+    resb 12
+    .device_caps                      resb 380    ; 0x1c8 undefined1[380]
+    .hel_caps                         resb 380    ; 0x344 undefined1[380]
+    .hwnd                             resb 4      ; 0x4c0 HWND
+endstruc
+
+; /imported/seuko-mod/TILE  (128 bytes)
+struc TILE
+    .field_0x0                        resb 4      ; 0x0 float
+    .field_0x4                        resb 4      ; 0x4 float
+    .field_0x8                        resb 4      ; 0x8 float
+    .field_0xc                        resb 4      ; 0xc float
+    .field_0x10                       resb 4      ; 0x10 uint
+    .field_0x14                       resb 4      ; 0x14 float
+    .field_0x18                       resb 4      ; 0x18 float
+    .field_0x1c                       resb 4      ; 0x1c float
+    .field_0x20                       resb 4      ; 0x20 float
+    .field_0x24                       resb 4      ; 0x24 float
+    .field_0x28                       resb 4      ; 0x28 float
+    .field_0x2c                       resb 4      ; 0x2c float
+    .field_0x30                       resb 4      ; 0x30 uint
+    .field_0x34                       resb 4      ; 0x34 float
+    .field_0x38                       resb 4      ; 0x38 float
+    .field_0x3c                       resb 4      ; 0x3c float
+    .field_0x40                       resb 4      ; 0x40 float
+    .field_0x44                       resb 4      ; 0x44 float
+    .field_0x48                       resb 4      ; 0x48 float
+    .field_0x4c                       resb 4      ; 0x4c float
+    .field_0x50                       resb 4      ; 0x50 float
+    .field_0x54                       resb 4      ; 0x54 float
+    .field_0x58                       resb 4      ; 0x58 float
+    .field_0x5c                       resb 4      ; 0x5c float
+    .field_0x60                       resb 4      ; 0x60 float
+    .field_0x64                       resb 4      ; 0x64 float
+    .field_0x68                       resb 4      ; 0x68 float
+    .field_0x6c                       resb 4      ; 0x6c float
+    .field_0x70                       resb 4      ; 0x70 float
+    .field_0x74                       resb 4      ; 0x74 float
+    .field_0x78                       resb 4      ; 0x78 float
+    .field_0x7c                       resb 4      ; 0x7c float
+endstruc
+
+; enum /imported/seuko-mod/TILE_ENUM1  (4 bytes)
+TILE_ENUM1.TILE_ENUM1_1 equ 1
+TILE_ENUM1.TILE_ENUM1_2 equ 2
+TILE_ENUM1.TILE_ENUM1_4 equ 4
+TILE_ENUM1.TILE_ENUM1_60 equ 96
+TILE_ENUM1.TILE_ENUM1_80 equ 128
+TILE_ENUM1.TILE_ENUM1_4000 equ 16384
+
+; enum /imported/seuko-mod/TRAFFIC_CAR_TYPE  (4 bytes)
+TRAFFIC_CAR_TYPE.TRAFFIC_1_REGULAR equ 1
+TRAFFIC_CAR_TYPE.TRAFFIC_2_PROT_RECYCLED_CAR equ 2
+TRAFFIC_CAR_TYPE.TRAFFIC_4_AMBULANCE equ 4
+TRAFFIC_CAR_TYPE.TRAFFIC_5 equ 5
+TRAFFIC_CAR_TYPE.TRAFFIC_6_POLICE_CAR equ 6
+TRAFFIC_CAR_TYPE.TRAFFIC_7 equ 7
+TRAFFIC_CAR_TYPE.TRAFFIC_MISSION_CAR equ 8
+TRAFFIC_CAR_TYPE.TRAFFIC_9 equ 9
+TRAFFIC_CAR_TYPE.TRAFFIC_a equ 10
+
+; enum /imported/seuko-mod/TRAFFIC_PHASE  (1 bytes)
+TRAFFIC_PHASE.TRAFFIC_PHASE_VERTICAL_GREEN equ 1
+TRAFFIC_PHASE.TRAFFIC_PHASE_VERTICAL_YELLOW equ 2
+TRAFFIC_PHASE.TRAFFIC_PHASE_VERTICAL_RED equ 3
+TRAFFIC_PHASE.TRAFFIC_PHASE_HORIZONTAL_GREEN equ 4
+TRAFFIC_PHASE.TRAFFIC_PHASE_HORIZONTAL_YELLOW equ 5
+TRAFFIC_PHASE.TRAFFIC_PHASE_HORIZONTAL_RED equ 6
+TRAFFIC_PHASE.TRAFFIC_PHASE_PEDS_CROSSING equ 7
+
+; /imported/seuko-mod/Texture  (32 bytes)
+struc Texture
+    resb 31
+    .field_0x1f                       resb 1      ; 0x1f undefined1
+endstruc
+
+; /imported/seuko-mod/Texture_S1  (36 bytes)
+struc Texture_S1
+    resb 6
+    .field_0x6                        resb 2      ; 0x6 ushort
+    .decr                             resb 4      ; 0x8 int
+    resb 23
+    .field_0x23                       resb 1      ; 0x23 undefined1
+endstruc
+
+; /imported/seuko-mod/Texture_S2  (36 bytes)
+struc Texture_S2
+    resb 35
+    .field_0x23                       resb 1      ; 0x23 undefined1
+endstruc
+
+; /imported/seuko-mod/Tick  (8 bytes)
+struc Tick
+    .tick                             resb 4      ; 0x0 uint
+    .random                           resb 4      ; 0x4 uint
+endstruc
+
+; /imported/seuko-mod/TrafficManager  (106 bytes)
+struc TrafficManager
+    resb 4
+    .ptr1                             resb 4      ; 0x4 void *
+    resb 8
+    .field_0x10                       resb 2      ; 0x10 short
+    resb 2
+    .nextCarId                        resb 4      ; 0x14 undefined4
+    resb 16
+    .recycledCars                     resb 4      ; 0x28 undefined4
+    resb 8
+    .unitCars                         resb 4      ; 0x34 undefined4
+    resb 4
+    .missionCars                      resb 4      ; 0x3c undefined4
+    .protRecycledCars                 resb 4      ; 0x40 undefined4
+    resb 4
+    .unkCarTypeACounter               resb 4      ; 0x48 int
+    resb 8
+    .minimalCarSpawnDelay             resb 1      ; 0x54 byte
+    .inc                              resb 1      ; 0x55 byte
+    resb 2
+    .carModel                         resb 1      ; 0x58 CAR_MODEL
+    resb 16
+    .do_free_shoping                  resb 1      ; 0x69 bool
+endstruc
+
+; /imported/seuko-mod/TrailerController  (16 bytes)
+struc TrailerController
+    resb 12
+    .trailer                          resb 4      ; 0xc Car *
+endstruc
+
+; /imported/seuko-mod/Vert  (32 bytes)
+struc Vert
+    .x                                resb 4      ; 0x0 float
+    .y                                resb 4      ; 0x4 float
+    .z                                resb 4      ; 0x8 float
+    .w                                resb 4      ; 0xc float
+    .diff                             resb 4      ; 0x10 dword
+    .spec                             resb 4      ; 0x14 dword
+    .u                                resb 4      ; 0x18 float
+    .v                                resb 4      ; 0x1c float
+endstruc
+
+; /imported/seuko-mod/Verts  (128 bytes)
+struc Verts
+    .mVerts                           resb 128    ; 0x0 Vert[4]
+endstruc
+
+; /imported/seuko-mod/WorldRect  (16 bytes)
+struc WorldRect
+    .left                             resb 4      ; 0x0 SCR_f
+    .right                            resb 4      ; 0x4 SCR_f
+    .top                              resb 4      ; 0x8 SCR_f
+    .bottom                           resb 4      ; 0xc SCR_f
+endstruc
+
+; /imported/seuko-mod/XYZ  (256 bytes)
+struc XYZ
+    .position                         resb 12     ; 0x0 SCR_Vector3
+    .field_0xc                        resb 4      ; 0xc int
+    .position2                        resb 12     ; 0x10 SCR_Vector3
+    .field_0x1c                       resb 4      ; 0x1c int
+    resb 28
+    .field_0x3c                       resb 4      ; 0x3c int
+    resb 40
+    .width                            resb 4      ; 0x68 uint
+    .height                           resb 4      ; 0x6c uint
+    .halfWidth                        resb 4      ; 0x70 uint
+    .halfHeight                       resb 4      ; 0x74 uint
+    resb 32
+    .position3                        resb 12     ; 0x98 SCR_Vector3
+    .field_0xa4                       resb 4      ; 0xa4 int
+    resb 87
+    .field_0xff                       resb 1      ; 0xff undefined1
+endstruc
+
+; /imported/seuko-mod/sprite_base  (12 bytes)
+struc sprite_base
+    .car                              resb 2      ; 0x0 ushort
+    .ped                              resb 2      ; 0x2 ushort
+    .code_obj                         resb 2      ; 0x4 ushort
+    .map_obj                          resb 2      ; 0x6 ushort
+    .user                             resb 2      ; 0x8 ushort
+    .font                             resb 2      ; 0xa ushort
+endstruc
+
+; /imported/seuko-mod/sprite_entry  (8 bytes)
+struc sprite_entry
+    .ptr                              resb 4      ; 0x0 void *
+    .w                                resb 1      ; 0x4 byte
+    .h                                resb 1      ; 0x5 byte
+    .pad                              resb 2      ; 0x6 ushort
+endstruc
 
 ; /scr_structs.h/SCR_CMD_HEADER  (8 bytes)
 struc SCR_CMD_HEADER

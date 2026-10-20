@@ -1,82 +1,82 @@
 source_repo,source_file,enum,constant,value,status,severity,ours_constant,detail
-gta2-seuko-mod,src/game/gta2.h,CAMERA_FOLLOW_STATE,CAMERA_FOLLOW_STATE_190,400,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAMERA_FOLLOW_STATE,CAMERA_FOLLOW_STATE_258,600,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAMERA_FOLLOW_STATE,CAMERA_FOLLOW_STATE_TELEPORT,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAMERA_FOLLOW_STATE,CAMERA_FOLLOW_STATE_FOLLOW,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAMERA_FOLLOW_STATE,CAMERA_FOLLOW_STATE_NO_FOLLOW,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAMERA_MOVEMENT,CAMERA_MOVEMENT_BACKWARD,256,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAMERA_MOVEMENT,CAMERA_MOVEMENT_DO_NOTHING,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAMERA_MOVEMENT,CAMERA_MOVEMENT_FORWARD,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAMERA_MOVEMENT,CAMERA_MOVEMENT_LEFT,65536,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAMERA_MOVEMENT,CAMERA_MOVEMENT_RIGHT,16777216,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAMERA_MOVEMENT,CAMERA_MOVEMENT_UNK2,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_LIGHT_BROKEN_RR,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_LIGHT_BROKEN_RL,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_LIGHT_BROKEN_FL,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_LIGHT_BROKEN_FR,8,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_FRONT_GLASS_BROKEN,16,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_LIGHT_ON_RL,32,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_LIGHT_ON_FL,64,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_FL_1,128,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_FL_2,256,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_FL_3,512,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_FL_4,1024,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_RL_1,2048,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_RL_2,4096,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_RL_3,8192,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_RL_4,16384,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_EMERG_LIGHT_FR,32768,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_EMERG_LIGHT_FL,65536,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_EMERG_LIGHT_RR,131072,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_EMERG_LIGHT_RL,262144,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_UNK_19,524288,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_UNK_20,1048576,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_UNK_21,2097152,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_LIGHT_ON_RR,4194304,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_LIGHT_ON_FR,8388608,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_FR_1,16777216,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_FR_2,33554432,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_FR_3,67108864,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_FR_4,134217728,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_RR_1,268435456,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_RR_2,536870912,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_RR_3,1073741824,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_RR_4,2147483648,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_LIGHT_BROKEN_RR,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_LIGHT_BROKEN_RL,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_LIGHT_BROKEN_FL,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_LIGHT_BROKEN_FR,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_FRONT_GLASS_BROKEN,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_LIGHT_ON_RL,5,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_LIGHT_ON_FL,6,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_FL_1,7,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_FL_2,8,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_FL_3,9,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_FL_4,10,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_RL_1,11,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_RL_2,12,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_RL_3,13,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_RL_4,14,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_EMERG_LIGHT_FR,15,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_EMERG_LIGHT_FL,16,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_EMERG_LIGHT_RR,17,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_EMERG_LIGHT_RL,18,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_UNK_19,19,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_UNK_20,20,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_UNK_21,21,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_LIGHT_ON_RR,22,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_LIGHT_ON_FR,23,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_FR_1,24,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_FR_2,25,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_FR_3,26,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_FR_4,27,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_RR_1,28,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_RR_2,29,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_RR_3,30,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_RR_4,31,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DOOR_STATE,CAR_DOOR_STATE_INITIAL_UNK3,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DOOR_STATE,CAR_DOOR_STATE_LOCKED,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_DOOR_STATE,CAR_DOOR_STATE_UNLOCKED,2,NEW,,,enum not in ours
+gta2-seuko-mod,src/game/gta2.h,CAMERA_FOLLOW_STATE,CAMERA_FOLLOW_STATE_190,400,SAME,,CAMERA_FOLLOW_STATE_190,
+gta2-seuko-mod,src/game/gta2.h,CAMERA_FOLLOW_STATE,CAMERA_FOLLOW_STATE_258,600,SAME,,CAMERA_FOLLOW_STATE_258,
+gta2-seuko-mod,src/game/gta2.h,CAMERA_FOLLOW_STATE,CAMERA_FOLLOW_STATE_TELEPORT,2,SAME,,CAMERA_FOLLOW_STATE_TELEPORT,
+gta2-seuko-mod,src/game/gta2.h,CAMERA_FOLLOW_STATE,CAMERA_FOLLOW_STATE_FOLLOW,1,SAME,,CAMERA_FOLLOW_STATE_FOLLOW,
+gta2-seuko-mod,src/game/gta2.h,CAMERA_FOLLOW_STATE,CAMERA_FOLLOW_STATE_NO_FOLLOW,0,SAME,,CAMERA_FOLLOW_STATE_NO_FOLLOW,
+gta2-seuko-mod,src/game/gta2.h,CAMERA_MOVEMENT,CAMERA_MOVEMENT_BACKWARD,256,SAME,,CAMERA_MOVEMENT_BACKWARD,
+gta2-seuko-mod,src/game/gta2.h,CAMERA_MOVEMENT,CAMERA_MOVEMENT_DO_NOTHING,0,SAME,,CAMERA_MOVEMENT_DO_NOTHING,
+gta2-seuko-mod,src/game/gta2.h,CAMERA_MOVEMENT,CAMERA_MOVEMENT_FORWARD,1,SAME,,CAMERA_MOVEMENT_FORWARD,
+gta2-seuko-mod,src/game/gta2.h,CAMERA_MOVEMENT,CAMERA_MOVEMENT_LEFT,65536,SAME,,CAMERA_MOVEMENT_LEFT,
+gta2-seuko-mod,src/game/gta2.h,CAMERA_MOVEMENT,CAMERA_MOVEMENT_RIGHT,16777216,SAME,,CAMERA_MOVEMENT_RIGHT,
+gta2-seuko-mod,src/game/gta2.h,CAMERA_MOVEMENT,CAMERA_MOVEMENT_UNK2,2,SAME,,CAMERA_MOVEMENT_UNK2,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_LIGHT_BROKEN_RR,1,SAME,,CAR_DELTAS_BITSTATE_LIGHT_BROKEN_RR,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_LIGHT_BROKEN_RL,2,SAME,,CAR_DELTAS_BITSTATE_LIGHT_BROKEN_RL,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_LIGHT_BROKEN_FL,4,SAME,,CAR_DELTAS_BITSTATE_LIGHT_BROKEN_FL,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_LIGHT_BROKEN_FR,8,SAME,,CAR_DELTAS_BITSTATE_LIGHT_BROKEN_FR,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_FRONT_GLASS_BROKEN,16,SAME,,CAR_DELTAS_BITSTATE_FRONT_GLASS_BROKEN,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_LIGHT_ON_RL,32,SAME,,CAR_DELTAS_BITSTATE_LIGHT_ON_RL,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_LIGHT_ON_FL,64,SAME,,CAR_DELTAS_BITSTATE_LIGHT_ON_FL,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_FL_1,128,SAME,,CAR_DELTAS_BITSTATE_DOOR_FL_1,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_FL_2,256,SAME,,CAR_DELTAS_BITSTATE_DOOR_FL_2,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_FL_3,512,SAME,,CAR_DELTAS_BITSTATE_DOOR_FL_3,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_FL_4,1024,SAME,,CAR_DELTAS_BITSTATE_DOOR_FL_4,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_RL_1,2048,SAME,,CAR_DELTAS_BITSTATE_DOOR_RL_1,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_RL_2,4096,SAME,,CAR_DELTAS_BITSTATE_DOOR_RL_2,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_RL_3,8192,SAME,,CAR_DELTAS_BITSTATE_DOOR_RL_3,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_RL_4,16384,SAME,,CAR_DELTAS_BITSTATE_DOOR_RL_4,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_EMERG_LIGHT_FR,32768,SAME,,CAR_DELTAS_BITSTATE_EMERG_LIGHT_FR,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_EMERG_LIGHT_FL,65536,SAME,,CAR_DELTAS_BITSTATE_EMERG_LIGHT_FL,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_EMERG_LIGHT_RR,131072,SAME,,CAR_DELTAS_BITSTATE_EMERG_LIGHT_RR,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_EMERG_LIGHT_RL,262144,SAME,,CAR_DELTAS_BITSTATE_EMERG_LIGHT_RL,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_UNK_19,524288,SAME,,CAR_DELTAS_BITSTATE_UNK_19,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_UNK_20,1048576,SAME,,CAR_DELTAS_BITSTATE_UNK_20,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_UNK_21,2097152,SAME,,CAR_DELTAS_BITSTATE_UNK_21,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_LIGHT_ON_RR,4194304,SAME,,CAR_DELTAS_BITSTATE_LIGHT_ON_RR,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_LIGHT_ON_FR,8388608,SAME,,CAR_DELTAS_BITSTATE_LIGHT_ON_FR,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_FR_1,16777216,SAME,,CAR_DELTAS_BITSTATE_DOOR_FR_1,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_FR_2,33554432,SAME,,CAR_DELTAS_BITSTATE_DOOR_FR_2,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_FR_3,67108864,SAME,,CAR_DELTAS_BITSTATE_DOOR_FR_3,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_FR_4,134217728,SAME,,CAR_DELTAS_BITSTATE_DOOR_FR_4,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_RR_1,268435456,SAME,,CAR_DELTAS_BITSTATE_DOOR_RR_1,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_RR_2,536870912,SAME,,CAR_DELTAS_BITSTATE_DOOR_RR_2,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_RR_3,1073741824,SAME,,CAR_DELTAS_BITSTATE_DOOR_RR_3,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_BITSTATE,CAR_DELTAS_BITSTATE_DOOR_RR_4,2147483648,SAME,,CAR_DELTAS_BITSTATE_DOOR_RR_4,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_LIGHT_BROKEN_RR,0,SAME,,CAR_DELTAS_INDEX_LIGHT_BROKEN_RR,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_LIGHT_BROKEN_RL,1,SAME,,CAR_DELTAS_INDEX_LIGHT_BROKEN_RL,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_LIGHT_BROKEN_FL,2,SAME,,CAR_DELTAS_INDEX_LIGHT_BROKEN_FL,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_LIGHT_BROKEN_FR,3,SAME,,CAR_DELTAS_INDEX_LIGHT_BROKEN_FR,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_FRONT_GLASS_BROKEN,4,SAME,,CAR_DELTAS_INDEX_FRONT_GLASS_BROKEN,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_LIGHT_ON_RL,5,SAME,,CAR_DELTAS_INDEX_LIGHT_ON_RL,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_LIGHT_ON_FL,6,SAME,,CAR_DELTAS_INDEX_LIGHT_ON_FL,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_FL_1,7,SAME,,CAR_DELTAS_INDEX_DOOR_FL_1,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_FL_2,8,SAME,,CAR_DELTAS_INDEX_DOOR_FL_2,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_FL_3,9,SAME,,CAR_DELTAS_INDEX_DOOR_FL_3,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_FL_4,10,SAME,,CAR_DELTAS_INDEX_DOOR_FL_4,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_RL_1,11,SAME,,CAR_DELTAS_INDEX_DOOR_RL_1,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_RL_2,12,SAME,,CAR_DELTAS_INDEX_DOOR_RL_2,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_RL_3,13,SAME,,CAR_DELTAS_INDEX_DOOR_RL_3,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_RL_4,14,SAME,,CAR_DELTAS_INDEX_DOOR_RL_4,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_EMERG_LIGHT_FR,15,SAME,,CAR_DELTAS_INDEX_EMERG_LIGHT_FR,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_EMERG_LIGHT_FL,16,SAME,,CAR_DELTAS_INDEX_EMERG_LIGHT_FL,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_EMERG_LIGHT_RR,17,SAME,,CAR_DELTAS_INDEX_EMERG_LIGHT_RR,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_EMERG_LIGHT_RL,18,SAME,,CAR_DELTAS_INDEX_EMERG_LIGHT_RL,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_UNK_19,19,SAME,,CAR_DELTAS_INDEX_UNK_19,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_UNK_20,20,SAME,,CAR_DELTAS_INDEX_UNK_20,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_UNK_21,21,SAME,,CAR_DELTAS_INDEX_UNK_21,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_LIGHT_ON_RR,22,SAME,,CAR_DELTAS_INDEX_LIGHT_ON_RR,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_LIGHT_ON_FR,23,SAME,,CAR_DELTAS_INDEX_LIGHT_ON_FR,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_FR_1,24,SAME,,CAR_DELTAS_INDEX_DOOR_FR_1,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_FR_2,25,SAME,,CAR_DELTAS_INDEX_DOOR_FR_2,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_FR_3,26,SAME,,CAR_DELTAS_INDEX_DOOR_FR_3,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_FR_4,27,SAME,,CAR_DELTAS_INDEX_DOOR_FR_4,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_RR_1,28,SAME,,CAR_DELTAS_INDEX_DOOR_RR_1,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_RR_2,29,SAME,,CAR_DELTAS_INDEX_DOOR_RR_2,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_RR_3,30,SAME,,CAR_DELTAS_INDEX_DOOR_RR_3,
+gta2-seuko-mod,src/game/gta2.h,CAR_DELTAS_INDEX,CAR_DELTAS_INDEX_DOOR_RR_4,31,SAME,,CAR_DELTAS_INDEX_DOOR_RR_4,
+gta2-seuko-mod,src/game/gta2.h,CAR_DOOR_STATE,CAR_DOOR_STATE_INITIAL_UNK3,3,SAME,,CAR_DOOR_STATE_INITIAL_UNK3,
+gta2-seuko-mod,src/game/gta2.h,CAR_DOOR_STATE,CAR_DOOR_STATE_LOCKED,1,SAME,,CAR_DOOR_STATE_LOCKED,
+gta2-seuko-mod,src/game/gta2.h,CAR_DOOR_STATE,CAR_DOOR_STATE_UNLOCKED,2,SAME,,CAR_DOOR_STATE_UNLOCKED,
 gta2-seuko-mod,src/game/gta2.h,CAR_ENGINE_STATE,CAR_ENGINE_STATE_UNK_0,0,CONFLICT,semantic,BROKEN_DOESNT_WORK,"same value, different name"
 gta2-seuko-mod,src/game/gta2.h,CAR_ENGINE_STATE,CAR_ENGINE_STATE_OFF,1,CONFLICT,naming,ENGINE_OFF,"same value, different name (similar)"
 gta2-seuko-mod,src/game/gta2.h,CAR_ENGINE_STATE,CAR_ENGINE_STATE_TURNING_OFF,2,SAME,,TURNING_OFF,enum-name prefix dropped
@@ -84,16 +84,16 @@ gta2-seuko-mod,src/game/gta2.h,CAR_ENGINE_STATE,CAR_ENGINE_STATE_ON,3,CONFLICT,n
 gta2-seuko-mod,src/game/gta2.h,CAR_ENGINE_STATE,CAR_ENGINE_STATE_TURNING_ON,4,CONFLICT,semantic,REL_TO_CAR_SIREN,"same value, different name"
 gta2-seuko-mod,src/game/gta2.h,CAR_ENGINE_STATE,CAR_ENGINE_STATE_BREAKING,5,CONFLICT,semantic,TURN_ENGINE_OFF,"same value, different name"
 gta2-seuko-mod,src/game/gta2.h,CAR_ENGINE_STATE,CAR_ENGINE_STATE_BROKEN,6,CONFLICT,semantic,ENGINE_OFF2,"same value, different name"
-gta2-seuko-mod,src/game/gta2.h,CAR_LIGHTS_BITSTATE,CAR_LIGHTS_BITSTATE_BRAKE_LIGHTS_ON,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_LIGHTS_BITSTATE,CAR_LIGHTS_BITSTATE_LIGHTS_ON,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_LIGHTS_BITSTATE,CAR_LIGHTS_BITSTATE_SIREN_ON,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_LIGHTS_BITSTATE,CAR_LIGHTS_BITSTATE_ALARM_ON,8,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_LOCK_STATE,CAR_LOCK_STATE_NO_LOCK,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_LOCK_STATE,CAR_LOCK_STATE_LOCKED,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_LOCK_STATE,CAR_LOCK_STATE_LOCKOUT_THIEF,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_LOCK_STATE,CAR_LOCK_STATE_UNLOCKED,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_LOCK_STATE,CAR_LOCK_STATE_LOCKED_PERMANENTLY,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_LOCK_STATE,CAR_LOCK_STATE_LOCKOUT_PLAYER,5,NEW,,,enum not in ours
+gta2-seuko-mod,src/game/gta2.h,CAR_LIGHTS_BITSTATE,CAR_LIGHTS_BITSTATE_BRAKE_LIGHTS_ON,1,SAME,,CAR_LIGHTS_BITSTATE_BRAKE_LIGHTS_ON,
+gta2-seuko-mod,src/game/gta2.h,CAR_LIGHTS_BITSTATE,CAR_LIGHTS_BITSTATE_LIGHTS_ON,2,SAME,,CAR_LIGHTS_BITSTATE_LIGHTS_ON,
+gta2-seuko-mod,src/game/gta2.h,CAR_LIGHTS_BITSTATE,CAR_LIGHTS_BITSTATE_SIREN_ON,4,SAME,,CAR_LIGHTS_BITSTATE_SIREN_ON,
+gta2-seuko-mod,src/game/gta2.h,CAR_LIGHTS_BITSTATE,CAR_LIGHTS_BITSTATE_ALARM_ON,8,SAME,,CAR_LIGHTS_BITSTATE_ALARM_ON,
+gta2-seuko-mod,src/game/gta2.h,CAR_LOCK_STATE,CAR_LOCK_STATE_NO_LOCK,0,SAME,,CAR_LOCK_STATE_NO_LOCK,
+gta2-seuko-mod,src/game/gta2.h,CAR_LOCK_STATE,CAR_LOCK_STATE_LOCKED,1,SAME,,CAR_LOCK_STATE_LOCKED,
+gta2-seuko-mod,src/game/gta2.h,CAR_LOCK_STATE,CAR_LOCK_STATE_LOCKOUT_THIEF,2,SAME,,CAR_LOCK_STATE_LOCKOUT_THIEF,
+gta2-seuko-mod,src/game/gta2.h,CAR_LOCK_STATE,CAR_LOCK_STATE_UNLOCKED,3,SAME,,CAR_LOCK_STATE_UNLOCKED,
+gta2-seuko-mod,src/game/gta2.h,CAR_LOCK_STATE,CAR_LOCK_STATE_LOCKED_PERMANENTLY,4,SAME,,CAR_LOCK_STATE_LOCKED_PERMANENTLY,
+gta2-seuko-mod,src/game/gta2.h,CAR_LOCK_STATE,CAR_LOCK_STATE_LOCKOUT_PLAYER,5,SAME,,CAR_LOCK_STATE_LOCKOUT_PLAYER,
 gta2-seuko-mod,src/game/gta2.h,CAR_MODEL,ALFA,0,SAME,,ALFA,
 gta2-seuko-mod,src/game/gta2.h,CAR_MODEL,ALLARD,1,SAME,,ALLARD,
 gta2-seuko-mod,src/game/gta2.h,CAR_MODEL,AMDB4,2,SAME,,AMDB4,
@@ -181,126 +181,126 @@ gta2-seuko-mod,src/game/gta2.h,CAR_MODEL,WRECK8,80,SAME,,WRECK8,
 gta2-seuko-mod,src/game/gta2.h,CAR_MODEL,WRECK9,81,SAME,,WRECK9,
 gta2-seuko-mod,src/game/gta2.h,CAR_MODEL,XK120,82,SAME,,XK120,
 gta2-seuko-mod,src/game/gta2.h,CAR_MODEL,ZCX5,83,SAME,,ZCX5,
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_ALFA,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_ALLARD,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_AMDB4,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_APC,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_BANKVAN,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_BMW,5,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_BOXCAR,6,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_BOXTRUCK,7,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_BUG,8,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_BUICK,10,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_BUS,11,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_CAR15,15,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_CAR20,20,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_CAR43,43,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_CAR9,9,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_COPCAR,12,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_DART,13,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_EDSEL,14,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_EDSELFBI,84,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_FIAT,16,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_FIRETRUCK,17,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_GRAHAM,18,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_GT24640,19,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_GTRUCK,21,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_GUNJEEP,22,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_HOTDOG,23,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_HOTDOG_D1,24,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_HOTDOG_D2,25,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_HOTDOG_D3,26,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_HOTDOG_D4,85,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_ICECREAM,27,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_ISETLIMO,28,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_ISETTA,29,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_JEEP,30,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_JEFFREY,31,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_KRSNABUS,86,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_LIMO,32,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_LIMO2,33,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_MEDICAR,34,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_MERC,35,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_MESSER,36,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_MIURA,37,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_MONSTER,38,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_MORGAN,39,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_MORRIS,40,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_PICKUP,41,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_RTYPE,42,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_SPIDER,44,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_SPRITE,45,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_STINGRAY,46,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_STRATOS,47,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_STRATOSB,48,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_STRIPETB,49,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_STYPE,50,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_STYPECAB,51,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_SWATVAN,52,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_T2000GT,53,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TANK,54,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TANKER,55,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TAXI,56,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TBIRD,57,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TOWTRUCK,58,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TRAIN,59,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TRAINCAB,60,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TRAINFB,61,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TRANCEAM,62,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TRUKCAB1,63,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TRUKCAB2,64,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TRUKCONT,65,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TRUKTRNS,66,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TVVAN,67,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_VAN,68,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_VESPA,69,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_VTYPE,70,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WBTWIN,71,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK0,72,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK1,73,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK2,74,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK3,75,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK4,76,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK5,77,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK6,78,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK7,79,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK8,80,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK9,81,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_XK120,82,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_ZCX5,83,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_0x1,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_DONT_SLOW_ON_COLLISION,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_0x4,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_NO_COLLISION_DAMAGE,8,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_NO_COLLISION,16,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_0x20,32,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_TRAIN_RELATED,64,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_HAS_ALARM,128,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_BULLETPROOF,256,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_ROCKETPROOF,512,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_FLAMEPROOF,1024,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_TANK_RELATED,2048,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_JAMMED,4096,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_0x2000,8192,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_FLAT,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_SLOPE_UP,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_SLOPE_DOWN,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_SLOPE_LEFT,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_SLOPE_RIGHT,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_5,5,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_IN_AIR,6,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_6,6,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_IN_WATER,8,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_WET,9,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_AIR_OR_SLOPE,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_CONCRETE,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_GRASS,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_3,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_WET,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_5,5,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_6,6,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_7,7,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_METAL,8,NEW,,,enum not in ours
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_ALFA,0,SAME,,CAR_MODEL4_ALFA,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_ALLARD,1,SAME,,CAR_MODEL4_ALLARD,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_AMDB4,2,SAME,,CAR_MODEL4_AMDB4,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_APC,3,SAME,,CAR_MODEL4_APC,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_BANKVAN,4,SAME,,CAR_MODEL4_BANKVAN,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_BMW,5,SAME,,CAR_MODEL4_BMW,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_BOXCAR,6,SAME,,CAR_MODEL4_BOXCAR,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_BOXTRUCK,7,SAME,,CAR_MODEL4_BOXTRUCK,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_BUG,8,SAME,,CAR_MODEL4_BUG,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_BUICK,10,SAME,,CAR_MODEL4_BUICK,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_BUS,11,SAME,,CAR_MODEL4_BUS,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_CAR15,15,SAME,,CAR_MODEL4_CAR15,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_CAR20,20,SAME,,CAR_MODEL4_CAR20,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_CAR43,43,SAME,,CAR_MODEL4_CAR43,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_CAR9,9,SAME,,CAR_MODEL4_CAR9,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_COPCAR,12,SAME,,CAR_MODEL4_COPCAR,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_DART,13,SAME,,CAR_MODEL4_DART,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_EDSEL,14,SAME,,CAR_MODEL4_EDSEL,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_EDSELFBI,84,SAME,,CAR_MODEL4_EDSELFBI,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_FIAT,16,SAME,,CAR_MODEL4_FIAT,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_FIRETRUCK,17,SAME,,CAR_MODEL4_FIRETRUCK,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_GRAHAM,18,SAME,,CAR_MODEL4_GRAHAM,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_GT24640,19,SAME,,CAR_MODEL4_GT24640,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_GTRUCK,21,SAME,,CAR_MODEL4_GTRUCK,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_GUNJEEP,22,SAME,,CAR_MODEL4_GUNJEEP,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_HOTDOG,23,SAME,,CAR_MODEL4_HOTDOG,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_HOTDOG_D1,24,SAME,,CAR_MODEL4_HOTDOG_D1,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_HOTDOG_D2,25,SAME,,CAR_MODEL4_HOTDOG_D2,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_HOTDOG_D3,26,SAME,,CAR_MODEL4_HOTDOG_D3,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_HOTDOG_D4,85,SAME,,CAR_MODEL4_HOTDOG_D4,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_ICECREAM,27,SAME,,CAR_MODEL4_ICECREAM,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_ISETLIMO,28,SAME,,CAR_MODEL4_ISETLIMO,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_ISETTA,29,SAME,,CAR_MODEL4_ISETTA,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_JEEP,30,SAME,,CAR_MODEL4_JEEP,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_JEFFREY,31,SAME,,CAR_MODEL4_JEFFREY,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_KRSNABUS,86,SAME,,CAR_MODEL4_KRSNABUS,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_LIMO,32,SAME,,CAR_MODEL4_LIMO,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_LIMO2,33,SAME,,CAR_MODEL4_LIMO2,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_MEDICAR,34,SAME,,CAR_MODEL4_MEDICAR,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_MERC,35,SAME,,CAR_MODEL4_MERC,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_MESSER,36,SAME,,CAR_MODEL4_MESSER,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_MIURA,37,SAME,,CAR_MODEL4_MIURA,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_MONSTER,38,SAME,,CAR_MODEL4_MONSTER,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_MORGAN,39,SAME,,CAR_MODEL4_MORGAN,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_MORRIS,40,SAME,,CAR_MODEL4_MORRIS,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_PICKUP,41,SAME,,CAR_MODEL4_PICKUP,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_RTYPE,42,SAME,,CAR_MODEL4_RTYPE,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_SPIDER,44,SAME,,CAR_MODEL4_SPIDER,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_SPRITE,45,SAME,,CAR_MODEL4_SPRITE,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_STINGRAY,46,SAME,,CAR_MODEL4_STINGRAY,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_STRATOS,47,SAME,,CAR_MODEL4_STRATOS,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_STRATOSB,48,SAME,,CAR_MODEL4_STRATOSB,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_STRIPETB,49,SAME,,CAR_MODEL4_STRIPETB,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_STYPE,50,SAME,,CAR_MODEL4_STYPE,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_STYPECAB,51,SAME,,CAR_MODEL4_STYPECAB,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_SWATVAN,52,SAME,,CAR_MODEL4_SWATVAN,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_T2000GT,53,SAME,,CAR_MODEL4_T2000GT,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TANK,54,SAME,,CAR_MODEL4_TANK,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TANKER,55,SAME,,CAR_MODEL4_TANKER,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TAXI,56,SAME,,CAR_MODEL4_TAXI,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TBIRD,57,SAME,,CAR_MODEL4_TBIRD,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TOWTRUCK,58,SAME,,CAR_MODEL4_TOWTRUCK,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TRAIN,59,SAME,,CAR_MODEL4_TRAIN,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TRAINCAB,60,SAME,,CAR_MODEL4_TRAINCAB,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TRAINFB,61,SAME,,CAR_MODEL4_TRAINFB,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TRANCEAM,62,SAME,,CAR_MODEL4_TRANCEAM,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TRUKCAB1,63,SAME,,CAR_MODEL4_TRUKCAB1,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TRUKCAB2,64,SAME,,CAR_MODEL4_TRUKCAB2,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TRUKCONT,65,SAME,,CAR_MODEL4_TRUKCONT,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TRUKTRNS,66,SAME,,CAR_MODEL4_TRUKTRNS,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_TVVAN,67,SAME,,CAR_MODEL4_TVVAN,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_VAN,68,SAME,,CAR_MODEL4_VAN,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_VESPA,69,SAME,,CAR_MODEL4_VESPA,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_VTYPE,70,SAME,,CAR_MODEL4_VTYPE,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WBTWIN,71,SAME,,CAR_MODEL4_WBTWIN,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK0,72,SAME,,CAR_MODEL4_WRECK0,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK1,73,SAME,,CAR_MODEL4_WRECK1,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK2,74,SAME,,CAR_MODEL4_WRECK2,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK3,75,SAME,,CAR_MODEL4_WRECK3,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK4,76,SAME,,CAR_MODEL4_WRECK4,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK5,77,SAME,,CAR_MODEL4_WRECK5,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK6,78,SAME,,CAR_MODEL4_WRECK6,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK7,79,SAME,,CAR_MODEL4_WRECK7,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK8,80,SAME,,CAR_MODEL4_WRECK8,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_WRECK9,81,SAME,,CAR_MODEL4_WRECK9,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_XK120,82,SAME,,CAR_MODEL4_XK120,
+gta2-seuko-mod,src/game/gta2.h,CAR_MODEL4,CAR_MODEL4_ZCX5,83,SAME,,CAR_MODEL4_ZCX5,
+gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_0x1,1,SAME,,CAR_PHYSICS_BITMASK_0x1,
+gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_DONT_SLOW_ON_COLLISION,2,SAME,,CAR_PHYSICS_BITMASK_DONT_SLOW_ON_COLLISION,
+gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_0x4,4,SAME,,CAR_PHYSICS_BITMASK_0x4,
+gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_NO_COLLISION_DAMAGE,8,SAME,,CAR_PHYSICS_BITMASK_NO_COLLISION_DAMAGE,
+gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_NO_COLLISION,16,SAME,,CAR_PHYSICS_BITMASK_NO_COLLISION,
+gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_0x20,32,SAME,,CAR_PHYSICS_BITMASK_0x20,
+gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_TRAIN_RELATED,64,SAME,,CAR_PHYSICS_BITMASK_TRAIN_RELATED,
+gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_HAS_ALARM,128,SAME,,CAR_PHYSICS_BITMASK_HAS_ALARM,
+gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_BULLETPROOF,256,SAME,,CAR_PHYSICS_BITMASK_BULLETPROOF,
+gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_ROCKETPROOF,512,SAME,,CAR_PHYSICS_BITMASK_ROCKETPROOF,
+gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_FLAMEPROOF,1024,SAME,,CAR_PHYSICS_BITMASK_FLAMEPROOF,
+gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_TANK_RELATED,2048,SAME,,CAR_PHYSICS_BITMASK_TANK_RELATED,
+gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_JAMMED,4096,SAME,,CAR_PHYSICS_BITMASK_JAMMED,
+gta2-seuko-mod,src/game/gta2.h,CAR_PHYSICS_BITMASK,CAR_PHYSICS_BITMASK_0x2000,8192,SAME,,CAR_PHYSICS_BITMASK_0x2000,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_FLAT,0,SAME,,CAR_SURFACE_FLAT,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_SLOPE_UP,1,SAME,,CAR_SURFACE_SLOPE_UP,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_SLOPE_DOWN,2,SAME,,CAR_SURFACE_SLOPE_DOWN,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_SLOPE_LEFT,3,SAME,,CAR_SURFACE_SLOPE_LEFT,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_SLOPE_RIGHT,4,SAME,,CAR_SURFACE_SLOPE_RIGHT,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_5,5,SAME,,CAR_SURFACE_5,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_IN_AIR,6,SAME,,CAR_SURFACE_IN_AIR,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_6,6,SAME,,CAR_SURFACE_6,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_IN_WATER,8,SAME,,CAR_SURFACE_IN_WATER,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE,CAR_SURFACE_WET,9,SAME,,CAR_SURFACE_WET,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_AIR_OR_SLOPE,0,SAME,,CAR_SURFACE2_AIR_OR_SLOPE,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_CONCRETE,1,SAME,,CAR_SURFACE2_CONCRETE,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_GRASS,2,SAME,,CAR_SURFACE2_GRASS,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_3,3,SAME,,CAR_SURFACE2_3,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_WET,4,SAME,,CAR_SURFACE2_WET,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_5,5,SAME,,CAR_SURFACE2_5,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_6,6,SAME,,CAR_SURFACE2_6,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_7,7,SAME,,CAR_SURFACE2_7,
+gta2-seuko-mod,src/game/gta2.h,CAR_SURFACE2,CAR_SURFACE2_METAL,8,SAME,,CAR_SURFACE2_METAL,
 gta2-seuko-mod,src/game/gta2.h,CAR_UNK_TYPE,FIRE_TRACK_CARS,5,CONFLICT,semantic,UNK_CARS_5,"same value, different name"
 gta2-seuko-mod,src/game/gta2.h,CAR_UNK_TYPE,MISSION_CARS,8,SAME,,MISSION_CARS,
 gta2-seuko-mod,src/game/gta2.h,CAR_UNK_TYPE,UNIT_CARS,6,SAME,,UNIT_CARS,
@@ -311,20 +311,20 @@ gta2-seuko-mod,src/game/gta2.h,CAR_UNK_TYPE,UNK_CARS_4,4,SAME,,UNK_CARS_4,
 gta2-seuko-mod,src/game/gta2.h,CAR_UNK_TYPE,UNK_CARS_7,7,SAME,,UNK_CARS_7,
 gta2-seuko-mod,src/game/gta2.h,CAR_UNK_TYPE,UNK_CARS_9,9,SAME,,UNK_CARS_9,
 gta2-seuko-mod,src/game/gta2.h,CAR_UNK_TYPE,UNK_CARS_a,10,SAME,,UNK_CARS_a,
-gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_BOMB,15,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_OIL,16,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_MINE,17,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_GUN,18,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_TANKTURRET,19,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_WATERGUN,20,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_FLAMETHROWER,21,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_JEEPGUN,22,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_INSTANTBOMB,23,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_LETTER_J,24,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_LETTER_K,25,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_LETTER_L,26,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_LETTER_M,27,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_0,0,NEW,,,enum not in ours
+gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_BOMB,15,SAME,,CAR_WEAP_BOMB,
+gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_OIL,16,SAME,,CAR_WEAP_OIL,
+gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_MINE,17,SAME,,CAR_WEAP_MINE,
+gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_GUN,18,SAME,,CAR_WEAP_GUN,
+gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_TANKTURRET,19,SAME,,CAR_WEAP_TANKTURRET,
+gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_WATERGUN,20,SAME,,CAR_WEAP_WATERGUN,
+gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_FLAMETHROWER,21,SAME,,CAR_WEAP_FLAMETHROWER,
+gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_JEEPGUN,22,SAME,,CAR_WEAP_JEEPGUN,
+gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_INSTANTBOMB,23,SAME,,CAR_WEAP_INSTANTBOMB,
+gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_LETTER_J,24,SAME,,CAR_WEAP_LETTER_J,
+gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_LETTER_K,25,SAME,,CAR_WEAP_LETTER_K,
+gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_LETTER_L,26,SAME,,CAR_WEAP_LETTER_L,
+gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_LETTER_M,27,SAME,,CAR_WEAP_LETTER_M,
+gta2-seuko-mod,src/game/gta2.h,CAR_WEAPON_INDEX,CAR_WEAP_0,0,SAME,,CAR_WEAP_0,
 gta2-seuko-mod,src/game/gta2.h,CHEATS,ARSESTAR,293617,SAME,,ARSESTAR,
 gta2-seuko-mod,src/game/gta2.h,CHEATS,BUCKFAST,296845,SAME,,BUCKFAST,
 gta2-seuko-mod,src/game/gta2.h,CHEATS,COCKTART,293033,SAME,,COCKTART,
@@ -368,10 +368,10 @@ gta2-seuko-mod,src/game/gta2.h,DEATH_REASON,NICKED,3,SAME,,NICKED,
 gta2-seuko-mod,src/game/gta2.h,DEATH_REASON,SHOCKED,4,SAME,,SHOCKED,
 gta2-seuko-mod,src/game/gta2.h,DEATH_REASON,WASTED,1,SAME,,WASTED,
 gta2-seuko-mod,src/game/gta2.h,DEATH_REASON,WASTED0,0,SAME,,WASTED0,
-gta2-seuko-mod,src/game/gta2.h,EXPLOSION_SIZE,EXPLOSION_SIZE_NONE,17,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,EXPLOSION_SIZE,EXPLOSION_SIZE_SMALL,18,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,EXPLOSION_SIZE,EXPLOSION_SIZE_MEDIUM,19,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,EXPLOSION_SIZE,EXPLOSION_SIZE_LARGE,20,NEW,,,enum not in ours
+gta2-seuko-mod,src/game/gta2.h,EXPLOSION_SIZE,EXPLOSION_SIZE_NONE,17,SAME,,EXPLOSION_SIZE_NONE,
+gta2-seuko-mod,src/game/gta2.h,EXPLOSION_SIZE,EXPLOSION_SIZE_SMALL,18,SAME,,EXPLOSION_SIZE_SMALL,
+gta2-seuko-mod,src/game/gta2.h,EXPLOSION_SIZE,EXPLOSION_SIZE_MEDIUM,19,SAME,,EXPLOSION_SIZE_MEDIUM,
+gta2-seuko-mod,src/game/gta2.h,EXPLOSION_SIZE,EXPLOSION_SIZE_LARGE,20,SAME,,EXPLOSION_SIZE_LARGE,
 gta2-seuko-mod,src/game/gta2.h,GAME_STATUS,GAME_PAUSED,2,SAME,,GAME_PAUSED,
 gta2-seuko-mod,src/game/gta2.h,GAME_STATUS,GAME_RUN,1,SAME,,GAME_RUN,
 gta2-seuko-mod,src/game/gta2.h,GTA_ERROR_CODE,GTA_ERROR_CODE_NO_LEVELSTART_DECLARATION_IN_SCRIPTFILE,65,SAME,,No_LEVELSTART_declaration_in_scriptfile,enum-name prefix dropped
@@ -383,18 +383,18 @@ gta2-seuko-mod,src/game/gta2.h,GTA_ERROR_CODE,GTA_ERROR_CODE_UNABLE_TO_CLOSE_REG
 gta2-seuko-mod,src/game/gta2.h,GTA_ERROR_CODE,GTA_ERROR_CODE_UNABLE_TO_SET_REGISTRY_VALUE,46,SAME,,Unable_to_set_registry_value,enum-name prefix dropped
 gta2-seuko-mod,src/game/gta2.h,GTA_ERROR_CODE,GTA_ERROR_CODE_UNK1,1,CONFLICT,semantic,UNK,"same value, different name"
 gta2-seuko-mod,src/game/gta2.h,HORN,HORN_ON,248,SAME,,HORN_ON,
-gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_FORWARD,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_BACKWARD,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_LEFT,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_RIGHT,8,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_ATTACK,16,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_ENTER_CAR,32,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_JUMP,64,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_PREV_WEAPON,128,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_NEXT_WEAPON,256,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_SPECIAL,512,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_SPECIAL2,1024,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_SPECIAL3,2048,NEW,,,enum not in ours
+gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_FORWARD,1,SAME,,KEYBOARD_STATE_FORWARD,
+gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_BACKWARD,2,SAME,,KEYBOARD_STATE_BACKWARD,
+gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_LEFT,4,SAME,,KEYBOARD_STATE_LEFT,
+gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_RIGHT,8,SAME,,KEYBOARD_STATE_RIGHT,
+gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_ATTACK,16,SAME,,KEYBOARD_STATE_ATTACK,
+gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_ENTER_CAR,32,SAME,,KEYBOARD_STATE_ENTER_CAR,
+gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_JUMP,64,SAME,,KEYBOARD_STATE_JUMP,
+gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_PREV_WEAPON,128,SAME,,KEYBOARD_STATE_PREV_WEAPON,
+gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_NEXT_WEAPON,256,SAME,,KEYBOARD_STATE_NEXT_WEAPON,
+gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_SPECIAL,512,SAME,,KEYBOARD_STATE_SPECIAL,
+gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_SPECIAL2,1024,SAME,,KEYBOARD_STATE_SPECIAL2,
+gta2-seuko-mod,src/game/gta2.h,KEYBOARD_STATE,KEYBOARD_STATE_SPECIAL3,2048,SAME,,KEYBOARD_STATE_SPECIAL3,
 gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_INCR_COP_LEVEL,5,NEW,,,constant not in ours
 gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_INCR_RESPECT_GANG1,2,NEW,,,constant not in ours
 gta2-seuko-mod,src/game/gta2.h,KEY_NAME,KEY_INCR_RESPECT_GANG2,3,NEW,,,constant not in ours
@@ -429,272 +429,272 @@ gta2-seuko-mod,src/game/gta2.h,MAIN_MENU_SOUND,BACK_SOUND,5,SAME,,BACK_SOUND,
 gta2-seuko-mod,src/game/gta2.h,MAIN_MENU_SOUND,CHEAT_SOUND,9,SAME,,CHEAT_SOUND,
 gta2-seuko-mod,src/game/gta2.h,MAIN_MENU_SOUND,ENTER_SOUND,6,SAME,,ENTER_SOUND,
 gta2-seuko-mod,src/game/gta2.h,MAIN_MENU_SOUND,LEFT_RIGHT_SOUND,3,SAME,,LEFT_RIGHT_SOUND,
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BIN_LID,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BOLLARD,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CONE,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BOXES,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BLASTER,5,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_RUBBISH,6,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BIN,7,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_ANIMATING_OIL,8,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_OIL,9,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MINE,10,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BUSH,11,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRATE,12,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_FOOTY,13,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_HARDBOX,14,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_NEWSDIS,15,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_OILDRUM,16,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_TYRE,17,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_HYDRANT_LID,18,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_HYDRANT,19,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_HYDRANT_UNLID,20,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_ROADBLOCK,21,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BENCH,22,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_PACKAGE,23,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_TOWER,25,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_PACKAGE,43,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_PACKAGE,44,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_BENCH,45,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_BENCH,46,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_ROADBLOCK,47,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_ROADBLOCK,48,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_HYDRANT_LID,49,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_ANIMATING_CRATE,50,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_CRATE,51,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_BOXES,52,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_CONE,53,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_BLASTER,54,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_BUSH,55,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_FOOTY,56,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_HARDBOX,57,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_HARDBOX,58,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_NEWSDIS,59,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_NEWSDIS,60,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_OILDRUM,61,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_OILDRUM,62,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_TYRE,63,NEW,,,enum not in ours
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BIN_LID,1,SAME,,OBJECT_TYPE_BIN_LID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BOLLARD,2,SAME,,OBJECT_TYPE_BOLLARD,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CONE,3,SAME,,OBJECT_TYPE_CONE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BOXES,4,SAME,,OBJECT_TYPE_BOXES,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BLASTER,5,SAME,,OBJECT_TYPE_BLASTER,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_RUBBISH,6,SAME,,OBJECT_TYPE_RUBBISH,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BIN,7,SAME,,OBJECT_TYPE_BIN,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_ANIMATING_OIL,8,SAME,,OBJECT_TYPE_ANIMATING_OIL,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_OIL,9,SAME,,OBJECT_TYPE_OIL,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MINE,10,SAME,,OBJECT_TYPE_MINE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BUSH,11,SAME,,OBJECT_TYPE_BUSH,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRATE,12,SAME,,OBJECT_TYPE_CRATE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_FOOTY,13,SAME,,OBJECT_TYPE_FOOTY,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_HARDBOX,14,SAME,,OBJECT_TYPE_HARDBOX,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_NEWSDIS,15,SAME,,OBJECT_TYPE_NEWSDIS,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_OILDRUM,16,SAME,,OBJECT_TYPE_OILDRUM,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_TYRE,17,SAME,,OBJECT_TYPE_TYRE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_HYDRANT_LID,18,SAME,,OBJECT_TYPE_HYDRANT_LID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_HYDRANT,19,SAME,,OBJECT_TYPE_HYDRANT,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_HYDRANT_UNLID,20,SAME,,OBJECT_TYPE_HYDRANT_UNLID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_ROADBLOCK,21,SAME,,OBJECT_TYPE_ROADBLOCK,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BENCH,22,SAME,,OBJECT_TYPE_BENCH,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_PACKAGE,23,SAME,,OBJECT_TYPE_PACKAGE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_TOWER,25,SAME,,OBJECT_TYPE_TOWER,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_PACKAGE,43,SAME,,OBJECT_TYPE_MOVING_PACKAGE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_PACKAGE,44,SAME,,OBJECT_TYPE_DEAD_PACKAGE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_BENCH,45,SAME,,OBJECT_TYPE_MOVING_BENCH,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_BENCH,46,SAME,,OBJECT_TYPE_DEAD_BENCH,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_ROADBLOCK,47,SAME,,OBJECT_TYPE_MOVING_ROADBLOCK,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_ROADBLOCK,48,SAME,,OBJECT_TYPE_DEAD_ROADBLOCK,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_HYDRANT_LID,49,SAME,,OBJECT_TYPE_MOVING_HYDRANT_LID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_ANIMATING_CRATE,50,SAME,,OBJECT_TYPE_ANIMATING_CRATE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_CRATE,51,SAME,,OBJECT_TYPE_DEAD_CRATE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_BOXES,52,SAME,,OBJECT_TYPE_DEAD_BOXES,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_CONE,53,SAME,,OBJECT_TYPE_DEAD_CONE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_BLASTER,54,SAME,,OBJECT_TYPE_DEAD_BLASTER,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_BUSH,55,SAME,,OBJECT_TYPE_DEAD_BUSH,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_FOOTY,56,SAME,,OBJECT_TYPE_MOVING_FOOTY,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_HARDBOX,57,SAME,,OBJECT_TYPE_MOVING_HARDBOX,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_HARDBOX,58,SAME,,OBJECT_TYPE_DEAD_HARDBOX,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_NEWSDIS,59,SAME,,OBJECT_TYPE_MOVING_NEWSDIS,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_NEWSDIS,60,SAME,,OBJECT_TYPE_DEAD_NEWSDIS,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_OILDRUM,61,SAME,,OBJECT_TYPE_MOVING_OILDRUM,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_OILDRUM,62,SAME,,OBJECT_TYPE_DEAD_OILDRUM,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_TYRE,63,SAME,,OBJECT_TYPE_MOVING_TYRE,
 gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,"/* moving collectables */
-	OBJECT_TYPE_MOVING_COLLECT_00_PISTOL",64,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_01_S_UZI,65,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_02_ROCKET_LAUNCHER,66,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_03_ELECTROGUN,67,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_04_MOLOTOV_COCTAIL,68,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_05_GRENADE,69,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_06_SHOTGUN,70,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_07_ELECTROBATON,71,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_08_FLAMETHROWER,72,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_09_SILENCED_S_UZI,73,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_10_DUAL_PISTOL,74,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_11_LETTER_L,75,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_12_LETTER_M,76,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_13_LETTER_N,77,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_14_LETTER_O,78,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_15_VEHICLE_BOMB,79,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_16_VEHICLE_OIL_SLICK,80,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_17_VEHICLE_MINE,81,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_18_VEHICLE_MACHINE_GUN,82,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_19_TANK_CANNON,83,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_20_WATER_CANNON,84,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_21_VEHICLE_FLAMETHROWER,85,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_22_JEEP_TURRET,86,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_23_INSTANT_VEHICLE_BOMB,87,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_24_LETTER_J,88,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_25_LETTER_K,89,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_26_LETTER_L,90,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_27_LETTER_M,91,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_28_MULTIPLIER_PLUS_1,92,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_29_LIFE_PLUS_1,93,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_30_HEALTH,94,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_31_ARMOR,95,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_32_GET_OUTTA_JAIL_FREE_CARD,96,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_33_COP_BRIBE,97,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_34_INVULNERABILITY,98,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_35_DOUBLE_DAMAGE,99,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_36_FAST_RELOAD,100,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_37_ELECTROFINGERS,101,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_38_RESPECT,102,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_39_INVISIBILITY,103,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_40_INSTANT_GANG,104,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_41_LETTER_N,105,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_42_LETTER_O,106,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_43_LETTER_P,107,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_44_LETTER_Q,108,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SMALL_ARROW,109,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_VEHICLE_CONE,110,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BLOOD_SPARK,111,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_WHITE_DOT,112,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_PARTICLE_SYSTEM,113,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_FIREJET,114,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SMALL_BROWN_SKID,116,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SMALL_GREY_SKID,117,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SMALL_RED_SKID,118,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MEDIUM_BROWN_SKID,119,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MEDIUM_GREY_SKID,120,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MEDIUM_RED_SKID,121,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CAR_CROSSING,122,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_BUSH,123,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BIG_WHITE_SKID,124,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MEDIUM_WHITE_SKID,125,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SMALL_WHITE_SKID,126,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_ANIMATING_CONE,127,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_ROCKET,128,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BUS_STOP_MARKER,129,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CAR_SHOP,130,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BUSY_CAR_SHOP,131,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CAR_BOMB,132,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_WIRE,134,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_BASE,135,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_HEAD_A,136,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_137,137,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOLOTOV_MOVING,138,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CONVEYOR_BELT,139,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_PART_A,140,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CONVEYOR_BELT_END,141,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CAR_CRUSHER,142,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_143,143,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_HUGE_RED_SKID,144,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_HUGE_WHITE_SKID,145,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_HUGE_BROWN_SKID,146,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_HUGE_GREY_SKID,147,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_TANKTOP,148,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_ANTENNA,149,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_ANIMATING_RUBBISH,151,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_RUBBISH,152,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_FLAMETHROWER_FLAME,154,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_CONE,155,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_BLASTER,156,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_BIN,157,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_BIN_LID,158,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_ROCKET,159,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SAVE_POINT,161,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_PHONE,163,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_PHONE_RINGING,164,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_MINE,165,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_166,166,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_167,167,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_168,168,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_169,169,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_TRAFFIC_LIGHT_CASING,170,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_171,171,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_172,172,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_173,173,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_PHONE_DEAD,174,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BRIEFCASE,175,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_RED_PHONE,176,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_RED_PHONE_RINGING,177,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_YELLOW_PHONE,178,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_YELLOW_PHONE_RINGING,179,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GREEN_PHONE,180,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GREEN_PHONE_RINGING,181,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GRENADE,182,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_GRENADE,183,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_PHONE_CALL_END,184,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_PHONE_CALL,185,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_RED_PHONE_CALL_END,186,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_RED_PHONE_CALL,187,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_YELLOW_PHONE_CALL_END,188,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_YELLOW_PHONE_CALL,189,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GREEN_PHONE_CALL_END,190,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GREEN_PHONE_CALL,191,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SHOT,192,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_193,193,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_SHOT_195,195,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_199,199,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_FLAMING_BULLET,194,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_FIRE,197,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_WATER_BULLET,198,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_00_PISTOL,200,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_01_S_UZI,201,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_02_ROCKET_LAUNCHER,202,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_03_ELECTROGUN,203,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_04_MOLOTOV_COCTAIL,204,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_05_GRENADE,205,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_06_SHOTGUN,206,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_07_ELECTROBATON,207,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_08_FLAMETHROWER,208,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_09_SILENCED_S_UZI,209,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_10_DUAL_PISTOL,210,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_11_LETTER_L,211,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_12_LETTER_M,212,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_13_LETTER_N,213,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_14_LETTER_O,214,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_15_VEHICLE_BOMB,215,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_16_VEHICLE_OIL_SLICK,216,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_17_VEHICLE_MINE,217,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_18_VEHICLE_MACHINE_GUN,218,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_19_TANK_CANNON,219,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_20_WATER_CANNON,220,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_21_VEHICLE_FLAMETHROWER,221,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_22_JEEP_TURRET,222,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_23_INSTANT_VEHICLE_BOMB,223,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_24_LETTER_J,224,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_25_LETTER_K,225,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_26_LETTER_L,226,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_27_LETTER_M,227,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_28_MULTIPLIER_PLUS_1,228,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_29_LIFE_PLUS_1,229,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_30_HEALTH,230,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_31_ARMOR,231,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_32_GET_OUTTA_JAIL_FREE_CARD,232,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_33_COP_BRIBE,233,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_34_INVULNERABILITY,234,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_35_DOUBLE_DAMAGE,235,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_36_FAST_RELOAD,236,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_37_ELECTROFINGERS,237,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_38_RESPECT,238,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_39_INVISIBILITY,239,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_40_INSTANT_GANG,240,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_41_LETTER_N,241,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_42_LETTER_O,242,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_43_LETTER_P,243,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_44_LETTER_Q,244,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BOMB,247,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GUNJEEP_TURRET,248,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BIG_BROWN_SKID,249,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BIG_GREY_SKID,250,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_251,251,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_PART_B,252,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BIG_RED_SKID,253,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BULLET,254,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_TRAFFIC_LIGHT,255,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_RED_FOOTPRINTS,256,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BLOOD,257,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CROSSING,258,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SPARK,259,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_PART_C,260,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_PART_D,261,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_PART_E,262,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_HEAD_B,263,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_PISTOL_BULLET,265,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BONUS_TOKEN,266,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_TASSER_BULLET,277,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_278,278,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SOUND_INSTANT,279,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_INVISIBLE_TARGET,280,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_POWERGEN,281,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_POWERGEN_DEAD,282,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_INVISIBLE_DESTRUCTIBLE,283,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GENLITE,284,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_INVISIBLE_DEAD,285,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_KILL_FRENZY,286,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GANG_DECAL_LOONIES,287,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GANG_DECAL_YAKUZA,288,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GANG_DECAL_ZAIBATSU,289,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GANG_DECAL_REDNECKS,290,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GANG_DECAL_SCIENTISTS,291,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GANG_DECAL_KRISHNA,292,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GANG_DECAL_RUSSIAN,293,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_TUNNEL_BLOCKER,294,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_REMOTE,295,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_TILE,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_SPRITE,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_CAR_REMAP,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_PED_REMAP,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_CODE_OBJ_REMAP,5,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_MAP_OBJ_REMAP,6,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_USER_REMAP,7,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_FONT_REMAP,8,NEW,,,enum not in ours
+	OBJECT_TYPE_MOVING_COLLECT_00_PISTOL",64,SAME,,___moving_collectables_____OBJECT_TYPE_MOVING_COLLECT_00_PISTOL,enum-name prefix dropped
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_01_S_UZI,65,SAME,,OBJECT_TYPE_MOVING_COLLECT_01_S_UZI,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_02_ROCKET_LAUNCHER,66,SAME,,OBJECT_TYPE_MOVING_COLLECT_02_ROCKET_LAUNCHER,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_03_ELECTROGUN,67,SAME,,OBJECT_TYPE_MOVING_COLLECT_03_ELECTROGUN,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_04_MOLOTOV_COCTAIL,68,SAME,,OBJECT_TYPE_MOVING_COLLECT_04_MOLOTOV_COCTAIL,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_05_GRENADE,69,SAME,,OBJECT_TYPE_MOVING_COLLECT_05_GRENADE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_06_SHOTGUN,70,SAME,,OBJECT_TYPE_MOVING_COLLECT_06_SHOTGUN,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_07_ELECTROBATON,71,SAME,,OBJECT_TYPE_MOVING_COLLECT_07_ELECTROBATON,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_08_FLAMETHROWER,72,SAME,,OBJECT_TYPE_MOVING_COLLECT_08_FLAMETHROWER,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_09_SILENCED_S_UZI,73,SAME,,OBJECT_TYPE_MOVING_COLLECT_09_SILENCED_S_UZI,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_10_DUAL_PISTOL,74,SAME,,OBJECT_TYPE_MOVING_COLLECT_10_DUAL_PISTOL,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_11_LETTER_L,75,SAME,,OBJECT_TYPE_MOVING_COLLECT_11_LETTER_L,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_12_LETTER_M,76,SAME,,OBJECT_TYPE_MOVING_COLLECT_12_LETTER_M,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_13_LETTER_N,77,SAME,,OBJECT_TYPE_MOVING_COLLECT_13_LETTER_N,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_14_LETTER_O,78,SAME,,OBJECT_TYPE_MOVING_COLLECT_14_LETTER_O,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_15_VEHICLE_BOMB,79,SAME,,OBJECT_TYPE_MOVING_COLLECT_15_VEHICLE_BOMB,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_16_VEHICLE_OIL_SLICK,80,SAME,,OBJECT_TYPE_MOVING_COLLECT_16_VEHICLE_OIL_SLICK,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_17_VEHICLE_MINE,81,SAME,,OBJECT_TYPE_MOVING_COLLECT_17_VEHICLE_MINE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_18_VEHICLE_MACHINE_GUN,82,SAME,,OBJECT_TYPE_MOVING_COLLECT_18_VEHICLE_MACHINE_GUN,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_19_TANK_CANNON,83,SAME,,OBJECT_TYPE_MOVING_COLLECT_19_TANK_CANNON,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_20_WATER_CANNON,84,SAME,,OBJECT_TYPE_MOVING_COLLECT_20_WATER_CANNON,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_21_VEHICLE_FLAMETHROWER,85,SAME,,OBJECT_TYPE_MOVING_COLLECT_21_VEHICLE_FLAMETHROWER,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_22_JEEP_TURRET,86,SAME,,OBJECT_TYPE_MOVING_COLLECT_22_JEEP_TURRET,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_23_INSTANT_VEHICLE_BOMB,87,SAME,,OBJECT_TYPE_MOVING_COLLECT_23_INSTANT_VEHICLE_BOMB,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_24_LETTER_J,88,SAME,,OBJECT_TYPE_MOVING_COLLECT_24_LETTER_J,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_25_LETTER_K,89,SAME,,OBJECT_TYPE_MOVING_COLLECT_25_LETTER_K,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_26_LETTER_L,90,SAME,,OBJECT_TYPE_MOVING_COLLECT_26_LETTER_L,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_27_LETTER_M,91,SAME,,OBJECT_TYPE_MOVING_COLLECT_27_LETTER_M,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_28_MULTIPLIER_PLUS_1,92,SAME,,OBJECT_TYPE_MOVING_COLLECT_28_MULTIPLIER_PLUS_1,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_29_LIFE_PLUS_1,93,SAME,,OBJECT_TYPE_MOVING_COLLECT_29_LIFE_PLUS_1,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_30_HEALTH,94,SAME,,OBJECT_TYPE_MOVING_COLLECT_30_HEALTH,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_31_ARMOR,95,SAME,,OBJECT_TYPE_MOVING_COLLECT_31_ARMOR,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_32_GET_OUTTA_JAIL_FREE_CARD,96,SAME,,OBJECT_TYPE_MOVING_COLLECT_32_GET_OUTTA_JAIL_FREE_CARD,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_33_COP_BRIBE,97,SAME,,OBJECT_TYPE_MOVING_COLLECT_33_COP_BRIBE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_34_INVULNERABILITY,98,SAME,,OBJECT_TYPE_MOVING_COLLECT_34_INVULNERABILITY,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_35_DOUBLE_DAMAGE,99,SAME,,OBJECT_TYPE_MOVING_COLLECT_35_DOUBLE_DAMAGE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_36_FAST_RELOAD,100,SAME,,OBJECT_TYPE_MOVING_COLLECT_36_FAST_RELOAD,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_37_ELECTROFINGERS,101,SAME,,OBJECT_TYPE_MOVING_COLLECT_37_ELECTROFINGERS,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_38_RESPECT,102,SAME,,OBJECT_TYPE_MOVING_COLLECT_38_RESPECT,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_39_INVISIBILITY,103,SAME,,OBJECT_TYPE_MOVING_COLLECT_39_INVISIBILITY,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_40_INSTANT_GANG,104,SAME,,OBJECT_TYPE_MOVING_COLLECT_40_INSTANT_GANG,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_41_LETTER_N,105,SAME,,OBJECT_TYPE_MOVING_COLLECT_41_LETTER_N,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_42_LETTER_O,106,SAME,,OBJECT_TYPE_MOVING_COLLECT_42_LETTER_O,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_43_LETTER_P,107,SAME,,OBJECT_TYPE_MOVING_COLLECT_43_LETTER_P,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_COLLECT_44_LETTER_Q,108,SAME,,OBJECT_TYPE_MOVING_COLLECT_44_LETTER_Q,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SMALL_ARROW,109,SAME,,OBJECT_TYPE_SMALL_ARROW,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_VEHICLE_CONE,110,SAME,,OBJECT_TYPE_VEHICLE_CONE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BLOOD_SPARK,111,SAME,,OBJECT_TYPE_BLOOD_SPARK,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_WHITE_DOT,112,SAME,,OBJECT_TYPE_WHITE_DOT,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_PARTICLE_SYSTEM,113,SAME,,OBJECT_TYPE_PARTICLE_SYSTEM,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_FIREJET,114,SAME,,OBJECT_TYPE_FIREJET,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SMALL_BROWN_SKID,116,SAME,,OBJECT_TYPE_SMALL_BROWN_SKID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SMALL_GREY_SKID,117,SAME,,OBJECT_TYPE_SMALL_GREY_SKID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SMALL_RED_SKID,118,SAME,,OBJECT_TYPE_SMALL_RED_SKID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MEDIUM_BROWN_SKID,119,SAME,,OBJECT_TYPE_MEDIUM_BROWN_SKID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MEDIUM_GREY_SKID,120,SAME,,OBJECT_TYPE_MEDIUM_GREY_SKID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MEDIUM_RED_SKID,121,SAME,,OBJECT_TYPE_MEDIUM_RED_SKID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CAR_CROSSING,122,SAME,,OBJECT_TYPE_CAR_CROSSING,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_BUSH,123,SAME,,OBJECT_TYPE_MOVING_BUSH,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BIG_WHITE_SKID,124,SAME,,OBJECT_TYPE_BIG_WHITE_SKID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MEDIUM_WHITE_SKID,125,SAME,,OBJECT_TYPE_MEDIUM_WHITE_SKID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SMALL_WHITE_SKID,126,SAME,,OBJECT_TYPE_SMALL_WHITE_SKID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_ANIMATING_CONE,127,SAME,,OBJECT_TYPE_ANIMATING_CONE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_ROCKET,128,SAME,,OBJECT_TYPE_ROCKET,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BUS_STOP_MARKER,129,SAME,,OBJECT_TYPE_BUS_STOP_MARKER,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CAR_SHOP,130,SAME,,OBJECT_TYPE_CAR_SHOP,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BUSY_CAR_SHOP,131,SAME,,OBJECT_TYPE_BUSY_CAR_SHOP,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CAR_BOMB,132,SAME,,OBJECT_TYPE_CAR_BOMB,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_WIRE,134,SAME,,OBJECT_TYPE_CRANE_WIRE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_BASE,135,SAME,,OBJECT_TYPE_CRANE_BASE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_HEAD_A,136,SAME,,OBJECT_TYPE_CRANE_HEAD_A,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_137,137,SAME,,OBJECT_TYPE_UNK_137,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOLOTOV_MOVING,138,SAME,,OBJECT_TYPE_MOLOTOV_MOVING,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CONVEYOR_BELT,139,SAME,,OBJECT_TYPE_CONVEYOR_BELT,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_PART_A,140,SAME,,OBJECT_TYPE_CRANE_PART_A,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CONVEYOR_BELT_END,141,SAME,,OBJECT_TYPE_CONVEYOR_BELT_END,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CAR_CRUSHER,142,SAME,,OBJECT_TYPE_CAR_CRUSHER,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_143,143,SAME,,OBJECT_TYPE_UNK_143,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_HUGE_RED_SKID,144,SAME,,OBJECT_TYPE_HUGE_RED_SKID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_HUGE_WHITE_SKID,145,SAME,,OBJECT_TYPE_HUGE_WHITE_SKID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_HUGE_BROWN_SKID,146,SAME,,OBJECT_TYPE_HUGE_BROWN_SKID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_HUGE_GREY_SKID,147,SAME,,OBJECT_TYPE_HUGE_GREY_SKID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_TANKTOP,148,SAME,,OBJECT_TYPE_TANKTOP,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_ANTENNA,149,SAME,,OBJECT_TYPE_ANTENNA,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_ANIMATING_RUBBISH,151,SAME,,OBJECT_TYPE_ANIMATING_RUBBISH,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_RUBBISH,152,SAME,,OBJECT_TYPE_DEAD_RUBBISH,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_FLAMETHROWER_FLAME,154,SAME,,OBJECT_TYPE_FLAMETHROWER_FLAME,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_CONE,155,SAME,,OBJECT_TYPE_MOVING_CONE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_BLASTER,156,SAME,,OBJECT_TYPE_MOVING_BLASTER,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_BIN,157,SAME,,OBJECT_TYPE_MOVING_BIN,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_BIN_LID,158,SAME,,OBJECT_TYPE_MOVING_BIN_LID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_ROCKET,159,SAME,,OBJECT_TYPE_UNK_ROCKET,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SAVE_POINT,161,SAME,,OBJECT_TYPE_SAVE_POINT,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_PHONE,163,SAME,,OBJECT_TYPE_PHONE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_PHONE_RINGING,164,SAME,,OBJECT_TYPE_PHONE_RINGING,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_DEAD_MINE,165,SAME,,OBJECT_TYPE_DEAD_MINE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_166,166,SAME,,OBJECT_TYPE_UNK_166,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_167,167,SAME,,OBJECT_TYPE_UNK_167,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_168,168,SAME,,OBJECT_TYPE_UNK_168,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_169,169,SAME,,OBJECT_TYPE_UNK_169,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_TRAFFIC_LIGHT_CASING,170,SAME,,OBJECT_TYPE_TRAFFIC_LIGHT_CASING,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_171,171,SAME,,OBJECT_TYPE_UNK_171,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_172,172,SAME,,OBJECT_TYPE_UNK_172,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_173,173,SAME,,OBJECT_TYPE_UNK_173,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_PHONE_DEAD,174,SAME,,OBJECT_TYPE_PHONE_DEAD,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BRIEFCASE,175,SAME,,OBJECT_TYPE_BRIEFCASE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_RED_PHONE,176,SAME,,OBJECT_TYPE_RED_PHONE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_RED_PHONE_RINGING,177,SAME,,OBJECT_TYPE_RED_PHONE_RINGING,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_YELLOW_PHONE,178,SAME,,OBJECT_TYPE_YELLOW_PHONE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_YELLOW_PHONE_RINGING,179,SAME,,OBJECT_TYPE_YELLOW_PHONE_RINGING,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GREEN_PHONE,180,SAME,,OBJECT_TYPE_GREEN_PHONE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GREEN_PHONE_RINGING,181,SAME,,OBJECT_TYPE_GREEN_PHONE_RINGING,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GRENADE,182,SAME,,OBJECT_TYPE_GRENADE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_MOVING_GRENADE,183,SAME,,OBJECT_TYPE_MOVING_GRENADE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_PHONE_CALL_END,184,SAME,,OBJECT_TYPE_PHONE_CALL_END,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_PHONE_CALL,185,SAME,,OBJECT_TYPE_PHONE_CALL,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_RED_PHONE_CALL_END,186,SAME,,OBJECT_TYPE_RED_PHONE_CALL_END,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_RED_PHONE_CALL,187,SAME,,OBJECT_TYPE_RED_PHONE_CALL,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_YELLOW_PHONE_CALL_END,188,SAME,,OBJECT_TYPE_YELLOW_PHONE_CALL_END,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_YELLOW_PHONE_CALL,189,SAME,,OBJECT_TYPE_YELLOW_PHONE_CALL,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GREEN_PHONE_CALL_END,190,SAME,,OBJECT_TYPE_GREEN_PHONE_CALL_END,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GREEN_PHONE_CALL,191,SAME,,OBJECT_TYPE_GREEN_PHONE_CALL,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SHOT,192,SAME,,OBJECT_TYPE_SHOT,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_193,193,SAME,,OBJECT_TYPE_UNK_193,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_SHOT_195,195,SAME,,OBJECT_TYPE_UNK_SHOT_195,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_199,199,SAME,,OBJECT_TYPE_UNK_199,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_FLAMING_BULLET,194,SAME,,OBJECT_TYPE_FLAMING_BULLET,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_FIRE,197,SAME,,OBJECT_TYPE_FIRE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_WATER_BULLET,198,SAME,,OBJECT_TYPE_WATER_BULLET,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_00_PISTOL,200,SAME,,OBJECT_TYPE_COLLECT_00_PISTOL,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_01_S_UZI,201,SAME,,OBJECT_TYPE_COLLECT_01_S_UZI,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_02_ROCKET_LAUNCHER,202,SAME,,OBJECT_TYPE_COLLECT_02_ROCKET_LAUNCHER,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_03_ELECTROGUN,203,SAME,,OBJECT_TYPE_COLLECT_03_ELECTROGUN,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_04_MOLOTOV_COCTAIL,204,SAME,,OBJECT_TYPE_COLLECT_04_MOLOTOV_COCTAIL,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_05_GRENADE,205,SAME,,OBJECT_TYPE_COLLECT_05_GRENADE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_06_SHOTGUN,206,SAME,,OBJECT_TYPE_COLLECT_06_SHOTGUN,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_07_ELECTROBATON,207,SAME,,OBJECT_TYPE_COLLECT_07_ELECTROBATON,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_08_FLAMETHROWER,208,SAME,,OBJECT_TYPE_COLLECT_08_FLAMETHROWER,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_09_SILENCED_S_UZI,209,SAME,,OBJECT_TYPE_COLLECT_09_SILENCED_S_UZI,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_10_DUAL_PISTOL,210,SAME,,OBJECT_TYPE_COLLECT_10_DUAL_PISTOL,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_11_LETTER_L,211,SAME,,OBJECT_TYPE_COLLECT_11_LETTER_L,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_12_LETTER_M,212,SAME,,OBJECT_TYPE_COLLECT_12_LETTER_M,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_13_LETTER_N,213,SAME,,OBJECT_TYPE_COLLECT_13_LETTER_N,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_14_LETTER_O,214,SAME,,OBJECT_TYPE_COLLECT_14_LETTER_O,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_15_VEHICLE_BOMB,215,SAME,,OBJECT_TYPE_COLLECT_15_VEHICLE_BOMB,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_16_VEHICLE_OIL_SLICK,216,SAME,,OBJECT_TYPE_COLLECT_16_VEHICLE_OIL_SLICK,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_17_VEHICLE_MINE,217,SAME,,OBJECT_TYPE_COLLECT_17_VEHICLE_MINE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_18_VEHICLE_MACHINE_GUN,218,SAME,,OBJECT_TYPE_COLLECT_18_VEHICLE_MACHINE_GUN,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_19_TANK_CANNON,219,SAME,,OBJECT_TYPE_COLLECT_19_TANK_CANNON,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_20_WATER_CANNON,220,SAME,,OBJECT_TYPE_COLLECT_20_WATER_CANNON,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_21_VEHICLE_FLAMETHROWER,221,SAME,,OBJECT_TYPE_COLLECT_21_VEHICLE_FLAMETHROWER,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_22_JEEP_TURRET,222,SAME,,OBJECT_TYPE_COLLECT_22_JEEP_TURRET,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_23_INSTANT_VEHICLE_BOMB,223,SAME,,OBJECT_TYPE_COLLECT_23_INSTANT_VEHICLE_BOMB,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_24_LETTER_J,224,SAME,,OBJECT_TYPE_COLLECT_24_LETTER_J,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_25_LETTER_K,225,SAME,,OBJECT_TYPE_COLLECT_25_LETTER_K,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_26_LETTER_L,226,SAME,,OBJECT_TYPE_COLLECT_26_LETTER_L,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_27_LETTER_M,227,SAME,,OBJECT_TYPE_COLLECT_27_LETTER_M,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_28_MULTIPLIER_PLUS_1,228,SAME,,OBJECT_TYPE_COLLECT_28_MULTIPLIER_PLUS_1,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_29_LIFE_PLUS_1,229,SAME,,OBJECT_TYPE_COLLECT_29_LIFE_PLUS_1,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_30_HEALTH,230,SAME,,OBJECT_TYPE_COLLECT_30_HEALTH,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_31_ARMOR,231,SAME,,OBJECT_TYPE_COLLECT_31_ARMOR,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_32_GET_OUTTA_JAIL_FREE_CARD,232,SAME,,OBJECT_TYPE_COLLECT_32_GET_OUTTA_JAIL_FREE_CARD,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_33_COP_BRIBE,233,SAME,,OBJECT_TYPE_COLLECT_33_COP_BRIBE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_34_INVULNERABILITY,234,SAME,,OBJECT_TYPE_COLLECT_34_INVULNERABILITY,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_35_DOUBLE_DAMAGE,235,SAME,,OBJECT_TYPE_COLLECT_35_DOUBLE_DAMAGE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_36_FAST_RELOAD,236,SAME,,OBJECT_TYPE_COLLECT_36_FAST_RELOAD,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_37_ELECTROFINGERS,237,SAME,,OBJECT_TYPE_COLLECT_37_ELECTROFINGERS,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_38_RESPECT,238,SAME,,OBJECT_TYPE_COLLECT_38_RESPECT,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_39_INVISIBILITY,239,SAME,,OBJECT_TYPE_COLLECT_39_INVISIBILITY,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_40_INSTANT_GANG,240,SAME,,OBJECT_TYPE_COLLECT_40_INSTANT_GANG,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_41_LETTER_N,241,SAME,,OBJECT_TYPE_COLLECT_41_LETTER_N,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_42_LETTER_O,242,SAME,,OBJECT_TYPE_COLLECT_42_LETTER_O,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_43_LETTER_P,243,SAME,,OBJECT_TYPE_COLLECT_43_LETTER_P,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_COLLECT_44_LETTER_Q,244,SAME,,OBJECT_TYPE_COLLECT_44_LETTER_Q,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BOMB,247,SAME,,OBJECT_TYPE_BOMB,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GUNJEEP_TURRET,248,SAME,,OBJECT_TYPE_GUNJEEP_TURRET,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BIG_BROWN_SKID,249,SAME,,OBJECT_TYPE_BIG_BROWN_SKID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BIG_GREY_SKID,250,SAME,,OBJECT_TYPE_BIG_GREY_SKID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_251,251,SAME,,OBJECT_TYPE_UNK_251,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_PART_B,252,SAME,,OBJECT_TYPE_CRANE_PART_B,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BIG_RED_SKID,253,SAME,,OBJECT_TYPE_BIG_RED_SKID,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BULLET,254,SAME,,OBJECT_TYPE_BULLET,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_TRAFFIC_LIGHT,255,SAME,,OBJECT_TYPE_TRAFFIC_LIGHT,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_RED_FOOTPRINTS,256,SAME,,OBJECT_TYPE_RED_FOOTPRINTS,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BLOOD,257,SAME,,OBJECT_TYPE_BLOOD,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CROSSING,258,SAME,,OBJECT_TYPE_CROSSING,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SPARK,259,SAME,,OBJECT_TYPE_SPARK,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_PART_C,260,SAME,,OBJECT_TYPE_CRANE_PART_C,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_PART_D,261,SAME,,OBJECT_TYPE_CRANE_PART_D,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_PART_E,262,SAME,,OBJECT_TYPE_CRANE_PART_E,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_CRANE_HEAD_B,263,SAME,,OBJECT_TYPE_CRANE_HEAD_B,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_PISTOL_BULLET,265,SAME,,OBJECT_TYPE_PISTOL_BULLET,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_BONUS_TOKEN,266,SAME,,OBJECT_TYPE_BONUS_TOKEN,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_TASSER_BULLET,277,SAME,,OBJECT_TYPE_TASSER_BULLET,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_UNK_278,278,SAME,,OBJECT_TYPE_UNK_278,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_SOUND_INSTANT,279,SAME,,OBJECT_TYPE_SOUND_INSTANT,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_INVISIBLE_TARGET,280,SAME,,OBJECT_TYPE_INVISIBLE_TARGET,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_POWERGEN,281,SAME,,OBJECT_TYPE_POWERGEN,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_POWERGEN_DEAD,282,SAME,,OBJECT_TYPE_POWERGEN_DEAD,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_INVISIBLE_DESTRUCTIBLE,283,SAME,,OBJECT_TYPE_INVISIBLE_DESTRUCTIBLE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GENLITE,284,SAME,,OBJECT_TYPE_GENLITE,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_INVISIBLE_DEAD,285,SAME,,OBJECT_TYPE_INVISIBLE_DEAD,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_KILL_FRENZY,286,SAME,,OBJECT_TYPE_KILL_FRENZY,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GANG_DECAL_LOONIES,287,SAME,,OBJECT_TYPE_GANG_DECAL_LOONIES,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GANG_DECAL_YAKUZA,288,SAME,,OBJECT_TYPE_GANG_DECAL_YAKUZA,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GANG_DECAL_ZAIBATSU,289,SAME,,OBJECT_TYPE_GANG_DECAL_ZAIBATSU,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GANG_DECAL_REDNECKS,290,SAME,,OBJECT_TYPE_GANG_DECAL_REDNECKS,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GANG_DECAL_SCIENTISTS,291,SAME,,OBJECT_TYPE_GANG_DECAL_SCIENTISTS,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GANG_DECAL_KRISHNA,292,SAME,,OBJECT_TYPE_GANG_DECAL_KRISHNA,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_GANG_DECAL_RUSSIAN,293,SAME,,OBJECT_TYPE_GANG_DECAL_RUSSIAN,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_TUNNEL_BLOCKER,294,SAME,,OBJECT_TYPE_TUNNEL_BLOCKER,
+gta2-seuko-mod,src/game/gta2.h,OBJECT_TYPE,OBJECT_TYPE_REMOTE,295,SAME,,OBJECT_TYPE_REMOTE,
+gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_TILE,1,SAME,,PALETTE_BASE_TILE,
+gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_SPRITE,2,SAME,,PALETTE_BASE_SPRITE,
+gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_CAR_REMAP,3,SAME,,PALETTE_BASE_CAR_REMAP,
+gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_PED_REMAP,4,SAME,,PALETTE_BASE_PED_REMAP,
+gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_CODE_OBJ_REMAP,5,SAME,,PALETTE_BASE_CODE_OBJ_REMAP,
+gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_MAP_OBJ_REMAP,6,SAME,,PALETTE_BASE_MAP_OBJ_REMAP,
+gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_USER_REMAP,7,SAME,,PALETTE_BASE_USER_REMAP,
+gta2-seuko-mod,src/game/gta2.h,PALETTE_BASE,PALETTE_BASE_FONT_REMAP,8,SAME,,PALETTE_BASE_FONT_REMAP,
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_INVISIBLE,33554432,NEW,,,constant not in ours
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_ARMED,128,SAME,,_ARMED,enum-name prefix dropped
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE,PED_BIT_STATE_FIRING_FROM_GUN,2048,SAME,,FIRING_FROM_GUN,enum-name prefix dropped
@@ -712,177 +712,177 @@ gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE2,PED_BIT_STATE2_CARTHIEF,6,CONFLICT
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE2,PED_BIT_STATE2_FIRING_FROM_GUN,2,SAME,,FIRING_FROM_GUN,enum-name prefix dropped
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE2,PED_BIT_STATE2_UNK_5,5,NEW,,,constant not in ours
 gta2-seuko-mod,src/game/gta2.h,PED_BIT_STATE2,PED_BIT_STATE2_UNK_MUGGER,4,CONFLICT,semantic,UNK_4_POLICE,"same value, different name"
-gta2-seuko-mod,src/game/gta2.h,PED_GRAPHIC_TYPE,PED_GRAPHIC_TYPE_DUMMY,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_GRAPHIC_TYPE,PED_GRAPHIC_TYPE_GANG,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_GRAPHIC_TYPE,PED_GRAPHIC_TYPE_EMERG,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_NO_OBJ,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FLEE_ON_FOOT_TILL_SAFE,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FLEE_CHAR_ON_FOOT_TILL_SAFE,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FLEE_CHAR_ON_FOOT_ALWAYS,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FLEE_CHAR_ANY_MEANS_TILL_SAFE,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FLEE_CHAR_ANY_MEANS_ALWAYS,5,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FLEE_CHAR_ALWAYS_ONCE_CAR_STOPPED,6,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_7,7,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_8,8,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_9,9,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_10,10,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_11,11,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_GO_TO_AREA_ON_FOOT,12,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_GO_TO_AREA_ANY_MEANS,13,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_GO_TO_AREA_IN_CAR,14,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_15,15,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_GO_TO_CHAR_ON_FOOT,16,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_17,17,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_18,18,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_KILL_CHAR_ANY_MEANS,19,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_KILL_CHAR_ON_FOOT,20,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_KILL_CHAR_IN_CAR,21,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_22,22,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_BEAT_OR_ROB_CHAR,23,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_GUARD_SPOT,24,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_GUARD_AREA,25,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_WAIT_ON_FOOT,26,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_WAIT_IN_CAR,27,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_28,28,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_29,29,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_30,30,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_31,31,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_32,32,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_33,33,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_34,34,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_ENTER_CAR,35,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_LEAVE_CAR,36,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_ENTER_TRAIN,37,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_LEAVE_TRAIN,38,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_39,39,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_40,40,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_41,41,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_PATROL_ON_FOOT,42,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_43,43,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_44,44,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_45,45,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_46,46,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_47,47,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_48,48,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_49,49,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_50,50,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_51,51,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_52,52,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_53,53,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_54,54,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FOLLOW_CAR_IN_CAR,55,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FOLLOW_CAR_ON_FOOT_WITH_OFFSET,56,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FIRE_AT_OBJECT_FROM_VEHICLE,57,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_DESTROY_OBJECT,58,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_DESTROY_CAR,59,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_PUT_OUT_CAR_FIRE,60,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_61,61,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_PLAYER,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_EMPTY,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNKNOWN_2,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_DUMMY,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_MISSION_DRIVER,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_DRIVER,5,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNKNOWN_6,6,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNKNOWN_7,7,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_BUS_PASSENGER,8,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_TRAIN_PASSENGER,9,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_DRIVER2,10,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNKNOWN_11,11,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNKNOWN_12,12,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ANGRY_DRIVER,13,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_PSYCHO,14,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_MUGGER,15,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_CARTHIEF,16,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_BANK_ROBBER,17,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_CRIMINAL,18,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_GANG_MEMBER,19,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNKNOWN_20,20,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNKNOWN_21,21,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ELVIS,22,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_MEDIC,23,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_POLICE,24,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_SWAT,25,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_FBI,26,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ARMY_IN_JEEP,27,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_GUARD,28,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_POLICE_ON_FOOT,29,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNK_30,30,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ARMY_ON_FOOT,31,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_GUARD_AGAINST_PLAYER,32,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_CRIMINAL_TYPE1,33,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_CRIMINAL_TYPE2,34,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_SPECIAL_GROUP_MEMBER,35,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_TANK_DRIVER,36,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ROAD_BLOCK_FBI,37,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_FIREMAN,38,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ROAD_BLOCK_TANK_MAN,39,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNKNOWN_40,40,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_DRONE,41,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_DRIVER_GET_OUTTA_MY_CAR,42,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_STAND_STILL_BLOKE,43,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ELVIS_LEADER,44,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_REFUGEES,45,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ANY_LAW_ENFORCEMENT,46,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ANY_EMERGENCY_SERVICE_MAN,47,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ANY_GANG_MEMBER,48,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ANY_ELVIS,49,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_DRIVER3,50,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_NO_OCCUPATION,51,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DEFAULT,255,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_BLUE_POLICE,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_GREEN_POLICE,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_RED_POLICE,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_YELLOW_POLICE,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_KHAKI_POLICE,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_RED_HEAD_REDNECK,5,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_BLOND_HEAD_REDNECK,6,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_YELLOW_SCIENTIST,7,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_ZAIBATSU,8,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_KRISTNA,9,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_RUSSIAN,10,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_LOONY,11,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_ELVIS,12,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_YAKUZA,13,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_FIREMAN,14,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_GREEN_SHORTS_PED,15,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_MEDIC,16,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_MUGGER,17,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_BLUE_DUMMY,18,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_LIGHT_BLUE_DUMMY,19,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_TSHIRT_AND_SHORTS_DUMMY,20,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_SHORT_SLEEVED_SHIRT_AND_TROUSERS_DUMMY,21,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_PRISON_UNIFORM,22,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_HULK1,23,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_HULK2,24,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_PLAYER,25,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_NAKED,26,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_27,27,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_28,28,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_29,29,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_30,30,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_31,31,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_32,32,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_33,33,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_34,34,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_35,35,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_36,36,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_37,37,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_38,38,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_39,39,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_40,40,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_41,41,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_42,42,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_43,43,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_44,44,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_45,45,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_46,46,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_47,47,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_48,48,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_49,49,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_50,50,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_51,51,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_52,52,NEW,,,enum not in ours
+gta2-seuko-mod,src/game/gta2.h,PED_GRAPHIC_TYPE,PED_GRAPHIC_TYPE_DUMMY,0,SAME,,PED_GRAPHIC_TYPE_DUMMY,
+gta2-seuko-mod,src/game/gta2.h,PED_GRAPHIC_TYPE,PED_GRAPHIC_TYPE_GANG,1,SAME,,PED_GRAPHIC_TYPE_GANG,
+gta2-seuko-mod,src/game/gta2.h,PED_GRAPHIC_TYPE,PED_GRAPHIC_TYPE_EMERG,2,SAME,,PED_GRAPHIC_TYPE_EMERG,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_NO_OBJ,0,SAME,,PED_OBJECTIVE_NO_OBJ,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FLEE_ON_FOOT_TILL_SAFE,1,SAME,,PED_OBJECTIVE_FLEE_ON_FOOT_TILL_SAFE,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FLEE_CHAR_ON_FOOT_TILL_SAFE,2,SAME,,PED_OBJECTIVE_FLEE_CHAR_ON_FOOT_TILL_SAFE,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FLEE_CHAR_ON_FOOT_ALWAYS,3,SAME,,PED_OBJECTIVE_FLEE_CHAR_ON_FOOT_ALWAYS,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FLEE_CHAR_ANY_MEANS_TILL_SAFE,4,SAME,,PED_OBJECTIVE_FLEE_CHAR_ANY_MEANS_TILL_SAFE,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FLEE_CHAR_ANY_MEANS_ALWAYS,5,SAME,,PED_OBJECTIVE_FLEE_CHAR_ANY_MEANS_ALWAYS,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FLEE_CHAR_ALWAYS_ONCE_CAR_STOPPED,6,SAME,,PED_OBJECTIVE_FLEE_CHAR_ALWAYS_ONCE_CAR_STOPPED,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_7,7,SAME,,PED_OBJECTIVE_UNKNOWN_7,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_8,8,SAME,,PED_OBJECTIVE_UNKNOWN_8,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_9,9,SAME,,PED_OBJECTIVE_UNKNOWN_9,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_10,10,SAME,,PED_OBJECTIVE_UNKNOWN_10,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_11,11,SAME,,PED_OBJECTIVE_UNKNOWN_11,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_GO_TO_AREA_ON_FOOT,12,SAME,,PED_OBJECTIVE_GO_TO_AREA_ON_FOOT,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_GO_TO_AREA_ANY_MEANS,13,SAME,,PED_OBJECTIVE_GO_TO_AREA_ANY_MEANS,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_GO_TO_AREA_IN_CAR,14,SAME,,PED_OBJECTIVE_GO_TO_AREA_IN_CAR,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_15,15,SAME,,PED_OBJECTIVE_UNKNOWN_15,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_GO_TO_CHAR_ON_FOOT,16,SAME,,PED_OBJECTIVE_GO_TO_CHAR_ON_FOOT,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_17,17,SAME,,PED_OBJECTIVE_UNKNOWN_17,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_18,18,SAME,,PED_OBJECTIVE_UNKNOWN_18,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_KILL_CHAR_ANY_MEANS,19,SAME,,PED_OBJECTIVE_KILL_CHAR_ANY_MEANS,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_KILL_CHAR_ON_FOOT,20,SAME,,PED_OBJECTIVE_KILL_CHAR_ON_FOOT,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_KILL_CHAR_IN_CAR,21,SAME,,PED_OBJECTIVE_KILL_CHAR_IN_CAR,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_22,22,SAME,,PED_OBJECTIVE_UNKNOWN_22,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_BEAT_OR_ROB_CHAR,23,SAME,,PED_OBJECTIVE_BEAT_OR_ROB_CHAR,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_GUARD_SPOT,24,SAME,,PED_OBJECTIVE_GUARD_SPOT,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_GUARD_AREA,25,SAME,,PED_OBJECTIVE_GUARD_AREA,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_WAIT_ON_FOOT,26,SAME,,PED_OBJECTIVE_WAIT_ON_FOOT,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_WAIT_IN_CAR,27,SAME,,PED_OBJECTIVE_WAIT_IN_CAR,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_28,28,SAME,,PED_OBJECTIVE_UNKNOWN_28,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_29,29,SAME,,PED_OBJECTIVE_UNKNOWN_29,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_30,30,SAME,,PED_OBJECTIVE_UNKNOWN_30,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_31,31,SAME,,PED_OBJECTIVE_UNKNOWN_31,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_32,32,SAME,,PED_OBJECTIVE_UNKNOWN_32,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_33,33,SAME,,PED_OBJECTIVE_UNKNOWN_33,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_34,34,SAME,,PED_OBJECTIVE_UNKNOWN_34,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_ENTER_CAR,35,SAME,,PED_OBJECTIVE_ENTER_CAR,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_LEAVE_CAR,36,SAME,,PED_OBJECTIVE_LEAVE_CAR,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_ENTER_TRAIN,37,SAME,,PED_OBJECTIVE_ENTER_TRAIN,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_LEAVE_TRAIN,38,SAME,,PED_OBJECTIVE_LEAVE_TRAIN,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_39,39,SAME,,PED_OBJECTIVE_UNKNOWN_39,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_40,40,SAME,,PED_OBJECTIVE_UNKNOWN_40,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_41,41,SAME,,PED_OBJECTIVE_UNKNOWN_41,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_PATROL_ON_FOOT,42,SAME,,PED_OBJECTIVE_PATROL_ON_FOOT,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_43,43,SAME,,PED_OBJECTIVE_UNKNOWN_43,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_44,44,SAME,,PED_OBJECTIVE_UNKNOWN_44,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_45,45,SAME,,PED_OBJECTIVE_UNKNOWN_45,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_46,46,SAME,,PED_OBJECTIVE_UNKNOWN_46,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_47,47,SAME,,PED_OBJECTIVE_UNKNOWN_47,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_48,48,SAME,,PED_OBJECTIVE_UNKNOWN_48,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_49,49,SAME,,PED_OBJECTIVE_UNKNOWN_49,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_50,50,SAME,,PED_OBJECTIVE_UNKNOWN_50,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_51,51,SAME,,PED_OBJECTIVE_UNKNOWN_51,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_52,52,SAME,,PED_OBJECTIVE_UNKNOWN_52,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_53,53,SAME,,PED_OBJECTIVE_UNKNOWN_53,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_54,54,SAME,,PED_OBJECTIVE_UNKNOWN_54,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FOLLOW_CAR_IN_CAR,55,SAME,,PED_OBJECTIVE_FOLLOW_CAR_IN_CAR,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FOLLOW_CAR_ON_FOOT_WITH_OFFSET,56,SAME,,PED_OBJECTIVE_FOLLOW_CAR_ON_FOOT_WITH_OFFSET,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_FIRE_AT_OBJECT_FROM_VEHICLE,57,SAME,,PED_OBJECTIVE_FIRE_AT_OBJECT_FROM_VEHICLE,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_DESTROY_OBJECT,58,SAME,,PED_OBJECTIVE_DESTROY_OBJECT,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_DESTROY_CAR,59,SAME,,PED_OBJECTIVE_DESTROY_CAR,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_PUT_OUT_CAR_FIRE,60,SAME,,PED_OBJECTIVE_PUT_OUT_CAR_FIRE,
+gta2-seuko-mod,src/game/gta2.h,PED_OBJECTIVE,PED_OBJECTIVE_UNKNOWN_61,61,SAME,,PED_OBJECTIVE_UNKNOWN_61,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_PLAYER,0,SAME,,PED_OCCUPATION_PLAYER,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_EMPTY,1,SAME,,PED_OCCUPATION_EMPTY,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNKNOWN_2,2,SAME,,PED_OCCUPATION_UNKNOWN_2,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_DUMMY,3,SAME,,PED_OCCUPATION_DUMMY,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_MISSION_DRIVER,4,SAME,,PED_OCCUPATION_MISSION_DRIVER,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_DRIVER,5,SAME,,PED_OCCUPATION_DRIVER,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNKNOWN_6,6,SAME,,PED_OCCUPATION_UNKNOWN_6,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNKNOWN_7,7,SAME,,PED_OCCUPATION_UNKNOWN_7,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_BUS_PASSENGER,8,SAME,,PED_OCCUPATION_BUS_PASSENGER,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_TRAIN_PASSENGER,9,SAME,,PED_OCCUPATION_TRAIN_PASSENGER,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_DRIVER2,10,SAME,,PED_OCCUPATION_DRIVER2,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNKNOWN_11,11,SAME,,PED_OCCUPATION_UNKNOWN_11,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNKNOWN_12,12,SAME,,PED_OCCUPATION_UNKNOWN_12,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ANGRY_DRIVER,13,SAME,,PED_OCCUPATION_ANGRY_DRIVER,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_PSYCHO,14,SAME,,PED_OCCUPATION_PSYCHO,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_MUGGER,15,SAME,,PED_OCCUPATION_MUGGER,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_CARTHIEF,16,SAME,,PED_OCCUPATION_CARTHIEF,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_BANK_ROBBER,17,SAME,,PED_OCCUPATION_BANK_ROBBER,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_CRIMINAL,18,SAME,,PED_OCCUPATION_CRIMINAL,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_GANG_MEMBER,19,SAME,,PED_OCCUPATION_GANG_MEMBER,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNKNOWN_20,20,SAME,,PED_OCCUPATION_UNKNOWN_20,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNKNOWN_21,21,SAME,,PED_OCCUPATION_UNKNOWN_21,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ELVIS,22,SAME,,PED_OCCUPATION_ELVIS,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_MEDIC,23,SAME,,PED_OCCUPATION_MEDIC,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_POLICE,24,SAME,,PED_OCCUPATION_POLICE,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_SWAT,25,SAME,,PED_OCCUPATION_SWAT,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_FBI,26,SAME,,PED_OCCUPATION_FBI,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ARMY_IN_JEEP,27,SAME,,PED_OCCUPATION_ARMY_IN_JEEP,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_GUARD,28,SAME,,PED_OCCUPATION_GUARD,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_POLICE_ON_FOOT,29,SAME,,PED_OCCUPATION_POLICE_ON_FOOT,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNK_30,30,SAME,,PED_OCCUPATION_UNK_30,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ARMY_ON_FOOT,31,SAME,,PED_OCCUPATION_ARMY_ON_FOOT,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_GUARD_AGAINST_PLAYER,32,SAME,,PED_OCCUPATION_GUARD_AGAINST_PLAYER,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_CRIMINAL_TYPE1,33,SAME,,PED_OCCUPATION_CRIMINAL_TYPE1,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_CRIMINAL_TYPE2,34,SAME,,PED_OCCUPATION_CRIMINAL_TYPE2,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_SPECIAL_GROUP_MEMBER,35,SAME,,PED_OCCUPATION_SPECIAL_GROUP_MEMBER,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_TANK_DRIVER,36,SAME,,PED_OCCUPATION_TANK_DRIVER,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ROAD_BLOCK_FBI,37,SAME,,PED_OCCUPATION_ROAD_BLOCK_FBI,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_FIREMAN,38,SAME,,PED_OCCUPATION_FIREMAN,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ROAD_BLOCK_TANK_MAN,39,SAME,,PED_OCCUPATION_ROAD_BLOCK_TANK_MAN,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_UNKNOWN_40,40,SAME,,PED_OCCUPATION_UNKNOWN_40,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_DRONE,41,SAME,,PED_OCCUPATION_DRONE,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_DRIVER_GET_OUTTA_MY_CAR,42,SAME,,PED_OCCUPATION_DRIVER_GET_OUTTA_MY_CAR,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_STAND_STILL_BLOKE,43,SAME,,PED_OCCUPATION_STAND_STILL_BLOKE,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ELVIS_LEADER,44,SAME,,PED_OCCUPATION_ELVIS_LEADER,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_REFUGEES,45,SAME,,PED_OCCUPATION_REFUGEES,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ANY_LAW_ENFORCEMENT,46,SAME,,PED_OCCUPATION_ANY_LAW_ENFORCEMENT,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ANY_EMERGENCY_SERVICE_MAN,47,SAME,,PED_OCCUPATION_ANY_EMERGENCY_SERVICE_MAN,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ANY_GANG_MEMBER,48,SAME,,PED_OCCUPATION_ANY_GANG_MEMBER,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_ANY_ELVIS,49,SAME,,PED_OCCUPATION_ANY_ELVIS,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_DRIVER3,50,SAME,,PED_OCCUPATION_DRIVER3,
+gta2-seuko-mod,src/game/gta2.h,PED_OCCUPATION,PED_OCCUPATION_NO_OCCUPATION,51,SAME,,PED_OCCUPATION_NO_OCCUPATION,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DEFAULT,255,SAME,,PED_REMAP_DEFAULT,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_BLUE_POLICE,0,SAME,,PED_REMAP_BLUE_POLICE,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_GREEN_POLICE,1,SAME,,PED_REMAP_GREEN_POLICE,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_RED_POLICE,2,SAME,,PED_REMAP_RED_POLICE,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_YELLOW_POLICE,3,SAME,,PED_REMAP_YELLOW_POLICE,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_KHAKI_POLICE,4,SAME,,PED_REMAP_KHAKI_POLICE,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_RED_HEAD_REDNECK,5,SAME,,PED_REMAP_RED_HEAD_REDNECK,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_BLOND_HEAD_REDNECK,6,SAME,,PED_REMAP_BLOND_HEAD_REDNECK,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_YELLOW_SCIENTIST,7,SAME,,PED_REMAP_YELLOW_SCIENTIST,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_ZAIBATSU,8,SAME,,PED_REMAP_ZAIBATSU,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_KRISTNA,9,SAME,,PED_REMAP_KRISTNA,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_RUSSIAN,10,SAME,,PED_REMAP_RUSSIAN,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_LOONY,11,SAME,,PED_REMAP_LOONY,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_ELVIS,12,SAME,,PED_REMAP_ELVIS,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_YAKUZA,13,SAME,,PED_REMAP_YAKUZA,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_FIREMAN,14,SAME,,PED_REMAP_FIREMAN,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_GREEN_SHORTS_PED,15,SAME,,PED_REMAP_GREEN_SHORTS_PED,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_MEDIC,16,SAME,,PED_REMAP_MEDIC,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_MUGGER,17,SAME,,PED_REMAP_MUGGER,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_BLUE_DUMMY,18,SAME,,PED_REMAP_BLUE_DUMMY,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_LIGHT_BLUE_DUMMY,19,SAME,,PED_REMAP_LIGHT_BLUE_DUMMY,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_TSHIRT_AND_SHORTS_DUMMY,20,SAME,,PED_REMAP_TSHIRT_AND_SHORTS_DUMMY,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_SHORT_SLEEVED_SHIRT_AND_TROUSERS_DUMMY,21,SAME,,PED_REMAP_SHORT_SLEEVED_SHIRT_AND_TROUSERS_DUMMY,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_PRISON_UNIFORM,22,SAME,,PED_REMAP_PRISON_UNIFORM,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_HULK1,23,SAME,,PED_REMAP_HULK1,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_HULK2,24,SAME,,PED_REMAP_HULK2,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_PLAYER,25,SAME,,PED_REMAP_PLAYER,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_NAKED,26,SAME,,PED_REMAP_NAKED,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_27,27,SAME,,PED_REMAP_DUMMY_27,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_28,28,SAME,,PED_REMAP_DUMMY_28,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_29,29,SAME,,PED_REMAP_DUMMY_29,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_30,30,SAME,,PED_REMAP_DUMMY_30,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_31,31,SAME,,PED_REMAP_DUMMY_31,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_32,32,SAME,,PED_REMAP_DUMMY_32,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_33,33,SAME,,PED_REMAP_DUMMY_33,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_34,34,SAME,,PED_REMAP_DUMMY_34,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_35,35,SAME,,PED_REMAP_DUMMY_35,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_36,36,SAME,,PED_REMAP_DUMMY_36,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_37,37,SAME,,PED_REMAP_DUMMY_37,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_38,38,SAME,,PED_REMAP_DUMMY_38,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_39,39,SAME,,PED_REMAP_DUMMY_39,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_40,40,SAME,,PED_REMAP_DUMMY_40,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_41,41,SAME,,PED_REMAP_DUMMY_41,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_42,42,SAME,,PED_REMAP_DUMMY_42,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_43,43,SAME,,PED_REMAP_DUMMY_43,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_44,44,SAME,,PED_REMAP_DUMMY_44,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_45,45,SAME,,PED_REMAP_DUMMY_45,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_46,46,SAME,,PED_REMAP_DUMMY_46,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_47,47,SAME,,PED_REMAP_DUMMY_47,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_48,48,SAME,,PED_REMAP_DUMMY_48,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_49,49,SAME,,PED_REMAP_DUMMY_49,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_50,50,SAME,,PED_REMAP_DUMMY_50,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_51,51,SAME,,PED_REMAP_DUMMY_51,
+gta2-seuko-mod,src/game/gta2.h,PED_REMAP,PED_REMAP_DUMMY_52,52,SAME,,PED_REMAP_DUMMY_52,
 gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_WALKING,0,CONFLICT,naming,WALK,"same value, different name (similar)"
 gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_UNKNOWN_1,1,NEW,,,constant not in ours
 gta2-seuko-mod,src/game/gta2.h,PED_STATE,PED_STATE_GOING_TO_TARGET,2,CONFLICT,semantic,GOING_TO_CAR,"same value, different name"
@@ -918,28 +918,28 @@ gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_UNKNOWN_12,12,NEW,,,constan
 gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_UNKNOWN_13,13,NEW,,,constant not in ours
 gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_STAYING,14,SAME,,STAYING,enum-name prefix dropped
 gta2-seuko-mod,src/game/gta2.h,PED_STATE2,PED_STATE2_SMOKING,26,NEW,,,constant not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE4,PED_STATE4_IDLE_STAYING,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE4,PED_STATE4_PROBABLY_JUMPING,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE4,PED_STATE4_UNK1,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE4,PED_STATE4_UNK4,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE4,PED_STATE4_UNK5,5,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_STATE4,PED_STATE4_UNK6,6,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_THREAT_REACTION,PED_THREAT_REACTION_NO_REACTION,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_THREAT_REACTION,PED_THREAT_REACTION_REACT_AS_EMERGENCY,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_THREAT_REACTION,PED_THREAT_REACTION_REACT_AS_NORMAL,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_THREAT_REACTION,PED_THREAT_REACTION_RUN_AWAY,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_THREAT_SEARCH,PED_THREAT_SEARCH_NO_THREATS,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_THREAT_SEARCH,PED_THREAT_SEARCH_LINE_OF_SIGHT,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_THREAT_SEARCH,PED_THREAT_SEARCH_AREA,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_THREAT_SEARCH,PED_THREAT_SEARCH_AREA_PLAYER_THREAT_ONLY,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_THREAT_SEARCH,PED_THREAT_SEARCH_LINE_OF_SIGHT_PLAYER_THREAT_ONLY,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_THREAT_SEARCH,PED_THREAT_SEARCH_AREA_PLAYER_ONLY,5,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PED_THREAT_SEARCH,PED_THREAT_SEARCH_LINE_OF_SIGHT_PLAYER_ONLY,6,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PLAYER_CONTROL_STATE,PLAYER_CONTROL_STATE_DEFAULT,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PLAYER_CONTROL_STATE,PLAYER_CONTROL_STATE_FREECAM,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PLAYER_CONTROL_STATE,PLAYER_CONTROL_STATE_AUX_PED,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PLAYER_CONTROL_STATE,PLAYER_CONTROL_STATE_NO_CONTROL_AUX_CAM,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,PLAYER_CONTROL_STATE,PLAYER_CONTROL_STATE_NO_CONTROL_STOPPED_CAMERA,4,NEW,,,enum not in ours
+gta2-seuko-mod,src/game/gta2.h,PED_STATE4,PED_STATE4_IDLE_STAYING,2,SAME,,PED_STATE4_IDLE_STAYING,
+gta2-seuko-mod,src/game/gta2.h,PED_STATE4,PED_STATE4_PROBABLY_JUMPING,3,SAME,,PED_STATE4_PROBABLY_JUMPING,
+gta2-seuko-mod,src/game/gta2.h,PED_STATE4,PED_STATE4_UNK1,1,SAME,,PED_STATE4_UNK1,
+gta2-seuko-mod,src/game/gta2.h,PED_STATE4,PED_STATE4_UNK4,4,SAME,,PED_STATE4_UNK4,
+gta2-seuko-mod,src/game/gta2.h,PED_STATE4,PED_STATE4_UNK5,5,SAME,,PED_STATE4_UNK5,
+gta2-seuko-mod,src/game/gta2.h,PED_STATE4,PED_STATE4_UNK6,6,SAME,,PED_STATE4_UNK6,
+gta2-seuko-mod,src/game/gta2.h,PED_THREAT_REACTION,PED_THREAT_REACTION_NO_REACTION,0,SAME,,PED_THREAT_REACTION_NO_REACTION,
+gta2-seuko-mod,src/game/gta2.h,PED_THREAT_REACTION,PED_THREAT_REACTION_REACT_AS_EMERGENCY,1,SAME,,PED_THREAT_REACTION_REACT_AS_EMERGENCY,
+gta2-seuko-mod,src/game/gta2.h,PED_THREAT_REACTION,PED_THREAT_REACTION_REACT_AS_NORMAL,2,SAME,,PED_THREAT_REACTION_REACT_AS_NORMAL,
+gta2-seuko-mod,src/game/gta2.h,PED_THREAT_REACTION,PED_THREAT_REACTION_RUN_AWAY,3,SAME,,PED_THREAT_REACTION_RUN_AWAY,
+gta2-seuko-mod,src/game/gta2.h,PED_THREAT_SEARCH,PED_THREAT_SEARCH_NO_THREATS,0,SAME,,PED_THREAT_SEARCH_NO_THREATS,
+gta2-seuko-mod,src/game/gta2.h,PED_THREAT_SEARCH,PED_THREAT_SEARCH_LINE_OF_SIGHT,1,SAME,,PED_THREAT_SEARCH_LINE_OF_SIGHT,
+gta2-seuko-mod,src/game/gta2.h,PED_THREAT_SEARCH,PED_THREAT_SEARCH_AREA,2,SAME,,PED_THREAT_SEARCH_AREA,
+gta2-seuko-mod,src/game/gta2.h,PED_THREAT_SEARCH,PED_THREAT_SEARCH_AREA_PLAYER_THREAT_ONLY,3,SAME,,PED_THREAT_SEARCH_AREA_PLAYER_THREAT_ONLY,
+gta2-seuko-mod,src/game/gta2.h,PED_THREAT_SEARCH,PED_THREAT_SEARCH_LINE_OF_SIGHT_PLAYER_THREAT_ONLY,4,SAME,,PED_THREAT_SEARCH_LINE_OF_SIGHT_PLAYER_THREAT_ONLY,
+gta2-seuko-mod,src/game/gta2.h,PED_THREAT_SEARCH,PED_THREAT_SEARCH_AREA_PLAYER_ONLY,5,SAME,,PED_THREAT_SEARCH_AREA_PLAYER_ONLY,
+gta2-seuko-mod,src/game/gta2.h,PED_THREAT_SEARCH,PED_THREAT_SEARCH_LINE_OF_SIGHT_PLAYER_ONLY,6,SAME,,PED_THREAT_SEARCH_LINE_OF_SIGHT_PLAYER_ONLY,
+gta2-seuko-mod,src/game/gta2.h,PLAYER_CONTROL_STATE,PLAYER_CONTROL_STATE_DEFAULT,0,SAME,,PLAYER_CONTROL_STATE_DEFAULT,
+gta2-seuko-mod,src/game/gta2.h,PLAYER_CONTROL_STATE,PLAYER_CONTROL_STATE_FREECAM,1,SAME,,PLAYER_CONTROL_STATE_FREECAM,
+gta2-seuko-mod,src/game/gta2.h,PLAYER_CONTROL_STATE,PLAYER_CONTROL_STATE_AUX_PED,2,SAME,,PLAYER_CONTROL_STATE_AUX_PED,
+gta2-seuko-mod,src/game/gta2.h,PLAYER_CONTROL_STATE,PLAYER_CONTROL_STATE_NO_CONTROL_AUX_CAM,3,SAME,,PLAYER_CONTROL_STATE_NO_CONTROL_AUX_CAM,
+gta2-seuko-mod,src/game/gta2.h,PLAYER_CONTROL_STATE,PLAYER_CONTROL_STATE_NO_CONTROL_STOPPED_CAMERA,4,SAME,,PLAYER_CONTROL_STATE_NO_CONTROL_STOPPED_CAMERA,
 gta2-seuko-mod,src/game/gta2.h,PLAYER_MOVEMENT_STATE,BACKWARD,2,SAME,,BACKWARD,
 gta2-seuko-mod,src/game/gta2.h,PLAYER_MOVEMENT_STATE,CTRL_ATTACK,16,SAME,,CTRL_ATTACK,
 gta2-seuko-mod,src/game/gta2.h,PLAYER_MOVEMENT_STATE,CTRL_ENTER_EXIT,32,SAME,,CTRL_ENTER_EXIT,
@@ -952,32 +952,32 @@ gta2-seuko-mod,src/game/gta2.h,PLAYER_MOVEMENT_STATE,CTRL_SPECIAL_2,1024,SAME,,C
 gta2-seuko-mod,src/game/gta2.h,PLAYER_MOVEMENT_STATE,CTRL_WEAPON_NEXT,256,SAME,,CTRL_WEAPON_NEXT,
 gta2-seuko-mod,src/game/gta2.h,PLAYER_MOVEMENT_STATE,CTRL_WEAPON_PREV,128,SAME,,CTRL_WEAPON_PREV,
 gta2-seuko-mod,src/game/gta2.h,PLAYER_MOVEMENT_STATE,LEFT,4,SAME,,LEFT,
-gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_MULTIPLIER,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_LIFE,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_HEALTH,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_ARMOR,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_GET_OUTTA_JAIL_FREE_CARD,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_COP_BRIBE,5,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_INVULNERABILITY,6,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_DOUBLE_DAMAGE,7,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_FAST_RELOAD,8,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_ELECTROFINGERS,9,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_RESPECT,10,NEW,,,enum not in ours
+gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_MULTIPLIER,0,SAME,,POWERUP_TYPE_MULTIPLIER,
+gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_LIFE,1,SAME,,POWERUP_TYPE_LIFE,
+gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_HEALTH,2,SAME,,POWERUP_TYPE_HEALTH,
+gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_ARMOR,3,SAME,,POWERUP_TYPE_ARMOR,
+gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_GET_OUTTA_JAIL_FREE_CARD,4,SAME,,POWERUP_TYPE_GET_OUTTA_JAIL_FREE_CARD,
+gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_COP_BRIBE,5,SAME,,POWERUP_TYPE_COP_BRIBE,
+gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_INVULNERABILITY,6,SAME,,POWERUP_TYPE_INVULNERABILITY,
+gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_DOUBLE_DAMAGE,7,SAME,,POWERUP_TYPE_DOUBLE_DAMAGE,
+gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_FAST_RELOAD,8,SAME,,POWERUP_TYPE_FAST_RELOAD,
+gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_ELECTROFINGERS,9,SAME,,POWERUP_TYPE_ELECTROFINGERS,
+gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_RESPECT,10,SAME,,POWERUP_TYPE_RESPECT,
 gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,"/* doesn't seem to work with fnGivePowerUp */
-	POWERUP_TYPE_INVISIBILITY",11,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_INSTANT_GANG,12,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_13,13,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_14,14,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_15,15,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_16,16,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,REPLAY_STATUS,REPLAY_STATUS_NOT_PLAYING,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,REPLAY_STATUS,REPLAY_STATUS_PLAYING,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,REPLAY_STATUS,REPLAY_STATUS_NOT_PLAYING_NO_CONTROL,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,REPLAY_STATUS,REPLAY_STATUS_PLAYING_EXIT_ON_KEYPRESS,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,S32_SHOW_IMAGINARY,UNK_0,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,S32_SHOW_IMAGINARY,SHOW,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,S32_SHOW_IMAGINARY,DONT_SHOW,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,S32_SHOW_IMAGINARY,UNK_3,3,NEW,,,enum not in ours
+	POWERUP_TYPE_INVISIBILITY",11,SAME,,___doesn_t_seem_to_work_with_fnGivePowerUp_____POWERUP_TYPE_INVISIBILITY,enum-name prefix dropped
+gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_INSTANT_GANG,12,SAME,,POWERUP_TYPE_INSTANT_GANG,
+gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_13,13,SAME,,POWERUP_TYPE_13,
+gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_14,14,SAME,,POWERUP_TYPE_14,
+gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_15,15,SAME,,POWERUP_TYPE_15,
+gta2-seuko-mod,src/game/gta2.h,POWERUP_TYPE,POWERUP_TYPE_16,16,SAME,,POWERUP_TYPE_16,
+gta2-seuko-mod,src/game/gta2.h,REPLAY_STATUS,REPLAY_STATUS_NOT_PLAYING,0,SAME,,REPLAY_STATUS_NOT_PLAYING,
+gta2-seuko-mod,src/game/gta2.h,REPLAY_STATUS,REPLAY_STATUS_PLAYING,1,SAME,,REPLAY_STATUS_PLAYING,
+gta2-seuko-mod,src/game/gta2.h,REPLAY_STATUS,REPLAY_STATUS_NOT_PLAYING_NO_CONTROL,2,SAME,,REPLAY_STATUS_NOT_PLAYING_NO_CONTROL,
+gta2-seuko-mod,src/game/gta2.h,REPLAY_STATUS,REPLAY_STATUS_PLAYING_EXIT_ON_KEYPRESS,3,SAME,,REPLAY_STATUS_PLAYING_EXIT_ON_KEYPRESS,
+gta2-seuko-mod,src/game/gta2.h,S32_SHOW_IMAGINARY,UNK_0,0,SAME,,UNK_0,
+gta2-seuko-mod,src/game/gta2.h,S32_SHOW_IMAGINARY,SHOW,1,SAME,,SHOW,
+gta2-seuko-mod,src/game/gta2.h,S32_SHOW_IMAGINARY,DONT_SHOW,2,SAME,,DONT_SHOW,
+gta2-seuko-mod,src/game/gta2.h,S32_SHOW_IMAGINARY,UNK_3,3,SAME,,UNK_3,
 gta2-seuko-mod,src/game/gta2.h,SAVE_SLOT_UNCLEAR_UI_OR_SCRIPTS_VALUE_ID,"/* Maybe used in scrtipts? Or UI related */
 	MONEY_MULTIPLIER",116,CONFLICT,naming,MONEY_MULTIPLIER,"same value, different name (similar)"
 gta2-seuko-mod,src/game/gta2.h,SAVE_SLOT_UNCLEAR_UI_OR_SCRIPTS_VALUE_ID,PLAYER_LIVES,115,SAME,,PLAYER_LIVES,
@@ -1217,41 +1217,41 @@ gta2-seuko-mod,src/game/gta2.h,SCR_CMD_TYPE,SCRCMD_WHILE_EXEC,70,NEW,,,constant 
 gta2-seuko-mod,src/game/gta2.h,SCR_STRING_DATA_TYPE,FILE_NAME_MISSIONS,21,SAME,,FILE_NAME_MISSIONS,
 gta2-seuko-mod,src/game/gta2.h,SCR_STRING_DATA_TYPE,GANG_NAME,17,SAME,,GANG_NAME,
 gta2-seuko-mod,src/game/gta2.h,SCR_STRING_DATA_TYPE,ZONE_NAME,10,SAME,,ZONE_NAME,
-gta2-seuko-mod,src/game/gta2.h,SPRITE_BIT1,SPRITE_BIT1_1,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,SPRITE_INVISIBILITY,SPRITE_INVISIBILITY_VISIBLE,0,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,SPRITE_INVISIBILITY,SPRITE_INVISIBILITY_INVISIBLE,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,SPRITE_INVISIBILITY,SPRITE_INVISIBILITY_MULTIPLY,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,SPRITE_INVISIBILITY,SPRITE_INVISIBILITY_NO_TRANSPARENCY,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,SPRITE_INVISIBILITY,SPRITE_INVISIBILITY_GHOST,65,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,SPRITE_TYPE,SPRITE_TYPE_INVISIBLE,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,SPRITE_TYPE,SPRITE_TYPE_CAR,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,SPRITE_TYPE,SPRITE_TYPE_PED,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,SPRITE_TYPE,SPRITE_TYPE_CODE_OBJ,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,SPRITE_TYPE,SPRITE_TYPE_MAP_OBJ,5,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,SPRITE_TYPE,SPRITE_TYPE_USER,6,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,SPRITE_TYPE,SPRITE_TYPE_FONT,7,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TILE_ENUM1,TILE_ENUM1_1,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TILE_ENUM1,TILE_ENUM1_2,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TILE_ENUM1,TILE_ENUM1_4,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TILE_ENUM1,TILE_ENUM1_4000,16384,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TILE_ENUM1,TILE_ENUM1_60,96,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TILE_ENUM1,TILE_ENUM1_80,128,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_1_REGULAR,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_2_PROT_RECYCLED_CAR,2,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_4_AMBULANCE,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_5,5,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_6_POLICE_CAR,6,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_7,7,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_9,9,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_MISSION_CAR,8,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_a,10,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TRAFFIC_PHASE,TRAFFIC_PHASE_HORIZONTAL_GREEN,4,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TRAFFIC_PHASE,TRAFFIC_PHASE_HORIZONTAL_RED,6,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TRAFFIC_PHASE,TRAFFIC_PHASE_HORIZONTAL_YELLOW,5,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TRAFFIC_PHASE,TRAFFIC_PHASE_PEDS_CROSSING,7,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TRAFFIC_PHASE,TRAFFIC_PHASE_VERTICAL_GREEN,1,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TRAFFIC_PHASE,TRAFFIC_PHASE_VERTICAL_RED,3,NEW,,,enum not in ours
-gta2-seuko-mod,src/game/gta2.h,TRAFFIC_PHASE,TRAFFIC_PHASE_VERTICAL_YELLOW,2,NEW,,,enum not in ours
+gta2-seuko-mod,src/game/gta2.h,SPRITE_BIT1,SPRITE_BIT1_1,1,SAME,,SPRITE_BIT1_1,
+gta2-seuko-mod,src/game/gta2.h,SPRITE_INVISIBILITY,SPRITE_INVISIBILITY_VISIBLE,0,SAME,,SPRITE_INVISIBILITY_VISIBLE,
+gta2-seuko-mod,src/game/gta2.h,SPRITE_INVISIBILITY,SPRITE_INVISIBILITY_INVISIBLE,1,SAME,,SPRITE_INVISIBILITY_INVISIBLE,
+gta2-seuko-mod,src/game/gta2.h,SPRITE_INVISIBILITY,SPRITE_INVISIBILITY_MULTIPLY,2,SAME,,SPRITE_INVISIBILITY_MULTIPLY,
+gta2-seuko-mod,src/game/gta2.h,SPRITE_INVISIBILITY,SPRITE_INVISIBILITY_NO_TRANSPARENCY,3,SAME,,SPRITE_INVISIBILITY_NO_TRANSPARENCY,
+gta2-seuko-mod,src/game/gta2.h,SPRITE_INVISIBILITY,SPRITE_INVISIBILITY_GHOST,65,SAME,,SPRITE_INVISIBILITY_GHOST,
+gta2-seuko-mod,src/game/gta2.h,SPRITE_TYPE,SPRITE_TYPE_INVISIBLE,1,SAME,,SPRITE_TYPE_INVISIBLE,
+gta2-seuko-mod,src/game/gta2.h,SPRITE_TYPE,SPRITE_TYPE_CAR,2,SAME,,SPRITE_TYPE_CAR,
+gta2-seuko-mod,src/game/gta2.h,SPRITE_TYPE,SPRITE_TYPE_PED,3,SAME,,SPRITE_TYPE_PED,
+gta2-seuko-mod,src/game/gta2.h,SPRITE_TYPE,SPRITE_TYPE_CODE_OBJ,4,SAME,,SPRITE_TYPE_CODE_OBJ,
+gta2-seuko-mod,src/game/gta2.h,SPRITE_TYPE,SPRITE_TYPE_MAP_OBJ,5,SAME,,SPRITE_TYPE_MAP_OBJ,
+gta2-seuko-mod,src/game/gta2.h,SPRITE_TYPE,SPRITE_TYPE_USER,6,SAME,,SPRITE_TYPE_USER,
+gta2-seuko-mod,src/game/gta2.h,SPRITE_TYPE,SPRITE_TYPE_FONT,7,SAME,,SPRITE_TYPE_FONT,
+gta2-seuko-mod,src/game/gta2.h,TILE_ENUM1,TILE_ENUM1_1,1,SAME,,TILE_ENUM1_1,
+gta2-seuko-mod,src/game/gta2.h,TILE_ENUM1,TILE_ENUM1_2,2,SAME,,TILE_ENUM1_2,
+gta2-seuko-mod,src/game/gta2.h,TILE_ENUM1,TILE_ENUM1_4,4,SAME,,TILE_ENUM1_4,
+gta2-seuko-mod,src/game/gta2.h,TILE_ENUM1,TILE_ENUM1_4000,16384,SAME,,TILE_ENUM1_4000,
+gta2-seuko-mod,src/game/gta2.h,TILE_ENUM1,TILE_ENUM1_60,96,SAME,,TILE_ENUM1_60,
+gta2-seuko-mod,src/game/gta2.h,TILE_ENUM1,TILE_ENUM1_80,128,SAME,,TILE_ENUM1_80,
+gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_1_REGULAR,1,SAME,,TRAFFIC_1_REGULAR,
+gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_2_PROT_RECYCLED_CAR,2,SAME,,TRAFFIC_2_PROT_RECYCLED_CAR,
+gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_4_AMBULANCE,4,SAME,,TRAFFIC_4_AMBULANCE,
+gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_5,5,SAME,,TRAFFIC_5,
+gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_6_POLICE_CAR,6,SAME,,TRAFFIC_6_POLICE_CAR,
+gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_7,7,SAME,,TRAFFIC_7,
+gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_9,9,SAME,,TRAFFIC_9,
+gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_MISSION_CAR,8,SAME,,TRAFFIC_MISSION_CAR,
+gta2-seuko-mod,src/game/gta2.h,TRAFFIC_CAR_TYPE,TRAFFIC_a,10,SAME,,TRAFFIC_a,
+gta2-seuko-mod,src/game/gta2.h,TRAFFIC_PHASE,TRAFFIC_PHASE_HORIZONTAL_GREEN,4,SAME,,TRAFFIC_PHASE_HORIZONTAL_GREEN,
+gta2-seuko-mod,src/game/gta2.h,TRAFFIC_PHASE,TRAFFIC_PHASE_HORIZONTAL_RED,6,SAME,,TRAFFIC_PHASE_HORIZONTAL_RED,
+gta2-seuko-mod,src/game/gta2.h,TRAFFIC_PHASE,TRAFFIC_PHASE_HORIZONTAL_YELLOW,5,SAME,,TRAFFIC_PHASE_HORIZONTAL_YELLOW,
+gta2-seuko-mod,src/game/gta2.h,TRAFFIC_PHASE,TRAFFIC_PHASE_PEDS_CROSSING,7,SAME,,TRAFFIC_PHASE_PEDS_CROSSING,
+gta2-seuko-mod,src/game/gta2.h,TRAFFIC_PHASE,TRAFFIC_PHASE_VERTICAL_GREEN,1,SAME,,TRAFFIC_PHASE_VERTICAL_GREEN,
+gta2-seuko-mod,src/game/gta2.h,TRAFFIC_PHASE,TRAFFIC_PHASE_VERTICAL_RED,3,SAME,,TRAFFIC_PHASE_VERTICAL_RED,
+gta2-seuko-mod,src/game/gta2.h,TRAFFIC_PHASE,TRAFFIC_PHASE_VERTICAL_YELLOW,2,SAME,,TRAFFIC_PHASE_VERTICAL_YELLOW,
 gta2-seuko-mod,src/game/gta2.h,VOCAL,VOCAL_ACCURACY_BONUS,9,SAME,,ACCURACY_BONUS_,enum-name prefix dropped
 gta2-seuko-mod,src/game/gta2.h,VOCAL,VOCAL_AND_REMEMBER__RESPECT_IS_EVERYTHING,24,SAME,,AND_REMEMBER__RESPECT_IS_EVERYTHING_,enum-name prefix dropped
 gta2-seuko-mod,src/game/gta2.h,VOCAL,VOCAL_BACK_TO_FRONT_BONUS,10,SAME,,BACK_TO_FRONT_BONUS_,enum-name prefix dropped
@@ -1338,41 +1338,41 @@ gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_WEAPON_24,24,NEW,,,co
 gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_WEAPON_25,25,NEW,,,constant not in ours
 gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_WEAPON_26,26,NEW,,,constant not in ours
 gta2-seuko-mod,src/game/gta2.h,WEAPON_INDEX,WEAPON_VEHICLE_WEAPON_27,27,NEW,,,constant not in ours
-gta2-resurection,gta2-resurection/gta2.h,CAR_TYPE,CAR_FIRE_TRUCK,17,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CAR_TYPE,CAR_GT24640,19,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CAR_TYPE,CAR_GUNJEEP,22,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CAR_TYPE,CAR_TANK,54,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CAR_TYPE,CAR_TAXI,56,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CAR_TYPE,CAR_TRUCK,63,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,ARSESTAR,293617,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,CUTIE1,211561,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,DAVEMOON,287647,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,FLAMEON,286402,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,GODOFGTA,300913,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,GOURANGA,299874,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,IAMDAVEJ,288557,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,MADEMAN,267793,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,MUCHCASH,301620,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,RSJABBER,293115,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,SCHURULZ,316868,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,VOLTFEST,318071,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,LIGHTING,LIGHTING_DAY,0,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,LIGHTING,LIGHTING_NIGHT,32768,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,PED_STATE_CAR,PED_STATE_CAR_25,37,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,PED_STATE_CAR,PED_STATE_CAR_DO_NOTHING,0,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,PED_STATE_CAR,PED_STATE_CAR_ENTER_CAR,35,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,PED_STATE_CAR,PED_STATE_CAR_LEAVE_CAR,36,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_DUAL_PISTOL,10,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_ELECTRIC_GUN,3,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_FLAMETHROWER,8,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_GRENADE,5,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_MOLOTOV,4,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_PISTOL,0,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_RPG,2,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_SHOTGUN,6,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_SMG,1,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_SMG_SILENCED,9,NEW,,,enum not in ours
-gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_VIBRATOR,7,NEW,,,enum not in ours
+gta2-resurection,gta2-resurection/gta2.h,CAR_TYPE,CAR_FIRE_TRUCK,17,SAME,,CAR_FIRE_TRUCK,
+gta2-resurection,gta2-resurection/gta2.h,CAR_TYPE,CAR_GT24640,19,SAME,,CAR_GT24640,
+gta2-resurection,gta2-resurection/gta2.h,CAR_TYPE,CAR_GUNJEEP,22,SAME,,CAR_GUNJEEP,
+gta2-resurection,gta2-resurection/gta2.h,CAR_TYPE,CAR_TANK,54,SAME,,CAR_TANK,
+gta2-resurection,gta2-resurection/gta2.h,CAR_TYPE,CAR_TAXI,56,SAME,,CAR_TAXI,
+gta2-resurection,gta2-resurection/gta2.h,CAR_TYPE,CAR_TRUCK,63,SAME,,CAR_TRUCK,
+gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,ARSESTAR,293617,SAME,,ARSESTAR,
+gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,CUTIE1,211561,SAME,,CUTIE1,
+gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,DAVEMOON,287647,SAME,,DAVEMOON,
+gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,FLAMEON,286402,SAME,,FLAMEON,
+gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,GODOFGTA,300913,SAME,,GODOFGTA,
+gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,GOURANGA,299874,SAME,,GOURANGA,
+gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,IAMDAVEJ,288557,SAME,,IAMDAVEJ,
+gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,MADEMAN,267793,SAME,,MADEMAN,
+gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,MUCHCASH,301620,SAME,,MUCHCASH,
+gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,RSJABBER,293115,SAME,,RSJABBER,
+gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,SCHURULZ,316868,SAME,,SCHURULZ,
+gta2-resurection,gta2-resurection/gta2.h,CHEAT_ENUM,VOLTFEST,318071,SAME,,VOLTFEST,
+gta2-resurection,gta2-resurection/gta2.h,LIGHTING,LIGHTING_DAY,0,SAME,,LIGHTING_DAY,
+gta2-resurection,gta2-resurection/gta2.h,LIGHTING,LIGHTING_NIGHT,32768,SAME,,LIGHTING_NIGHT,
+gta2-resurection,gta2-resurection/gta2.h,PED_STATE_CAR,PED_STATE_CAR_25,37,SAME,,PED_STATE_CAR_25,
+gta2-resurection,gta2-resurection/gta2.h,PED_STATE_CAR,PED_STATE_CAR_DO_NOTHING,0,SAME,,PED_STATE_CAR_DO_NOTHING,
+gta2-resurection,gta2-resurection/gta2.h,PED_STATE_CAR,PED_STATE_CAR_ENTER_CAR,35,SAME,,PED_STATE_CAR_ENTER_CAR,
+gta2-resurection,gta2-resurection/gta2.h,PED_STATE_CAR,PED_STATE_CAR_LEAVE_CAR,36,SAME,,PED_STATE_CAR_LEAVE_CAR,
+gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_DUAL_PISTOL,10,SAME,,WEAPON_DUAL_PISTOL,
+gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_ELECTRIC_GUN,3,SAME,,WEAPON_ELECTRIC_GUN,
+gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_FLAMETHROWER,8,SAME,,WEAPON_FLAMETHROWER,
+gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_GRENADE,5,SAME,,WEAPON_GRENADE,
+gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_MOLOTOV,4,SAME,,WEAPON_MOLOTOV,
+gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_PISTOL,0,SAME,,WEAPON_PISTOL,
+gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_RPG,2,SAME,,WEAPON_RPG,
+gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_SHOTGUN,6,SAME,,WEAPON_SHOTGUN,
+gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_SMG,1,SAME,,WEAPON_SMG,
+gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_SMG_SILENCED,9,SAME,,WEAPON_SMG_SILENCED,
+gta2-resurection,gta2-resurection/gta2.h,WEAPON,WEAPON_VIBRATOR,7,SAME,,WEAPON_VIBRATOR,
 gta2-mouse,gta2.segments.fixed.exe.h,CAR_ENGINE_STATE,BROKEN_DOESNT_WORK,0,SAME,,BROKEN_DOESNT_WORK,
 gta2-mouse,gta2.segments.fixed.exe.h,CAR_ENGINE_STATE,ENGINE_OFF,1,SAME,,ENGINE_OFF,
 gta2-mouse,gta2.segments.fixed.exe.h,CAR_ENGINE_STATE,ENGINE_OFF2,6,SAME,,ENGINE_OFF2,
@@ -1506,16 +1506,16 @@ gta2-mouse,gta2.segments.fixed.exe.h,CAR_SIREN_STATE,SIREN_OFF,2,SAME,,SIREN_OFF
 gta2-mouse,gta2.segments.fixed.exe.h,CAR_SIREN_STATE,SIREN_ON,4,SAME,,SIREN_ON,
 gta2-mouse,gta2.segments.fixed.exe.h,CAR_SIREN_STATE,SIREN_UNK1,1,SAME,,SIREN_UNK1,
 gta2-mouse,gta2.segments.fixed.exe.h,CAR_SIREN_STATE,SIREN_UNK_10,16,SAME,,SIREN_UNK_10,
-gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_AMBULANCE,4,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_FIRETRUCK,5,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_MISSION_CAR,8,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_PARKED_CAR_FROM_SCRIPT,9,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_POLICE,7,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_PROT_RECYCLED_CAR,2,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_RECYCLED_CAR,1,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_UNIT_CAR,6,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_UNK4,3,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_UNK6,10,NEW,,,enum not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_AMBULANCE,4,SAME,,COUNTER_AMBULANCE,
+gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_FIRETRUCK,5,SAME,,COUNTER_FIRETRUCK,
+gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_MISSION_CAR,8,SAME,,COUNTER_MISSION_CAR,
+gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_PARKED_CAR_FROM_SCRIPT,9,SAME,,COUNTER_PARKED_CAR_FROM_SCRIPT,
+gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_POLICE,7,SAME,,COUNTER_POLICE,
+gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_PROT_RECYCLED_CAR,2,SAME,,COUNTER_PROT_RECYCLED_CAR,
+gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_RECYCLED_CAR,1,SAME,,COUNTER_RECYCLED_CAR,
+gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_UNIT_CAR,6,SAME,,COUNTER_UNIT_CAR,
+gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_UNK4,3,SAME,,COUNTER_UNK4,
+gta2-mouse,gta2.segments.fixed.exe.h,CAR_TYPE_COUNTER,COUNTER_UNK6,10,SAME,,COUNTER_UNK6,
 gta2-mouse,gta2.segments.fixed.exe.h,CAR_UNK_TYPE,FIRE_TRACK_CARS,5,CONFLICT,semantic,UNK_CARS_5,"same value, different name"
 gta2-mouse,gta2.segments.fixed.exe.h,CAR_UNK_TYPE,MISSION_CARS,8,SAME,,MISSION_CARS,
 gta2-mouse,gta2.segments.fixed.exe.h,CAR_UNK_TYPE,UNIT_CARS,6,SAME,,UNIT_CARS,
@@ -1559,13 +1559,13 @@ gta2-mouse,gta2.segments.fixed.exe.h,CHEATS,SEGARULZ,305547,SAME,,SEGARULZ,
 gta2-mouse,gta2.segments.fixed.exe.h,CHEATS,TUMYFROG,329533,SAME,,TUMYFROG,
 gta2-mouse,gta2.segments.fixed.exe.h,CHEATS,UKGAMER,285484,SAME,,UKGAMER,
 gta2-mouse,gta2.segments.fixed.exe.h,CHEATS,VOLTFEST,318071,SAME,,VOLTFEST,
-gta2-mouse,gta2.segments.fixed.exe.h,COP_LEVEL,COP_0_STARS,0,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,COP_LEVEL,COP_1_STAR,600,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,COP_LEVEL,COP_2_STARS,1600,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,COP_LEVEL,COP_3_STARS,3000,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,COP_LEVEL,COP_4_STARS,5000,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,COP_LEVEL,COP_5_STARS,8000,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,COP_LEVEL,COP_6_STARS,12000,NEW,,,enum not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,COP_LEVEL,COP_0_STARS,0,SAME,,COP_0_STARS,
+gta2-mouse,gta2.segments.fixed.exe.h,COP_LEVEL,COP_1_STAR,600,SAME,,COP_1_STAR,
+gta2-mouse,gta2.segments.fixed.exe.h,COP_LEVEL,COP_2_STARS,1600,SAME,,COP_2_STARS,
+gta2-mouse,gta2.segments.fixed.exe.h,COP_LEVEL,COP_3_STARS,3000,SAME,,COP_3_STARS,
+gta2-mouse,gta2.segments.fixed.exe.h,COP_LEVEL,COP_4_STARS,5000,SAME,,COP_4_STARS,
+gta2-mouse,gta2.segments.fixed.exe.h,COP_LEVEL,COP_5_STARS,8000,SAME,,COP_5_STARS,
+gta2-mouse,gta2.segments.fixed.exe.h,COP_LEVEL,COP_6_STARS,12000,SAME,,COP_6_STARS,
 gta2-mouse,gta2.segments.fixed.exe.h,CarInfoFlags,artic_cab,8,SAME,,artic_cab,
 gta2-mouse,gta2.segments.fixed.exe.h,CarInfoFlags,emerg_lights,2,SAME,,emerg_lights,
 gta2-mouse,gta2.segments.fixed.exe.h,CarInfoFlags,forhire_lights,32,SAME,,forhire_lights,
@@ -1592,15 +1592,15 @@ gta2-mouse,gta2.segments.fixed.exe.h,GTA_ERROR_CODE,UNK,1,SAME,,UNK,
 gta2-mouse,gta2.segments.fixed.exe.h,GTA_ERROR_CODE,Unable_to_set_registry_value,46,SAME,,Unable_to_set_registry_value,
 gta2-mouse,gta2.segments.fixed.exe.h,GTA_ERROR_CODE,unable_to_close_registry_key,42,SAME,,unable_to_close_registry_key,
 gta2-mouse,gta2.segments.fixed.exe.h,HORN,HORN_ON,248,SAME,,HORN_ON,
-gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_ALT,1024,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_ATTACK,16,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_ENTER,32,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_JUMP,64,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_MOVE_BACKWARD,2,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_MOVE_FORWARD,1,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_ROTATE_LEFT,4,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_ROTATE_RIGHT,8,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_TAB,512,NEW,,,enum not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_ALT,1024,CONFLICT,semantic,KEYBOARD_STATE_SPECIAL2,"same value, different name"
+gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_ATTACK,16,CONFLICT,semantic,KEYBOARD_STATE_ATTACK,"same value, different name"
+gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_ENTER,32,CONFLICT,semantic,KEYBOARD_STATE_ENTER_CAR,"same value, different name"
+gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_JUMP,64,CONFLICT,semantic,KEYBOARD_STATE_JUMP,"same value, different name"
+gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_MOVE_BACKWARD,2,CONFLICT,semantic,KEYBOARD_STATE_BACKWARD,"same value, different name"
+gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_MOVE_FORWARD,1,CONFLICT,semantic,KEYBOARD_STATE_FORWARD,"same value, different name"
+gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_ROTATE_LEFT,4,CONFLICT,semantic,KEYBOARD_STATE_LEFT,"same value, different name"
+gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_ROTATE_RIGHT,8,CONFLICT,semantic,KEYBOARD_STATE_RIGHT,"same value, different name"
+gta2-mouse,gta2.segments.fixed.exe.h,KEYBOARD_STATE,KEY_STATE_TAB,512,CONFLICT,semantic,KEYBOARD_STATE_SPECIAL,"same value, different name"
 gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_INCR_COP_LEVEL,5,NEW,,,constant not in ours
 gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_INCR_RESPECT_GANG1,2,NEW,,,constant not in ours
 gta2-mouse,gta2.segments.fixed.exe.h,KEY_NAME,KEY_INCR_RESPECT_GANG2,3,NEW,,,constant not in ours
@@ -1707,44 +1707,44 @@ gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE2,PED_STATE2_STAYING,14,SAME,,STAY
 gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE2,PED_STATE2_UNK_16,22,SAME,,UNK_16,enum-name prefix dropped
 gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE2,PED_STATE2_UNK_f,15,SAME,,UNK_f,enum-name prefix dropped
 gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE2,PED_STATE2_WALKING,0,SAME,,WALKING,enum-name prefix dropped
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_COP,54,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_ENTERING_TO_CAR,35,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_GANG_MEMBER,13,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_GETTING_OUT_FROM_CAR,36,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK1,1,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK10,16,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK13,19,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK14,20,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK16,22,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK17,23,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK18,24,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK19,25,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK1a,26,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK1b,27,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK1f,31,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK2,2,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK20,32,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK21,33,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK22,34,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK25,37,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK26,38,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK2a,42,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK2b,43,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK3,3,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK33,51,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK34,52,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK37,55,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK38,56,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK39,57,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK3a,58,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK3b,59,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK3c,60,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK3d_REL_TO_MISSION_ARROWS,61,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK6,6,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK8,8,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNKa,10,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNKc,12,NEW,,,enum not in ours
-gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNKe,14,NEW,,,enum not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_COP,54,SAME,,PED_STATE3_COP,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_ENTERING_TO_CAR,35,SAME,,PED_STATE3_ENTERING_TO_CAR,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_GANG_MEMBER,13,SAME,,PED_STATE3_GANG_MEMBER,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_GETTING_OUT_FROM_CAR,36,SAME,,PED_STATE3_GETTING_OUT_FROM_CAR,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK1,1,SAME,,PED_STATE3_UNK1,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK10,16,SAME,,PED_STATE3_UNK10,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK13,19,SAME,,PED_STATE3_UNK13,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK14,20,SAME,,PED_STATE3_UNK14,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK16,22,SAME,,PED_STATE3_UNK16,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK17,23,SAME,,PED_STATE3_UNK17,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK18,24,SAME,,PED_STATE3_UNK18,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK19,25,SAME,,PED_STATE3_UNK19,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK1a,26,SAME,,PED_STATE3_UNK1a,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK1b,27,SAME,,PED_STATE3_UNK1b,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK1f,31,SAME,,PED_STATE3_UNK1f,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK2,2,SAME,,PED_STATE3_UNK2,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK20,32,SAME,,PED_STATE3_UNK20,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK21,33,SAME,,PED_STATE3_UNK21,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK22,34,SAME,,PED_STATE3_UNK22,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK25,37,SAME,,PED_STATE3_UNK25,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK26,38,SAME,,PED_STATE3_UNK26,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK2a,42,SAME,,PED_STATE3_UNK2a,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK2b,43,SAME,,PED_STATE3_UNK2b,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK3,3,SAME,,PED_STATE3_UNK3,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK33,51,SAME,,PED_STATE3_UNK33,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK34,52,SAME,,PED_STATE3_UNK34,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK37,55,SAME,,PED_STATE3_UNK37,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK38,56,SAME,,PED_STATE3_UNK38,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK39,57,SAME,,PED_STATE3_UNK39,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK3a,58,SAME,,PED_STATE3_UNK3a,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK3b,59,SAME,,PED_STATE3_UNK3b,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK3c,60,SAME,,PED_STATE3_UNK3c,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK3d_REL_TO_MISSION_ARROWS,61,SAME,,PED_STATE3_UNK3d_REL_TO_MISSION_ARROWS,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK6,6,SAME,,PED_STATE3_UNK6,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNK8,8,SAME,,PED_STATE3_UNK8,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNKa,10,SAME,,PED_STATE3_UNKa,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNKc,12,SAME,,PED_STATE3_UNKc,
+gta2-mouse,gta2.segments.fixed.exe.h,PED_STATE3,PED_STATE3_UNKe,14,SAME,,PED_STATE3_UNKe,
 gta2-mouse,gta2.segments.fixed.exe.h,PLAYER_MOVEMENT_STATE,BACKWARD,2,SAME,,BACKWARD,
 gta2-mouse,gta2.segments.fixed.exe.h,PLAYER_MOVEMENT_STATE,CTRL_ATTACK,16,SAME,,CTRL_ATTACK,
 gta2-mouse,gta2.segments.fixed.exe.h,PLAYER_MOVEMENT_STATE,CTRL_ENTER_EXIT,32,SAME,,CTRL_ENTER_EXIT,
@@ -2067,38 +2067,38 @@ gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_INDEX,SHOCKER,3,SAME,,SHOCKER,
 gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_INDEX,SHOTGUN,6,CONFLICT,semantic,UNK_WEAPON_6,"same value, different name"
 gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_INDEX,SMG,1,SAME,,SMG,
 gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_INDEX,TANK_MAIN_GUN,19,SAME,,TANK_MAIN_GUN,
-gta2-resurection.gzf,gzf/gta2_types.h,CAR_TYPE,CAR_FIRE_TRUCK,17,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CAR_TYPE,CAR_GT24640,19,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CAR_TYPE,CAR_GUNJEEP,22,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CAR_TYPE,CAR_TANK,54,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CAR_TYPE,CAR_TAXI,56,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CAR_TYPE,CAR_TRUCK,63,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,CUTIE1,211561,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,MADEMAN,267793,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,FLAMEON,286402,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,DAVEMOON,287647,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,IAMDAVEJ,288557,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,RSJABBER,293115,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,ARSESTAR,293617,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,GOURANGA,299874,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,GODOFGTA,300913,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,MUCHCASH,301620,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,SCHURULZ,316868,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,VOLTFEST,318071,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,LIGHTING,LIGHTING_DAY,0,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,LIGHTING,LIGHTING_NIGHT,32768,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,PED_STATE_CAR,PED_STATE_CAR_DO_NOTHING,0,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,PED_STATE_CAR,PED_STATE_CAR_ENTER_CAR,35,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,PED_STATE_CAR,PED_STATE_CAR_LEAVE_CAR,36,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,PED_STATE_CAR,PED_STATE_CAR_25,37,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_PISTOL,0,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_SMG,1,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_RPG,2,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_ELECTRIC_GUN,3,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_MOLOTOV,4,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_GRENADE,5,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_SHOTGUN,6,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_VIBRATOR,7,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_FLAMETHROWER,8,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_SMG_SILENCED,9,NEW,,,enum not in ours
-gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_DUAL_PISTOL,10,NEW,,,enum not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,CAR_TYPE,CAR_FIRE_TRUCK,17,SAME,,CAR_FIRE_TRUCK,
+gta2-resurection.gzf,gzf/gta2_types.h,CAR_TYPE,CAR_GT24640,19,SAME,,CAR_GT24640,
+gta2-resurection.gzf,gzf/gta2_types.h,CAR_TYPE,CAR_GUNJEEP,22,SAME,,CAR_GUNJEEP,
+gta2-resurection.gzf,gzf/gta2_types.h,CAR_TYPE,CAR_TANK,54,SAME,,CAR_TANK,
+gta2-resurection.gzf,gzf/gta2_types.h,CAR_TYPE,CAR_TAXI,56,SAME,,CAR_TAXI,
+gta2-resurection.gzf,gzf/gta2_types.h,CAR_TYPE,CAR_TRUCK,63,SAME,,CAR_TRUCK,
+gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,CUTIE1,211561,SAME,,CUTIE1,
+gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,MADEMAN,267793,SAME,,MADEMAN,
+gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,FLAMEON,286402,SAME,,FLAMEON,
+gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,DAVEMOON,287647,SAME,,DAVEMOON,
+gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,IAMDAVEJ,288557,SAME,,IAMDAVEJ,
+gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,RSJABBER,293115,SAME,,RSJABBER,
+gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,ARSESTAR,293617,SAME,,ARSESTAR,
+gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,GOURANGA,299874,SAME,,GOURANGA,
+gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,GODOFGTA,300913,SAME,,GODOFGTA,
+gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,MUCHCASH,301620,SAME,,MUCHCASH,
+gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,SCHURULZ,316868,SAME,,SCHURULZ,
+gta2-resurection.gzf,gzf/gta2_types.h,CHEAT_ENUM,VOLTFEST,318071,SAME,,VOLTFEST,
+gta2-resurection.gzf,gzf/gta2_types.h,LIGHTING,LIGHTING_DAY,0,SAME,,LIGHTING_DAY,
+gta2-resurection.gzf,gzf/gta2_types.h,LIGHTING,LIGHTING_NIGHT,32768,SAME,,LIGHTING_NIGHT,
+gta2-resurection.gzf,gzf/gta2_types.h,PED_STATE_CAR,PED_STATE_CAR_DO_NOTHING,0,SAME,,PED_STATE_CAR_DO_NOTHING,
+gta2-resurection.gzf,gzf/gta2_types.h,PED_STATE_CAR,PED_STATE_CAR_ENTER_CAR,35,SAME,,PED_STATE_CAR_ENTER_CAR,
+gta2-resurection.gzf,gzf/gta2_types.h,PED_STATE_CAR,PED_STATE_CAR_LEAVE_CAR,36,SAME,,PED_STATE_CAR_LEAVE_CAR,
+gta2-resurection.gzf,gzf/gta2_types.h,PED_STATE_CAR,PED_STATE_CAR_25,37,SAME,,PED_STATE_CAR_25,
+gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_PISTOL,0,SAME,,WEAPON_PISTOL,
+gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_SMG,1,SAME,,WEAPON_SMG,
+gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_RPG,2,SAME,,WEAPON_RPG,
+gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_ELECTRIC_GUN,3,SAME,,WEAPON_ELECTRIC_GUN,
+gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_MOLOTOV,4,SAME,,WEAPON_MOLOTOV,
+gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_GRENADE,5,SAME,,WEAPON_GRENADE,
+gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_SHOTGUN,6,SAME,,WEAPON_SHOTGUN,
+gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_VIBRATOR,7,SAME,,WEAPON_VIBRATOR,
+gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_FLAMETHROWER,8,SAME,,WEAPON_FLAMETHROWER,
+gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_SMG_SILENCED,9,SAME,,WEAPON_SMG_SILENCED,
+gta2-resurection.gzf,gzf/gta2_types.h,WEAPON,WEAPON_DUAL_PISTOL,10,SAME,,WEAPON_DUAL_PISTOL,

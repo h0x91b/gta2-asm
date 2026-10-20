@@ -1,9 +1,4 @@
 source_ref,address,kind,function,comment,ours_has_comment_here
-gzf/comments.csv:2,0x004591e0,pre,cheats,"Ваш персонаж приобретёт высшую степень уважения во всех бандах.
-",no
-gzf/comments.csv:3,0x00459345,pre,cheats,give 200000 money,no
-gzf/comments.csv:4,0x004593e3,pre,cheats,give 10 millions,no
-gzf/comments.csv:5,0x0047a914,pre,FUN_0047a860,save goes here,no
 gzf/comments.csv:6,0x004cb530,plate,HideMouseCursor,Modified it to always show cursor,no
 gzf/comments.csv:7,0x004cb530,pre,HideMouseCursor,Mofidied it to always show cursor,no
 gzf/comments.csv:8,0x004d1269,pre,injectBack,IDC_ARROW,no
@@ -211,10 +206,6 @@ gzf/comments.csv:56,0x004d7568,plate,___timet_from_ft,"Library Function - Single
  ___timet_from_ft
 
 Library: Visual Studio 2003 Release",yes
-gzf/comments.csv:57,0x004d78e0,plate,_strncpy,"Library Function - Single Match
- _strncpy
-
-Library: Visual Studio 2003 Release",no
 gzf/comments.csv:58,0x004d7a04,plate,__strnicmp,"Library Function - Single Match
  __strnicmp
 
@@ -245,10 +236,6 @@ gzf/comments.csv:64,0x004d7ca1,plate,_IsRootUNCName,"Library Function - Single M
  _IsRootUNCName
 
 Library: Visual Studio 2003 Release",yes
-gzf/comments.csv:65,0x004d8110,plate,_strncat,"Library Function - Single Match
- _strncat
-
-Library: Visual Studio",no
 gzf/comments.csv:66,0x004d8245,plate,_rewind,"Library Function - Single Match
  _rewind
 
@@ -623,10 +610,6 @@ gzf/comments.csv:158,0x004e015e,plate,___dtold,"Library Function - Single Match
  ___dtold
 
 Library: Visual Studio 2003 Release",yes
-gzf/comments.csv:159,0x004e02a0,plate,_memset,"Library Function - Single Match
- _memset
-
-Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release, Visual Studio 2019 Release",no
 gzf/comments.csv:160,0x004e0333,plate,__abstract_cw,"Library Function - Single Match
  __abstract_cw
 
@@ -778,4 +761,3 @@ gzf/comments.csv:196,0x004e36a7,plate,__strdup,"Library Function - Single Match
  __strdup
 
 Library: Visual Studio 2003 Release",yes
-gzf/comments.csv:882,0x005e8108,eol,,game tick,no

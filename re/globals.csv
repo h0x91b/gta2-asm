@@ -2,7 +2,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x003f1000,EXE,,USER_DEFINED,.text,,/undefined,1
 0x003f130d,relToCarRecycle,,USER_DEFINED,.text,,,
 0x00434daa,prt_434daa_5c0dd4ac,getSelectedWeapon::override,USER_DEFINED,.text,getSelectedWeapon,,
-0x00461de0,?MainMenu,,USER_DEFINED,.text,MainMenu,,
+0x00461de0,?MainMenu,,USER_DEFINED,.text,InitGame,,
 0x00475d72,buf4k,ParseStrings,USER_DEFINED,.text,ParseStrings,,
 0x004a49c0,?KeyDown,,USER_DEFINED,.text,KeyUp,,
 0x004b7666,aaa,ChangeMoney2,USER_DEFINED,.text,ChangeMoney2,,
@@ -23,14 +23,67 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00595011,isNight,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00595014,start_mode,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00595018,isExit,,USER_DEFINED,.data.exp,,/undefined1,1
+0x0059501c,dmavideo_Vid_GetVersion,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595020,dmavideo_Vid_Init_SYS,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595024,dmavideo_Vid_CheckMode,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595028,dmavideo_Vid_FindMode,,USER_DEFINED,.data.exp,,/pointer,4
+0x0059502c,dmavideo_Vid_FindFirstMode,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595030,dmavideo_Vid_FindNextMode,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595034,dmavideo_Vid_FindDevice,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595038,dmavideo_Vid_SetDevice,,USER_DEFINED,.data.exp,,/pointer,4
 0x0059503c,ptr_dmavideo_Vid_CloseScreen,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595040,dmavideo_Vid_SetMode,,USER_DEFINED,.data.exp,,/pointer,4
 0x00595044,dmavideo_Vid_FlipBuffers,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595048,dmavideo_Vid_ReleaseSurface,,USER_DEFINED,.data.exp,,/pointer,4
+0x0059504c,dmavideo_Vid_GrabSurface,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595050,dmavideo_Vid_ShutDown_SYS,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595054,dmavideo_Vid_EnableWrites,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595058,dmavideo_Vid_DisableWrites,,USER_DEFINED,.data.exp,,/pointer,4
+0x0059505c,dmavideo_Vid_GetSurface,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595060,dmavideo_Vid_FreeSurface,,USER_DEFINED,.data.exp,,/pointer,4
 0x00595064,dmavideo_Vid_ClearScreen,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595068,dmavideo_Vid_WindowProc,,USER_DEFINED,.data.exp,,/pointer,4
+0x0059506c,dmavideo_Vid_InitDLL,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595070,dmavideo_Vid_SetGamma,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952a8,d3ddll_gbh_InitDLL,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952ac,d3ddll_gbh_Init,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952b0,d3ddll_gbh_CloseDLL,,USER_DEFINED,.data.exp,,/pointer,4
 0x005952b4,d3ddll_gbh_SetWindow,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952b8,d3ddll_gbh_GetGlobals,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952bc,d3ddll_gbh_DrawTile,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952c0,d3ddll_gbh_DrawTilePart,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952c4,d3ddll_gbh_DrawQuad,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952c8,d3ddll_gbh_DrawQuadClipped,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952cc,d3ddll_gbh_DrawFlatRect,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952d0,d3ddll_gbh_DrawTriangle,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952d4,d3ddll_gbh_PrintBitmap,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952d8,d3ddll_gbh_SetColourDepth,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952dc,d3ddll_gbh_Plot,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952e0,d3ddll_gbh_ConvertColour,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952e4,d3ddll_gbh_RegisterTexture,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952e8,d3ddll_gbh_SetCamera,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952ec,d3ddll_gbh_ResetLights,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952f0,d3ddll_gbh_AddLight,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952f4,d3ddll_gbh_SetAmbient,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952f8,d3ddll_gbh_GetUsedCache,,USER_DEFINED,.data.exp,,/pointer,4
+0x005952fc,d3ddll_gbh_FreeTexture,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595300,d3ddll_gbh_RegisterPalette,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595304,d3ddll_gbh_FreePalette,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595308,d3ddll_gbh_AssignPalette,,USER_DEFINED,.data.exp,,/pointer,4
+0x0059530c,d3ddll_gbh_LockTexture,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595310,d3ddll_gbh_UnlockTexture,,USER_DEFINED,.data.exp,,/pointer,4
 0x00595314,d3ddll_gbh_BeginScene,,USER_DEFINED,.data.exp,,/pointer,4
 0x00595318,d3ddll_gbh_EndScene,,USER_DEFINED,.data.exp,,/pointer,4
+0x0059531c,d3ddll_gbh_BeginLevel,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595320,d3ddll_gbh_EndLevel,,USER_DEFINED,.data.exp,,/pointer,4
 0x00595324,d3ddll_MakeScreenTable,,USER_DEFINED,.data.exp,,/pointer,4
 0x00595328,d3ddll_ConvertColourBank,,USER_DEFINED,.data.exp,,/pointer,4
+0x0059532c,d3ddll_SetShadeTableA,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595330,d3ddll_gbh_InitImageTable,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595334,d3ddll_gbh_FreeImageTable,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595338,d3ddll_gbh_LoadImage,,USER_DEFINED,.data.exp,,/pointer,4
+0x0059533c,d3ddll_gbh_BlitImage,,USER_DEFINED,.data.exp,,/pointer,4
+0x00595340,d3ddll_gbh_BlitBuffer,,USER_DEFINED,.data.exp,,/pointer,4
 0x00595410,random_seed,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00595ffb,replay_number,,USER_DEFINED,.data.exp,,,
 0x005d25f0,hFile,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -38,15 +91,25 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005d31d8,ptrToS1,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005dcb58,IsGamePaused,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005dcbc8,ptrToS6,,USER_DEFINED,.data.exp,,/auto_structs/S6 *,4
+0x005dcbe5,soundRelated3d,,USER_DEFINED,.data.exp,,/undefined1,1
+0x005dcbec,SFXVolume,,USER_DEFINED,.data.exp,,/undefined1,1
+0x005dcbed,CDVol,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005e202c,ptrToPlayAVocal,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e21cc,ptrToS5,,USER_DEFINED,.data.exp,,/auto_structs/S5 *,4
 0x005e3cc4,ptrToGameStats,,USER_DEFINED,.data.exp,,/_game/GameStats *,4
+0x005e3f54,eq8192,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e4ca0,relToCars,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e4ca4,ptrToCarManager,,USER_DEFINED,.data.exp,,/_car/CarManager *,4
 0x005e4cac,ptrToPositionStruct,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e4cc4,interestingStruct,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e4d14,defaultRotation,,USER_DEFINED,.data.exp,,/undefined2,2
+0x005e4d4c,CarsScale,,USER_DEFINED,.data.exp,,/int,4
+0x005e4d64,TankCannonRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
 0x005e4db8,defaultX,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e4eb8,WaterCannonRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
+0x005e500c,JeepGunRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
+0x005e5014,AntennaRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
+0x005e508c,pCarsS4,,USER_DEFINED,.data.exp,,/imported/gzf-2021/CarsS4 *,4
 0x005e5488,ptrToUnkRelatedToCars,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e5bbc,ptrToPedManager,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e5bc0,ptrToS24,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -88,10 +151,16 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e8108,frameCounterFromBeginnigOfTheGame,,USER_DEFINED,.data.exp,,/int *,4
 0x005e85c0,ptrToS23,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e8b80,ptrToS13,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e8f04,DirectInputDeviceObjectDataCount,,USER_DEFINED,.data.exp,,/dword,4
+0x005e8f5c,Controls,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e8f8c,KeyPressCode,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e8f90,KeyPressState,,USER_DEFINED,.data.exp,,/uint,4
 0x005e8fa4,relatedToFronteמd,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e9708,pTextGameResource,,USER_DEFINED,.data.exp,,/undefined,1
 0x005e9808,generalCharBuf,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e9f08,wcharBuf,,USER_DEFINED,.data.exp,,/wchar_t *,4
 0x005ea408,fileNameBuffer,,USER_DEFINED,.data.exp,,/char[100],100
+0x005ea9cc,pFireEngine,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005ead50,do_3d_sound,,USER_DEFINED,.data.exp,,/undefined,1
 0x005ead51,do_blood,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005ead52,do_show_object_ids,,USER_DEFINED,.data.exp,,/undefined,1
@@ -209,9 +278,11 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00662748,lastFrameTime,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00662786,relToPlayReplay,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00662c08,relToCounters,,USER_DEFINED,.data.exp,,/_scripts/SCR_STRING_HEADER *,4
+0x006633a0,CurrentlyDrawnMapLayerIndex,,USER_DEFINED,.data.exp,,/int,4
 0x006633c8,ptrToS12,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00663764,eq_0,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006639a0,relToSpiteOfCar,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00663de4,pAmbulance,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00664168,ptrToS14,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006644b0,relToS15,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006644b4,relToS15_2,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -224,7 +295,9 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00664ff0,unk1,,USER_DEFINED,.data.exp,,/int,4
 0x00664ff4,unk2,,USER_DEFINED,.data.exp,,/int,4
 0x00665078,unk3,,USER_DEFINED,.data.exp,,/byte,1
+0x00665784,BareGameObjectManager,,USER_DEFINED,.data.exp,,/imported/seuko-mod/BareGameObjectManager *,4
 0x00665788,ptrToUnkStruct2,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00665b40,ObjectPrefabsContainer,,USER_DEFINED,.data.exp,,/imported/seuko-mod/ObjectPrefabsContainer *,4
 0x0066a3b4,ptrTo_relSprites,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0066a3b8,relToS24_unk33,,USER_DEFINED,.data.exp,,/undefined1,1
 0x0066a3b9,relToS24_unk34,,USER_DEFINED,.data.exp,,/undefined,1
@@ -249,12 +322,19 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00671c08,ptrToUnkStruct1,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00671e9c,ptrToS19,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006721cc,ptrToTrafficLightsStruct,,USER_DEFINED,.data.exp,,/auto_structs/TrafficLigthStruct *,4
+0x00672f24,DefaultFontId,,USER_DEFINED,.data.exp,,/short,2
 0x00672f40,ptrToS10,,USER_DEFINED,.data.exp,,/auto_structs/S10 *,4
 0x006732e0,full_height,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006732e4,full_width,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006732e8,window_height,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006732f0,dmavideo.dll,,USER_DEFINED,.data.exp,,/undefined1,1
+0x00673470,renderdevice,,USER_DEFINED,.data.exp,,/undefined,1
+0x00673474,ScreenHeight,,USER_DEFINED,.data.exp,,/int,4
+0x00673478,rendername,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00673578,window_width,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0067357c,windowLeft,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00673584,ScreenWidth,,USER_DEFINED,.data.exp,,/int,4
+0x00673588,videodevice,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0067358c,lighting,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00673590,windowTop,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00673594,relatedToGamma,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -264,12 +344,15 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00673944,ptrToWeaponRelStruct,,USER_DEFINED,.data.exp,,/_weapon/WeaponRelStruct *,4
 0x00673d18,ptrToMainWindow,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00673d1c,mutex,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00673d20,SVideoPtr,,USER_DEFINED,.data.exp,,/imported/seuko-mod/SVideo *,4
 0x00673d28,cwd,,USER_DEFINED,.data.exp,,/undefined,1
 0x00673e28,hInstance,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00673e2c,isMultiplayer,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00673f54,VERSION_MAJOR,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00673f58,VERSION_MINOR,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00675008,EnvironmentStrings,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00675358,IsRendererLoaded,,USER_DEFINED,.data.exp,,/bool,1
+0x0067535c,d3ddll_DrawLine,,USER_DEFINED,.data.exp,,/undefined,1
 0x00676704,lpCmdLine,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00676cd8,strPathToGXT,,USER_DEFINED,.data.exp,,/undefined,1
 0x006771f0,Rsrc_Icon_1_c09,,IMPORTED,.rsrc,,/IconResource,1384
