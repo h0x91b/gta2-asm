@@ -35,7 +35,7 @@ functions: 15/15 checks passed
   [w32] RegisterClassA(WinMain) wndproc 0x4d0a00
   [w32] CreateWindowExA(GTA2) 100x100 -> hwnd 0xab0000 (SDL window), wndproc 0x4d0a00
   [w32] ShowWindow(0xab0000): SDL_ShowWindow -> 1
-  [w32] DirectInput8Create(version 0x800) -> IDirectInput8A 0x2000de20 (silent: no input yet)
+  [w32] DirectInput8Create(version 0x800) -> IDirectInput8A 0x2000de20 
   [w32] LoadLibraryA(dmavideo.dll) -> 0x7f0d0000
   [w32] GetProcAddress(dmavideo.dll, Vid_GetVersion) -> 0x100048fc (UNIMPLEMENTED)
   [w32] GetProcAddress(dmavideo.dll, Vid_Init_SYS) -> 0x10004906 (UNIMPLEMENTED)
@@ -64,6 +64,10 @@ a window titled "GTA2", 960×720 client area, black).
 | `--hold` | when the run stops, keep pumping SDL events for 5 s so the window is visible |
 | `--frames=N` | exit (status 0) after N presented frames (`renderer-sdl.md`) |
 | `--shot=PATH` | with `--frames`: save the last frame's back buffer as BMP |
+| `--trace-input` | log every key change, Acquire, `GetDeviceState` view change and delivered `GetDeviceData` record (implied by `--trace`) |
+| `--keys=F:KEY,...` | scripted taps: KEY (a DIK name, e.g. `DOWN`, `RETURN`, `ESCAPE`) goes down at presented frame F, up 4 frames later; pushed into SDL's queue, so it takes the real key path |
+| `--input-test` | no game run: drive the game's own input code (see "Input") for ~15 s against real keys pressed in a test window |
+| `--input-selftest` | the same with a scripted SDL event sequence; prints PASS/FAIL per check, exit = number of failures |
 
 ## Mechanism
 
@@ -202,7 +206,7 @@ and not yet exercised by the game.
 | ShowWindow ✓ | `SDL_ShowWindow`/`HideWindow`; first show sends WM_SHOWWINDOW, WM_ACTIVATEAPP, WM_NCACTIVATE, WM_ACTIVATE, WM_SETFOCUS |
 | UpdateWindow ✓, GetWindowRect ✓, GetClientRect ✓, SetWindowPos ✓ | no frame: window rect = client rect at x,y; `SetWindowPos` resizes/moves the SDL window and sends WM_SIZE/WM_MOVE |
 | DestroyWindow, SetWindowTextA, Get/SetWindowLongA, CallWindowProcA | WM_DESTROY + `SDL_DestroyWindow`; title; WNDPROC/STYLE/EXSTYLE/USERDATA; call32 |
-| PeekMessageA, DispatchMessageA, PostMessageA, SendMessageA, PostQuitMessage, TranslateMessage | posted-message queue fed by SDL events (close → WM_CLOSE, letters/digits/arrows/Esc/Enter/Space → WM_KEYDOWN/UP); filters ignored; no WM_CHAR yet |
+| PeekMessageA, DispatchMessageA, PostMessageA, SendMessageA, PostQuitMessage, TranslateMessage | posted-message queue fed by SDL events (see "Input": close → WM_CLOSE, keys → WM_(SYS)KEYDOWN/UP, focus → WM_ACTIVATE); filters ignored; no WM_CHAR (TranslateMessage is a no-op: the game never reads characters from messages) |
 | DefWindowProcA ✓ | WM_NCCREATE/WM_NCACTIVATE → TRUE, WM_CLOSE → DestroyWindow, else 0 |
 | GetSystemMetrics ✓ | SM_CXSCREEN/SM_CYSCREEN from SDL's desktop mode; others logged → 0 |
 | LoadIconA ✓, LoadCursorA ✓, GetDC, ReleaseDC, SetForegroundWindow, FindWindowExA | tokens / TRUE / NULL |
@@ -227,9 +231,9 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
 | VERSION GetFileVersionInfoSizeA ✓, GetFileVersionInfoA ✓, VerQueryValueA ✓ | a fake version block that is just a `VS_FIXEDFILEINFO` carrying **our port's version** (see "Game version" below); only the root `\\` query answers |
 | SHELL32 ShellExecuteA | logged, error |
 | DPLAYX DirectPlayCreate, DirectPlayLobbyCreateW | `E_FAIL` (network play is out of scope) |
-| DINPUT8 DirectInput8Create ✓ | **must succeed** (failure is fatal, `0x44BA2B` → error handler `0x450530`): fake IDirectInput8A |
-| IDirectInput8A (11 methods) | CreateDevice → fake device (kind = GUID.Data1: keyboard/mouse); EnumDevices enumerates nothing; most others DI_OK |
-| IDirectInputDevice8A (32 methods) | Acquire/SetDataFormat/SetCooperativeLevel/… DI_OK; GetDeviceState → all zero (nothing pressed); GetDeviceData → 0 events; GetCapabilities zeroed |
+| DINPUT8 DirectInput8Create ✓ | **must succeed** (failure is fatal, `0x44BA2B` → error handler `0x450530`) |
+| IDirectInput8A (11 methods) | CreateDevice ✓ → device (kind = GUID.Data1: keyboard/mouse); EnumDevices enumerates nothing (no joysticks); most others DI_OK |
+| IDirectInputDevice8A (32 methods) | real keyboard + mouse fed by SDL3, see "Input" |
 | mss32 (52), binkw32 (18) | default silent stub: 0, correct stdcall pop from the `@N` decoration; first call logged. Not reached yet. |
 
 ### Hooks (`w32_hooks.asm`)
@@ -238,12 +242,110 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
 |---|---|---|
 | `0x4031C0` | `GetDXVersion(DWORD* ver, DWORD* platform)` — Microsoft's DirectX SDK sample (Ghidra name `LoadDirectInputFuncs`) | it creates DirectDraw objects and surfaces only to measure the DirectX version, and WinMain refuses anything below `0x601` (`0x4D11DB`, "ERROR: Incorrect version of DirectX"). The hook answers `0x801` / NT. |
 
+## Input (`w32_dinput.asm`, `pump_sdl` in `w32_user32.asm`)
+
+### Which path the game reads (measured in Ghidra + llvm-objdump on vanilla 11.44)
+
+- **Frontend menu: DirectInput `GetDeviceState`, polled.** `InitFrontend` → `dInput8`
+  `@0x453D80` (frontend2.cpp) creates its own keyboard (`GUID_SysKeyboard`,
+  `c_dfDIKeyboard` @`0x577EB4`, 256 bytes, coop `6` = NONEXCLUSIVE|FOREGROUND) into
+  `FrontEnd+4` and acquires it. Each frame `0x452050` calls `0x452000`:
+  `GetDeviceState(256, FrontEnd+8)`, re-Acquire on `DIERR_INPUTLOST`/`NOTACQUIRED`, then
+  edge-detects 7 keys into `FrontEnd+0xC9B8..0xC9BE`: LEFT `CB`, RIGHT `CD`, UP `C8`,
+  DOWN `D0`, RETURN `1C`, ESCAPE `01`, DELETE `D3`. Only while `FrontEnd+0x10D` is set:
+  `InitFrontend` sets it, WndProc's `WM_ACTIVATE` (via `0x4D09D0` → `0x453A30`) writes the
+  active flag into it.
+- **In-game: DirectInput `GetDeviceData`, buffered.** `directInputUtils` `@0x44BB30`
+  (diutil.cpp; stdcall, 2 args, `ret 8` — Ghidra's `void` is wrong) creates the keyboard
+  `0x5E8F4C` with `DIPROP_BUFFERSIZE = 10000` and acquires it; `0x44C0F0` reads one
+  20-byte `DIDEVICEOBJECTDATA` per call until the buffer is empty (`0x44BA60` first asks
+  for the count with `rgdod = NULL`, `INFINITE`, `DIGDD_PEEK`).
+- **Window messages: no keys.** WndProc `0x4D0A00` never handles `WM_KEYDOWN`/`WM_CHAR`;
+  it handles `WM_SYSKEYDOWN` (Alt+Enter → mode switch, F10/Alt swallowed),
+  `WM_ACTIVATE` (focus gate above, exclusive mouse), `WM_SETFOCUS`/`WM_KILLFOCUS` (audio,
+  video restore/close), `WM_DESTROY` → `PostQuitMessage`. Window close: SDL quit/close →
+  `WM_CLOSE` → DefWindowProc → DestroyWindow → `WM_DESTROY` → `WM_QUIT`.
+- **Mouse: never read.** `InitMouseExclusive` `@0x4CAD30` (from `fullScreenProbably`)
+  creates `GUID_SysMouse` (`c_dfDIMouse` @`0x5782C4`) into `0x6735A8` with coop `5`
+  (EXCLUSIVE|FOREGROUND) and acquires it: only to hide/capture the cursor in full
+  screen. No `GetDeviceState`/`GetDeviceData` on it anywhere (all 8 references are in
+  `0x4CAD30..0x4CADCA`). No `WM_MOUSEMOVE` handling either.
+
+### What the shim does
+
+- **Mapping.** `key_table`: SDL scancode → (DIK, VK, name) for the whole keyboard —
+  letters, digits, punctuation, F1–F15, arrows, the Ins/Del/Home/End/PgUp/PgDn block,
+  keypad, Ctrl/Shift/Alt/Win left and right (macOS Cmd = Win, Option = Alt).
+- **State.** SDL key events (not `SDL_GetKeyboardState`, so pushed events count too)
+  update one `di_keys[256]` (`0x80` = down) and append a record `{DIK, 0x80/0, tick,
+  sequence}` to a 1024-entry ring. SDL auto-repeat does not reach DirectInput.
+- **GetDeviceState** (keyboard): `di_keys`, plus every key pressed since this device's
+  previous read (ring records past its own cursor), so a tap that begins and ends
+  between two polls is still seen once. *Deviation:* Windows would drop such a tap.
+  Mouse: `DIMOUSESTATE`/`DIMOUSESTATE2` with motion and wheel (`×120`) accumulated since
+  the last read (fraction kept), buttons in DI order (left, right, middle, X1, X2).
+- **GetDeviceData** (keyboard): per-device read cursor into the ring, set on Acquire;
+  `DIGDD_PEEK`, `rgdod = NULL` (count/flush), `DI_BUFFEROVERFLOW` when more than
+  `min(buffer size, 1024)` records are pending, `DIERR_NOTBUFFERED` without a buffer
+  size. Mouse: no buffered data.
+- **Acquire/Unacquire.** Acquire needs a data format; a FOREGROUND device needs focus
+  (`DIERR_OTHERAPPHASPRIO` otherwise); twice → `DI_NOEFFECT`. Unacquired devices answer
+  `DIERR_NOTACQUIRED`. An EXCLUSIVE mouse turns on SDL relative mode (cursor hidden and
+  captured), Unacquire/Release/focus loss turn it off. Set/GetProperty know
+  `DIPROP_BUFFERSIZE`; GetCapabilities reports an attached keyboard/mouse.
+- **Focus.** `SDL_EVENT_WINDOW_FOCUS_LOST`: every held key is released (key-up records
+  go into the ring), mouse buttons cleared, capture off, `WM_ACTIVATEAPP(0)` +
+  `WM_ACTIVATE(WA_INACTIVE)` posted; gained: `WM_ACTIVATEAPP(1)` + `WM_ACTIVATE(WA_ACTIVE)`.
+  *Deviation:* Windows would return `DIERR_INPUTLOST` and drop the buffer; the in-game
+  reader is change-based and would keep a key held. `WM_SETFOCUS`/`WM_KILLFOCUS` are not
+  sent on SDL focus changes (they reopen/close the video mode). The host assumes focus
+  at start until SDL says otherwise.
+- **Messages.** Every mapped key also posts `WM_KEYDOWN`/`WM_KEYUP` with VK and a real
+  lParam (scan code = DIK & 0x7F, extended bit = DIK & 0x80, repeat bit 30 for SDL
+  repeats, bits 30–31 on release); with Alt held (or F10) `WM_SYSKEYDOWN`/`UP` + bit 29,
+  so Alt+Enter reaches the game's mode switch.
+
+### Evidence
+
+`--input-selftest` (no renderer needed) drives the game's own code: DirectInput8Create
+through the IAT into `0x5E8FA4`, `dInput8` `@0x453D80` on a zeroed FrontEnd, the in-game
+`directInputUtils` `@0x44BB30`, `InitMouseExclusive` `@0x4CAD30`; then per frame the
+frontend poll `0x452050`, `GetDeviceData` on `0x5E8F4C` one record at a time, the mouse
+state. It pushes 10 key taps (one shorter than a frame, one auto-repeat, three held
+across a focus loss) plus mouse motion/buttons and checks 14 counters — 14/14 PASS,
+repeatable (pushed events are marked in `SDL_Event.reserved`; real devices are ignored
+in this mode):
+
+```
+  [input] SDL key down -> DIK_DOWN (0xd0), record #0
+  [input] GetDeviceState(keyboard 0x2001f250) <- 0x452016: held DIK_DOWN
+  [menu] frame 10: frontend sees DOWN pressed (0x452050 edge flag)
+  [input] GetDeviceData(keyboard 0x2001f370) #0 down DIK_DOWN (0xd0) <- 0x1000001d
+  ...
+  [input] focus lost
+  [input] SDL key up   -> DIK_A (0x1e), record #13
+  ...
+  [PASS] in-game GetDeviceData records: 20 (expected 20)
+  [PASS] WM_KEYDOWN/WM_SYSKEYDOWN posted: 11 (expected 11)
+input selftest: 0 failures
+```
+
+End to end with the renderer (`--entry --keys=... --frames=N --shot=...`, 2026-10-20):
+frame 300 without keys shows PLAY selected; `200:DOWN` → OPTIONS, `200:DOWN,240:DOWN` →
+QUIT, `200:RETURN` → the PLAY submenu (player MUCHCASH, START PLAY IN AREA),
+`200:RETURN,280:ESCAPE` → back to the main menu. RETURN on OPTIONS makes the game
+`ShellExecuteA` `gta2manager.exe` (vanilla: options live in a separate program); the
+shim refuses, the game shows "Failed to launch 'GTA2 Manager' correctly" and exits —
+game behaviour, not an input problem. A real key (System Events `key code 125`) was
+seen once in `--input-test` (SDL → `DIK_DOWN` → the in-game buffer); automating real
+keys needs the test window frontmost, which `osascript` cannot hold reliably.
+
 ## What the game needs next (notes for later work)
 
 - **Renderer**: done for the frontend — shim tables `dmavideo` / `d3ddll` in
   `w32_renderer.asm`, see `renderer-sdl.md`. Gameplay drawing (tiles, lighting) is next.
-- **Input**: DirectInput devices return nothing pressed. Filling `GetDeviceState` from
-  `SDL_GetKeyboardState` (SDL scancode → DIK_*) is a small step.
+- **Input**: done (keyboard + mouse, see "Input"). Joysticks (EnumDevices
+  `DI8DEVCLASS_GAMECTRL`) are not offered; WM_CHAR is not generated.
 - **Audio/video**: every mss32/binkw32 call returns 0. If the game treats a 0 from
   `AIL_startup`-style calls as fatal, those need real "no device" answers.
 - **Not done**: SEH dispatch (`RtlUnwind`), WM_TIMER, dialogs, INI files, registry

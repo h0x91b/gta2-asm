@@ -12,6 +12,11 @@ host/build.sh --load --entry --trace   # + one log line per shim call
 host/build.sh --load --entry --hold    # + keep the SDL window up 5 s when it stops
 host/build.sh --load --entry --frames=300 --shot=/tmp/menu.bmp
                               # run to the main menu, save frame 300 as BMP, exit 0
+host/build.sh --load --entry --keys=200:DOWN,240:RETURN --frames=300 --shot=/tmp/m.bmp
+                              # + scripted key taps at presented frames (DIK names)
+host/build.sh --load --input-selftest  # DirectInput self-test through the game's own
+                              # input code, PASS/FAIL per check (exit = failures)
+host/build.sh --load --input-test      # same code, ~15 s of real keys in a test window
 ```
 
 The Win32 shim layer (`w32_*.asm`, included by `loader.asm`) is documented in

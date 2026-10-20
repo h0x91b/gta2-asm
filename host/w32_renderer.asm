@@ -495,6 +495,8 @@ vid_FlipBuffers:
     call r_upload_fb
 .fb_done:
     inc dword [r_frames]
+    mov edi, [r_frames]
+    call input_keys_frame           ; --keys=FRAME:KEY,...
     mov eax, [r_frames]
     cmp eax, 1
     je .stats

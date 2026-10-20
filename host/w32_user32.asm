@@ -16,8 +16,21 @@ SDL_EVENT_QUIT  equ 0x100
 SDL_EVENT_WINDOW_CLOSE_REQUESTED equ 0x210
 SDL_EVENT_KEY_DOWN equ 0x300
 SDL_EVENT_KEY_UP   equ 0x301
+SELFTEST_MARK      equ 0x5E1F7E57   ; SDL_Event.reserved of --input-selftest events
 SDL_KEY_SCANCODE   equ 24           ; offsetof(SDL_KeyboardEvent, scancode)
+SDL_KEY_DOWN       equ 36           ; offsetof(SDL_KeyboardEvent, down)
 SDL_KEY_REPEAT     equ 37           ; offsetof(SDL_KeyboardEvent, repeat)
+SDL_EVENT_WINDOW_FOCUS_GAINED equ 0x20E
+SDL_EVENT_WINDOW_FOCUS_LOST   equ 0x20F
+SDL_EVENT_MOUSE_MOTION      equ 0x400
+SDL_EVENT_MOUSE_BUTTON_DOWN equ 0x401
+SDL_EVENT_MOUSE_BUTTON_UP   equ 0x402
+SDL_EVENT_MOUSE_WHEEL       equ 0x403
+SDL_MOTION_XREL    equ 36           ; SDL_MouseMotionEvent.xrel / yrel (float)
+SDL_MOTION_YREL    equ 40
+SDL_BUTTON_BUTTON  equ 24           ; SDL_MouseButtonEvent.button / down
+SDL_BUTTON_DOWN    equ 25
+SDL_WHEEL_Y        equ 28           ; SDL_MouseWheelEvent.y (float)
 
 WM_CREATE     equ 0x01
 WM_DESTROY    equ 0x02
@@ -33,6 +46,8 @@ WM_NCCREATE   equ 0x81
 WM_NCACTIVATE equ 0x86
 WM_KEYDOWN    equ 0x100
 WM_KEYUP      equ 0x101
+WM_SYSKEYDOWN equ 0x104             ; WM_SYSKEYUP = 0x105
+VK_F10        equ 0x79
 
 HWND_BASE     equ 0x00AB0000        ; HWND = HWND_BASE + 4*i
 MAX_WINDOWS   equ 8
@@ -71,6 +86,9 @@ section .text
     SDLFN SDL_ShowCursor
     SDLFN SDL_HideCursor
     SDLFN SDL_GetVersion
+    SDLFN SDL_PushEvent
+    SDLFN SDL_RaiseWindow
+    SDLFN SDL_SetWindowRelativeMouseMode
 %endmacro
 
 setup_user32:
@@ -255,11 +273,15 @@ post_msg:
     xor eax, eax
     ret
 
-; Map SDL events to posted messages (close -> WM_CLOSE, keys -> WM_KEYDOWN/UP).
+; Map SDL events: close -> WM_CLOSE; keys -> DirectInput state (input_key) and
+; WM_KEYDOWN/UP (WM_SYS* with Alt or F10, like Windows); focus -> input_focus;
+; mouse -> the DirectInput mouse accumulators. gta2.exe reads keys through
+; DirectInput only; its WndProc handles just WM_SYSKEYDOWN (Alt+Enter, F10, Alt).
 pump_sdl:
     push rbx
     push r12
-    sub rsp, 136                    ; SDL_Event (128) + alignment
+    push r13
+    sub rsp, 128                    ; SDL_Event (128); rsp stays 16-aligned
     cmp byte [sdl_inited], 0
     je .out
 .poll:
@@ -272,10 +294,31 @@ pump_sdl:
     je .close
     cmp eax, SDL_EVENT_WINDOW_CLOSE_REQUESTED
     je .close
+    cmp byte [input_selftest], 0    ; --input-selftest: only its own pushed events
+    je .real_ok                     ; (marked in SDL_Event.reserved), not real devices
+    cmp eax, SDL_EVENT_WINDOW_FOCUS_GAINED
+    jb .real_ok
+    cmp eax, SDL_EVENT_MOUSE_WHEEL
+    ja .real_ok
+    cmp dword [rsp + 4], SELFTEST_MARK
+    jne .poll
+.real_ok:
     cmp eax, SDL_EVENT_KEY_DOWN
     je .key
     cmp eax, SDL_EVENT_KEY_UP
     je .key
+    cmp eax, SDL_EVENT_WINDOW_FOCUS_GAINED
+    je .focus
+    cmp eax, SDL_EVENT_WINDOW_FOCUS_LOST
+    je .focus
+    cmp eax, SDL_EVENT_MOUSE_MOTION
+    je .motion
+    cmp eax, SDL_EVENT_MOUSE_BUTTON_DOWN
+    je .button
+    cmp eax, SDL_EVENT_MOUSE_BUTTON_UP
+    je .button
+    cmp eax, SDL_EVENT_MOUSE_WHEEL
+    je .wheel
     jmp .poll
 .close:
     mov edi, [main_hwnd]
@@ -284,33 +327,85 @@ pump_sdl:
     xor ecx, ecx
     call post_msg
     jmp .poll
+.focus:
+    xor edi, edi
+    cmp eax, SDL_EVENT_WINDOW_FOCUS_GAINED
+    sete dil
+    call input_focus
+    jmp .poll
+.motion:
+    movss xmm0, [rsp + SDL_MOTION_XREL]
+    movss xmm1, [rsp + SDL_MOTION_YREL]
+    call input_mouse_motion
+    jmp .poll
+.button:
+    movzx edi, byte [rsp + SDL_BUTTON_BUTTON]
+    movzx esi, byte [rsp + SDL_BUTTON_DOWN]
+    call input_mouse_button
+    jmp .poll
+.wheel:
+    movss xmm0, [rsp + SDL_WHEEL_Y]
+    call input_mouse_wheel
+    jmp .poll
 .key:
-    mov ebx, WM_KEYDOWN
-    cmp eax, SDL_EVENT_KEY_UP
-    jne .k1
-    mov ebx, WM_KEYUP
-.k1:
     mov eax, [rsp + SDL_KEY_SCANCODE]
-    cmp eax, 128
+    cmp eax, SDL_SCANCODES
     jae .poll
-    lea rcx, [scancode_vk]
-    movzx edx, byte [rcx + rax]
-    test edx, edx
+    lea rcx, [sdl_dik]
+    movzx r12d, byte [rcx + rax]    ; DIK
+    lea rcx, [sdl_vk]
+    movzx r13d, byte [rcx + rax]    ; VK
+    test r12d, r12d
     jz .poll
-    lea rcx, [scancode_set1]        ; lParam: repeat 1, scan code, up/down bits
-    movzx ecx, byte [rcx + rax]
+    movzx ebx, byte [rsp + SDL_KEY_DOWN]
+    cmp byte [rsp + SDL_KEY_REPEAT], 0
+    jne .msg                        ; DirectInput has no auto-repeat
+    mov edi, r12d
+    mov esi, ebx
+    call input_key
+.msg:
+    test r13d, r13d
+    jz .poll
+    ; lParam: repeat count 1, scan code = DIK & 0x7F, extended = DIK & 0x80,
+    ; context (Alt held) bit 29, previous state bit 30, transition bit 31
+    mov ecx, r12d
+    and ecx, 0x7F
     shl ecx, 16
     or ecx, 1
-    cmp ebx, WM_KEYUP
-    jne .k2
-    or ecx, 0xC0000000
+    test r12d, 0x80
+    jz .k1
+    or ecx, 1 << 24
+.k1:
+    mov esi, WM_KEYDOWN
+    lea rax, [di_keys]
+    mov dl, [rax + 0x38]            ; DIK_LMENU | DIK_RMENU
+    or dl, [rax + 0xB8]
+    test dl, 0x80
+    jz .k2
+    or ecx, 1 << 29
+    mov esi, WM_SYSKEYDOWN
 .k2:
+    cmp r13d, VK_F10
+    jne .k3
+    mov esi, WM_SYSKEYDOWN
+.k3:
+    test ebx, ebx
+    jnz .k4
+    or ecx, 0xC0000000
+    inc esi                         ; WM_KEYUP / WM_SYSKEYUP
+    jmp .k5
+.k4:
+    cmp byte [rsp + SDL_KEY_REPEAT], 0
+    je .k5
+    or ecx, 1 << 30
+.k5:
     mov edi, [main_hwnd]
-    mov esi, ebx
+    mov edx, r13d
     call post_msg
     jmp .poll
 .out:
-    add rsp, 136
+    add rsp, 128
+    pop r13
     pop r12
     pop rbx
     ret
@@ -1206,24 +1301,6 @@ fmt_dialog:  db "  [w32] DialogBoxParamA(template 0x%x): dialogs unsupported -> 
 msg_sdl:     db "cannot load SDL3", 0
 msg_hold:    db "--hold: keeping the window up for 5 s", 0
 msg_sdl_sym: db "SDL3 is missing a function the loader needs", 0
-; SDL scancode -> Win32 virtual key / set-1 scan code (letters, digits, common keys)
-scancode_vk:
-    times 4 db 0
-    db 'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
-    db '1','2','3','4','5','6','7','8','9','0'
-    db 0x0D, 0x1B, 0x08, 0x09, 0x20             ; return escape backspace tab space
-    times (79 - 45) db 0
-    db 0x27, 0x25, 0x28, 0x26                   ; right left down up (79..82)
-    times (128 - 83) db 0
-scancode_set1:
-    times 4 db 0
-    db 0x1E,0x30,0x2E,0x20,0x12,0x21,0x22,0x23,0x17,0x24,0x25,0x26,0x32,0x31,0x18,0x19,0x10,0x13,0x1F,0x14,0x16,0x2F,0x11,0x2D,0x15,0x2C
-    db 0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B
-    db 0x1C, 0x01, 0x0E, 0x0F, 0x39
-    times (79 - 45) db 0
-    db 0x4D, 0x4B, 0x50, 0x48
-    times (128 - 83) db 0
-
 section .bss
 alignb 8
 %unmacro SDLFN 1

@@ -18,7 +18,7 @@ Rosetta, `host/loader` (see `host/README.md`) maps vanilla `gta2.exe` at `0x3F00
 `--entry` runs the game from its PE entry point through NASM Win32 shims (CRT startup,
 WinMain, registry, a real SDL3 window, DirectInput) and our SDL_Renderer replacements of
 `dmavideo.dll`/`d3ddll.dll` into the frontend loop, which draws the original main menu
-(no input yet). Shim list and policies: `docs/win32-shims.md`; renderer:
+and navigates it with real keyboard input (SDL3 events → DirectInput 8). Shim list and policies: `docs/win32-shims.md`; renderer:
 `docs/renderer-sdl.md`.
 
 SDL3 is **dlopen'ed, not linked**: linked, dyld puts its frameworks in the low 4 GB and

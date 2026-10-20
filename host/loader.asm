@@ -847,6 +847,37 @@ _main:
     mov [r_shot_path], rax
     jmp .arg
 .not_shot:
+    mov rdi, [rbx]                  ; --keys=FRAME:KEY,...: scripted key taps
+    lea rsi, [arg_keys]
+    mov edx, 7
+    call _strncmp
+    test eax, eax
+    jnz .not_keys
+    mov rax, [rbx]
+    add rax, 7
+    mov [keys_arg], rax
+    jmp .arg
+.not_keys:
+    lea rdi, [arg_options]          ; flags that only set a byte
+.opt:
+    mov rsi, [rdi]
+    test rsi, rsi
+    jz .not_opt
+    push rdi
+    sub rsp, 8
+    mov rdi, [rbx]
+    call _strcmp
+    add rsp, 8
+    pop rdi
+    test eax, eax
+    jz .set_opt
+    add rdi, 16
+    jmp .opt
+.set_opt:
+    mov rax, [rdi + 8]
+    mov byte [rax], 1
+    jmp .arg
+.not_opt:
     mov rax, [rbx]
     mov [exe_path], rax
     jmp .arg
@@ -877,7 +908,10 @@ _main:
     call setup_kernel32
     call setup_user32
     call setup_renderer
+    call setup_input
     call setup_registry
+    mov al, [trace]
+    or [trace_input], al            ; --trace implies --trace-input
 
     lea rdi, [msg_calls]
     call _puts
@@ -885,6 +919,14 @@ _main:
     test eax, eax
     jnz .checks_failed
 
+    mov al, [input_selftest]
+    or [input_test_on], al
+    cmp byte [input_test_on], 0
+    je .no_input_test
+    call input_test                 ; --input-test / --input-selftest
+    mov edi, eax
+    call _exit
+.no_input_test:
     cmp byte [run_entry], 0
     je .ok
     mov rax, [nt]
@@ -990,6 +1032,16 @@ arg_trace:   db "--trace", 0
 arg_hold:    db "--hold", 0
 arg_frames:  db "--frames=", 0
 arg_shot:    db "--shot=", 0
+arg_keys:    db "--keys=", 0
+s_opt_trace_input: db "--trace-input", 0
+s_opt_input_test: db "--input-test", 0
+s_opt_input_selftest: db "--input-selftest", 0
+align 8
+arg_options:                        ; {name, byte flag}
+    dq s_opt_trace_input, trace_input
+    dq s_opt_input_test, input_test_on
+    dq s_opt_input_selftest, input_selftest
+    dq 0
 prot_names:  db "---", 0, "r--", 0, "-w-", 0, "rw-", 0, "--x", 0, "r-x", 0, "-wx", 0, "rwx", 0
 str_pass:    db "PASS", 0
 str_fail:    db "FAIL", 0

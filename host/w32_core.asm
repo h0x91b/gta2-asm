@@ -15,6 +15,7 @@
 ; return 0, pop N bytes, log the first call.
 
 extern _strcasecmp, _strncasecmp, _strlen, _strcpy, _strrchr, _atoi, _strdup
+extern _memcmp, _putchar
 extern _usleep, _getpid, _clock_gettime_nsec_np, _write, _read, _fflush
 ; x86_64 macOS: the 64-bit-inode struct stat / struct dirent layouts we use need the
 ; $INODE64 symbol variants (the plain names are the legacy 32-bit-inode ABI).
