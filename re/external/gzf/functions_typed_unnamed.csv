@@ -1,0 +1,125 @@
+address,name,namespace,name_source,calling_convention,signature_source,size,thunk_to,signature
+0x003f113c,FUN_003f113c,,DEFAULT,__fastcall,USER_DEFINED,108,,int __fastcall FUN_003f113c(Game * param_1)
+0x003f11a8,FUN_003f11a8,,DEFAULT,__fastcall,USER_DEFINED,96,,Player_S4 * __fastcall FUN_003f11a8(Game * param_1)
+0x003f135c,FUN_003f135c,,DEFAULT,__fastcall,USER_DEFINED,33,,"undefined __fastcall FUN_003f135c(Game * param_1, char param_2)"
+0x00401c80,FUN_00401c80,,DEFAULT,__fakethis,USER_DEFINED,37,,"undefined4 __fakethis FUN_00401c80(short * param_1_00, void * sometimePed)"
+0x00403920,FUN_00403920,,DEFAULT,__thiscall,USER_DEFINED,13,,"void __thiscall FUN_00403920(Ped * param_1_00, uint param_2)"
+0x00403940,FUN_00403940,,DEFAULT,__thiscall,USER_DEFINED,13,,"void __thiscall FUN_00403940(int param_1_00, Ped * param_2)"
+0x00403980,FUN_00403980,,DEFAULT,__fastcall,USER_DEFINED,7,,undefined4 __fastcall FUN_00403980(Ped * param_1)
+0x00403a00,FUN_00403a00,,DEFAULT,__fastcall,USER_DEFINED,15,,"void __fastcall FUN_00403a00(Ped * param_1, undefined edx, Ped * param_1_00, undefined4 * param_4)"
+0x00403a10,FUN_00403a10,,DEFAULT,__fastcall,USER_DEFINED,15,,"void __fastcall FUN_00403a10(Ped * param_1, undefined param_2, Ped * param_1_00, undefined4 * param_4)"
+0x00404d40,FUN_00404d40,,DEFAULT,__thiscall,USER_DEFINED,420,,"void __thiscall FUN_00404d40(undefined * param_1_00, Ped * ped)"
+0x0040f490,FUN_0040f490,,DEFAULT,__fakethis,USER_DEFINED,27,,"void __fakethis FUN_0040f490(AllCars * param_1_00, Car * param_2)"
+0x00416b40,FUN_00416b40,,DEFAULT,__fastcall,USER_DEFINED,4,,undefined4 __fastcall FUN_00416b40(Car * param_1)
+0x00416b50,FUN_00416b50,,DEFAULT,__thiscall,USER_DEFINED,15,,"void __thiscall FUN_00416b50(Ped * param_1_00, undefined4 * param_2)"
+0x0041dc70,FUN_0041dc70,,DEFAULT,__fastcall,USER_DEFINED,3,,bool __fastcall FUN_0041dc70(Player_S4 * param_1)
+0x0041e1e0,FUN_0041e1e0,,DEFAULT,__fastcall,USER_DEFINED,42,,void __fastcall FUN_0041e1e0(CarsS3 * param_1)
+0x0041e540,FUN_0041e540,,DEFAULT,__fastcall,USER_DEFINED,53,,void __fastcall FUN_0041e540(PlayerS1 * param_1)
+0x0041ea10,FUN_0041ea10,,DEFAULT,__thiscall,USER_DEFINED,169,,"void __thiscall FUN_0041ea10(PlayerS1 * param_1_00, char forward, char backward, char rotateLeft, char rotateRight, char nextWeapon, char prevWeapon)"
+0x0041f700,FUN_0041f700,,DEFAULT,__fastcall,USER_DEFINED,46,,void __fastcall FUN_0041f700(Car * param_1)
+0x0041f860,FUN_0041f860,,DEFAULT,__thiscall,USER_DEFINED,19,,"int __thiscall FUN_0041f860(Car * param_1_00, uint param_2)"
+0x00420b70,FUN_00420b70,,DEFAULT,__fastcall,USER_DEFINED,7,,uint __fastcall FUN_00420b70(Ped * param_1)
+0x00420c00,FUN_00420c00,,DEFAULT,__fastcall,USER_DEFINED,44,,void __fastcall FUN_00420c00(S9_cars * param_1)
+0x00420eb0,FUN_00420eb0,,DEFAULT,__fastcall,USER_DEFINED,61,,CarsS4 * __fastcall FUN_00420eb0(CarsS4 * param_1)
+0x00420f30,FUN_00420f30,,DEFAULT,__fakethis,USER_DEFINED,69,,"void __fakethis FUN_00420f30(AllCars * param_1_00, int param_2)"
+0x00421310,FUN_00421310,,DEFAULT,__fastcall,USER_DEFINED,23,,undefined __fastcall FUN_00421310(CarS1 * car)
+0x00421460,FUN_00421460,,DEFAULT,__fastcall,USER_DEFINED,8,,void __fastcall FUN_00421460(Car * param_1)
+0x004215b0,FUN_004215b0,,DEFAULT,__fastcall,USER_DEFINED,11,,bool __fastcall FUN_004215b0(Car * param_1)
+0x004219d0,FUN_004219d0,,DEFAULT,__fastcall,USER_DEFINED,4,,byte __fastcall FUN_004219d0(Player_S4 * param_1)
+0x004226c0,FUN_004226c0,,DEFAULT,__fakethis,USER_DEFINED,511,,"void __fakethis FUN_004226c0(Car * car, bool param_2, undefined4 param_3)"
+0x00424620,FUN_00424620,,DEFAULT,__fastcall,USER_DEFINED,12,,undefined4 * __fastcall FUN_00424620(Car * param_1)
+0x00426120,FUN_00426120,,DEFAULT,__fastcall,USER_DEFINED,31,,void __fastcall FUN_00426120(Car * param_1)
+0x00427a20,FUN_00427a20,,DEFAULT,__thiscall,USER_DEFINED,241,,"void __thiscall FUN_00427a20(Car * car, Ped * param_2)"
+0x00428fa0,FUN_00428fa0,,DEFAULT,__fastcall,USER_DEFINED,676,,int __fastcall FUN_00428fa0(S9_cars * param_1)
+0x0042a2d0,FUN_0042a2d0,,DEFAULT,__fastcall,USER_DEFINED,141,,void __fastcall FUN_0042a2d0(AllCars * param_1)
+0x0042a4c0,FUN_0042a4c0,,DEFAULT,__fastcall,USER_DEFINED,59,,void __fastcall FUN_0042a4c0(S9_cars * param_1)
+0x0042a9e0,FUN_0042a9e0,,DEFAULT,__fastcall,USER_DEFINED,215,,undefined __fastcall FUN_0042a9e0(CarsS5 * param_1)
+0x00433200,FUN_00433200,,DEFAULT,__fastcall,USER_DEFINED,26,,undefined4 __fastcall FUN_00433200(Ped * param_1)
+0x00433270,FUN_00433270,,DEFAULT,__thiscall,USER_DEFINED,53,,"void __thiscall FUN_00433270(Ped * param_1_00, int param_2)"
+0x00433830,FUN_00433830,,DEFAULT,__fastcall,USER_DEFINED,13,,undefined __fastcall FUN_00433830(S3Bytes * param_1)
+0x00433a80,FUN_00433a80,,DEFAULT,__fastcall,USER_DEFINED,4,,undefined4 __fastcall FUN_00433a80(PedS1 * param_1)
+0x00433ba0,FUN_00433ba0,,DEFAULT,__fastcall,USER_DEFINED,7,,undefined __fastcall FUN_00433ba0(Ped * param_1)
+0x00433c90,FUN_00433c90,,DEFAULT,__fastcall,USER_DEFINED,11,,bool __fastcall FUN_00433c90(Ped * param_1)
+0x00433dd0,FUN_00433dd0,,DEFAULT,__thiscall,USER_DEFINED,22,,"void __thiscall FUN_00433dd0(Ped * param_1_00, undefined4 param_2)"
+0x00434900,FUN_00434900,,DEFAULT,__fastcall,USER_DEFINED,26,,int __fastcall FUN_00434900(Player_S4 * param_1)
+0x00434d70,FUN_00434d70,,DEFAULT,__fastcall,USER_DEFINED,227,,PlayerWeapon * __fastcall FUN_00434d70(Ped * ped)
+0x00435720,FUN_00435720,,DEFAULT,__fastcall,USER_DEFINED,1118,,void __fastcall FUN_00435720(Ped * param_1)
+0x00436920,FUN_00436920,,DEFAULT,__fastcall,USER_DEFINED,610,,"void __fastcall FUN_00436920(Ped * param_1_00, uint param_2_00, undefined4 param_3, undefined * param_4)"
+0x0043e650,FUN_0043e650,,DEFAULT,__fastcall,USER_DEFINED,532,,void __fastcall FUN_0043e650(Ped * param_1)
+0x0043f180,FUN_0043f180,,DEFAULT,__fastcall,USER_DEFINED,433,,void __fastcall FUN_0043f180(Ped * param_1)
+0x004411b0,FUN_004411b0,,DEFAULT,__fastcall,USER_DEFINED,593,,void __fastcall FUN_004411b0(Ped * param_1)
+0x00441f10,FUN_00441f10,,DEFAULT,__fastcall,USER_DEFINED,306,,void __fastcall FUN_00441f10(Ped * param_1)
+0x00444930,FUN_00444930,,DEFAULT,__thiscall,USER_DEFINED,310,,"void __thiscall FUN_00444930(Ped * this, uint param_2, undefined4 param_3)"
+0x00445230,FUN_00445230,,DEFAULT,__fastcall,USER_DEFINED,795,,pointer __fastcall FUN_00445230(Ped * ped2)
+0x00445330,FUN_00445330,,DEFAULT,__fastcall,USER_DEFINED,414,,void __fastcall FUN_00445330(Ped * param_1)
+0x004454e0,FUN_004454e0,,DEFAULT,__fastcall,USER_DEFINED,1126,,uint __fastcall FUN_004454e0(Ped * ped)
+0x00445960,FUN_00445960,,DEFAULT,__fastcall,USER_DEFINED,188,,void __fastcall FUN_00445960(PedsManager * param_1)
+0x00446010,FUN_00446010,,DEFAULT,__fakethis,USER_DEFINED,77,,"void __fakethis FUN_00446010(int * * param_1_00, Ped * param_2)"
+0x004470b0,FUN_004470b0,,DEFAULT,__stdcall,USER_DEFINED,241,,"int __stdcall FUN_004470b0(undefined4 param_1, PedSprite * param_2)"
+0x00447740,FUN_00447740,,DEFAULT,__fastcall,USER_DEFINED,104,,"int __fastcall FUN_00447740(undefined4 param_1, undefined param_2, PedSprite * pedSprite, undefined4 param_4)"
+0x00447cb0,FUN_00447cb0,,DEFAULT,__fastcall,USER_DEFINED,124,,undefined2 * __fastcall FUN_00447cb0(undefined * param_1)
+0x0044a2c0,FUN_0044a2c0,,DEFAULT,__fastcall,USER_DEFINED,86,,"uint __fastcall FUN_0044a2c0(int param_1, undefined param_2, undefined param_3, Player_S4 * param_4, undefined param_5)"
+0x00452490,FUN_00452490,,DEFAULT,__fastcall,USER_DEFINED,47,,void __fastcall FUN_00452490(Frontend * param_1)
+0x004524c0,FUN_004524c0,,DEFAULT,__fastcall,USER_DEFINED,56,,void __fastcall FUN_004524c0(Frontend * param_1)
+0x00452b00,FUN_00452b00,,DEFAULT,__fastcall,USER_DEFINED,18,,undefined __fastcall FUN_00452b00(FrontendS1S3 * param_1)
+0x00452b30,FUN_00452b30,,DEFAULT,__fastcall,USER_DEFINED,85,,undefined __fastcall FUN_00452b30(FrontendS1S1 * param_1)
+0x00452c80,FUN_00452c80,,DEFAULT,__fastcall,USER_DEFINED,53,,undefined __fastcall FUN_00452c80(FrontendS1S2 * param_1)
+0x00453a30,FUN_00453a30,,DEFAULT,__fakethis,USER_DEFINED,15,,"void __fakethis FUN_00453a30(Frontend * param_1_00, undefined * param_2)"
+0x00455340,FUN_00455340,,DEFAULT,__fastcall,USER_DEFINED,860,,void __fastcall FUN_00455340(Frontend * param_1)
+0x00455c20,FUN_00455c20,,DEFAULT,__fastcall,USER_DEFINED,107,,void __fastcall FUN_00455c20(Frontend * param_1)
+0x00455e50,FUN_00455e50,,DEFAULT,__fastcall,USER_DEFINED,159,,undefined __fastcall FUN_00455e50(FrontendS1 * param_1)
+0x00456a60,FUN_00456a60,,DEFAULT,__fastcall,USER_DEFINED,814,,undefined __fastcall FUN_00456a60(Frontend * param_1)
+0x00459540,FUN_00459540,,DEFAULT,__fastcall,USER_DEFINED,79,,void __fastcall FUN_00459540(Frontend * param_1)
+0x004597c0,FUN_004597c0,,DEFAULT,__fastcall,USER_DEFINED,1565,,void __fastcall FUN_004597c0(Frontend * param_1)
+0x0045a250,FUN_0045a250,,DEFAULT,__fastcall,USER_DEFINED,231,,void __fastcall FUN_0045a250(Frontend * param_1)
+0x0045a320,FUN_0045a320,,DEFAULT,__fastcall,USER_DEFINED,307,,undefined4 __fastcall FUN_0045a320(Frontend * param_1)
+0x0045a480,FUN_0045a480,,DEFAULT,__thiscall,USER_DEFINED,44,,"void __thiscall FUN_0045a480(Game * param_1_00, int param_2, undefined4 param_3, undefined4 param_4)"
+0x0045a4b0,FUN_0045a4b0,,DEFAULT,__thiscall,USER_DEFINED,20,,"void __thiscall FUN_0045a4b0(Game * param_1_00, int param_2, undefined4 param_3)"
+0x0045a4d0,FUN_0045a4d0,,DEFAULT,__fastcall,USER_DEFINED,19,,uint __fastcall FUN_0045a4d0(Game * param_1)
+0x0045a540,FUN_0045a540,,DEFAULT,__fastcall,USER_DEFINED,85,,void __fastcall FUN_0045a540(Game * param_1)
+0x0045a690,FUN_0045a690,,DEFAULT,__fastcall,USER_DEFINED,76,,void __fastcall FUN_0045a690(Game * param_1)
+0x0045a700,FUN_0045a700,,DEFAULT,__fastcall,USER_DEFINED,33,,void __fastcall FUN_0045a700(Game * param_1)
+0x0045a8d0,FUN_0045a8d0,,DEFAULT,__fastcall,USER_DEFINED,64,,Player_S4 * __fastcall FUN_0045a8d0(Game * param_1)
+0x0045a910,FUN_0045a910,,DEFAULT,__fastcall,USER_DEFINED,67,,Player_S4 * __fastcall FUN_0045a910(Game * param_1)
+0x0045aea0,FUN_0045aea0,,DEFAULT,__fastcall,USER_DEFINED,160,,"uint __fastcall FUN_0045aea0(u4 param_1, u4 _edx, CarSprite * param_3, undefined param_4)"
+0x0045b469,FUN_0045b469,,DEFAULT,__fakethis,USER_DEFINED,387,,void __fakethis FUN_0045b469(Game * game)
+0x0045b5f0,FUN_0045b5f0,,DEFAULT,__fastcall,USER_DEFINED,430,,void __fastcall FUN_0045b5f0(Game * game)
+0x0045bba0,FUN_0045bba0,,DEFAULT,__thiscall,USER_DEFINED,98,,"bool __thiscall FUN_0045bba0(Game * pGame, CarSprite * param_2, byte playerIndex, undefined4 param_4)"
+0x0045c3b0,FUN_0045c3b0,,DEFAULT,__fastcall,USER_DEFINED,104,,void __fastcall FUN_0045c3b0(Game * param_1)
+0x00460fd0,FUN_00460fd0,,DEFAULT,__fastcall,USER_DEFINED,28,,undefined4 * __fastcall FUN_00460fd0(SKeyboard * param_1)
+0x00461db0,FUN_00461db0,,DEFAULT,__fastcall,USER_DEFINED,7,,undefined __fastcall FUN_00461db0(Player_S4 * param_1)
+0x00475a20,FUN_00475a20,,DEFAULT,__fastcall,USER_DEFINED,7,,bool __fastcall FUN_00475a20(S8 * param_1)
+0x00476200,FUN_00476200,,DEFAULT,__thiscall,USER_DEFINED,42,,"int __thiscall FUN_00476200(S8 * param_1_00, uint param_2)"
+0x004766d0,FUN_004766d0,,DEFAULT,__fastcall,USER_DEFINED,4,,undefined4 __fastcall FUN_004766d0(Player_S4 * param_1)
+0x00479cc0,FUN_00479cc0,,DEFAULT,__stdcall,USER_DEFINED,119,,void __stdcall FUN_00479cc0(void)
+0x00481960,FUN_00481960,,DEFAULT,__fastcall,USER_DEFINED,681,,undefined2 * __fastcall FUN_00481960(S8 * param_1)
+0x00493710,FUN_00493710,,DEFAULT,__fastcall,USER_DEFINED,104,,void __fastcall FUN_00493710(PedS1 * param_1)
+0x004a1be0,FUN_004a1be0,,DEFAULT,__fastcall,USER_DEFINED,265,,void __fastcall FUN_004a1be0(CarsS3 * param_1)
+0x004a1cf0,FUN_004a1cf0,,DEFAULT,__fastcall,USER_DEFINED,51,,void __fastcall FUN_004a1cf0(CarsS3 * param_1)
+0x004a1d60,FUN_004a1d60,,DEFAULT,__fastcall,USER_DEFINED,52,,CarsS3 * __fastcall FUN_004a1d60(CarsS3 * param_1)
+0x004a4fe0,FUN_004a4fe0,,DEFAULT,__fastcall,USER_DEFINED,4,,undefined2 __fastcall FUN_004a4fe0(Car * param_1)
+0x004a50e0,SetCharAttributeLikeMoneyAndHealth,,DEFAULT,__fastcall,USER_DEFINED,5,SetCharAttributeLikeMoneyAndHealth,"void __fastcall SetCharAttributeLikeMoneyAndHealth(int * param_1, int * param_1_00, int param_3)"
+0x004a5130,FUN_004a5130,,DEFAULT,__fastcall,USER_DEFINED,20,,Ped * __fastcall FUN_004a5130(Player_S4 * param_1)
+0x004a5220,FUN_004a5220,,DEFAULT,__fastcall,USER_DEFINED,139,,"void __fastcall FUN_004a5220(Player_S4 * param_1, undefined _edx, Car * param_3, int param_4)"
+0x004a5460,FUN_004a5460,,DEFAULT,__fastcall,USER_DEFINED,267,,"void __fastcall FUN_004a5460(Player_S4 * player, u4 _edx, char param_3, char param_4)"
+0x004a5e90,FUN_004a5e90,,DEFAULT,__fakethis,USER_DEFINED,436,,"void __fakethis FUN_004a5e90(Player_S4 * param_1_00, char param_2)"
+0x004a61f0,FUN_004a61f0,,DEFAULT,__fastcall,USER_DEFINED,173,,void __fastcall FUN_004a61f0(Player_S4 * param_1)
+0x004a66f0,FUN_004a66f0,,DEFAULT,__fastcall,USER_DEFINED,485,,void __fastcall FUN_004a66f0(Player_S4 * param_1)
+0x004a6c80,FUN_004a6c80,,DEFAULT,__fastcall,USER_DEFINED,288,,"void __fastcall FUN_004a6c80(Player_S4 * s4, int * param_2, uint param_3)"
+0x004a7680,FUN_004a7680,,DEFAULT,__fastcall,USER_DEFINED,69,,void __fastcall FUN_004a7680(Player_S4 * param_1)
+0x004a81e0,FUN_004a81e0,,DEFAULT,__fastcall,USER_DEFINED,352,,undefined __fastcall FUN_004a81e0(Player_S4 * param_1)
+0x004a9590,FUN_004a9590,,DEFAULT,__thiscall,USER_DEFINED,115,,"uint __thiscall FUN_004a9590(Police_s5 * param_1_00, Ped * param_2)"
+0x004aa030,FUN_004aa030,,DEFAULT,__fastcall,USER_DEFINED,1677,,void __fastcall FUN_004aa030(Police_s5 * param_1)
+0x004bcb40,FUN_004bcb40,,DEFAULT,__fastcall,USER_DEFINED,80,,void __fastcall FUN_004bcb40(PedSprite * param_1)
+0x004be980,FUN_004be980,,DEFAULT,__thiscall,USER_DEFINED,49,,"int __thiscall FUN_004be980(Car * param_1_00, int param_2)"
+0x004bf000,FUN_004bf000,,DEFAULT,__fastcall,USER_DEFINED,82,,void __fastcall FUN_004bf000(Car * param_1)
+0x004bf1f0,FUN_004bf1f0,,DEFAULT,__fakethis,USER_DEFINED,18,,"void * __fakethis FUN_004bf1f0(undefined4 param_1_00, CAR_TYPE carType)"
+0x004bf740,FUN_004bf740,,DEFAULT,__fastcall,USER_DEFINED,5,,undefined2 __fastcall FUN_004bf740(S7 * param_1)
+0x004c08d0,FUN_004c08d0,,DEFAULT,__fastcall,USER_DEFINED,112,,undefined __fastcall FUN_004c08d0(undefined param_1)
+0x004c23a0,GetTextFromGamesResources,,DEFAULT,__fakethis,USER_DEFINED,5,GetTextFromGamesResources,"undefined __fakethis GetTextFromGamesResources(void * * param_1_00, void * param_2)"
+0x004c5f60,FUN_004c5f60,,DEFAULT,__stdcall,USER_DEFINED,14,,void __stdcall FUN_004c5f60(Player_S4 * param_1)
+0x004c6f80,FUN_004c6f80,,DEFAULT,__fastcall,USER_DEFINED,35,,uint __fastcall FUN_004c6f80(int param_1)
+0x004cc7d0,FUN_004cc7d0,,DEFAULT,__fastcall,USER_DEFINED,52,,undefined __fastcall FUN_004cc7d0(TrafficManagerS1 * param_1)
+0x004cc9b0,FUN_004cc9b0,,DEFAULT,__fastcall,USER_DEFINED,4,,TrafficManagerS1 * __fastcall FUN_004cc9b0(TrafficManager * param_1)
+0x004ccb10,FUN_004ccb10,,DEFAULT,__fastcall,USER_DEFINED,42,,undefined __fastcall FUN_004ccb10(Car * param_1)
+0x004d09d0,FUN_004d09d0,,DEFAULT,__stdcall,USER_DEFINED,41,,void __stdcall FUN_004d09d0(byte * param_1)

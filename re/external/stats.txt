@@ -1,0 +1,27 @@
+functions.gta2-seuko-mod=NEW:62 SAME:1 CONFLICT:9
+functions.gta2-resurection=NEW:3 SAME:1 CONFLICT:1
+functions.gta2-mouse=NEW:1 SAME:2 CONFLICT:1
+functions.gta2-resurection.gzf=NEW:130 SAME:40 CONFLICT:66
+globals.gta2-seuko-mod=NEW:23 SAME:8 CONFLICT:20
+globals.gta2-resurection=NEW:3 SAME:21 CONFLICT:10
+globals.gta2-mouse=NEW:0 SAME:3 CONFLICT:0
+globals.gta2-resurection.gzf=NEW:125 SAME:89 CONFLICT:37
+code_refs.gta2-seuko-mod=NEW:98 SAME:0 CONFLICT:0
+code_refs.gta2-resurection=NEW:2 SAME:0 CONFLICT:0
+code_refs.gta2-mouse=NEW:0 SAME:0 CONFLICT:0
+code_refs.gta2-resurection.gzf=NEW:0 SAME:0 CONFLICT:0
+struct_fields.gta2-seuko-mod=NEW:680 SAME:187 CONFLICT:45
+struct_fields.gta2-resurection=NEW:82 SAME:6 CONFLICT:16
+struct_fields.gta2-mouse=NEW:128 SAME:211 CONFLICT:28
+struct_fields.gta2-resurection.gzf=NEW:82 SAME:29 CONFLICT:17
+enum_constants.gta2-seuko-mod=NEW:1054 SAME:244 CONFLICT:38
+enum_constants.gta2-resurection=NEW:35 SAME:0 CONFLICT:0
+enum_constants.gta2-mouse=NEW:324 SAME:361 CONFLICT:8
+enum_constants.gta2-resurection.gzf=NEW:35 SAME:0 CONFLICT:0
+structs.gta2-seuko-mod=NEW_STRUCT:85 SAME_SIZE:56 SIZE_CONFLICT:12
+structs.gta2-resurection=NEW_STRUCT:29 SAME_SIZE:2 SIZE_CONFLICT:3
+structs.gta2-mouse=NEW_STRUCT:24 SAME_SIZE:63 SIZE_CONFLICT:11
+structs.gta2-resurection.gzf=NEW_STRUCT:29 SAME_SIZE:9 SIZE_CONFLICT:3
+functions.byte_check_suspect=2 of 273 checked
+gzf_comments_new=196
+ct_entries=147 static=133

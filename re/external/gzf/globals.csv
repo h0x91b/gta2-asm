@@ -1,0 +1,155 @@
+address,name,namespace,name_source,section,in_function,datatype,size
+0x003f0000,"""gta2.exe.bin.exe""",,USER_DEFINED,Headers,,/DOS/IMAGE_DOS_HEADER,128
+0x003f0000,gta2.exe.bin.exe,,USER_DEFINED,Headers,,/DOS/IMAGE_DOS_HEADER,128
+0x003f0000,"""gta2-resurected.exe""",,USER_DEFINED,Headers,,/DOS/IMAGE_DOS_HEADER,128
+0x003f0000,gta2.exe,,USER_DEFINED,Headers,,/DOS/IMAGE_DOS_HEADER,128
+0x003f0000,gta2-resurected.exe,,USER_DEFINED,Headers,,/DOS/IMAGE_DOS_HEADER,128
+0x003f0000,_,,USER_DEFINED,Headers,,/DOS/IMAGE_DOS_HEADER,128
+0x005787c8,vftable,type_info,IMPORTED,.rdata,,/pointer,4
+0x00591e84,NextPedId,,USER_DEFINED,.data,,/undefined4,4
+0x00595010,max_frame_rate,,USER_DEFINED,.data,,/bool,1
+0x00595011,isNight,,USER_DEFINED,.data,,/undefined1,1
+0x00595014,isFullScreenMode,,USER_DEFINED,.data,,/undefined4,4
+0x005dcbc8,do_3d_sound,,USER_DEFINED,.data,,/bool,1
+0x005dcbe5,soundRelated3d,,USER_DEFINED,.data,,/undefined1,1
+0x005dcbec,SFXVolume,,USER_DEFINED,.data,,/undefined1,1
+0x005dcbed,CDVol,,USER_DEFINED,.data,,/undefined1,1
+0x005e3cc4,pS1,,USER_DEFINED,.data,,/_my/S1 *,4
+0x005e3f54,eq8192,,USER_DEFINED,.data,,/undefined4,4
+0x005e4ca0,pAllCars,,USER_DEFINED,.data,,/_my/AllCars *,4
+0x005e4ca4,pS9,,USER_DEFINED,.data,,/_my/S9_cars *,4
+0x005e4db8,eq0,,USER_DEFINED,.data,,/undefined4,4
+0x005e508c,pCarsS4,,USER_DEFINED,.data,,/_my/CarsS4 *,4
+0x005e5bbc,pedManager,,USER_DEFINED,.data,,/_my/PedsManager *,4
+0x005e5c60,eq0_2bytes,,USER_DEFINED,.data,,/undefined2,2
+0x005e5cfc,eq0,,USER_DEFINED,.data,,/undefined4,4
+0x005e8108,cycle,,USER_DEFINED,.data,,/undefined4,4
+0x005e9708,pTextGameResource,,USER_DEFINED,.data,,/undefined,1
+0x005e9808,WindowName,,USER_DEFINED,.data,,/undefined4,4
+0x005ea9cc,pFireEngine,,USER_DEFINED,.data,,/undefined4,4
+0x005ead50,do_3d_sound,,USER_DEFINED,.data,,/undefined,1
+0x005ead51,do_blood,,USER_DEFINED,.data,,/undefined1,1
+0x005ead52,do_show_object_ids,,USER_DEFINED,.data,,/undefined,1
+0x005ead53,skip_traffic_lights,,USER_DEFINED,.data,,/undefined1,1
+0x005ead54,skip_buses,,USER_DEFINED,.data,,/undefined1,1
+0x005ead55,do_show_instruments,,USER_DEFINED,.data,,/undefined1,1
+0x005ead56,skip_particles,,USER_DEFINED,.data,,/undefined1,1
+0x005ead57,skip_trains,,USER_DEFINED,.data,,/undefined1,1
+0x005ead58,do_show_input,,USER_DEFINED,.data,,/undefined1,1
+0x005ead59,skip_right,,USER_DEFINED,.data,,/undefined1,1
+0x005ead5a,show_hidden_faces,,USER_DEFINED,.data,,/undefined1,1
+0x005ead5b,skip_recycling,,USER_DEFINED,.data,,/undefined1,1
+0x005ead5d,exploding_on,,USER_DEFINED,.data,,/undefined1,1
+0x005ead5e,skip_police,,USER_DEFINED,.data,,/undefined1,1
+0x005ead5f,skip_bottom,,USER_DEFINED,.data,,/undefined1,1
+0x005ead60,do_police_1,,USER_DEFINED,.data,,/undefined1,1
+0x005ead61,do_infinite_lives,,USER_DEFINED,.data,,/undefined1,1
+0x005ead63,log_random,,USER_DEFINED,.data,,/undefined1,1
+0x005ead64,skip_user,,USER_DEFINED,.data,,/undefined1,1
+0x005ead65,double_damage,,USER_DEFINED,.data,,/undefined1,1
+0x005ead66,do_miss_logging,,USER_DEFINED,.data,,/undefined1,1
+0x005ead67,skip_left,,USER_DEFINED,.data,,/undefined1,1
+0x005ead68,do_corner_window,,USER_DEFINED,.data,,/undefined1,1
+0x005ead69,skip_dummies,,USER_DEFINED,.data,,/undefined1,1
+0x005ead6b,skip_ambulance,,USER_DEFINED,.data,,/undefined1,1
+0x005ead6c,skip_window_check,,USER_DEFINED,.data,,/undefined,1
+0x005ead6e,give_basic_weapons,,USER_DEFINED,.data,,/undefined1,1
+0x005ead6f,do_show_imaginary,,USER_DEFINED,.data,,/undefined1,1
+0x005ead70,give_electric_gun,,USER_DEFINED,.data,,/undefined1,1
+0x005ead71,do_invulnerable,,USER_DEFINED,.data,,/undefined1,1
+0x005ead72,skip_audio,,USER_DEFINED,.data,,/bool,1
+0x005ead74,get_all_weapons,,USER_DEFINED,.data,,/undefined1,1
+0x005ead75,no_annoying_chars,,USER_DEFINED,.data,,/undefined1,1
+0x005ead76,show_player_names,,USER_DEFINED,.data,,/undefined1,1
+0x005ead77,log_directinput,,USER_DEFINED,.data,,/undefined1,1
+0x005ead78,skip_slopes,,USER_DEFINED,.data,,/undefined1,1
+0x005ead79,do_show_timing,,USER_DEFINED,.data,,/undefined1,1
+0x005ead7a,log_random_extra,,USER_DEFINED,.data,,/undefined1,1
+0x005ead7c,skip_frontend,,USER_DEFINED,.data,,/undefined1,1
+0x005ead7d,do_brian_test,,USER_DEFINED,.data,,/undefined1,1
+0x005ead7e,do_load_savegame,,USER_DEFINED,.data,,/undefined1,1
+0x005ead7f,do_show_horn,,USER_DEFINED,.data,,/undefined1,1
+0x005ead80,do_test,,USER_DEFINED,.data,,/undefined1,1
+0x005ead81,do_mike,,USER_DEFINED,.data,,/undefined1,1
+0x005ead82,do_show_camera,,USER_DEFINED,.data,,/undefined1,1
+0x005ead84,do_free_shopping,,USER_DEFINED,.data,,/undefined1,1
+0x005ead85,do_show_physics,,USER_DEFINED,.data,,/undefined1,1
+0x005ead86,ignore_replay_header,,USER_DEFINED,.data,,/undefined1,1
+0x005ead87,do_debug_keys,,USER_DEFINED,.data,,/undefined1,1
+0x005ead88,skip_draw,,USER_DEFINED,.data,,/undefined1,1
+0x005ead89,do_show_junc_ids,,USER_DEFINED,.data,,/undefined1,1
+0x005ead8a,MADEMAN,,USER_DEFINED,.data,,/undefined1,1
+0x005ead8b,skip_fire_engines,,USER_DEFINED,.data,,/undefined1,1
+0x005ead8c,skip_top,,USER_DEFINED,.data,,/undefined1,1
+0x005ead8d,do_iain_test,,USER_DEFINED,.data,,/undefined1,1
+0x005ead8f,health99,,USER_DEFINED,.data,,/undefined1,1
+0x005ead90,skip_tiles,,USER_DEFINED,.data,,/undefined1,1
+0x005ead91,log_input,,USER_DEFINED,.data,,/undefined1,1
+0x005ead94,dont_get_car_back,,USER_DEFINED,.data,,/undefined1,1
+0x005ead95,do_show_counters,,USER_DEFINED,.data,,/undefined1,1
+0x005ead96,do_show_traffic_lights_info,,USER_DEFINED,.data,,/undefined1,1
+0x005ead97,giveMoneyOnstart,,USER_DEFINED,.data,,/bool,1
+0x005ead99,log_routefinder,,USER_DEFINED,.data,,/undefined1,1
+0x005ead9a,do_text_id_test,,USER_DEFINED,.data,,/undefined1,1
+0x005ead9b,give_flame_thrower,,USER_DEFINED,.data,,/undefined1,1
+0x005ead9c,skip_lid,,USER_DEFINED,.data,,/undefined1,1
+0x005ead9d,do_police_2,,USER_DEFINED,.data,,/undefined1,1
+0x005ead9e,keep_weapons_after_death,,USER_DEFINED,.data,,/undefined1,1
+0x005eada1,do_show_ids,,USER_DEFINED,.data,,/undefined1,1
+0x005eada4,skip_replay_sync_check,,USER_DEFINED,.data,,/undefined,1
+0x005eada5,show_brief_number,,USER_DEFINED,.data,,/undefined1,1
+0x005eada6,IAMDAVEJ,,USER_DEFINED,.data,,/undefined1,1
+0x005eada7,show_cycle,,USER_DEFINED,.data,,/undefined1,1
+0x005eada8,do_sync_check,,USER_DEFINED,.data,,/undefined1,1
+0x005eada9,do_police_3,,USER_DEFINED,.data,,/undefined1,1
+0x005eadab,skip_quit_confirm,,USER_DEFINED,.data,,/undefined1,1
+0x005eadac,limit_recycling,,USER_DEFINED,.data,,/undefined1,1
+0x005eadad,do_exit_after_replay,,USER_DEFINED,.data,,/undefined1,1
+0x005eadae,skip_mission,,USER_DEFINED,.data,,/undefined1,1
+0x005eadaf,skip_skidmarks,,USER_DEFINED,.data,,/undefined1,1
+0x005eadb0,log_collisions,,USER_DEFINED,.data,,/undefined,1
+0x005eadb1,do_show_collision_box,,USER_DEFINED,.data,,/undefined1,1
+0x005eadb2,show_all_arrows,,USER_DEFINED,.data,,/undefined1,1
+0x005eadb3,do_kill_phones_on_answer,,USER_DEFINED,.data,,/undefined1,1
+0x005eb160,pFrontend,,USER_DEFINED,.data,,/_my/Frontend *,4
+0x005eb4fc,pGame,,USER_DEFINED,.data,,/_my/Game *,4
+0x00662128,pKeyboard,,USER_DEFINED,.data,,/_my/SKeyboard *,4
+0x00662748,tickCounts,,USER_DEFINED,.data,,/undefined4,4
+0x00662c08,DAT_00662c08_maybeTrafficRelated,,USER_DEFINED,.data,,/undefined4,4
+0x00663de4,pAmbulance,,USER_DEFINED,.data,,/undefined4,4
+0x006644bc,pS8,,USER_DEFINED,.data,,/_my/S8 *,4
+0x0066ab7c,pCarsS2,,USER_DEFINED,.data,,/_my/CarsS2 *,4
+0x0066b7a0,pPolice,,USER_DEFINED,.data,,/_my/Police_s5 *,4
+0x00670684,pS7,,USER_DEFINED,.data,,/_my/S7 *,4
+0x00671550,textResources,,USER_DEFINED,.data,,/undefined4,4
+0x00671880,PlayerName,,USER_DEFINED,.data,,/undefined1,1
+0x00671e9c,pTiming,,USER_DEFINED,.data,,/undefined4,4
+0x006721cc,pTrafficLights,,USER_DEFINED,.data,,/_my/TrafficLights *,4
+0x00672f40,StructRelToTextSpeed,,USER_DEFINED,.data,,/undefined4,4
+0x006732e0,full_height,,USER_DEFINED,.data,,/undefined4,4
+0x006732e4,full_width,,USER_DEFINED,.data,,/undefined4,4
+0x006732e8,WindowY,,USER_DEFINED,.data,,/undefined4,4
+0x006732f0,dmavideo.dll,,USER_DEFINED,.data,,/pointer,4
+0x00673470,renderdevice,,USER_DEFINED,.data,,/undefined4,4
+0x00673478,rendername,,USER_DEFINED,.data,,/undefined1,1
+0x00673578,WindowX,,USER_DEFINED,.data,,/undefined4,4
+0x0067357c,screenX,,USER_DEFINED,.data,,/int,4
+0x00673588,videodevice,,USER_DEFINED,.data,,/undefined4,4
+0x0067358c,lighting,,USER_DEFINED,.data,,/_my/LIGHTING,4
+0x00673590,screenY,,USER_DEFINED,.data,,/undefined4,4
+0x00673594,gammaRelated,,USER_DEFINED,.data,,/undefined4,4
+0x00673598,min_frame_rate,,USER_DEFINED,.data,,/undefined1,1
+0x00673944,TrafficManager,,USER_DEFINED,.data,,/_my/TrafficManager *,4
+0x00673d18,hwnd,,USER_DEFINED,.data,,/undefined4,4
+0x00673d20,dinputrelated,,USER_DEFINED,.data,,/undefined4,4
+0x00673e28,DirectInput,,USER_DEFINED,.data,,/undefined4,4
+0x00673f54,VersionMajor,,USER_DEFINED,.data,,/undefined4,4
+0x00673f58,VersionMinor,,USER_DEFINED,.data,,/undefined4,4
+0x006771f0,Rsrc_Icon_1_c09,,IMPORTED,.rsrc,,/IconResource,1384
+0x00677758,Rsrc_Icon_2_c09,,IMPORTED,.rsrc,,/IconResource,1736
+0x00677e20,Rsrc_Icon_3_c09,,IMPORTED,.rsrc,,/IconResource,2216
+0x006786c8,Rsrc_Icon_4_c09,,IMPORTED,.rsrc,,/IconResource,3752
+0x00679570,Rsrc_Dialog_67_809,,IMPORTED,.rsrc,,/DialogResource,32
+0x006795bc,Rsrc_Dialog_68_809,,IMPORTED,.rsrc,,/DialogResource,56
+0x00679618,Rsrc_GroupIcon_65_809,,IMPORTED,.rsrc,,/GroupIconResource,62
+0x00679658,Rsrc_Version_1_809,,IMPORTED,.rsrc,,/PE/VS_VERSION_INFO,92

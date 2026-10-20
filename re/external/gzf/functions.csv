@@ -1,0 +1,447 @@
+address,name,namespace,name_source,calling_convention,signature_source,size,thunk_to,signature
+0x00401ad0,WriteToFirstArg,,USER_DEFINED,__fakethis,ANALYSIS,11,,"void __fakethis WriteToFirstArg(undefined4 * outVar, undefined4 param_2)"
+0x00401af0,DecodeFloatOnPed,,USER_DEFINED,__fakethis,ANALYSIS,14,,"void __fakethis DecodeFloatOnPed(int * param_1_00, int param_2)"
+0x00401b60,DecodeFloat,,USER_DEFINED,__stdcall,ANALYSIS,36,,undefined4 * __stdcall DecodeFloat(undefined4 * param_1)
+0x00403890,CreateNewPed,,USER_DEFINED,__fastcall,USER_DEFINED,34,,Ped * __fastcall CreateNewPed(PedsManager * param_1)
+0x004039a0,SetHealth,,USER_DEFINED,__thiscall,USER_DEFINED,15,,"void __thiscall SetHealth(Ped * param_1_00, word param_2)"
+0x0040ce30,SetZ,,USER_DEFINED,__thiscall,ANALYSIS,20,,"void __thiscall SetZ(int * param_1_00, uint param_2)"
+0x0040d120,do_show_junc_id,,USER_DEFINED,__fastcall,ANALYSIS,292,,void __fastcall do_show_junc_id(uint param_1)
+0x0040e550,GoForward,,USER_DEFINED,__thiscall,USER_DEFINED,17,,"void __thiscall GoForward(PlayerS2 * param_1_00, int * param_2)"
+0x00410520,audio,,USER_DEFINED,unknown,DEFAULT,10,,undefined audio()
+0x00410600,CDVol,,USER_DEFINED,unknown,DEFAULT,56,,undefined CDVol(undefined4 param_1)
+0x00410ba0,DecodeFloat,,USER_DEFINED,__fastcall,ANALYSIS,9,,"float10 * __fastcall DecodeFloat(float10 * __return_storage_ptr__, int * param_1)"
+0x004118f0,IsFireTruck,,USER_DEFINED,__fastcall,USER_DEFINED,11,,bool __fastcall IsFireTruck(Car * param_1)
+0x00411900,IsTank,,USER_DEFINED,__fastcall,USER_DEFINED,11,,bool __fastcall IsTank(Car * param_1)
+0x00411910,IsGunJeep,,USER_DEFINED,__fastcall,USER_DEFINED,11,,undefined __fastcall IsGunJeep(Car * param_1)
+0x00416490,initSound,,USER_DEFINED,__fastcall,ANALYSIS,54,,void __fastcall initSound(char * param_1)
+0x00416b60,GetPedsCar,,USER_DEFINED,__fastcall,USER_DEFINED,7,,Car * __fastcall GetPedsCar(Ped * param_1)
+0x00416bc0,PauseGame,,USER_DEFINED,__fastcall,USER_DEFINED,7,,bool __fastcall PauseGame(Game * param_1)
+0x0041b0a0,IsPlayersPed,,USER_DEFINED,__fastcall,USER_DEFINED,12,,bool __fastcall IsPlayersPed(Ped * param_1)
+0x0041c1e0,decodeFloat,,USER_DEFINED,__fastcall,ANALYSIS,6,,int __fastcall decodeFloat(int * param_1)
+0x0041c1f0,getColor,,USER_DEFINED,__fastcall,USER_DEFINED,5,,ushort __fastcall getColor(CarSprite * param_1)
+0x0041d020,GetPlayerPed,,USER_DEFINED,__fastcall,USER_DEFINED,7,,Ped * __fastcall GetPlayerPed(Player_S4 * param_1)
+0x0041dc40,AddMoney,,USER_DEFINED,__fastcall,USER_DEFINED,35,,"void __fastcall AddMoney(Player_S4 * param_1, int _edx, int money)"
+0x0041f9d0,DecodeFloat,,USER_DEFINED,__fastcall,ANALYSIS,6,,int __fastcall DecodeFloat(int * param_1)
+0x00420b80,SetCopLevel0,,USER_DEFINED,__fastcall,USER_DEFINED,10,,void __fastcall SetCopLevel0(Ped * param_1)
+0x00420f80,InitCarsS2,,USER_DEFINED,__fastcall,USER_DEFINED,74,,CarsS2 * __fastcall InitCarsS2(CarsS2 * param_1)
+0x004267b0,InitCar,,USER_DEFINED,__fastcall,USER_DEFINED,268,,undefined __fastcall InitCar(Car * param_1)
+0x00426db0,InitAllCars,,USER_DEFINED,__fastcall,USER_DEFINED,79,,AllCars * __fastcall InitAllCars(AllCars * param_1)
+0x00427180,CollisionOfCar,,USER_DEFINED,__fakethis,USER_DEFINED,262,,"uint __fakethis CollisionOfCar(Car * car, short dam, undefined4 param_3)"
+0x004333a0,SetMaskBit,,USER_DEFINED,__fakethis,USER_DEFINED,18,,"uint __fakethis SetMaskBit(Ped * ped, uint mask)"
+0x00433900,SetCar,,USER_DEFINED,__fastcall,USER_DEFINED,13,,"void __fastcall SetCar(PedS1 * param_1, undefined edx, Car * param_3)"
+0x00433c40,Jump,,USER_DEFINED,__fastcall,USER_DEFINED,16,,void __fastcall Jump(Ped * param_1)
+0x00434c00,GetCopStars,,USER_DEFINED,__fastcall,USER_DEFINED,60,,byte __fastcall GetCopStars(Ped * param_1)
+0x00435530,getFirstPed,,USER_DEFINED,__fastcall,USER_DEFINED,4,,Ped * __fastcall getFirstPed(int param_1)
+0x00435660,PedDestruct,,USER_DEFINED,__fastcall,USER_DEFINED,184,,undefined __fastcall PedDestruct(Ped * param_1)
+0x00435b80,initPed,,USER_DEFINED,__fastcall,ANALYSIS,109,,void __fastcall initPed(Ped * param_1)
+0x0043ae10,GetPedById,,USER_DEFINED,__stdcall,USER_DEFINED,42,,Ped * __stdcall GetPedById(int pedId)
+0x0043ae70,initPed,,USER_DEFINED,__fastcall,USER_DEFINED,109,,undefined __fastcall initPed(Ped * param_1)
+0x0043df60,CreateNewPedAndSetHealth,,USER_DEFINED,__stdcall,ANALYSIS,27,,Ped * __stdcall CreateNewPedAndSetHealth(void)
+0x0043e0e0,InitPedManager,,USER_DEFINED,__fastcall,USER_DEFINED,85,,PedsManager * __fastcall InitPedManager(PedsManager * pedsManager)
+0x0043e1e0,MovePlayer,,USER_DEFINED,__fastcall,USER_DEFINED,215,,void __fastcall MovePlayer(Ped * param_1)
+0x004404e0,iain_test,,USER_DEFINED,unknown,DEFAULT,10,,undefined iain_test()
+0x004419e0,TakeDamage,,USER_DEFINED,__fakethis,USER_DEFINED,78,,"void __fakethis TakeDamage(Ped * ped, short damage)"
+0x00443170,GameLogic,,USER_DEFINED,__fastcall,USER_DEFINED,1099,,void __fastcall GameLogic(Ped * param_1)
+0x0044aa90,ShowCycle,,USER_DEFINED,__fastcall,ANALYSIS,113,,void __fastcall ShowCycle(undefined4 * param_1)
+0x0044ba00,diutil,,USER_DEFINED,__stdcall,ANALYSIS,54,,void __stdcall diutil(undefined4 param_1)
+0x0044dc50,errorLog,,USER_DEFINED,unknown,DEFAULT,8851,,"undefined errorLog(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6, undefined4 param_7, undefined4 param_8, undefined4 param_9, undefined4 param_10, undefined4 param_11)"
+0x00450530,errorLog,,USER_DEFINED,__stdcall,ANALYSIS,448,,"void __stdcall errorLog(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6, undefined4 param_7, undefined4 param_8, undefined4 param_9, undefined4 param_10, undefined4 param_11)"
+0x004512d0,fire_engines,,USER_DEFINED,__fastcall,ANALYSIS,41,,void __fastcall fire_engines(int param_1)
+0x00452990,movieIntro,,USER_DEFINED,__stdcall,ANALYSIS,35,,undefined1 * __stdcall movieIntro(void)
+0x00453e20,MainMenu,,USER_DEFINED,__fastcall,USER_DEFINED,5702,,void __fastcall MainMenu(Frontend * param_1)
+0x004590f0,cheats,,USER_DEFINED,__fakethis,USER_DEFINED,1102,,"void __fakethis cheats(Frontend * front, undefined playerName)"
+0x0045a650,processPlayerKeys,,USER_DEFINED,__fastcall,USER_DEFINED,51,,void __fastcall processPlayerKeys(Game * param_1)
+0x0045bf50,night,,USER_DEFINED,__fastcall,ANALYSIS,141,,void __fastcall night(int * param_1)
+0x0045c1f0,GameTick,,USER_DEFINED,__fastcall,USER_DEFINED,441,,void __fastcall GameTick(Game * game)
+0x0045c4d0,InitGame,,USER_DEFINED,__fakethis,USER_DEFINED,3709,,"undefined4 * __fakethis InitGame(Game * game, char param_2, undefined param_3)"
+0x0045fd10,GetKeyState,,USER_DEFINED,__fastcall,ANALYSIS,595,,uint __fastcall GetKeyState(int param_1)
+0x004611f0,GetKeyState,,USER_DEFINED,__thiscall,USER_DEFINED,16,,"undefined2 __thiscall GetKeyState(SKeyboard * param_1_00, uint param_2)"
+0x00461200,keybrd,,USER_DEFINED,unknown,DEFAULT,420,,undefined keybrd()
+0x00472e90,PauseGame,,USER_DEFINED,__thiscall,USER_DEFINED,134,,"uint __thiscall PauseGame(Game * param_1_00, byte * param_2)"
+0x004740b0,ambulance,,USER_DEFINED,__fastcall,ANALYSIS,49,,void __fastcall ambulance(int param_1)
+0x00474100,do_mike,,USER_DEFINED,__fastcall,ANALYSIS,15,,void __fastcall do_mike(int param_1)
+0x004741a0,do_mike,,USER_DEFINED,unknown,DEFAULT,1,,undefined do_mike()
+0x00476e10,do_miss_logging,,USER_DEFINED,__fastcall,ANALYSIS,60,,void __fastcall do_miss_logging(int param_1)
+0x00481890,missionRelated,,USER_DEFINED,unknown,DEFAULT,99,,undefined missionRelated()
+0x00481900,not_skip_mission,,USER_DEFINED,unknown,DEFAULT,85,,undefined not_skip_mission()
+0x00481d80,relateToBink,,USER_DEFINED,unknown,DEFAULT,29,,"undefined relateToBink(undefined4 param_1, undefined4 param_2)"
+0x00491ce0,particles,,USER_DEFINED,unknown,DEFAULT,152,,undefined particles()
+0x004a4870,GetSelectedWeapon,,USER_DEFINED,__fastcall,USER_DEFINED,27,,PlayerWeapon * __fastcall GetSelectedWeapon(Player_S4 * param_1)
+0x004a4930,SetKeyState,,USER_DEFINED,__thiscall,USER_DEFINED,10,,"void __thiscall SetKeyState(Player_S4 * this, undefined4 param_2)"
+0x004a4ae0,MapKeys,,USER_DEFINED,__fastcall,USER_DEFINED,338,,void __fastcall MapKeys(Player_S4 * param_1)
+0x004a4f90,GiveKFWeapon,,USER_DEFINED,__fastcall,USER_DEFINED,6,,void __fastcall GiveKFWeapon(PlayerWeapon * param_1)
+0x004a50b0,SetCharAttributeLikeMoneyAndHealth,,USER_DEFINED,__fastcall,USER_DEFINED,38,,"void __fastcall SetCharAttributeLikeMoneyAndHealth(int * param_1, int * param_1_00, int param_3)"
+0x004a5150,GetPlayersPed,,USER_DEFINED,__fastcall,USER_DEFINED,27,,Ped * __fastcall GetPlayersPed(Player_S4 * param_1)
+0x004a5c50,PlayerMovement,,USER_DEFINED,__thiscall,USER_DEFINED,572,,"void __thiscall PlayerMovement(Player_S4 * this, Ped * param_2)"
+0x004a6da0,gamestart,,USER_DEFINED,__fastcall,USER_DEFINED,336,,void __fastcall gamestart(Player_S4 * param_1)
+0x004a93b0,plydat,,USER_DEFINED,unknown,DEFAULT,123,,undefined plydat()
+0x004a9d60,SetPoliceTarget,,USER_DEFINED,__fakethis,USER_DEFINED,283,,"void __fakethis SetPoliceTarget(Police_s5 * police, Ped * param_2)"
+0x004aef70,police,,USER_DEFINED,__fastcall,USER_DEFINED,181,,void __fastcall police(Police_s5 * param_1)
+0x004b5000,GetSetting,,USER_DEFINED,unknown,DEFAULT,105,,undefined GetSetting(undefined4 param_1)
+0x004b5070,SetSetting,,USER_DEFINED,unknown,DEFAULT,157,,"undefined SetSetting(undefined4 param_1, undefined4 param_2)"
+0x004b53b0,GetSetting,,USER_DEFINED,unknown,DEFAULT,108,,undefined GetSetting(undefined4 param_1)
+0x004b5660,GetRegistrySetting,,USER_DEFINED,unknown,DEFAULT,157,,"undefined GetRegistrySetting(undefined4 param_1, undefined4 param_2)"
+0x004b5700,SetSetting,,USER_DEFINED,__stdcall,USER_DEFINED,101,,"void __stdcall SetSetting(LPCSTR param_1, undefined4 param_2)"
+0x004b9260,exploding_on,,USER_DEFINED,unknown,DEFAULT,142,,undefined exploding_on()
+0x004c2120,GetTextFromGamesResources,,USER_DEFINED,__fakethis,USER_DEFINED,44,,"undefined __fakethis GetTextFromGamesResources(void * * param_1_00, void * param_2)"
+0x004c2280,WidecharToAscii,,USER_DEFINED,unknown,USER_DEFINED,65,,char * WidecharToAscii(undefined4 playerName)
+0x004c2540,LoadGameResources,,USER_DEFINED,__fastcall,ANALYSIS,446,,void __fastcall LoadGameResources(int param_1)
+0x004c36c0,show_timing,,USER_DEFINED,__fastcall,USER_DEFINED,63,,void __fastcall show_timing(Timing * param_1)
+0x004c4a60,traffic_lights,,USER_DEFINED,__fastcall,USER_DEFINED,324,,"void __fastcall traffic_lights(TrafficLights * param_1, uint param_2)"
+0x004c4b00,trafficLights,,USER_DEFINED,unknown,DEFAULT,60,,undefined trafficLights()
+0x004c8c20,drawUIText,,USER_DEFINED,__fastcall,USER_DEFINED,87,,"int __fastcall drawUIText(int param_1, undefined edx, char * text, undefined4 x, undefined4 y, undefined4 param_6, undefined4 param_7, undefined4 param_8)"
+0x004cab50,DrawGUI,,USER_DEFINED,__fastcall,ANALYSIS,151,,void __fastcall DrawGUI(int param_1)
+0x004cb520,isFullScreenMode,,USER_DEFINED,unknown,DEFAULT,11,,undefined isFullScreenMode()
+0x004cb530,HideMouseCursor,,USER_DEFINED,unknown,DEFAULT,17,,undefined HideMouseCursor()
+0x004cb550,ShowMouseCursor,,USER_DEFINED,unknown,DEFAULT,17,,undefined ShowMouseCursor()
+0x004cb570,FullscreenMode,,USER_DEFINED,unknown,DEFAULT,336,,undefined FullscreenMode()
+0x004cb6c0,GetAndReleaseHdc,,USER_DEFINED,__stdcall,ANALYSIS,46,,undefined4 __stdcall GetAndReleaseHdc(void)
+0x004cb730,WindowedMode,,USER_DEFINED,unknown,DEFAULT,16,,undefined WindowedMode()
+0x004cb930,gamma,,USER_DEFINED,unknown,DEFAULT,96,,undefined gamma(undefined4 param_1)
+0x004cb990,gamma,,USER_DEFINED,unknown,DEFAULT,38,,undefined gamma()
+0x004cca60,DecrAmmo,,USER_DEFINED,__fastcall,ANALYSIS,17,,void __fastcall DecrAmmo(short * param_1)
+0x004cd7f0,GetCarByType,,USER_DEFINED,__stdcall,USER_DEFINED,45,,"Car * __stdcall GetCarByType(Car * car, CAR_TYPE type)"
+0x004cda20,InitTrafficManager,,USER_DEFINED,__fastcall,USER_DEFINED,74,,TrafficManager * __fastcall InitTrafficManager(TrafficManager * param_1)
+0x004d0a00,realWndProc,,USER_DEFINED,__stdcall,ANALYSIS,941,,"LRESULT __stdcall realWndProc(HWND hwnd, uint msg, uint wparam, LONG * lparam)"
+0x004d1170,WinMain,,USER_DEFINED,__stdcall,IMPORTED,54,,"int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)"
+0x004d11a6,injectBack,,USER_DEFINED,__stdcall,USER_DEFINED,1509,,"undefined4 __stdcall injectBack(undefined4 param_1, undefined4 param_2, int param_3, int param_4, int param_5, int param_6, int param_7, int param_8, int param_9, int param_10, undefined4 param_11, UINT param_12, WPARAM param_13, undefined4 param_14, undefined4 param_15, undefined4 param_16, undefined4 param_17, undefined4 param_18, undefined4 wndProc, undefined4 param_20, undefined4 param_21, undefined4 param_22, undefined4 icon, undefined4 IDC_ARROW, undefined4 param_25, undefined4 param_26, undefined4 param_27, undefined4 param_28, undefined4 param_29, undefined4 param_30, undefined4 param_31, undefined4 param_32)"
+0x004d2e50,InitVideoDll,,USER_DEFINED,__stdcall,ANALYSIS,1784,,undefined4 __stdcall InitVideoDll(LPCSTR param_1)
+0x004d5ce1,__heap_alloc,,ANALYSIS,__cdecl,IMPORTED,70,,void * __cdecl __heap_alloc(size_t _Size)
+0x004d5d27,__nh_malloc,,ANALYSIS,__cdecl,IMPORTED,44,,"void * __cdecl __nh_malloc(size_t _Size, int _NhFlag)"
+0x004d5d53,_malloc,,ANALYSIS,__cdecl,IMPORTED,18,,void * __cdecl _malloc(size_t _Size)
+0x004d5dca,operator_new,,ANALYSIS,__cdecl,IMPORTED,14,,void * __cdecl operator_new(uint param_1)
+0x004d5dd8,_JumpToContinuation,,ANALYSIS,__stdcall,IMPORTED,43,,"void __stdcall _JumpToContinuation(void * param_1, EHRegistrationNode * param_2)"
+0x004d5e08,_CallMemberFunction0,,ANALYSIS,__stdcall,IMPORTED,7,,"void __stdcall _CallMemberFunction0(void * param_1, void * param_2)"
+0x004d5e0f,FID_conflict:_CallMemberFunction1,,ANALYSIS,unknown,DEFAULT,7,,"undefined FID_conflict:_CallMemberFunction1(undefined param_1, undefined4 param_2)"
+0x004d5e16,FID_conflict:_CallMemberFunction1,,ANALYSIS,unknown,DEFAULT,7,,"undefined FID_conflict:_CallMemberFunction1(undefined param_1, undefined4 param_2)"
+0x004d5e1d,_UnwindNestedFrames,,ANALYSIS,__stdcall,IMPORTED,82,,"void __stdcall _UnwindNestedFrames(EHRegistrationNode * param_1, EHExceptionRecord * param_2)"
+0x004d5e6f,___CxxFrameHandler,,ANALYSIS,unknown,DEFAULT,54,,"undefined ___CxxFrameHandler(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4)"
+0x004d5f54,_GetRangeOfTrysToCheck,,ANALYSIS,__cdecl,IMPORTED,122,,"_s_TryBlockMapEntry * __cdecl _GetRangeOfTrysToCheck(_s_FuncInfo * param_1, int param_2, int param_3, uint * param_4, uint * param_5)"
+0x004d5fce,_CreateFrameInfo,,ANALYSIS,__cdecl,IMPORTED,25,,"FrameInfo * __cdecl _CreateFrameInfo(FrameInfo * param_1, void * param_2)"
+0x004d6002,_FindAndUnlinkFrame,,ANALYSIS,__cdecl,IMPORTED,57,,void __cdecl _FindAndUnlinkFrame(FrameInfo * param_1)
+0x004d613c,__global_unwind2,,ANALYSIS,unknown,DEFAULT,32,,undefined __global_unwind2(undefined4 param_1)
+0x004d617e,__local_unwind2,,ANALYSIS,unknown,DEFAULT,104,,"undefined __local_unwind2(undefined4 param_1, undefined4 param_2)"
+0x004d61e6,__abnormal_termination,,ANALYSIS,__cdecl,IMPORTED,35,,int __cdecl __abnormal_termination(void)
+0x004d6209,__NLG_Notify1,,ANALYSIS,unknown,DEFAULT,23,,undefined __NLG_Notify1()
+0x004d6212,__NLG_Notify,,ANALYSIS,__stdcall,IMPORTED,10,,void __stdcall __NLG_Notify(ulong param_1)
+0x004d6230,__allshr,,ANALYSIS,unknown,DEFAULT,33,,undefined __allshr()
+0x004d6260,__alldiv,,ANALYSIS,unknown,DEFAULT,170,,"undefined __alldiv(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4)"
+0x004d630a,_free,,ANALYSIS,__cdecl,IMPORTED,56,,void __cdecl _free(void * _Memory)
+0x004d6342,__onexit,,ANALYSIS,__cdecl,IMPORTED,130,,_onexit_t __cdecl __onexit(_onexit_t _Func)
+0x004d63c4,_atexit,,ANALYSIS,__cdecl,IMPORTED,18,,int __cdecl _atexit(void * param_1)
+0x004d63fe,FID_conflict:__fread_lk,,ANALYSIS,__cdecl,IMPORTED,233,,"size_t __cdecl FID_conflict:__fread_lk(void * _DstBuf, size_t _ElementSize, size_t _Count, FILE * _File)"
+0x004d64e7,FID_conflict:__fwrite_lk,,ANALYSIS,__cdecl,IMPORTED,263,,"size_t __cdecl FID_conflict:__fwrite_lk(void * _Str, size_t _Size, size_t _Count, FILE * _File)"
+0x004d65ee,_fseek,,ANALYSIS,__cdecl,IMPORTED,142,,"int __cdecl _fseek(FILE * _File, long _Offset, int _Origin)"
+0x004d667c,_ftell,,ANALYSIS,__cdecl,IMPORTED,345,,long __cdecl _ftell(FILE * _File)
+0x004d67d5,printf,,USER_DEFINED,unknown,DEFAULT,88,,"undefined printf(undefined4 param_1, undefined4 param_2, undefined1 param_3)"
+0x004d685e,_fclose,,ANALYSIS,__cdecl,IMPORTED,86,,int __cdecl _fclose(FILE * _File)
+0x004d68b4,__fsopen,,ANALYSIS,__cdecl,IMPORTED,42,,"FILE * __cdecl __fsopen(char * _Filename, char * _Mode, int _ShFlag)"
+0x004d68de,fopen,,USER_DEFINED,unknown,DEFAULT,19,,"undefined fopen(undefined4 param_1, undefined4 param_2)"
+0x004d68f1,FID_conflict:_getc,,ANALYSIS,__cdecl,IMPORTED,26,,int __cdecl FID_conflict:_getc(FILE * _File)
+0x004d6925,`eh_vector_constructor_iterator',,ANALYSIS,__stdcall,IMPORTED,74,,"void __stdcall `eh_vector_constructor_iterator'(void * param_1, uint param_2, int param_3, FuncDef5 * param_4, FuncDef6 * param_5)"
+0x004d6999,__ArrayUnwind,,ANALYSIS,__stdcall,IMPORTED,47,,"void __stdcall __ArrayUnwind(void * param_1, uint param_2, int param_3, FuncDef7 * param_4)"
+0x004d69f7,`eh_vector_destructor_iterator',,ANALYSIS,__stdcall,IMPORTED,72,,"void __stdcall `eh_vector_destructor_iterator'(void * param_1, uint param_2, int param_3, FuncDef8 * param_4)"
+0x004d6a60,__chkstk,,ANALYSIS,unknown,DEFAULT,61,,undefined __chkstk(undefined1 param_1)
+0x004d6ae3,__stricmp,,ANALYSIS,__cdecl,IMPORTED,67,,"int __cdecl __stricmp(char * _Str1, char * _Str2)"
+0x004d6bc2,_atol,,ANALYSIS,__cdecl,IMPORTED,88,,long __cdecl _atol(char * _Str)
+0x004d6c98,_sscanf,,ANALYSIS,__cdecl,IMPORTED,52,,"int __cdecl _sscanf(char * _Src, char * _Format, ...)"
+0x004d6cd1,wstrlen,,USER_DEFINED,unknown,DEFAULT,22,,undefined wstrlen(undefined4 playerName)
+0x004d6cec,_wcsncpy,,ANALYSIS,__cdecl,IMPORTED,61,,"undefined __cdecl _wcsncpy(undefined _Dest, undefined _Source, size_t _Count)"
+0x004d6d29,_wcscmp,,ANALYSIS,__cdecl,IMPORTED,50,,"int __cdecl _wcscmp(undefined _Str1, undefined _Str2)"
+0x004d6d5b,sprintf,,USER_DEFINED,__stdcall,ANALYSIS,111,,"undefined4 __stdcall sprintf(char * param_1, undefined4 param_2, ...)"
+0x004d6dfc,__ftol2,,ANALYSIS,unknown,DEFAULT,117,,undefined __ftol2()
+0x004d6e80,_strrchr,,ANALYSIS,__cdecl,IMPORTED,45,,"char * __cdecl _strrchr(char * _Str, int _Ch)"
+0x004d6eb0,_memmove,,ANALYSIS,__cdecl,IMPORTED,524,,"void * __cdecl _memmove(void * _Dst, void * _Src, size_t _Size)"
+0x004d71f7,rand,,USER_DEFINED,unknown,DEFAULT,35,,undefined rand()
+0x004d73b8,__exit,,ANALYSIS,__cdecl,IMPORTED,17,,void __cdecl __exit(int _Code)
+0x004d7425,__itoa,,ANALYSIS,__cdecl,IMPORTED,42,,"char * __cdecl __itoa(int _Value, char * _Dest, int _Radix)"
+0x004d744f,__ltoa,,ANALYSIS,__cdecl,IMPORTED,39,,"char * __cdecl __ltoa(long _Value, char * _Dest, int _Radix)"
+0x004d7568,___timet_from_ft,,ANALYSIS,unknown,DEFAULT,100,,undefined ___timet_from_ft(undefined4 param_1)
+0x004d78e0,_strncpy,,ANALYSIS,__cdecl,IMPORTED,292,,"char * __cdecl _strncpy(char * _Dest, char * _Source, size_t _Count)"
+0x004d7a04,__strnicmp,,ANALYSIS,__cdecl,IMPORTED,85,,"int __cdecl __strnicmp(char * _Str1, char * _Str2, size_t _MaxCount)"
+0x004d7a59,FID_conflict:__wctime,,ANALYSIS,__cdecl,IMPORTED,25,,undefined __cdecl FID_conflict:__wctime(undefined _Time)
+0x004d7a72,FID_conflict:__time32,,ANALYSIS,__cdecl,IMPORTED,57,,__time32_t __cdecl FID_conflict:__time32(__time32_t * _Time)
+0x004d7ab0,_strncmp,,ANALYSIS,__cdecl,IMPORTED,57,,"int __cdecl _strncmp(char * _Str1, char * _Str2, size_t _MaxCount)"
+0x004d7ae9,__strupr,,ANALYSIS,__cdecl,IMPORTED,235,,char * __cdecl __strupr(char * _String)
+0x004d7be4,___dtoxmode,,ANALYSIS,unknown,DEFAULT,189,,"undefined ___dtoxmode(undefined4 param_1, undefined4 param_2)"
+0x004d7ca1,_IsRootUNCName,,ANALYSIS,unknown,DEFAULT,109,,undefined _IsRootUNCName()
+0x004d8110,_strncat,,ANALYSIS,__cdecl,IMPORTED,309,,"char * __cdecl _strncat(char * _Dest, char * _Source, size_t _Count)"
+0x004d8245,_rewind,,ANALYSIS,__cdecl,IMPORTED,85,,void __cdecl _rewind(FILE * _File)
+0x004d829a,_bsearch,,ANALYSIS,__cdecl,IMPORTED,140,,"void * __cdecl _bsearch(void * _Key, void * _Base, size_t _NumOfElements, size_t _SizeOfElements, _PtFuncCompare * _PtFuncCompare)"
+0x004d8447,__getcwd,,ANALYSIS,__cdecl,IMPORTED,19,,"char * __cdecl __getcwd(char * _DstBuf, int _SizeInBytes)"
+0x004d845a,__amsg_exit,,ANALYSIS,__cdecl,IMPORTED,34,,void __cdecl __amsg_exit(int param_1)
+0x004d84f9,entry,,IMPORTED,unknown,DEFAULT,5,FUN_0056dcda,undefined entry()
+0x004d878f,__flush,,ANALYSIS,__cdecl,IMPORTED,93,,int __cdecl __flush(FILE * _File)
+0x004d87ec,_fflush,,ANALYSIS,__cdecl,IMPORTED,59,,int __cdecl _fflush(FILE * _File)
+0x004d8827,_flsall,,ANALYSIS,unknown,DEFAULT,109,,undefined _flsall(undefined4 param_1)
+0x004d8894,__flushall,,ANALYSIS,__cdecl,IMPORTED,9,,int __cdecl __flushall(void)
+0x004d8960,_strlen,,ANALYSIS,__cdecl,IMPORTED,139,,size_t __cdecl _strlen(char * _Str)
+0x004d8a9e,__lseek,,ANALYSIS,__cdecl,IMPORTED,140,,"long __cdecl __lseek(int _FileHandle, long _Offset, int _Origin)"
+0x004d9400,_memcpy,,ANALYSIS,__cdecl,IMPORTED,524,,"void * __cdecl _memcpy(void * _Dst, void * _Src, size_t _Size)"
+0x004d973d,___heap_select,,ANALYSIS,unknown,DEFAULT,26,,undefined ___heap_select()
+0x004d9757,__heap_init,,ANALYSIS,__cdecl,IMPORTED,81,,int __cdecl __heap_init(void)
+0x004d983c,___sbh_heap_init,,ANALYSIS,unknown,DEFAULT,72,,undefined ___sbh_heap_init(undefined4 param_1)
+0x004d9884,___sbh_find_block,,ANALYSIS,unknown,DEFAULT,43,,undefined ___sbh_find_block(undefined4 param_1)
+0x004d98af,___sbh_free_block,,ANALYSIS,unknown,DEFAULT,792,,"undefined ___sbh_free_block(undefined4 param_1, undefined4 param_2)"
+0x004d9bc7,___sbh_alloc_new_region,,ANALYSIS,unknown,DEFAULT,183,,undefined ___sbh_alloc_new_region()
+0x004d9c7e,___sbh_alloc_new_group,,ANALYSIS,unknown,DEFAULT,262,,undefined ___sbh_alloc_new_group(undefined4 param_1)
+0x004d9d84,___sbh_resize_block,,ANALYSIS,unknown,DEFAULT,735,,"undefined ___sbh_resize_block(undefined4 param_1, undefined4 param_2, undefined4 param_3)"
+0x004da134,___sbh_heap_check,,ANALYSIS,unknown,DEFAULT,793,,undefined ___sbh_heap_check()
+0x004da4a8,___sbh_alloc_block,,ANALYSIS,unknown,DEFAULT,764,,undefined ___sbh_alloc_block(undefined4 param_1)
+0x004da7ba,__callnewh,,ANALYSIS,__cdecl,IMPORTED,27,,int __cdecl __callnewh(size_t _Size)
+0x004da7d5,__forcdecpt,,ANALYSIS,__cdecl,IMPORTED,88,,void __cdecl __forcdecpt(char * _Buf)
+0x004da892,__fassign,,ANALYSIS,__cdecl,IMPORTED,62,,"void __cdecl __fassign(int flag, char * argument, char * number)"
+0x004dabb1,__cfltcvt,,ANALYSIS,__cdecl,IMPORTED,81,,"errno_t __cdecl __cfltcvt(double * arg, char * buffer, size_t sizeInBytes, int format, int precision, int caps)"
+0x004dac14,__ms_p5_test_fdiv,,ANALYSIS,unknown,DEFAULT,64,,undefined __ms_p5_test_fdiv()
+0x004dac54,__ms_p5_mp_test_fdiv,,ANALYSIS,unknown,DEFAULT,41,,undefined __ms_p5_mp_test_fdiv()
+0x004dac7d,TypeMatch,,ANALYSIS,__cdecl,IMPORTED,79,,"int __cdecl TypeMatch(_s_HandlerType * param_1, _s_CatchableType * param_2, _s_ThrowInfo * param_3)"
+0x004dace5,___FrameUnwindToState,,ANALYSIS,unknown,DEFAULT,142,,"undefined ___FrameUnwindToState(undefined4 param_1, undefined param_2, undefined4 param_3, undefined4 param_4)"
+0x004dadc8,___DestructExceptionObject,,ANALYSIS,unknown,DEFAULT,52,,undefined ___DestructExceptionObject(undefined4 param_1)
+0x004dafa7,CallCatchBlock,,ANALYSIS,__cdecl,IMPORTED,140,,"void * __cdecl CallCatchBlock(EHExceptionRecord * param_1, EHRegistrationNode * param_2, _CONTEXT * param_3, _s_FuncInfo * param_4, void * param_5, int param_6, ulong param_7)"
+0x004db13d,BuildCatchObject,,ANALYSIS,__cdecl,IMPORTED,368,,"void __cdecl BuildCatchObject(EHExceptionRecord * param_1, void * param_2, _s_HandlerType * param_3, _s_CatchableType * param_4)"
+0x004db3af,CatchIt,,ANALYSIS,__cdecl,IMPORTED,103,,"void __cdecl CatchIt(EHExceptionRecord * param_1, EHRegistrationNode * param_2, _CONTEXT * param_3, void * param_4, _s_FuncInfo * param_5, _s_HandlerType * param_6, _s_CatchableType * param_7, _s_TryBlockMapEntry * param_8, int param_9, EHRegistrationNode * param_10, uchar param_11)"
+0x004db6af,___InternalCxxFrameHandler,,ANALYSIS,unknown,DEFAULT,162,,"undefined ___InternalCxxFrameHandler(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6, undefined4 param_7, undefined4 param_8)"
+0x004db78e,_inconsistency,,ANALYSIS,__cdecl,IMPORTED,38,,void __cdecl _inconsistency(void)
+0x004db7c0,__CallSettingFrame@12,,ANALYSIS,unknown,DEFAULT,76,,"undefined __CallSettingFrame@12(undefined4 param_1, undefined4 param_2, undefined4 param_3)"
+0x004db80c,_realloc,,ANALYSIS,__cdecl,IMPORTED,354,,"void * __cdecl _realloc(void * _Memory, size_t _NewSize)"
+0x004db96e,__msize,,ANALYSIS,__cdecl,IMPORTED,56,,size_t __cdecl __msize(void * _Memory)
+0x004db9a6,__filbuf,,ANALYSIS,__cdecl,IMPORTED,222,,int __cdecl __filbuf(FILE * _File)
+0x004dba84,__flsbuf,,ANALYSIS,__cdecl,IMPORTED,278,,"int __cdecl __flsbuf(int _Ch, FILE * _File)"
+0x004dbb9a,_write_char,,ANALYSIS,unknown,DEFAULT,51,,undefined _write_char()
+0x004dbbcd,_write_multi_char,,ANALYSIS,unknown,DEFAULT,36,,"undefined _write_multi_char(undefined1 param_1, undefined4 param_2, undefined4 param_3)"
+0x004dbbf1,_write_string,,ANALYSIS,unknown,DEFAULT,55,,undefined _write_string(undefined4 param_1)
+0x004dc3dc,__freebuf,,ANALYSIS,__cdecl,IMPORTED,43,,void __cdecl __freebuf(FILE * _File)
+0x004dc407,__openfile,,ANALYSIS,__cdecl,IMPORTED,360,,"FILE * __cdecl __openfile(char * _Filename, char * _Mode, int _ShFlag, FILE * _File)"
+0x004dc56f,__getstream,,ANALYSIS,__cdecl,IMPORTED,114,,FILE * __cdecl __getstream(void)
+0x004dc5e4,__SEH_prolog,,ANALYSIS,unknown,DEFAULT,59,,"undefined __SEH_prolog(undefined4 param_1, undefined4 param_2)"
+0x004dc61f,__SEH_epilog,,ANALYSIS,unknown,DEFAULT,17,,undefined __SEH_epilog()
+0x004dc710,___ascii_stricmp,,ANALYSIS,__cdecl,IMPORTED,78,,"int __cdecl ___ascii_stricmp(char * _Str1, char * _Str2)"
+0x004dc75e,__dosmaperr,,ANALYSIS,__cdecl,IMPORTED,95,,void __cdecl __dosmaperr(ulong param_1)
+0x004dc7bd,__mbctoupper,,ANALYSIS,__cdecl,IMPORTED,120,,uint __cdecl __mbctoupper(uint _Ch)
+0x004dc874,__ismbcspace,,ANALYSIS,__cdecl,IMPORTED,144,,int __cdecl __ismbcspace(uint _Ch)
+0x004dc910,__allmul,,ANALYSIS,unknown,DEFAULT,52,,"undefined __allmul(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4)"
+0x004dc944,__hextodec,,ANALYSIS,unknown,DEFAULT,50,,undefined __hextodec()
+0x004dc976,__inc,,ANALYSIS,unknown,DEFAULT,22,,undefined __inc()
+0x004dd550,_write_char,,ANALYSIS,unknown,DEFAULT,37,,undefined _write_char(undefined4 param_1)
+0x004dd575,_write_multi_char,,ANALYSIS,unknown,DEFAULT,37,,"undefined _write_multi_char(undefined4 param_1, undefined4 param_2, undefined4 param_3)"
+0x004dd59a,_write_string,,ANALYSIS,unknown,DEFAULT,61,,undefined _write_string(undefined4 param_1)
+0x004dde50,__aulldvrm,,ANALYSIS,unknown,DEFAULT,149,,"undefined __aulldvrm(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4)"
+0x004ddee5,___loctotime_t,,ANALYSIS,unknown,DEFAULT,270,,"undefined ___loctotime_t(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6, undefined4 param_7)"
+0x004de000,_strcpy,,ANALYSIS,__cdecl,IMPORTED,138,,"char * __cdecl _strcpy(char * _Dest, char * _Source)"
+0x004de010,_strcat,,ANALYSIS,__cdecl,IMPORTED,101,,"char * __cdecl _strcat(char * _Dest, char * _Source)"
+0x004de200,___ascii_strnicmp,,ANALYSIS,__cdecl,IMPORTED,97,,"int __cdecl ___ascii_strnicmp(char * _Str1, char * _Str2, size_t _MaxCount)"
+0x004de361,_localtime,,ANALYSIS,__cdecl,IMPORTED,384,,tm * __cdecl _localtime(undefined _Time)
+0x004de4f0,__aulldiv,,ANALYSIS,unknown,DEFAULT,104,,"undefined __aulldiv(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4)"
+0x004de645,___crtLCMapStringA,,ANALYSIS,__cdecl,IMPORTED,886,,"int __cdecl ___crtLCMapStringA(_locale_t _Plocinfo, undefined _LocaleName, DWORD _DwMapFlag, LPCSTR _LpSrcStr, int _CchSrc, LPSTR _LpDestStr, int _CchDest, int _Code_page, BOOL _BError)"
+0x004deb42,__mbsrchr,,ANALYSIS,__cdecl,IMPORTED,86,,"uchar * __cdecl __mbsrchr(uchar * _Str, uint _Ch)"
+0x004deb98,__fullpath,,ANALYSIS,__cdecl,IMPORTED,164,,"char * __cdecl __fullpath(char * _FullPath, char * _Path, size_t _SizeInBytes)"
+0x004decec,__mbctolower,,ANALYSIS,__cdecl,IMPORTED,120,,uint __cdecl __mbctolower(uint _Ch)
+0x004ded64,__mbspbrk,,ANALYSIS,__cdecl,IMPORTED,121,,"uchar * __cdecl __mbspbrk(uchar * _Str, uchar * _Control)"
+0x004def7e,__FF_MSGBANNER,,ANALYSIS,__cdecl,IMPORTED,57,,void __cdecl __FF_MSGBANNER(void)
+0x004defee,__XcptFilter,,ANALYSIS,__cdecl,IMPORTED,369,,"int __cdecl __XcptFilter(ulong _ExceptionNum, _EXCEPTION_POINTERS * _ExceptionPtr)"
+0x004df1c8,__setenvp,,ANALYSIS,__cdecl,IMPORTED,199,,int __cdecl __setenvp(void)
+0x004df49d,___crtGetEnvironmentStringsA,,ANALYSIS,__cdecl,IMPORTED,290,,LPVOID __cdecl ___crtGetEnvironmentStringsA(void)
+0x004df5c0,_strcmp,,ANALYSIS,__cdecl,IMPORTED,135,,"int __cdecl _strcmp(char * _Str1, char * _Str2)"
+0x004df648,__commit,,ANALYSIS,__cdecl,IMPORTED,87,,int __cdecl __commit(int _FileHandle)
+0x004df69f,_calloc,,ANALYSIS,__cdecl,IMPORTED,123,,"void * __cdecl _calloc(size_t _Count, size_t _Size)"
+0x004df80f,__set_osfhnd,,ANALYSIS,__cdecl,IMPORTED,119,,"int __cdecl __set_osfhnd(int param_1, intptr_t param_2)"
+0x004df886,__free_osfhnd,,ANALYSIS,__cdecl,IMPORTED,122,,int __cdecl __free_osfhnd(int param_1)
+0x004df900,__get_osfhandle,,ANALYSIS,__cdecl,IMPORTED,60,,intptr_t __cdecl __get_osfhandle(int _FileHandle)
+0x004df93c,__open_osfhandle,,ANALYSIS,__cdecl,IMPORTED,157,,"int __cdecl __open_osfhandle(intptr_t _OSFileHandle, int _Flags)"
+0x004df9d9,__lseeki64,,ANALYSIS,__cdecl,IMPORTED,159,,"undefined __cdecl __lseeki64(int _FileHandle, undefined _Offset, int _Origin)"
+0x004dfc71,__ZeroTail,,ANALYSIS,unknown,DEFAULT,50,,"undefined __ZeroTail(undefined4 param_1, undefined4 param_2)"
+0x004dfca3,__IncMan,,ANALYSIS,unknown,DEFAULT,77,,"undefined __IncMan(undefined4 param_1, undefined4 param_2)"
+0x004dfcf0,__RoundMan,,ANALYSIS,unknown,DEFAULT,114,,"undefined __RoundMan(undefined4 param_1, undefined4 param_2)"
+0x004dfd62,__CopyMan,,ANALYSIS,unknown,DEFAULT,27,,"undefined __CopyMan(undefined4 param_1, undefined4 param_2)"
+0x004dfd89,__IsZeroMan,,ANALYSIS,unknown,DEFAULT,25,,undefined __IsZeroMan(undefined4 param_1)
+0x004dfda2,__ShrMan,,ANALYSIS,unknown,DEFAULT,123,,"undefined __ShrMan(undefined4 param_1, undefined4 param_2)"
+0x004dfe1d,__ld12cvt,,ANALYSIS,unknown,DEFAULT,344,,"undefined __ld12cvt(undefined4 param_1, undefined4 param_2, undefined4 param_3)"
+0x004dff75,FID_conflict:__ld12tod,,ANALYSIS,__cdecl,IMPORTED,22,,"INTRNCVT_STATUS __cdecl FID_conflict:__ld12tod(_LDBL12 * _Ifp, _CRT_DOUBLE * _D)"
+0x004dff8b,FID_conflict:__ld12tod,,ANALYSIS,__cdecl,IMPORTED,22,,"INTRNCVT_STATUS __cdecl FID_conflict:__ld12tod(_LDBL12 * _Ifp, _CRT_DOUBLE * _D)"
+0x004dffa1,__ld12told,,ANALYSIS,__cdecl,IMPORTED,124,,"INTRNCVT_STATUS __cdecl __ld12told(_LDBL12 * _Ifp, _LDOUBLE * _Ld)"
+0x004e015e,___dtold,,ANALYSIS,unknown,DEFAULT,186,,"undefined ___dtold(undefined4 param_1, undefined4 param_2)"
+0x004e02a0,_memset,,ANALYSIS,__cdecl,IMPORTED,96,,"void * __cdecl _memset(void * _Dst, int _Val, size_t _Size)"
+0x004e0333,__abstract_cw,,ANALYSIS,unknown,DEFAULT,146,,undefined __abstract_cw()
+0x004e03c5,__hw_cw,,ANALYSIS,unknown,DEFAULT,142,,undefined __hw_cw()
+0x004e04b1,__control87,,ANALYSIS,__cdecl,IMPORTED,50,,"uint __cdecl __control87(uint _NewValue, uint _Mask)"
+0x004e04e3,__controlfp,,ANALYSIS,__cdecl,IMPORTED,22,,"uint __cdecl __controlfp(uint _NewValue, uint _Mask)"
+0x004e055f,FID_conflict:_ValidateRead,,ANALYSIS,unknown,DEFAULT,28,,"undefined FID_conflict:_ValidateRead(undefined4 param_1, undefined4 param_2)"
+0x004e057b,FID_conflict:_ValidateRead,,ANALYSIS,unknown,DEFAULT,28,,"undefined FID_conflict:_ValidateRead(undefined4 param_1, undefined4 param_2)"
+0x004e0597,_ValidateExecute,,ANALYSIS,__cdecl,IMPORTED,24,,int __cdecl _ValidateExecute(FuncDef9 * param_1)
+0x004e05c7,__getbuf,,ANALYSIS,__cdecl,IMPORTED,68,,void __cdecl __getbuf(FILE * _File)
+0x004e060b,__isatty,,ANALYSIS,__cdecl,IMPORTED,39,,int __cdecl __isatty(int _FileHandle)
+0x004e0632,_wctomb,,ANALYSIS,__cdecl,IMPORTED,102,,"int __cdecl _wctomb(char * _MbCh, undefined _WCh)"
+0x004e075d,__seh_longjmp_unwind@4,,ANALYSIS,unknown,DEFAULT,27,,undefined __seh_longjmp_unwind@4(undefined4 param_1)
+0x004e07ed,_setSBCS,,ANALYSIS,unknown,DEFAULT,41,,undefined _setSBCS()
+0x004e0ba4,___initmbctable,,ANALYSIS,unknown,DEFAULT,30,,undefined ___initmbctable()
+0x004e0d8e,___crtGetStringTypeA,,ANALYSIS,__cdecl,IMPORTED,421,,"BOOL __cdecl ___crtGetStringTypeA(_locale_t _Plocinfo, DWORD _DWInfoType, LPCSTR _LpSrcStr, int _CchSrc, LPWORD _LpCharType, int _Code_page, BOOL _BError)"
+0x004e0f48,FID_conflict:_ungetc,,ANALYSIS,__cdecl,IMPORTED,108,,"int __cdecl FID_conflict:_ungetc(int _Ch, FILE * _File)"
+0x004e108b,_isspace,,ANALYSIS,__cdecl,IMPORTED,41,,int __cdecl _isspace(int _C)
+0x004e121f,_mbtowc,,ANALYSIS,__cdecl,IMPORTED,200,,"int __cdecl _mbtowc(undefined _DstCh, char * _SrcCh, size_t _SrcSizeInBytes)"
+0x004e13c4,__tzset,,ANALYSIS,__cdecl,IMPORTED,595,,void __cdecl __tzset(void)
+0x004e1617,_cvtdate,,ANALYSIS,unknown,DEFAULT,440,,"undefined _cvtdate(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6, undefined4 param_7, undefined4 param_8, undefined4 param_9)"
+0x004e1960,___tzset,,ANALYSIS,unknown,DEFAULT,21,,undefined ___tzset()
+0x004e1975,_gmtime,,ANALYSIS,__cdecl,IMPORTED,245,,tm * __cdecl _gmtime(undefined _Time)
+0x004e1d70,_strpbrk,,ANALYSIS,__cdecl,IMPORTED,64,,"char * __cdecl _strpbrk(char * _Str, char * _Control)"
+0x004e1db0,___crtMessageBoxA,,ANALYSIS,__cdecl,IMPORTED,249,,"int __cdecl ___crtMessageBoxA(LPCSTR _LpText, LPCSTR _LpCaption, UINT _UType)"
+0x004e1fb7,___addl,,ANALYSIS,unknown,DEFAULT,33,,"undefined ___addl(undefined4 param_1, undefined4 param_2, undefined4 param_3)"
+0x004e1fd8,___add_12,,ANALYSIS,unknown,DEFAULT,94,,"undefined ___add_12(undefined4 param_1, undefined4 param_2)"
+0x004e2036,___shl_12,,ANALYSIS,unknown,DEFAULT,46,,undefined ___shl_12(undefined4 param_1)
+0x004e2064,___shr_12,,ANALYSIS,unknown,DEFAULT,45,,undefined ___shr_12(undefined4 param_1)
+0x004e2920,_siglookup,,ANALYSIS,unknown,DEFAULT,57,,undefined _siglookup()
+0x004e2959,_signal,,ANALYSIS,__cdecl,IMPORTED,264,,void __cdecl _signal(int param_1)
+0x004e2a61,_raise,,ANALYSIS,__cdecl,IMPORTED,297,,int __cdecl _raise(int _SigNum)
+0x004e2b8a,__flswbuf,,ANALYSIS,__cdecl,IMPORTED,293,,"int __cdecl __flswbuf(int _Ch, FILE * _File)"
+0x004e2caf,_getenv,,ANALYSIS,__cdecl,IMPORTED,129,,char * __cdecl _getenv(char * _VarName)
+0x004e2ff4,__mbsnbicoll,,ANALYSIS,__cdecl,IMPORTED,63,,"int __cdecl __mbsnbicoll(uchar * _Str1, uchar * _Str2, size_t _MaxCount)"
+0x004e309e,_strncnt,,ANALYSIS,__cdecl,IMPORTED,28,,"size_t __cdecl _strncnt(char * _String, size_t _Cnt)"
+0x004e3444,_findenv,,ANALYSIS,unknown,DEFAULT,77,,undefined _findenv(undefined4 param_1)
+0x004e3491,_copy_environ,,ANALYSIS,unknown,DEFAULT,97,,undefined _copy_environ()
+0x004e36a7,__strdup,,ANALYSIS,__cdecl,IMPORTED,43,,char * __cdecl __strdup(char * _Src)
+0x004e3980,Unwind@004e3980,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3980()
+0x004e398b,Unwind@004e398b,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e398b()
+0x004e39a0,Unwind@004e39a0,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e39a0()
+0x004e39c0,Unwind@004e39c0,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e39c0()
+0x004e39e0,Unwind@004e39e0,,ANALYSIS,unknown,DEFAULT,22,,undefined Unwind@004e39e0()
+0x004e3a00,Unwind@004e3a00,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3a00()
+0x004e3a0b,Unwind@004e3a0b,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3a0b()
+0x004e3a16,Unwind@004e3a16,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3a16()
+0x004e3a21,Unwind@004e3a21,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3a21()
+0x004e3a2c,Unwind@004e3a2c,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3a2c()
+0x004e3a50,Unwind@004e3a50,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3a50()
+0x004e3a70,Unwind@004e3a70,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3a70()
+0x004e3a90,Unwind@004e3a90,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3a90()
+0x004e3a9b,Unwind@004e3a9b,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3a9b()
+0x004e3ab0,Unwind@004e3ab0,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3ab0()
+0x004e3ad0,Unwind@004e3ad0,,ANALYSIS,unknown,DEFAULT,19,,undefined Unwind@004e3ad0()
+0x004e3af0,Unwind@004e3af0,,ANALYSIS,unknown,DEFAULT,19,,undefined Unwind@004e3af0()
+0x004e3b10,Unwind@004e4220,,ANALYSIS,unknown,DEFAULT,8,,undefined Unwind@004e4220()
+0x004e3b30,Unwind@004e3b30,,ANALYSIS,unknown,DEFAULT,25,,undefined Unwind@004e3b30()
+0x004e3b49,Unwind@004e3b49,,ANALYSIS,unknown,DEFAULT,24,,undefined Unwind@004e3b49()
+0x004e3b70,Unwind@004e3b70,,ANALYSIS,unknown,DEFAULT,25,,undefined Unwind@004e3b70()
+0x004e3b89,Unwind@004e3b89,,ANALYSIS,unknown,DEFAULT,24,,undefined Unwind@004e3b89()
+0x004e3bb0,Unwind@004e3bb0,,ANALYSIS,unknown,DEFAULT,27,,undefined Unwind@004e3bb0()
+0x004e3bcb,Unwind@004e3bcb,,ANALYSIS,unknown,DEFAULT,24,,undefined Unwind@004e3bcb()
+0x004e3be3,Unwind@004e3be3,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e3be3()
+0x004e3bf1,Unwind@004e3bf1,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3bf1()
+0x004e3bfc,Unwind@004e3bfc,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3bfc()
+0x004e3c07,Unwind@004e3c07,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3c07()
+0x004e3c20,Unwind@004e3c20,,ANALYSIS,unknown,DEFAULT,27,,undefined Unwind@004e3c20()
+0x004e3c3b,Unwind@004e3c3b,,ANALYSIS,unknown,DEFAULT,24,,undefined Unwind@004e3c3b()
+0x004e3c53,Unwind@004e3c53,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e3c53()
+0x004e3c70,Unwind@004e3c70,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3c70()
+0x004e3c90,Unwind@004e3c90,,ANALYSIS,unknown,DEFAULT,19,,undefined Unwind@004e3c90()
+0x004e3cb0,Unwind@004e3cb0,,ANALYSIS,unknown,DEFAULT,22,,undefined Unwind@004e3cb0()
+0x004e3cc6,Unwind@004e3cc6,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e3cc6()
+0x004e3ce0,Unwind@004e4430,,ANALYSIS,unknown,DEFAULT,8,,undefined Unwind@004e4430()
+0x004e3d00,Unwind@004e449c,,ANALYSIS,unknown,DEFAULT,8,,undefined Unwind@004e449c()
+0x004e3d20,Unwind@004e3d20,,ANALYSIS,unknown,DEFAULT,24,,undefined Unwind@004e3d20()
+0x004e3d50,Unwind@004e3d50,,ANALYSIS,unknown,DEFAULT,22,,undefined Unwind@004e3d50()
+0x004e3d66,Unwind@004e3d66,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e3d66()
+0x004e3d74,Unwind@004e3d74,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e3d74()
+0x004e3d90,Unwind@004e3d90,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3d90()
+0x004e3d9b,Unwind@004e3d9b,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3d9b()
+0x004e3da6,Unwind@004e3da6,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3da6()
+0x004e3db1,Unwind@004e3db1,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3db1()
+0x004e3dbc,Unwind@004e3dbc,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3dbc()
+0x004e3dc7,Unwind@004e3dc7,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3dc7()
+0x004e3dd2,Unwind@004e3dd2,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3dd2()
+0x004e3ddd,Unwind@004e3ddd,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3ddd()
+0x004e3de8,Unwind@004e3de8,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3de8()
+0x004e3df3,Unwind@004e3df3,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3df3()
+0x004e3dfe,Unwind@004e3dfe,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3dfe()
+0x004e3e09,Unwind@004e3e09,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3e09()
+0x004e3e14,Unwind@004e3e14,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3e14()
+0x004e3e1f,Unwind@004e3e1f,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3e1f()
+0x004e3e2a,Unwind@004e3e2a,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3e2a()
+0x004e3e35,Unwind@004e3e35,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3e35()
+0x004e3e40,Unwind@004e3e40,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3e40()
+0x004e3e4b,Unwind@004e3e4b,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3e4b()
+0x004e3e56,Unwind@004e3e56,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3e56()
+0x004e3e61,Unwind@004e3e61,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3e61()
+0x004e3e6c,Unwind@004e3e6c,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3e6c()
+0x004e3e77,Unwind@004e3e77,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3e77()
+0x004e3e82,Unwind@004e3e82,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3e82()
+0x004e3e8d,Unwind@004e3e8d,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3e8d()
+0x004e3e98,Unwind@004e3e98,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3e98()
+0x004e3ea3,Unwind@004e3ea3,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3ea3()
+0x004e3eae,Unwind@004e3eae,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3eae()
+0x004e3eb9,Unwind@004e3eb9,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3eb9()
+0x004e3ec4,Unwind@004e3ec4,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3ec4()
+0x004e3ecf,Unwind@004e3ecf,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3ecf()
+0x004e3eda,Unwind@004e3eda,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3eda()
+0x004e3ee5,Unwind@004e3ee5,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3ee5()
+0x004e3ef0,Unwind@004e3ef0,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3ef0()
+0x004e3efb,Unwind@004e3efb,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3efb()
+0x004e3f06,Unwind@004e3f06,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3f06()
+0x004e3f11,Unwind@004e3f11,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3f11()
+0x004e3f1c,Unwind@004e3f1c,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3f1c()
+0x004e3f27,Unwind@004e3f27,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3f27()
+0x004e3f32,Unwind@004e3f32,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3f32()
+0x004e3f3d,Unwind@004e3f3d,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3f3d()
+0x004e3f48,Unwind@004e3f48,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3f48()
+0x004e3f53,Unwind@004e3f53,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3f53()
+0x004e3f5e,Unwind@004e3f5e,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3f5e()
+0x004e3f69,Unwind@004e3f69,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3f69()
+0x004e3f74,Unwind@004e3f74,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3f74()
+0x004e3f7f,Unwind@004e3f7f,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3f7f()
+0x004e3f8a,Unwind@004e3f8a,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3f8a()
+0x004e3fa0,Unwind@004e3ce0,,ANALYSIS,unknown,DEFAULT,8,,undefined Unwind@004e3ce0()
+0x004e3fc0,Unwind@004e3fc0,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3fc0()
+0x004e3fcb,Unwind@004e3fcb,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3fcb()
+0x004e3fe0,Unwind@004e3fe0,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e3fe0()
+0x004e4000,Unwind@004e4000,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e4000()
+0x004e400b,Unwind@004e400b,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e400b()
+0x004e4016,Unwind@004e4016,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e4016()
+0x004e4030,Unwind@004e4030,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e4030()
+0x004e4050,Unwind@004e4050,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e4050()
+0x004e405e,Unwind@004e405e,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e405e()
+0x004e406c,Unwind@004e406c,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e406c()
+0x004e407a,Unwind@004e407a,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e407a()
+0x004e4088,Unwind@004e4088,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e4088()
+0x004e40a0,Unwind@004e40a0,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e40a0()
+0x004e40ae,Unwind@004e40ae,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e40ae()
+0x004e40bc,Unwind@004e40bc,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e40bc()
+0x004e40ca,Unwind@004e40ca,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e40ca()
+0x004e40d8,Unwind@004e40d8,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e40d8()
+0x004e40f0,Unwind@004e40f0,,ANALYSIS,unknown,DEFAULT,27,,undefined Unwind@004e40f0()
+0x004e4120,Unwind@004e4120,,ANALYSIS,unknown,DEFAULT,27,,undefined Unwind@004e4120()
+0x004e413b,Unwind@004e413b,,ANALYSIS,unknown,DEFAULT,27,,undefined Unwind@004e413b()
+0x004e4160,Unwind@004e4160,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e4160()
+0x004e4180,Unwind@004e4180,,ANALYSIS,unknown,DEFAULT,19,,undefined Unwind@004e4180()
+0x004e41a0,Unwind@004e41a0,,ANALYSIS,unknown,DEFAULT,19,,undefined Unwind@004e41a0()
+0x004e41c0,Unwind@004e41c0,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e41c0()
+0x004e41cb,Unwind@004e41cb,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e41cb()
+0x004e41d6,Unwind@004e41d6,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e41d6()
+0x004e41e1,Unwind@004e41e1,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e41e1()
+0x004e4200,Unwind@004e4200,,ANALYSIS,unknown,DEFAULT,8,,undefined Unwind@004e4200()
+0x004e4208,Unwind@004e4208,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e4208()
+0x004e4220,Unwind@004e3d00,,ANALYSIS,unknown,DEFAULT,8,,undefined Unwind@004e3d00()
+0x004e4240,Unwind@004e4240,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e4240()
+0x004e424e,Unwind@004e424e,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e424e()
+0x004e425c,Unwind@004e425c,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e425c()
+0x004e426a,Unwind@004e426a,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e426a()
+0x004e4278,Unwind@004e4278,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e4278()
+0x004e4286,Unwind@004e4286,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e4286()
+0x004e4294,Unwind@004e4294,,ANALYSIS,unknown,DEFAULT,14,,undefined Unwind@004e4294()
+0x004e42b0,Unwind@004e42b0,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e42b0()
+0x004e42d0,Unwind@004e42d0,,ANALYSIS,unknown,DEFAULT,30,,undefined Unwind@004e42d0()
+0x004e42f0,Unwind@004e42f0,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e42f0()
+0x004e4310,Unwind@004e4310,,ANALYSIS,unknown,DEFAULT,11,,undefined Unwind@004e4310()
+0x004e4325,Unwind@004e4325,,ANALYSIS,unknown,DEFAULT,26,,undefined Unwind@004e4325()
+0x004e433f,Unwind@004e433f,,ANALYSIS,unknown,DEFAULT,10,,undefined Unwind@004e433f()
+0x004e4353,Unwind@004e4353,,ANALYSIS,unknown,DEFAULT,26,,undefined Unwind@004e4353()
+0x004e436d,Unwind@004e436d,,ANALYSIS,unknown,DEFAULT,10,,undefined Unwind@004e436d()
+0x004e4377,Unwind@004e4377,,ANALYSIS,unknown,DEFAULT,26,,undefined Unwind@004e4377()
+0x004e438c,Unwind@004e438c,,ANALYSIS,unknown,DEFAULT,26,,undefined Unwind@004e438c()
+0x004e43a6,Unwind@004e43a6,,ANALYSIS,unknown,DEFAULT,10,,undefined Unwind@004e43a6()
+0x004e43ba,Unwind@004e43ba,,ANALYSIS,unknown,DEFAULT,26,,undefined Unwind@004e43ba()
+0x004e43d4,Unwind@004e43d4,,ANALYSIS,unknown,DEFAULT,10,,undefined Unwind@004e43d4()
+0x004e43e8,Unwind@004e43e8,,ANALYSIS,unknown,DEFAULT,26,,undefined Unwind@004e43e8()
+0x004e440c,Unwind@004e440c,,ANALYSIS,unknown,DEFAULT,26,,undefined Unwind@004e440c()
+0x004e4430,Unwind@004e448a,,ANALYSIS,unknown,DEFAULT,8,,undefined Unwind@004e448a()
+0x004e4442,Unwind@004e4442,,ANALYSIS,unknown,DEFAULT,26,,undefined Unwind@004e4442()
+0x004e4466,Unwind@004e4466,,ANALYSIS,unknown,DEFAULT,26,,undefined Unwind@004e4466()
+0x004e448a,Unwind@004e3b10,,ANALYSIS,unknown,DEFAULT,8,,undefined Unwind@004e3b10()
+0x004e449c,Unwind@004e3fa0,,ANALYSIS,unknown,DEFAULT,8,,undefined Unwind@004e3fa0()
+0x0067a000,LoadHookDll,,USER_DEFINED,__stdcall,ANALYSIS,21,,"void __stdcall LoadHookDll(undefined4 param_1, int param_2, int param_3, int param_4, int param_5, int param_6, int param_7, int param_8, int param_9, undefined4 param_10, UINT param_11, WPARAM param_12)"

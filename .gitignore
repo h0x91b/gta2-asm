@@ -1,3 +1,5 @@
 /gta2/
 /third_party/sdl-x86_64/
 .claude/settings.local.json
+/.external/
+__pycache__/

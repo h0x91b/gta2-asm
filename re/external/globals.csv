@@ -1,0 +1,340 @@
+source_repo,source_ref,occurrences,address,name,kind,type,signature,section,status,severity,detail,ours_name,ours_type,note
+gta2-mouse,MainWindow.cpp:316,1,0x005e5bbc,ptrToPedManager,global,,,.data,SAME,,,ptrToPedManager,/undefined4,
+gta2-mouse,MainWindow.cpp:317,1,0x005eb4fc,ptrToGame,global,,,.data,SAME,,,ptrToGame,/_game/Game *,
+gta2-mouse,MainWindow.cpp:408,1,0x00672f40,,global,S10*,,.data,SAME,,,ptrToS10,/auto_structs/S10 *,dereferenced as S10*
+gta2-resurection,gta2-resurected.ct:1417,1,0x00591e84,NextPedId,global,4 Bytes,,.data,SAME,,,nextPedId,/uint,Cheat Engine entry
+gta2-resurection,gta2-resurected.ct:483,2,0x00595011,isNight,global,4 Bytes,,.data,SAME,,,isNight,/undefined1,Cheat Engine entry
+gta2-resurection,gta2-resurected.ct:458,2,0x00595014,start_mode,global,4 Bytes,,.data,SAME,,,start_mode,/undefined4,Cheat Engine entry
+gta2-resurection,gta2-resurected.ct:490,2,0x005dcbec,SFXVolume,global,Byte,,.data,NEW,,,,,Cheat Engine entry
+gta2-resurection,gta2-resurection/mod-settings.lua:54,1,0x005e4ca4,s9,global,struct S9_cars*,,.data,CONFLICT,semantic,name,ptrToCarManager,/_car/CarManager *,ffi.cast to struct S9_cars**
+gta2-resurection,gta2-resurected.ct:642,2,0x005e4cb8,,global,Byte,,.data,NEW,,,,,Cheat Engine entry (no description)
+gta2-resurection,gta2-resurected.ct:252,2,0x005e4db8,,global,4 Bytes,,.data,SAME,,,defaultX,/undefined4,Cheat Engine entry (no description)
+gta2-resurection,gta2-resurected.ct:17,4,0x005e5bc4,myPed,global,4 Bytes,,.data,CONFLICT,naming,name (similar),ptrToPed,/_ped/Ped *,Cheat Engine entry
+gta2-resurection,gta2-resurected.ct:46,2,0x005e5bc4,playerPed,global,4 Bytes,,.data,CONFLICT,naming,name (similar),ptrToPed,/_ped/Ped *,Cheat Engine entry
+gta2-resurection,gta2-resurected.ct:433,2,0x005e5c60,,global,2 Bytes,,.data,SAME,,,defaultRotation,/short,Cheat Engine entry (no description)
+gta2-resurection,gta2-resurected.ct:444,2,0x005e9808,string,global,String,,.data,CONFLICT,semantic,name,generalCharBuf,/undefined4,Cheat Engine entry
+gta2-resurection,gta2-resurected.ct:595,2,0x005e9f08,,global,4 Bytes,,.data,SAME,,,wcharBuf,/wchar_t *,Cheat Engine entry (no description)
+gta2-resurection,gta2-resurected.ct:577,2,0x005ead69,skip_dummies,global,Byte,,.data,SAME,,,skip_dummies,/undefined1,Cheat Engine entry
+gta2-resurection,gta2-resurected.ct:563,3,0x005ead79,do_show_timing,global,Byte,,.data,SAME,,,do_show_timing,/undefined1,Cheat Engine entry
+gta2-resurection,gta2-resurection/mod-settings.lua:50,1,0x005ead85,Show_physics,global,bool,,.data,CONFLICT,naming,name (similar),do_show_physics,/undefined1,"debug toggle; setting ""Show physics"""
+gta2-resurection,gta2-resurected.ct:556,2,0x005ead85,do_show_physics,global,Byte,,.data,SAME,,,do_show_physics,/undefined1,Cheat Engine entry
+gta2-resurection,gta2-resurection/gta2.lua:83,1,0x005ead86,,global,bool,,.data,SAME,,,ignore_replay_header,/undefined1,ffi.cast to bool*; commented-out line
+gta2-resurection,gta2-resurected.ct:535,2,0x005ead90,skip_tiles,global,Byte,,.data,SAME,,,skip_tiles,/undefined1,Cheat Engine entry
+gta2-resurection,gta2-resurected.ct:542,2,0x005ead95,do_show_counters,global,Byte,,.data,SAME,,,do_show_counters,/undefined1,Cheat Engine entry
+gta2-resurection,gta2-resurection/mod-settings.lua:52,1,0x005ead96,Show_traffic_lights_info,global,bool,,.data,CONFLICT,naming,name (similar),do_show_traffic_lights_info,/undefined1,"debug toggle; setting ""Show traffic lights info"""
+gta2-resurection,gta2-resurected.ct:1383,1,0x005ead96,do_show_traffic_lights_info,global,Byte,,.data,SAME,,,do_show_traffic_lights_info,/undefined1,Cheat Engine entry
+gta2-resurection,gta2-resurection/mod-settings.lua:51,1,0x005eada1,Show_id_s,global,bool,,.data,CONFLICT,naming,name (similar),do_show_ids,/undefined1,"debug toggle; setting ""Show id's"""
+gta2-resurection,gta2-resurection/mod-settings.lua:49,1,0x005eada7,Show_cycles,global,bool,,.data,CONFLICT,naming,name (similar),show_cycle,/undefined1,"debug toggle; setting ""Show cycles"""
+gta2-resurection,gta2-resurected.ct:528,2,0x005eada7,show_cycle,global,Byte,,.data,SAME,,,show_cycle,/undefined1,Cheat Engine entry
+gta2-resurection,gta2-resurected.ct:570,2,0x005eada9,do_police_3,global,Byte,,.data,SAME,,,do_police_3,/undefined1,Cheat Engine entry
+gta2-resurection,gta2-resurected.ct:549,2,0x005eadb1,do_show_collision_box,global,Byte,,.data,SAME,,,do_show_collision_box,/undefined1,Cheat Engine entry
+gta2-resurection,gta2-resurection/gta-helper.h:15,1,0x005eb160,pFrontend,global,,,.data,SAME,,,ptrToFrontEnd,/undefined4,#define
+gta2-resurection,gta2-resurection/gta-helper.h:14,5,0x005eb4fc,pGame,global,struct Game,,.data,SAME,,,ptrToGame,/_game/Game *,#define
+gta2-resurection,gta2-resurection/gta2.lua:97,1,0x005eb4fc,p,global,int,,.data,CONFLICT,semantic,name,ptrToGame,/_game/Game *,ffi.cast to int*; commented-out line
+gta2-resurection,gta2-resurected.ct:497,2,0x00662748,,global,4 Bytes,,.data,SAME,,,lastFrameTime,/undefined4,Cheat Engine entry (no description)
+gta2-resurection,gta2-resurected.ct:1424,1,0x00662750,,global,Byte,,.data,NEW,,,,,Cheat Engine entry (no description)
+gta2-resurection,gta2-resurected.ct:618,2,0x00671880,,global,String,,.data,SAME,,,PlayerName,/char[78],Cheat Engine entry (no description)
+gta2-resurection,gta2-resurected.ct:451,2,0x00673578,windowX,global,4 Bytes,,.data,CONFLICT,semantic,name,window_width,/undefined4,Cheat Engine entry
+gta2-resurection,gta2-resurected.ct:466,2,0x0067358c,lighting,global,4 Bytes,,.data,SAME,,,lighting,/undefined4,Cheat Engine entry
+gta2-resurection.gzf,gzf/globals.csv:2,2,0x003f0000,"""gta2.exe.bin.exe""",global,/DOS/IMAGE_DOS_HEADER,,,NEW,,outside image,,,
+gta2-resurection.gzf,gzf/globals.csv:4,2,0x003f0000,"""gta2-resurected.exe""",global,/DOS/IMAGE_DOS_HEADER,,,NEW,,outside image,,,
+gta2-resurection.gzf,gzf/globals.csv:5,1,0x003f0000,gta2.exe,global,/DOS/IMAGE_DOS_HEADER,,,NEW,,outside image,,,
+gta2-resurection.gzf,gzf/globals.csv:7,1,0x003f0000,_,global,/DOS/IMAGE_DOS_HEADER,,,NEW,,outside image,,,
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:2,1,0x0057960c,,global,/UnwindMapEntry[2],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[2],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:3,1,0x00579638,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:4,1,0x0057965c,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:5,1,0x00579664,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:6,1,0x00579680,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:7,1,0x00579688,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:8,1,0x005796a4,,global,/UnwindMapEntry[5],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[5],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:9,1,0x005796cc,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:10,1,0x005796e8,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:11,1,0x005796f0,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:12,1,0x0057970c,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:13,1,0x00579714,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:14,1,0x00579730,,global,/UnwindMapEntry[2],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[2],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:15,1,0x00579740,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:16,1,0x0057975c,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:17,1,0x00579764,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:18,1,0x00579780,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:19,1,0x00579788,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:20,1,0x005797a4,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:21,1,0x005797ac,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:22,1,0x005797c8,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:23,1,0x005797d0,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:24,1,0x005797ec,,global,/UnwindMapEntry[2],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[2],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:25,1,0x005797fc,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:26,1,0x00579818,,global,/UnwindMapEntry[2],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[2],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:27,1,0x00579828,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:28,1,0x00579844,,global,/UnwindMapEntry[6],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[6],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:29,1,0x00579874,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:30,1,0x00579890,,global,/UnwindMapEntry[3],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[3],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:31,1,0x005798a8,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:32,1,0x005798c4,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:33,1,0x005798cc,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:34,1,0x005798e8,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:35,1,0x005798f0,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:36,1,0x0057990c,,global,/UnwindMapEntry[2],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[2],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:37,1,0x0057991c,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:38,1,0x00579938,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:39,1,0x00579940,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:40,1,0x0057995c,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:41,1,0x00579964,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:42,1,0x00579980,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:43,1,0x00579988,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:44,1,0x005799a4,,global,/UnwindMapEntry[3],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[3],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:45,1,0x005799bc,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:46,1,0x005799d8,,global,/UnwindMapEntry[47],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[47],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:47,1,0x00579b50,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:48,1,0x00579b6c,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:49,1,0x00579b74,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:50,1,0x00579b90,,global,/UnwindMapEntry[2],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[2],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:51,1,0x00579ba0,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:52,1,0x00579bbc,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:53,1,0x00579bc4,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:54,1,0x00579be0,,global,/UnwindMapEntry[3],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[3],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:55,1,0x00579bf8,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:56,1,0x00579c14,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:57,1,0x00579c1c,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:58,1,0x00579c38,,global,/UnwindMapEntry[5],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[5],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:59,1,0x00579c60,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:60,1,0x00579c7c,,global,/UnwindMapEntry[5],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[5],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:61,1,0x00579ca4,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:62,1,0x00579cc0,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:63,1,0x00579cc8,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:64,1,0x00579ce4,,global,/UnwindMapEntry[2],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[2],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:65,1,0x00579cf4,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:66,1,0x00579d10,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:67,1,0x00579d18,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:68,1,0x00579d34,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:69,1,0x00579d3c,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:70,1,0x00579d58,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:71,1,0x00579d60,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:72,1,0x00579d7c,,global,/UnwindMapEntry[4],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[4],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:73,1,0x00579d9c,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:74,1,0x00579db8,,global,/UnwindMapEntry[2],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[2],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:75,1,0x00579dc8,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:76,1,0x00579de4,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:77,1,0x00579dec,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:78,1,0x00579e08,,global,/UnwindMapEntry[7],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[7],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:79,1,0x00579e40,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:80,1,0x00579e5c,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:81,1,0x00579e64,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:82,1,0x00579e80,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:83,1,0x00579e88,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:84,1,0x00579ea4,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:85,1,0x00579eac,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:86,1,0x00579ec8,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:87,1,0x00579ed0,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:88,1,0x00579eec,,global,/UnwindMapEntry[2],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[2],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:89,1,0x00579efc,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:90,1,0x00579f18,,global,/UnwindMapEntry[3],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[3],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:91,1,0x00579f30,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:92,1,0x00579f4c,,global,/UnwindMapEntry[2],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[2],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:93,1,0x00579f5c,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:94,1,0x00579f78,,global,/UnwindMapEntry[2],,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry[2],"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:95,1,0x00579f88,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:96,1,0x00579fa4,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:97,1,0x00579fac,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:98,1,0x00579fc8,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:99,1,0x00579fd0,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:100,1,0x00579fec,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:101,1,0x00579ff4,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:102,1,0x0057a010,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:103,1,0x0057a018,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:104,1,0x0057a034,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:105,1,0x0057a03c,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:106,1,0x0057a058,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:107,1,0x0057a060,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:108,1,0x0057a07c,,global,/UnwindMapEntry,,.rdata,NEW,,ours: typed but unnamed,,/UnwindMapEntry,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals_typed_unnamed.csv:109,1,0x0057a084,,global,/FuncInfo,,.rdata,NEW,,ours: typed but unnamed,,/FuncInfo,"typed, unnamed"
+gta2-resurection.gzf,gzf/globals.csv:9,1,0x00591e84,NextPedId,global,/undefined4,,.data,SAME,,,nextPedId,/uint,
+gta2-resurection.gzf,gzf/globals.csv:10,1,0x00595010,max_frame_rate,global,/bool,,.data,SAME,,,max_frame_rate,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:11,1,0x00595011,isNight,global,/undefined1,,.data,SAME,,,isNight,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:12,1,0x00595014,isFullScreenMode,global,/undefined4,,.data,CONFLICT,semantic,name,start_mode,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:13,1,0x005dcbc8,do_3d_sound,global,/bool,,.data,CONFLICT,semantic,name; ours has this name at 0x005ead50,ptrToS6,/auto_structs/S6 *,
+gta2-resurection.gzf,gzf/globals.csv:14,1,0x005dcbe5,soundRelated3d,global,/undefined1,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:15,1,0x005dcbec,SFXVolume,global,/undefined1,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:16,1,0x005dcbed,CDVol,global,/undefined1,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:17,1,0x005e3cc4,pS1,global,/_my/S1 *,,.data,CONFLICT,semantic,name,ptrToGameStats,/_game/GameStats *,
+gta2-resurection.gzf,gzf/globals.csv:18,1,0x005e3f54,eq8192,global,/undefined4,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:19,1,0x005e4ca0,pAllCars,global,/_my/AllCars *,,.data,CONFLICT,naming,name (similar),relToCars,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:20,1,0x005e4ca4,pS9,global,/_my/S9_cars *,,.data,CONFLICT,semantic,name,ptrToCarManager,/_car/CarManager *,
+gta2-resurection.gzf,gzf/globals.csv:21,1,0x005e4db8,eq0,global,/undefined4,,.data,CONFLICT,semantic,name; ours has this name at 0x00663764,defaultX,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:22,1,0x005e508c,pCarsS4,global,/_my/CarsS4 *,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:23,1,0x005e5bbc,pedManager,global,/_my/PedsManager *,,.data,SAME,,,ptrToPedManager,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:24,1,0x005e5c60,eq0_2bytes,global,/undefined2,,.data,CONFLICT,semantic,name,defaultRotation,/short,
+gta2-resurection.gzf,gzf/globals.csv:25,1,0x005e5cfc,eq0,global,/undefined4,,.data,CONFLICT,semantic,name; ours has this name at 0x00663764,ZERO,/int,
+gta2-resurection.gzf,gzf/globals.csv:26,1,0x005e8108,cycle,global,/undefined4,,.data,CONFLICT,semantic,name,frameCounterFromBeginnigOfTheGame,/int *,
+gta2-resurection.gzf,gzf/globals.csv:27,1,0x005e9708,pTextGameResource,global,/undefined,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:28,1,0x005e9808,WindowName,global,/undefined4,,.data,CONFLICT,semantic,name,generalCharBuf,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:29,1,0x005ea9cc,pFireEngine,global,/undefined4,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:30,1,0x005ead50,do_3d_sound,global,/undefined,,.data,SAME,,,do_3d_sound,/undefined,
+gta2-resurection.gzf,gzf/globals.csv:31,1,0x005ead51,do_blood,global,/undefined1,,.data,SAME,,,do_blood,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:32,1,0x005ead52,do_show_object_ids,global,/undefined,,.data,SAME,,,do_show_object_ids,/undefined,
+gta2-resurection.gzf,gzf/globals.csv:33,1,0x005ead53,skip_traffic_lights,global,/undefined1,,.data,SAME,,,skip_traffic_lights,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:34,1,0x005ead54,skip_buses,global,/undefined1,,.data,SAME,,,skip_buses,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:35,1,0x005ead55,do_show_instruments,global,/undefined1,,.data,SAME,,,do_show_instruments,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:36,1,0x005ead56,skip_particles,global,/undefined1,,.data,SAME,,,skip_particles,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:37,1,0x005ead57,skip_trains,global,/undefined1,,.data,SAME,,,skip_trains,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:38,1,0x005ead58,do_show_input,global,/undefined1,,.data,SAME,,,do_show_input,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:39,1,0x005ead59,skip_right,global,/undefined1,,.data,SAME,,,skip_right,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:40,1,0x005ead5a,show_hidden_faces,global,/undefined1,,.data,SAME,,,show_hidden_faces,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:41,1,0x005ead5b,skip_recycling,global,/undefined1,,.data,SAME,,,skip_recycling,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:42,1,0x005ead5d,exploding_on,global,/undefined1,,.data,SAME,,,exploding_on,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:43,1,0x005ead5e,skip_police,global,/undefined1,,.data,SAME,,,skip_police,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:44,1,0x005ead5f,skip_bottom,global,/undefined1,,.data,SAME,,,skip_bottom,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:45,1,0x005ead60,do_police_1,global,/undefined1,,.data,SAME,,,do_police_1,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:46,1,0x005ead61,do_infinite_lives,global,/undefined1,,.data,SAME,,,do_infinite_lives,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:47,1,0x005ead63,log_random,global,/undefined1,,.data,SAME,,,log_random,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:48,1,0x005ead64,skip_user,global,/undefined1,,.data,SAME,,,skip_user,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:49,1,0x005ead65,double_damage,global,/undefined1,,.data,CONFLICT,semantic,name,CHEAT_SCHURULZ,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:50,1,0x005ead66,do_miss_logging,global,/undefined1,,.data,SAME,,,do_miss_logging,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:51,1,0x005ead67,skip_left,global,/undefined1,,.data,SAME,,,skip_left,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:52,1,0x005ead68,do_corner_window,global,/undefined1,,.data,SAME,,,do_corner_window,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:53,1,0x005ead69,skip_dummies,global,/undefined1,,.data,SAME,,,skip_dummies,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:54,1,0x005ead6b,skip_ambulance,global,/undefined1,,.data,SAME,,,skip_ambulance,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:55,1,0x005ead6c,skip_window_check,global,/undefined,,.data,SAME,,,skip_window_check,/undefined,
+gta2-resurection.gzf,gzf/globals.csv:56,1,0x005ead6e,give_basic_weapons,global,/undefined1,,.data,CONFLICT,semantic,name,CHEAT_DAVEMOON,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:57,1,0x005ead6f,do_show_imaginary,global,/undefined1,,.data,SAME,,,do_show_imaginary,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:58,1,0x005ead70,give_electric_gun,global,/undefined1,,.data,CONFLICT,semantic,name,CHEAT_VOLTFEST,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:59,1,0x005ead71,do_invulnerable,global,/undefined1,,.data,SAME,,,do_invulnerable,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:60,1,0x005ead72,skip_audio,global,/bool,,.data,SAME,,,skip_audio,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:61,1,0x005ead74,get_all_weapons,global,/undefined1,,.data,SAME,,,get_all_weapons,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:62,1,0x005ead75,no_annoying_chars,global,/undefined1,,.data,SAME,,,no_annoying_chars,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:63,1,0x005ead76,show_player_names,global,/undefined1,,.data,SAME,,,show_player_names,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:64,1,0x005ead77,log_directinput,global,/undefined1,,.data,SAME,,,log_directinput,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:65,1,0x005ead78,skip_slopes,global,/undefined1,,.data,SAME,,,skip_slopes,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:66,1,0x005ead79,do_show_timing,global,/undefined1,,.data,SAME,,,do_show_timing,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:67,1,0x005ead7a,log_random_extra,global,/undefined1,,.data,SAME,,,log_random_extra,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:68,1,0x005ead7c,skip_frontend,global,/undefined1,,.data,SAME,,,skip_frontend,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:69,1,0x005ead7d,do_brian_test,global,/undefined1,,.data,SAME,,,do_brian_test,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:70,1,0x005ead7e,do_load_savegame,global,/undefined1,,.data,SAME,,,do_load_savegame,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:71,1,0x005ead7f,do_show_horn,global,/undefined1,,.data,SAME,,,do_show_horn,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:72,1,0x005ead80,do_test,global,/undefined1,,.data,SAME,,,do_test,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:73,1,0x005ead81,do_mike,global,/undefined1,,.data,SAME,,,do_mike,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:74,1,0x005ead82,do_show_camera,global,/undefined1,,.data,SAME,,,do_show_camera,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:75,1,0x005ead84,do_free_shopping,global,/undefined1,,.data,SAME,,,do_free_shopping,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:76,1,0x005ead85,do_show_physics,global,/undefined1,,.data,SAME,,,do_show_physics,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:77,1,0x005ead86,ignore_replay_header,global,/undefined1,,.data,SAME,,,ignore_replay_header,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:78,1,0x005ead87,do_debug_keys,global,/undefined1,,.data,SAME,,,do_debug_keys,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:79,1,0x005ead88,skip_draw,global,/undefined1,,.data,SAME,,,skip_draw,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:80,1,0x005ead89,do_show_junc_ids,global,/undefined1,,.data,SAME,,,do_show_junc_ids,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:81,1,0x005ead8a,MADEMAN,global,/undefined1,,.data,CONFLICT,naming,name (similar),CHEAT_MADEMAN,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:82,1,0x005ead8b,skip_fire_engines,global,/undefined1,,.data,SAME,,,skip_fire_engines,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:83,1,0x005ead8c,skip_top,global,/undefined1,,.data,SAME,,,skip_top,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:84,1,0x005ead8d,do_iain_test,global,/undefined1,,.data,SAME,,,do_iain_test,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:85,1,0x005ead8f,health99,global,/undefined1,,.data,CONFLICT,semantic,name,CHEAT_CUTIE1,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:86,1,0x005ead90,skip_tiles,global,/undefined1,,.data,SAME,,,skip_tiles,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:87,1,0x005ead91,log_input,global,/undefined1,,.data,SAME,,,log_input,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:88,1,0x005ead94,dont_get_car_back,global,/undefined1,,.data,SAME,,,dont_get_car_back,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:89,1,0x005ead95,do_show_counters,global,/undefined1,,.data,SAME,,,do_show_counters,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:90,1,0x005ead96,do_show_traffic_lights_info,global,/undefined1,,.data,SAME,,,do_show_traffic_lights_info,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:91,1,0x005ead97,giveMoneyOnstart,global,/bool,,.data,CONFLICT,semantic,name,CHEAT_DANISGOD,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:92,1,0x005ead99,log_routefinder,global,/undefined1,,.data,SAME,,,log_routefinder,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:93,1,0x005ead9a,do_text_id_test,global,/undefined1,,.data,SAME,,,do_text_id_test,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:94,1,0x005ead9b,give_flame_thrower,global,/undefined1,,.data,CONFLICT,semantic,name,CHEAT_FLAMEON,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:95,1,0x005ead9c,skip_lid,global,/undefined1,,.data,SAME,,,skip_lid,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:96,1,0x005ead9d,do_police_2,global,/undefined1,,.data,SAME,,,do_police_2,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:97,1,0x005ead9e,keep_weapons_after_death,global,/undefined1,,.data,SAME,,,keep_weapons_after_death,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:98,1,0x005eada1,do_show_ids,global,/undefined1,,.data,SAME,,,do_show_ids,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:99,1,0x005eada4,skip_replay_sync_check,global,/undefined,,.data,SAME,,,skip_replay_sync_check,/undefined,
+gta2-resurection.gzf,gzf/globals.csv:100,1,0x005eada5,show_brief_number,global,/undefined1,,.data,SAME,,,show_brief_number,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:101,1,0x005eada6,IAMDAVEJ,global,/undefined1,,.data,CONFLICT,naming,name (similar),CHEAT_IAMDAVEJ,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:102,1,0x005eada7,show_cycle,global,/undefined1,,.data,SAME,,,show_cycle,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:103,1,0x005eada8,do_sync_check,global,/undefined1,,.data,SAME,,,do_sync_check,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:104,1,0x005eada9,do_police_3,global,/undefined1,,.data,SAME,,,do_police_3,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:105,1,0x005eadab,skip_quit_confirm,global,/undefined1,,.data,SAME,,,skip_quit_confirm,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:106,1,0x005eadac,limit_recycling,global,/undefined1,,.data,SAME,,,limit_recycling,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:107,1,0x005eadad,do_exit_after_replay,global,/undefined1,,.data,SAME,,,do_exit_after_replay,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:108,1,0x005eadae,skip_mission,global,/undefined1,,.data,SAME,,,skip_mission,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:109,1,0x005eadaf,skip_skidmarks,global,/undefined1,,.data,SAME,,,skip_skidmarks,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:110,1,0x005eadb0,log_collisions,global,/undefined,,.data,SAME,,,log_collisions,/undefined,
+gta2-resurection.gzf,gzf/globals.csv:111,1,0x005eadb1,do_show_collision_box,global,/undefined1,,.data,SAME,,,do_show_collision_box,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:112,1,0x005eadb2,show_all_arrows,global,/undefined1,,.data,SAME,,,show_all_arrows,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:113,1,0x005eadb3,do_kill_phones_on_answer,global,/undefined1,,.data,SAME,,,do_kill_phones_on_answer,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:114,1,0x005eb160,pFrontend,global,/_my/Frontend *,,.data,SAME,,,ptrToFrontEnd,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:115,1,0x005eb4fc,pGame,global,/_my/Game *,,.data,SAME,,,ptrToGame,/_game/Game *,
+gta2-resurection.gzf,gzf/globals.csv:116,1,0x00662128,pKeyboard,global,/_my/SKeyboard *,,.data,CONFLICT,semantic,ours has this name at 0x005ecac8,,,
+gta2-resurection.gzf,gzf/globals.csv:117,1,0x00662748,tickCounts,global,/undefined4,,.data,CONFLICT,semantic,name,lastFrameTime,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:118,1,0x00662c08,DAT_00662c08_maybeTrafficRelated,global,/undefined4,,.data,CONFLICT,semantic,name,relToCounters,/_scripts/SCR_STRING_HEADER *,
+gta2-resurection.gzf,gzf/globals.csv:119,1,0x00663de4,pAmbulance,global,/undefined4,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:120,1,0x006644bc,pS8,global,/_my/S8 *,,.data,CONFLICT,semantic,name,ptrToS15_script,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:121,1,0x0066ab7c,pCarsS2,global,/_my/CarsS2 *,,.data,CONFLICT,semantic,name,ptrToMaybeCarEngineHolder,/_car/MaybeCarEngineHolder *,
+gta2-resurection.gzf,gzf/globals.csv:122,1,0x0066b7a0,pPolice,global,/_my/Police_s5 *,,.data,CONFLICT,naming,name (similar),ptrToSPolice,/auto_structs/SPolice *,
+gta2-resurection.gzf,gzf/globals.csv:123,1,0x00670684,pS7,global,/_my/S7 *,,.data,CONFLICT,semantic,name,ptrToS3,/_STY/Style_S3 *,
+gta2-resurection.gzf,gzf/globals.csv:124,1,0x00671550,textResources,global,/undefined4,,.data,CONFLICT,semantic,name,ptrToS1_2_LOCALES,/auto_structs/LocaleSettings *,
+gta2-resurection.gzf,gzf/globals.csv:125,1,0x00671880,PlayerName,global,/undefined1,,.data,SAME,,,PlayerName,/char[78],
+gta2-resurection.gzf,gzf/globals.csv:126,1,0x00671e9c,pTiming,global,/undefined4,,.data,CONFLICT,semantic,name,ptrToS19,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:127,1,0x006721cc,pTrafficLights,global,/_my/TrafficLights *,,.data,CONFLICT,naming,name (similar),ptrToTrafficLightsStruct,/auto_structs/TrafficLigthStruct *,
+gta2-resurection.gzf,gzf/globals.csv:128,1,0x00672f40,StructRelToTextSpeed,global,/undefined4,,.data,CONFLICT,semantic,name,ptrToS10,/auto_structs/S10 *,
+gta2-resurection.gzf,gzf/globals.csv:129,1,0x006732e0,full_height,global,/undefined4,,.data,SAME,,,full_height,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:130,1,0x006732e4,full_width,global,/undefined4,,.data,SAME,,,full_width,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:131,1,0x006732e8,WindowY,global,/undefined4,,.data,CONFLICT,semantic,name,window_height,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:132,1,0x006732f0,dmavideo.dll,global,/pointer,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:133,1,0x00673470,renderdevice,global,/undefined4,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:134,1,0x00673478,rendername,global,/undefined1,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:135,1,0x00673578,WindowX,global,/undefined4,,.data,CONFLICT,semantic,name,window_width,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:136,1,0x0067357c,screenX,global,/int,,.data,CONFLICT,semantic,name,windowLeft,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:137,1,0x00673588,videodevice,global,/undefined4,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:138,1,0x0067358c,lighting,global,/_my/LIGHTING,,.data,SAME,,,lighting,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:139,1,0x00673590,screenY,global,/undefined4,,.data,CONFLICT,semantic,name,windowTop,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:140,1,0x00673594,gammaRelated,global,/undefined4,,.data,CONFLICT,naming,name (similar),relatedToGamma,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:141,1,0x00673598,min_frame_rate,global,/undefined1,,.data,SAME,,,min_frame_rate,/undefined1,
+gta2-resurection.gzf,gzf/globals.csv:142,1,0x00673944,TrafficManager,global,/_my/TrafficManager *,,.data,CONFLICT,semantic,name,ptrToWeaponRelStruct,/_weapon/WeaponRelStruct *,
+gta2-resurection.gzf,gzf/globals.csv:143,1,0x00673d18,hwnd,global,/undefined4,,.data,CONFLICT,semantic,name,ptrToMainWindow,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:144,1,0x00673d20,dinputrelated,global,/undefined4,,.data,NEW,,,,,
+gta2-resurection.gzf,gzf/globals.csv:145,1,0x00673e28,DirectInput,global,/undefined4,,.data,CONFLICT,semantic,name,hInstance,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:146,1,0x00673f54,VersionMajor,global,/undefined4,,.data,SAME,,,VERSION_MAJOR,/undefined4,
+gta2-resurection.gzf,gzf/globals.csv:147,1,0x00673f58,VersionMinor,global,/undefined4,,.data,SAME,,,VERSION_MINOR,/undefined4,
+gta2-seuko-mod,src/game/memory.h:37,1,0x00595014,IsFullScreen,global,bool,,.data,CONFLICT,semantic,name,start_mode,/undefined4,object at address
+gta2-seuko-mod,src/game/functions.h:60,1,0x00595044,pFlipBuffers,fnptr_slot,FlipBuffersType*,void __stdcall FlipBuffers(SVideo* sVideo),.data,CONFLICT,naming,name (similar),dmavideo_Vid_FlipBuffers,/pointer,global slot holding a pointer to the function (renderer/video DLL export)
+gta2-seuko-mod,src/game/functions.h:66,1,0x00595064,pClearScreen,fnptr_slot,ClearScreenType*,"void __stdcall ClearScreen(SVideo* sVideo, DWORD param_2, DWORD param_3, DWORD param_4, DWORD param_5, DWORD param_6, DWORD param_7, DWORD param_8)",.data,CONFLICT,naming,name (similar),dmavideo_Vid_ClearScreen,/pointer,global slot holding a pointer to the function (renderer/video DLL export)
+gta2-seuko-mod,src/game/memory.h:32,1,0x005952a8,pgbh_InitDLL,fnptr_slot,,,.data,NEW,,,,,d3ddll.dll gbh_InitDLL pointer; renderer base = it - 0x00e053f0
+gta2-seuko-mod,src/events/renderer.cpp:56,1,0x005952bc,pDrawTile,fnptr_slot,FunctionPtrHook,,.data,NEW,,,,,function-pointer slot the mod hooks (FunctionPtrHook drawTileHook)
+gta2-seuko-mod,src/game/functions.h:54,2,0x005952c4,pDrawQuad,fnptr_slot,DrawQuadType*,"void __stdcall DrawQuad(uint32_t flags, DWORD sprite, GTAVertex* verticies, uint16_t flags2)",.data,NEW,,,,,global slot holding a pointer to the function (renderer/video DLL export)
+gta2-seuko-mod,src/events/renderer.cpp:122,1,0x005952d0,pDrawTriangle,fnptr_slot,FunctionPtrHook,,.data,NEW,,,,,function-pointer slot the mod hooks (FunctionPtrHook drawTriangleHook)
+gta2-seuko-mod,src/game/memory.h:29,1,0x005e3cc4,MainCamera,global,Camera*,,.data,CONFLICT,semantic,name,ptrToGameStats,/_game/GameStats *,holds a pointer
+gta2-seuko-mod,src/game/memory.h:28,1,0x005e4ca0,CarsManager,global,CarsManager*,,.data,CONFLICT,naming,name (similar),relToCars,/undefined4,holds a pointer
+gta2-seuko-mod,src/game/memory.h:51,1,0x005e4ca4,TrafficManager,global,TrafficManager*,,.data,CONFLICT,semantic,name,ptrToCarManager,/_car/CarManager *,holds a pointer
+gta2-seuko-mod,src/game/memory.h:52,1,0x005e4d4c,CarsScale,global,int,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:46,1,0x005e4d64,TankCannonRoofOffsetY,global,int,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:49,1,0x005e4eb8,WaterCannonRoofOffsetY,global,int,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:47,1,0x005e500c,JeepGunRoofOffsetY,global,int,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:48,1,0x005e5014,AntennaRoofOffsetY,global,int,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:64,1,0x005e5bbc,PedManager,global,PedManager_S25*,,.data,SAME,,,ptrToPedManager,/undefined4,holds a pointer
+gta2-seuko-mod,src/game/memory.h:58,1,0x005e8108,Tick,global,Tick*,,.data,CONFLICT,semantic,name,frameCounterFromBeginnigOfTheGame,/int *,holds a pointer
+gta2-seuko-mod,src/game/memory.h:56,1,0x005e8f04,DirectInputDeviceObjectDataCount,global,DWORD,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:59,1,0x005e8f5c,Controls,global,Controls,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:60,1,0x005e8f5c,ControlsAsArray,global,KeyCode,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:19,1,0x005e8f8c,KeyPressCode,global,KeyCode,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:55,1,0x005e8f8c,DirectInputDeviceObjectData,global,DirectInput_DeviceObjectData,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:20,1,0x005e8f90,KeyPressState,global,uint,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:23,1,0x005ead51,Cheats,global,Cheats,,.data,SAME,,"ours names its first field (doBlood); ours labels inside: CHEAT_BUCKFAST@+0x42=aggresivePeds, CHEAT_CUTIE1@+0x3e=health99, CHEAT_DANISGOD@+0x46=give200000, CHEAT_DAVEMOON@+0x1d=giveBasicWeapons, CHEAT_FLAMEON@+0x4a=giveFlamethrower, CHEAT_IAMDAVEJ@+0x55=give9000000, CHEAT_LASVEGAS@+0x4e=onlyElvisPeds, CHEAT_MADEMAN@+0x39=maxRespect, CHEAT_NEKKID@+0x4f=nekkidPeds, CHEAT_SCHURULZ@+0x14=doubleDamage, CHEAT_UKGAMER@+0xb=unlockAllLevels, CHEAT_VOLTFEST@+0x1f=giveElectricGun …",do_blood,/undefined1,object at address
+gta2-seuko-mod,src/events/after-debug-flags.cpp:19,1,0x005ead76,,global,written by hook asm,,.data,SAME,,,show_player_names,/undefined1,"mov ds : [0x005ead76], al"
+gta2-seuko-mod,src/game/memory.h:9,1,0x005eb4fc,Game,global,Game*,,.data,SAME,,,ptrToGame,/_game/Game *,holds a pointer
+gta2-seuko-mod,src/game/memory.h:24,1,0x005eb898,GangRespectContainer,global,GangRespectContainer*,,.data,CONFLICT,naming,name (similar),ptrToGangRespect,/undefined4,holds a pointer
+gta2-seuko-mod,src/game/memory.h:27,1,0x005ec070,Menu,global,Menu,,.data,SAME,,,ptrToMenu,/_game/Menu,object at address
+gta2-seuko-mod,src/game/memory.h:57,1,0x005ecac8,Keyboard,global,Keyboard,,.data,SAME,,ours labels inside: playerMovementState@+0x4=state,?keyboard,/undefined,object at address
+gta2-seuko-mod,src/game/memory.h:45,1,0x00662c08,MapBlocks,global,MapBlocks*,,.data,CONFLICT,semantic,name,relToCounters,/_scripts/SCR_STRING_HEADER *,holds a pointer
+gta2-seuko-mod,src/game/memory.h:44,1,0x006633a0,CurrentlyDrawnMapLayerIndex,global,int,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:63,1,0x006644b8,S17Mission,global,S17_Mission*,,.data,SAME,,,ptrToS17Mission,/undefined4,holds a pointer
+gta2-seuko-mod,src/game/memory.h:26,1,0x006644bc,S15,global,S15_Script*,,.data,CONFLICT,naming,name (similar),ptrToS15_script,/undefined4,holds a pointer
+gta2-seuko-mod,src/game/memory.h:66,1,0x00665784,BareGameObjectManager,global,BareGameObjectManager*,,.data,NEW,,,,,holds a pointer
+gta2-seuko-mod,src/game/memory.h:50,1,0x00665788,S33,global,S33*,,.data,CONFLICT,semantic,name,ptrToUnkStruct2,/undefined4,holds a pointer
+gta2-seuko-mod,src/game/memory.h:62,1,0x00665b40,ObjectPrefabsContainer,global,ObjectPrefabsContainer*,,.data,NEW,,,,,holds a pointer
+gta2-seuko-mod,src/game/memory.h:65,1,0x0066a3b4,PedGameObjectManager,global,PedGameObjectManager*,,.data,CONFLICT,semantic,name,ptrTo_relSprites,/undefined4,holds a pointer
+gta2-seuko-mod,src/game/memory.h:61,1,0x0066b404,S28,global,S28*,,.data,CONFLICT,naming,name (similar),ptrToS28PlayerData,/auto_structs/S28 *,holds a pointer
+gta2-seuko-mod,src/game/memory.h:22,1,0x00670684,StyleS3,global,Style_S3*,,.data,CONFLICT,naming,name (similar),ptrToS3,/_STY/Style_S3 *,holds a pointer
+gta2-seuko-mod,src/game/memory.h:21,1,0x00671978,S4,global,S4*,,.data,CONFLICT,naming,name (similar),ptrToS4,/undefined4,holds a pointer
+gta2-seuko-mod,src/game/memory.h:25,1,0x00672f24,DefaultFontId,global,short,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:39,1,0x006732e0,FullScreenHeight,global,int,,.data,CONFLICT,naming,name (similar),full_height,/undefined4,object at address
+gta2-seuko-mod,src/game/memory.h:38,1,0x006732e4,FullScreenWidth,global,int,,.data,CONFLICT,naming,name (similar),full_width,/undefined4,object at address
+gta2-seuko-mod,src/game/memory.h:41,1,0x006732e8,WindowedHeight,global,int,,.data,CONFLICT,naming,name (similar),window_height,/undefined4,object at address
+gta2-seuko-mod,src/game/memory.h:43,1,0x00673474,ScreenHeight,global,int,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:40,1,0x00673578,WindowedWidth,global,int,,.data,CONFLICT,naming,name (similar),window_width,/undefined4,object at address
+gta2-seuko-mod,src/game/memory.h:42,1,0x00673584,ScreenWidth,global,int,,.data,NEW,,,,,object at address
+gta2-seuko-mod,src/game/memory.h:53,1,0x00673d18,GameWindow,global,HWND,,.data,CONFLICT,semantic,name,ptrToMainWindow,/undefined4,object at address
+gta2-seuko-mod,src/game/memory.h:36,1,0x00673d20,SVideoPtr,global,SVideo*,,.data,NEW,,"ours labels inside: VERSION_MAJOR@+0x234, VERSION_MINOR@+0x238, cwd@+0x8=found_width, hInstance@+0x108, isMultiplayer@+0x10c",,,object at address
+gta2-seuko-mod,src/game/memory.h:54,1,0x00673e2c,IsMultiplayer,global,bool,,.data,SAME,,,isMultiplayer,/undefined4,object at address
+gta2-seuko-mod,src/game/memory.h:30,1,0x00675358,IsRendererLoaded,global,bool,,.data,NEW,,,,,object at address

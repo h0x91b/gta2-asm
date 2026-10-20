@@ -1,0 +1,1512 @@
+source_repo,source_file,struct,offset,size,bits,field,type,status,severity,ours_field,ours_type,ours_size,detail
+gta2-seuko-mod,src/game/gta2.h,AllCarsInfo,0x0,1024,,cars,struct CarInfo *[256],SAME,,cars,CarInfo *[256],1024,
+gta2-seuko-mod,src/game/gta2.h,AllCarsInfo,0x400,1,,totalCars,UINT8,SAME,,totalCars,UINT8,1,
+gta2-seuko-mod,src/game/gta2.h,Ambulance,0x1,1,,maybeIndex,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Ambulance,0xd0,64,,arr,struct AmbulanceSub[2],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,BareGameObject,0x0,4,,next,struct BareGameObject *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,BareGameObject,0x4,4,,sprite2,struct Sprite *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,BareGameObject,0x8,4,,state1,struct SpriteData *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,BareGameObject,0xc,4,,state2,undefined4 *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,BareGameObject,0x10,4,,relToId,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,BareGameObject,0x14,4,,id,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,BareGameObject,0x18,4,,type,enum OBJECT_TYPE,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,BareGameObject,0x1c,4,,probablyPhysics,struct PlayerPhysics *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,BareGameObject,0x24,2,,probablyRemap,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,BareGameObjectManager,0x0,4,,nextFree,struct BareGameObject *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,BareGameObjectManager,0x4,4,,someObject,struct BareGameObject *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,BareGameObjectManager,0x8,168300,,objects,struct BareGameObject[3825],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,BusAndTrainsHolder,0x0,5200,,arr,struct BusAndTrains[100],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,BusAndTrainsHolder,0x1450,880,,arr2,struct BusAndTrains2[10],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,C1,0x1478,4,,countOfS5,uint,SAME,,countOfS5,uint,4,
+gta2-seuko-mod,src/game/gta2.h,C1,0x1488,4080,,s5Arr1020,struct S5 *[1020],SAME,,s5Arr1020,S5 *[1020],4080,
+gta2-seuko-mod,src/game/gta2.h,Camera,0x0,16,,cameraPosTarget2,struct CameraPos,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x10,16,,cameraPosTarget,struct CameraPos,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x20,16,,cameraBoundaries,struct WorldRect,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x30,4,,movementBitmask,enum CAMERA_MOVEMENT,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x34,4,,ped,struct Ped *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x3c,4,,followState,enum CAMERA_FOLLOW_STATE,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x40,4,,targetElevation,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x44,4,,flyTimerMaybe,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x48,8,,altMovingPosition,struct SCR_Vector2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x50,4,,altMovingStateUp,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x54,4,,altMovingStateDown,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x58,4,,altMovingStateLeft,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x5c,4,,altMovingStateRight,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x66,2,,altMovingLimit,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x68,4,,screenPxWidth,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x6c,4,,screenPxHeight,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x70,4,,screenPxCenterX,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x74,4,,screenPxCenterY,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x78,16,,cameraBoundariesNonNegative,struct WorldRect,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x88,16,,cameraPos2,struct CameraPos,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0x98,16,,cameraPos,struct CameraPos,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0xa8,4,,uiScale,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Camera,0xac,16,,cameraVelocity,struct CameraPos,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CameraPos,0x0,4,,x,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CameraPos,0x4,4,,y,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CameraPos,0x8,4,,z,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CameraPos,0xc,4,,zoom,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Car,0x0,4,,roof,struct Roof *,NEW,,_gap_0x0,uint8_t[8],8,ours placeholder _gap_0x0
+gta2-seuko-mod,src/game/gta2.h,Car,0x4,4,,lastPassenger,struct Passenger *,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Car,0x8,4,,deltasBitstate,enum CAR_DELTAS_BITSTATE,CONFLICT,semantic,carLights,CAR_LIGHTS_AND_DOORS_BITSTATE,4,name
+gta2-seuko-mod,src/game/gta2.h,Car,0xc,64,,carDoor,struct CarDoor[4],CONFLICT,semantic,_gap_0xc,uint8_t[24],24,overlaps ours bitMask2
+gta2-seuko-mod,src/game/gta2.h,Car,0x4c,4,,lastCar,struct Car *,NEW,,field67_0x4c,int,4,ours placeholder field67_0x4c
+gta2-seuko-mod,src/game/gta2.h,Car,0x50,4,,sprite,struct Sprite *,CONFLICT,semantic,position,Position *,4,name
+gta2-seuko-mod,src/game/gta2.h,Car,0x54,4,,driver,struct Ped *,SAME,,driver,Ped *,4,
+gta2-seuko-mod,src/game/gta2.h,Car,0x58,4,,physics,struct CarPhysics *,CONFLICT,semantic,maybeEngine,MaybeCarEngine *,4,name
+gta2-seuko-mod,src/game/gta2.h,Car,0x5c,4,,notEngineStruct,struct CarManager4_S1 *,NEW,,_gap_0x5c,uint8_t[8],8,ours placeholder _gap_0x5c
+gta2-seuko-mod,src/game/gta2.h,Car,0x64,4,,trailerController,struct TrailerController *,NEW,,field79_0x64,void *,4,ours placeholder field79_0x64
+gta2-seuko-mod,src/game/gta2.h,Car,0x68,4,,scale,uint,NEW,,_gap_0x68,uint8_t[8],8,ours placeholder _gap_0x68
+gta2-seuko-mod,src/game/gta2.h,Car,0x6c,4,,id,uint,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Car,0x70,1,,latelyShot,_Bool,CONFLICT,semantic,driverPedId,int,4,name; size ours 4 vs 1
+gta2-seuko-mod,src/game/gta2.h,Car,0x74,2,,carDamage,short,CONFLICT,semantic,_gap_0x74,uint8_t[1],1,overlaps ours carDamagePercent
+gta2-seuko-mod,src/game/gta2.h,Car,0x78,2,,physicsBitmask,short,CONFLICT,semantic,bitMask,byte,1,name (similar); size ours 1 vs 2
+gta2-seuko-mod,src/game/gta2.h,Car,0x84,4,,carModel,enum CAR_MODEL4,CONFLICT,semantic,carModel,CAR_MODEL,1,size ours 1 vs 4
+gta2-seuko-mod,src/game/gta2.h,Car,0x88,4,,mask,uint,NEW,,field106_0x88,int,4,ours placeholder field106_0x88
+gta2-seuko-mod,src/game/gta2.h,Car,0x8c,1,,fireState,byte,NEW,,_gap_0x8c,uint8_t[12],12,ours placeholder _gap_0x8c
+gta2-seuko-mod,src/game/gta2.h,Car,0x8e,1,,alarmTimer,byte,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Car,0x90,4,,latelyShotBulletType,int,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Car,0x94,1,,latelyShotTimer,byte,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Car,0x98,4,,lockState,enum CAR_LOCK_STATE,CONFLICT,semantic,locksDoor,byte,1,name; size ours 1 vs 4
+gta2-seuko-mod,src/game/gta2.h,Car,0x9c,4,,engineState,enum CAR_ENGINE_STATE,SAME,,engineState,CAR_ENGINE_STATE,4,
+gta2-seuko-mod,src/game/gta2.h,Car,0xa0,4,,trafficCarType,enum TRAFFIC_CAR_TYPE,NEW,,_gap_0xa0,uint8_t[4],4,ours placeholder _gap_0xa0
+gta2-seuko-mod,src/game/gta2.h,Car,0xa4,1,,lightsBitstate,enum CAR_LIGHTS_BITSTATE,CONFLICT,semantic,sirenState,CAR_SIREN_STATE,1,name
+gta2-seuko-mod,src/game/gta2.h,Car,0xa5,1,,sirenPhase,byte,NEW,,_gap_0xa5,uint8_t[2],2,ours placeholder _gap_0xa5
+gta2-seuko-mod,src/game/gta2.h,Car,0xa7,1,,horn,enum HORN,SAME,,horn,HORN,1,
+gta2-seuko-mod,src/game/gta2.h,Car,0xb4,1,,currentUpgradeSound,byte,NEW,,,,,beyond ours struct size
+gta2-seuko-mod,src/game/gta2.h,Car,0xb5,1,,isTurretBeingRotated,_Bool,NEW,,,,,beyond ours struct size
+gta2-seuko-mod,src/game/gta2.h,CarDoor,0x0,1,,animationFrame,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarDoor,0x2,1,,deltaID,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarDoor,0x4,4,,doorState,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarDoor,0x8,4,,pedInDoor,struct Ped *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x0,1,,model,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x1,1,,turbo,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x2,1,,value,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x4,4,,mass,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x8,4,,front_drive_bias,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0xc,4,,front_mass_bias,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x10,4,,brake_friction,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x14,4,,turn_in,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x18,4,,turn_ratio,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x1c,4,,rear_end_stability,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x20,4,,handbrake_slide_value,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x24,4,,thrust,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x28,4,,max_speed,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x2c,4,,anti_strength,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x30,4,,skid_threshhold,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x34,4,,gear1_multiplier,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x38,4,,gear2_multiplier,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x3c,4,,gear3_multiplier,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x40,4,,gear2_speed,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEngineData,0x44,4,,gear3_speed,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEnginePrefab,0x0,4,,first,struct CarPhysics *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarEnginePrefab,0x4,53856,,arr306,struct CarPhysics[306],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0x0,1,,model,UINT8,SAME,,model,UINT8,1,
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0x1,1,,sprite,UINT8,SAME,,sprite,bool_,1,
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0x2,1,,w,UINT8,SAME,,w,UINT8,1,
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0x3,1,,h,UINT8,SAME,,h,UINT8,1,
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0x4,1,,num_remaps,UINT8,SAME,,num_remaps,UINT8,1,
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0x5,1,,passengers,UINT8,SAME,,passengers,UINT8,1,
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0x6,1,,wreck,byte,SAME,,wreck,byte,1,
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0x7,1,,rating,byte,SAME,,rating,byte,1,
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0x8,1,,front_wheel_offset,INT8,SAME,,front_wheel_offset,INT8,1,
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0x9,1,,rear_wheel_offset,INT8,SAME,,rear_wheel_offset,INT8,1,
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0xa,1,,front_window_offset,INT8,SAME,,front_window_offset,INT8,1,
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0xb,1,,rear_window_offset,INT8,SAME,,rear_window_offset,INT8,1,
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0xc,4,,info_flags,enum CarInfoFlags,CONFLICT,semantic,info_flags,CarInfoFlags,1,size ours 1 vs 4
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0x10,4,,info_flags_2,enum CarInfoFlags2,CONFLICT,semantic,remap,UINT8[22],22,inside ours remap (+0xe)
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0x14,22,,remap,UINT8[22],CONFLICT,semantic,remap,UINT8[22],22,inside ours remap (+0xe)
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0x2a,1,,num_doors,UINT8,CONFLICT,semantic,doors,DoorInfo[5],10,inside ours doors (+0x25)
+gta2-seuko-mod,src/game/gta2.h,CarInfo,0x2b,10,,doors,struct DoorInfo[5],CONFLICT,semantic,doors,DoorInfo[5],10,inside ours doors (+0x25)
+gta2-seuko-mod,src/game/gta2.h,CarInfoChunk,0x0,4,,last,struct CarInfo *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarInfoChunk,0x4,1024,,carInfoArray,struct CarInfo *[256],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarManager4,0x0,4,,last,struct CarManager4_S1 *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarManager4,0x4,36720,,arr306,struct CarManager4_S1[306],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarManager4_S1,0x0,4,,parentCar,Car *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarManager4_S1,0xc,4,,prev,struct CarManager4_S1 *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarManager4_S1,0x70,4,,ptr,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarManager5,0x4,160,,arr10,struct CarManager5_S1[10],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x0,4,,xVelocityReadOnly,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x4,4,,yVelocityReadOnly,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x8,4,,totalDamageMaybe,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0xc,4,,next,struct CarPhysics *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x10,8,,rrSkid,struct SCR_Vector2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x18,8,,rlSkid,struct SCR_Vector2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x20,8,,frSkid,struct SCR_Vector2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x28,8,,flSkid,struct SCR_Vector2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x30,8,,position,struct SCR_Vector2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x38,8,,positionReadOnly,struct SCR_Vector2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x40,8,,velocity,struct SCR_Vector2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x48,8,,jumpFromEdgeForce,struct SCR_Vector2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x58,2,,rotation,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x5c,4,,prev,struct CarPhysics *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x60,4,,gasPedal,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x64,4,,alsoRefToAnotherEngine,struct CarPhysics *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x68,4,,zVelocityRelated,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x6c,4,,zPos,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x70,4,,zVelocityReadOnly,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x74,4,,rotationForce,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x78,4,,pointingAngle,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x84,4,,frontSkid,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x88,4,,rearSkid,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x90,1,,timerSinceLastMove,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x91,1,,isBrakeOn,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x92,1,,isHandbrakeOn,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x93,1,,isForwardGasOn,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x94,1,,isBackwardGasOn,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x98,4,,surfaceType,enum CAR_SURFACE,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0x9c,4,,surfaceType2,enum CAR_SURFACE2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0xa5,1,,currentSlopeLength,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0xa6,1,,currentSlopeLeftTiles,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0xa7,1,,currentTileZ,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0xa8,1,,handbrakeForce,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0xa9,1,,carModel,enum CAR_MODEL,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0xac,1,,driveWheelsLockedProbably,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysics,0xad,1,,steering,char,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysicsData,0x4,4,,front_wheel_offset,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysicsData,0x8,4,,rear_wheel_offset,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysicsData,0x14,4,,thrust1,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysicsData,0x18,4,,thrust2,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysicsData,0x24,4,,skid_threshhold1,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarPhysicsData,0x28,4,,skid_threshhold2,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarsManager,0x0,4,,nextFreeCar,struct Car *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarsManager,0x4,4,,lastCar,struct Car *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarsManager,0x8,56610,,arr306Cars,struct Car[306],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CarsManager,0xdd2a,2,,carsCount,u2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x0,1,,doBlood,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x1,1,,showObjectsIds,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x2,1,,skipTrafficLights,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x3,1,,skipBuses,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x4,1,,showCounters,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x5,1,,skipParticles,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x6,1,,skipTrains,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x7,1,,showInput,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x8,1,,skipRightTiles,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x9,1,,showHiddenFaces,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0xa,1,,noTraffic,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0xb,1,,unlockAllLevels,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0xc,1,,explodingOn,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0xd,1,,noPolice,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0xe,1,,skipBottomTiles,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0xf,1,,doPolice1,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x10,1,,infiniteLives,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x12,1,,logRandom,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x13,1,,noHUD,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x14,1,,doubleDamage,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x15,1,,logMissions,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x16,1,,skipLeftTiles,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x17,1,,doCornerWindow,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x18,1,,noPedestrians,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x1a,1,,noAmbulances,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x1b,1,,skipWindowCheck,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x1c,1,,miniCars,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x1d,1,,giveBasicWeapons,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x1e,1,,showImaginaryThings,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x1f,1,,giveElectricGun,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x20,1,,invulnerability,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x21,1,,noAudio,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x23,1,,getAllWeapons,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x24,1,,noAnnoyingChars,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x25,1,,showPlayerNames,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x26,1,,logDirectInput,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x27,1,,noSlopesTiles,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x28,1,,showFPS,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x29,1,,logRandomExtra,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x2a,1,,multiplierX10,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x2b,1,,skipFrontend,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x2c,1,,doBrianTest,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x2d,1,,doLoadSavegame,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x2e,1,,showCarHorn,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x2f,1,,doTest,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x30,1,,showDrawingInfo,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x31,1,,showCameraInfo,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x32,1,,getOuttaJailFreeCard,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x33,1,,freeShopping,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x34,1,,showVehicleInfo,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x35,1,,ignoreReplayHeader,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x36,1,,debugKeys,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x37,1,,insaneSpeed,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x38,1,,showJunctionsIds,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x39,1,,maxRespect,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x3a,1,,skipFireEngines,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x3b,1,,skipTopTiles,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x3c,1,,showPedInfo,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x3d,1,,invisibility,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x3e,1,,health99,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x3f,1,,skipTiles,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x40,1,,logInput,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x42,1,,aggresivePeds,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x43,1,,dontGetCarBack,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x44,1,,showTrafficInfo,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x45,1,,showTrafficLightsInfo,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x46,1,,give200000,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x48,1,,logRoutefinder,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x49,1,,doTextIDTest,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x4a,1,,giveFlamethrower,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x4b,1,,skipLid,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x4c,1,,doPolice2,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x4d,1,,keepWeaponsAfterDeath,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x4e,1,,onlyElvisPeds,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x4f,1,,nekkidPeds,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x50,1,,showPedsIds,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x53,1,,skipReplaySyncCheck,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x54,1,,showBriefNumber,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x55,1,,give9000000,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x56,1,,showCycle,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x57,1,,doSyncCheck,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x58,1,,doPolice3,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x59,1,,playReplay,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x5a,1,,skipQuitConfirm,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x5b,1,,limitRecycling,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x5c,1,,exitAfterReplay,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x5d,1,,skipMissions,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x5e,1,,skipSkidmarks,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x5f,1,,logCollisions,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x60,1,,showCollisionBox,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x61,1,,showAllArrows,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Cheats,0x62,1,,killPhonesOnAnswer,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,ChunkHeader,0x0,4,,chunk_type,char[4],SAME,,chunk_type,char[4],4,
+gta2-seuko-mod,src/game/gta2.h,ChunkHeader,0x4,4,,chunk_size,UINT32,SAME,,chunk_size,UINT32,4,
+gta2-seuko-mod,src/game/gta2.h,Collide,0x0,4,,ptr1,struct Sprite *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Collide,0x4,4,,ptr2,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Collide,0x8,4,,ptr3,struct Collide *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CollideTopLevel,0x0,4,,length,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CollideTopLevel,0x4,4,,someIncrement,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CollisionBox,0x0,4,,xsize,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CollisionBox,0x4,4,,ysize,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CollisionBox,0x8,4,,zsize_maybe,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CollisionBox,0xc,8,,brCorner,struct SCR_Vector2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CollisionBox,0x14,8,,blCorner,struct SCR_Vector2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CollisionBox,0x1c,8,,flCorner,struct SCR_Vector2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,CollisionBox,0x24,8,,frCorner,struct SCR_Vector2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,D3DContext_s1,0x20,4,,gbh_CloseScreen,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,D3DContext_s1,0x24,4,,Vid_SetMode,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,D3DContext_s1,0x40,4,,Vid_GetSurface,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,D3DContext_s1,0x44,4,,Vid_FreeSurface,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,DirectInput_DeviceObjectData,0x0,4,,ofs,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,DirectInput_DeviceObjectData,0x4,4,,data,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,DirectInput_DeviceObjectData,0x8,4,,timeStamp,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,DirectInput_DeviceObjectData,0xc,4,,sequence,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,DirectInput_DeviceObjectData,0x10,4,,appData,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,DoorInfo,0x0,1,,rx,INT8,SAME,,rx,INT8,1,
+gta2-seuko-mod,src/game/gta2.h,DoorInfo,0x1,1,,ry,INT8,SAME,,ry,INT8,1,
+gta2-seuko-mod,src/game/gta2.h,EnginesDataHolder,0x0,4,,maybeAlsoCars,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,EnginesDataHolder,0x4,1024,,physicsArray,struct CarPhysicsData *[256],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,EnginesDataHolder,0x404,1024,,engineArray,struct CarEngineData *[256],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,EnginesDataHolder,0x804,4,,counter2,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,FrontEnd,0x110,4,,movie1,int,SAME,,movie1,int,4,
+gta2-seuko-mod,src/game/gta2.h,FrontEnd,0x11e,2,,doPlayMovies,short,SAME,,doPlayMovies,short,2,
+gta2-seuko-mod,src/game/gta2.h,FrontEnd,0xd5e,2,,plyrslot,short,SAME,,plyrslot,short,2,
+gta2-seuko-mod,src/game/gta2.h,FrontEnd,0xd60,2,,plyrslot2,short,SAME,,plyrslot2,short,2,
+gta2-seuko-mod,src/game/gta2.h,FrontEnd,0xc9a0,2,,bufSize_256,short,CONFLICT,semantic,playerName,WCHAR[8],32,inside ours playerName (+0xc98c)
+gta2-seuko-mod,src/game/gta2.h,FrontEnd,0xc9a2,2,,short_eq_5,short,CONFLICT,semantic,playerName,WCHAR[8],32,inside ours playerName (+0xc98c)
+gta2-seuko-mod,src/game/gta2.h,FrontEnd,0xc9c5,4,,time,dword,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,FrontEnd,0xedb5,1,,vector_8,undefined1,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,FrontEnd,0xedf4,1,,movie2,byte,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,FrontEnd,0x1eb2e,8,,buf8,byte[8],NEW,,_gap_0x1eb1e,uint8_t[2],2,ours placeholder _gap_0x1eb1e
+gta2-seuko-mod,src/game/gta2.h,GTAVertex,0x0,4,,x,float,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GTAVertex,0x4,4,,y,float,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GTAVertex,0x8,4,,z,float,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GTAVertex,0xc,4,,z2,float,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GTAVertex,0x10,4,,flags,uint32_t,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GTAVertex,0x18,4,,u,float,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GTAVertex,0x1c,4,,v,float,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Game,0x0,4,,gameStatus,enum GAME_STATUS,SAME,,gameStatus,GAME_STATUS,4,
+gta2-seuko-mod,src/game/gta2.h,Game,0x4,24,,players,struct Player *[6],CONFLICT,semantic,saveSlotArr,SaveSlot *[6],24,name
+gta2-seuko-mod,src/game/gta2.h,Game,0x1c,4,,currentPlayer2,struct Player *,NEW,,field2_0x1c,void *,4,ours placeholder field2_0x1c
+gta2-seuko-mod,src/game/gta2.h,Game,0x23,1,,length,byte,SAME,,length,byte,1,
+gta2-seuko-mod,src/game/gta2.h,Game,0x24,1,,slotIndex,char,SAME,,slotIndex,char,1,
+gta2-seuko-mod,src/game/gta2.h,Game,0x2c,4,,relatedToQuitGame,int,SAME,,relatedToQuitGame,int,4,
+gta2-seuko-mod,src/game/gta2.h,Game,0x30,1,,compensationFPSTime,byte,NEW,,field13_0x30,byte,1,ours placeholder field13_0x30
+gta2-seuko-mod,src/game/gta2.h,Game,0x38,4,,currentPlayer,struct Player *,CONFLICT,semantic,CurrentSaveSlot,SaveSlot *,4,name
+gta2-seuko-mod,src/game/gta2.h,Game2,0x28,4,,car,struct Car *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Game2Holder,0x0,34840,,arr,struct Game2[10],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Game2Holder,0x8818,4,,last,struct Game2 *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0x4,4,,someBitstate,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0x8,4,,state1,enum PED_STATE,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0xc,4,,state2,enum PED_STATE2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0x10,4,,relToId,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0x14,4,,id,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0x18,4,,type,OBJECT_TYPE,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0x1c,4,,probablyPhysics,struct Camera *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0x24,2,,probablyRemap,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0x38,4,,speed,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0x40,2,,spriteRotation,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0x4a,2,,cigaretteIdleTimer,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0x58,1,,bit1,enum SPRITE_BIT1,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0x78,4,,nextMaybe,struct GameObject *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0x7c,4,,ped,struct Ped *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0x80,4,,sprite,struct Sprite *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0x98,4,,deltaX,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0x9c,4,,deltaY,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0xa4,4,,teleportX,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0xa8,4,,teleportY,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GameObject,0xac,4,,teleportZ,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GangRespect,0x0,1,,present,_Bool,NEW,,_gap_0x0,uint8_t[260],260,ours placeholder _gap_0x0
+gta2-seuko-mod,src/game/gta2.h,GangRespect,0x1,1,,id,char,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,GangRespect,0x2,10,,gangName,char[10],NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,GangRespect,0x11c,4,,respectArr,char[4],CONFLICT,naming,respect,int,4,name (similar)
+gta2-seuko-mod,src/game/gta2.h,GangRespect,0x138,1,,spritesOffset,byte,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,GangRespect,0x139,1,,shouldDraw,_Bool,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,GangRespectContainer,0x0,3240,,gang,struct GangRespect[10],NEW,,field0_0x0,GangRespect[10],3240,ours placeholder field0_0x0
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x0,1,,do_3d_sound,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x1,1,,do_blood,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x2,1,,do_show_object_ids,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x3,1,,skip_traffic_lights,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x4,1,,skip_buses,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x5,1,,do_show_instruments,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x6,1,,skip_particles,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x7,1,,skip_trains,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x8,1,,do_show_input,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x9,1,,skip_right,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0xa,1,,show_hidden_faces,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0xb,1,,skip_recycling,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0xd,1,,exploding_on,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0xe,1,,skip_police,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0xf,1,,skip_bottom,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x10,1,,do_police_1,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x11,1,,do_infinite_lives,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x13,1,,log_random,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x14,1,,skip_user,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x16,1,,do_miss_logging,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x17,1,,skip_left,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x18,1,,do_corner_window,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x19,1,,skip_dummies,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x1b,1,,skip_ambulance,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x1c,1,,skip_window_check,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x1f,1,,do_show_imaginary,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x21,1,,do_invulnerable,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x22,1,,skip_audio,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x23,1,,relatedToGXTFiles,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x24,1,,get_all_weapons,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x25,1,,no_annoying_chars,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x26,1,,show_player_names,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x27,1,,log_directinput,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x28,1,,skip_slopes,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x29,1,,do_show_timing,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x2a,1,,log_random_extra,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x2c,1,,skip_frontend,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x2d,1,,do_brian_test,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x2e,1,,do_load_savegame,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x2f,1,,do_show_horn,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x30,1,,do_test,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x31,1,,do_mike,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x32,1,,do_show_camera,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x34,1,,do_free_shopping,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x35,1,,do_show_physics,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x36,1,,ignore_replay_header,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x37,1,,do_debug_keys,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x38,1,,skip_draw,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x39,1,,do_show_junc_ids,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x3b,1,,skip_fire_engines,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x3c,1,,skip_top,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x3d,1,,do_iain_test,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x40,1,,skip_tiles,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x41,1,,log_input,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x44,1,,dont_get_car_back,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x45,1,,do_show_counters,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x46,1,,do_show_traffic_lights_info,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x49,1,,log_routefinder,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x4c,1,,skip_lid,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x4d,1,,do_police_2,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x4e,1,,keep_weapons_after_death,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x4f,1,,spawn_only_elvis,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x51,1,,do_show_ids,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x52,1,,jail_key,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x54,1,,skip_replay_sync_check,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x55,1,,show_brief_number,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x57,1,,show_cycle,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x58,1,,do_sync_check,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x59,1,,do_police_3,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x5a,1,,play_replay,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x5b,1,,skip_quit_confirm,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x5c,1,,limit_recycling,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x5d,1,,do_exit_after_replay,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x5e,1,,skip_mission,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x5f,1,,skip_skidmarks,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x60,1,,log_collisions,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x61,1,,do_show_collision_box,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x62,1,,show_all_arrows,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GlobalSettings,0x63,1,,do_kill_phones_on_answer,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GtaString,0xa,2,,decr,undefined2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GtaString,0x12,2,,id,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GtaString,0x14,4,,prev,struct GtaString *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GtaStringsHolder,0x0,4,,last,struct GtaString *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GtaStringsHolder,0x4,4,,first,struct GtaString *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GtaStringsHolder,0x8,1200,,arr50,struct GtaString[50],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,GtaStringsHolder,0x4b8,2,,total,undefined2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Keyboard,0x0,1,,directInputCleanedMaybe,undefined1,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Keyboard,0x4,4,,state,enum KEYBOARD_STATE,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Keyboard,0x8,48,,controls,enum KEYBOARD_STATE[12],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Keyboard,0x38,4,,replayStatus,enum REPLAY_STATUS,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Keyboard,0x3c,480000,,allEvents,struct KeyboardEvent[40000],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Keyboard,0x7533c,4,,replayEventCount,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Keyboard,0x75340,4,,eventCount,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Keyboard,0x75344,1,,lastFocusEventLParam,undefined1,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,KeyboardEvent,0x0,4,,tick,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,KeyboardEvent,0x4,4,,state,enum KEYBOARD_STATE,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,KeyboardEvent,0x8,4,,random,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,LocaleSettings,0x0,4,,ptrToLocales,struct LocaleSingle *,SAME,,ptrToLocales,void *,4,
+gta2-seuko-mod,src/game/gta2.h,LocaleSettings,0x4,4,,length,int,SAME,,length,int,4,
+gta2-seuko-mod,src/game/gta2.h,LocaleSettings,0x8,8,,s2,struct S2,SAME,,s2,struct S2,8,
+gta2-seuko-mod,src/game/gta2.h,LocaleSettings,0x10,1,,language,char,SAME,,language,char,1,
+gta2-seuko-mod,src/game/gta2.h,LocaleSingle,0x0,4,,text,WCHAR *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,LocaleSingle,0x4,8,,id,char[8],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,MapBlocks,0x32c,4,,len,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,MapBlocks,0x330,4,,ptrRelToMap,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,MapBlocks,0x334,4,,probablyArray,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,MapBlocks,0x364,2,,lenOrCounter,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,MaybeCarEngineHolder,0x0,4,,firstElement,struct CarPhysics *,SAME,,firstElement,MaybeCarEngine *,4,
+gta2-seuko-mod,src/game/gta2.h,MaybeCarEngineHolder,0x4,4,,arr306,struct CarPhysics *,SAME,,arr306,MaybeCarEngine *,4,
+gta2-seuko-mod,src/game/gta2.h,MaybeWeaponStruct,0xc,4,,prev,struct MaybeWeaponStruct *,SAME,,_prev,MaybeWeaponStruct *,4,
+gta2-seuko-mod,src/game/gta2.h,Menu,0x0,256,,gmpFile,char[256],SAME,,gmpFile,char[256],256,
+gta2-seuko-mod,src/game/gta2.h,Menu,0x100,256,,styFile,char[256],SAME,,styFile,char[256],256,
+gta2-seuko-mod,src/game/gta2.h,Menu,0x200,256,,styFile2,char[256],SAME,,styFile2,char[256],256,
+gta2-seuko-mod,src/game/gta2.h,Menu,0x300,256,,saveFile,char[256],NEW,,unk2,char[256],256,ours placeholder unk2
+gta2-seuko-mod,src/game/gta2.h,Menu,0x400,1,,playerArea,byte,SAME,,playerArea,byte,1,
+gta2-seuko-mod,src/game/gta2.h,Menu,0x401,1,,bonusStage,byte,SAME,,bonusStage,byte,1,
+gta2-seuko-mod,src/game/gta2.h,Menu,0x403,1,,playerProfile,byte,SAME,,playerProfile,byte,1,
+gta2-seuko-mod,src/game/gta2.h,Menu,0x43c,2,,fraglimit,short,SAME,,fraglimit,short,2,
+gta2-seuko-mod,src/game/gta2.h,ObjectPrefab,0x1c,2,,remap,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,ObjectPrefab,0x1e,2,,defaultSpriteId,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,ObjectPrefab,0x28,4,,defaultSpriteType,enum SPRITE_TYPE,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,ObjectPrefab,0x30,4,,paletteBase,enum PALETTE_BASE,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,ObjectPrefab,0x40,4,,showImaginary,enum S32_SHOW_IMAGINARY,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,ObjectPrefabsContainer,0x0,2,,length,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,ObjectPrefabsContainer,0x4,34800,,s30Arr,struct S30[300],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,ObjectPrefabsContainer,0x87f4,1200,,objectPrefabArr,struct ObjectPrefab *[300],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,ObjectPrefabsContainer,0x8ca4,4,,eq99OnInit,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,PaletteBase,0x0,2,,tile,ushort,SAME,,tile,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,PaletteBase,0x2,2,,sprite,ushort,SAME,,sprite,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,PaletteBase,0x4,2,,car_remap,ushort,SAME,,car_remap,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,PaletteBase,0x6,2,,ped_remap,ushort,SAME,,ped_remap,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,PaletteBase,0x8,2,,code_obj_remap,ushort,SAME,,code_obj_remap,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,PaletteBase,0xa,2,,map_obj_remap,ushort,SAME,,map_obj_remap,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,PaletteBase,0xc,2,,user_remap,ushort,SAME,,user_remap,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,PaletteBase,0xe,2,,font_remap,ushort,SAME,,font_remap,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,PaletteIndex,0x0,32768,,PaletteIndexArr,Uint16[16384],SAME,,PaletteIndexArr,Uint16[16384],32768,
+gta2-seuko-mod,src/game/gta2.h,Passenger,0x0,4,,ped,struct Ped *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Passenger,0x4,4,,prev,struct Passenger *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Ped,0x2c,4,,elvisSomething,struct Ped *,SAME,,elvisSomething,Ped *,4,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x31,1,,lenOfForPedsArray,byte,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Ped,0x84,4,,carToEnterMaybe,Car *,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Ped,0x88,4,,someCar,Car *,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Ped,0x140,4,,refCar,struct Car *,NEW,,field313_0x140,int,4,ours placeholder field313_0x140
+gta2-seuko-mod,src/game/gta2.h,Ped,0x148,4,,objectiveTargetPed,Ped *,NEW,,field315_0x148,int,4,ours placeholder field315_0x148
+gta2-seuko-mod,src/game/gta2.h,Ped,0x150,4,,objectiveTargetCar,Car *,NEW,,field317_0x150,int,4,ours placeholder field317_0x150
+gta2-seuko-mod,src/game/gta2.h,Ped,0x154,4,,targetCarForEnter,Car *,NEW,,field318_0x154,Car *,4,ours placeholder field318_0x154
+gta2-seuko-mod,src/game/gta2.h,Ped,0x15c,4,,playerWeapons,struct WEAPON_PLAYER_LIST *,SAME,,playerWeapons,WEAPON_PLAYER_LIST *,4,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x160,4,,nextPed,struct Ped *,SAME,,nextPed,Ped *,4,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x164,4,,group,PedGroup *,CONFLICT,semantic,ElvisOrTarget,Ped *,4,name
+gta2-seuko-mod,src/game/gta2.h,Ped,0x168,4,,gameObject,struct GameObject *,CONFLICT,semantic,pedSprite,Sprite *,4,name
+gta2-seuko-mod,src/game/gta2.h,Ped,0x16c,4,,currentCar,struct Car *,SAME,,currentCar,Car *,4,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x170,4,,selectedWeapon,struct WEAPON_STRUCT *,SAME,,selectedWeapon,WEAPON_STRUCT *,4,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x174,4,,ptrToWeapon,void *,SAME,,ptrToWeapon,void *,4,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x180,4,,pedRef2,struct Ped *,NEW,,field329_0x180,int,4,ours placeholder field329_0x180
+gta2-seuko-mod,src/game/gta2.h,Ped,0x1a0,4,,objectiveTargetObject,void *,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Ped,0x1a8,4,,elvisLeader,struct Ped *,SAME,,elvisLeader,Ped *,4,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x1ac,12,,position,struct SCR_Vector3,CONFLICT,semantic,x,int,4,name; size ours 4 vs 12
+gta2-seuko-mod,src/game/gta2.h,Ped,0x1b8,12,,position2,struct SCR_Vector3,NEW,,field358_0x1b8,Ped *,4,ours placeholder field358_0x1b8
+gta2-seuko-mod,src/game/gta2.h,Ped,0x1dc,12,,objectiveTargetPosition,struct SCR_Vector3,NEW,,_gap_0x1dc,uint8_t[36],36,ours placeholder _gap_0x1dc
+gta2-seuko-mod,src/game/gta2.h,Ped,0x200,4,,id,int,SAME,,id,int,4,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x204,4,,somePedId,int,NEW,,field404_0x204,int,4,ours placeholder field404_0x204
+gta2-seuko-mod,src/game/gta2.h,Ped,0x208,2,,invulnerability,ushort,SAME,,Invulnerability,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x20a,2,,copValue,short,CONFLICT,semantic,CopLevel,short,2,name
+gta2-seuko-mod,src/game/gta2.h,Ped,0x212,2,,eq_100,undefined2,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Ped,0x216,2,,health,ushort,SAME,,health,short,2,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x218,2,,objectiveTimer,ushort,NEW,,field416_0x218,short,2,ours placeholder field416_0x218
+gta2-seuko-mod,src/game/gta2.h,Ped,0x21c,4,,bitState,enum PED_BIT_STATE,CONFLICT,naming,bitStateInvisOnFireEtc,PED_BIT_STATE,4,name (similar)
+gta2-seuko-mod,src/game/gta2.h,Ped,0x225,1,,relatedToTimerToAction,byte,NEW,,field424_0x225,byte,1,ours placeholder field424_0x225
+gta2-seuko-mod,src/game/gta2.h,Ped,0x234,1,,eq99,byte,SAME,,eq99,byte,1,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x238,4,,bitState2,enum PED_BIT_STATE2,SAME,,bitState2,uint,4,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x240,4,,occupation,enum PED_OCCUPATION,SAME,,occupation,OCUPATION,4,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x244,1,,remap,enum PED_REMAP,NEW,,field443_0x244,byte,1,ours placeholder field443_0x244
+gta2-seuko-mod,src/game/gta2.h,Ped,0x248,4,,enterCarAsPassenger,int,NEW,,field447_0x248,int,4,ours placeholder field447_0x248
+gta2-seuko-mod,src/game/gta2.h,Ped,0x24c,1,,targetCarDoor,byte,NEW,,field448_0x24c,byte,1,ours placeholder field448_0x24c
+gta2-seuko-mod,src/game/gta2.h,Ped,0x258,4,,objective,enum PED_OBJECTIVE,NEW,,field460_0x258,int,4,ours placeholder field460_0x258
+gta2-seuko-mod,src/game/gta2.h,Ped,0x26c,4,,graphicType,enum PED_GRAPHIC_TYPE,NEW,,field474_0x26c,int,4,ours placeholder field474_0x26c
+gta2-seuko-mod,src/game/gta2.h,Ped,0x274,4,,gangCarModel,enum CAR_MODEL4,NEW,,_gap_0x274,uint8_t[4],4,ours placeholder _gap_0x274
+gta2-seuko-mod,src/game/gta2.h,Ped,0x278,4,,state,enum PED_STATE,SAME,,state,PED_STATE,4,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x27c,4,,state2,enum PED_STATE2,SAME,,state2,PED_STATE2,4,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x280,4,,state1_2,enum PED_STATE,SAME,,state1_2,PED_STATE,4,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x284,4,,state2_2,enum PED_STATE2,SAME,,state2_2,PED_STATE2,4,
+gta2-seuko-mod,src/game/gta2.h,Ped,0x288,4,,threatSearch,PED_THREAT_SEARCH,NEW,,field484_0x288,int,4,ours placeholder field484_0x288
+gta2-seuko-mod,src/game/gta2.h,Ped,0x28c,4,,threatReaction,PED_THREAT_REACTION,NEW,,field485_0x28c,int,4,ours placeholder field485_0x28c
+gta2-seuko-mod,src/game/gta2.h,Ped,0x290,4,,relToMultiplayer,int,SAME,,relToMultiplayer,int,4,
+gta2-seuko-mod,src/game/gta2.h,PedGameObjectManager,0x0,4,,nextFreeMaybe,struct GameObject *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,PedGameObjectManager,0x4,72000,,objects,struct GameObject[400],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,PedGroup,0x0,52,,undefinedFields,undefined[52],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,PedGroup,0x34,1,,membersCount,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,PedManager_S25,0x0,4,,firstPedInArray,struct Ped *,SAME,,firstPedInArray,Ped *,4,
+gta2-seuko-mod,src/game/gta2.h,PedManager_S25,0x4,4,,lastPedInArray,struct Ped *,SAME,,lastPedInArray,Ped *,4,
+gta2-seuko-mod,src/game/gta2.h,PedManager_S25,0x8,132000,,peds,struct Ped[200],SAME,,peds,Ped[200],132000,
+gta2-seuko-mod,src/game/gta2.h,PedManager_S25,0x203a8,2,,pedsInUse,short,SAME,,pedsInUse_,short,2,
+gta2-seuko-mod,src/game/gta2.h,PhysicalPalette,0x0,1024,,colors,UINT8[256][4],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x4,4,,keyboardKeys,enum KEYBOARD_STATE,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x10,4,,playerPed3,struct Ped *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x2e,1,,gangsRespectIndex,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x44,4,,deathReason,enum DEATH_REASON,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x54,12,,lastCars,struct Car *[3],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x68,4,,controlState,enum PLAYER_CONTROL_STATE,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x6c,4,,teleportMode,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x70,1,,up,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x71,1,,down,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x72,1,,left,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x73,1,,right,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x74,1,,prevWeapon,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x75,1,,nextWeapon,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x76,1,,debugKey1,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x77,1,,debugKey2,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x78,1,,keyUp,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x79,1,,keyDown,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x7a,1,,keyLeft,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x7b,1,,keyRight,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x7c,1,,keyAttack,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x7d,1,,keyEnter,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x7e,1,,keySpace,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x7f,1,,keyPrevWeapon,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x80,1,,keyNexWeapon,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x81,1,,keySpecial,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x82,1,,keySpecial2,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x90,188,,ph1,struct Camera,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x14c,188,,ph2,struct Camera,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x208,188,,ph3,struct Camera,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x2c4,4,,ped,struct Ped *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x2c8,4,,ped2,struct Ped *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x2d4,56,,animatedMoney,struct SaveSlotAnimatedValue,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x680,2,,incToBe100,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x682,2,,eq_1000,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x684,56,,lives,struct SaveSlotAnimatedValue,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x6bc,56,,moneyMultiplier,struct SaveSlotAnimatedValue,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x6fa,2,,armor,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x700,2,,bonus1,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x702,2,,bonus2,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x704,2,,bonus3,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x706,2,,bonus4,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x70a,2,,bonus5,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x718,112,,iArr28,int[28],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Player,0x794,1,,isChatOpen,_Bool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,RenderDistanceArrayItem,0x0,8,,position,struct SCR_Vector2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Roof,0x0,4,,sprite,struct Sprite *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Roof,0x4,4,,next,struct Roof *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Roof,0x8,4,,xOffset,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Roof,0xc,4,,yOffset,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Roof,0x10,2,,rotation,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,RoofSpritesHolder,0x0,4,,last,struct Roof *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,RoofSpritesHolder,0x4,7200,,arr,struct Roof[300],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,S10,0xe4,1796,,txtMessage,struct S10_TxtMessage,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,S10,0x27b5,1,,displayDebugPedInfo,undefined1,SAME,,displayDebugPedInfo,undefined1,1,
+gta2-seuko-mod,src/game/gta2.h,S10,0x2854,4,,ptrToSomeStructRelToBIG_LABEL,undefined4,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,S10,0x2af4,4,,text_speed,int,SAME,,text_speed,int,4,
+gta2-seuko-mod,src/game/gta2.h,S10_TxtMessage,0x0,1280,,message,WCHAR[640],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,S10_TxtMessage,0x6f8,4,,prev,struct S10_TxtMessage *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,S10_TxtMessage,0x700,4,,messageCode,char *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,S12,0x0,4,,bitMask,uint,SAME,,_bitMask,uint,4,
+gta2-seuko-mod,src/game/gta2.h,S12,0x8,4,,ptrToS12,struct S12 *,SAME,,ptrToS12,S12 *,4,
+gta2-seuko-mod,src/game/gta2.h,S12,0x1c,12000,,renderDistanceArr,RenderDistanceArrayItem[1500],NEW,,_gap_0x1c,uint8_t[12000],12000,ours placeholder _gap_0x1c
+gta2-seuko-mod,src/game/gta2.h,S12,0x2efc,4,,currentDrawLayerSize,int,NEW,,field12019_0x2efc,int,4,ours placeholder field12019_0x2efc
+gta2-seuko-mod,src/game/gta2.h,S12,0x2f00,4,,tilesCount,int,NEW,,field12020_0x2f00,int,4,ours placeholder field12020_0x2f00
+gta2-seuko-mod,src/game/gta2.h,S14_sub1,0x0,120,,arr30i,int[30],SAME,,arr30i,int[30],120,
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0x4,384,,arr96i,int[96],SAME,,arr96i,int[96],384,
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0x188,240,,arr60i,int[60],SAME,,arr60i,int[60],240,
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0x27c,120,,arr30i,int[30],SAME,,arr30i,int[30],120,
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0x2f4,4,,shouldBeEqTo1,undefined4,SAME,,shouldBeEqTo1,undefined4,4,
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0x344,4,,missionPtrMaybe,DWORD *,NEW,,field50_0x344,undefined4,4,ours placeholder field50_0x344
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0x35c,256,,pathToScriptFile,char[256],SAME,,pathToScriptFile,char[256],256,
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0x45c,4,,name,char[4],SAME,,name,char[4],4,
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0x46c,12000,,base_pointers,Uint16[6000],SAME,,base_pointers,Uint16[6000],12000,
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0x334c,65536,,script,Uint8[65536],SAME,,script,Uint8[65536],65536,
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0x1334c,4,,ptrToStrings,struct SCR_STRINGS *,SAME,,ptrToStrings,SCR_STRINGS *,4,
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0x13350,4,,pScript4k,struct Script4k *,SAME,,pScript4k,Script4k *,4,
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0x13354,8000,,a20kArray,byte[4][2000],CONFLICT,naming,_20kArray,byte[4][2000],8000,name (similar)
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0xaa934,92160,,missionScript,MissionCode[30],SAME,,missionScript,MissionCode[30],92160,
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0xc1d72,60,,base_script_max_pointers,ushort[30],SAME,,base_script_max_pointers,ushort[30],60,
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0xc1dae,2,,len2,short,SAME,,len2,short,2,
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0xc1db0,120,,mission_script_size,uint[30],SAME,,mission_script_size,uint[30],120,
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0xc1e32,60,,arr15i_3,int[15],SAME,,arr15i_3,int[15],60,
+gta2-seuko-mod,src/game/gta2.h,S15_Script,0xc1e74,48,,arr12i,int[12],SAME,,arr12i,int[12],48,
+gta2-seuko-mod,src/game/gta2.h,S16,0x8,2272,,arr_s16sub,struct S16_sub1[8],SAME,,arr_s16sub,S16_sub1[8],2272,
+gta2-seuko-mod,src/game/gta2.h,S16_sub1,0x14,256,,arr64i,int[64],SAME,,arr64i,int[64],256,
+gta2-seuko-mod,src/game/gta2.h,S16_sub1,0x114,4,,vec2i,struct SCR_Vector2 *,SAME,,vec2i,Vec2i *,4,
+gta2-seuko-mod,src/game/gta2.h,S17_Mission,0x0,4,,len,int,SAME,,len,int,4,
+gta2-seuko-mod,src/game/gta2.h,S17_Mission,0x4,600,,vec3,struct SCR_Vector3[50],CONFLICT,naming,vec3i50,Vec3i[50],600,name (similar)
+gta2-seuko-mod,src/game/gta2.h,S18,0x0,4,,len,int,SAME,,len,int,4,
+gta2-seuko-mod,src/game/gta2.h,S18,0x4,600,,s18_sub_50,struct S18_sub[50],SAME,,s18_sub_50,S18_sub[50],600,
+gta2-seuko-mod,src/game/gta2.h,S18_sub,0x0,4,,b,undefined4,SAME,,b,undefined4,4,
+gta2-seuko-mod,src/game/gta2.h,S18_sub,0x4,2,,c,undefined2,SAME,,c,undefined2,2,
+gta2-seuko-mod,src/game/gta2.h,S18_sub,0x8,4,,a,undefined4,SAME,,a,undefined4,4,
+gta2-seuko-mod,src/game/gta2.h,S19,0x4,4,,time,DWORD,SAME,,time,DWORD,4,
+gta2-seuko-mod,src/game/gta2.h,S19,0x10,4,,time2,DWORD,SAME,,time2,DWORD,4,
+gta2-seuko-mod,src/game/gta2.h,S20,0x4,2,,inc,undefined2,SAME,,inc,undefined2,2,
+gta2-seuko-mod,src/game/gta2.h,S21,0x0,4,,last,struct Sprite *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,S21,0x4,367263,,arr,struct Sprite[5031],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,S23,0x3c8,4,,buf0x40000,undefined4,SAME,,buf0x40000,undefined4,4,
+gta2-seuko-mod,src/game/gta2.h,S24_char,0x0,2,,PedCapacity,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,S24_char,0x2,1,,dummy_chars,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,S24_char,0x8,4,,position,struct Sprite *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,S26,0x38,4,,relToCopStars,int,NEW,,,,,beyond ours struct size
+gta2-seuko-mod,src/game/gta2.h,S28,0x1890,2880,,arr12,byte[12][240],SAME,,arr12,byte[12][240],2880,
+gta2-seuko-mod,src/game/gta2.h,S28,0x26a0,1312,,arr8,byte[8][164],SAME,,arr8,byte[8][164],1312,
+gta2-seuko-mod,src/game/gta2.h,S29,0x4,200,,arr10,struct S29_1[10],SAME,,arr10,S29_1[10],200,
+gta2-seuko-mod,src/game/gta2.h,S33,0x1c,185,,car,struct Car,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,S4,0x0,4096,,iArr1024,int[1024],SAME,,iArr1024,int[1024],4096,
+gta2-seuko-mod,src/game/gta2.h,S4,0x1004,192,,iArr48,int[48],SAME,,iArr48,int[48],192,
+gta2-seuko-mod,src/game/gta2.h,S4,0x1548,140,,subs1arr,S4_SUBS1[7],NEW,,_gap_0x1548,uint8_t[118],118,ours placeholder _gap_0x1548
+gta2-seuko-mod,src/game/gta2.h,S6,0x1468,8,,gameCameraPos,struct SCR_Vector2,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,S6,0x1470,4,,pedZ,SCR_f,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,S6,0x1474,2,,rotation,ushort,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,S6,0x1478,4,,length,uint,SAME,,length,uint,4,
+gta2-seuko-mod,src/game/gta2.h,S6,0x5450,4,,relToAudio,int,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,S6,0x5464,4,,vocal,enum VOCAL,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,S6,0x5478,1,,someArray,undefined1,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,S7,0x718,15,,weapons,byte[15],SAME,,weapons,byte[15],15,
+gta2-seuko-mod,src/game/gta2.h,SCR_CAR_DATA_DEC,0x0,12,,head,struct SCR_CMD_HEADER,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SCR_CAR_DATA_DEC,0xc,2,,varname,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SCR_CAR_DATA_DEC,0x10,12,,pos,struct SCR_Vector3,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SCR_CAR_DATA_DEC,0x1c,2,,rot,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SCR_CAR_DATA_DEC,0x1e,2,,remap,short,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SCR_CAR_DATA_DEC,0x20,2,,carId,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SCR_CAR_DATA_DEC,0x22,2,,trailerId,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_HEADER,0x0,2,,cmd_this,Uint16,SAME,,cmd_this,Uint16,2,
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_HEADER,0x2,4,,type,enum SCR_CMD_TYPE,CONFLICT,semantic,type,SCR_CMD_TYPE,2,size ours 2 vs 4
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_HEADER,0x8,2,,cmd_next,Uint16,NEW,,,,,beyond ours struct size
+gta2-seuko-mod,src/game/gta2.h,SCR_CMD_HEADER,0xa,2,,return_value,Uint16,NEW,,,,,beyond ours struct size
+gta2-seuko-mod,src/game/gta2.h,SCR_PLAYER_PED,0x0,12,,header,struct SCR_CMD_HEADER,CONFLICT,semantic,header,struct SCR_CMD_HEADER,8,size ours 8 vs 12
+gta2-seuko-mod,src/game/gta2.h,SCR_PLAYER_PED,0xc,4,,ped,struct Ped *,CONFLICT,semantic,pos,struct SCR_XYZ_f,12,name; size ours 12 vs 4
+gta2-seuko-mod,src/game/gta2.h,SCR_PLAYER_PED,0x10,12,,pos,struct SCR_Vector3,CONFLICT,semantic,pos,struct SCR_XYZ_f,12,inside ours pos (+0xc)
+gta2-seuko-mod,src/game/gta2.h,SCR_PLAYER_PED,0x1c,2,,rot,Uint16,NEW,,,,,beyond ours struct size
+gta2-seuko-mod,src/game/gta2.h,SCR_PLAYER_PED,0x1e,2,,remap,Sint16,NEW,,,,,beyond ours struct size
+gta2-seuko-mod,src/game/gta2.h,SCR_STRINGS,0x0,2,,len,ushort,SAME,,len,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,SCR_STRINGS,0x2,5118,,buf,byte[5118],SAME,,buf,byte[5118],5118,
+gta2-seuko-mod,src/game/gta2.h,SCR_STRING_HEADER,0x0,2,,str_id,Uint16,SAME,,str_id,Uint16,2,
+gta2-seuko-mod,src/game/gta2.h,SCR_STRING_HEADER,0x2,2,,stringIndex,Uint16,SAME,,stringIndex,Uint16,2,
+gta2-seuko-mod,src/game/gta2.h,SCR_STRING_HEADER,0x4,4,,datatype,enum SCR_STRING_DATA_TYPE,CONFLICT,semantic,datatype,SCR_STRING_DATA_TYPE,1,size ours 1 vs 4
+gta2-seuko-mod,src/game/gta2.h,SCR_STRING_HEADER,0xb,1,,len,Uint8,NEW,,,,,beyond ours struct size
+gta2-seuko-mod,src/game/gta2.h,SCR_STRING_HEADER,0xc,1,,textStart,char,NEW,,,,,beyond ours struct size
+gta2-seuko-mod,src/game/gta2.h,SCR_Vector2,0x0,4,,x,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SCR_Vector2,0x4,4,,y,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SCR_Vector3,0x0,4,,x,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SCR_Vector3,0x4,4,,y,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SCR_Vector3,0x8,4,,z,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SDevice,0x0,4,,id,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SDevice,0x4,4,,flags,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SDevice,0x8,4,,name,char *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SDevice,0xc,4,,desc,char *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SDevice,0x10,4,,next_ptr,struct SDevice *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SDevice,0x14,4,,pDeviceGuid,GUID *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SDevice,0x18,16,,guid,struct _GUID,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SDevice,0x28,4,,dwVidMemTotal,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SDevice,0x2c,4,,end_buffer,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SDisplayMode,0x0,4,,display_mode_idx,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SDisplayMode,0x4,4,,deviceId,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SDisplayMode,0x8,4,,width,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SDisplayMode,0xc,4,,height,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SDisplayMode,0x10,4,,pitch,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SDisplayMode,0x14,4,,rgb_bit_count,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SDisplayMode,0x38,4,,pnext,struct SDisplayMode *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SGlobals,0x0,4,,mNumPolysDrawn,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SGlobals,0x4,4,,mNumTextureSwaps,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SGlobals,0x8,4,,mNumBatchFlushes,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SGlobals,0xc,4,,mSceneTime_2B93EAC,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SGlobals,0x10,48,,gCacheSizes_dword_43EB0,dword[12],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SGlobals,0x40,48,,gCacheSizes_word_10810,dword[12],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SGlobals,0x70,48,,gCacheHitRates_dword_E43F10,dword[12],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SGlobals,0xa0,48,,gCacheUnknown_107F8,dword[12],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SGlobals,0xd0,48,,cache_12_array_dword_E13D80,void *[12],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SImage,0xc,2,,width,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SImage,0xe,2,,height,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SLight,0x4,12,,position,struct SCR_Vector3,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SLight,0x10,4,,rgba,DWORD,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SMission,0x168,4,,ptrToStructRel2Bonus2,struct SMission *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SMission,0x1ac,1,,x,undefined1,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SMission,0x1b0,1,,y,undefined1,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SMission,0x21c,4,,mask,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SNightArray,0x4,4,,ptr1,struct SNightArray *,SAME,,ptr1,SNightArray *,4,
+gta2-seuko-mod,src/game/gta2.h,SNightArray,0x8,4,,ptr2,struct SNightArray *,SAME,,ptr2,SNightArray *,4,
+gta2-seuko-mod,src/game/gta2.h,SPolice,0x4,1120,,arr20,struct SPoliceSub[20],SAME,,arr20,SPoliceSub[20],1120,
+gta2-seuko-mod,src/game/gta2.h,SPolice,0x464,496,,arr124_4,byte[124][4],SAME,,arr124_4,byte[124][4],496,
+gta2-seuko-mod,src/game/gta2.h,SPolice,0x654,4,,copLevel,int,SAME,,copLevel,int,4,
+gta2-seuko-mod,src/game/gta2.h,SPolice,0x65c,4,,relToAi,int,NEW,,field11_0x65c,int,4,ours placeholder field11_0x65c
+gta2-seuko-mod,src/game/gta2.h,SPolice,0x7ad,1,,numPolicePedsInRangeScreen,byte,SAME,,numPolicePedsInRangeScreen,byte,1,
+gta2-seuko-mod,src/game/gta2.h,SRelToBonus2,0x2c,1,,mask,byte,SAME,,mask,byte,1,
+gta2-seuko-mod,src/game/gta2.h,SRelateToNight,0x8,120000,,nightArr3000,struct SNightArray[3000],SAME,,nightArr3000,SNightArray[3000],120000,
+gta2-seuko-mod,src/game/gta2.h,STexture,0x0,2,,id,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,STexture,0x4,2,,pal_is_trans,undefined2,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,STexture,0x6,2,,pal_size,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,STexture,0x8,4,,locked_pixels_ptr,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,STexture,0xe,2,,width,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,STexture,0x10,2,,height,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,STexture,0x12,1,,bPalIsValid,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,STexture,0x13,1,,flags,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,STexture,0x14,4,,original_pixel_data_ptr,BYTE *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,STexture,0x18,4,,pPaltData,WORD *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,STexture,0x1c,4,,cachePtr,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x4,4,,mask1,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x8,4,,found_width,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0xc,4,,found_height,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x10,4,,found_rgb_bit_count,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x14,4,,display_mode_count_2_q,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x18,4,,num_guids,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x1c,4,,num_display_modes,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x20,4,,num_enums,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x24,4,,head_ptr,struct SDisplayMode *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x28,4,,display_mode_array,struct SDisplayMode *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x2c,4,,device_info_head_ptr,struct SDevice *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x30,4,,device_info_last,struct SDevice *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x34,4,,active_device_id,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x3c,4,,current_enum_ptr,struct SDisplayMode *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x40,4,,full_screen,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x48,4,,rect_right,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x4c,4,,rect_bottom,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x50,4,,surface_pixels_ptr,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x54,4,,surface_pixels_pitch,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x60,4,,g,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x64,4,,r,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x68,4,,b,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x7c,4,,self_dll_handle,HINSTANCE,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x84,4,,Vid_GetVersion,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x88,4,,last_error,HRESULT,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x8c,4,,DirectDraw7,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x120,4,,IDDraw4,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x134,4,,SurfacePrimary,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x138,4,,Surface,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x13c,124,,DDSurfaceDesc7,undefined[124],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x1b8,4,,clipper,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x1c8,380,,device_caps,undefined[380],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x344,380,,hel_caps,undefined[380],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SVideo,0x4c0,4,,hwnd,HWND,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,SaveSlotAnimatedValue,0x0,4,,value,uint,SAME,,value,int,4,
+gta2-seuko-mod,src/game/gta2.h,SaveSlotAnimatedValue,0x10,1,,accuracyCount,byte,SAME,,accuracyCount,byte,1,
+gta2-seuko-mod,src/game/gta2.h,SaveSlotAnimatedValue,0x14,4,,reverseCount,int,SAME,,reverseCount,int,4,
+gta2-seuko-mod,src/game/gta2.h,SaveSlotAnimatedValue,0x20,4,,ptrToSaveSlot,struct Player *,SAME,,ptrToSaveSlot,SaveSlot *,4,
+gta2-seuko-mod,src/game/gta2.h,SaveSlotAnimatedValue,0x2a,2,,maxDigitsInValue,short,SAME,,maxDigitsInValue,short,2,
+gta2-seuko-mod,src/game/gta2.h,SaveSlotAnimatedValue,0x2c,2,,min,short,SAME,,min,short,2,
+gta2-seuko-mod,src/game/gta2.h,SaveSlotAnimatedValue,0x2e,2,,digitOffsetForAnimationOfChange,short,SAME,,digitOffsetForAnimationOfChange,short,2,
+gta2-seuko-mod,src/game/gta2.h,SaveSlotAnimatedValue,0x30,4,,max,int,SAME,,max,int,4,
+gta2-seuko-mod,src/game/gta2.h,SaveSlotAnimatedValue,0x36,2,,id,short,SAME,,id,short,2,
+gta2-seuko-mod,src/game/gta2.h,Script4k,0x0,2,,numOfStrings,ushort,SAME,,numOfStrings,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,Script4k,0x4,3996,,strings,struct SCR_STRING_HEADER *[999],SAME,,strings,SCR_STRING_HEADER *[999],3996,
+gta2-seuko-mod,src/game/gta2.h,Sprite,0x0,2,,rotation,ushort,CONFLICT,semantic,id,uint,4,name; size ours 4 vs 2
+gta2-seuko-mod,src/game/gta2.h,Sprite,0x4,4,,prev,struct Sprite *,NEW,,_gap_0x4,uint8_t[32],32,ours placeholder _gap_0x4
+gta2-seuko-mod,src/game/gta2.h,Sprite,0x8,4,,gameObject,struct BareGameObject *,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Sprite,0xc,4,,next,struct Sprite *,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Sprite,0x10,4,,collisionBox,struct CollisionBox *,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Sprite,0x14,12,,position,struct SCR_Vector3,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Sprite,0x20,2,,incFromS20,short,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Sprite,0x22,2,,sprite,short,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Sprite,0x24,2,,carColor,short,CONFLICT,semantic,_id,ushort,2,name
+gta2-seuko-mod,src/game/gta2.h,Sprite,0x28,4,,layer,int,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Sprite,0x2c,1,,invisibility,enum SPRITE_INVISIBILITY,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Sprite,0x30,4,,spriteType,enum SPRITE_TYPE,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Sprite,0x34,4,,paletteBase,enum PALETTE_BASE,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Sprite,0x38,1,,zoomInSprite,byte,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,Sprite,0x39,1,,ZOfTileOn,byte,NEW,,,,,inside ours gap
+gta2-seuko-mod,src/game/gta2.h,SpriteBase,0x0,2,,car,ushort,SAME,,car,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,SpriteBase,0x2,2,,ped,ushort,SAME,,ped,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,SpriteBase,0x4,2,,code_obj,ushort,SAME,,code_obj,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,SpriteBase,0x6,2,,map_obj,ushort,SAME,,map_obj,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,SpriteBase,0x8,2,,user,ushort,SAME,,user,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,SpriteBase,0xa,2,,font,ushort,SAME,,font,ushort,2,
+gta2-seuko-mod,src/game/gta2.h,SpriteEntry,0x0,4,,ptr,void *,SAME,,ptr,void *,4,
+gta2-seuko-mod,src/game/gta2.h,SpriteEntry,0x4,1,,width,uint8_t,CONFLICT,semantic,w,UINT8,1,name
+gta2-seuko-mod,src/game/gta2.h,SpriteEntry,0x5,1,,height,uint8_t,CONFLICT,semantic,h,UINT8,1,name
+gta2-seuko-mod,src/game/gta2.h,StyleFileHeader,0x0,4,,file_type,char[4],SAME,,file_type,char[4],4,
+gta2-seuko-mod,src/game/gta2.h,StyleFileHeader,0x4,2,,version_code,Uint16,SAME,,version_code,Uint16,2,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x0,2,,maybeCountOfpalettes,short,CONFLICT,naming,_countOfpalettes,short,2,name (similar)
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x2,2,,relToFontBase,short,SAME,,relToFontBase,short,2,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x4,2,,spriteIndexRel,short,SAME,,spriteIndexRel,short,2,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x6,2,,relToMapCatMenuItem,short,CONFLICT,semantic,relToMapObjectInfo,short,2,name
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x8,2,,size_physical_palette,short,SAME,,size_physical_palette,short,2,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0xc,4,,paletteBase2,struct PaletteBase *,SAME,,paletteBase2,PaletteBase *,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x10,4,,paletteBase,struct PaletteBase *,SAME,,paletteBase,PaletteBase *,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x14,4,,spriteBase2,struct SpriteBase *,SAME,,spriteBase2,SpriteBase *,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x18,4,,spriteBase,struct SpriteBase *,SAME,,spriteBase,SpriteBase *,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x1c,4,,fontBase,void *,SAME,,fontBase,void *,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x20,4,,spriteEntries,struct SpriteEntry *,CONFLICT,semantic,spriteIndex,void *,4,name
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x24,4,,map_object_info,void *,SAME,,map_object_info,void *,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x28,4,,palleteIndex,struct PaletteIndex *,SAME,,palleteIndex,PaletteIndex *,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x2c,4,,physical_palettes,struct PhysicalPalette *,SAME,,physical_palettes,void *,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x30,4,,i9,int,SAME,,i9,int,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x34,4,,sprite_graphics,void *,SAME,,sprite_graphics,void *,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x38,4,,i13,undefined4,SAME,,i13,undefined4,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x3c,4,,tiles,void *,CONFLICT,semantic,i10,int,4,name
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x40,4,,bufSize_0x800,void *,CONFLICT,semantic,i21,undefined4,4,name
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x44,4,,i11,undefined4,SAME,,i11,undefined4,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x48,4,,i14,undefined4,SAME,,i14,undefined4,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x4c,4,,i18,undefined4,SAME,,i18,undefined4,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x50,4,,i15,undefined4,SAME,,i15,undefined4,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x54,4,,i20,undefined4,SAME,,i20,undefined4,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x58,4,,car_info_chunk,void *,SAME,,car_info_chunk,void *,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x5c,4,,allCarsInfo,struct AllCarsInfo *,SAME,,allCarsInfo,AllCarsInfo *,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x60,4,,i19,undefined4,SAME,,i19,undefined4,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x64,4,,i1,int,SAME,,i1,int,4,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x68,2,,short1,short,SAME,,short1,short,2,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x6a,1,,b1,byte,SAME,,b1,byte,1,
+gta2-seuko-mod,src/game/gta2.h,Style_S3,0x6c,4096,,iArr1024,int[1024],SAME,,iArr1024,int[1024],4096,
+gta2-seuko-mod,src/game/gta2.h,SubScript,0x2,2,,index,short,SAME,,index,short,2,
+gta2-seuko-mod,src/game/gta2.h,SubScript,0x4,1,,eq21,byte,SAME,,eq21,byte,1,
+gta2-seuko-mod,src/game/gta2.h,SubScript,0x8,1,,missionNameLength,byte,SAME,,missionNameLength,byte,1,
+gta2-seuko-mod,src/game/gta2.h,SubScript,0x9,13,,missionName,char[13],SAME,,missionName,char[13],13,
+gta2-seuko-mod,src/game/gta2.h,Texture_S1,0x8,4,,decr,int,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Tick,0x0,4,,tick,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Tick,0x4,4,,random,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,TrafficLigthStruct,0x192,1,,phase,enum TRAFFIC_PHASE,CONFLICT,semantic,cycle,byte,1,name
+gta2-seuko-mod,src/game/gta2.h,TrafficLigthStruct,0x193,1,,timer,byte,NEW,,,,,beyond ours struct size
+gta2-seuko-mod,src/game/gta2.h,TrafficManager,0x4,4,,ptr1,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,TrafficManager,0x14,4,,nextCarId,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,TrafficManager,0x28,4,,recycledCars,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,TrafficManager,0x34,4,,unitCars,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,TrafficManager,0x3c,4,,missionCars,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,TrafficManager,0x40,4,,protRecycledCars,undefined4,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,TrafficManager,0x54,1,,minimalCarSpawnDelay,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,TrafficManager,0x55,1,,inc,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,TrafficManager,0x58,1,,carModel,enum CAR_MODEL,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,TrafficManager,0x69,1,,do_free_shoping,bbool,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,TrailerController,0xc,4,,trailer,Car *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Vert,0x0,4,,x,float,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Vert,0x4,4,,y,float,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Vert,0x8,4,,z,float,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Vert,0xc,4,,w,float,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Vert,0x10,4,,diff,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Vert,0x14,4,,spec,dword,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Vert,0x18,4,,u,float,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Vert,0x1c,4,,v,float,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,Verts,0x0,128,,mVerts,struct Vert[4],NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,WEAPON_PLAYER_LIST,0x50,4,,bitMask,uint,SAME,,bitMask,uint,4,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_PLAYER_LIST,0x718,112,,weapons,struct WEAPON_STRUCT *[28],CONFLICT,semantic,weapons,WEAPON_PLAYER_LIST *[22],88,size ours 88 vs 112
+gta2-seuko-mod,src/game/gta2.h,WEAPON_PLAYER_LIST,0x788,2,,selectedWeapon,short,CONFLICT,semantic,count,short,2,name
+gta2-seuko-mod,src/game/gta2.h,WEAPON_STRUCT,0x0,2,,ammo,short,SAME,,ammo,short,2,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_STRUCT,0x2,1,,timeToReload,byte,SAME,,timeToReload,byte,1,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_STRUCT,0x14,4,,carId,int,SAME,,carId,int,4,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_STRUCT,0x18,4,,nextWeapon,struct WEAPON_STRUCT *,SAME,,nextWeapon,WEAPON_STRUCT *,4,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_STRUCT,0x1c,4,,id,enum WEAPON_INDEX,SAME,,id,WEAPON_INDEX,4,
+gta2-seuko-mod,src/game/gta2.h,WEAPON_STRUCT,0x24,4,,ped,struct Ped *,SAME,,ped,Ped *,4,
+gta2-seuko-mod,src/game/gta2.h,WeaponRelStruct,0x0,4,,ptr,struct WEAPON_STRUCT *,NEW,,_gap_0x0,uint8_t[4],4,ours placeholder _gap_0x0
+gta2-seuko-mod,src/game/gta2.h,WeaponRelStruct,0x4,1344,,weapons,struct WEAPON_STRUCT[28],CONFLICT,semantic,weapons,WEAPON_STRUCT[22],1056,size ours 1056 vs 1344
+gta2-seuko-mod,src/game/gta2.h,WorldRect,0x0,4,,left,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,WorldRect,0x4,4,,right,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,WorldRect,0x8,4,,top,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,WorldRect,0xc,4,,bottom,SCR_f,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,XYZ,0x0,12,,position,struct SCR_Vector3,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,XYZ,0x10,12,,position2,struct SCR_Vector3,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,XYZ,0x68,4,,width,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,XYZ,0x6c,4,,height,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,XYZ,0x70,4,,halfWidth,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,XYZ,0x74,4,,halfHeight,uint,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,XYZ,0x98,12,,position3,struct SCR_Vector3,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,palette_base,0x0,2,,tile,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,palette_base,0x2,2,,sprite,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,palette_base,0x4,2,,car_remap,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,palette_base,0x6,2,,ped_remap,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,palette_base,0x8,2,,code_obj_remap,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,palette_base,0xa,2,,map_obj_remap,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,palette_base,0xc,2,,user_remap,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,palette_base,0xe,2,,font_remap,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,sprite_base,0x0,2,,car,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,sprite_base,0x2,2,,ped,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,sprite_base,0x4,2,,code_obj,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,sprite_base,0x6,2,,map_obj,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,sprite_base,0x8,2,,user,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,sprite_base,0xa,2,,font,ushort,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,sprite_entry,0x0,4,,ptr,void *,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,sprite_entry,0x4,1,,w,byte,NEW,,,,,struct not in ours
+gta2-seuko-mod,src/game/gta2.h,sprite_entry,0x5,1,,h,byte,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,AllCars,0x4,4,,firstCar,struct Car *,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,AllCars,0x8,57528,,cars,struct Car[306],NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Car,0x0,2,,xxx,undefined2,NEW,,_gap_0x0,uint8_t[8],8,ours placeholder _gap_0x0
+gta2-resurection,gta2-resurection/gta2.h,Car,0x4c,4,,next,struct Car *,NEW,,field67_0x4c,int,4,ours placeholder field67_0x4c
+gta2-resurection,gta2-resurection/gta2.h,Car,0x50,4,,carSprite,struct CarSprite *,CONFLICT,semantic,position,Position *,4,name
+gta2-resurection,gta2-resurection/gta2.h,Car,0x54,4,,driver,struct Ped *,SAME,,driver,Ped *,4,
+gta2-resurection,gta2-resurection/gta2.h,Car,0x6c,4,,id,uint,NEW,,,,,inside ours gap
+gta2-resurection,gta2-resurection/gta2.h,Car,0x74,2,,damage,short,CONFLICT,semantic,_gap_0x74,uint8_t[1],1,overlaps ours carDamagePercent
+gta2-resurection,gta2-resurection/gta2.h,Car,0x84,4,,type,enum CAR_TYPE,CONFLICT,semantic,carModel,CAR_MODEL,1,name; size ours 1 vs 4
+gta2-resurection,gta2-resurection/gta2.h,CarSprite,0x14,4,,x,int,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,CarSprite,0x18,4,,y,int,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,CarSprite,0x1c,4,,z,int,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,CarSprite,0x24,2,,color,ushort,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,CarsS2,0x4,53856,,arr,struct CarsS3[306],NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,CarsS3,0xc,4,,next,int,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,CarsS3,0x10,4,,arr,int,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,CarsS4,0x4,36720,,arr,struct CarsS5[306],NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Frontend,0x122,51306,,arr1,struct FrontendS1[17],NEW,,,,,inside ours gap
+gta2-resurection,gta2-resurection/gta2.h,Frontend,0xc98c,18,,name,WCHAR[9],CONFLICT,semantic,playerName,WCHAR[8],32,name (similar); size ours 32 vs 18
+gta2-resurection,gta2-resurection/gta2.h,FrontendS1,0x4,1300,,arr,struct FrontendS1S1[10],NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,FrontendS1,0x518,1650,,arr2,struct FrontendS1S2[15],NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,FrontendS1,0xb8a,50,,arr3,struct FrontendS1S3[10],NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,FrontendS1S1,0x2,2,,x,undefined2,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,FrontendS1S1,0x4,2,,y,undefined2,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,FrontendS1S1,0x6,4,,label,WCHAR *,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Game,0x0,4,,gameStatus,uint,SAME,,gameStatus,GAME_STATUS,4,
+gta2-resurection,gta2-resurection/gta2.h,Game,0x4,24,,players,struct Player_S4 *[6],CONFLICT,semantic,saveSlotArr,SaveSlot *[6],24,name
+gta2-resurection,gta2-resurection/gta2.h,Game,0x1c,4,,s3,struct S3 *,NEW,,field2_0x1c,void *,4,ours placeholder field2_0x1c
+gta2-resurection,gta2-resurection/gta2.h,Game,0x34,4,,relToSkipPoliceEnum,undefined4,NEW,,field17_0x34,int,4,ours placeholder field17_0x34
+gta2-resurection,gta2-resurection/gta2.h,Game,0x38,4,,player,struct Player_S4 *,CONFLICT,semantic,CurrentSaveSlot,SaveSlot *,4,name
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x0,300,,arr,struct S3Bytes[100],CONFLICT,semantic,field0_0x0,byte,1,overlaps ours elvisSomething
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x150,4,,targetCar1,struct Car *,NEW,,field317_0x150,int,4,ours placeholder field317_0x150
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x154,4,,targetCar2,struct Car *,NEW,,field318_0x154,Car *,4,ours placeholder field318_0x154
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x15c,4,,player,struct Player_S4 *,CONFLICT,naming,playerWeapons,WEAPON_PLAYER_LIST *,4,name (similar)
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x160,4,,nextPed,struct Ped *,SAME,,nextPed,Ped *,4,
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x168,4,,pedS1,struct PedS1 *,CONFLICT,semantic,pedSprite,Sprite *,4,name
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x16c,4,,car,struct Car *,CONFLICT,naming,currentCar,Car *,4,name (similar)
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x1ac,4,,cameraX,int,CONFLICT,naming,x,int,4,name (similar)
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x1b0,4,,cameraY,int,CONFLICT,naming,y,int,4,name (similar)
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x1b4,4,,cameraZ,int,CONFLICT,naming,z,int,4,name (similar)
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x1b8,4,,targetX,int,NEW,,field358_0x1b8,Ped *,4,ours placeholder field358_0x1b8
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x1bc,4,,targetY,int,NEW,,field359_0x1bc,Ped *,4,ours placeholder field359_0x1bc
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x1c0,4,,targetZ,int,NEW,,field360_0x1c0,Ped *,4,ours placeholder field360_0x1c0
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x200,4,,id,uint,SAME,,id,int,4,
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x20a,2,,copLevel,short,SAME,,CopLevel,short,2,
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x216,2,,health,word,SAME,,health,short,2,
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x21c,4,,mask2,uint,CONFLICT,semantic,bitStateInvisOnFireEtc,PED_BIT_STATE,4,name
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x238,4,,mask1,uint,CONFLICT,semantic,bitState2,uint,4,name
+gta2-resurection,gta2-resurection/gta2.h,Ped,0x25c,4,,carState,enum PED_STATE_CAR,NEW,,field461_0x25c,int,4,ours placeholder field461_0x25c
+gta2-resurection,gta2-resurection/gta2.h,PedS1,0x40,2,,rotation,short,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PedS1,0x80,4,,sprite,struct PedSprite *,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PedS1,0x84,4,,car,struct Car *,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PedSprite,0x0,2,,readonlyRotation,undefined2,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PedSprite,0x14,4,,x,u4,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PedSprite,0x18,4,,y,u4,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PedSprite,0x1c,4,,z,u4,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PedsManager,0x0,4,,firstPed,struct Ped *,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PedsManager,0x4,4,,_lastPed,undefined4,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PedsManager,0x8,132000,,peds,struct Ped[200],NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PedsManager,0x203a8,2,,_length,undefined2,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PlayerS1,0x0,4,,x,int,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PlayerS1,0x4,4,,y,int,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PlayerS1,0x8,4,,z,int,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PlayerS1,0x14,12,,vec,struct PlayerS2,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PlayerS2,0x0,4,,x,int,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PlayerS2,0x4,4,,y,int,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PlayerS2,0x8,4,,z,int,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,PlayerWeapon,0x0,2,,ammo,short,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x0,1,,somethingRelToAudio,_Bool,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x4,4,,keyState,uint,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x78,1,,forward,_Bool,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x79,1,,backward,_Bool,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x7a,1,,rotateLeft,_Bool,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x7b,1,,rotateRight,_Bool,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x7c,1,,attack,_Bool,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x7d,1,,enter,_Bool,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x7e,1,,jump,_Bool,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x7f,1,,nextWeaponZ,_Bool,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x80,1,,prevWeaponX,_Bool,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x81,1,,tab,_Bool,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x8d,1,,attackIsChanged,_Bool,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x90,36,,ps1,struct PlayerS1,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x2c4,4,,ped,struct Ped *,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x2d4,4,,money,int,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x684,4,,lives,int,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x6bc,4,,moneyMultiplier,int,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x718,44,,weapons,struct PlayerWeapon *[11],NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Player_S4,0x788,2,,selectedWeapon,short,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Police_s5,0x464,4,,targetPed,struct Ped *,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,S1,0x34,4,,playerPed,struct Ped *,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,S1,0x178,4,,playerPed2,struct Ped *,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,S3,0x14c,4,,s1,struct S1 *,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,S3Bytes,0x0,1,,a,u1,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,S3Bytes,0x1,1,,b,u1,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,S3Bytes,0x2,1,,c,u1,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,S7,0x6c,4096,,arr1024,undefined4[1024],CONFLICT,semantic,_gap_0x6c,uint8_t[600],600,overlaps ours weapons
+gta2-resurection,gta2-resurection/gta2.h,S9_cars,0x69,1,,do_free_shopping,_Bool,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,SKeyboard,0x0,512,,keyMapping,WCHAR[256],NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Timing,0x8,4,,fps1,undefined4,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,Timing,0x14,4,,fps2,undefined4,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,TrafficLights,0x192,1,,phase,byte,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,TrafficLights,0x193,1,,timer,byte,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,TrafficManager,0x4,4,,first,struct TrafficManagerS1 *,NEW,,,,,struct not in ours
+gta2-resurection,gta2-resurection/gta2.h,TrafficManager,0x8,1,,arr255,undefined1,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,AllCarsInfo,0x0,1024,,cars,struct CarInfo *[256],SAME,,cars,CarInfo *[256],1024,
+gta2-mouse,gta2.segments.fixed.exe.h,Ambulance,0x1,1,,maybeIndex,byte,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Ambulance,0xd0,64,,arr,struct AmbulanceSub[2],NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0x8,4,,carLights,enum CAR_LIGHTS_AND_DOORS_BITSTATE,SAME,,carLights,CAR_LIGHTS_AND_DOORS_BITSTATE,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0x24,4,,bitMask2,uint,SAME,,bitMask2,uint,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0x50,4,,position,struct Pos *,SAME,,position,Position *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0x54,4,,driver,struct Ped *,SAME,,driver,Ped *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0x58,4,,maybeEngine,struct MaybeCarEngine *,SAME,,maybeEngine,MaybeCarEngine *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0x6c,4,,id,uint,NEW,,,,,inside ours gap
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0x70,4,,driverPedId,int,SAME,,driverPedId,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0x75,1,,carDamagePercent,byte,SAME,,carDamagePercent,byte,1,
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0x78,1,,bitMask,byte,SAME,,bitMask,byte,1,
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0x84,4,,carModel,enum CAR_MODEL,CONFLICT,semantic,carModel,CAR_MODEL,1,size ours 1 vs 4
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0x88,4,,mask,uint,NEW,,field106_0x88,int,4,ours placeholder field106_0x88
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0x95,1,,pedId,byte,NEW,,,,,inside ours gap
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0x98,1,,locksDoor,byte,SAME,,locksDoor,byte,1,
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0x9c,4,,engineState,enum CAR_ENGINE_STATE,SAME,,engineState,CAR_ENGINE_STATE,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0xa0,4,,type,enum CAR_TYPE_COUNTER,NEW,,_gap_0xa0,uint8_t[4],4,ours placeholder _gap_0xa0
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0xa4,4,,sirenState,enum CAR_SIREN_STATE,CONFLICT,semantic,sirenState,CAR_SIREN_STATE,1,size ours 1 vs 4
+gta2-mouse,gta2.segments.fixed.exe.h,Car,0xaa,4,,horn,enum HORN,NEW,,,,,beyond ours struct size
+gta2-mouse,gta2.segments.fixed.exe.h,CarInfo,0x6,1,,wreck,byte,SAME,,wreck,byte,1,
+gta2-mouse,gta2.segments.fixed.exe.h,CarInfo,0x7,1,,rating,byte,SAME,,rating,byte,1,
+gta2-mouse,gta2.segments.fixed.exe.h,CarInfo,0xc,4,,info_flags,enum CarInfoFlags,CONFLICT,semantic,info_flags,CarInfoFlags,1,size ours 1 vs 4
+gta2-mouse,gta2.segments.fixed.exe.h,CarInfo,0x10,4,,info_flags_2,enum CarInfoFlags2,CONFLICT,semantic,remap,UINT8[22],22,inside ours remap (+0xe)
+gta2-mouse,gta2.segments.fixed.exe.h,CarInfo,0x2b,10,,doors,struct DoorInfo[5],CONFLICT,semantic,doors,DoorInfo[5],10,inside ours doors (+0x25)
+gta2-mouse,gta2.segments.fixed.exe.h,CarManager,0x28,4,,recycledCars,undefined4,SAME,,recycledCars,undefined4,4,
+gta2-mouse,gta2.segments.fixed.exe.h,CarManager,0x34,4,,unitCars,undefined4,SAME,,unitCars,undefined4,4,
+gta2-mouse,gta2.segments.fixed.exe.h,CarManager,0x3c,4,,missionCars,undefined4,SAME,,missionCars,undefined4,4,
+gta2-mouse,gta2.segments.fixed.exe.h,CarManager,0x40,4,,protRecycledCars,undefined4,SAME,,protRecycledCars,undefined4,4,
+gta2-mouse,gta2.segments.fixed.exe.h,CarManager,0x69,1,,do_free_shoping,undefined1,SAME,,do_free_shoping,bool_,1,
+gta2-mouse,gta2.segments.fixed.exe.h,ChunkHeader,0x0,4,,chunk_type,char[4],SAME,,chunk_type,char[4],4,
+gta2-mouse,gta2.segments.fixed.exe.h,ChunkHeader,0x4,4,,chunk_size,UINT32,SAME,,chunk_size,UINT32,4,
+gta2-mouse,gta2.segments.fixed.exe.h,FrontEnd,0x110,4,,movie1,int,SAME,,movie1,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,FrontEnd,0x11e,2,,doPlayMovies,short,SAME,,doPlayMovies,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,FrontEnd,0xd5e,2,,plyrslot,short,SAME,,plyrslot,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,FrontEnd,0xd60,2,,plyrslot2,short,SAME,,plyrslot2,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,FrontEnd,0xc9a0,2,,maybeBufSize256,short,CONFLICT,semantic,playerName,WCHAR[8],32,inside ours playerName (+0xc98c)
+gta2-mouse,gta2.segments.fixed.exe.h,FrontEnd,0xc9a2,2,,short_eq_5,short,CONFLICT,semantic,playerName,WCHAR[8],32,inside ours playerName (+0xc98c)
+gta2-mouse,gta2.segments.fixed.exe.h,FrontEnd,0xc9c5,4,,time,dword,NEW,,,,,inside ours gap
+gta2-mouse,gta2.segments.fixed.exe.h,FrontEnd,0xedb5,1,,vector_8,undefined1,NEW,,,,,inside ours gap
+gta2-mouse,gta2.segments.fixed.exe.h,FrontEnd,0xedf4,1,,movie2,byte,NEW,,,,,inside ours gap
+gta2-mouse,gta2.segments.fixed.exe.h,FrontEnd,0x1eb2e,8,,buf8,byte[8],NEW,,_gap_0x1eb1e,uint8_t[2],2,ours placeholder _gap_0x1eb1e
+gta2-mouse,gta2.segments.fixed.exe.h,Game,0x0,4,,gameStatus,enum GAME_STATUS,SAME,,gameStatus,GAME_STATUS,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Game,0x4,24,,saveSlotArr,struct Save *[6],SAME,,saveSlotArr,SaveSlot *[6],24,
+gta2-mouse,gta2.segments.fixed.exe.h,Game,0x1c,4,,currentSaveSlot2,struct Save *,NEW,,field2_0x1c,void *,4,ours placeholder field2_0x1c
+gta2-mouse,gta2.segments.fixed.exe.h,Game,0x23,1,,length,byte,SAME,,length,byte,1,
+gta2-mouse,gta2.segments.fixed.exe.h,Game,0x24,1,,slotIndex,char,SAME,,slotIndex,char,1,
+gta2-mouse,gta2.segments.fixed.exe.h,Game,0x2c,4,,relatedToQuitGame,int,SAME,,relatedToQuitGame,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Game,0x30,1,,compensationFPSTime,byte,NEW,,field13_0x30,byte,1,ours placeholder field13_0x30
+gta2-mouse,gta2.segments.fixed.exe.h,Game,0x38,4,,CurrentSaveSlot,struct Save *,SAME,,CurrentSaveSlot,SaveSlot *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,GameStats,0x50c,4,,vehicles_hijacked,int,SAME,,vehicles_hijacked,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,GameStats,0x510,4,,civilians_run_down,int,SAME,,civilians_run_down,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,GameStats,0x514,4,,civilians_murdered,int,SAME,,civilians_murdered,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,GameStats,0x518,4,,lawmen_killed,int,SAME,,lawmen_killed,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,GameStats,0x51c,4,,gang_members_killed,int,SAME,,gang_members_killed,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,GameStats,0x52c,4,,auto_damage_cost,int,SAME,,auto_damage_cost,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,GameStats,0x530,4,,fugitive_factor,int,SAME,,fugitive_factor,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Gang,0x11c,4,,respect,byte[4],NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Gangs,0x0,3240,,arr,struct Gang[10],NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,LocaleSettings,0x0,4,,ptrToLocales,void *,SAME,,ptrToLocales,void *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,LocaleSettings,0x4,4,,length,int,SAME,,length,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,LocaleSettings,0x8,8,,s2,struct S2,SAME,,s2,struct S2,8,
+gta2-mouse,gta2.segments.fixed.exe.h,LocaleSettings,0x10,1,,language,char,SAME,,language,char,1,
+gta2-mouse,gta2.segments.fixed.exe.h,MaybeCarEngine,0xc,4,,next,struct MaybeCarEngine *,SAME,,next,MaybeCarEngine *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,MaybeCarEngine,0x5c,4,,MaybePrev,void *,CONFLICT,naming,prev_,void *,4,name (similar)
+gta2-mouse,gta2.segments.fixed.exe.h,MaybeCarEngineHolder,0x0,4,,firstElement,struct MaybeCarEngine *,SAME,,firstElement,MaybeCarEngine *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,MaybeCarEngineHolder,0x4,4,,arr306,struct MaybeCarEngine *,SAME,,arr306,MaybeCarEngine *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,MaybeWeaponStruct,0xc,4,,prev,struct MaybeWeaponStruct *,SAME,,_prev,MaybeWeaponStruct *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Menu,0x0,256,,gmpFile,char[256],SAME,,gmpFile,char[256],256,
+gta2-mouse,gta2.segments.fixed.exe.h,Menu,0x100,256,,styFile,char[256],SAME,,styFile,char[256],256,
+gta2-mouse,gta2.segments.fixed.exe.h,Menu,0x200,256,,styFile2,char[256],SAME,,styFile2,char[256],256,
+gta2-mouse,gta2.segments.fixed.exe.h,Menu,0x400,1,,playerArea,byte,SAME,,playerArea,byte,1,
+gta2-mouse,gta2.segments.fixed.exe.h,Menu,0x401,1,,bonusStage,byte,SAME,,bonusStage,byte,1,
+gta2-mouse,gta2.segments.fixed.exe.h,Menu,0x403,1,,playerProfile,byte,SAME,,playerProfile,byte,1,
+gta2-mouse,gta2.segments.fixed.exe.h,Menu,0x43c,2,,fraglimit,short,SAME,,fraglimit,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,PaletteBase,0x0,2,,tile,ushort,SAME,,tile,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,PaletteBase,0x2,2,,sprite,ushort,SAME,,sprite,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,PaletteBase,0x4,2,,car_remap,ushort,SAME,,car_remap,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,PaletteBase,0x6,2,,ped_remap,ushort,SAME,,ped_remap,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,PaletteBase,0x8,2,,code_obj_remap,ushort,SAME,,code_obj_remap,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,PaletteBase,0xa,2,,map_obj_remap,ushort,SAME,,map_obj_remap,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,PaletteBase,0xc,2,,user_remap,ushort,SAME,,user_remap,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,PaletteBase,0xe,2,,font_remap,ushort,SAME,,font_remap,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,PaletteIndex,0x0,32768,,PaletteIndexArr,Uint16[16384],SAME,,PaletteIndexArr,Uint16[16384],32768,
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x2c,4,,elvisSomething,struct Ped *,SAME,,elvisSomething,Ped *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x34,1,,lenOfForPedsArray,byte,NEW,,,,,inside ours gap
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x140,4,,refCar,struct Car *,NEW,,field313_0x140,int,4,ours placeholder field313_0x140
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x15c,4,,playerWeapons,struct WEAPON_PLAYER_LIST *,SAME,,playerWeapons,WEAPON_PLAYER_LIST *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x160,4,,nextPed,struct Ped *,SAME,,nextPed,Ped *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x164,4,,ElvisOrTarget,struct Ped *,SAME,,ElvisOrTarget,Ped *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x168,4,,pedSprite,struct Sprite *,SAME,,pedSprite,Sprite *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x16c,4,,currentCar,struct Car *,SAME,,currentCar,Car *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x170,4,,selectedWeapon,struct WEAPON_STRUCT *,SAME,,selectedWeapon,WEAPON_STRUCT *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x174,4,,ptrToWeapon,void *,SAME,,ptrToWeapon,void *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x1a8,4,,elvisLeader,struct Ped *,SAME,,elvisLeader,Ped *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x1ac,4,,x,int,SAME,,x,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x1b0,4,,y,int,SAME,,y,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x1b4,4,,z,int,SAME,,z,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x200,4,,id,int,SAME,,id,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x204,4,,somePedId,int,NEW,,field404_0x204,int,4,ours placeholder field404_0x204
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x208,2,,Invulnerability,ushort,SAME,,Invulnerability,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x20a,4,,CopLevel,enum COP_LEVEL,CONFLICT,semantic,CopLevel,short,2,size ours 2 vs 4
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x218,2,,health,short,NEW,,field416_0x218,short,2,ours placeholder field416_0x218
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x21a,2,,incrTo9999,short,NEW,,field417_0x21a,short,2,ours placeholder field417_0x21a
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x21e,4,,bitStateInvisOnFireEtc,enum PED_BIT_STATE,CONFLICT,semantic,bitStateInvisOnFireEtc,PED_BIT_STATE,4,inside ours bitStateInvisOnFireEtc (+0x21c)
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x236,1,,eq99,byte,NEW,,,,,inside ours gap
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x23a,4,,bitState2,uint,CONFLICT,semantic,bitState2,uint,4,inside ours bitState2 (+0x238)
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x242,4,,occupation,enum OCUPATION,CONFLICT,semantic,occupation,OCUPATION,4,inside ours occupation (+0x240)
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x25a,4,,state3,enum PED_STATE3,NEW,,,,,inside ours gap
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x276,4,,gangCarModel,enum CAR_MODEL,NEW,,,,,inside ours gap
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x27a,4,,state,enum PED_STATE,CONFLICT,semantic,state,PED_STATE,4,inside ours state (+0x278)
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x27e,4,,state2,enum PED_STATE2,CONFLICT,semantic,state2,PED_STATE2,4,inside ours state2 (+0x27c)
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x282,4,,state1_2,enum PED_STATE,CONFLICT,semantic,state1_2,PED_STATE,4,inside ours state1_2 (+0x280)
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x286,4,,state2_2,enum PED_STATE2,CONFLICT,semantic,state2_2,PED_STATE2,4,inside ours state2_2 (+0x284)
+gta2-mouse,gta2.segments.fixed.exe.h,Ped,0x292,4,,relToMultiplayer,int,CONFLICT,semantic,relToMultiplayer,int,4,inside ours relToMultiplayer (+0x290)
+gta2-mouse,gta2.segments.fixed.exe.h,PedManager,0x0,4,,firstPedInArray,struct Ped *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,PedManager,0x4,4,,lastPedInArray,struct Ped *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,PedManager,0x8,132400,,peds,struct Ped[200],NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,PedManager,0x20538,2,,MaybePedsInUse,short,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Police,0x4,1120,,arr20,struct SPoliceSub[20],NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Police,0x464,496,,arr124_4,byte[124][4],NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Police,0x654,4,,copLevel,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Police,0x7ad,1,,numPolicePedsInRangeScreen,byte,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Pos,0x0,2,,rotation,short,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Pos,0x4,4,,MaybePrev,struct Pos *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Pos,0xc,4,,s22_1,struct S22_1 *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Pos,0x10,4,,ptrRelToPos,void *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Pos,0x14,4,,x,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Pos,0x18,4,,y,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Pos,0x1c,4,,z,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Pos,0x20,2,,incFromS20,short,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,PositionsArray_S21,0x0,4,,last,struct Pos *,SAME,,last,Position *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,PositionsArray_S21,0x4,301860,,arr,struct Pos[5031],SAME,,arr,Position[5031],301860,
+gta2-mouse,gta2.segments.fixed.exe.h,S10,0x27b5,1,,displayDebugPedInfo,undefined1,SAME,,displayDebugPedInfo,undefined1,1,
+gta2-mouse,gta2.segments.fixed.exe.h,S10,0x2854,1,,ptrToSomeStructRelToBIG_LABEL,undefined1,NEW,,,,,inside ours gap
+gta2-mouse,gta2.segments.fixed.exe.h,S10,0x2af4,4,,text_speed,int,SAME,,text_speed,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S11,0x32c,4,,len,int,CONFLICT,semantic,len,ushort,2,size ours 2 vs 4
+gta2-mouse,gta2.segments.fixed.exe.h,S11,0x330,4,,ptrRelToMap,void *,SAME,,ptrRelToMap,void *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S11,0x334,4,,probablyArray,void *,SAME,,probablyArray,void *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S11,0x364,2,,lenOrCounter,ushort,SAME,,lenOrCounter,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,S12,0x0,4,,bitMask,uint,SAME,,_bitMask,uint,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S12,0x8,4,,ptrToS12,struct S12 *,SAME,,ptrToS12,S12 *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S14_sub1,0x0,120,,arr30i,int[30],SAME,,arr30i,int[30],120,
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0x4,384,,arr96i,int[96],SAME,,arr96i,int[96],384,
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0x188,240,,arr60i,int[60],SAME,,arr60i,int[60],240,
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0x27c,120,,arr30i,int[30],SAME,,arr30i,int[30],120,
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0x2f4,4,,shouldBeEqTo1,undefined4,SAME,,shouldBeEqTo1,undefined4,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0x35c,256,,pathToScriptFile,char[256],SAME,,pathToScriptFile,char[256],256,
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0x45c,4,,name,char[4],SAME,,name,char[4],4,
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0x46c,12000,,base_pointers,Uint16[6000],SAME,,base_pointers,Uint16[6000],12000,
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0x334c,65536,,script,Uint8[65536],SAME,,script,Uint8[65536],65536,
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0x1334c,4,,ptrToStrings,struct SCR_STRINGS *,SAME,,ptrToStrings,SCR_STRINGS *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0x13350,4,,pScript4k,struct Script4k *,SAME,,pScript4k,Script4k *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0x13354,8000,,a20kArray,byte[4][2000],CONFLICT,naming,_20kArray,byte[4][2000],8000,name (similar)
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0xaa934,92160,,missionScript,MissionCode[30],SAME,,missionScript,MissionCode[30],92160,
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0xc1d72,60,,base_script_max_pointers,ushort[30],SAME,,base_script_max_pointers,ushort[30],60,
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0xc1dae,2,,len2,short,SAME,,len2,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0xc1db0,120,,mission_script_size,uint[30],SAME,,mission_script_size,uint[30],120,
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0xc1e32,60,,arr15i_3,int[15],SAME,,arr15i_3,int[15],60,
+gta2-mouse,gta2.segments.fixed.exe.h,S15_script,0xc1e74,48,,arr12i,int[12],SAME,,arr12i,int[12],48,
+gta2-mouse,gta2.segments.fixed.exe.h,S16,0x8,2272,,arr_s16sub,struct S16_sub1[8],SAME,,arr_s16sub,S16_sub1[8],2272,
+gta2-mouse,gta2.segments.fixed.exe.h,S16_sub1,0x14,256,,arr64i,int[64],SAME,,arr64i,int[64],256,
+gta2-mouse,gta2.segments.fixed.exe.h,S16_sub1,0x114,4,,vec2i,struct Vec2i *,SAME,,vec2i,Vec2i *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S17_mission,0x0,4,,len,int,SAME,,len,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S17_mission,0x4,600,,vec3i50,struct Vec3i[50],SAME,,vec3i50,Vec3i[50],600,
+gta2-mouse,gta2.segments.fixed.exe.h,S18,0x0,4,,len,int,SAME,,len,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S18,0x4,600,,s18_sub_50,struct S18_sub[50],SAME,,s18_sub_50,S18_sub[50],600,
+gta2-mouse,gta2.segments.fixed.exe.h,S18_sub,0x0,4,,b,undefined4,SAME,,b,undefined4,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S18_sub,0x4,2,,c,undefined2,SAME,,c,undefined2,2,
+gta2-mouse,gta2.segments.fixed.exe.h,S18_sub,0x8,4,,a,undefined4,SAME,,a,undefined4,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S19,0x4,4,,time,DWORD,SAME,,time,DWORD,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S19,0x10,4,,time2,DWORD,SAME,,time2,DWORD,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S20,0x4,2,,inc,undefined2,SAME,,inc,undefined2,2,
+gta2-mouse,gta2.segments.fixed.exe.h,S22,0x0,4,,last,struct S22_1 *,NEW,,field0_0x0,int,4,ours placeholder field0_0x0
+gta2-mouse,gta2.segments.fixed.exe.h,S22,0x4,382356,,arr,struct S22_1[5031],NEW,,_gap_0x4,uint8_t[382356],382356,ours placeholder _gap_0x4
+gta2-mouse,gta2.segments.fixed.exe.h,S22_1,0x2c,4,,ref1,struct S22_1 *,NEW,,,,,inside ours gap
+gta2-mouse,gta2.segments.fixed.exe.h,S23,0x3c8,4,,buf0x40000,undefined4,SAME,,buf0x40000,undefined4,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S24,0x0,2,,short0,short,SAME,,short0,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,S24,0x8,4,,position,struct Pos *,SAME,,position,Position *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,S26,0x38,4,,relToCopStars,int,NEW,,,,,beyond ours struct size
+gta2-mouse,gta2.segments.fixed.exe.h,S28,0x1890,2880,,arr12,byte[12][240],SAME,,arr12,byte[12][240],2880,
+gta2-mouse,gta2.segments.fixed.exe.h,S28,0x26a0,1312,,arr8,byte[8][164],SAME,,arr8,byte[8][164],1312,
+gta2-mouse,gta2.segments.fixed.exe.h,S29,0x4,200,,arr10,struct S29_1[10],SAME,,arr10,S29_1[10],200,
+gta2-mouse,gta2.segments.fixed.exe.h,S30,0x8,792,,arr,byte[99][8],SAME,,arr,byte[99][8],792,
+gta2-mouse,gta2.segments.fixed.exe.h,S31,0x0,4,,last,struct S32 *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S31,0x8,168300,,arrS32,struct S32[3825],NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S32,0x4,4,,s22_1_ex,struct S22_1 *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S32,0xc,4,,s22_1,struct S22_1 *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S32,0x10,4,,pos,struct Pos *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S33,0x0,4,,last,struct S34 *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S33,0x4,8808,,arr,struct S34[1101],NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S34,0x0,4,,ref1,struct S34 *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S35,0x0,4,,last,struct S36 *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S35,0x4,23100,,arr,struct S36[385],NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S36,0x4,4,,pos,struct Pos *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S36,0x8,4,,ref1,struct S36 *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S36,0xc,4,,ref2,struct S36 *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S36,0x18,4,,ref3,struct S36 *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S37,0x0,2,,index,ushort,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S37,0x4,34800,,arr,struct S38[300],NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S37,0x8ca4,2,,someShort,short,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,S4,0x0,4096,,iArr1024,int[1024],SAME,,iArr1024,int[1024],4096,
+gta2-mouse,gta2.segments.fixed.exe.h,S4,0x1004,192,,iArr48,int[48],SAME,,iArr48,int[48],192,
+gta2-mouse,gta2.segments.fixed.exe.h,S7,0x718,15,,weapons,byte[15],SAME,,weapons,byte[15],15,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CAR_DATA_DEC,0x0,10,,head,struct SCR_CMD_HEADER,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CAR_DATA_DEC,0xa,2,,varname,short,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CAR_DATA_DEC,0xe,12,,pos,struct SCR_XYZ_f,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CAR_DATA_DEC,0x1a,2,,rot,short,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CAR_DATA_DEC,0x1c,2,,remap,short,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CAR_DATA_DEC,0x1e,2,,carId,ushort,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CAR_DATA_DEC,0x20,2,,trailerId,ushort,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_HEADER,0x0,2,,cmd_this,Uint16,SAME,,cmd_this,Uint16,2,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_HEADER,0x2,4,,type,enum SCR_CMD_TYPE,CONFLICT,semantic,type,SCR_CMD_TYPE,2,size ours 2 vs 4
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_HEADER,0x6,2,,cmd_next,Uint16,CONFLICT,semantic,return_value,Uint16,2,name
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_HEADER,0x8,2,,return_value,Uint16,NEW,,,,,beyond ours struct size
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_SIX_PARAMS,0x0,10,,header,struct SCR_CMD_HEADER,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_SIX_PARAMS,0xa,4,,params12,union U_SCR_TWO_PARAMS,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_SIX_PARAMS,0xe,4,,params34,union U_SCR_TWO_PARAMS,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_CMD_SIX_PARAMS,0x12,4,,params56,union U_SCR_TWO_PARAMS,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_PLAYER_PED,0x0,10,,header,struct SCR_CMD_HEADER,CONFLICT,semantic,header,struct SCR_CMD_HEADER,8,size ours 8 vs 10
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_PLAYER_PED,0xa,4,,ped,struct Ped *,CONFLICT,semantic,field2_0xa,Uint16,2,overlaps ours pos
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_PLAYER_PED,0xe,12,,pos,struct SCR_XYZ_f,CONFLICT,semantic,pos,struct SCR_XYZ_f,12,inside ours pos (+0xc)
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_PLAYER_PED,0x1a,2,,rot,Uint16,CONFLICT,semantic,remap,Sint16,2,name
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_PLAYER_PED,0x1c,2,,remap,Sint16,NEW,,,,,beyond ours struct size
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_STRINGS,0x0,2,,len,ushort,SAME,,len,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_STRINGS,0x2,5118,,buf,byte[5118],SAME,,buf,byte[5118],5118,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_STRING_HEADER,0x0,2,,str_id,Uint16,SAME,,str_id,Uint16,2,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_STRING_HEADER,0x2,2,,stringIndex,Uint16,SAME,,stringIndex,Uint16,2,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_STRING_HEADER,0x4,4,,datatype,enum SCR_STRING_DATA_TYPE,CONFLICT,semantic,datatype,SCR_STRING_DATA_TYPE,1,size ours 1 vs 4
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_STRING_HEADER,0xb,1,,len,Uint8,NEW,,,,,beyond ours struct size
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_STRING_HEADER,0xc,1,,textStart,char,NEW,,,,,beyond ours struct size
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_TWO_SHORTS,0x0,2,,s1,short,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_TWO_SHORTS,0x2,2,,s2,short,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_XYZ_f,0x0,4,,x,SCR_f,SAME,,x,SCR_f,4,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_XYZ_f,0x4,4,,y,SCR_f,SAME,,y,SCR_f,4,
+gta2-mouse,gta2.segments.fixed.exe.h,SCR_XYZ_f,0x8,4,,z,SCR_f,SAME,,z,SCR_f,4,
+gta2-mouse,gta2.segments.fixed.exe.h,SNightArray,0x4,4,,ptr1,struct SNightArray *,SAME,,ptr1,SNightArray *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,SNightArray,0x8,4,,ptr2,struct SNightArray *,SAME,,ptr2,SNightArray *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,SRelToBonus2,0x2c,1,,mask,byte,SAME,,mask,byte,1,
+gta2-mouse,gta2.segments.fixed.exe.h,SRelToCars,0x8,57528,,arr306,byte[188][306],SAME,,arr306,byte[188][306],57528,
+gta2-mouse,gta2.segments.fixed.exe.h,SRelToCars3,0xc,64,,arr4,struct SRelToCars2[4],SAME,,arr4,SRelToCars2[4],64,
+gta2-mouse,gta2.segments.fixed.exe.h,SRelateToNight,0x8,120000,,nightArr3000,struct SNightArray[3000],SAME,,nightArr3000,SNightArray[3000],120000,
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x4,4,,keyboardKeys,enum KEYBOARD_STATE,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x10,4,,playerPed3,struct Ped *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x2e,1,,saveSlotIndex,byte,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x44,4,,deathReason,enum DEATH_REASON,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x54,12,,lastCars,struct Car *[3],NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x68,4,,someState,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x76,1,,debugKey1,byte,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x77,1,,debugKey2,byte,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x90,256,,xyz,struct XYZ,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x190,4,,playerPed,struct Ped *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x1f4,4,,encodedCameraX,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x1f8,4,,encodedCameraY,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x1fc,4,,encodedCameraZ,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x218,256,,xyz2,struct XYZ,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x36c,4,,auxGameCameraX,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x370,4,,auxGameCameraY,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x374,4,,auxGameCameraZ,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x390,4,,playerPed2,struct Ped *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x394,4,,pedRelTo_fieldx68,struct Ped *,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x3a0,840,,animatedValues_firstMoney,struct SaveSlotAnimatedValue[15],NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x74c,2,,incToBe100,ushort,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x74e,2,,eq_1000,short,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x750,56,,lives,struct SaveSlotAnimatedValue,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x788,56,,moneyMultiplier,struct SaveSlotAnimatedValue,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x7cc,2,,bonus1,short,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x7ce,2,,bonus2,short,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x7d0,2,,bonus3,short,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x7d2,2,,bonus4,short,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x7d6,2,,bonus5,short,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Save,0x7e4,112,,iArr28,int[28],NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,SaveSlotAnimatedValue,0x0,4,,value,int,SAME,,value,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,SaveSlotAnimatedValue,0x10,1,,accuracyCount,byte,SAME,,accuracyCount,byte,1,
+gta2-mouse,gta2.segments.fixed.exe.h,SaveSlotAnimatedValue,0x14,4,,reverseCount,int,SAME,,reverseCount,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,SaveSlotAnimatedValue,0x20,4,,ptrToSaveSlot,struct Save *,SAME,,ptrToSaveSlot,SaveSlot *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,SaveSlotAnimatedValue,0x2a,2,,maxDigitsInValue,short,SAME,,maxDigitsInValue,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,SaveSlotAnimatedValue,0x2c,2,,min,short,SAME,,min,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,SaveSlotAnimatedValue,0x2e,2,,digitOffsetForAnimationOfChange,short,SAME,,digitOffsetForAnimationOfChange,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,SaveSlotAnimatedValue,0x30,4,,max,int,SAME,,max,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,SaveSlotAnimatedValue,0x36,2,,id,short,SAME,,id,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,Script4k,0x0,2,,numOfStrings,ushort,SAME,,numOfStrings,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,Script4k,0x4,3996,,strings,struct SCR_STRING_HEADER *[999],SAME,,strings,SCR_STRING_HEADER *[999],3996,
+gta2-mouse,gta2.segments.fixed.exe.h,Sprite,0x0,4,,id,uint,SAME,,id,uint,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Sprite,0x8,4,,state1,uint,NEW,,,,,inside ours gap
+gta2-mouse,gta2.segments.fixed.exe.h,Sprite,0x10,4,,relToId,uint,NEW,,,,,inside ours gap
+gta2-mouse,gta2.segments.fixed.exe.h,Sprite,0x24,2,,maybe_id,ushort,CONFLICT,naming,_id,ushort,2,name (similar)
+gta2-mouse,gta2.segments.fixed.exe.h,Sprite,0x40,2,,spriteRotation,short,NEW,,field60_0x40,short,2,ours placeholder field60_0x40
+gta2-mouse,gta2.segments.fixed.exe.h,Sprite,0x58,4,,bit1,uint,NEW,,,,,inside ours gap
+gta2-mouse,gta2.segments.fixed.exe.h,Sprite,0x78,4,,MaybeNext,struct Sprite *,CONFLICT,naming,next_,Sprite *,4,name (similar)
+gta2-mouse,gta2.segments.fixed.exe.h,Sprite,0x7c,4,,ped,struct Ped *,NEW,,_gap_0x7c,uint8_t[4],4,ours placeholder _gap_0x7c
+gta2-mouse,gta2.segments.fixed.exe.h,Sprite,0x80,4,,actualPosition,struct Pos *,SAME,,actualPosition,Position *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,SpriteBase,0x0,2,,car,ushort,SAME,,car,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,SpriteBase,0x2,2,,ped,ushort,SAME,,ped,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,SpriteBase,0x4,2,,code_obj,ushort,SAME,,code_obj,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,SpriteBase,0x6,2,,map_obj,ushort,SAME,,map_obj,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,SpriteBase,0x8,2,,user,ushort,SAME,,user,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,SpriteBase,0xa,2,,font,ushort,SAME,,font,ushort,2,
+gta2-mouse,gta2.segments.fixed.exe.h,SpriteEntry,0x0,4,,ptr,void *,SAME,,ptr,void *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,StyleFileHeader,0x0,4,,file_type,char[4],SAME,,file_type,char[4],4,
+gta2-mouse,gta2.segments.fixed.exe.h,StyleFileHeader,0x4,2,,version_code,Uint16,SAME,,version_code,Uint16,2,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x0,2,,countOfpalettes,short,SAME,,_countOfpalettes,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x2,2,,relToFontBase,short,SAME,,relToFontBase,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x4,2,,spriteIndexRel,short,SAME,,spriteIndexRel,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x6,2,,relToMapObjectInfo,short,SAME,,relToMapObjectInfo,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x8,2,,size_physical_palette,short,SAME,,size_physical_palette,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0xc,4,,paletteBase2,struct PaletteBase *,SAME,,paletteBase2,PaletteBase *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x10,4,,paletteBase,struct PaletteBase *,SAME,,paletteBase,PaletteBase *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x14,4,,spriteBase2,struct SpriteBase *,SAME,,spriteBase2,SpriteBase *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x18,4,,spriteBase,struct SpriteBase *,SAME,,spriteBase,SpriteBase *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x1c,4,,fontBase,void *,SAME,,fontBase,void *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x20,4,,spriteIndex,void *,SAME,,spriteIndex,void *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x24,4,,map_object_info,void *,SAME,,map_object_info,void *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x28,4,,palleteIndex,struct PaletteIndex *,SAME,,palleteIndex,PaletteIndex *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x2c,4,,physical_palettes,void *,SAME,,physical_palettes,void *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x30,4,,i9,int,SAME,,i9,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x34,4,,sprite_graphics,void *,SAME,,sprite_graphics,void *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x38,4,,i13,undefined4,SAME,,i13,undefined4,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x3c,4,,i10,int,SAME,,i10,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x40,4,,i21,undefined4,SAME,,i21,undefined4,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x44,4,,i11,undefined4,SAME,,i11,undefined4,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x48,4,,i14,undefined4,SAME,,i14,undefined4,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x4c,4,,i18,undefined4,SAME,,i18,undefined4,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x50,4,,i15,undefined4,SAME,,i15,undefined4,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x54,4,,i20,undefined4,SAME,,i20,undefined4,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x58,4,,car_info_chunk,void *,SAME,,car_info_chunk,void *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x5c,4,,allCarsInfo,struct AllCarsInfo *,SAME,,allCarsInfo,AllCarsInfo *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x60,4,,i19,undefined4,SAME,,i19,undefined4,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x64,4,,i1,int,SAME,,i1,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x68,2,,short1,short,SAME,,short1,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x6a,1,,b1,byte,SAME,,b1,byte,1,
+gta2-mouse,gta2.segments.fixed.exe.h,Style_S3,0x6c,4096,,iArr1024,int[1024],SAME,,iArr1024,int[1024],4096,
+gta2-mouse,gta2.segments.fixed.exe.h,SubScript,0x2,2,,index,short,SAME,,index,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,SubScript,0x4,1,,eq21,byte,SAME,,eq21,byte,1,
+gta2-mouse,gta2.segments.fixed.exe.h,SubScript,0x8,1,,missionNameLength,byte,SAME,,missionNameLength,byte,1,
+gta2-mouse,gta2.segments.fixed.exe.h,SubScript,0x9,13,,missionName,char[13],SAME,,missionName,char[13],13,
+gta2-mouse,gta2.segments.fixed.exe.h,TrafficLigthStruct,0x192,1,,cycle,byte,SAME,,cycle,byte,1,
+gta2-mouse,gta2.segments.fixed.exe.h,U_SCR_TWO_PARAMS,0x0,4,,shorts,struct SCR_TWO_SHORTS,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,U_SCR_TWO_PARAMS,0x0,4,,i32val,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,Vec2i,0x0,4,,x,int,SAME,,x,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Vec2i,0x4,4,,y,int,SAME,,y,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Vec3i,0x0,4,,x,int,SAME,,x,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Vec3i,0x4,4,,y,int,SAME,,y,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,Vec3i,0x8,4,,z,int,SAME,,z,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_PLAYER_LIST,0x50,4,,bitMask,uint,SAME,,bitMask,uint,4,
+gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_PLAYER_LIST,0x718,88,,weapons,struct WEAPON_STRUCT *[22],SAME,,weapons,WEAPON_PLAYER_LIST *[22],88,
+gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_PLAYER_LIST,0x788,2,,count,short,SAME,,count,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_STRUCT,0x0,2,,ammo,short,SAME,,ammo,short,2,
+gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_STRUCT,0x2,1,,timeToReload,byte,SAME,,timeToReload,byte,1,
+gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_STRUCT,0x14,4,,carId,int,SAME,,carId,int,4,
+gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_STRUCT,0x18,4,,nextWeapon,struct WEAPON_STRUCT *,SAME,,nextWeapon,WEAPON_STRUCT *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_STRUCT,0x1c,4,,id,enum WEAPON_INDEX,SAME,,id,WEAPON_INDEX,4,
+gta2-mouse,gta2.segments.fixed.exe.h,WEAPON_STRUCT,0x24,4,,ped,struct Ped *,SAME,,ped,Ped *,4,
+gta2-mouse,gta2.segments.fixed.exe.h,WeaponRelStruct,0x4,1056,,weapons,struct WEAPON_STRUCT[22],SAME,,weapons,WEAPON_STRUCT[22],1056,
+gta2-mouse,gta2.segments.fixed.exe.h,XYZ,0x0,4,,x,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,XYZ,0x4,4,,y,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,XYZ,0x8,4,,z,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,XYZ,0x10,4,,x2,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,XYZ,0x14,4,,y2,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,XYZ,0x18,4,,z2,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,XYZ,0x68,4,,width,uint,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,XYZ,0x6c,4,,height,uint,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,XYZ,0x70,4,,halfWidth,uint,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,XYZ,0x74,4,,halfHeight,uint,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,XYZ,0x98,4,,xx,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,XYZ,0x9c,4,,yy,int,NEW,,,,,struct not in ours
+gta2-mouse,gta2.segments.fixed.exe.h,XYZ,0xa0,4,,zz,int,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,AllCars,0x4,4,,firstCar,Car *,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,AllCars,0x8,57528,,cars,Car[306],NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Car,0x0,2,,xxx,undefined2,NEW,,_gap_0x0,uint8_t[8],8,ours placeholder _gap_0x0
+gta2-resurection.gzf,gzf/gta2_types.h,Car,0x4c,4,,next,Car *,NEW,,field67_0x4c,int,4,ours placeholder field67_0x4c
+gta2-resurection.gzf,gzf/gta2_types.h,Car,0x50,4,,carSprite,CarSprite *,CONFLICT,semantic,position,Position *,4,name
+gta2-resurection.gzf,gzf/gta2_types.h,Car,0x54,4,,driver,Ped *,SAME,,driver,Ped *,4,
+gta2-resurection.gzf,gzf/gta2_types.h,Car,0x6c,4,,id,uint,NEW,,,,,inside ours gap
+gta2-resurection.gzf,gzf/gta2_types.h,Car,0x74,2,,damage,short,CONFLICT,semantic,_gap_0x74,uint8_t[1],1,overlaps ours carDamagePercent
+gta2-resurection.gzf,gzf/gta2_types.h,Car,0x84,4,,type,CAR_TYPE,CONFLICT,semantic,carModel,CAR_MODEL,1,name; size ours 1 vs 4
+gta2-resurection.gzf,gzf/gta2_types.h,CarSprite,0x14,4,,x,int,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,CarSprite,0x18,4,,y,int,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,CarSprite,0x1c,4,,z,int,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,CarSprite,0x24,2,,color,ushort,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,CarsS2,0x4,53856,,arr,CarsS3[306],NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,CarsS3,0xc,4,,next,int,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,CarsS3,0x10,4,,arr,int,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,CarsS4,0x4,36720,,arr,CarsS5[306],NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Frontend,0x122,51306,,arr1,FrontendS1[17],NEW,,,,,inside ours gap
+gta2-resurection.gzf,gzf/gta2_types.h,Frontend,0xc98c,36,,name,WCHAR[9],CONFLICT,semantic,playerName,WCHAR[8],32,name (similar); size ours 32 vs 36
+gta2-resurection.gzf,gzf/gta2_types.h,FrontendS1,0x4,1300,,arr,FrontendS1S1[10],NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,FrontendS1,0x518,1650,,arr2,FrontendS1S2[15],NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,FrontendS1,0xb8a,50,,arr3,FrontendS1S3[10],NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,FrontendS1S1,0x2,2,,x,undefined2,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,FrontendS1S1,0x4,2,,y,undefined2,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,FrontendS1S1,0x6,4,,label,WCHAR *,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Game,0x0,4,,gameStatus,uint,SAME,,gameStatus,GAME_STATUS,4,
+gta2-resurection.gzf,gzf/gta2_types.h,Game,0x4,24,,players,Player_S4 *[6],CONFLICT,semantic,saveSlotArr,SaveSlot *[6],24,name
+gta2-resurection.gzf,gzf/gta2_types.h,Game,0x1c,4,,s3,S3 *,NEW,,field2_0x1c,void *,4,ours placeholder field2_0x1c
+gta2-resurection.gzf,gzf/gta2_types.h,Game,0x34,4,,relToSkipPoliceEnum,undefined4,NEW,,field17_0x34,int,4,ours placeholder field17_0x34
+gta2-resurection.gzf,gzf/gta2_types.h,Game,0x38,4,,player,Player_S4 *,CONFLICT,semantic,CurrentSaveSlot,SaveSlot *,4,name
+gta2-resurection.gzf,gzf/gta2_types.h,IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct,0x0,4,,OffsetToDirectory,dword,SAME,,OffsetToDirectory,dword,4,
+gta2-resurection.gzf,gzf/gta2_types.h,IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct,0x4,4,,DataIsDirectory,dword,SAME,,DataIsDirectory,dword,4,
+gta2-resurection.gzf,gzf/gta2_types.h,IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion,0x0,4,,OffsetToData,dword,SAME,,OffsetToData,dword,4,
+gta2-resurection.gzf,gzf/gta2_types.h,IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion,0x0,8,,IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct,struct IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct,CONFLICT,semantic,OffsetToData,dword,4,name; size ours 4 vs 8
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x0,300,,arr,S3Bytes[100],CONFLICT,semantic,field0_0x0,byte,1,overlaps ours elvisSomething
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x150,4,,targetCar1,Car *,NEW,,field317_0x150,int,4,ours placeholder field317_0x150
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x154,4,,targetCar2,Car *,NEW,,field318_0x154,Car *,4,ours placeholder field318_0x154
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x15c,4,,player,Player_S4 *,CONFLICT,naming,playerWeapons,WEAPON_PLAYER_LIST *,4,name (similar)
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x160,4,,nextPed,Ped *,SAME,,nextPed,Ped *,4,
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x168,4,,pedS1,PedS1 *,CONFLICT,semantic,pedSprite,Sprite *,4,name
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x16c,4,,car,Car *,CONFLICT,naming,currentCar,Car *,4,name (similar)
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x1ac,4,,cameraX,int,CONFLICT,naming,x,int,4,name (similar)
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x1b0,4,,cameraY,int,CONFLICT,naming,y,int,4,name (similar)
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x1b4,4,,cameraZ,int,CONFLICT,naming,z,int,4,name (similar)
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x1b8,4,,targetX,int,NEW,,field358_0x1b8,Ped *,4,ours placeholder field358_0x1b8
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x1bc,4,,targetY,int,NEW,,field359_0x1bc,Ped *,4,ours placeholder field359_0x1bc
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x1c0,4,,targetZ,int,NEW,,field360_0x1c0,Ped *,4,ours placeholder field360_0x1c0
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x200,4,,id,uint,SAME,,id,int,4,
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x20a,2,,copLevel,short,SAME,,CopLevel,short,2,
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x216,2,,health,word,SAME,,health,short,2,
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x21c,4,,mask2,uint,CONFLICT,semantic,bitStateInvisOnFireEtc,PED_BIT_STATE,4,name
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x238,4,,mask1,uint,CONFLICT,semantic,bitState2,uint,4,name
+gta2-resurection.gzf,gzf/gta2_types.h,Ped,0x25c,4,,carState,PED_STATE_CAR,NEW,,field461_0x25c,int,4,ours placeholder field461_0x25c
+gta2-resurection.gzf,gzf/gta2_types.h,PedS1,0x40,2,,rotation,short,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PedS1,0x80,4,,sprite,PedSprite *,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PedS1,0x84,4,,car,Car *,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PedSprite,0x0,2,,readonlyRotation,undefined2,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PedSprite,0x14,4,,x,u4,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PedSprite,0x18,4,,y,u4,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PedSprite,0x1c,4,,z,u4,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PedsManager,0x0,4,,firstPed,Ped *,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PedsManager,0x4,4,,_lastPed,undefined4,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PedsManager,0x8,132000,,peds,Ped[200],NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PedsManager,0x203a8,2,,_length,undefined2,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PlayerS1,0x0,4,,x,int,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PlayerS1,0x4,4,,y,int,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PlayerS1,0x8,4,,z,int,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PlayerS1,0x14,12,,vec,struct PlayerS2,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PlayerS2,0x0,4,,x,int,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PlayerS2,0x4,4,,y,int,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PlayerS2,0x8,4,,z,int,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,PlayerWeapon,0x0,2,,ammo,short,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x0,1,,somethingRelToAudio,bool_,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x4,4,,keyState,uint,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x78,1,,forward,bool_,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x79,1,,backward,bool_,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x7a,1,,rotateLeft,bool_,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x7b,1,,rotateRight,bool_,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x7c,1,,attack,bool_,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x7d,1,,enter,bool_,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x7e,1,,jump,bool_,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x7f,1,,nextWeaponZ,bool_,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x80,1,,prevWeaponX,bool_,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x81,1,,tab,bool_,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x8d,1,,attackIsChanged,bool_,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x90,36,,ps1,struct PlayerS1,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x2c4,4,,ped,Ped *,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x2d4,4,,money,int,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x684,4,,lives,int,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x6bc,4,,moneyMultiplier,int,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x718,44,,weapons,PlayerWeapon *[11],NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Player_S4,0x788,2,,selectedWeapon,short,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Police_s5,0x464,4,,targetPed,Ped *,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,S1,0x34,4,,playerPed,Ped *,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,S1,0x178,4,,playerPed2,Ped *,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,S3,0x14c,4,,s1,S1 *,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,S3Bytes,0x0,1,,a,u1,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,S3Bytes,0x1,1,,b,u1,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,S3Bytes,0x2,1,,c,u1,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,S7,0x6c,4096,,arr1024,undefined4[1024],CONFLICT,semantic,_gap_0x6c,uint8_t[600],600,overlaps ours weapons
+gta2-resurection.gzf,gzf/gta2_types.h,S9_cars,0x69,1,,do_free_shopping,bool_,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,SKeyboard,0x0,1024,,keyMapping,WCHAR[256],NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Timing,0x8,4,,fps1,undefined4,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,Timing,0x14,4,,fps2,undefined4,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,TrafficLights,0x192,1,,phase,byte,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,TrafficLights,0x193,1,,timer,byte,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,TrafficManager,0x4,4,,first,TrafficManagerS1 *,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,TrafficManager,0x8,1,,arr255,undefined1,NEW,,,,,struct not in ours
+gta2-resurection.gzf,gzf/gta2_types.h,TypeDescriptor,0x0,4,,pVFTable,void *,SAME,,pVFTable,void *,4,
+gta2-resurection.gzf,gzf/gta2_types.h,TypeDescriptor,0x4,4,,spare,void *,SAME,,spare,void *,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_FuncInfo,0x0,4,,magicNumber_and_bbtFlags,uint,SAME,,magicNumber_and_bbtFlags,uint,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_FuncInfo,0x4,4,,maxState,__ehstate_t,SAME,,maxState,__ehstate_t,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_FuncInfo,0x8,4,,pUnwindMap,UnwindMapEntry *,SAME,,pUnwindMap,UnwindMapEntry *,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_FuncInfo,0xc,4,,nTryBlocks,uint,SAME,,nTryBlocks,uint,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_FuncInfo,0x10,4,,pTryBlockMap,TryBlockMapEntry *,SAME,,pTryBlockMap,TryBlockMapEntry *,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_FuncInfo,0x14,4,,nIPMapEntries,uint,SAME,,nIPMapEntries,uint,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_FuncInfo,0x18,4,,pIPToStateMap,void *,SAME,,pIPToStateMap,void *,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_HandlerType,0x0,4,,adjectives,uint,SAME,,adjectives,uint,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_HandlerType,0x4,4,,pType,TypeDescriptor *,SAME,,pType,TypeDescriptor *,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_HandlerType,0x8,4,,dispCatchObj,ptrdiff_t,SAME,,dispCatchObj,ptrdiff_t,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_HandlerType,0xc,4,,addressOfHandler,void *,SAME,,addressOfHandler,void *,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_TryBlockMapEntry,0x0,4,,tryLow,__ehstate_t,SAME,,tryLow,__ehstate_t,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_TryBlockMapEntry,0x4,4,,tryHigh,__ehstate_t,SAME,,tryHigh,__ehstate_t,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_TryBlockMapEntry,0x8,4,,catchHigh,__ehstate_t,SAME,,catchHigh,__ehstate_t,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_TryBlockMapEntry,0xc,4,,nCatches,int,SAME,,nCatches,int,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_TryBlockMapEntry,0x10,4,,pHandlerArray,HandlerType *,SAME,,pHandlerArray,HandlerType *,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_UnwindMapEntry,0x0,4,,toState,__ehstate_t,SAME,,toState,__ehstate_t,4,
+gta2-resurection.gzf,gzf/gta2_types.h,_s_UnwindMapEntry,0x4,4,,action,action (*),SAME,,action,action (*),4,

@@ -1,0 +1,781 @@
+source_ref,address,kind,function,comment,ours_has_comment_here
+gzf/comments.csv:2,0x004591e0,pre,cheats,"Ваш персонаж приобретёт высшую степень уважения во всех бандах.
+",no
+gzf/comments.csv:3,0x00459345,pre,cheats,give 200000 money,no
+gzf/comments.csv:4,0x004593e3,pre,cheats,give 10 millions,no
+gzf/comments.csv:5,0x0047a914,pre,FUN_0047a860,save goes here,no
+gzf/comments.csv:6,0x004cb530,plate,HideMouseCursor,Modified it to always show cursor,no
+gzf/comments.csv:7,0x004cb530,pre,HideMouseCursor,Mofidied it to always show cursor,no
+gzf/comments.csv:8,0x004d1269,pre,injectBack,IDC_ARROW,no
+gzf/comments.csv:9,0x004d130b,pre,injectBack,"HWND CreateWindowExA(
+  DWORD     dwExStyle,
+  LPCSTR    lpClassName,
+  LPCSTR    lpWindowName,
+  DWORD     dwStyle,
+  int       X,
+  int       Y,
+  int       nWidth,
+  int       nHeight,
+  HWND      hWndParent,
+  HMENU     hMenu,
+  HINSTANCE hInstance,
+  LPVOID    lpParam
+);",no
+gzf/comments.csv:10,0x004d13e5,pre,injectBack,SWP_NOCOPYBITS | SWP_NOOWNERZORDER | SWP_NOACTIVATE | SWP_NOZORDER,no
+gzf/comments.csv:11,0x004d5ce1,plate,__heap_alloc,"Library Function - Single Match
+ __heap_alloc
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:12,0x004d5d27,plate,__nh_malloc,"Library Function - Single Match
+ __nh_malloc
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:13,0x004d5d53,plate,_malloc,"Library Function - Single Match
+ _malloc
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:14,0x004d5dca,plate,operator_new,"Library Function - Single Match
+ void * __cdecl operator new(unsigned int)
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:15,0x004d5dd8,plate,_JumpToContinuation,"Library Function - Single Match
+ void __stdcall _JumpToContinuation(void *,struct EHRegistrationNode *)
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:16,0x004d5e08,plate,_CallMemberFunction0,"Library Function - Single Match
+ void __stdcall _CallMemberFunction0(void *,void *)
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:17,0x004d5e0f,plate,FID_conflict:_CallMemberFunction1,"Library Function - Multiple Matches With Different Base Names
+ void __stdcall _CallMemberFunction1(void *,void *,void *)
+ void __stdcall _CallMemberFunction2(void *,void *,void *,int)
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:18,0x004d5e16,plate,FID_conflict:_CallMemberFunction1,"Library Function - Multiple Matches With Different Base Names
+ void __stdcall _CallMemberFunction1(void *,void *,void *)
+ void __stdcall _CallMemberFunction2(void *,void *,void *,int)
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:19,0x004d5e1d,plate,_UnwindNestedFrames,"Library Function - Single Match
+ void __stdcall _UnwindNestedFrames(struct EHRegistrationNode *,struct EHExceptionRecord *)
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:20,0x004d5e6f,plate,___CxxFrameHandler,"Library Function - Single Match
+ ___CxxFrameHandler
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:21,0x004d5f54,plate,_GetRangeOfTrysToCheck,"Library Function - Single Match
+ struct _s_TryBlockMapEntry const * __cdecl _GetRangeOfTrysToCheck(struct _s_FuncInfo const *,int,int,unsigned int *,unsigned int *)
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:22,0x004d5fce,plate,_CreateFrameInfo,"Library Function - Single Match
+ struct FrameInfo * __cdecl _CreateFrameInfo(struct FrameInfo *,void *)
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:23,0x004d6002,plate,_FindAndUnlinkFrame,"Library Function - Single Match
+ void __cdecl _FindAndUnlinkFrame(struct FrameInfo *)
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:24,0x004d613c,plate,__global_unwind2,"Library Function - Single Match
+ __global_unwind2
+
+Library: Visual Studio",yes
+gzf/comments.csv:25,0x004d617e,plate,__local_unwind2,"Library Function - Single Match
+ __local_unwind2
+
+Libraries: Visual Studio 1998 Debug, Visual Studio 1998 Release, Visual Studio 2003 Debug, Visual Studio 2003 Release",yes
+gzf/comments.csv:26,0x004d61e6,plate,__abnormal_termination,"Library Function - Single Match
+ __abnormal_termination
+
+Library: Visual Studio",yes
+gzf/comments.csv:27,0x004d6209,plate,__NLG_Notify1,"Library Function - Single Match
+ __NLG_Notify1
+
+Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release",yes
+gzf/comments.csv:28,0x004d6212,plate,__NLG_Notify,"Library Function - Single Match
+ __NLG_Notify
+
+Libraries: Visual Studio 1998 Debug, Visual Studio 1998 Release, Visual Studio 2003 Debug, Visual Studio 2003 Release",yes
+gzf/comments.csv:29,0x004d6230,plate,__allshr,"Library Function - Single Match
+ __allshr
+
+Library: Visual Studio",yes
+gzf/comments.csv:30,0x004d6260,plate,__alldiv,"Library Function - Single Match
+ __alldiv
+
+Library: Visual Studio",yes
+gzf/comments.csv:31,0x004d630a,plate,_free,"Library Function - Single Match
+ _free
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:32,0x004d6342,plate,__onexit,"Library Function - Single Match
+ __onexit
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:33,0x004d63c4,plate,_atexit,"Library Function - Single Match
+ _atexit
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:34,0x004d63fe,plate,FID_conflict:__fread_lk,"Library Function - Multiple Matches With Different Base Names
+ __fread_lk
+ _fread
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:35,0x004d64e7,plate,FID_conflict:__fwrite_lk,"Library Function - Multiple Matches With Different Base Names
+ __fwrite_lk
+ _fwrite
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:36,0x004d65ee,plate,_fseek,"Library Function - Single Match
+ _fseek
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:37,0x004d667c,plate,_ftell,"Library Function - Single Match
+ _ftell
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:38,0x004d685e,plate,_fclose,"Library Function - Single Match
+ _fclose
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:39,0x004d68b4,plate,__fsopen,"Library Function - Single Match
+ __fsopen
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:40,0x004d68f1,plate,FID_conflict:_getc,"Library Function - Multiple Matches With Different Base Names
+ _fgetc
+ _getc
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:41,0x004d6925,plate,`eh_vector_constructor_iterator',"Library Function - Single Match
+ void __stdcall `eh vector constructor iterator'(void *,unsigned int,int,void (__thiscall*)(void *),void (__thiscall*)(void *))
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:42,0x004d6999,plate,__ArrayUnwind,"Library Function - Single Match
+ void __stdcall __ArrayUnwind(void *,unsigned int,int,void (__thiscall*)(void *))
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:43,0x004d69f7,plate,`eh_vector_destructor_iterator',"Library Function - Single Match
+ void __stdcall `eh vector destructor iterator'(void *,unsigned int,int,void (__thiscall*)(void *))
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:44,0x004d6a60,plate,__chkstk,"Library Function - Single Match
+ __chkstk
+
+Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release",yes
+gzf/comments.csv:45,0x004d6ae3,plate,__stricmp,"Library Function - Single Match
+ __stricmp
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:46,0x004d6bc2,plate,_atol,"Library Function - Single Match
+ _atol
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:47,0x004d6c98,plate,_sscanf,"Library Function - Single Match
+ _sscanf
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:48,0x004d6cec,plate,_wcsncpy,"Library Function - Single Match
+ _wcsncpy
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:49,0x004d6d29,plate,_wcscmp,"Library Function - Single Match
+ _wcscmp
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:50,0x004d6dfc,plate,__ftol2,"Library Function - Single Match
+ __ftol2
+
+Library: Visual Studio",yes
+gzf/comments.csv:51,0x004d6e80,plate,_strrchr,"Library Function - Single Match
+ _strrchr
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:52,0x004d6eb0,plate,_memmove,"Library Function - Single Match
+ _memmove
+
+Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release",yes
+gzf/comments.csv:53,0x004d73b8,plate,__exit,"Library Function - Single Match
+ __exit
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:54,0x004d7425,plate,__itoa,"Library Function - Single Match
+ __itoa
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:55,0x004d744f,plate,__ltoa,"Library Function - Single Match
+ __ltoa
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:56,0x004d7568,plate,___timet_from_ft,"Library Function - Single Match
+ ___timet_from_ft
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:57,0x004d78e0,plate,_strncpy,"Library Function - Single Match
+ _strncpy
+
+Library: Visual Studio 2003 Release",no
+gzf/comments.csv:58,0x004d7a04,plate,__strnicmp,"Library Function - Single Match
+ __strnicmp
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:59,0x004d7a59,plate,FID_conflict:__wctime,"Library Function - Multiple Matches With Different Base Names
+ __wctime
+ _ctime
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:60,0x004d7a72,plate,FID_conflict:__time32,"Library Function - Multiple Matches With Different Base Names
+ __time32
+ _time
+
+Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release",yes
+gzf/comments.csv:61,0x004d7ab0,plate,_strncmp,"Library Function - Single Match
+ _strncmp
+
+Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release",yes
+gzf/comments.csv:62,0x004d7ae9,plate,__strupr,"Library Function - Single Match
+ __strupr
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:63,0x004d7be4,plate,___dtoxmode,"Library Function - Single Match
+ ___dtoxmode
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:64,0x004d7ca1,plate,_IsRootUNCName,"Library Function - Single Match
+ _IsRootUNCName
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:65,0x004d8110,plate,_strncat,"Library Function - Single Match
+ _strncat
+
+Library: Visual Studio",no
+gzf/comments.csv:66,0x004d8245,plate,_rewind,"Library Function - Single Match
+ _rewind
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:67,0x004d829a,plate,_bsearch,"Library Function - Single Match
+ _bsearch
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:68,0x004d8447,plate,__getcwd,"Library Function - Single Match
+ __getcwd
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:69,0x004d845a,plate,__amsg_exit,"Library Function - Single Match
+ __amsg_exit
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:70,0x004d878f,plate,__flush,"Library Function - Single Match
+ __flush
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:71,0x004d87ec,plate,_fflush,"Library Function - Single Match
+ _fflush
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:72,0x004d8827,plate,_flsall,"Library Function - Single Match
+ _flsall
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:73,0x004d8894,plate,__flushall,"Library Function - Single Match
+ __flushall
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:74,0x004d8960,plate,_strlen,"Library Function - Single Match
+ _strlen
+
+Library: Visual Studio",yes
+gzf/comments.csv:75,0x004d8a9e,plate,__lseek,"Library Function - Single Match
+ __lseek
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:76,0x004d9400,plate,_memcpy,"Library Function - Single Match
+ _memcpy
+
+Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release",yes
+gzf/comments.csv:77,0x004d973d,plate,___heap_select,"Library Function - Single Match
+ ___heap_select
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:78,0x004d9757,plate,__heap_init,"Library Function - Single Match
+ __heap_init
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:79,0x004d983c,plate,___sbh_heap_init,"Library Function - Single Match
+ ___sbh_heap_init
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:80,0x004d9884,plate,___sbh_find_block,"Library Function - Single Match
+ ___sbh_find_block
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:81,0x004d98af,plate,___sbh_free_block,"Library Function - Single Match
+ ___sbh_free_block
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:82,0x004d9bc7,plate,___sbh_alloc_new_region,"Library Function - Single Match
+ ___sbh_alloc_new_region
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:83,0x004d9c7e,plate,___sbh_alloc_new_group,"Library Function - Single Match
+ ___sbh_alloc_new_group
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:84,0x004d9d84,plate,___sbh_resize_block,"Library Function - Single Match
+ ___sbh_resize_block
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:85,0x004da134,plate,___sbh_heap_check,"Library Function - Single Match
+ ___sbh_heap_check
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:86,0x004da4a8,plate,___sbh_alloc_block,"Library Function - Single Match
+ ___sbh_alloc_block
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:87,0x004da7ba,plate,__callnewh,"Library Function - Single Match
+ __callnewh
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:88,0x004da7d5,plate,__forcdecpt,"Library Function - Single Match
+ __forcdecpt
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:89,0x004da892,plate,__fassign,"Library Function - Single Match
+ __fassign
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:90,0x004dabb1,plate,__cfltcvt,"Library Function - Single Match
+ __cfltcvt
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:91,0x004dac14,plate,__ms_p5_test_fdiv,"Library Function - Single Match
+ __ms_p5_test_fdiv
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:92,0x004dac54,plate,__ms_p5_mp_test_fdiv,"Library Function - Single Match
+ __ms_p5_mp_test_fdiv
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:93,0x004dac7d,plate,TypeMatch,"Library Function - Single Match
+ int __cdecl TypeMatch(struct _s_HandlerType const *,struct _s_CatchableType const *,struct _s_ThrowInfo const *)
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:94,0x004dace5,plate,___FrameUnwindToState,"Library Function - Single Match
+ ___FrameUnwindToState
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:95,0x004dadc8,plate,___DestructExceptionObject,"Library Function - Single Match
+ ___DestructExceptionObject
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:96,0x004dafa7,plate,CallCatchBlock,"Library Function - Single Match
+ void * __cdecl CallCatchBlock(struct EHExceptionRecord *,struct EHRegistrationNode *,struct _CONTEXT *,struct _s_FuncInfo const *,void *,int,unsigned long)
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:97,0x004db13d,plate,BuildCatchObject,"Library Function - Single Match
+ void __cdecl BuildCatchObject(struct EHExceptionRecord *,void *,struct _s_HandlerType const *,struct _s_CatchableType const *)
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:98,0x004db3af,plate,CatchIt,"Library Function - Single Match
+ void __cdecl CatchIt(struct EHExceptionRecord *,struct EHRegistrationNode *,struct _CONTEXT *,void *,struct _s_FuncInfo const *,struct _s_HandlerType const *,struct _s_CatchableType const *,struct _s_TryBlockMapEntry const *,int,struct EHRegistrationNode *,unsigned char)
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:99,0x004db6af,plate,___InternalCxxFrameHandler,"Library Function - Single Match
+ ___InternalCxxFrameHandler
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:100,0x004db78e,plate,_inconsistency,"Library Function - Single Match
+ void __cdecl _inconsistency(void)
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:101,0x004db7c0,plate,__CallSettingFrame@12,"Library Function - Single Match
+ __CallSettingFrame@12
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:102,0x004db80c,plate,_realloc,"Library Function - Single Match
+ _realloc
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:103,0x004db96e,plate,__msize,"Library Function - Single Match
+ __msize
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:104,0x004db9a6,plate,__filbuf,"Library Function - Single Match
+ __filbuf
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:105,0x004dba84,plate,__flsbuf,"Library Function - Single Match
+ __flsbuf
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:106,0x004dbb9a,plate,_write_char,"Library Function - Single Match
+ _write_char
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:107,0x004dbbcd,plate,_write_multi_char,"Library Function - Single Match
+ _write_multi_char
+
+Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release, Visual Studio 2008 Release, Visual Studio 2010 Release",yes
+gzf/comments.csv:108,0x004dbbf1,plate,_write_string,"Library Function - Single Match
+ _write_string
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:109,0x004dc3dc,plate,__freebuf,"Library Function - Single Match
+ __freebuf
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:110,0x004dc407,plate,__openfile,"Library Function - Single Match
+ __openfile
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:111,0x004dc56f,plate,__getstream,"Library Function - Single Match
+ __getstream
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:112,0x004dc5e4,plate,__SEH_prolog,"Library Function - Single Match
+ __SEH_prolog
+
+Library: Visual Studio",yes
+gzf/comments.csv:113,0x004dc61f,plate,__SEH_epilog,"Library Function - Single Match
+ __SEH_epilog
+
+Library: Visual Studio",yes
+gzf/comments.csv:114,0x004dc710,plate,___ascii_stricmp,"Library Function - Single Match
+ ___ascii_stricmp
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:115,0x004dc75e,plate,__dosmaperr,"Library Function - Single Match
+ __dosmaperr
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:116,0x004dc7bd,plate,__mbctoupper,"Library Function - Single Match
+ __mbctoupper
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:117,0x004dc874,plate,__ismbcspace,"Library Function - Single Match
+ __ismbcspace
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:118,0x004dc910,plate,__allmul,"Library Function - Single Match
+ __allmul
+
+Library: Visual Studio",yes
+gzf/comments.csv:119,0x004dc944,plate,__hextodec,"Library Function - Single Match
+ __hextodec
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:120,0x004dc976,plate,__inc,"Library Function - Single Match
+ __inc
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:121,0x004dd550,plate,_write_char,"Library Function - Single Match
+ _write_char
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:122,0x004dd575,plate,_write_multi_char,"Library Function - Single Match
+ _write_multi_char
+
+Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release",yes
+gzf/comments.csv:123,0x004dd59a,plate,_write_string,"Library Function - Single Match
+ _write_string
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:124,0x004dde50,plate,__aulldvrm,"Library Function - Single Match
+ __aulldvrm
+
+Library: Visual Studio",yes
+gzf/comments.csv:125,0x004ddee5,plate,___loctotime_t,"Library Function - Single Match
+ ___loctotime_t
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:126,0x004de000,plate,_strcpy,"Library Function - Single Match
+ _strcpy
+
+Library: Visual Studio",yes
+gzf/comments.csv:127,0x004de010,plate,_strcat,"Library Function - Single Match
+ _strcat
+
+Library: Visual Studio",yes
+gzf/comments.csv:128,0x004de200,plate,___ascii_strnicmp,"Library Function - Single Match
+ ___ascii_strnicmp
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:129,0x004de361,plate,_localtime,"Library Function - Single Match
+ _localtime
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:130,0x004de4f0,plate,__aulldiv,"Library Function - Single Match
+ __aulldiv
+
+Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release",yes
+gzf/comments.csv:131,0x004de645,plate,___crtLCMapStringA,"Library Function - Single Match
+ ___crtLCMapStringA
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:132,0x004deb42,plate,__mbsrchr,"Library Function - Single Match
+ __mbsrchr
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:133,0x004deb98,plate,__fullpath,"Library Function - Single Match
+ __fullpath
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:134,0x004decec,plate,__mbctolower,"Library Function - Single Match
+ __mbctolower
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:135,0x004ded64,plate,__mbspbrk,"Library Function - Single Match
+ __mbspbrk
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:136,0x004def7e,plate,__FF_MSGBANNER,"Library Function - Single Match
+ __FF_MSGBANNER
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:137,0x004defee,plate,__XcptFilter,"Library Function - Single Match
+ __XcptFilter
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:138,0x004df1c8,plate,__setenvp,"Library Function - Single Match
+ __setenvp
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:139,0x004df49d,plate,___crtGetEnvironmentStringsA,"Library Function - Single Match
+ ___crtGetEnvironmentStringsA
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:140,0x004df5c0,plate,_strcmp,"Library Function - Single Match
+ _strcmp
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:141,0x004df648,plate,__commit,"Library Function - Single Match
+ __commit
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:142,0x004df69f,plate,_calloc,"Library Function - Single Match
+ _calloc
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:143,0x004df80f,plate,__set_osfhnd,"Library Function - Single Match
+ __set_osfhnd
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:144,0x004df886,plate,__free_osfhnd,"Library Function - Single Match
+ __free_osfhnd
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:145,0x004df900,plate,__get_osfhandle,"Library Function - Single Match
+ __get_osfhandle
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:146,0x004df93c,plate,__open_osfhandle,"Library Function - Single Match
+ __open_osfhandle
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:147,0x004df9d9,plate,__lseeki64,"Library Function - Single Match
+ __lseeki64
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:148,0x004dfc71,plate,__ZeroTail,"Library Function - Single Match
+ __ZeroTail
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:149,0x004dfca3,plate,__IncMan,"Library Function - Single Match
+ __IncMan
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:150,0x004dfcf0,plate,__RoundMan,"Library Function - Single Match
+ __RoundMan
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:151,0x004dfd62,plate,__CopyMan,"Library Function - Single Match
+ __CopyMan
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:152,0x004dfd89,plate,__IsZeroMan,"Library Function - Single Match
+ __IsZeroMan
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:153,0x004dfda2,plate,__ShrMan,"Library Function - Single Match
+ __ShrMan
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:154,0x004dfe1d,plate,__ld12cvt,"Library Function - Single Match
+ __ld12cvt
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:155,0x004dff75,plate,FID_conflict:__ld12tod,"Library Function - Multiple Matches With Different Base Names
+ __ld12tod
+ __ld12tof
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:156,0x004dff8b,plate,FID_conflict:__ld12tod,"Library Function - Multiple Matches With Different Base Names
+ __ld12tod
+ __ld12tof
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:157,0x004dffa1,plate,__ld12told,"Library Function - Single Match
+ __ld12told
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:158,0x004e015e,plate,___dtold,"Library Function - Single Match
+ ___dtold
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:159,0x004e02a0,plate,_memset,"Library Function - Single Match
+ _memset
+
+Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release, Visual Studio 2019 Release",no
+gzf/comments.csv:160,0x004e0333,plate,__abstract_cw,"Library Function - Single Match
+ __abstract_cw
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:161,0x004e03c5,plate,__hw_cw,"Library Function - Single Match
+ __hw_cw
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:162,0x004e04b1,plate,__control87,"Library Function - Single Match
+ __control87
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:163,0x004e04e3,plate,__controlfp,"Library Function - Single Match
+ __controlfp
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:164,0x004e055f,plate,FID_conflict:_ValidateRead,"Library Function - Multiple Matches With Different Base Names
+ int __cdecl _ValidateRead(void const *,unsigned int)
+ int __cdecl _ValidateWrite(void *,unsigned int)
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:165,0x004e057b,plate,FID_conflict:_ValidateRead,"Library Function - Multiple Matches With Different Base Names
+ int __cdecl _ValidateRead(void const *,unsigned int)
+ int __cdecl _ValidateWrite(void *,unsigned int)
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:166,0x004e0597,plate,_ValidateExecute,"Library Function - Single Match
+ int __cdecl _ValidateExecute(int (__stdcall*)(void))
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:167,0x004e05c7,plate,__getbuf,"Library Function - Single Match
+ __getbuf
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:168,0x004e060b,plate,__isatty,"Library Function - Single Match
+ __isatty
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:169,0x004e0632,plate,_wctomb,"Library Function - Single Match
+ _wctomb
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:170,0x004e075d,plate,__seh_longjmp_unwind@4,"Library Function - Single Match
+ __seh_longjmp_unwind@4
+
+Libraries: Visual Studio 1998 Debug, Visual Studio 1998 Release, Visual Studio 2003 Debug, Visual Studio 2003 Release",yes
+gzf/comments.csv:171,0x004e07ed,plate,_setSBCS,"Library Function - Single Match
+ _setSBCS
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:172,0x004e0ba4,plate,___initmbctable,"Library Function - Single Match
+ ___initmbctable
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:173,0x004e0d8e,plate,___crtGetStringTypeA,"Library Function - Single Match
+ ___crtGetStringTypeA
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:174,0x004e0f48,plate,FID_conflict:_ungetc,"Library Function - Multiple Matches With Different Base Names
+ __ungetc_lk
+ _ungetc
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:175,0x004e108b,plate,_isspace,"Library Function - Single Match
+ _isspace
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:176,0x004e121f,plate,_mbtowc,"Library Function - Single Match
+ _mbtowc
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:177,0x004e13c4,plate,__tzset,"Library Function - Single Match
+ __tzset
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:178,0x004e1617,plate,_cvtdate,"Library Function - Single Match
+ _cvtdate
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:179,0x004e1960,plate,___tzset,"Library Function - Single Match
+ ___tzset
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:180,0x004e1975,plate,_gmtime,"Library Function - Single Match
+ _gmtime
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:181,0x004e1d70,plate,_strpbrk,"Library Function - Single Match
+ _strpbrk
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:182,0x004e1db0,plate,___crtMessageBoxA,"Library Function - Single Match
+ ___crtMessageBoxA
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:183,0x004e1fb7,plate,___addl,"Library Function - Single Match
+ ___addl
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:184,0x004e1fd8,plate,___add_12,"Library Function - Single Match
+ ___add_12
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:185,0x004e2036,plate,___shl_12,"Library Function - Single Match
+ ___shl_12
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:186,0x004e2064,plate,___shr_12,"Library Function - Single Match
+ ___shr_12
+
+Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release",yes
+gzf/comments.csv:187,0x004e2920,plate,_siglookup,"Library Function - Single Match
+ _siglookup
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:188,0x004e2959,plate,_signal,"Library Function - Single Match
+ _signal
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:189,0x004e2a61,plate,_raise,"Library Function - Single Match
+ _raise
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:190,0x004e2b8a,plate,__flswbuf,"Library Function - Single Match
+ __flswbuf
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:191,0x004e2caf,plate,_getenv,"Library Function - Single Match
+ _getenv
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:192,0x004e2ff4,plate,__mbsnbicoll,"Library Function - Single Match
+ __mbsnbicoll
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:193,0x004e309e,plate,_strncnt,"Library Function - Single Match
+ _strncnt
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:194,0x004e3444,plate,_findenv,"Library Function - Single Match
+ _findenv
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:195,0x004e3491,plate,_copy_environ,"Library Function - Single Match
+ _copy_environ
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:196,0x004e36a7,plate,__strdup,"Library Function - Single Match
+ __strdup
+
+Library: Visual Studio 2003 Release",yes
+gzf/comments.csv:882,0x005e8108,eol,,game tick,no

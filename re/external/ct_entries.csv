@@ -1,0 +1,148 @@
+source_ref,description,address_expr,base,offsets_outer_to_inner,variable_type,static
+gta2-resurected.ct:9,No description,0F490908+216,,,2 Bytes,no (heap address)
+gta2-resurected.ct:17,myPed,"""gta2-resurected.exe""+001F5BC4",0x005e5bc4,,4 Bytes,yes
+gta2-resurected.ct:24,myPed->Health,"""gta2-resurected.exe""+001F5BC4",0x005e5bc4,+0x216,2 Bytes,yes
+gta2-resurected.ct:34,s5 (police)->ped->copLevel,0066b7a0,0x0066b7a0,+0x464 -> +0x20a,4 Bytes,yes
+gta2-resurected.ct:46,playerPed,005e5bc4,0x005e5bc4,,4 Bytes,yes
+gta2-resurected.ct:53,S1->playerPed->health,005e5bc4,0x005e5bc4,+0x216,2 Bytes,yes
+gta2-resurected.ct:63,S1->playerPed->copLevel,005e5bc4,0x005e5bc4,+0x20a,2 Bytes,yes
+gta2-resurected.ct:73,S1->playerPed->id,005e5bc4,0x005e5bc4,+0x200,2 Bytes,yes
+gta2-resurected.ct:84,S1->playerPed->car,005e5bc4,0x005e5bc4,+0x16c,4 Bytes,yes
+gta2-resurected.ct:94,S1->playerPed->car->id,005e5bc4,0x005e5bc4,+0x16c -> +0x0,2 Bytes,yes
+gta2-resurected.ct:105,S1->playerPed->car->id,005e5bc4,0x005e5bc4,+0x16c -> +0x6c,4 Bytes,yes
+gta2-resurected.ct:116,S1->playerPed->car->damage,005e5bc4,0x005e5bc4,+0x16c -> +0x74,4 Bytes,yes
+gta2-resurected.ct:127,S1->playerPed->car->8c,005e5bc4,0x005e5bc4,+0x16c -> +0x8c,Byte,yes
+gta2-resurected.ct:138,S1->playerPed->car->type,005e5bc4,0x005e5bc4,+0x16c -> +0x84,4 Bytes,yes
+gta2-resurected.ct:149,S1->playerPed->car->68,005e5bc4,0x005e5bc4,+0x16c -> +0x68,4 Bytes,yes
+gta2-resurected.ct:160,S1->playerPed->car->70,005e5bc4,0x005e5bc4,+0x16c -> +0x70,4 Bytes,yes
+gta2-resurected.ct:174,S1->playerPed->cameraX,005e5bc4,0x005e5bc4,+0x1ac,4 Bytes,yes
+gta2-resurected.ct:184,S1->playerPed->cameraX,005e5bc4,0x005e5bc4,+0x1ac,4 Bytes,yes
+gta2-resurected.ct:196,S1->playerPed,005e5bc4,0x005e5bc4,+0x20c,4 Bytes,yes
+gta2-resurected.ct:206,money,5eb4fc,0x005eb4fc,+0x4 -> +0x2d4,4 Bytes,yes
+gta2-resurected.ct:216,No Description,0F291030,,,4 Bytes,no (heap address)
+gta2-resurected.ct:223,ped->copLevel,0F291030-200+20a,,,4 Bytes,no (heap address)
+gta2-resurected.ct:230,s5 (police)->ped,0066b7a0,0x0066b7a0,+0x464,4 Bytes,yes
+gta2-resurected.ct:241,pS7->5c,00670684,0x00670684,+0x5c -> +0x20,4 Bytes,yes
+gta2-resurected.ct:252,No description,005e4db8,0x005e4db8,,4 Bytes,yes
+gta2-resurected.ct:259,pS8->46c,006644bc,0x006644bc,+0x46c,4 Bytes,yes
+gta2-resurected.ct:269,pGame,0x005eb4fc,0x005eb4fc,,4 Bytes,yes
+gta2-resurected.ct:276,pGame->gameStatus,0x005eb4fc,0x005eb4fc,+0x0,4 Bytes,yes
+gta2-resurected.ct:287,pGame->s4,0x005eb4fc,0x005eb4fc,+0x38,4 Bytes,yes
+gta2-resurected.ct:297,pGame->s4->selectedWeapon,0x005eb4fc,0x005eb4fc,+0x38 -> +0x788,2 Bytes,yes
+gta2-resurected.ct:308,pGame->s4->money,0x005eb4fc,0x005eb4fc,+0x38 -> +0x2d4,4 Bytes,yes
+gta2-resurected.ct:319,pGame->s4->lives,0x005eb4fc,0x005eb4fc,+0x38 -> +0x684,4 Bytes,yes
+gta2-resurected.ct:330,pGame->s4->moneyMultiplier,0x005eb4fc,0x005eb4fc,+0x38 -> +0x6bc,4 Bytes,yes
+gta2-resurected.ct:342,pGame->s4->ped,0x005eb4fc,0x005eb4fc,+0x38 -> +0x2c4,4 Bytes,yes
+gta2-resurected.ct:354,pGame->s4->ped->id,0x005eb4fc,0x005eb4fc,+0x38 -> +0x2c4 -> +0x200,4 Bytes,yes
+gta2-resurected.ct:367,pGame->s4->ped->id,0x005eb4fc,0x005eb4fc,+0x38 -> +0x2c4 -> +0x200,4 Bytes,yes
+gta2-resurected.ct:381,pGame->s4->electricGun->Ammo,0x005eb4fc,0x005eb4fc,+0x38 -> +0x724 -> +0x0,2 Bytes,yes
+gta2-resurected.ct:393,pGame->s4->pistol->Ammo,0x005eb4fc,0x005eb4fc,+0x38 -> +0x718 -> +0x0,2 Bytes,yes
+gta2-resurected.ct:405,pGame->s4->smg->Ammo,0x005eb4fc,0x005eb4fc,+0x38 -> +0x71c -> +0x0,2 Bytes,yes
+gta2-resurected.ct:417,pGame->s4->flame_thrower->Ammo,0x005eb4fc,0x005eb4fc,+0x38 -> +0x738 -> +0x0,2 Bytes,yes
+gta2-resurected.ct:433,No description,005e5c60,0x005e5c60,,2 Bytes,yes
+gta2-resurected.ct:444,string,005e9808,0x005e9808,,String,yes
+gta2-resurected.ct:451,windowX,00673578,0x00673578,,4 Bytes,yes
+gta2-resurected.ct:458,start_mode,00595014,0x00595014,,4 Bytes,yes
+gta2-resurected.ct:466,lighting,0067358c,0x0067358c,,4 Bytes,yes
+gta2-resurected.ct:483,isNight,00595011,0x00595011,,4 Bytes,yes
+gta2-resurected.ct:490,SFXVolume,005dcbec,0x005dcbec,,Byte,yes
+gta2-resurected.ct:497,No description,00662748,0x00662748,,4 Bytes,yes
+gta2-resurected.ct:505,MyPed,005e5bc4,0x005e5bc4,,4 Bytes,yes
+gta2-resurected.ct:511,pointerscan result,"""gta2-resurected.exe""+001F5BC4",0x005e5bc4,+0x0,4 Bytes,yes
+gta2-resurected.ct:521,No description,15a50ec0,,,4 Bytes,no (heap address)
+gta2-resurected.ct:528,show_cycle,005eada7,0x005eada7,,Byte,yes
+gta2-resurected.ct:535,skip_tiles,005ead90,0x005ead90,,Byte,yes
+gta2-resurected.ct:542,do_show_counters,005ead95,0x005ead95,,Byte,yes
+gta2-resurected.ct:549,do_show_collision_box,005eadb1,0x005eadb1,,Byte,yes
+gta2-resurected.ct:556,do_show_physics,005ead85,0x005ead85,,Byte,yes
+gta2-resurected.ct:563,do_show_timing,005ead79,0x005ead79,,Byte,yes
+gta2-resurected.ct:570,do_police_3,005eada9,0x005eada9,,Byte,yes
+gta2-resurected.ct:577,skip_dummies,005ead69,0x005ead69,,Byte,yes
+gta2-resurected.ct:584,Cycle,005e8108,0x005e8108,+0x0,4 Bytes,yes
+gta2-resurected.ct:595,No description,005e9f08,0x005e9f08,,4 Bytes,yes
+gta2-resurected.ct:601,No description,14BBA100,,,4 Bytes,no (heap address)
+gta2-resurected.ct:607,No description,14BBA190,,,4 Bytes,no (heap address)
+gta2-resurected.ct:618,No description,00671880,0x00671880,,String,yes
+gta2-resurected.ct:625,pS9->do_free_shopping,005e4ca4,0x005e4ca4,+0x69,Byte,yes
+gta2-resurected.ct:635,No description,169F6928,,,2 Bytes,no (heap address)
+gta2-resurected.ct:642,No description,005e4cb8,0x005e4cb8,,Byte,yes
+gta2-resurected.ct:649,No description,0F490908+216,,,2 Bytes,no (heap address)
+gta2-resurected.ct:657,myPed,"""gta2-resurected.exe""+001F5BC4",0x005e5bc4,,4 Bytes,yes
+gta2-resurected.ct:664,myPed->Health,"""gta2-resurected.exe""+001F5BC4",0x005e5bc4,+0x216,2 Bytes,yes
+gta2-resurected.ct:674,s5 (police)->ped->copLevel,0066b7a0,0x0066b7a0,+0x464 -> +0x20a,4 Bytes,yes
+gta2-resurected.ct:686,playerPed,005e5bc4,0x005e5bc4,,4 Bytes,yes
+gta2-resurected.ct:693,S1->playerPed->health,005e5bc4,0x005e5bc4,+0x216,2 Bytes,yes
+gta2-resurected.ct:703,S1->playerPed->copLevel,005e5bc4,0x005e5bc4,+0x20a,2 Bytes,yes
+gta2-resurected.ct:713,S1->playerPed->id,005e5bc4,0x005e5bc4,+0x200,2 Bytes,yes
+gta2-resurected.ct:724,S1->playerPed->car,005e5bc4,0x005e5bc4,+0x16c,4 Bytes,yes
+gta2-resurected.ct:734,S1->playerPed->car->id,005e5bc4,0x005e5bc4,+0x16c -> +0x0,2 Bytes,yes
+gta2-resurected.ct:745,S1->playerPed->car->id,005e5bc4,0x005e5bc4,+0x16c -> +0x6c,4 Bytes,yes
+gta2-resurected.ct:756,S1->playerPed->car->damage,005e5bc4,0x005e5bc4,+0x16c -> +0x74,4 Bytes,yes
+gta2-resurected.ct:767,S1->playerPed->car->8c,005e5bc4,0x005e5bc4,+0x16c -> +0x8c,Byte,yes
+gta2-resurected.ct:778,S1->playerPed->car->type,005e5bc4,0x005e5bc4,+0x16c -> +0x84,4 Bytes,yes
+gta2-resurected.ct:789,S1->playerPed->car->68,005e5bc4,0x005e5bc4,+0x16c -> +0x68,4 Bytes,yes
+gta2-resurected.ct:800,S1->playerPed->car->70,005e5bc4,0x005e5bc4,+0x16c -> +0x70,4 Bytes,yes
+gta2-resurected.ct:814,S1->playerPed->cameraX,005e5bc4,0x005e5bc4,+0x1ac,4 Bytes,yes
+gta2-resurected.ct:824,S1->playerPed->cameraX,005e5bc4,0x005e5bc4,+0x1ac,4 Bytes,yes
+gta2-resurected.ct:836,S1->playerPed,005e5bc4,0x005e5bc4,+0x20c,4 Bytes,yes
+gta2-resurected.ct:846,money,5eb4fc,0x005eb4fc,+0x4 -> +0x2d4,4 Bytes,yes
+gta2-resurected.ct:856,No Description,0F291030,,,4 Bytes,no (heap address)
+gta2-resurected.ct:863,ped->copLevel,0F291030-200+20a,,,4 Bytes,no (heap address)
+gta2-resurected.ct:870,s5 (police)->ped,0066b7a0,0x0066b7a0,+0x464,4 Bytes,yes
+gta2-resurected.ct:881,pS7->5c,00670684,0x00670684,+0x5c -> +0x20,4 Bytes,yes
+gta2-resurected.ct:892,No description,005e4db8,0x005e4db8,,4 Bytes,yes
+gta2-resurected.ct:899,pS8->46c,006644bc,0x006644bc,+0x46c,4 Bytes,yes
+gta2-resurected.ct:909,pGame,0x005eb4fc,0x005eb4fc,,4 Bytes,yes
+gta2-resurected.ct:916,pGame->gameStatus,0x005eb4fc,0x005eb4fc,+0x0,4 Bytes,yes
+gta2-resurected.ct:927,pGame->s4,0x005eb4fc,0x005eb4fc,+0x38,4 Bytes,yes
+gta2-resurected.ct:937,pGame->s4->keyState,0x005eb4fc,0x005eb4fc,+0x38 -> +0x4,2 Bytes,yes
+gta2-resurected.ct:948,pGame->s4->selectedWeapon,0x005eb4fc,0x005eb4fc,+0x38 -> +0x788,2 Bytes,yes
+gta2-resurected.ct:959,pGame->s4->money,0x005eb4fc,0x005eb4fc,+0x38 -> +0x2d4,4 Bytes,yes
+gta2-resurected.ct:970,pGame->s4->lives,0x005eb4fc,0x005eb4fc,+0x38 -> +0x684,4 Bytes,yes
+gta2-resurected.ct:981,pGame->s4->moneyMultiplier,0x005eb4fc,0x005eb4fc,+0x38 -> +0x6bc,4 Bytes,yes
+gta2-resurected.ct:993,pGame->s4->ped,0x005eb4fc,0x005eb4fc,+0x38 -> +0x2c4,4 Bytes,yes
+gta2-resurected.ct:1005,pGame->s4->ped->id,0x005eb4fc,0x005eb4fc,+0x38 -> +0x2c4 -> +0x200,4 Bytes,yes
+gta2-resurected.ct:1018,pGame->s4->ped->pedS1,0x005eb4fc,0x005eb4fc,+0x38 -> +0x2c4 -> +0x168,4 Bytes,yes
+gta2-resurected.ct:1031,pGame->s4->ped->pedS1->80,0x005eb4fc,0x005eb4fc,+0x38 -> +0x2c4 -> +0x168 -> +0x80,4 Bytes,yes
+gta2-resurected.ct:1044,pGame->s4->ped->pedS1->80->cameraX,0x005eb4fc,0x005eb4fc,+0x38 -> +0x2c4 -> +0x168 -> +0x80 -> +0x14,4 Bytes,yes
+gta2-resurected.ct:1058,pGame->s4->ped->pedS1->80->1c,0x005eb4fc,0x005eb4fc,+0x38 -> +0x2c4 -> +0x168 -> +0x80 -> +0x1c,4 Bytes,yes
+gta2-resurected.ct:1072,pGame->s4->ped->pedS1->80->readOnlyRotation,0x005eb4fc,0x005eb4fc,+0x38 -> +0x2c4 -> +0x168 -> +0x80 -> +0x0,2 Bytes,yes
+gta2-resurected.ct:1086,pGame->s4->ped->pedS1->40,0x005eb4fc,0x005eb4fc,+0x38 -> +0x2c4 -> +0x168 -> +0x40,2 Bytes,yes
+gta2-resurected.ct:1105,pGame->s4->electricGun->Ammo,0x005eb4fc,0x005eb4fc,+0x38 -> +0x724 -> +0x0,2 Bytes,yes
+gta2-resurected.ct:1117,pGame->s4->pistol->Ammo,0x005eb4fc,0x005eb4fc,+0x38 -> +0x718 -> +0x0,2 Bytes,yes
+gta2-resurected.ct:1129,pGame->s4->smg->Ammo,0x005eb4fc,0x005eb4fc,+0x38 -> +0x71c -> +0x0,2 Bytes,yes
+gta2-resurected.ct:1141,pGame->s4->flame_thrower->Ammo,0x005eb4fc,0x005eb4fc,+0x38 -> +0x738 -> +0x0,2 Bytes,yes
+gta2-resurected.ct:1157,No description,005e5c60,0x005e5c60,,2 Bytes,yes
+gta2-resurected.ct:1168,string,005e9808,0x005e9808,,String,yes
+gta2-resurected.ct:1175,windowX,00673578,0x00673578,,4 Bytes,yes
+gta2-resurected.ct:1182,start_mode,00595014,0x00595014,,4 Bytes,yes
+gta2-resurected.ct:1190,lighting,0067358c,0x0067358c,,4 Bytes,yes
+gta2-resurected.ct:1207,isNight,00595011,0x00595011,,4 Bytes,yes
+gta2-resurected.ct:1214,SFXVolume,005dcbec,0x005dcbec,,Byte,yes
+gta2-resurected.ct:1221,No description,00662748,0x00662748,,4 Bytes,yes
+gta2-resurected.ct:1229,MyPed,005e5bc4,0x005e5bc4,,4 Bytes,yes
+gta2-resurected.ct:1235,pointerscan result,"""gta2-resurected.exe""+001F5BC4",0x005e5bc4,+0x0,4 Bytes,yes
+gta2-resurected.ct:1245,No description,15a50ec0,,,4 Bytes,no (heap address)
+gta2-resurected.ct:1252,show_cycle,005eada7,0x005eada7,,Byte,yes
+gta2-resurected.ct:1259,skip_tiles,005ead90,0x005ead90,,Byte,yes
+gta2-resurected.ct:1266,do_show_counters,005ead95,0x005ead95,,Byte,yes
+gta2-resurected.ct:1273,do_show_collision_box,005eadb1,0x005eadb1,,Byte,yes
+gta2-resurected.ct:1280,do_show_physics,005ead85,0x005ead85,,Byte,yes
+gta2-resurected.ct:1287,do_show_timing,005ead79,0x005ead79,,Byte,yes
+gta2-resurected.ct:1294,do_police_3,005eada9,0x005eada9,,Byte,yes
+gta2-resurected.ct:1301,skip_dummies,005ead69,0x005ead69,,Byte,yes
+gta2-resurected.ct:1308,Cycle,005e8108,0x005e8108,+0x0,4 Bytes,yes
+gta2-resurected.ct:1318,CycleRandom,005e8108,0x005e8108,+0x4,4 Bytes,yes
+gta2-resurected.ct:1329,No description,005e9f08,0x005e9f08,,4 Bytes,yes
+gta2-resurected.ct:1335,No description,14BBA100,,,4 Bytes,no (heap address)
+gta2-resurected.ct:1341,No description,14BBA190,,,4 Bytes,no (heap address)
+gta2-resurected.ct:1352,No description,00671880,0x00671880,,String,yes
+gta2-resurected.ct:1359,pS9->do_free_shopping,005e4ca4,0x005e4ca4,+0x69,Byte,yes
+gta2-resurected.ct:1369,No description,169F6928,,,2 Bytes,no (heap address)
+gta2-resurected.ct:1376,No description,005e4cb8,0x005e4cb8,,Byte,yes
+gta2-resurected.ct:1383,do_show_traffic_lights_info,005ead96,0x005ead96,,Byte,yes
+gta2-resurected.ct:1390,do_show_timing,005ead79,0x005ead79,,Byte,yes
+gta2-resurected.ct:1397,pTrafficLights->timer,006721cc,0x006721cc,+0x193,Byte,yes
+gta2-resurected.ct:1407,pTrafficLights->phase,006721cc,0x006721cc,+0x192,Byte,yes
+gta2-resurected.ct:1417,NextPedId,00591e84,0x00591e84,,4 Bytes,yes
+gta2-resurected.ct:1424,No description,00662750,0x00662750,,Byte,yes
