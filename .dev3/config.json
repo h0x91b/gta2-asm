@@ -1,0 +1,6 @@
+{
+  "clonePaths": ["gta2"],
+  "defaultBaseBranch": "main",
+  "defaultCompareRefMode": "remote",
+  "portCount": 0
+}
