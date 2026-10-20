@@ -136,13 +136,15 @@ their absolute addresses apply 1:1. How this was checked:
 
 ### Ghidra project
 
-- Location: `/Users/arsenyp/ghidra/gta2.rep` (`gta2.gpr` next to it, ~174 MB).
+- **Current project (user's choice): `/Users/arsenyp/ghidra/gta-2-recovered.gpr`**
+  (+ `gta-2-recovered.rep/`). Same read-only rules as below; work on a copy.
+- Older project: `/Users/arsenyp/ghidra/gta2.rep` (`gta2.gpr` next to it, ~174 MB).
   Programs inside: `gta2.segments.fixed.exe`, `gta2.segments.fixed2.exe`,
   `miss2.exe` (the mission-script compiler).
 - **READ-ONLY.** It is Ghidra's binary project database: reading it needs Ghidra
   (GUI or `analyzeHeadless`). Do not modify it, and never open it in place with a
   Ghidra that might upgrade or lock it. Work on a copy.
-- Also present, status unclear (which one is current is not established):
+- Also present, superseded by `gta-2-recovered`:
   `/Users/arsenyp/ghidra/gta-2.rep` (+ `gta-2.gpr`, recently locked) and
   `/Users/arsenyp/ghidra/gta2-ghidra-proj.zip` (42 MB, 2020).
 - **Grep `re/` instead of opening Ghidra**: named functions, globals, imports, comments
@@ -161,14 +163,16 @@ MacOSX 26.2 SDK, Apple clang 17.0.0.
 | Linker | ✅ Apple `ld` 1230.1 at **`/usr/bin/ld`** (= `xcrun ld`) | ⚠️ **Trap:** `ld` and `otool` on `PATH` resolve to anaconda's ancient ld64-530 (`/opt/homebrew/anaconda3/bin`). Always call `/usr/bin/ld` / `xcrun ld` (or link through `clang -arch x86_64`). |
 | clang (x86_64 target) | ✅ Apple clang 17 | `clang -arch x86_64` builds Rosetta binaries; handy for C test harnesses. |
 | lldb | ✅ lldb-1703 | Debugging x86_64 processes under Rosetta works through Rosetta's debugserver. 32-bit LDT code segments are untested; expect lldb to mis-disassemble them (it assumes 64-bit mode). Plan to need `disassemble --arch i386 -s <addr>` or a manual memory dump. |
-| SDL (x86_64) | ❌ **missing** | Homebrew under `/opt/homebrew` is arm64-only: `sdl3` 3.4.14 and `sdl2-compat` 2.32.70 (SDL2 API on top of SDL3), all `arm64`. A Rosetta host can't link them. |
-| Ghidra | ❌ missing | JDK 21 is already present (`/opt/homebrew/opt/openjdk@21`), which is what current Ghidra needs. |
+| SDL3 (x86_64) | ✅ 3.4.14 at **`~/.local/opt/sdl3-x86_64`** (`include/`, `lib/libSDL3.dylib`) | Built from source in `~/.local/src/SDL-x86` (tag `release-3.4.14`), `minos 26.0`. Install name is `@rpath/libSDL3.0.dylib`: link with `-rpath`, see `host/build.sh`. Do not modify that prefix. Homebrew's `sdl3`/`sdl2-compat` under `/opt/homebrew` are arm64-only and unusable from a Rosetta host; x86_64 Homebrew refuses to install on Apple Silicon. |
+| Ghidra | ✅ 12.1.4 (Homebrew formula `ghidra`) | `ghidraRun` on `PATH`; headless at `/opt/homebrew/opt/ghidra/libexec/support/analyzeHeadless`. Uses JDK 21 (`/opt/homebrew/opt/openjdk@21`). |
 | cmake / ninja / pkg-config | ✅ (arm64 Homebrew) | They run natively and can still drive an x86_64 build via `CMAKE_OSX_ARCHITECTURES=x86_64`. |
 
 ### Required link flags for the host (verified)
 
 The game must sit at `0x3F0000` and allocate only below 4 GB, so the host must keep
-the low 4 GB free:
+the low 4 GB free. `host/build.sh` is the working reference (NASM + SDL3, adds
+`-L…/sdl3-x86_64/lib -lSDL3 -rpath …` and `-platform_version macos 26.0 <sdk>`
+to match SDL's `minos`); the minimal form is:
 
 ```sh
 nasm -f macho64 -o host.o host.asm
@@ -195,7 +199,8 @@ but it is a long-term risk to track. Add `-platform_version` (or a
 ### Install steps for the user (not done by agents)
 
 Agents may only `brew install` into the existing arm64 Homebrew. Everything below is
-system-level and is the user's call:
+system-level and is the user's call. Steps 1 and 2 are **done** (2026-10-20, see the
+table above); kept for rebuilding on another machine.
 
 1. **x86_64 SDL** (required). Options, recommended first:
    - **Build SDL3 for x86_64 from source** into a repo-local prefix (no system
@@ -215,7 +220,9 @@ system-level and is the user's call:
      arch -x86_64 /usr/local/bin/brew install sdl3
      ```
      This is heavier and system-wide, and invites arm64/x86_64 `PATH` mix-ups.
-2. **Ghidra** (for RE work): `brew install --cask ghidra` (uses the existing JDK 21).
+     ⚠️ In practice x86_64 Homebrew **refuses to install on Apple Silicon** — use the
+     source build.
+2. **Ghidra** (for RE work): `brew install ghidra` (formula; uses the existing JDK 21).
 3. Optional: put `/usr/bin` before `/opt/homebrew/anaconda3/bin` on `PATH`, or
    just always call `/usr/bin/ld` explicitly.
 
