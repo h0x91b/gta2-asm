@@ -1,6 +1,6 @@
 {
   "devScript": "host/build.sh --load --entry",
-  "clonePaths": ["gta2"],
+  "clonePaths": ["data.pak"],
   "defaultBaseBranch": "main",
   "defaultCompareRefMode": "remote",
   "portCount": 0
