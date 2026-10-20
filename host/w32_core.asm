@@ -527,6 +527,7 @@ HT_FIND     equ 3
 HT_EVENT    equ 4
 HT_MUTEX    equ 5
 HT_PROCESS  equ 6
+HT_PAK      equ 7                 ; data.pak file: fd = pak index, extra = position
 
 ; eax = handle_new(edi = type, esi = fd, rdx = extra), 0 if the table is full
 handle_new:

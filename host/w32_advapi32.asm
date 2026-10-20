@@ -1,5 +1,5 @@
 ; w32_advapi32.asm — ADVAPI32 shims: the registry as an in-memory store, seeded at
-; startup from gta2_install.reg (REGEDIT4 text, in the game directory). Nothing is
+; startup from gta2_install.reg (REGEDIT4 text, overlay or data.pak). Nothing is
 ; ever read from or written to a real registry or any system-wide file; writes stay
 ; in memory for the life of the process (not persisted yet).
 ;
@@ -301,10 +301,14 @@ setup_registry:
     push r14
     push r15
     lea rdi, [s_regfile]
-    lea rsi, [s_mode_r]
-    call _fopen
+    call vfs_load                   ; overlay or pak
     test rax, rax
     jz .no_file
+    mov [reg_file_buf], rax
+    mov rdi, rax
+    mov rsi, rdx
+    lea rdx, [s_mode_r]
+    call _fmemopen
     mov r15, rax
     mov r14d, -1                    ; current key
 .line:
@@ -457,6 +461,8 @@ setup_registry:
 .eof:
     mov rdi, r15
     call _fclose
+    mov rdi, [reg_file_buf]
+    call _free
     lea rdi, [fmt_reg_loaded]
     lea rsi, [s_regfile]
     mov edx, [reg_nkeys]
@@ -709,6 +715,7 @@ fmt_reg_noval: db "  [w32] registry value not found: %s", 10, 0
 
 section .bss
 alignb 8
+reg_file_buf: resq 1
 reg_nkeys:   resd 1
 reg_nvals:   resd 1
 reg_end:     resq 1

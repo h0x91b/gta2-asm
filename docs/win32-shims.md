@@ -111,14 +111,16 @@ match the 64-bit-inode struct layouts; the plain names are the legacy ABI.
 
 ## Policies (decisions with long-term impact)
 
-- **Paths.** The host `chdir`s into the directory holding `gta2.ebin` (vanilla
-  `gta2.exe` renamed on disk: no `.exe` files in the project); the game is told
-  it lives in `C:\GTA2` (`GetModuleFileNameA` → `C:\GTA2\gta2.exe`,
-  `GetCurrentDirectoryA` → `C:\GTA2`). `C:\GTA2\x` and relative paths map into the game
-  directory, any other absolute path is refused (not found). Backslashes become `/` and
-  every component is matched case-insensitively against the disk. Writes land in the
-  task's own `gta2/` copy (e.g. the CRT's `test\error.log`).
-- **Registry.** In memory, seeded from `gta2/gta2_install.reg` at startup. Writes are
+- **Paths.** Game files come from `data.pak` (a Stored zip, indexed once by
+  `w32_vfs.asm`) plus a writable overlay, `~/Library/Application Support/gta2-resurrected/`,
+  which is the host's cwd. The game is told it lives in `C:\GTA2`
+  (`GetModuleFileNameA` → `C:\GTA2\gta2.exe`, `GetCurrentDirectoryA` → `C:\GTA2`).
+  `C:\GTA2\x` and relative paths map to the game root, any other absolute path is
+  refused (not found). Backslashes become `/`, `.` components drop, and lookup is
+  case-insensitive: the overlay first, then the pak. Writes always land in the overlay
+  (e.g. the CRT's `test\error.log`); a pak-only file opened for writing with
+  `OPEN_EXISTING`/`OPEN_ALWAYS` is copied there first. The pak is read-only.
+- **Registry.** In memory, seeded from `gta2_install.reg` (overlay or pak) at startup. Writes are
   kept for the life of the process only — not persisted (later: write back to a text
   file next to the game).
 - **Threads.** None exist; sync objects are tokens. `CreateThread` is not imported.
@@ -140,7 +142,7 @@ and not yet exercised by the game.
 | GetEnvironmentStrings(A/W) ✓, FreeEnvironmentStrings(A/W) ✓ | fixed small block (PATH, SystemRoot, TEMP, windir); free is a no-op |
 | GetModuleHandleA ✓ | NULL / `gta2.exe` → `0x3F0000`; system DLLs → fake handles `0x7F000000 + k·0x10000` |
 | GetModuleFileNameA ✓ | `C:\GTA2\gta2.exe` |
-| LoadLibraryA ✓ | system DLL → its fake handle; otherwise a fake module if the file exists in the game dir (`dmavideo.dll`); else NULL, error 126 |
+| LoadLibraryA ✓ | system DLL → its fake handle; otherwise a fake module if the file exists in the overlay or pak (`dmavideo.dll`); else NULL, error 126 |
 | GetProcAddress ✓ | new slot bound by name (cached per DLL+name); unknown names become traps, logged `UNIMPLEMENTED`; ordinals supported |
 | FreeLibrary | TRUE |
 | GetProcessHeap ✓, HeapCreate ✓, HeapDestroy | one heap for everything, token `0x00DE0000` |
@@ -167,12 +169,12 @@ and not yet exercised by the game.
 
 | import | semantics / shortcut |
 |---|---|
-| CreateFileA ✓ | path policy above; access → `O_RDONLY/O_WRONLY/O_RDWR`, all five dispositions; failure → `INVALID_HANDLE_VALUE`, error 2, logged |
-| ReadFile, WriteFile ✓, SetFilePointer, SetEndOfFile, FlushFileBuffers | `read`/`write`/`lseek` (64-bit with the high dword)/`ftruncate`; no overlapped I/O |
+| CreateFileA ✓ | path policy above. Overlay: access → `O_RDONLY/O_WRONLY/O_RDWR`, all five dispositions, missing parent dirs created. Pak, read-only access: an `HT_PAK` handle (entry + position), logged as `[vfs]`. Failure → `INVALID_HANDLE_VALUE`, error 2, logged |
+| ReadFile, WriteFile ✓, SetFilePointer, SetEndOfFile, FlushFileBuffers | `read`/`write`/`lseek` (64-bit with the high dword)/`ftruncate`; pak handles: `pread` clipped to the entry, own position, no writes; no overlapped I/O |
 | GetStdHandle ✓, GetFileType ✓ | std handles map to fds 0/1/2 (`FILE_TYPE_CHAR`); files are `FILE_TYPE_DISK` |
-| GetFileAttributesA | directory / normal, or `INVALID_FILE_ATTRIBUTES` |
-| FindFirstFileA ✓, FindNextFileA, FindClose ✓ | `opendir` + `fnmatch(FNM_CASEFOLD)`, `*.*` matches everything, `.`/`..` skipped; size + attributes filled |
-| GetCurrentDirectoryA ✓, SetCurrentDirectoryA | always `C:\GTA2`; only the game directory itself can be set |
+| GetFileAttributesA | directory / normal (overlay, else pak entry or pak directory), or `INVALID_FILE_ATTRIBUTES` |
+| FindFirstFileA ✓, FindNextFileA, FindClose ✓ | overlay `opendir`, then pak entries directly in that dir the overlay lacks; `fnmatch(FNM_CASEFOLD)`, `*.*` matches everything, `.`/`..` skipped; size + attributes filled |
+| GetCurrentDirectoryA ✓, SetCurrentDirectoryA | always `C:\GTA2`; only the game root itself can be set |
 | GetFullPathNameA | relative → `C:\GTA2\name` |
 | GetDriveTypeA | `DRIVE_FIXED` |
 | GetPrivateProfileStringA | no INI support: copies the default, logs the request |

@@ -227,15 +227,9 @@ k32_LoadLibraryA:                   ; (name) -> HMODULE
     jnz .log
     ; not a system DLL: a fake plugin module if the file is in the game directory
     mov edi, ARG(0)
-    call win_path               ; rax = host path (static buffer)
-    test rax, rax
-    jz .missing
-    mov rdi, rax
-    lea rsi, [rsp]              ; stat buffer is big; use a scratch area
-    lea rsi, [stat_buf]
-    call _stat
-    test eax, eax
-    jnz .missing
+    call vfs_resolve            ; overlay or pak
+    cmp eax, VFS_NONE
+    jle .missing
     mov edi, ARG(0)
     mov esi, '\'
     call _strrchr

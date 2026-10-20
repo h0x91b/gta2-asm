@@ -55,7 +55,7 @@ V_POS       equ 56              ; q: frame position << 16
 V_BUF       equ 64              ; q: stream: malloc'd buffer to free
 V_SIZE      equ 72
 
-extern _malloc, _fseek, _ftell, _fread, _fwrite, _atexit
+extern _malloc, _fseek, _fwrite, _atexit
 
 section .text
 
@@ -663,7 +663,7 @@ aud_atexit:
     ret
 
 ; ---- WAV streams ----------------------------------------------------------------------
-; eax = aud_load_wav(rdi = host path, rsi = voice): fill V_DATA/LEN/FMT/RATE from a WAV
+; eax = aud_load_wav(rdi = game path, rsi = voice): fill V_DATA/LEN/FMT/RATE from a WAV
 ; (PCM 8/16-bit, or IMA ADPCM decoded to 16-bit up front). 1 ok, 0 unreadable.
 aud_load_wav:
     push rbx
@@ -674,35 +674,11 @@ aud_load_wav:
     push r15
     sub rsp, 24
     mov rbx, rsi
-    lea rsi, [s_rb]
-    call _fopen
+    call vfs_load                   ; overlay or pak, +16 bytes of slack
     test rax, rax
     jz .fail0
-    mov r12, rax
-    mov rdi, r12
-    xor esi, esi
-    mov edx, 2                      ; SEEK_END
-    call _fseek
-    mov rdi, r12
-    call _ftell
-    mov r13, rax                    ; file size
-    mov rdi, r12
-    xor esi, esi
-    xor edx, edx
-    call _fseek
-    lea rdi, [r13 + 16]
-    call _malloc
     mov rbp, rax                    ; file bytes
-    mov rdi, rbp
-    mov esi, 1
-    mov rdx, r13
-    mov rcx, r12
-    call _fread
-    mov r14, rax
-    mov rdi, r12
-    call _fclose
-    cmp r14, r13
-    jne .bad
+    mov r13, rdx                    ; file size
     cmp r13, 12
     jb .bad
     cmp dword [rbp], 'RIFF'
@@ -1265,10 +1241,6 @@ ail_open_stream:
     call aud_voice
     mov r13, rax
     mov edi, ARG(1)
-    call win_path
-    test rax, rax
-    jz .fail
-    mov rdi, rax
     mov rsi, r13
     call aud_load_wav
     test eax, eax
@@ -1435,7 +1407,6 @@ shimtab_mss32:
     dq 0                            ; the 3D sample API stays on the silent default
 
 section .rodata
-s_rb:           db "rb", 0
 fmt_aud_open:   db "  [aud] AIL_waveOutOpen(%d ch, %d Hz, %d bit): mixing 22050 Hz stereo s16 on the game thread", 10, 0
 fmt_aud_dev:    db "  [aud] SDL audio device stream open (driver %s)", 10, 0
 fmt_aud_nodev:  db "  [aud] no SDL audio device (%s): mixing on the wall clock, silent", 10, 0

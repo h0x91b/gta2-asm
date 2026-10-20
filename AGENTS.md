@@ -50,7 +50,7 @@ point jumps to `0x56DCDA`, past VirtualSize end `0x56DBC0`).
 
 ## Target binary: vanilla `gta2.exe`
 
-Lives on disk as **`gta2/gta2.ebin`** (see "Game files"): every `.exe` in the game folder
+Lives as **`gta2.ebin`** inside `data.pak` (see "Game files"): every `.exe` in the game folder
 is renamed to `.ebin` (company policy: no `.exe` files in the project). Only the host-side
 file is renamed; the game still sees itself as `C:\GTA2\gta2.exe`. Facts measured from
 the file:
@@ -120,6 +120,14 @@ Option 1 is implemented for the frontend in `host/w32_renderer.asm`
   the only binary allowed in git. Never modify or re-pack it without the user's word.
 - For an experiment that needs loose files, unpack it into your worktree
   (`unzip -q data.pak -d gta2`; `/gta2/` stays git-ignored) and never commit the result.
+  `tools/mkpak.sh [dir [out]]` rebuilds a pak from such a folder (`zip -0 -r -X`).
+- **The loader runs from the pak alone** (`host/w32_vfs.asm`): it indexes the central
+  directory once, maps `gta2.ebin` from it, and serves every game file read (Win32
+  file shims, registry seed, mss32 streams, `LoadLibraryA` probes) from it,
+  case-insensitively. It refuses a pak with any non-Stored entry. **Writes** go to the
+  overlay `~/Library/Application Support/gta2-resurrected/` (the host's cwd); overlay
+  files win over the pak, and a pak file opened for writing is copied there first. The
+  pak itself is never written. Delete the overlay to get back to vanilla state.
 - Contents, for orientation: game data in `data/`, plugin DLLs (`d3ddll.dll`,
   `dmavideo.dll`, `mss32.dll`, `binkw32.dll`, glide DLLs), and dgVoodoo wrappers
   (`DDraw.dll`, `D3DImm.dll`, `dgVoodoo.conf`). The dgVoodoo files are a Windows-only

@@ -3,7 +3,7 @@
 # CLT and an x86_64 SDL3 (default ~/.local/opt/sdl3-x86_64, override with SDL3_PREFIX).
 #   ./build.sh                  build ./host (SDL hello window) and ./loader (PE loader)
 #   ./build.sh --run [N]        build + run the hello window (quit after N frames)
-#   ./build.sh --load [args]    build + run the loader on ../gta2/gta2.ebin
+#   ./build.sh --load [args]    build + run the loader on ../data.pak (the game as a Stored zip)
 #                               (e.g. --load --entry: also jump to the PE entry point)
 set -e
 cd "$(dirname "$0")"
@@ -32,5 +32,5 @@ link loader loader.o   # libSystem only: SDL3 is dlopen'ed after the low 4 GB is
 
 case "$1" in
   --run)  shift; exec arch -x86_64 ./host "$@" ;;
-  --load) shift; exec arch -x86_64 ./loader ../gta2/gta2.ebin "$@" ;;
+  --load) shift; exec arch -x86_64 ./loader ../data.pak "$@" ;;
 esac

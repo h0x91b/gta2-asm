@@ -5,7 +5,7 @@ Two x86-64 NASM binaries (run under Rosetta 2), one build command:
 ```sh
 host/build.sh                 # builds ./host and ./loader
 host/build.sh --run [N]       # SDL3 hello window (main.asm), quit after N frames
-host/build.sh --load          # PE loader (loader.asm) on ../gta2/gta2.ebin: exit 0 = all checks pass
+host/build.sh --load          # PE loader (loader.asm) on ../data.pak: exit 0 = all checks pass
 host/build.sh --load --entry  # ...then run the game from its PE entry point through the Win32
                               # shims; stops (exit 3) at the first unimplemented import
 host/build.sh --load --entry --trace   # + one log line per shim call
@@ -36,7 +36,10 @@ low regions first and then `dlopen`s SDL3 (`$GTA2_SDL3_LIB`, default
 
 What it does (`loader.asm`; SDL is dlopen'ed by the shims):
 
-1. Reads `gta2.ebin` (vanilla `gta2.exe`, renamed on disk), validates MZ / PE / i386 /
+1. Opens `data.pak` (first argument, default `data.pak`; `build.sh --load` passes
+   `../data.pak`), indexes it (`w32_vfs.asm`), reads its `gta2.ebin` (vanilla
+   `gta2.exe`, renamed) and `chdir`s into the overlay
+   `~/Library/Application Support/gta2-resurrected/`. Validates MZ / PE / i386 /
    PE32 / ImageBase `0x3F0000` (no relocations, so no other base), `mmap`s SizeOfImage at `0x3F0000` (hint + verify).
 2. Copies headers and every section to ImageBase+VA. Raw bytes are copied up to
    `min(SizeOfRawData, align_up(VirtualSize, 0x1000))` like the Windows loader; the rest

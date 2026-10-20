@@ -3,17 +3,17 @@
 ; x86-64 Mach-O (macho64), runs under Rosetta 2. Separate binary from the SDL hello
 ; window (host/main.asm); same link flags, no SDL.
 ;
-;   ./loader [gta2.ebin]          map the image, stub every import, call original
-;                                 functions through a 32-bit LDT code segment and check
-;                                 the results; exit 0 when every check passes
-;   ./loader [gta2.ebin] --entry  same, then jump to the real PE entry point: it runs
-;                                 until the first import and dies on its stub (exit 3)
+;   ./loader [data.pak]           map gta2.ebin from the pak, stub every import, call
+;                                 original functions through a 32-bit LDT code segment
+;                                 and check the results; exit 0 when every check passes
+;   ./loader [data.pak] --entry   same, then jump to the real PE entry point and run the
+;                                 game through the Win32 shims
 ;
 ; Exit codes: 0 ok, 1 load/setup failure, 2 a function check failed,
 ;             3 the game called an unimplemented import, 4 SIGSEGV/SIGBUS.
 ;
 ; How it works (see spike/ for the proof of each mechanism):
-;   1. The whole file is read into a malloc buffer and validated (MZ, PE, i386, PE32,
+;   1. gta2.ebin is read from data.pak (w32_vfs.asm) into a malloc buffer and validated (MZ, PE, i386, PE32,
 ;      ImageBase 0x3F0000 — there are no relocations, so no other base is possible).
 ;   2. SizeOfImage is mmap'ed at 0x3F0000 (hint + verify, never blind MAP_FIXED), the
 ;      headers and every section are copied to ImageBase+VA (raw bytes up to the
@@ -300,26 +300,23 @@ fail:
     mov edi, EXIT_LOAD
     call _exit
 
-; Read the whole file into a malloc'ed buffer: rdi = path -> [file], [file_size]
-read_file:
+; Open data.pak (rdi = path) and read its gta2.ebin into a malloc'ed buffer -> [file],
+; [file_size]
+read_image:
     push rbx
     push r12
     push r13
-    mov r12, rdi
-    xor esi, esi                ; O_RDONLY
-    xor eax, eax
-    call _open
-    test eax, eax
-    js .no_open
+    call vfs_open_pak
+    lea rdi, [s_image]
+    call vfs_find
+    cmp eax, -1
+    je .no_image
     mov ebx, eax
-    mov edi, ebx
-    xor esi, esi
-    mov edx, SEEK_END
-    call _lseek
-    test rax, rax
-    jle .bad_read
-    mov r13, rax
-    mov [file_size], rax
+    imul eax, eax, PAK_ENT_SIZE
+    add rax, [pak_ents]
+    mov r12, rax
+    mov r13d, [rax + 16]
+    mov [file_size], r13
     mov rdi, r13
     call _malloc
     test rax, rax
@@ -329,26 +326,21 @@ read_file:
     mov rsi, rax
     mov rdx, r13
     xor ecx, ecx
-    call _pread
+    call vfs_read_at
     cmp rax, r13
     jne .bad_read
-    mov edi, ebx
-    call _close
     lea rdi, [fmt_file]
-    mov rsi, r12
+    mov rsi, [pak_path]
     mov rdx, r13
+    mov rcx, [r12 + 8]
     xor eax, eax
     call _printf
     pop r13
     pop r12
     pop rbx
     ret
-.no_open:
-    lea rdi, [fmt_no_open]
-    mov rsi, r12
-    xor eax, eax
-    call _printf
-    lea rdi, [msg_open]
+.no_image:
+    lea rdi, [msg_no_image]
     call fail
 .bad_read:
     lea rdi, [msg_read]
@@ -796,7 +788,7 @@ _main:
 
     lea rax, [default_exe]
     mov [exe_path], rax
-.arg:                           ; [gta2.ebin] [--entry] [--trace], any order
+.arg:                           ; [data.pak] [--entry] [--trace], any order
     dec r12d
     jle .args_done
     add rbx, 8
@@ -924,8 +916,8 @@ _main:
     call _sigaction
 
     mov rdi, [exe_path]
-    call read_file
-    call enter_game_dir         ; the game opens data\... relative to its own directory
+    call read_image
+    call enter_overlay_dir      ; the game's relative paths resolve against the overlay
     call map_image
     call setup_low
     call setup_arena
@@ -1055,7 +1047,7 @@ s_gta2:     db "GTA2", 0
 s_long:     db "Anywhere City: Downtown, Residential, Industrial", 0
 strs_end:
 
-default_exe: db "gta2/gta2.ebin", 0  ; gta2.exe renamed on disk (no .exe files policy)
+default_exe: db "data.pak", 0        ; the game folder as a Stored zip (w32_vfs.asm)
 arg_entry:   db "--entry", 0
 arg_trace:   db "--trace", 0
 arg_hold:    db "--hold", 0
@@ -1077,8 +1069,7 @@ prot_names:  db "---", 0, "r--", 0, "-w-", 0, "rw-", 0, "--x", 0, "r-x", 0, "-wx
 str_pass:    db "PASS", 0
 str_fail:    db "FAIL", 0
 
-fmt_file:    db "loader: read %s (%lld bytes)", 10, 0
-fmt_no_open: db "loader: cannot open %s", 10, 0
+fmt_file:    db "loader: read gta2.ebin from %s (%lld bytes at offset 0x%llx)", 10, 0
 fmt_pe:      db "PE32 i386: ImageBase=0x%x SizeOfImage=0x%x entry=0x%x sections=%d", 10, 0
 fmt_sec:     db "  map %-8.8s 0x%06x-0x%06x (VirtualSize end)  copied 0x%06x raw, zeroed tail 0x%06x", 10, 0
 fmt_low:     db "low region 0x%x-0x%x (rwx: thunks, stubs, TEB, 32-bit stack); code32 sel 0x%x, fs sel 0x%x -> TEB 0x%x", 10, 0
@@ -1095,7 +1086,8 @@ fmt_crash:   db "loader: signal %d, addr %p, rip 0x%llx cs 0x%llx rsp 0x%llx", 1
 fmt_fail:    db "loader: FAIL: %s", 10, 0
 msg_calls:   db "calling original gta2.exe functions in 32-bit mode:", 0
 msg_ok:      db "ALL OK", 0
-msg_open:    db "open", 0
+s_image:     db "gta2.ebin", 0
+msg_no_image: db "data.pak has no gta2.ebin", 0
 msg_read:    db "read", 0
 msg_bad_pe:  db "not a PE32 i386 image this loader understands", 0
 msg_bad_base: db "ImageBase is not 0x3F0000 (no relocations: cannot rebase)", 0
@@ -1113,39 +1105,10 @@ trace:       db 0
 hold:        db 0                   ; --hold: keep the SDL window up 5 s when we stop
 
 section .text
-; chdir() into the directory that holds gta2.ebin (exe_path's directory part)
-enter_game_dir:
-    push rbx
-    mov rdi, [exe_path]
-    call _strdup
-    mov rbx, rax
-    mov rdi, rax
-    mov esi, '/'
-    call _strrchr
-    test rax, rax
-    jz .here
-    mov byte [rax], 0
-    mov rdi, rbx
-    call _chdir
-    test eax, eax
-    jnz .bad
-.here:
-    lea rdi, [game_cwd]
-    mov esi, 1024
-    call _getcwd
-    lea rdi, [fmt_cwd]
-    lea rsi, [game_cwd]
-    xor eax, eax
-    call _printf
-    pop rbx
-    ret
-.bad:
-    lea rdi, [msg_chdir]
-    call fail
-
 %include "w32_core.asm"
 %include "w32_kernel32.asm"
 %include "w32_files.asm"
+%include "w32_vfs.asm"
 %include "w32_locale.asm"
 %include "w32_user32.asm"
 %include "w32_advapi32.asm"
@@ -1157,12 +1120,9 @@ enter_game_dir:
 %include "w32_tables.asm"
 
 section .rodata
-fmt_cwd:     db "game directory: %s (seen by the game as C:\GTA2)", 10, 0
-msg_chdir:   db "chdir into the game directory", 0
 
 section .bss
 alignb 8
-game_cwd:    resb 1024
 file:        resq 1
 file_size:   resq 1
 nt:          resq 1

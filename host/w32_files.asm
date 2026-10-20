@@ -1,12 +1,13 @@
-; w32_files.asm — KERNEL32 file shims on top of the game directory.
+; w32_files.asm — KERNEL32 file shims on top of data.pak + the overlay (w32_vfs.asm).
 ;
-; Path policy: the host chdir()s into the directory holding gta2.ebin, and the game is
-; told it lives in C:\GTA2 (GetModuleFileNameA / GetCurrentDirectoryA). win_path maps
+; Path policy: the host chdir()s into the overlay directory, and the game is told it
+; lives in C:\GTA2 (GetModuleFileNameA / GetCurrentDirectoryA). win_path maps
 ;   C:\GTA2\x, \GTA2\x (any case, either slash)  -> x
-;   relative paths                                -> relative to the game directory
+;   relative paths                                -> relative to the game root
 ;   any other absolute path                       -> refused (not found)
-; and then resolves every component case-insensitively against what is on disk
-; (Windows is case-insensitive, APFS here is too by default, but nothing guarantees it).
+; drops "." components, and resolves every component case-insensitively against the
+; overlay on disk (Windows is case-insensitive, APFS here is too by default, but nothing
+; guarantees it). A path missing from the overlay is then looked up in the pak.
 
 O_RDONLY equ 0
 O_WRONLY equ 1
@@ -113,6 +114,12 @@ win_path:
     inc rbx
     jmp .scan
 .have_end:
+    cmp byte [r15], '.'             ; "." component: nothing to append
+    jne .append
+    lea rax, [r15 + 1]
+    cmp rax, rbx
+    je .next_comp
+.append:
     ; append "/" (if not first) + component
     test r14d, r14d
     jz .no_sep
@@ -225,13 +232,30 @@ handle_fd:
     mov eax, -1
     ret
 
+; rax = pak_handle(edi = HANDLE) -> handle entry if it is an open pak file, else 0
+pak_handle:
+    sub rsp, 8
+    call handle_get
+    add rsp, 8
+    test rax, rax
+    jz .r
+    cmp dword [rax], HT_PAK
+    je .r
+    xor eax, eax
+.r:
+    ret
+
+; Overlay file (or nothing anywhere): host open(), created in the overlay as asked.
+; Pak file: read-only access gets an HT_PAK handle {entry index, u64 position}; write
+; access copies the entry to the overlay first (unless it is about to be truncated).
 k32_CreateFileA:    ; (name, access, share, sec, disposition, flags, template)
     HENTER
     mov edi, ARG(0)
-    call win_path
-    test rax, rax
-    jz .not_found
-    mov r12, rax
+    call vfs_resolve
+    cmp eax, VFS_REFUSED
+    je .not_found
+    mov r14d, eax
+    lea r12, [path_out]
     ; access -> O_RDONLY / O_WRONLY / O_RDWR
     mov eax, ARG(1)
     xor r13d, r13d
@@ -259,6 +283,25 @@ k32_CreateFileA:    ; (name, access, share, sec, disposition, flags, template)
     jne .open
     or r13d, O_TRUNC
 .open:
+    test r14d, r14d
+    js .host
+    test ARG(1), GENERIC_WRITE
+    jz .pak
+    mov eax, ARG(4)
+    cmp eax, 3                      ; OPEN_EXISTING / OPEN_ALWAYS keep the contents
+    je .copy
+    cmp eax, 4
+    jne .host
+.copy:
+    mov edi, r14d
+    mov rsi, r12
+    call vfs_copy_out
+.host:
+    test r13d, O_CREAT
+    jz .host_open
+    mov rdi, r12
+    call mkdir_parents
+.host_open:
     mov rdi, r12
     mov esi, r13d
     mov edx, 0644o
@@ -272,8 +315,11 @@ k32_CreateFileA:    ; (name, access, share, sec, disposition, flags, template)
     xor edx, edx
     call handle_new
     mov r13d, eax
+    test ARG(1), GENERIC_WRITE      ; writes always logged, reads with --trace
+    jnz .log
     cmp byte [trace], 0
     je .ret
+.log:
     lea rdi, [fmt_open]
     mov esi, ARG(0)
     mov rdx, r12
@@ -284,6 +330,22 @@ k32_CreateFileA:    ; (name, access, share, sec, disposition, flags, template)
     mov dword [last_error], 0
     mov eax, r13d
     HRET
+.pak:
+    mov edi, HT_PAK
+    mov esi, r14d
+    xor edx, edx                    ; position
+    call handle_new
+    mov r13d, eax
+    lea rdi, [fmt_open_pak]
+    mov esi, ARG(0)
+    mov rdx, r12
+    imul ecx, r14d, PAK_ENT_SIZE
+    add rcx, [pak_ents]
+    mov ecx, [rcx + 16]
+    mov r8d, r13d
+    xor eax, eax
+    call _printf
+    jmp .ret
 .not_found:
     lea rdi, [fmt_open_fail]
     mov esi, ARG(0)
@@ -296,6 +358,21 @@ k32_CreateFileA:    ; (name, access, share, sec, disposition, flags, template)
 k32_ReadFile:       ; (h, buf, n, read*, overlapped)
     HENTER
     mov edi, ARG(0)
+    call pak_handle
+    test rax, rax
+    jz .host
+    mov r12, rax
+    mov edi, [r12 + 4]
+    mov esi, ARG(1)
+    mov edx, ARG(2)
+    mov rcx, [r12 + 8]
+    call vfs_read_at
+    test rax, rax
+    js .bad
+    add [r12 + 8], rax
+    jmp .count
+.host:
+    mov edi, ARG(0)
     call handle_fd
     test eax, eax
     js .bad
@@ -305,6 +382,7 @@ k32_ReadFile:       ; (h, buf, n, read*, overlapped)
     call _read
     test rax, rax
     js .bad
+.count:
     mov ecx, ARG(3)
     test ecx, ecx
     jz .ok
@@ -344,6 +422,36 @@ k32_WriteFile:      ; (h, buf, n, written*, overlapped)
 k32_SetFilePointer: ; (h, lo, hi*, method) -> new low dword
     HENTER
     mov edi, ARG(0)
+    call pak_handle
+    test rax, rax
+    jz .host
+    mov r12, rax
+    movsxd rsi, ARG(1)              ; distance (64-bit = hi:lo when hi* is given)
+    mov ecx, ARG(2)
+    test ecx, ecx
+    jz .pak_from
+    mov esi, ARG(1)
+    mov eax, [rcx]
+    shl rax, 32
+    or rsi, rax
+.pak_from:
+    mov eax, ARG(3)
+    xor edx, edx                    ; FILE_BEGIN
+    cmp eax, 1
+    cmove rdx, [r12 + 8]            ; FILE_CURRENT
+    cmp eax, 2
+    jne .pak_seek
+    imul eax, [r12 + 4], PAK_ENT_SIZE ; FILE_END
+    add rax, [pak_ents]
+    mov edx, [rax + 16]
+.pak_seek:
+    lea rax, [rdx + rsi]
+    test rax, rax
+    js .bad
+    mov [r12 + 8], rax
+    jmp .r_hi
+.host:
+    mov edi, ARG(0)
     call handle_fd
     test eax, eax
     js .bad
@@ -361,6 +469,7 @@ k32_SetFilePointer: ; (h, lo, hi*, method) -> new low dword
     call _lseek
     test rax, rax
     js .bad
+.r_hi:
     mov ecx, ARG(2)
     test ecx, ecx
     jz .r
@@ -403,8 +512,11 @@ k32_GetFileType:    ; (h) -> FILE_TYPE_DISK 1 / CHAR 2 / UNKNOWN 0
     jz .unk
     cmp dword [rax], HT_STD
     je .chr
+    cmp dword [rax], HT_PAK
+    je .disk
     cmp dword [rax], HT_FILE
     jne .unk
+.disk:
     mov eax, 1
     ret
 .chr:
@@ -430,14 +542,27 @@ k32_GetStdHandle:   ; (-10 / -11 / -12)
 k32_GetFileAttributesA: ; (path) -> attributes or INVALID_FILE_ATTRIBUTES
     HENTER
     mov edi, ARG(0)
-    call win_path
-    test rax, rax
-    jz .missing
-    mov rdi, rax
-    lea rsi, [stat_buf]
-    call _stat
+    call vfs_resolve
+    cmp eax, VFS_OVERLAY
+    je .host
+    cmp eax, VFS_NONE
+    je .pak_dir
+    jl .missing
+    imul eax, eax, PAK_ENT_SIZE
+    add rax, [pak_ents]
+    test dword [rax + 20], PAK_DIR
+    mov eax, 0x80
+    mov ecx, 0x10
+    cmovnz eax, ecx
+    HRET
+.pak_dir:
+    lea rdi, [path_out]
+    call vfs_is_dir
     test eax, eax
-    jnz .missing
+    jz .missing
+    mov eax, 0x10
+    HRET
+.host:
     movzx eax, word [stat_buf + ST_MODE]
     and eax, S_IFMT
     cmp eax, S_IFDIR
@@ -451,11 +576,16 @@ k32_GetFileAttributesA: ; (path) -> attributes or INVALID_FILE_ATTRIBUTES
     HRET
 
 ; ---- directory search ------------------------------------------------------
-; HT_FIND handle extra -> host block {DIR* 0, char dir[1024] 8, char pattern[260] 1032}
+; HT_FIND handle extra -> host block {DIR* 0, char dir[1024] 8, char pattern[260] 1032,
+; u32 next pak index 1296, u32 strlen(dir) 1300 (0 = root)}. The overlay directory is
+; listed first (DIR* = 0 once done or if it does not exist), then the pak entries
+; directly inside dir that the overlay does not have.
 FIND_DIR    equ 0
 FIND_PATH   equ 8
 FIND_PAT    equ 1032
-FIND_SIZE   equ 1296
+FIND_IDX    equ 1296
+FIND_PLEN   equ 1300
+FIND_SIZE   equ 1304
 
 k32_FindFirstFileA: ; (pattern, WIN32_FIND_DATAA*)
     HENTER
@@ -506,11 +636,24 @@ k32_FindFirstFileA: ; (pattern, WIN32_FIND_DATAA*)
     jnz .opendir
     mov word [r12 + FIND_PAT], '*'
 .opendir:
+    mov dword [r12 + FIND_IDX], 0
+    xor eax, eax
+    cmp word [r12 + FIND_PATH], '.'
+    je .plen
+    lea rdi, [r12 + FIND_PATH]
+    call _strlen
+.plen:
+    mov [r12 + FIND_PLEN], eax
     lea rdi, [r12 + FIND_PATH]
     call _opendir
-    test rax, rax
-    jz .fail
     mov [r12 + FIND_DIR], rax
+    test rax, rax
+    jnz .search
+    lea rdi, [r12 + FIND_PATH]
+    call vfs_is_dir
+    test eax, eax
+    jz .fail
+.search:
     mov rdi, r12
     mov esi, ARG(1)
     call find_next
@@ -533,6 +676,8 @@ k32_FindFirstFileA: ; (pattern, WIN32_FIND_DATAA*)
     HRET
 .empty:
     mov rdi, [r12 + FIND_DIR]
+    test rdi, rdi
+    jz .fail
     call _closedir
 .fail:
     mov rdi, r12
@@ -577,7 +722,10 @@ k32_FindClose:      ; (h)
     mov r12, rax
     mov r13, [rax + 8]
     mov rdi, [r13 + FIND_DIR]
+    test rdi, rdi
+    jz .freeblk
     call _closedir
+.freeblk:
     mov rdi, r13
     call _free
     mov dword [r12], HT_FREE
@@ -599,9 +747,16 @@ find_next:
     mov r12d, esi
 .entry:
     mov rdi, [rbx + FIND_DIR]
+    test rdi, rdi
+    jz .pak
     call _readdir
     test rax, rax
-    jz .none
+    jnz .dirent
+    mov rdi, [rbx + FIND_DIR]
+    call _closedir
+    mov qword [rbx + FIND_DIR], 0
+    jmp .pak
+.dirent:
     lea r13, [rax + DIRENT_NAME]
     cmp byte [r13], '.'
     jne .match
@@ -650,6 +805,71 @@ find_next:
 .filled:
     mov eax, 1
     jmp .out
+.pak:
+    mov r14d, [rbx + FIND_IDX]
+.pak_next:
+    cmp r14d, [pak_count]
+    jae .none
+    imul eax, r14d, PAK_ENT_SIZE
+    add rax, [pak_ents]
+    mov r15, rax
+    inc r14d
+    mov r13, [r15]                  ; name, must be dir + "/" + leaf
+    mov edx, [rbx + FIND_PLEN]
+    test edx, edx
+    jz .leaf
+    mov rdi, r13
+    lea rsi, [rbx + FIND_PATH]
+    call _strncasecmp
+    test eax, eax
+    jnz .pak_next
+    mov eax, [rbx + FIND_PLEN]
+    add r13, rax
+    cmp byte [r13], '/'
+    jne .pak_next
+    inc r13
+.leaf:
+    cmp byte [r13], 0
+    je .pak_next
+    mov rdi, r13
+    mov esi, '/'
+    call _strchr
+    test rax, rax
+    jnz .pak_next
+    lea rdi, [rbx + FIND_PAT]
+    mov rsi, r13
+    mov edx, FNM_CASEFOLD
+    call _fnmatch
+    test eax, eax
+    jnz .pak_next
+    lea rdi, [find_tmp]             ; the overlay's copy was listed already
+    mov esi, PATH_MAX_W
+    lea rdx, [fmt_join]
+    lea rcx, [rbx + FIND_PATH]
+    mov r8, r13
+    xor eax, eax
+    call _snprintf
+    lea rdi, [find_tmp]
+    lea rsi, [stat_buf]
+    call _stat
+    test eax, eax
+    jz .pak_next
+    mov [rbx + FIND_IDX], r14d
+    mov edi, r12d
+    xor esi, esi
+    mov edx, 320
+    call _memset
+    lea rdi, [r12 + 44]
+    mov rsi, r13
+    mov edx, 259
+    call _strncpy
+    mov eax, [r15 + 16]
+    mov [r12 + 32], eax             ; nFileSizeLow
+    mov dword [r12], 0x80
+    test dword [r15 + 20], PAK_DIR
+    jz .filled
+    mov dword [r12], 0x10
+    jmp .filled
 .none:
     xor eax, eax
 .out:
@@ -763,7 +983,8 @@ s_starstar:  db "*.*", 0
 fmt_join:    db "%s/%s", 0
 fmt_fullpath: db "%s\%s", 0
 fmt_str:     db "%s", 0
-fmt_open:    db "  [w32] CreateFileA(%s) -> %s, handle 0x%x", 10, 0
+fmt_open:    db "  [w32] CreateFileA(%s) -> overlay %s, handle 0x%x", 10, 0
+fmt_open_pak: db "  [vfs] CreateFileA(%s) -> pak %s (%u bytes), handle 0x%x", 10, 0
 fmt_open_fail: db "  [w32] CreateFileA(%s) -> not found", 10, 0
 fmt_find:    db "  [w32] FindFirstFileA(%s) -> 0x%x", 10, 0
 fmt_find_none: db "  [w32] FindFirstFileA(%s) -> no match", 10, 0
