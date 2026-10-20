@@ -282,6 +282,7 @@ pump_sdl:
     push r12
     push r13
     sub rsp, 128                    ; SDL_Event (128); rsp stays 16-aligned
+    call audio_pump                 ; mss32 mixer: top the audio output up
     cmp byte [sdl_inited], 0
     je .out
 .poll:

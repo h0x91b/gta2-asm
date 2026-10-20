@@ -192,9 +192,6 @@ shimtab_dplayx:
     SHIM "DirectPlayCreate", 12, dpl_DirectPlayCreate
     SHIM "DirectPlayLobbyCreateW", 20, dpl_DirectPlayLobbyCreateW
     dq 0
-shimtab_mss32:
-    dq s_mss32
-    dq 0
 shimtab_binkw32:
     dq s_binkw32
     dq 0

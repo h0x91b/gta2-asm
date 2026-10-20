@@ -8,7 +8,7 @@ with `%include` (one NASM unit).
 
 **Update:** with the renderer plugins implemented (`host/w32_renderer.asm`,
 [`renderer-sdl.md`](renderer-sdl.md)) the game no longer stops: it loads both plugins,
-initialises the (silent) audio, loads the frontend and **runs the frontend loop,
+initialises the audio (real since `w32_audio.asm`, see "Audio"), loads the frontend and **runs the frontend loop,
 drawing the main menu**, until the window is closed (or `--frames=N`). The section
 below is the record of the stop before that step.
 
@@ -234,7 +234,8 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
 | DINPUT8 DirectInput8Create ✓ | **must succeed** (failure is fatal, `0x44BA2B` → error handler `0x450530`) |
 | IDirectInput8A (11 methods) | CreateDevice ✓ → device (kind = GUID.Data1: keyboard/mouse); EnumDevices enumerates nothing (no joysticks); most others DI_OK |
 | IDirectInputDevice8A (32 methods) | real keyboard + mouse fed by SDL3, see "Input" |
-| mss32 (52), binkw32 (18) | default silent stub: 0, correct stdcall pop from the `@N` decoration; first call logged. Not reached yet. |
+| mss32 (52) | 36 real (`w32_audio.asm`, see "Audio"); the 16 `AIL_*3D*` exports keep the silent default |
+| binkw32 (18) | default silent stub: 0, correct stdcall pop from the `@N` decoration; first call logged |
 
 ### Hooks (`w32_hooks.asm`)
 
@@ -355,14 +356,93 @@ So the shim also posts `WM_ACTIVATE(WA_ACTIVE)` right behind it — the user ret
 from a manager that closed at once. `ShowWindow(7)` is harmless here: our `ShowWindow`
 never minimizes. Our own options screen replaces this later.
 
+## Audio (`w32_audio.asm`)
+
+### How the game uses mss32 (own analysis of vanilla 11.44, code `0x4B5F70`..`0x4B73E0`)
+
+- Sound manager object at `0x66C950`. Startup: `AIL_startup`, `AIL_set_preference`,
+  `AIL_waveOutOpen(&drv, 0, -1, fmt)` with **22050 Hz, 16-bit, stereo**. Until now that
+  call "succeeded" with a 0 driver and the game quietly shut its audio down again.
+- `AIL_enumerate_3D_providers` → 0 (none), so it stays on the **2D sample API**:
+  1 8-bit sample (`+0x98`) + 16 16-bit mono samples (`+0x58`) via
+  `AIL_allocate_sample_handle`.
+- **SFX banks**: `data\audio\<style>.RAW` (raw PCM) + `.SDT` (0x140 entries × 24 bytes:
+  offset, size, rate, …). The game reads them itself into `AIL_mem_alloc_lock` memory
+  and points samples into it (`AIL_set_sample_address`). The frontend bank is
+  `fstyle.raw/.sdt` (568 120 bytes, 18 entries, 22050 Hz s16 mono). A stereo menu effect
+  is two entries played at once as two samples, pan 0 and pan 127.
+- **Music**: `AIL_open_stream(drv, "data\gtaudio\<n>[A].wav")`, `loop_count 0`
+  (forever), `set_stream_volume` from the `CDVol` setting (measured `0x4C`). The
+  frontend asks for `data\gtaudio\d.wav` and retries every frame while it is missing.
+  **This install has no `data\gtaudio` folder at all** (neither the task copy nor the
+  main checkout), so the menu has no music until those files are added.
+- **Voices**: `data\audio\vocals\*.wav`, IMA ADPCM (format 0x11, 4-bit, stereo,
+  block align 1024), played as streams.
+- Volumes: SFX samples come out at vol 10 (registry `SFXVol` = 11), master 127.
+
+### Design
+
+- **Everything runs on the game thread.** `audio_pump` (called from `pump_sdl` every
+  frame and from `AIL_delay`) mixes 256-frame chunks into int64 accumulators, clips to
+  s16 and puts them into one `SDL_AudioStream` (`SDL_OpenAudioDeviceStream`, 22050 Hz
+  stereo s16), keeping ~2048 frames (~93 ms) queued. SDL's device thread only drains
+  that stream, so no game or shim state is touched off-thread. No callback.
+- **Voices**: 64 records; `HSAMPLE`/`HSTREAM` = `0xA10000 + 16 * index`, `HDIGDRIVER`
+  = `0xA0D000` (tokens, never dereferenced by the game). Per voice: 8/16-bit, mono/
+  stereo, signed/unsigned 8-bit, rate (16.16 step, nearest-sample resampling), volume
+  and pan 0..127 (linear, pan 64 = both sides full), loop count and loop block.
+- **Streams** are loaded whole on `AIL_open_stream` (PCM WAV, or IMA ADPCM decoded up
+  front to s16) — the files are small. Missing/unsupported file → 0, logged once per
+  name.
+- **Focus**: `AIL_digital_handle_release/reacquire` pause/resume the device.
+- **No audio device**: the mixer advances on the wall clock instead, so
+  `--audio-dump` works headless.
+
+### Exports implemented (36)
+
+`startup`, `shutdown`, `set_preference`, `waveOutOpen`, `waveOutClose`,
+`mem_alloc_lock`, `mem_free_lock`, `set_digital_master_volume`,
+`digital_handle_release`, `digital_handle_reacquire`, `delay`,
+`enumerate_3D_providers` (none); samples: `allocate/release_sample_handle`,
+`init_sample`, `set_sample_type`, `set_sample_address`, `set_sample_playback_rate`,
+`set_sample_volume`, `set_sample_pan`, `set_sample_loop_count`,
+`set_sample_loop_block`, `start_sample`, `end_sample`, `sample_status`; streams:
+`open/close/start_stream`, `stream_status`, `set_stream_loop_count`,
+`(set_)stream_volume`, `(set_)stream_playback_rate`, `(set_)stream_ms_position`.
+The 16 `*3D*` exports stay on the silent default (never reached: no provider).
+
+### Proof: `--audio-dump=PATH.wav`
+
+Writes the mixed output (22050 Hz stereo s16) and at exit prints its duration, the
+number of sample starts / streams and peak + rms per second. Measured:
+
+- `--keys=300:DOWN,360:DOWN,420:UP`: every key tap starts one stereo pair from
+  `fstyle.raw` at the tap's frame (`start_sample ... len 47872 ... pan 0` / `pan 127`;
+  UP plays a different entry, len 47958).
+- Stream path checked with a temporary `data\gtaudio\d.wav` (a copy of
+  `vocals\gta.wav`, IMA ADPCM, removed again): the dump matches macOS `afconvert`'s
+  decode of the same file with correlation 0.9999997, gain 0.596 (= stream volume
+  76/127). It looped every 3.3 s, as the game asks for (`loop_count 0`).
+
+Listen live: `host/build.sh --load --entry` and move through the menu.
+
+### Gaps
+
+- Music: no `data\gtaudio` files in this install (see above).
+- 3D samples / EAX / A3D (in-game positional sound) — not offered.
+- Bink video audio (`binkw32` is still silent; no movies are shipped either).
+- Resampling is nearest-sample; every rate the frontend uses is 22050 Hz = the mix
+  rate, so it is exact there.
+
 ## What the game needs next (notes for later work)
 
 - **Renderer**: done for the frontend — shim tables `dmavideo` / `d3ddll` in
   `w32_renderer.asm`, see `renderer-sdl.md`. Gameplay drawing (tiles, lighting) is next.
 - **Input**: done (keyboard + mouse, see "Input"). Joysticks (EnumDevices
   `DI8DEVCLASS_GAMECTRL`) are not offered; WM_CHAR is not generated.
-- **Audio/video**: every mss32/binkw32 call returns 0. If the game treats a 0 from
-  `AIL_startup`-style calls as fatal, those need real "no device" answers.
+- **Audio**: frontend done (see "Audio"); music needs the `data\gtaudio` files.
+  In-game: 3D samples (no provider offered, so the game should stay on 2D — unverified
+  in gameplay), Bink video audio.
 - **Not done**: SEH dispatch (`RtlUnwind`), WM_TIMER, dialogs, INI files, registry
   persistence, x87 control word (still macOS' default, not Windows' `0x27F`).
 

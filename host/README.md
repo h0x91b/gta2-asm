@@ -14,6 +14,8 @@ host/build.sh --load --entry --frames=300 --shot=/tmp/menu.bmp
                               # run to the main menu, save frame 300 as BMP, exit 0
 host/build.sh --load --entry --keys=200:DOWN,240:RETURN --frames=300 --shot=/tmp/m.bmp
                               # + scripted key taps at presented frames (DIK names)
+host/build.sh --load --entry --frames=600 --audio-dump=/tmp/menu.wav
+                              # + write the mixed mss32 audio as WAV, print levels/second
 host/build.sh --load --input-selftest  # DirectInput self-test through the game's own
                               # input code, PASS/FAIL per check (exit = failures)
 host/build.sh --load --input-test      # same code, ~15 s of real keys in a test window

@@ -858,6 +858,34 @@ _main:
     mov [keys_arg], rax
     jmp .arg
 .not_keys:
+    mov rdi, [rbx]                  ; --audio-dump=PATH: also write the mixed output as WAV
+    lea rsi, [arg_audio_dump]
+    mov edx, 13
+    call _strncmp
+    test eax, eax
+    jnz .not_dump
+    mov rax, [rbx]
+    add rax, 13
+    mov [aud_dump_path], rax
+    mov rdi, rax
+    lea rsi, [s_wb]
+    call _fopen
+    mov [aud_dump_file], rax
+    test rax, rax
+    jz .arg
+    sub rsp, 64                     ; placeholder header, rewritten at exit
+    mov rdi, rsp
+    xor esi, esi
+    mov edx, 64
+    call _memset
+    mov rdi, rsp
+    mov esi, 1
+    mov edx, 44
+    mov rcx, [aud_dump_file]
+    call _fwrite
+    add rsp, 64
+    jmp .arg
+.not_dump:
     lea rdi, [arg_options]          ; flags that only set a byte
 .opt:
     mov rsi, [rdi]
@@ -908,6 +936,7 @@ _main:
     call setup_kernel32
     call setup_user32
     call setup_renderer
+    call setup_audio
     call setup_input
     call setup_registry
     mov al, [trace]
@@ -1033,6 +1062,8 @@ arg_hold:    db "--hold", 0
 arg_frames:  db "--frames=", 0
 arg_shot:    db "--shot=", 0
 arg_keys:    db "--keys=", 0
+arg_audio_dump: db "--audio-dump=", 0
+s_wb:        db "wb", 0
 s_opt_trace_input: db "--trace-input", 0
 s_opt_input_test: db "--input-test", 0
 s_opt_input_selftest: db "--input-selftest", 0
@@ -1122,6 +1153,7 @@ enter_game_dir:
 %include "w32_dinput.asm"
 %include "w32_hooks.asm"
 %include "w32_renderer.asm"
+%include "w32_audio.asm"
 %include "w32_tables.asm"
 
 section .rodata
