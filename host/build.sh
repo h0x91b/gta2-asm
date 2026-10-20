@@ -27,8 +27,8 @@ link() {
 rm -f host main.o loader loader.o
 nasm -f macho64 ${NASMFLAGS:-} -o main.o main.asm
 link host main.o -L"$SDL3_PREFIX/lib" -lSDL3 -rpath "$SDL3_PREFIX/lib"
-nasm -f macho64 ${NASMFLAGS:-} -o loader.o loader.asm
-link loader loader.o
+nasm -f macho64 ${NASMFLAGS:-} -I. -o loader.o loader.asm
+link loader loader.o   # libSystem only: SDL3 is dlopen'ed after the low 4 GB is mapped
 
 case "$1" in
   --run)  shift; exec arch -x86_64 ./host "$@" ;;

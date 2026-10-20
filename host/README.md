@@ -6,15 +6,24 @@ Two x86-64 NASM binaries (run under Rosetta 2), one build command:
 host/build.sh                 # builds ./host and ./loader
 host/build.sh --run [N]       # SDL3 hello window (main.asm), quit after N frames
 host/build.sh --load          # PE loader (loader.asm) on ../gta2/gta2.exe: exit 0 = all checks pass
-host/build.sh --load --entry  # ...then jump to the real PE entry point (exits 3 on the first import)
+host/build.sh --load --entry  # ...then run the game from its PE entry point through the Win32
+                              # shims; stops (exit 3) at the first unimplemented import
+host/build.sh --load --entry --trace   # + one log line per shim call
+host/build.sh --load --entry --hold    # + keep the SDL window up 5 s when it stops
 ```
 
+The Win32 shim layer (`w32_*.asm`, included by `loader.asm`) and its exact stopping
+point are documented in [`docs/win32-shims.md`](../docs/win32-shims.md).
+
 Both are linked with `-pagezero_size 0x1000 -no_pie -image_base 0x200000000` through
-`/usr/bin/ld` (via `xcrun -f ld`), so the low 4 GB is free for the game.
+`/usr/bin/ld` (via `xcrun -f ld`), so the low 4 GB is free for the game. `loader` links
+**only libSystem**: linked SDL3 frameworks would land in the low 4 GB, so it maps its
+low regions first and then `dlopen`s SDL3 (`$GTA2_SDL3_LIB`, default
+`~/.local/opt/sdl3-x86_64/lib/libSDL3.0.dylib`).
 
 ## `loader` — vanilla gta2.exe mapped, original functions called in 32-bit mode
 
-What it does (`loader.asm`, no SDL):
+What it does (`loader.asm`; SDL is dlopen'ed by the shims):
 
 1. Reads `gta2.exe`, validates MZ / PE / i386 / PE32 / ImageBase `0x3F0000` (no
    relocations, so no other base), `mmap`s SizeOfImage at `0x3F0000` (hint + verify).
@@ -24,12 +33,13 @@ What it does (`loader.asm`, no SDL):
    bytes is wrong for this exe: the 11.44 patch keeps code in `.text`'s raw slack past
    VirtualSize — the entry point jumps to `0x56DCDA`, VirtualSize ends at `0x56DBC0`.
 3. Walks the import directory and points **every** IAT slot at its own 10-byte 32-bit
-   stub (`push index; jmp common32`) at `0x10004000`. `common32` far-calls a 64-bit
-   thunk that prints `unimplemented import DLL!Name (called from 0x…)` and exits **3**.
+   stub (`push index; jmp common32`) at `0x10004000`. `common32` far-calls
+   `host_dispatch`, which runs the slot's Win32 shim (see `docs/win32-shims.md`); slots
+   without one print `unimplemented import DLL!Name (called from 0x…)` and exit **3**.
 4. `mprotect`s from section characteristics: headers `r--`, `.text r-x`, `.rdata r--`
    (the IAT lives there; it is written before this step), `.data rw-`, `.rsrc r--`.
-   Our own low region `0x10000000-0x10200000` (thunks, stubs, TEB, 1 MB 32-bit stack)
-   is **RWX** for now.
+   Our own low region `0x10000000-0x11000000` (thunks, stubs, TEB, 8 MB 32-bit stack)
+   is **RWX** for now; the shims' arena (heap etc.) is `0x20000000-0x60000000`, RW.
 5. LDT: flat 32-bit code descriptor (index 16, selector `0x87`) and a TEB data
    descriptor (index 17, `0x8f`, `fs:[0]=-1`, `fs:[4/8]` stack base/limit,
    `fs:[0x18]` self). `call32` sets eax/ecx/edx + stack args, far-returns into
@@ -53,7 +63,10 @@ Addresses from `re/functions.csv`; behaviour read from `ndisasm -b32` of the fil
 Rejected: `carUpgradeCost` (`0x41F7D0`) — it starts by dereferencing the global at
 `0x5E4CA4`, which is zero before game init.
 
-### Real output (2026-10-20, `host/build.sh --load --entry`)
+### Real output (2026-10-20, before the Win32 shims; `host/build.sh --load --entry`)
+
+Kept as the record of the loader step. The shim layer since adds a few setup lines and
+runs much further — current output in `docs/win32-shims.md`.
 
 ```
 loader: read ../gta2/gta2.exe (1740800 bytes)
@@ -107,8 +120,8 @@ pair is `push "KERNEL32"; call [GetModuleHandleA]` — exactly where the run sto
 
 ### Not done yet / caveats
 
-- No Win32 shim is implemented; every import traps. WinMain / game init untouched.
-- `call32` is single-threaded and not re-entrant (one context block at `0x10002000`).
+- `call32` is single-threaded; it is re-entrant (import handlers call back into 32-bit
+  code, e.g. WndProc), nested frames go just below the game's `esp`.
 - x87 control word is the macOS default (64-bit precision), not Windows' `0x27F`
   (53-bit); set it before running float-heavy game code.
 - The low region is RWX; the image itself is mapped with per-section protections.

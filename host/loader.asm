@@ -57,26 +57,29 @@ SCN_WRITE       equ 0x80000000
 
 ; ---- our low memory (32-bit code can only reach the low 4 GB) -------------
 LOW_BASE    equ 0x10000000
-LOW_SIZE    equ 0x200000
+LOW_SIZE    equ 0x1000000           ; 16 MB: thunks, stubs, TEB, 8 MB 32-bit stack
 CODE32      equ LOW_BASE + 0x0000   ; blob32 copied here
 THUNK64     equ LOW_BASE + 0x1000   ; blob64 copied here
 CTX         equ LOW_BASE + 0x2000   ; call32 context (single-threaded, not re-entrant)
 SAVED_RSP   equ CTX + 0x00          ; host rsp at call32 entry
 CONT        equ CTX + 0x08          ; host continuation address
-HOST_UNIMPL equ CTX + 0x10          ; 64-bit host function for import stubs
+HOST_DISPATCH equ CTX + 0x10        ; 64-bit host_dispatch, reached from dispatch64
 FAR_RET     equ CTX + 0x18          ; m16:32 -> THUNK64:ret64 (64-bit CS)
-FAR_UNIMPL  equ CTX + 0x20          ; m16:32 -> THUNK64:unimpl64 (64-bit CS)
+FAR_DISPATCH equ CTX + 0x20         ; m16:32 -> THUNK64:dispatch64 (64-bit CS)
 C_TARGET    equ CTX + 0x28          ; 32-bit function to call
 C_EAX       equ CTX + 0x2C          ; register arguments for it
 C_ECX       equ CTX + 0x30
 C_EDX       equ CTX + 0x34
 C_FS        equ CTX + 0x38          ; TEB selector, loaded into fs on every entry
+POP_BYTES   equ CTX + 0x3C          ; stdcall argument bytes common32 pops for the caller
+ESP32_TOP   equ CTX + 0x40          ; where call32 builds its 32-bit frame (nests below the
+                                    ; game's esp while an import handler runs)
 TEB         equ LOW_BASE + 0x3000   ; fake NT_TIB, base of the FS descriptor
 STUBS       equ LOW_BASE + 0x4000   ; import stubs, STUB_SIZE bytes each
 STUB_SIZE   equ 10
 MAX_IMPORTS equ 1024                ; 0x2800 bytes of stubs: fits below STRS
 STRS        equ LOW_BASE + 0x8000   ; test strings (strs blob copied here)
-STACK32_LO  equ LOW_BASE + 0x100000
+STACK32_LO  equ LOW_BASE + 0x800000
 STACK32_TOP equ LOW_BASE + LOW_SIZE - 16
 
 LDT_CODE    equ 16                  ; Rosetta aborts on LDT_AUTO_ALLOC: pick indices
@@ -90,6 +93,10 @@ PROT_R      equ 1
 PROT_W      equ 2
 PROT_X      equ 4
 MAP_ANONPRIV equ 0x1002             ; MAP_ANON | MAP_PRIVATE
+; SDL3 is NOT linked: dyld would load its frameworks into the low 4 GB (mmap at
+; 0x3F0000 then fails). Low regions are mapped first, SDL is dlopen'ed afterwards
+; (w32_user32.asm). A fixed zerofill segment would also work, but CrowdStrike Falcon
+; on the dev machine SIGKILLs + deletes binaries with one (measured 2026-10-20).
 SEEK_END    equ 2
 
 EXIT_LOAD   equ 1
@@ -115,9 +122,13 @@ tramp32:                    ; entered by o64 retf from call32; args already on t
     call [C_TARGET]         ; cdecl/stdcall/fastcall all fine: esp is not trusted after
     jmp far [FAR_RET]       ; edx:eax back to the host
 
-common32:                   ; every import stub jumps here with its index pushed
-    call far [FAR_UNIMPL]   ; never returns
-    ud2
+common32:                   ; every import stub jumps here with its index pushed:
+    call far [FAR_DISPATCH] ; [esp]=index [esp+4]=caller ret [esp+8]=args; edx:eax back
+    mov fs, [C_FS]
+    add esp, 4              ; drop the index
+    pop ecx                 ; caller's return address (ecx is volatile in every Win32 ABI)
+    add esp, [POP_BYTES]    ; stdcall: callee pops its arguments (0 for cdecl)
+    jmp ecx
 blob32_end:
 
 ; ========================================================================
@@ -129,13 +140,9 @@ ret64:
     mov rsp, [abs SAVED_RSP]
     jmp [abs CONT]
 
-unimpl64:                   ; [esp]=eip32 [esp+4]=cs [esp+8]=import index [esp+12]=caller ret
+dispatch64:                 ; [esp]=eip32 [esp+4]=cs [esp+8]=import index [esp+12]=caller ret
     mov esp, esp            ; upper rsp is undefined after compat mode
-    mov edi, [rsp + 8]
-    mov esi, [rsp + 12]
-    and rsp, -16
-    call [abs HOST_UNIMPL]
-    ud2
+    jmp [abs HOST_DISPATCH]
 blob64_end:
 
 ; ========================================================================
@@ -151,6 +158,8 @@ call32:
     push r13
     push r14
     push r15
+    push qword [abs SAVED_RSP]  ; re-entrant: a handler may call back into 32-bit code
+    sub rsp, 8
     mov [abs C_TARGET], edi
     mov [abs C_EAX], ecx
     mov [abs C_ECX], r8d
@@ -158,7 +167,8 @@ call32:
     mov [abs SAVED_RSP], rsp
     lea rax, [.back]
     mov [abs CONT], rax
-    mov esp, STACK32_TOP        ; zero-extends: rsp = STACK32_TOP
+    mov eax, [abs ESP32_TOP]    ; STACK32_TOP, or just below the game's esp when nested
+    mov rsp, rax
     mov ecx, edx
 .push_arg:                      ; args[nargs-1] first, so args[0] ends up at [esp]
     test ecx, ecx
@@ -177,6 +187,8 @@ call32:
     shl rdx, 32
     mov eax, eax
     or rax, rdx
+    add rsp, 8
+    pop qword [abs SAVED_RSP]
     pop r15
     pop r14
     pop r13
@@ -185,11 +197,61 @@ call32:
     pop rbx
     ret
 
-; noreturn host_unimpl(edi = import index, esi = return address in game code)
-; Runs on the 32-bit stack (below 4 GB), rsp already aligned by unimpl64.
+; host_dispatch: reached from dispatch64 in 64-bit mode, rsp = the game's esp:
+;   [rsp]=eip32 [rsp+4]=cs32 [rsp+8]=slot index [rsp+12]=caller ret [rsp+16]=args.
+; Switches to the host stack (below the innermost call32 frame), calls
+; imp_handler[index](rdi = args, esi = index) and far-returns edx:eax to common32
+; with POP_BYTES = imp_pop[index]. Saves the game's esi/edi (SysV clobbers them;
+; ebx/ebp are callee-saved on both sides).
+host_dispatch:
+    mov r10, rsp
+    mov rsp, [abs SAVED_RSP]
+    push rbp
+    mov rbp, rsp
+    push r10
+    push rsi
+    push rdi
+    push qword [abs ESP32_TOP]
+    push rbx
+    push r12
+    and rsp, -16
+    lea rax, [r10 - 16]         ; nested call32 frames go below the game's frame
+    and eax, -16
+    mov [abs ESP32_TOP], eax
+    mov esi, [r10 + 8]
+    lea rdi, [r10 + 16]
+    lea rax, [imp_handler]
+    call [rax + rsi*8]
+    cmp byte [trace], 0
+    je .no_trace
+    mov rdi, [rbp - 8]          ; r10
+    mov rsi, rax
+    mov rbx, rax                ; game's rbx/r12 are saved in the frame
+    mov r12, rdx
+    call trace_call
+    mov rax, rbx
+    mov rdx, r12
+.no_trace:
+    lea rsp, [rbp - 48]
+    pop r12
+    pop rbx
+    pop qword [abs ESP32_TOP]
+    pop rdi
+    pop rsi
+    pop r10
+    pop rbp
+    mov ecx, [r10 + 8]
+    lea r11, [imp_pop]
+    mov ecx, [r11 + rcx*4]
+    mov [abs POP_BYTES], ecx
+    mov rsp, r10
+    retf                        ; 32-bit operand size: pops eip32 + cs
+
+; noreturn host_unimpl(rdi = args, esi = slot index): the default import handler.
 host_unimpl:
-    mov ebx, edi
-    mov r12d, esi
+    and rsp, -16
+    mov ebx, esi
+    mov r12d, [rdi - 4]         ; caller's return address
     lea rax, [imp_dll]
     mov rsi, [rax + rbx*8]
     lea rax, [imp_name]
@@ -209,6 +271,7 @@ host_unimpl:
     xor eax, eax
     call _printf
 .out:
+    call hold_window
     mov edi, EXIT_UNIMPL
     call _exit
 
@@ -451,36 +514,18 @@ patch_imports:
     mov eax, [r13 + r15*4]
     test eax, eax
     jz .dll_done
-    mov ecx, [n_imports]
-    cmp ecx, MAX_IMPORTS
-    jae .too_many
-    lea rdx, [imp_dll]
-    mov [rdx + rcx*8], r12
-    lea rdx, [imp_name]
-    lea rsi, [imp_ord]
+    mov rdi, r12
+    xor edx, edx
     test eax, eax
     js .ordinal                 ; IMAGE_ORDINAL_FLAG32
-    lea rax, [rax + IMAGE_BASE + 2]   ; IMAGE_IMPORT_BY_NAME.Name (skip Hint)
-    mov [rdx + rcx*8], rax
-    jmp .stub
+    lea rsi, [rax + IMAGE_BASE + 2]   ; IMAGE_IMPORT_BY_NAME.Name (skip Hint)
+    jmp .slot
 .ordinal:
-    mov qword [rdx + rcx*8], 0
-    and eax, 0xFFFF
-    mov [rsi + rcx*4], eax
-.stub:
-    ; push imm32 index ; jmp rel32 common32
-    imul edi, ecx, STUB_SIZE
-    add edi, STUBS
-    mov byte [rdi], 0x68
-    mov [rdi + 1], ecx
-    mov byte [rdi + 5], 0xE9
-    mov eax, A32(common32)
-    lea edx, [rdi + 10]
-    sub eax, edx
-    mov [rdi + 6], eax
-    mov [r14 + r15*4], edi      ; IAT slot -> stub
-    inc ecx
-    mov [n_imports], ecx
+    xor esi, esi
+    movzx edx, ax
+.slot:
+    call new_slot               ; eax = stub address
+    mov [r14 + r15*4], eax      ; IAT slot -> stub
     inc r15d
     jmp .thunk
 .dll_done:
@@ -504,6 +549,38 @@ patch_imports:
     pop r14
     pop r13
     pop r12
+    pop rbx
+    ret
+
+; eax = new_slot(rdi = DLL name, rsi = function name or 0, edx = ordinal): allocate the
+; next import slot, write its 32-bit stub `push index; jmp common32` and bind it to a
+; handler (bind_slot). Returns the stub's 32-bit address. Strings must stay alive.
+new_slot:
+    push rbx
+    mov ecx, [n_imports]
+    cmp ecx, MAX_IMPORTS
+    jae .too_many
+    mov ebx, ecx
+    lea rax, [imp_dll]
+    mov [rax + rbx*8], rdi
+    lea rax, [imp_name]
+    mov [rax + rbx*8], rsi
+    lea rax, [imp_ord]
+    mov [rax + rbx*4], edx
+    imul edi, ebx, STUB_SIZE
+    add edi, STUBS
+    mov byte [rdi], 0x68        ; push imm32 index
+    mov [rdi + 1], ebx
+    mov byte [rdi + 5], 0xE9    ; jmp rel32 common32
+    mov eax, A32(common32)
+    lea edx, [rdi + 10]
+    sub eax, edx
+    mov [rdi + 6], eax
+    inc dword [n_imports]
+    mov edi, ebx
+    call bind_slot
+    imul eax, ebx, STUB_SIZE
+    add eax, STUBS
     pop rbx
     ret
 .too_many:
@@ -603,10 +680,11 @@ setup_low:
     mov [sel64], ax
     mov dword [abs FAR_RET], A64(ret64)
     mov [abs FAR_RET + 4], ax
-    mov dword [abs FAR_UNIMPL], A64(unimpl64)
-    mov [abs FAR_UNIMPL + 4], ax
-    lea rax, [host_unimpl]
-    mov [abs HOST_UNIMPL], rax
+    mov dword [abs FAR_DISPATCH], A64(dispatch64)
+    mov [abs FAR_DISPATCH + 4], ax
+    lea rax, [host_dispatch]
+    mov [abs HOST_DISPATCH], rax
+    mov dword [abs ESP32_TOP], STACK32_TOP
 
     mov dword [abs TEB + 0x00], -1          ; ExceptionList: end of SEH chain
     mov dword [abs TEB + 0x04], STACK32_TOP ; StackBase
@@ -718,24 +796,37 @@ _main:
 
     lea rax, [default_exe]
     mov [exe_path], rax
-    cmp r12d, 2
-    jl .args_done
-    mov rdi, [rbx + 8]
+.arg:                           ; [gta2.exe] [--entry] [--trace], any order
+    dec r12d
+    jle .args_done
+    add rbx, 8
+    mov rdi, [rbx]
     lea rsi, [arg_entry]
     call _strcmp
     test eax, eax
-    jz .flag1
-    mov rax, [rbx + 8]
-    mov [exe_path], rax
-    cmp r12d, 3
-    jl .args_done
-    mov rdi, [rbx + 16]
-    lea rsi, [arg_entry]
-    call _strcmp
-    test eax, eax
-    jnz .args_done
-.flag1:
+    jnz .not_entry
     mov byte [run_entry], 1
+    jmp .arg
+.not_entry:
+    mov rdi, [rbx]
+    lea rsi, [arg_trace]
+    call _strcmp
+    test eax, eax
+    jnz .not_trace
+    mov byte [trace], 1
+    jmp .arg
+.not_trace:
+    mov rdi, [rbx]
+    lea rsi, [arg_hold]
+    call _strcmp
+    test eax, eax
+    jnz .not_hold
+    mov byte [hold], 1
+    jmp .arg
+.not_hold:
+    mov rax, [rbx]
+    mov [exe_path], rax
+    jmp .arg
 .args_done:
 
     lea rax, [crash_handler]
@@ -752,10 +843,17 @@ _main:
 
     mov rdi, [exe_path]
     call read_file
+    call enter_game_dir         ; the game opens data\... relative to its own directory
     call map_image
     call setup_low
+    call setup_arena
+    call setup_modules
     call patch_imports
+    call install_hooks
     call protect_image
+    call setup_kernel32
+    call setup_user32
+    call setup_registry
 
     lea rdi, [msg_calls]
     call _puts
@@ -864,6 +962,8 @@ strs_end:
 
 default_exe: db "gta2/gta2.exe", 0
 arg_entry:   db "--entry", 0
+arg_trace:   db "--trace", 0
+arg_hold:    db "--hold", 0
 prot_names:  db "---", 0, "r--", 0, "-w-", 0, "rw-", 0, "--x", 0, "r-x", 0, "-wx", 0, "rwx", 0
 str_pass:    db "PASS", 0
 str_fail:    db "FAIL", 0
@@ -900,9 +1000,58 @@ align 8
 sel32:       dw 0
 sel64:       dw 0
 run_entry:   db 0
+trace:       db 0
+hold:        db 0                   ; --hold: keep the SDL window up 5 s when we stop
+
+section .text
+; chdir() into the directory that holds gta2.exe (exe_path's directory part)
+enter_game_dir:
+    push rbx
+    mov rdi, [exe_path]
+    call _strdup
+    mov rbx, rax
+    mov rdi, rax
+    mov esi, '/'
+    call _strrchr
+    test rax, rax
+    jz .here
+    mov byte [rax], 0
+    mov rdi, rbx
+    call _chdir
+    test eax, eax
+    jnz .bad
+.here:
+    lea rdi, [game_cwd]
+    mov esi, 1024
+    call _getcwd
+    lea rdi, [fmt_cwd]
+    lea rsi, [game_cwd]
+    xor eax, eax
+    call _printf
+    pop rbx
+    ret
+.bad:
+    lea rdi, [msg_chdir]
+    call fail
+
+%include "w32_core.asm"
+%include "w32_kernel32.asm"
+%include "w32_files.asm"
+%include "w32_locale.asm"
+%include "w32_user32.asm"
+%include "w32_advapi32.asm"
+%include "w32_misc.asm"
+%include "w32_dinput.asm"
+%include "w32_hooks.asm"
+%include "w32_tables.asm"
+
+section .rodata
+fmt_cwd:     db "game directory: %s (seen by the game as C:\GTA2)", 10, 0
+msg_chdir:   db "chdir into the game directory", 0
 
 section .bss
-align 8
+alignb 8
+game_cwd:    resb 1024
 file:        resq 1
 file_size:   resq 1
 nt:          resq 1

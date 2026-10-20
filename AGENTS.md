@@ -13,10 +13,17 @@ the process, the memory layout and every OS/library service it expects.
 
 ## Execution model
 
-Proven up to the first original-code calls: `spike/` proved the 32-bit LDT segment
-under Rosetta, and `host/loader` (see `host/README.md`) maps vanilla `gta2.exe` at
-`0x3F0000`, stubs every import and calls original functions in 32-bit mode with
-checked results. No Win32 shim or game init exists yet.
+Proven up to the renderer plugin: `spike/` proved the 32-bit LDT segment under
+Rosetta, `host/loader` (see `host/README.md`) maps vanilla `gta2.exe` at `0x3F0000`, and
+`--entry` runs the game from its PE entry point through NASM Win32 shims (CRT startup,
+WinMain, registry, a real SDL3 window, DirectInput) to `LoadLibraryA("dmavideo.dll")`;
+it stops at the first renderer call `dmavideo.dll!Vid_InitDLL`. Shim list, policies and
+the exact stopping point: `docs/win32-shims.md`.
+
+SDL3 is **dlopen'ed, not linked**: linked, dyld puts its frameworks in the low 4 GB and
+`mmap(0x3F0000)` fails. Do not "fix" that with a fixed zerofill Mach-O segment either:
+CrowdStrike Falcon on the dev machine SIGKILLs and deletes such binaries (exit 137, the
+file vanishes).
 
 Loader gotcha: copy each section's raw data up to `align_up(VirtualSize, 0x1000)`,
 not just `VirtualSize` — the 11.44 patch keeps code in `.text`'s raw slack (the entry
@@ -32,8 +39,9 @@ point jumps to `0x56DCDA`, past VirtualSize end `0x56DBC0`).
   through thunks — the Wine/CrossOver "32-on-64" approach. Everything the game
   touches (heap, stacks, TLS, structures handed to it) must live below 4 GB.
 - **Win32 imports** (`KERNEL32`, `USER32`, `GDI32`, `ADVAPI32`, `WINMM`, `DINPUT8`,
-  `DPLAYX`, …) are shimmed by us and thunked to libc / SDL. Third-party DLLs the
-  game ships with (`mss32.dll` audio, `binkw32.dll` video) are shimmed the same way
+  `DPLAYX`, …) are shimmed by us (`host/w32_*.asm`) and thunked to libc / SDL. Game
+  functions that only probe the OS may be hooked to host stubs (`w32_hooks.asm`).
+  Third-party DLLs the game ships with (`mss32.dll` audio, `binkw32.dll` video) are shimmed the same way
   or replaced.
 - **Renderer**: see "Renderer seam" below — the cheapest port point is the game's
   own renderer-plugin DLL API, not DirectDraw COM.
@@ -169,7 +177,7 @@ MacOSX 26.2 SDK, Apple clang 17.0.0.
 | Linker | ✅ Apple `ld` 1230.1 at **`/usr/bin/ld`** (= `xcrun ld`) | ⚠️ **Trap:** `ld` and `otool` on `PATH` resolve to anaconda's ancient ld64-530 (`/opt/homebrew/anaconda3/bin`). Always call `/usr/bin/ld` / `xcrun ld` (or link through `clang -arch x86_64`). |
 | clang (x86_64 target) | ✅ Apple clang 17 | `clang -arch x86_64` builds Rosetta binaries; handy for C test harnesses. |
 | lldb | ✅ lldb-1703 | Debugging x86_64 processes under Rosetta works through Rosetta's debugserver. 32-bit LDT code segments are untested; expect lldb to mis-disassemble them (it assumes 64-bit mode). Plan to need `disassemble --arch i386 -s <addr>` or a manual memory dump. |
-| SDL3 (x86_64) | ✅ 3.4.14 at **`~/.local/opt/sdl3-x86_64`** (`include/`, `lib/libSDL3.dylib`) | Built from source in `~/.local/src/SDL-x86` (tag `release-3.4.14`), `minos 26.0`. Install name is `@rpath/libSDL3.0.dylib`: link with `-rpath`, see `host/build.sh`. Do not modify that prefix. Homebrew's `sdl3`/`sdl2-compat` under `/opt/homebrew` are arm64-only and unusable from a Rosetta host; x86_64 Homebrew refuses to install on Apple Silicon. |
+| SDL3 (x86_64) | ✅ 3.4.14 at **`~/.local/opt/sdl3-x86_64`** (`include/`, `lib/libSDL3.dylib`) | Built from source in `~/.local/src/SDL-x86` (tag `release-3.4.14`), `minos 26.0`. Install name is `@rpath/libSDL3.0.dylib`: `host` links it with `-rpath`; `loader` dlopens `lib/libSDL3.0.dylib` (see `host/build.sh`). Do not modify that prefix. Homebrew's `sdl3`/`sdl2-compat` under `/opt/homebrew` are arm64-only and unusable from a Rosetta host; x86_64 Homebrew refuses to install on Apple Silicon. |
 | Ghidra | ✅ 12.1.4 (Homebrew formula `ghidra`) | `ghidraRun` on `PATH`; headless at `/opt/homebrew/opt/ghidra/libexec/support/analyzeHeadless`. Uses JDK 21 (`/opt/homebrew/opt/openjdk@21`). |
 | cmake / ninja / pkg-config | ✅ (arm64 Homebrew) | They run natively and can still drive an x86_64 build via `CMAKE_OSX_ARCHITECTURES=x86_64`. |
 
