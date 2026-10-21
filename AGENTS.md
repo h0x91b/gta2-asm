@@ -21,7 +21,9 @@ WinMain, registry, a real SDL3 window, DirectInput) and our SDL_Renderer replace
 and navigates it with real keyboard input (SDL3 events → DirectInput 8), with menu sound
 effects from `mss32` reimplemented on SDL3 audio (`docs/win32-shims.md`, "Audio"). PLAY
 starts the first level (Downtown, `wil`) and the game loop draws it: tiles, slopes,
-sprites, HUD and the original point lighting (`--keys=150:RETURN,250:RETURN`). Shim list and policies: `docs/win32-shims.md`; renderer:
+sprites, HUD and the original point lighting (`--keys=150:RETURN,250:RETURN`). On foot the
+player can also strafe (Q/E) and turn with the mouse, both through the game's own walker and
+its collision (`host/player_move.asm`, `docs/re/ped-movement-collision.md`). Shim list and policies: `docs/win32-shims.md`; renderer:
 `docs/renderer-sdl.md`.
 
 SDL3 is **dlopen'ed, not linked**: linked, dyld puts its frameworks in the low 4 GB and

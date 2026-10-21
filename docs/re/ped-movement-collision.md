@@ -281,8 +281,15 @@ then `[esi+0x40] = wrap1440([esi+0x40] + offset)`. The displaced `mov`/`test` th
 flag, skip the save, and the end of the function restores the facing.
 
 Offsets relative to the facing: pure strafe ±360; forward + strafe ±180; backward + strafe: the
-backward branch has already turned the heading by 720, so ∓180. Which sign is "right" on screen
-was measured on the first run (§7).
+backward branch has already turned the heading by 720, so ∓180. Left is **+360**, right **−360**
+(x = sin h, y = cos h; the left arrow makes the heading grow). Measured on Downtown's start
+(facing north, heading 720): right moved the ped +x and left −x at 1/16 block per tick with
+y and the heading unchanged, and each run stopped at a building wall (left: x pinned at 156.75
+blocks for 250 frames). Implementation: `host/player_move.asm`.
+
+**The hook sees every walking ped**, not only the player: the check for the player's
+GameObject must come before anything is consumed (the first version cleared the offset on an
+NPC that walked earlier in the tick, and the player never strafed).
 
 ### Input side
 

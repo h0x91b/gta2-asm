@@ -393,6 +393,8 @@ hooks:
     CALLHOOK 0x4BE394, "ScaleShadow", 0x401BD0
     CALLHOOK 0x472535, "DrawMapLayer", 0x4720E0
     CALLHOOK 0x45A61F, "DrawUI", 0x4CA440               ; debug_menu.asm
+    CALLHOOK 0x4A7901, "MoveOnFoot", 0x4A5C50           ; player_move.asm
+    JMPHOOK 0x49AC76, "WalkHeading", {0x8A,0x44,0x24,0x11, 0x84,0xC0}   ; player_move.asm
     dq 0
 
 shimtab_gta2:
@@ -402,6 +404,8 @@ shimtab_gta2:
     SHIM "ScaleShadow", 8, hk_ScaleShadow
     SHIM "DrawMapLayer", 0, hk_DrawMapLayer
     SHIM "DrawUI", 0, hk_DrawUI
+    SHIM "MoveOnFoot", 4, hk_MoveOnFoot
+    SHIM "WalkHeading", 4, hk_WalkHeading
     dq 0
 
 hook_kinds: dq s_hk_entry, s_hk_call, s_hk_jmp, s_hk_patch

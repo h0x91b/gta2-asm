@@ -23,6 +23,8 @@
 ;          src/modules/modmenu/utils/categorized-native-cheats-data.cpp and
 ;          src/events/after-debug-flags.cpp @25b1985 — the idea, the RISKY marks and the
 ;          name GetSettingBooleanWithDefaultValue; the registry path is own analysis.
+;   controls  on-foot strafe and mouse turning (player_move.asm): strafe, strafe_left,
+;          strafe_right (key names as in --keys), mouse_turn, mouse_sensitivity (percent).
 ;   camera zoom: auto | percent (25..400). The camera's target zoom (cameraPosTarget.zoom,
 ;          the view scale) is multiplied by percent/100 on its way to the camera
 ;          (hk_CameraPosApply, w32_hooks.asm); smaller = more city. Vanilla 1280x960
@@ -102,7 +104,7 @@ config_apply:
 .opened:
     mov r15, rax
     xor r14d, r14d                  ; line number
-    mov r13d, -1                    ; section: -1 none yet, 0 skipped, 1 debug
+    mov r13d, -1                    ; section: -1 none yet, 0 skipped, 1 debug, 2 camera, 3 controls
     mov dword [cfg_nset], 0
 .line:
     lea rdi, [cfg_line]
@@ -195,8 +197,16 @@ config_apply:
     lea rsi, [s_cfg_camera]
     call _strcmp
     test eax, eax
-    jnz .skip_section
+    jnz .not_camera
     mov r13d, 2
+    jmp .line
+.not_camera:
+    mov rdi, rbx
+    lea rsi, [s_cfg_controls]
+    call _strcmp
+    test eax, eax
+    jnz .skip_section
+    mov r13d, 3
     jmp .line
 .skip_section:
     lea rdi, [fmt_cfg_skip_section]
@@ -213,6 +223,8 @@ config_apply:
     jz .line                        ; inside a skipped section
     cmp r13d, 2
     je .camera
+    cmp r13d, 3
+    je .controls
     mov rdi, [cfg_val]
     call cfg_bool
     test eax, eax
@@ -235,6 +247,20 @@ config_apply:
     xor eax, eax
     call _printf
     jmp .line
+.controls:                          ; controls.*: player_move.asm
+    mov rdi, rbx
+    mov rsi, [cfg_val]
+    call pm_config
+    test eax, eax
+    jz .counted
+    js .err_controls
+    jmp .unknown_flag
+.counted:
+    inc dword [cfg_nset]
+    jmp .line
+.err_controls:
+    mov r9, rdx
+    jmp .err
 .camera:                            ; camera.zoom: auto | percent
     mov rdi, rbx
     lea rsi, [s_cfg_zoom]
@@ -279,6 +305,7 @@ config_apply:
     xor eax, eax
     call _printf
 .out:
+    call pm_report
     pop r15
     pop r14
     pop r13
@@ -537,6 +564,7 @@ section .rodata
 s_cfg_default: db "config.yaml", 0
 s_cfg_debug:  db "debug", 0
 s_cfg_camera: db "camera", 0
+s_cfg_controls: db "controls", 0
 s_cfg_zoom:   db "zoom", 0
 s_cfg_auto:   db "auto", 0
 fmt_cfg_zoom: db "config: camera.zoom = %s", 10, 0

@@ -16,6 +16,21 @@
 camera:
   zoom: 70                       # the default; auto, or 100 for vanilla
 
+# On-foot controls the original game does not have (host/player_move.asm). Both go
+# through the game's own walking code, so walls, cars and other peds stop you as usual.
+# strafe: sidestep left / right with strafe_left / strafe_right held (key names as in
+# --keys: Q, E, A, D, LSHIFT, ...; the defaults Q and E are unused by the game). Together
+# with forward or back it walks diagonally; the ped keeps facing the same way.
+# mouse_turn: turn the ped smoothly with the mouse while on foot (the cursor is captured
+# while you walk; switch apps to release it). The arrow keys keep working.
+# mouse_sensitivity: percent; 100 = half a degree per mouse point. 10..1000.
+controls:
+  strafe: true
+  strafe_left: Q
+  strafe_right: E
+  mouse_turn: false
+  mouse_sensitivity: 100
+
 # The game's own debug flags (DMA Design developer switches), read by HiddenDebugFlags
 # (0x451930) from HKCU\SOFTWARE\DMA Design Ltd\GTA2\Debug. A flag is on when its
 # registry value exists, so `false` removes it. Leave a line out to keep the default

@@ -69,6 +69,10 @@ License terms below are quoted as each source states them; this is not legal adv
   - **Game lifecycle:** `InitGame` 0x461DE0 / `DeinitGame` 0x462060 and `ptrToGame` 0x5EB4FC
     (`host/w32_renderer.asm`); its DeinitGame call-site map (six sites) was surveyed for the
     quit-to-menu work.
+  - **Mouse control** (`src/modules/modmenu/cheats/mouse-control/`,
+    `src/events/keyboard-state-update.cpp`, hook 0x4A4934 inside `SetKeyState`): reviewed as
+    prior art for `host/player_move.asm` (Seq 37); it turns the ped with virtual left/right
+    keys, which our mouse turning bypasses. No code or address taken.
   - `WorldPointToScreen`, `PedSetObjective`, `PedManager` (`host/debug_paths.asm`),
     `InitMouseExclusive`, `GameWindow` (`host/w32_dinput.asm`).
 - **License as stated** ([README#L123-L125](https://github.com/izawartka/gta2-seuko-mod/blob/25b198591f840b909dc5e3a38be880840d94c17d/README.md#L123-L125)):
@@ -90,6 +94,9 @@ License terms below are quoted as each source states them; this is not legal adv
   `re/external/gzf/` (names such as `GameTick`, `InitVideoDll`, `WndProc`, `SetZ`,
   `do_show_junc_id`, the debug-flag names used in `host/debug_menu.asm`). Harvest:
   `re/external/`.
+  Its mouse rotation (`mod-mouse-rotation.lua`, the `SetKeyState` 0x4A4930 hook in
+  `dllmain.cpp` @87e1d98, virtual left/right keys) is credited as prior art in
+  `host/player_move.asm`; no code taken.
 - **License:** MIT, © 2021 Arseniy Pavlenko.
 
 ### gta2-mouse — h0x91b (Arseniy Pavlenko)
@@ -101,7 +108,9 @@ License terms below are quoted as each source states them; this is not legal adv
 - **What we took:** Ghidra-exported types `gta2.segments.fixed.exe.h` (the same program as in
   the user's Ghidra project, see `re/README.md`), addresses from `MainWindow.cpp`
   (`ptrToGame`, `ptrToPedManager`, `GetSaveSlotByIndex`, …), harvested into `re/external/`.
-  The mouse-aiming idea is noted for a later port; nothing of it is in the host yet.
+  Its mouse aiming (`MainWindow.cpp` @6c5351b: cursor angle written to the ped's heading
+  GameObject+0x40) is the prior art for `host/player_move.asm`, which turns through
+  `Player.turnRate` instead because the game's walker overwrites a written heading every tick.
 - **License:** MIT, © 2019 Arseniy Pavlenko.
 
 ### gta2_re — CriminalRETeam

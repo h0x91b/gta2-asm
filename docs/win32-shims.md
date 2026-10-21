@@ -146,7 +146,11 @@ match the 64-bit-inode struct layouts; the plain names are the legacy ABI.
   (a flag is on when its value exists, so `false` deletes the value; `show_player_names` is
   value-based). Every flag with comments: `config.example.yaml`. Section `camera:`,
   key `zoom: auto | 25..400` (percent of the game's zoom, see "Hooks", `0x41F3E9`);
-  without it the camera runs at 70% (`ZOOM_DEFAULT`), `zoom: 100` is vanilla.
+  without it the camera runs at 70% (`ZOOM_DEFAULT`), `zoom: 100` is vanilla. Section
+  `controls:` (`host/player_move.asm`): `strafe` (default on), `strafe_left` / `strafe_right`
+  (key names as in `--keys`, default Q / E), `mouse_turn` (default off),
+  `mouse_sensitivity` (percent, 10..1000, 100 = 0.5° per mouse point); see "Hooks",
+  `0x4A7901` and `0x49AC76`.
 - **Threads.** None exist; sync objects are tokens. `CreateThread` is not imported.
 - **OS identity.** Windows XP SP3 (5.1.2600, NT), code page 1252 (implemented as
   Latin-1), US-English locale, 1 CPU, DirectX 8.1.
@@ -273,6 +277,8 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
 | `0x4BE394` | `call ScaleScrf` (CALLHOOK) — thiscall `0x401BD0`, out = main camera `uiScale` × shadow offset | scales the shadow offset by the same zoom, so shadows stay under their sprites (seuko-mod `scale-shadow.cpp`). |
 | `0x472535` | `call DrawMapLayer` (CALLHOOK) — fastcall `0x4720E0(S12*)`, per map layer, after its blocks are queued: inline queue at S12+0x1c, count +0x2efc, 1500 entries, no bounds check | safety valve: above 1200 entries the zoom-out is reduced 5 points per layer (Downtown street level: 99 at 100%, 357 at 50%, 1271 at 25%). (seuko-mod `draw-map-layer.cpp`) |
 | `0x45A61F` | `call DrawUI` (CALLHOOK) — fastcall `0x4CA440`, the HUD, once per gameplay frame | the Ped paths and Road network overlays (`debug_paths.asm`, `debug_roads.asm`) are drawn before it and our debug menu (`debug_menu.asm`) right after it with the game's `DrawGTAText` (`0x4CC100`) and `DrawFlatRect2D` (`0x474110`); its key handling sits in front of `input_key`. (seuko-mod `draw-ui.cpp`) |
+| `0x4A7901` | `call Player_MoveOnFoot` (CALLHOOK) — thiscall `0x4A5C50(Player*, Ped*)`, ret 4, in Player_HandleControls when the player is on foot: keys → `Player.turnRate` (+8) and `Player.moveSpeed` (+0xC) | after the original: strafe keys held (`di_keys`, config `controls:`) → a heading offset for this tick's move (±360 Ang16, ±180 with forward or back) and, without forward/back, `moveSpeed = +1.0` so the walker moves; mouse turning → `turnRate` = the game's own value + the tick's mouse delta (the game's value is put back before the next call, so its key ramp is unchanged). Own analysis, `docs/re/ped-movement-collision.md` §6. |
+| `0x49AC76` | inside `PedGameObject_StateWalk` (JMPHOOK, 6 bytes `mov al,[esp+0x11]; test al,al`), `esi` = the walking ped's GameObject; every walking ped passes | for the player's GameObject with a strafe offset: saves the heading into the walker's local `[esp+0x24]`, clears the flag `[esp+0x11]` and turns the heading by the offset. Probe, tile-edge tests, wall slide and sprite obstacles then run along the strafe direction, and the walker restores the facing at `0x49B0A5` — the game's own backward-walk mechanism (`0x49AA8E`). Measured (Downtown start, facing north): E moves +x, Q −x with the heading unchanged, both stop at the walls. |
 
 ## Input (`w32_dinput.asm`, `pump_sdl` in `w32_user32.asm`)
 
@@ -301,7 +307,9 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
   creates `GUID_SysMouse` (`c_dfDIMouse` @`0x5782C4`) into `0x6735A8` with coop `5`
   (EXCLUSIVE|FOREGROUND) and acquires it: only to hide/capture the cursor in full
   screen. No `GetDeviceState`/`GetDeviceData` on it anywhere (all 8 references are in
-  `0x4CAD30..0x4CADCA`). No `WM_MOUSEMOVE` handling either.
+  `0x4CAD30..0x4CADCA`). No `WM_MOUSEMOVE` handling either. The host reads the SDL
+  motion itself for `controls.mouse_turn` (`player_move.asm`), and turns relative mode
+  on while the player walks with it enabled.
 
 ### What the shim does
 
