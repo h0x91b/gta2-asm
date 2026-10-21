@@ -21,7 +21,7 @@ Real console output, `host/build.sh --load --entry` (the PE-loading part and the
 function checks are omitted, they are unchanged from `host/README.md`):
 
 ```
-hook: 0x4031c0 GetDXVersion -> host
+hook: 0x4031c0 GetDXVersion (entry)
 SDL 3.4.14 loaded from /Users/arsenyp/.local/opt/sdl3-x86_64/lib/libSDL3.0.dylib
 registry: gta2_install.reg -> 8 keys, 54 values (in memory only)
 ...
@@ -87,8 +87,14 @@ a window titled "GTA2", 1280×960 client area, black).
   (`GetProcessHeap`, all plugin exports) are shims or traps exactly like static imports.
 - **Callbacks.** `call32` is re-entrant: a handler can call back into 32-bit code
   (WndProc, `CallWindowProcA`); nested 32-bit frames go just below the game's `esp`.
-- **Hooks** (`w32_hooks.asm`): a game function's entry is overwritten with `jmp` to a
-  slot named `gta2.exe!Name`, after checking its first 8 original bytes.
+- **Hooks** (`w32_hooks.asm`): four kinds in one table, each checked against its
+  original bytes first, each stub a slot named `gta2.exe!Name` (so `--trace` shows it):
+  `HOOK` (function entry → `jmp` stub), `CALLHOOK` (an `E8 call` retargeted to the stub),
+  `JMPHOOK` (mid-function: whole instructions moved to a 32-bit trampoline at
+  `0x10010000+` that does `pushad; pushfd` and calls the stub with the register block, then
+  runs them — or resumes where the handler says) and `PATCH` (plain bytes).
+  `host_dispatch` keeps the game's eax/ecx/edx in `G_EAX/G_ECX/G_EDX`, so thiscall and
+  fastcall targets work and a `CALLHOOK` handler can call the original through `call32`.
 - **COM** (`w32_dinput.asm`): an interface is a shim table in vtable order
   (`"IDirectInput8A::CreateDevice"`); `com_new` builds the vtable from slots once and
   allocates objects `{vtbl, refcount, kind}` in low memory.
@@ -261,6 +267,8 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
 | address | function | why |
 |---|---|---|
 | `0x4031C0` | `GetDXVersion(DWORD* ver, DWORD* platform)` — Microsoft's DirectX SDK sample (Ghidra name `LoadDirectInputFuncs`) | it creates DirectDraw objects and surfaces only to measure the DirectX version, and WinMain refuses anything below `0x601` (`0x4D11DB`, "ERROR: Incorrect version of DirectX"). The hook answers `0x801` / NT. |
+| `0x41F3E9` | `CameraPosApply` (JMPHOOK, 7 bytes) — inside the camera update, `cameraPosTarget` (camera+0x10) is copied into `cameraPosTarget2` (camera+0), which `cameraPos` then follows; `esi` = Camera* | seam for camera height/zoom (seuko-mod `camera-pos-apply.cpp`). Pass-through today. |
+| `0x4BE394` | `call ScaleScrf` (CALLHOOK) — thiscall `0x401BD0`, out = main camera `uiScale` × shadow offset | seam for the shadow offset when the view scale changes (seuko-mod `scale-shadow.cpp`). Calls the original today. |
 
 ## Input (`w32_dinput.asm`, `pump_sdl` in `w32_user32.asm`)
 

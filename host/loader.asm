@@ -76,6 +76,9 @@ C_FS        equ CTX + 0x38          ; TEB selector, loaded into fs on every entr
 POP_BYTES   equ CTX + 0x3C          ; stdcall argument bytes common32 pops for the caller
 ESP32_TOP   equ CTX + 0x40          ; where call32 builds its 32-bit frame (nests below the
                                     ; game's esp while an import handler runs)
+G_EAX       equ CTX + 0x44          ; the game's eax/ecx/edx when it entered a stub
+G_ECX       equ CTX + 0x48          ; (host_dispatch; read them before any call32)
+G_EDX       equ CTX + 0x4C
 TEB         equ LOW_BASE + 0x3000   ; fake NT_TIB, base of the FS descriptor
 STUBS       equ LOW_BASE + 0x4000   ; import stubs, STUB_SIZE bytes each
 STUB_SIZE   equ 10
@@ -206,6 +209,9 @@ call32:
 ; with POP_BYTES = imp_pop[index]. Saves the game's esi/edi (SysV clobbers them;
 ; ebx/ebp are callee-saved on both sides).
 host_dispatch:
+    mov [abs G_EAX], eax
+    mov [abs G_ECX], ecx
+    mov [abs G_EDX], edx
     mov r10, rsp
     mov rsp, [abs SAVED_RSP]
     push rbp
