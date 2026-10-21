@@ -41,7 +41,8 @@ the main menu, …) go in `config.yaml` in that folder; copy
 [config.example.yaml](config.example.yaml), which lists every one, or point at a file with
 `--config=PATH`.
 In a game, **K** opens a debug menu (game font, arrows + RETURN): quick save where you
-stand (not during a mission), all weapons, +$100000, live camera zoom; a Player page (set
+stand (not during a mission), all weapons, +$100000, live camera zoom, Ped paths (lines from
+each ped to the next cells of its planned path, or a tick showing where it faces); a Player page (set
 or lock the wanted level, skin and body type), a Vehicle page (spawn any car in front of
 you; colour, invincibility, repair or explode the car you are in or left last) and a
 Debug flags page (FPS / camera info / invulnerability / no police and a few other DMA

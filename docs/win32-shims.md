@@ -67,7 +67,7 @@ a window titled "GTA2", 1280×960 client area, black).
 | `--window=WxH` | override the registry's `screen\window_width/height` for this run (320×240 … 4096×4096; default 1280×960, the install seeds 960×720): the window size and the gameplay resolution (`renderer-sdl.md`, "Resolution") |
 | `--config=PATH` | read settings from PATH instead of the overlay's `config.yaml` (see "Registry", config.yaml) |
 | `--trace-input` | log every key change, Acquire, `GetDeviceState` view change and delivered `GetDeviceData` record (implied by `--trace`) |
-| `--keys=F:KEY,...` | scripted taps: KEY (a DIK name, e.g. `DOWN`, `RETURN`, `ESCAPE`) goes down at presented frame F, up 4 frames later; pushed into SDL's queue, so it takes the real key path |
+| `--keys=F:KEY[:N],...` | scripted taps: KEY (a DIK name, e.g. `DOWN`, `RETURN`, `ESCAPE`) goes down at presented frame F, up 4 frames later (N frames with `:N`, to hold it); pushed into SDL's queue, so it takes the real key path |
 | `--input-test` | no game run: drive the game's own input code (see "Input") for ~15 s against real keys pressed in a test window |
 | `--input-selftest` | the same with a scripted SDL event sequence; prints PASS/FAIL per check, exit = number of failures |
 | `--bg-audio` | keep the game audible while the window is not focused (default: muted, see "Audio") |
@@ -271,7 +271,7 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
 | `0x41F3E9` | `CameraPosApply` (JMPHOOK, 7 bytes) — inside the camera update, `cameraPosTarget` (camera+0x10) is copied into `cameraPosTarget2` (camera+0), which `cameraPos` then follows; `esi` = Camera* | multiplies the target zoom (+0x1c) by `camera.zoom` from config.yaml and skips the original copy. The view scale is `cameraPos.zoom`, not `uiScale`: forcing `uiScale` = 1.0 at 1280×960 only halved the HUD (measured). (seuko-mod `camera-pos-apply.cpp`) |
 | `0x4BE394` | `call ScaleScrf` (CALLHOOK) — thiscall `0x401BD0`, out = main camera `uiScale` × shadow offset | scales the shadow offset by the same zoom, so shadows stay under their sprites (seuko-mod `scale-shadow.cpp`). |
 | `0x472535` | `call DrawMapLayer` (CALLHOOK) — fastcall `0x4720E0(S12*)`, per map layer, after its blocks are queued: inline queue at S12+0x1c, count +0x2efc, 1500 entries, no bounds check | safety valve: above 1200 entries the zoom-out is reduced 5 points per layer (Downtown street level: 99 at 100%, 357 at 50%, 1271 at 25%). (seuko-mod `draw-map-layer.cpp`) |
-| `0x45A61F` | `call DrawUI` (CALLHOOK) — fastcall `0x4CA440`, the HUD, once per gameplay frame | our debug menu (`debug_menu.asm`) is drawn right after it with the game's `DrawGTAText` (`0x4CC100`) and `DrawFlatRect2D` (`0x474110`); its key handling sits in front of `input_key`. (seuko-mod `draw-ui.cpp`) |
+| `0x45A61F` | `call DrawUI` (CALLHOOK) — fastcall `0x4CA440`, the HUD, once per gameplay frame | the Ped paths overlay (`debug_paths.asm`) is drawn before it and our debug menu (`debug_menu.asm`) right after it with the game's `DrawGTAText` (`0x4CC100`) and `DrawFlatRect2D` (`0x474110`); its key handling sits in front of `input_key`. (seuko-mod `draw-ui.cpp`) |
 
 ## Input (`w32_dinput.asm`, `pump_sdl` in `w32_user32.asm`)
 

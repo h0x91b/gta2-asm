@@ -6,7 +6,8 @@
 ;
 ; While the menu is open every key press goes to it, not to the game; keys held when it
 ; opens are released, so the player stops. Key releases always reach the game.
-; Pages: the main one (quick save, all weapons, +$100000, camera zoom) leads to Player
+; Pages: the main one (quick save, all weapons, +$100000, camera zoom, ped paths drawn by
+; debug_paths.asm) leads to Player
 ; (wanted level and its lock, skin), Vehicle (spawn a car; colour, repair, invincibility
 ; and explosion of the current or last car) and Debug flags (a few of the game's own,
 ; written straight into their bytes, which HiddenDebugFlags 0x451930 filled from the
@@ -264,8 +265,12 @@ hk_DrawUI:
     call dm_repair_car
 .a5:
     cmp r13d, DMA_EXPLODE
-    jne .draw
+    jne .paths
     call dm_explode_car
+.paths:
+    cmp byte [dm_paths], 0          ; under the HUD and the menu
+    je .draw
+    call dm_draw_paths
 .draw:
     mov edi, 0x4CA440
     mov rsi, rbx
@@ -1322,6 +1327,7 @@ dmp_main_items:
     DMITEM DM_ACTION, "Get all weapons", DMA_WEAPONS
     DMITEM DM_ACTION, "Add $100000", DMA_MONEY
     DMITEM DM_ZOOM,   "Camera zoom: ", 0
+    DMITEM DM_FLAG,   "Ped paths: ", dm_paths
     DMITEM DM_PAGE,   "Player...", dmp_player
     DMITEM DM_PAGE,   "Vehicle...", dmp_vehicle
     DMITEM DM_PAGE,   "Debug flags...", dmp_flags
@@ -1675,6 +1681,7 @@ dm_body_orig:  resd 1
 dm_last_car:   resd 1
 dm_last_car_id: resd 1
 dm_wanted_lock: resb 1
+dm_paths:      resb 1               ; "Ped paths" toggle (DM_FLAG byte)
 alignb 2
 dm_wanted_val: resw 1
 dm_buf:        resb 128

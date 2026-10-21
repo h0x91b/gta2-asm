@@ -877,7 +877,8 @@ di_GetCapabilities:
 
 ; ---- --keys=FRAME:KEY[,FRAME:KEY...] ---------------------------------------------
 ; Scripted key taps for end-to-end runs with the real game: at presented frame FRAME
-; (counted by Vid_FlipBuffers) KEY goes down, KEYS_HOLD frames later up. KEY is a DIK
+; (counted by Vid_FlipBuffers) KEY goes down, KEYS_HOLD frames later up (FRAME:KEY:N:
+; N frames later, to hold a key, e.g. walking). KEY is a DIK
 ; name from key_table (DOWN, RETURN, ESCAPE, A, ...), case-insensitive. The events are
 ; pushed into SDL's queue, so they take the same path as real keys (pump_sdl).
 KEYS_MAX  equ 64
@@ -913,11 +914,30 @@ parse_keys_arg:
     jz .name_end
     cmp al, ','
     je .name_end
+    cmp al, ':'
+    je .name_end
     inc rbx
     jmp .name
 .name_end:
     mov r15b, [rbx]
     mov byte [rbx], 0
+    mov dword [keys_hold], KEYS_HOLD
+    cmp r15b, ':'
+    jne .lookup
+    lea rdi, [rbx + 1]              ; FRAME:KEY:N
+    lea rsi, [keys_end]
+    mov edx, 10
+    call _strtoul
+    test eax, eax
+    jz .bad
+    mov [keys_hold], eax
+    mov rbx, [keys_end]
+    mov r15b, [rbx]
+    test r15b, r15b
+    jz .lookup
+    cmp r15b, ','
+    jne .bad
+.lookup:
     lea r14, [key_table]            ; name -> SDL scancode
 .find:
     movzx eax, word [r14]
@@ -940,7 +960,8 @@ parse_keys_arg:
     mov [rdx + rax], r12d
     mov [rdx + rax + 4], ecx
     mov dword [rdx + rax + 8], 1
-    lea r8d, [r12 + KEYS_HOLD]
+    mov r8d, r12d
+    add r8d, [keys_hold]
     mov [rdx + rax + 12], r8d
     mov [rdx + rax + 16], ecx
     mov dword [rdx + rax + 20], 0
@@ -1722,6 +1743,7 @@ alignb 8
 keys_arg:    resq 1                 ; --keys= value
 keys_end:    resq 1
 keys_ev:     resb 12 * KEYS_MAX
+keys_hold:   resd 1
 n_keys_ev:   resd 1
 di_keys:     resb 256
 sdl_dik:     resb SDL_SCANCODES

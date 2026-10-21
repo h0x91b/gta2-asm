@@ -1177,6 +1177,7 @@ section .text
 %include "w32_dinput.asm"
 %include "w32_hooks.asm"
 %include "debug_menu.asm"
+%include "debug_paths.asm"
 %include "w32_renderer.asm"
 %include "w32_audio.asm"
 %include "w32_tables.asm"
