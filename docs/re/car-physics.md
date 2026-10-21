@@ -100,7 +100,7 @@ WinMain2 0x4D11B8 ─ drawAndLimitFrames 0x462A30 ─ Game_RunLogicStep 0x461930
 linAccel = forceAccum / mass            angAccel = −torqueAccum / inertia     (note the minus)
 linVel  += linAccel                     angVel  += angAccel
 forceAccum = torqueAccum = 0
-|vx|+|vy| < 1/256 → linVel = 0          |angVel| < 1/256 (hypothesis: 0x6658DC = 1/(64·4)) → 0
+|vx|+|vy| < 1/256 → linVel = 0          |angVel| < 1/256 (0x6658DC = 1/(64·4), initialiser operands) → 0
 s = step · g_CollisionRemainingFraction (0x66AFC0)
 heading += Fix16_ToAng16(angVel·s) ; cmPos += linVel·s ; centerPos = cmPos − R(heading)·cmOffset
 zPos += zStep(saved at start)·step ; UpdateGroundZ ; WriteSprite (sprite = centerPos, zPos, heading)
@@ -647,7 +647,8 @@ comment in Ghidra has the evidence.
 `xcrun llvm-objdump` and evaluates every CRT initialiser thunk built only from
 `push imm; mov ecx,&G; call WriteToFirstArg/bitShiftLeft14`, `G = [S]` copies and
 `Fix16_Add/Sub/Mul/Div` of two globals: 13 625 globals, values for 13 539. Thunks with any other
-instruction are skipped (e.g. the 0.985 air damping and the 0.13 assist factor), and a global that
+instruction are skipped (e.g. the 0.985 air damping, the 0.13 assist factor and the 1/256
+angular dead zone at 0x6658DC, which was read from its initialiser by hand), and a global that
 is rewritten at run time is not detected — check for writers before calling one a constant.
 
 ## 9. Open questions
@@ -655,7 +656,6 @@ is rewritten at run time is not detected — check for writers before calling on
 * Who sets `Game+0x30` (11 ms ticks)?
 * Ang16 convention: `Fix16Vec2_GetAngle` is atan2(y, x) while wheel points (0, off) rotate as if
   heading 0 were +Y; this decides which compass directions the assist's 90°/270° are. Needs a runtime sample.
-* Exact angular dead-zone value (0x6658DC, computed by an initialiser the script does not cover).
 * Object types behind damage/oil codes (8/9, 10, 0x80, 0x8A, 0xC2, 0x109).
 * `CarPhysics+0xAB`, `0xAA` semantics; `FUN_00469B00`, `FUN_004214F0` (model substitution condition).
 * Velocity clamp after an impulse: none found as a separate step (gta2_re's
