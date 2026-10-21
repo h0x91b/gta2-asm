@@ -20,6 +20,11 @@
 ;   - Key repeat is not a DirectInput event: SDL repeats only reach WM_KEYDOWN.
 ;   - Losing focus releases every held key (key-up records go into the ring) instead
 ;     of DIERR_INPUTLOST: the in-game reader is change-based and would keep a key held.
+;   - Keys already down when a keyboard is acquired (DV_STALE) read as up through
+;     GetDeviceState until they are released. InitFrontend (0x456A60) zeroes the
+;     menu's previous-key bytes, so the RETURN that confirmed quitting a game, still
+;     held when the frontend polls for the first time, would be a fresh press and
+;     start the level again. Windows hides that behind a slow frontend load.
 
 DI_OK              equ 0
 DI_NOEFFECT        equ 1                ; S_FALSE
@@ -47,7 +52,8 @@ DV_BUFSZ       equ 24                   ; DIPROP_BUFFERSIZE (0 = unbuffered)
 DV_RSEQ        equ 28                   ; next kring sequence this device reads
 DV_SSEQ        equ 32                   ; kring sequence GetDeviceState has seen
 DV_SHADOW      equ 36                   ; 256 bytes: last state handed out (traces)
-DV_SIZE        equ DV_SHADOW + 256
+DV_STALE       equ DV_SHADOW + 256      ; 256 bytes: down at Acquire, not yet released
+DV_SIZE        equ DV_STALE + 256
 
 KRING          equ 1024                 ; buffered key records (power of two)
 KR_SIZE        equ 16                   ; {dwOfs = DIK, dwData, dwTimeStamp, dwSequence}
@@ -469,6 +475,14 @@ di_Acquire:                 ; (this)
     xor esi, esi
     mov edx, 256
     call _memset
+    cmp dword [r12 + COM_KIND], GUID_SysKeyboard
+    jne .not_kbd
+    lea rdi, [r12 + DV_STALE]       ; keys held now are not new presses
+    lea rsi, [di_keys]
+    mov edx, 256
+    call _memcpy
+    call trace_stale
+.not_kbd:
     cmp dword [r12 + COM_KIND], GUID_SysMouse
     jne .ok
     mov qword [mouse_dx], 0         ; motion before Acquire is not reported
@@ -493,6 +507,30 @@ di_Acquire:                 ; (this)
     xor eax, eax
 .r:
     HRET
+
+; trace_stale(r12 = keyboard device): --trace-input line per key held at Acquire
+trace_stale:
+    cmp byte [trace_input], 0
+    je .r
+    push rbx
+    xor ebx, ebx
+.k:
+    cmp byte [r12 + DV_STALE + rbx], 0
+    je .n
+    mov edi, ebx
+    call dik_str
+    lea rdi, [fmt_in_stale]
+    mov esi, r12d
+    mov rdx, rax
+    xor eax, eax
+    call _printf
+.n:
+    inc ebx
+    cmp ebx, 256
+    jb .k
+    pop rbx
+.r:
+    ret
 
 di_Unacquire:               ; (this)
     sub rsp, 8
@@ -561,11 +599,30 @@ di_GetDeviceState:
     shl edx, 4
     lea rsi, [kring]
     cmp dword [rsi + rdx + 4], 0
-    je .tap
+    je .tap_up
     mov edx, [rsi + rdx]            ; a key-down record: report the key down once
     mov byte [r13 + rdx], 0x80
     jmp .tap
+.tap_up:
+    mov edx, [rsi + rdx]            ; released since: no longer stale
+    mov byte [r12 + DV_STALE + rdx], 0
+    jmp .tap
 .taps_done:
+    xor ecx, ecx                    ; stale keys read as up while still held
+    lea rsi, [di_keys]
+.stale:
+    cmp byte [r12 + DV_STALE + rcx], 0
+    je .stale_next
+    cmp byte [rsi + rcx], 0
+    jne .stale_held
+    mov byte [r12 + DV_STALE + rcx], 0
+    jmp .stale_next
+.stale_held:
+    mov byte [r13 + rcx], 0
+.stale_next:
+    inc ecx
+    cmp ecx, 256
+    jb .stale
     cmp byte [trace_input], 0
     je .ok
     lea rdi, [r12 + DV_SHADOW]      ; trace only when this device's view changed
@@ -1634,6 +1691,7 @@ fmt_di_create: db "  [w32] DirectInput8Create(version 0x%x) -> IDirectInput8A 0x
 fmt_di_device: db "  [w32] IDirectInput8A::CreateDevice(%s) -> 0x%x <- 0x%x", 10, 0
 fmt_in_key:  db "  [input] SDL key %-4s -> DIK_%s (0x%02x), record #%u", 10, 0
 fmt_in_focus: db "  [input] focus %s", 10, 0
+fmt_in_stale: db "  [input] keyboard 0x%x acquired with DIK_%s held: reads as up until released", 10, 0
 fmt_in_acq:  db "  [input] Acquire(%s 0x%x) coop 0x%x buffer %u <- 0x%x", 10, 0
 fmt_in_state: db "  [input] GetDeviceState(keyboard 0x%x) <- 0x%x: held", 0
 fmt_in_name: db " DIK_%s", 0

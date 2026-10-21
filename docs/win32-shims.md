@@ -292,6 +292,13 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
 - **GetDeviceState** (keyboard): `di_keys`, plus every key pressed since this device's
   previous read (ring records past its own cursor), so a tap that begins and ends
   between two polls is still seen once. *Deviation:* Windows would drop such a tap.
+  Keys already down when the device was acquired read as **up** until released
+  (`DV_STALE`). *Deviation:* Windows reports them held. `InitFrontend` (`0x456A60`)
+  zeroes the menu's previous-key bytes (`FrontEnd+0xC9BF..0xC9C5`) and the menu poll
+  (`0x452050`) treats down-now-and-not-before as a press, so the RETURN that confirms
+  quitting a game (the in-game reader acts on key-down) was still held at the frontend's
+  first poll and chose "RESUME SAVED STATUS" on the "PLAYER QUIT!" screen: the level
+  started again. On Windows the slow frontend load hides it; ours takes milliseconds.
   Mouse: `DIMOUSESTATE`/`DIMOUSESTATE2` with motion and wheel (`×120`) accumulated since
   the last read (fraction kept), buttons in DI order (left, right, middle, X1, X2).
 - **GetDeviceData** (keyboard): per-device read cursor into the ring, set on Acquire;

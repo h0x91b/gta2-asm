@@ -181,9 +181,10 @@ Gameplay renders natively at the window size; the frontend stays 640×480.
 - **Checked**: `--window=1280x720 --keys=150:RETURN,250:RETURN,600:ESCAPE --frames=660`
   draws the in-game quit prompt ("Is that it?") centred at 1280×720. The main menu at
   the default size is unchanged (640×480 shot). Quitting play (`…,660:RETURN`) reloads
-  the frontend (`e.gxt`, `fstyle.sty`, the 25 TGAs) but the screen then stays on the last
-  game frame — `ptrToGame` is still set and no frontend blit is drawn. That is not this
-  change: master's 640×480 build gives a byte-identical frame-1000 shot. Open.
+  the frontend, which then saw the confirming RETURN still held and started the level
+  again (a new game, so `ptrToGame` was set again). Fixed in the DirectInput shim: keys
+  held at `Acquire` read as up until released (`docs/win32-shims.md`, "Input"); the
+  "PLAYER QUIT!" screen now appears.
 
 ## Known gaps
 
