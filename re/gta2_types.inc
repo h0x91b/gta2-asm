@@ -291,7 +291,10 @@ struc FloatingScore
     .worldZ                           resb 4      ; 0x30 int
     .colorId                          resb 2      ; 0x34 ushort
     .life                             resb 1      ; 0x36 byte
-    resb 13
+    resb 1
+    .delayTicks                       resb 4      ; 0x38 int
+    .growX                            resb 4      ; 0x3c int
+    .growY                            resb 4      ; 0x40 int
     .next                             resb 4      ; 0x44 void *
     resb 4
     .amount                           resb 4      ; 0x4c uint
@@ -313,6 +316,67 @@ endstruc
 struc FrameCounter
     .frame                            resb 4      ; 0x0 int
     .frameRandom                      resb 4      ; 0x4 uint
+endstruc
+
+; /FrontendLevelPaths  (768 bytes)
+struc FrontendLevelPaths
+    .gmpPath                          resb 256    ; 0x0 char[256]
+    .styPath                          resb 256    ; 0x100 char[256]
+    .scrPath                          resb 256    ; 0x200 char[256]
+endstruc
+
+; /FrontendPage  (3018 bytes)
+struc FrontendPage
+    .itemCount                        resb 2      ; 0x0 ushort
+    .decorCount                       resb 2      ; 0x2 ushort
+    .items                            resb 1300   ; 0x4 FrontendPageItem[10]
+    .decor                            resb 1650   ; 0x518 FrontendPageDecor[15]
+    .cursors                          resb 60     ; 0xb8a FrontendPageCursor[10]
+    .selected                         resb 2      ; 0xbc6 ushort
+    .defaultSelected                  resb 2      ; 0xbc8 ushort
+endstruc
+
+; /FrontendPageCursor  (6 bytes)
+struc FrontendPageCursor
+    .x                                resb 2      ; 0x0 ushort
+    .y                                resb 2      ; 0x2 ushort
+    .enabled                          resb 1      ; 0x4 byte
+    .pad                              resb 1      ; 0x5 byte
+endstruc
+
+; /FrontendPageDecor  (110 bytes)
+struc FrontendPageDecor
+    .kind                             resb 1      ; 0x0 byte
+    .enabled                          resb 1      ; 0x1 byte
+    .x                                resb 2      ; 0x2 ushort
+    .y                                resb 2      ; 0x4 ushort
+    .text                             resb 100    ; 0x6 wchar_t[50]
+    .fontId                           resb 2      ; 0x6a ushort
+    .remap                            resb 2      ; 0x6c ushort
+endstruc
+
+; /FrontendPageItem  (130 bytes)
+struc FrontendPageItem
+    .kind                             resb 1      ; 0x0 byte
+    .enabled                          resb 1      ; 0x1 byte
+    .x                                resb 2      ; 0x2 ushort
+    .y                                resb 2      ; 0x4 ushort
+    .label                            resb 100    ; 0x6 wchar_t[50]
+    .fontId                           resb 2      ; 0x6a ushort
+    .remap                            resb 2      ; 0x6c ushort
+    .choice                           resb 2      ; 0x6e ushort
+    .choice2                          resb 2      ; 0x70 ushort
+    .choiceEnabled                    resb 12     ; 0x72 byte[12]
+    .choiceMax                        resb 2      ; 0x7e ushort
+    .action                           resb 2      ; 0x80 ushort
+endstruc
+
+; /FrontendSaveSlotInfo  (4 bytes)
+struc FrontendSaveSlotInfo
+    .exists                           resb 1      ; 0x0 byte
+    .area                             resb 1      ; 0x1 byte
+    .levelOrBonusId                   resb 1      ; 0x2 byte
+    .isBonusLevel                     resb 1      ; 0x3 byte
 endstruc
 
 ; /GTAVertex  (32 bytes)
@@ -361,6 +425,54 @@ HUD_DIGIT_SPRITE.HUD_DIGITS_LIVES equ 115
 HUD_DIGIT_SPRITE.HUD_DIGITS_MULTIPLIER equ 116
 HUD_DIGIT_SPRITE.HUD_DIGITS_MONEY equ 158
 
+; /HudArrow  (124 bytes)
+struc HudArrow
+    .screenX                          resb 4      ; 0x0 int
+    .screenY                          resb 4      ; 0x4 int
+    .angle                            resb 2      ; 0x8 short
+    .pad0a                            resb 2      ; 0xa byte[2]
+    .orbitRadiusBase                  resb 4      ; 0xc int
+    .radius                           resb 4      ; 0x10 int
+    .radiusSpeed                      resb 4      ; 0x14 int
+    resb 8
+    .colour                           resb 4      ; 0x20 int
+    .spriteId                         resb 2      ; 0x24 short
+    .retargetCooldown                 resb 1      ; 0x26 byte
+    resb 1
+    .gang                             resb 4      ; 0x28 void *
+    .minRespect                       resb 1      ; 0x2c char
+    .visible                          resb 1      ; 0x2d byte
+    .inUse                            resb 1      ; 0x2e byte
+    resb 1
+    .target0                          resb 36     ; 0x30 HudArrowTarget
+    .target1                          resb 36     ; 0x54 HudArrowTarget
+    .current                          resb 4      ; 0x78 HudArrowTarget *
+endstruc
+
+; /HudArrowPool  (2120 bytes)
+struc HudArrowPool
+    .arrows                           resb 2108   ; 0x0 HudArrow[17]
+    .enabled                          resb 1      ; 0x83c byte
+    .pad83d                           resb 3      ; 0x83d byte[3]
+    .onScreenGangArrow                resb 4      ; 0x840 HudArrow *
+    .needsOrphanPrune                 resb 1      ; 0x844 byte
+    .pad845                           resb 3      ; 0x845 byte[3]
+endstruc
+
+; /HudArrowTarget  (36 bytes)
+struc HudArrowTarget
+    .ped                              resb 4      ; 0x0 void *
+    .car                              resb 4      ; 0x4 void *
+    .object                           resb 4      ; 0x8 void *
+    .player                           resb 4      ; 0xc void *
+    .mode                             resb 4      ; 0x10 int
+    .posX                             resb 4      ; 0x14 int
+    .posY                             resb 4      ; 0x18 int
+    .posZ                             resb 4      ; 0x1c int
+    .onScreen                         resb 1      ; 0x20 byte
+    .pad21                            resb 3      ; 0x21 byte[3]
+endstruc
+
 ; /HudBigLabel  (456 bytes)
 struc HudBigLabel
     .timer                            resb 1      ; 0x0 byte
@@ -391,13 +503,122 @@ struc HudBriefQueue
     .timer                            resb 2      ; 0x504 short
     .pad506                           resb 2      ; 0x506 short
     .lineCount                        resb 4      ; 0x508 int
-    .field_50c                        resb 4      ; 0x50c int
+    .iconFrame                        resb 4      ; 0x50c int
     .textLen                          resb 4      ; 0x510 int
     .phase                            resb 4      ; 0x514 int
     .pool                             resb 480    ; 0x518 HudBriefNode[20]
     .head                             resb 4      ; 0x6f8 HudBriefNode *
     .freeList                         resb 4      ; 0x6fc HudBriefNode *
-    .pending                          resb 4      ; 0x700 HudBriefNode *
+    .history                          resb 4      ; 0x700 HudBriefNode *
+endstruc
+
+; /HudCarNameLabel  (76 bytes)
+struc HudCarNameLabel
+    .timer                            resb 1      ; 0x0 byte
+    .pad1                             resb 1      ; 0x1 byte
+    .text                             resb 66     ; 0x2 wchar_t[33]
+    .textWidth                        resb 4      ; 0x44 int
+    .slideY                           resb 4      ; 0x48 int
+endstruc
+
+; /HudDebugLabel  (196 bytes)
+struc HudDebugLabel
+    .text                             resb 164    ; 0x0 wchar_t[82]
+    .timer                            resb 4      ; 0xa4 int
+    .x                                resb 2      ; 0xa8 ushort
+    .y                                resb 2      ; 0xaa ushort
+    .fontId                           resb 2      ; 0xac ushort
+    .pad0e                            resb 2      ; 0xae ushort
+    .paletteBase                      resb 4      ; 0xb0 int
+    .remap                            resb 2      ; 0xb4 short
+    .pad16                            resb 2      ; 0xb6 short
+    .invisibility                     resb 4      ; 0xb8 int
+    .alpha                            resb 1      ; 0xbc byte
+    .pad1d                            resb 3      ; 0xbd byte[3]
+    .next                             resb 4      ; 0xc0 void *
+endstruc
+
+; /HudDebugLabelPool  (5888 bytes)
+struc HudDebugLabelPool
+    resb 5876
+    .count                            resb 4      ; 0x16f4 int
+    .activeHead                       resb 4      ; 0x16f8 HudDebugLabel *
+    .freeHead                         resb 4      ; 0x16fc HudDebugLabel *
+endstruc
+
+; /HudKillFeedLine  (208 bytes)
+struc HudKillFeedLine
+    .timer                            resb 1      ; 0x0 byte
+    .pad1                             resb 1      ; 0x1 byte
+    .text                             resb 202    ; 0x2 wchar_t[101]
+    .textWidth                        resb 4      ; 0xcc int
+endstruc
+
+; /HudPagerArray  (48 bytes)
+struc HudPagerArray
+    .entries                          resb 48     ; 0x0 HudPagerEntry[4]
+endstruc
+
+; /HudPagerEntry  (12 bytes)
+struc HudPagerEntry
+    .timerTicks                       resb 4      ; 0x0 int
+    .counterPtr                       resb 4      ; 0x4 int *
+    .sound                            resb 4      ; 0x8 void *
+endstruc
+
+; /HudPausePage  (4 bytes)
+struc HudPausePage
+    .page                             resb 1      ; 0x0 byte
+    .ticksLeft                        resb 1      ; 0x1 byte
+    .pad2                             resb 2      ; 0x2 byte[2]
+endstruc
+
+; /HudPickupLabel  (136 bytes)
+struc HudPickupLabel
+    .timer                            resb 1      ; 0x0 byte
+    .pad1                             resb 1      ; 0x1 byte
+    .text                             resb 130    ; 0x2 wchar_t[65]
+    .textWidth                        resb 4      ; 0x84 int
+endstruc
+
+; /HudPlayerMarker  (16 bytes)
+struc HudPlayerMarker
+    .screenX                          resb 4      ; 0x0 int
+    .screenY                          resb 4      ; 0x4 int
+    .angle                            resb 2      ; 0x8 short
+    .visible                          resb 1      ; 0xa byte
+    .pad0b                            resb 5      ; 0xb byte[5]
+endstruc
+
+; /HudWantedStar  (12 bytes)
+struc HudWantedStar
+    .lit                              resb 1      ; 0x0 byte
+    .blinkCounter                     resb 1      ; 0x1 byte
+    .blinkPeriod                      resb 1      ; 0x2 byte
+    .pad3                             resb 1      ; 0x3 byte
+    .bounceOffset                     resb 4      ; 0x4 int
+    .bounceDelta                      resb 4      ; 0x8 int
+endstruc
+
+; /HudWantedStars  (84 bytes)
+struc HudWantedStars
+    .stars                            resb 72     ; 0x0 HudWantedStar[6]
+    .count                            resb 4      ; 0x48 int
+    .spriteW                          resb 4      ; 0x4c int
+    .spriteH                          resb 4      ; 0x50 int
+endstruc
+
+; /HudZoneNameLabel  (152 bytes)
+struc HudZoneNameLabel
+    .timer                            resb 1      ; 0x0 byte
+    .pad1                             resb 1      ; 0x1 byte
+    .text                             resb 130    ; 0x2 wchar_t[65]
+    .textWidth                        resb 4      ; 0x84 int
+    .zoneSecondary                    resb 4      ; 0x88 void *
+    .zonePrimary                      resb 4      ; 0x8c void *
+    .fadeBlend                        resb 4      ; 0x90 int
+    .fadeAlpha                        resb 1      ; 0x94 byte
+    .pad95                            resb 3      ; 0x95 byte[3]
 endstruc
 
 ; /IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct  (8 bytes)
@@ -718,6 +939,29 @@ struc RoadSegment
     .minY                             resb 1      ; 0x5 byte
     .maxX                             resb 1      ; 0x6 byte
     .maxY                             resb 1      ; 0x7 byte
+endstruc
+
+; /SaveGameHeader  (1864 bytes)
+struc SaveGameHeader
+    .gmpPath                          resb 25     ; 0x0 char[25]
+    .styPath                          resb 25     ; 0x19 char[25]
+    .scrPath                          resb 25     ; 0x32 char[25]
+    .startArea                        resb 1      ; 0x4b byte
+    .bonusLevelId                     resb 1      ; 0x4c byte
+    .isBonusLevel                     resb 1      ; 0x4d byte
+    resb 6
+    .playerCheckpoint                 resb 214    ; 0x54 byte[214]
+    .patchCount                       resb 4      ; 0x12a uint
+    resb 6
+    .patchEntries                     resb 1200   ; 0x134 ushort[600]
+    .pickupX                          resb 80     ; 0x5e4 int[20]
+    .pickupY                          resb 80     ; 0x634 int[20]
+    .pickupZ                          resb 80     ; 0x684 int[20]
+    .pickupType                       resb 40     ; 0x6d4 ushort[20]
+    .pickupAmmo                       resb 20     ; 0x6fc byte[20]
+    .spawnerState                     resb 50     ; 0x710 byte[50]
+    resb 2
+    .menuField574                     resb 4      ; 0x744 uint
 endstruc
 
 ; /ScriptTrigger  (24 bytes)
@@ -1152,7 +1396,7 @@ struc Car
     .deltasBitstate                   resb 4      ; 0x8 CAR_DELTAS_BITSTATE
     .carDoor                          resb 64     ; 0xc CarDoor[4]
     .next                             resb 4      ; 0x4c Car *
-    .sprite                           resb 4      ; 0x50 Sprite *
+    .body                             resb 4      ; 0x50 Position *
     .driver                           resb 4      ; 0x54 Ped *
     .physics                          resb 4      ; 0x58 CarPhysics *
     .ai                               resb 4      ; 0x5c CarAI *
@@ -1457,73 +1701,78 @@ struc FrontEnd
     resb 227
     .field252_0xff                    resb 4      ; 0xff undefined4
     resb 5
-    .field258_0x108                   resb 4      ; 0x108 int
+    .resultCode                       resb 4      ; 0x108 int
     .field259_0x10c                   resb 1      ; 0x10c byte
-    resb 3
-    .movie1                           resb 4      ; 0x110 int
-    .field264_0x114                   resb 4      ; 0x114 int
-    .field265_0x118                   resb 4      ; 0x118 int
+    .keyboardActive                   resb 1      ; 0x10d byte
     resb 2
-    .doPlayMovies                     resb 2      ; 0x11e short
+    .mode                             resb 4      ; 0x110 int
+    .cursorBlink                      resb 4      ; 0x114 int
+    .cursorBlinkTimer                 resb 4      ; 0x118 int
+    .defaultFontId                    resb 2      ; 0x11c short
+    .pageId                           resb 2      ; 0x11e short
     resb 3134
     .plyrslot                         resb 2      ; 0xd5e short
     .plyrslot2                        resb 2      ; 0xd60 short
     resb 16502
-    .field19907_0x4dd8                resb 100    ; 0x4dd8 wchar_t[50]
+    .field19906_0x4dd8                resb 100    ; 0x4dd8 wchar_t[50]
     resb 31568
     .playerName                       resb 16     ; 0xc98c WCHAR[8]
-    .field51477_0xc99c                resb 2      ; 0xc99c short
-    .field51478_0xc99e                resb 1      ; 0xc99e byte
-    .field51479_0xc99f                resb 1      ; 0xc99f byte
-    .bufSize_256                      resb 2      ; 0xc9a0 short
-    .short_eq_5                       resb 2      ; 0xc9a2 short
-    .field51482_0xc9a4                resb 4      ; 0xc9a4 int
-    .field51483_0xc9a8                resb 4      ; 0xc9a8 int
-    .field51484_0xc9ac                resb 4      ; 0xc9ac int
-    .field51485_0xc9b0                resb 4      ; 0xc9b0 int
-    .field51486_0xc9b4                resb 2      ; 0xc9b4 short
-    .byte                             resb 1      ; 0xc9b6 undefined1
-    .field51488_0xc9b7                resb 1      ; 0xc9b7 byte
-    .field51489_0xc9b8                resb 1      ; 0xc9b8 byte
-    .field51490_0xc9b9                resb 1      ; 0xc9b9 byte
-    .field51491_0xc9ba                resb 1      ; 0xc9ba byte
-    resb 1
-    .field51493_0xc9bc                resb 1      ; 0xc9bc byte
-    .field51494_0xc9bd                resb 1      ; 0xc9bd byte
-    .field51495_0xc9be                resb 1      ; 0xc9be byte
-    .field51496_0xc9bf                resb 1      ; 0xc9bf byte
-    .field51497_0xc9c0                resb 1      ; 0xc9c0 byte
-    .field51498_0xc9c1                resb 1      ; 0xc9c1 byte
-    .field51499_0xc9c2                resb 1      ; 0xc9c2 byte
-    .field51500_0xc9c3                resb 1      ; 0xc9c3 byte
-    .field51501_0xc9c4                resb 1      ; 0xc9c4 byte
+    .field51476_0xc99c                resb 2      ; 0xc99c short
+    .nameLen                          resb 1      ; 0xc99e byte
+    .textKeyHeld                      resb 1      ; 0xc99f byte
+    .lastKeyDik                       resb 2      ; 0xc9a0 short
+    .keyRepeatCounter                 resb 2      ; 0xc9a2 short
+    .field51481_0xc9a4                resb 4      ; 0xc9a4 int
+    .field51482_0xc9a8                resb 4      ; 0xc9a8 int
+    .field51483_0xc9ac                resb 4      ; 0xc9ac int
+    .field51484_0xc9b0                resb 4      ; 0xc9b0 int
+    .field51485_0xc9b4                resb 2      ; 0xc9b4 short
+    .codeLen                          resb 1      ; 0xc9b6 byte
+    .codeErrorShown                   resb 1      ; 0xc9b7 byte
+    .keyLeftEdge                      resb 1      ; 0xc9b8 byte
+    .keyRightEdge                     resb 1      ; 0xc9b9 byte
+    .keyUpEdge                        resb 1      ; 0xc9ba byte
+    .keyDownEdge                      resb 1      ; 0xc9bb byte
+    .keyEnterEdge                     resb 1      ; 0xc9bc byte
+    .keyEscapeEdge                    resb 1      ; 0xc9bd byte
+    .keyDeleteEdge                    resb 1      ; 0xc9be byte
+    .keyLeftPrev                      resb 1      ; 0xc9bf byte
+    .keyRightPrev                     resb 1      ; 0xc9c0 byte
+    .keyUpPrev                        resb 1      ; 0xc9c1 byte
+    .keyDownPrev                      resb 1      ; 0xc9c2 byte
+    .keyEnterPrev                     resb 1      ; 0xc9c3 byte
+    .keyEscapePrev                    resb 1      ; 0xc9c4 byte
     .time                             resb 4      ; 0xc9c5 dword
-    .field51503_0xc9c9                resb 1      ; 0xc9c9 byte
-    .field51504_0xc9ca                resb 1      ; 0xc9ca byte
+    .field51502_0xc9c9                resb 1      ; 0xc9c9 byte
+    .field51503_0xc9ca                resb 1      ; 0xc9ca byte
     resb 2
     .cheatsAreActive                  resb 1      ; 0xc9cd bool
-    resb 9191
-    .vector_8                         resb 1      ; 0xedb5 undefined1
-    resb 62
-    .movie2                           resb 1      ; 0xedf4 byte
-    resb 1
-    .field60764_0xedf6                resb 2      ; 0xedf6 short
-    .field60765_0xedf8                resb 1      ; 0xedf8 byte
-    .field60766_0xedf9                resb 1      ; 0xedf9 byte
-    resb 64802
-    .field125569_0x1eb1c              resb 2      ; 0x1eb1c short
     resb 2
-    .unkPtr                           resb 4      ; 0x1eb20 int
-    .field125573_0x1eb24              resb 2      ; 0x1eb24 short
-    resb 8
-    .buf8                             resb 8      ; 0x1eb2e byte[8]
-    .field125583_0x1eb36              resb 1      ; 0x1eb36 byte
-    .field125584_0x1eb37              resb 1      ; 0x1eb37 byte
-    .field125585_0x1eb38              resb 1      ; 0x1eb38 byte
-    .field125586_0x1eb39              resb 1      ; 0x1eb39 byte
-    .field125587_0x1eb3a              resb 1      ; 0x1eb3a byte
-    .field125588_0x1eb3b              resb 1      ; 0x1eb3b byte
-    resb 4
+    .idleTimerStart                   resb 4      ; 0xc9d0 dword
+    resb 9185
+    .vector_8                         resb 1      ; 0xedb5 undefined1
+    resb 30
+    .saveSlots                        resb 32     ; 0xedd4 FrontendSaveSlotInfo[8]
+    .backgroundId                     resb 1      ; 0xedf4 byte
+    resb 1
+    .deleteConfirmY                   resb 2      ; 0xedf6 short
+    .deleteConfirmArmed               resb 1      ; 0xedf8 byte
+    .hiScoreTableIndex                resb 1      ; 0xedf9 byte
+    resb 64802
+    .creditsTick                      resb 2      ; 0x1eb1c short
+    resb 2
+    .creditsScrollY                   resb 4      ; 0x1eb20 int
+    .creditsLineIndex                 resb 2      ; 0x1eb24 short
+    .selectedAreaPerProfile           resb 8      ; 0x1eb26 byte[8]
+    .selectedBonusPerProfile          resb 8      ; 0x1eb2e byte[8]
+    .profileArrowLeft                 resb 1      ; 0x1eb36 byte
+    .profileArrowRight                resb 1      ; 0x1eb37 byte
+    .areaArrowLeft                    resb 1      ; 0x1eb38 byte
+    .areaArrowRight                   resb 1      ; 0x1eb39 byte
+    .bonusArrowLeft                   resb 1      ; 0x1eb3a byte
+    .bonusArrowRight                  resb 1      ; 0x1eb3b byte
+    .areaCount                        resb 1      ; 0x1eb3c byte
+    .levelCountPerArea                resb 3      ; 0x1eb3d byte[3]
 endstruc
 
 ; /_game/Game  (64 bytes)
@@ -1570,19 +1819,31 @@ endstruc
 struc Menu
     .gmpFile                          resb 256    ; 0x0 char[256]
     .styFile                          resb 256    ; 0x100 char[256]
-    .styFile2                         resb 256    ; 0x200 char[256]
-    .unk2                             resb 256    ; 0x300 char[256]
-    .playerArea                       resb 1      ; 0x400 byte
-    .bonusStage                       resb 1      ; 0x401 byte
+    .scrFile                          resb 256    ; 0x200 char[256]
+    .savePath                         resb 256    ; 0x300 char[256]
+    .startArea                        resb 1      ; 0x400 byte
+    .bonusLevelId                     resb 1      ; 0x401 byte
+    .isBonusLevel                     resb 1      ; 0x402 byte
+    .profileSlot                      resb 1      ; 0x403 byte
+    .levelEndReason                   resb 1      ; 0x404 byte
+    resb 3
+    .crimeStats                       resb 40     ; 0x408 int[10]
+    .totalEarned                      resb 4      ; 0x430 int
+    .wantedStarSeconds                resb 4      ; 0x434 int
+    .bonusRatingTextId                resb 2      ; 0x438 ushort
+    .bonusLevelSelected               resb 1      ; 0x43a byte
+    .mpGameType                       resb 1      ; 0x43b byte
+    .fragLimit                        resb 4      ; 0x43c int
+    .mpLocalPlayerIndex               resb 1      ; 0x440 byte
+    .mpPlayerCount                    resb 1      ; 0x441 byte
+    .mpWinner                         resb 1      ; 0x442 byte
     resb 1
-    .playerProfile                    resb 1      ; 0x403 byte
-    resb 55
-    .field63_0x43b                    resb 1      ; 0x43b byte
-    .fraglimit                        resb 2      ; 0x43c short
-    resb 94
-    .field159_0x49c                   resb 4      ; 0x49c int
-    resb 212
-    .unk1                             resb 4      ; 0x574 int
+    .mpTimeLimitMinutes               resb 4      ; 0x444 int
+    .mpKillMatrix                     resb 72     ; 0x448 ushort[36]
+    .mpFrags                          resb 12     ; 0x490 ushort[6]
+    .mpPoints                         resb 24     ; 0x49c int[6]
+    .mpPlayerNames                    resb 192    ; 0x4b4 wchar_t[96]
+    .unsure_field574                  resb 4      ; 0x574 int
 endstruc
 
 ; /_game/Player  (2140 bytes)
@@ -1591,7 +1852,7 @@ struc Player
     resb 3
     .inputWord                        resb 4      ; 0x4 uint
     .turnRate                         resb 2      ; 0x8 short
-    .unsure_turnStep                  resb 2      ; 0xa short
+    .turnStep                         resb 2      ; 0xa short
     .moveSpeed                        resb 4      ; 0xc SCR_f
     .unused_0x10                      resb 4      ; 0x10 SCR_f
     .savedPedWeapon                   resb 2      ; 0x14 short
@@ -1623,7 +1884,7 @@ struc Player
     .lastCarMiddle                    resb 4      ; 0x58 Car *
     .lastCarNewest                    resb 4      ; 0x5c Car *
     .scoreTargetReached               resb 4      ; 0x60 int
-    .unsure_turnProfile               resb 1      ; 0x64 byte
+    .turnProfile                      resb 1      ; 0x64 byte
     resb 3
     .controlState                     resb 4      ; 0x68 PLAYER_CONTROL_STATE
     .viewCamDetached                  resb 4      ; 0x6c int
@@ -1827,7 +2088,7 @@ struc Ped
     .player                           resb 4      ; 0x15c Player *
     .nextPed                          resb 4      ; 0x160 Ped *
     .group                            resb 4      ; 0x164 PedGroup *
-    .sprite                           resb 4      ; 0x168 Sprite *
+    .gameObject                       resb 4      ; 0x168 GameObject *
     .currentCar                       resb 4      ; 0x16c Car *
     .selectedWeapon                   resb 4      ; 0x170 WEAPON_STRUCT *
     .altWeapon                        resb 4      ; 0x174 WEAPON_STRUCT *
@@ -2381,16 +2642,22 @@ struc HudManager
     resb 46
     .field46_0x2e                     resb 1      ; 0x2e char
     resb 29
-    .field76_0x4c                     resb 4      ; 0x4c void *
-    resb 148
+    .zoneName                         resb 152    ; 0x4c HudZoneNameLabel
     .briefQueue                       resb 1796   ; 0xe4 HudBriefQueue
-    resb 8056
-    .field8282_0x2760                 resb 4      ; 0x2760 void *
-    resb 81
+    .pagerArray                       resb 48     ; 0x7e8 HudPagerArray
+    .debugLabels                      resb 5888   ; 0x818 HudDebugLabelPool
+    .arrowPool                        resb 2120   ; 0x1f18 HudArrowPool
+    .wantedStars                      resb 84     ; 0x2760 HudWantedStars
+    resb 1
     .displayDebugPedInfo              resb 1      ; 0x27b5 undefined1
-    resb 158
-    .ptrToSomeStructRelToBIG_LABEL    resb 4      ; 0x2854 undefined4
-    resb 668
+    resb 2
+    .pickupLabel                      resb 136    ; 0x27b8 HudPickupLabel
+    resb 4
+    .playerMarker                     resb 16     ; 0x2844 HudPlayerMarker
+    .bigLabel                         resb 456    ; 0x2854 HudBigLabel
+    .pausePage                        resb 4      ; 0x2a1c HudPausePage
+    .killFeedLine                     resb 208    ; 0x2a20 HudKillFeedLine
+    resb 4
     .text_speed                       resb 4      ; 0x2af4 int
 endstruc
 
@@ -2635,7 +2902,7 @@ struc Position
     resb 2
     .prev_                            resb 4      ; 0x4 Position *
     .field4_0x8                       resb 4      ; 0x8 int
-    .next_                            resb 4      ; 0xc Position *
+    .bounds                           resb 4      ; 0xc void *
     .field6_0x10                      resb 4      ; 0x10 int
     .x                                resb 4      ; 0x14 int
     .y                                resb 4      ; 0x18 int
@@ -2647,10 +2914,10 @@ struc Position
     .field15_0x28                     resb 4      ; 0x28 int
     .field16_0x2c                     resb 1      ; 0x2c byte
     resb 3
-    .field20_0x30                     resb 4      ; 0x30 int
+    .collisionKind                    resb 4      ; 0x30 int
     .field21_0x34                     resb 4      ; 0x34 int
     .field22_0x38                     resb 1      ; 0x38 byte
-    .field23_0x39                     resb 1      ; 0x39 byte
+    .boundsDirty                      resb 1      ; 0x39 byte
     resb 2
 endstruc
 
@@ -5274,6 +5541,12 @@ struc sprite_entry
     .w                                resb 1      ; 0x4 byte
     .h                                resb 1      ; 0x5 byte
     .pad                              resb 2      ; 0x6 ushort
+endstruc
+
+; /math/Vec2  (8 bytes)
+struc Vec2
+    .x                                resb 4      ; 0x0 Fix16
+    .y                                resb 4      ; 0x4 Fix16
 endstruc
 
 ; /scr_structs.h/SCR_CMD_HEADER  (8 bytes)

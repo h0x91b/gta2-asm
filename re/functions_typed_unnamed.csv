@@ -1,6 +1,5 @@
 address,name,namespace,name_source,calling_convention,signature_source,size,thunk_to,signature
 0x003f135c,FUN_003f135c,,DEFAULT,__fastcall,USER_DEFINED,33,,"undefined __fastcall FUN_003f135c(Game * param_1, char param_2)"
-0x00401cf0,FUN_00401cf0,,DEFAULT,__stdcall,USER_DEFINED,42,,"void __stdcall FUN_00401cf0(undefined4 param_1, undefined4 param_2, int length, undefined * param_4)"
 0x00403940,FUN_00403940,,DEFAULT,__thiscall,USER_DEFINED,13,,"void __thiscall FUN_00403940(void * this, int param_1_00, Ped * param_2)"
 0x00403d10,FUN_00403d10,,DEFAULT,__fastcall,USER_DEFINED,8,,undefined __fastcall FUN_00403d10(Ped * param_1)
 0x00404ef0,FUN_00404ef0,,DEFAULT,__thiscall,USER_DEFINED,838,,"void __thiscall FUN_00404ef0(void * this, Ped * param_1)"
@@ -22,17 +21,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0044a1e0,CrimeStats_RearmOneShots,,DEFAULT,__fastcall,USER_DEFINED,5,CrimeStats_RearmOneShots,undefined __fastcall CrimeStats_RearmOneShots(CrimeStats * param_1)
 0x0044af70,FUN_0044af70,,DEFAULT,__fastcall,USER_DEFINED,7,,void __fastcall FUN_0044af70(void * iParm1)
 0x0044afe0,FUN_0044afe0,,DEFAULT,__stdcall,USER_DEFINED,25,,void __stdcall FUN_0044afe0(void * param_1)
-0x004524c0,FUN_004524c0,,DEFAULT,__fastcall,USER_DEFINED,56,,void __fastcall FUN_004524c0(FrontEnd * param_1)
-0x00452b30,FUN_00452b30,,DEFAULT,__fastcall,USER_DEFINED,85,,undefined __fastcall FUN_00452b30(FrontendS1S1 * param_1)
-0x00452c80,FUN_00452c80,,DEFAULT,__fastcall,USER_DEFINED,53,,undefined __fastcall FUN_00452c80(FrontendS1S2 * param_1)
-0x00455c20,FUN_00455c20,,DEFAULT,__fastcall,USER_DEFINED,107,,void __fastcall FUN_00455c20(FrontEnd * param_1)
-0x00455e50,FUN_00455e50,,DEFAULT,__fastcall,USER_DEFINED,159,,undefined __fastcall FUN_00455e50(FrontendS1 * param_1)
-0x00455f90,FUN_00455f90,,DEFAULT,__fastcall,USER_DEFINED,361,,void __fastcall FUN_00455f90(FrontEnd * frontend)
-0x00459540,FUN_00459540,,DEFAULT,__fastcall,USER_DEFINED,79,,void __fastcall FUN_00459540(FrontEnd * param_1)
-0x004597c0,FUN_004597c0,,DEFAULT,__fastcall,USER_DEFINED,1559,,void __fastcall FUN_004597c0(FrontEnd * param_1)
-0x00459e30,FUN_00459e30,,DEFAULT,__fastcall,USER_DEFINED,470,,void __fastcall FUN_00459e30(FrontEnd * param_1)
-0x0045a250,FUN_0045a250,,DEFAULT,__fastcall,USER_DEFINED,178,,void __fastcall FUN_0045a250(FrontEnd * param_1)
-0x0045a320,FUN_0045a320,,DEFAULT,__fastcall,USER_DEFINED,307,,undefined4 __fastcall FUN_0045a320(FrontEnd * param_1)
 0x0045a480,FUN_0045a480,,DEFAULT,default,USER_DEFINED,44,,"void FUN_0045a480(Game * game, int iParm1, int param_3, undefined4 param_4, undefined4 param_5)"
 0x0045a4d0,FUN_0045a4d0,,DEFAULT,__fastcall,USER_DEFINED,19,,uint __fastcall FUN_0045a4d0(Game * param_1)
 0x0045a540,FUN_0045a540,,DEFAULT,__fastcall,USER_DEFINED,85,,void __fastcall FUN_0045a540(Game * param_1)
@@ -47,7 +35,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0045c1e0,LightManager_Update,,DEFAULT,__fastcall,USER_DEFINED,5,LightManager_Update,void __fastcall LightManager_Update(LightManager * this)
 0x0045c420,FUN_0045c420,,DEFAULT,default,USER_DEFINED,79,,"uint FUN_0045c420(Game * game, uint uParm1, undefined4 param_3, undefined4 param_4)"
 0x0045c470,FUN_0045c470,,DEFAULT,default,USER_DEFINED,92,,"uint FUN_0045c470(Game * game, uint uParm1, undefined4 param_3, undefined4 param_4)"
-0x0045e550,FUN_0045e550,,DEFAULT,__fastcall,USER_DEFINED,7,,undefined __fastcall FUN_0045e550(void * param_1)
 0x00460fd0,FUN_00460fd0,,DEFAULT,__fastcall,USER_DEFINED,28,,undefined4 * __fastcall FUN_00460fd0(SKeyboard * param_1)
 0x00461db0,FUN_00461db0,,DEFAULT,__fastcall,USER_DEFINED,7,,undefined __fastcall FUN_00461db0(undefined param_1)
 0x004642a0,FUN_004642a0,,DEFAULT,default,USER_DEFINED,131,,"void FUN_004642a0(void * this, int * piParm1, int * param_3, int * param_4, int * param_5, int * param_6, int * * param_7, int * param_8)"
@@ -64,21 +51,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004a50e0,AnimatedValue_Set,,DEFAULT,__fastcall,USER_DEFINED,5,AnimatedValue_Set,"void __fastcall AnimatedValue_Set(AnimatedValue * param_1, int * param_1_00, int param_3)"
 0x004a5180,FUN_004a5180,,DEFAULT,__fastcall,USER_DEFINED,8,,void __fastcall FUN_004a5180(Player * param_1)
 0x004af570,FUN_004af570,,DEFAULT,__thiscall,USER_DEFINED,35,,"bool __thiscall FUN_004af570(void * this, uint param_1)"
-0x004b1d80,FUN_004b1d80,,DEFAULT,__fastcall,USER_DEFINED,113,,void __fastcall FUN_004b1d80(S6 * s6)
 0x004b75a0,AnimatedValue_Get,,DEFAULT,__fastcall,USER_DEFINED,5,AnimatedValue_Get,int __fastcall AnimatedValue_Get(AnimatedValue * param_1)
-0x004b9e50,FUN_004b9e50,,DEFAULT,__fastcall,USER_DEFINED,7,,void __fastcall FUN_004b9e50(SpriteManager * param_1)
-0x004c4b70,FUN_004c4b70,,DEFAULT,__fastcall,USER_DEFINED,11,,void __fastcall FUN_004c4b70(void * param_1)
-0x004c4d60,FUN_004c4d60,,DEFAULT,__fastcall,USER_DEFINED,22,,void __fastcall FUN_004c4d60(int * param_1)
-0x004c5e70,FUN_004c5e70,,DEFAULT,__stdcall,USER_DEFINED,38,,"int __stdcall FUN_004c5e70(void * ptr, int iParm1, int * param_3)"
-0x004c6c60,FUN_004c6c60,,DEFAULT,__fastcall,USER_DEFINED,15,,void __fastcall FUN_004c6c60(void * param_1)
-0x004c6f80,FUN_004c6f80,,DEFAULT,__fastcall,USER_DEFINED,35,,uint __fastcall FUN_004c6f80(int param_1)
-0x004c7b10,FUN_004c7b10,,DEFAULT,__fastcall,USER_DEFINED,94,,void __fastcall FUN_004c7b10(void * param_1)
-0x004c8620,FUN_004c8620,,DEFAULT,__fastcall,USER_DEFINED,35,,void __fastcall FUN_004c8620(HudManager * param_1)
-0x004cc810,FUN_004cc810,,DEFAULT,__fastcall,USER_DEFINED,75,,undefined __fastcall FUN_004cc810(SoundClient * param_1)
-0x004cc9e0,FUN_004cc9e0,,DEFAULT,__fastcall,USER_DEFINED,26,,int __fastcall FUN_004cc9e0(void * ptr)
-0x004ccb10,FUN_004ccb10,,DEFAULT,__fastcall,USER_DEFINED,42,,undefined __fastcall FUN_004ccb10(Car * param_1)
-0x004cd400,FUN_004cd400,,DEFAULT,default,USER_DEFINED,91,,"void FUN_004cd400(WEAPON_STRUCT * weapon, undefined4 param_2)"
-0x004ce970,FUN_004ce970,,DEFAULT,default,USER_DEFINED,1484,,"void FUN_004ce970(void * ped, ushort * puParm1, undefined * param_3, int param_4, uint param_5)"
 0x004d09d0,FUN_004d09d0,,DEFAULT,__stdcall,USER_DEFINED,41,,void __stdcall FUN_004d09d0(byte * param_1)
 0x004d17b0,DirectInput8Create,DINPUT8.DLL,DEFAULT,__stdcall,USER_DEFINED,6,DINPUT8.DLL::DirectInput8Create,"HRESULT __stdcall DirectInput8Create(HINSTANCE hinst, DWORD dwVersion, DWORD riidltf, LPVOID * ppvOut, LPUNKNOWN punkOuter)"
 0x004d2b02,VerQueryValueA,VERSION.DLL,DEFAULT,__stdcall,USER_DEFINED,6,VERSION.DLL::VerQueryValueA,"BOOL __stdcall VerQueryValueA(LPCVOID pBlock, LPCSTR lpSubBlock, LPVOID * lplpBuffer, PUINT puLen)"

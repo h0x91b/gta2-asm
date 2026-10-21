@@ -77,6 +77,9 @@ imported from the external sources in `re/external/` (see its README, "Imported 
 - Enum constants that look like compiler macros (`_MSC_VER`, `_M_IX86`…) or collide with
   another enum's constant are prefixed `EnumName__`.
 - Bitfields are emitted as raw storage bytes with the bit layout in a comment.
+- The `Fix16_*` / `Ang16_*` / `Vec2_*` operators are MSVC `__thiscall`, typed in Ghidra with
+  custom storage (object = first parameter in `ECX`). The export prints them as `__stdcall`; the
+  real convention is in [docs/re/math-helpers.md](../docs/re/math-helpers.md) §2.
 
 ## Regenerate
 

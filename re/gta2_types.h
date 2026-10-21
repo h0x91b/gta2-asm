@@ -47,12 +47,33 @@ typedef struct FireEngineSlot FireEngineSlot;
 typedef struct FloatingScore FloatingScore;
 typedef struct FloatingScoreManager FloatingScoreManager;
 typedef struct FrameCounter FrameCounter;
+typedef struct FrontendLevelPaths FrontendLevelPaths;
+typedef struct FrontendPage FrontendPage;
+typedef struct FrontendPageCursor FrontendPageCursor;
+typedef struct FrontendPageDecor FrontendPageDecor;
+typedef struct FrontendPageItem FrontendPageItem;
+typedef struct FrontendSaveSlotInfo FrontendSaveSlotInfo;
 typedef struct GTAVertex GTAVertex;
 typedef struct Generator Generator;
 typedef struct GeneratorManager GeneratorManager;
+typedef struct HudArrow HudArrow;
+typedef struct HudArrowPool HudArrowPool;
+typedef struct HudArrowTarget HudArrowTarget;
 typedef struct HudBigLabel HudBigLabel;
 typedef struct HudBriefNode HudBriefNode;
 typedef struct HudBriefQueue HudBriefQueue;
+typedef struct HudCarNameLabel HudCarNameLabel;
+typedef struct HudDebugLabel HudDebugLabel;
+typedef struct HudDebugLabelPool HudDebugLabelPool;
+typedef struct HudKillFeedLine HudKillFeedLine;
+typedef struct HudPagerArray HudPagerArray;
+typedef struct HudPagerEntry HudPagerEntry;
+typedef struct HudPausePage HudPausePage;
+typedef struct HudPickupLabel HudPickupLabel;
+typedef struct HudPlayerMarker HudPlayerMarker;
+typedef struct HudWantedStar HudWantedStar;
+typedef struct HudWantedStars HudWantedStars;
+typedef struct HudZoneNameLabel HudZoneNameLabel;
 typedef struct IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct;
 typedef union IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion;
 typedef struct KanjiFont KanjiFont;
@@ -76,6 +97,7 @@ typedef struct RoadJunction RoadJunction;
 typedef struct RoadNetwork RoadNetwork;
 typedef struct RoadSearchNode RoadSearchNode;
 typedef struct RoadSegment RoadSegment;
+typedef struct SaveGameHeader SaveGameHeader;
 typedef struct ScriptTrigger ScriptTrigger;
 typedef struct ScriptTriggerPool ScriptTriggerPool;
 typedef struct SoundEvent SoundEvent;
@@ -287,6 +309,7 @@ typedef struct WorldRect WorldRect;
 typedef struct XYZ XYZ;
 typedef struct sprite_base sprite_base;
 typedef struct sprite_entry sprite_entry;
+typedef struct Vec2 Vec2;
 typedef struct SCR_CMD_HEADER SCR_CMD_HEADER;
 typedef struct SCR_FOUR_PARAMS SCR_FOUR_PARAMS;
 typedef struct SCR_MISSION_HEADER SCR_MISSION_HEADER;
@@ -2362,6 +2385,8 @@ typedef uchar UINT8;
 typedef int ptrdiff_t;
 typedef int __ehstate_t;
 typedef void action(void);
+typedef short Ang16;
+typedef int Fix16;
 typedef int Sint32;
 typedef Sint32 SCR_f;
 typedef short Sint16;
@@ -2596,7 +2621,10 @@ struct FloatingScore {
     int worldZ; /* 0x30 */
     ushort colorId; /* 0x34 */
     byte life; /* 0x36 */
-    uint8_t _gap_0x37[0xd];
+    uint8_t _gap_0x37[0x1];
+    int delayTicks; /* 0x38 */
+    int growX; /* 0x3c */
+    int growY; /* 0x40 */
     void *next; /* 0x44 */
     uint8_t _gap_0x48[0x4];
     uint amount; /* 0x4c */
@@ -2618,6 +2646,67 @@ struct FloatingScoreManager {
 struct FrameCounter {
     int frame; /* 0x0 */
     uint frameRandom; /* 0x4 */
+};
+
+// /FrontendLevelPaths  size 0x300
+struct FrontendLevelPaths {
+    char gmpPath[256]; /* 0x0 */
+    char styPath[256]; /* 0x100 */
+    char scrPath[256]; /* 0x200 */
+};
+
+// /FrontendPageItem  size 0x82
+struct FrontendPageItem {
+    byte kind; /* 0x0 */
+    byte enabled; /* 0x1 */
+    ushort x; /* 0x2 */
+    ushort y; /* 0x4 */
+    wchar_t label[50]; /* 0x6 */
+    ushort fontId; /* 0x6a */
+    ushort remap; /* 0x6c */
+    ushort choice; /* 0x6e */
+    ushort choice2; /* 0x70 */
+    byte choiceEnabled[12]; /* 0x72 */
+    ushort choiceMax; /* 0x7e */
+    ushort action; /* 0x80 */
+};
+
+// /FrontendPageDecor  size 0x6e
+struct FrontendPageDecor {
+    byte kind; /* 0x0 */
+    byte enabled; /* 0x1 */
+    ushort x; /* 0x2 */
+    ushort y; /* 0x4 */
+    wchar_t text[50]; /* 0x6 */
+    ushort fontId; /* 0x6a */
+    ushort remap; /* 0x6c */
+};
+
+// /FrontendPageCursor  size 0x6
+struct FrontendPageCursor {
+    ushort x; /* 0x0 */
+    ushort y; /* 0x2 */
+    byte enabled; /* 0x4 */
+    byte pad; /* 0x5 */
+};
+
+// /FrontendPage  size 0xbca
+struct FrontendPage {
+    ushort itemCount; /* 0x0 */
+    ushort decorCount; /* 0x2 */
+    FrontendPageItem items[10]; /* 0x4 */
+    FrontendPageDecor decor[15]; /* 0x518 */
+    FrontendPageCursor cursors[10]; /* 0xb8a */
+    ushort selected; /* 0xbc6 */
+    ushort defaultSelected; /* 0xbc8 */
+};
+
+// /FrontendSaveSlotInfo  size 0x4
+struct FrontendSaveSlotInfo {
+    byte exists; /* 0x0 */
+    byte area; /* 0x1 */
+    byte levelOrBonusId; /* 0x2 */
+    byte isBonusLevel; /* 0x3 */
 };
 
 // /_s_FuncInfo  size 0x1c
@@ -2680,6 +2769,54 @@ struct _s_HandlerType {
     void *addressOfHandler; /* 0xc */
 };
 
+// /HudArrowTarget  size 0x24
+struct HudArrowTarget {
+    void *ped; /* 0x0 */
+    void *car; /* 0x4 */
+    void *object; /* 0x8 */
+    void *player; /* 0xc */
+    int mode; /* 0x10 */
+    int posX; /* 0x14 */
+    int posY; /* 0x18 */
+    int posZ; /* 0x1c */
+    byte onScreen; /* 0x20 */
+    byte pad21[3]; /* 0x21 */
+};
+
+// /HudArrow  size 0x7c
+struct HudArrow {
+    int screenX; /* 0x0 */
+    int screenY; /* 0x4 */
+    short angle; /* 0x8 */
+    byte pad0a[2]; /* 0xa */
+    int orbitRadiusBase; /* 0xc */
+    int radius; /* 0x10 */
+    int radiusSpeed; /* 0x14 */
+    uint8_t _gap_0x18[0x8];
+    int colour; /* 0x20 */
+    short spriteId; /* 0x24 */
+    byte retargetCooldown; /* 0x26 */
+    uint8_t _gap_0x27[0x1];
+    void *gang; /* 0x28 */
+    char minRespect; /* 0x2c */
+    byte visible; /* 0x2d */
+    byte inUse; /* 0x2e */
+    uint8_t _gap_0x2f[0x1];
+    HudArrowTarget target0; /* 0x30 */
+    HudArrowTarget target1; /* 0x54 */
+    HudArrowTarget *current; /* 0x78 */
+};
+
+// /HudArrowPool  size 0x848
+struct HudArrowPool {
+    HudArrow arrows[17]; /* 0x0 */
+    byte enabled; /* 0x83c */
+    byte pad83d[3]; /* 0x83d */
+    HudArrow *onScreenGangArrow; /* 0x840 */
+    byte needsOrphanPrune; /* 0x844 */
+    byte pad845[3]; /* 0x845 */
+};
+
 // /HudBigLabel  size 0x1c8
 struct HudBigLabel {
     byte timer; /* 0x0 */
@@ -2710,13 +2847,122 @@ struct HudBriefQueue {
     short timer; /* 0x504 */
     short pad506; /* 0x506 */
     int lineCount; /* 0x508 */
-    int field_50c; /* 0x50c */
+    int iconFrame; /* 0x50c */
     int textLen; /* 0x510 */
     int phase; /* 0x514 */
     HudBriefNode pool[20]; /* 0x518 */
     HudBriefNode *head; /* 0x6f8 */
     HudBriefNode *freeList; /* 0x6fc */
-    HudBriefNode *pending; /* 0x700 */
+    HudBriefNode *history; /* 0x700 */
+};
+
+// /HudCarNameLabel  size 0x4c
+struct HudCarNameLabel {
+    byte timer; /* 0x0 */
+    byte pad1; /* 0x1 */
+    wchar_t text[33]; /* 0x2 */
+    int textWidth; /* 0x44 */
+    int slideY; /* 0x48 */
+};
+
+// /HudDebugLabel  size 0xc4
+struct HudDebugLabel {
+    wchar_t text[82]; /* 0x0 */
+    int timer; /* 0xa4 */
+    ushort x; /* 0xa8 */
+    ushort y; /* 0xaa */
+    ushort fontId; /* 0xac */
+    ushort pad0e; /* 0xae */
+    int paletteBase; /* 0xb0 */
+    short remap; /* 0xb4 */
+    short pad16; /* 0xb6 */
+    int invisibility; /* 0xb8 */
+    byte alpha; /* 0xbc */
+    byte pad1d[3]; /* 0xbd */
+    void *next; /* 0xc0 */
+};
+
+// /HudDebugLabelPool  size 0x1700
+struct HudDebugLabelPool {
+    uint8_t _gap_0x0[0x16f4];
+    int count; /* 0x16f4 */
+    HudDebugLabel *activeHead; /* 0x16f8 */
+    HudDebugLabel *freeHead; /* 0x16fc */
+};
+
+// /HudKillFeedLine  size 0xd0
+struct HudKillFeedLine {
+    byte timer; /* 0x0 */
+    byte pad1; /* 0x1 */
+    wchar_t text[101]; /* 0x2 */
+    int textWidth; /* 0xcc */
+};
+
+// /HudPagerEntry  size 0xc
+struct HudPagerEntry {
+    int timerTicks; /* 0x0 */
+    int *counterPtr; /* 0x4 */
+    void *sound; /* 0x8 */
+};
+
+// /HudPagerArray  size 0x30
+struct HudPagerArray {
+    HudPagerEntry entries[4]; /* 0x0 */
+};
+
+// /HudPausePage  size 0x4
+struct HudPausePage {
+    byte page; /* 0x0 */
+    byte ticksLeft; /* 0x1 */
+    byte pad2[2]; /* 0x2 */
+};
+
+// /HudPickupLabel  size 0x88
+struct HudPickupLabel {
+    byte timer; /* 0x0 */
+    byte pad1; /* 0x1 */
+    wchar_t text[65]; /* 0x2 */
+    int textWidth; /* 0x84 */
+};
+
+// /HudPlayerMarker  size 0x10
+struct HudPlayerMarker {
+    int screenX; /* 0x0 */
+    int screenY; /* 0x4 */
+    short angle; /* 0x8 */
+    byte visible; /* 0xa */
+    byte pad0b[5]; /* 0xb */
+};
+
+// /HudWantedStar  size 0xc
+struct HudWantedStar {
+    byte lit; /* 0x0 */
+    byte blinkCounter; /* 0x1 */
+    byte blinkPeriod; /* 0x2 */
+    byte pad3; /* 0x3 */
+    int bounceOffset; /* 0x4 */
+    int bounceDelta; /* 0x8 */
+};
+
+// /HudWantedStars  size 0x54
+struct HudWantedStars {
+    HudWantedStar stars[6]; /* 0x0 */
+    int count; /* 0x48 */
+    int spriteW; /* 0x4c */
+    int spriteH; /* 0x50 */
+};
+
+// /HudZoneNameLabel  size 0x98
+struct HudZoneNameLabel {
+    byte timer; /* 0x0 */
+    byte pad1; /* 0x1 */
+    wchar_t text[65]; /* 0x2 */
+    int textWidth; /* 0x84 */
+    void *zoneSecondary; /* 0x88 */
+    void *zonePrimary; /* 0x8c */
+    int fadeBlend; /* 0x90 */
+    byte fadeAlpha; /* 0x94 */
+    byte pad95[3]; /* 0x95 */
 };
 
 // /IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct  size 0x8
@@ -3050,6 +3296,29 @@ struct RoadNetwork {
     ushort searchNodeCount; /* 0xcc66 */
 };
 
+// /SaveGameHeader  size 0x748
+struct SaveGameHeader {
+    char gmpPath[25]; /* 0x0 */
+    char styPath[25]; /* 0x19 */
+    char scrPath[25]; /* 0x32 */
+    byte startArea; /* 0x4b */
+    byte bonusLevelId; /* 0x4c */
+    byte isBonusLevel; /* 0x4d */
+    uint8_t _gap_0x4e[0x6];
+    byte playerCheckpoint[214]; /* 0x54 */
+    uint patchCount; /* 0x12a */
+    uint8_t _gap_0x12e[0x6];
+    ushort patchEntries[600]; /* 0x134 */
+    int pickupX[20]; /* 0x5e4 */
+    int pickupY[20]; /* 0x634 */
+    int pickupZ[20]; /* 0x684 */
+    ushort pickupType[20]; /* 0x6d4 */
+    byte pickupAmmo[20]; /* 0x6fc */
+    byte spawnerState[50]; /* 0x710 */
+    uint8_t _gap_0x742[0x2];
+    uint menuField574; /* 0x744 */
+};
+
 // /ScriptTrigger  size 0x18
 struct ScriptTrigger {
     void *scriptCmd; /* 0x0 */
@@ -3317,7 +3586,7 @@ struct Car {
     CAR_DELTAS_BITSTATE deltasBitstate; /* 0x8 */
     CarDoor carDoor[4]; /* 0xc */
     Car *next; /* 0x4c */
-    Sprite *sprite; /* 0x50 */
+    Position *body; /* 0x50 */
     Ped *driver; /* 0x54 */
     CarPhysics *physics; /* 0x58 */
     CarAI *ai; /* 0x5c */
@@ -3448,73 +3717,78 @@ struct FrontEnd {
     uint8_t _gap_0x1c[0xe3];
     undefined4 field252_0xff; /* 0xff */
     uint8_t _gap_0x103[0x5];
-    int field258_0x108; /* 0x108 */
+    int resultCode; /* 0x108 */
     byte field259_0x10c; /* 0x10c */
-    uint8_t _gap_0x10d[0x3];
-    int movie1; /* 0x110 */
-    int field264_0x114; /* 0x114 */
-    int field265_0x118; /* 0x118 */
-    uint8_t _gap_0x11c[0x2];
-    short doPlayMovies; /* 0x11e */
+    byte keyboardActive; /* 0x10d */
+    uint8_t _gap_0x10e[0x2];
+    int mode; /* 0x110 */
+    int cursorBlink; /* 0x114 */
+    int cursorBlinkTimer; /* 0x118 */
+    short defaultFontId; /* 0x11c */
+    short pageId; /* 0x11e */
     uint8_t _gap_0x120[0xc3e];
     short plyrslot; /* 0xd5e */
     short plyrslot2; /* 0xd60 */
     uint8_t _gap_0xd62[0x4076];
-    wchar_t field19907_0x4dd8[50]; /* 0x4dd8 */
+    wchar_t field19906_0x4dd8[50]; /* 0x4dd8 */
     uint8_t _gap_0x4e3c[0x7b50];
     WCHAR playerName[8]; /* 0xc98c */
-    short field51477_0xc99c; /* 0xc99c */
-    byte field51478_0xc99e; /* 0xc99e */
-    byte field51479_0xc99f; /* 0xc99f */
-    short bufSize_256; /* 0xc9a0 */
-    short short_eq_5; /* 0xc9a2 */
-    int field51482_0xc9a4; /* 0xc9a4 */
-    int field51483_0xc9a8; /* 0xc9a8 */
-    int field51484_0xc9ac; /* 0xc9ac */
-    int field51485_0xc9b0; /* 0xc9b0 */
-    short field51486_0xc9b4; /* 0xc9b4 */
-    undefined1 byte; /* 0xc9b6 Created by retype action */
-    byte field51488_0xc9b7; /* 0xc9b7 */
-    byte field51489_0xc9b8; /* 0xc9b8 */
-    byte field51490_0xc9b9; /* 0xc9b9 */
-    byte field51491_0xc9ba; /* 0xc9ba */
-    uint8_t _gap_0xc9bb[0x1];
-    byte field51493_0xc9bc; /* 0xc9bc */
-    byte field51494_0xc9bd; /* 0xc9bd */
-    byte field51495_0xc9be; /* 0xc9be */
-    byte field51496_0xc9bf; /* 0xc9bf */
-    byte field51497_0xc9c0; /* 0xc9c0 */
-    byte field51498_0xc9c1; /* 0xc9c1 */
-    byte field51499_0xc9c2; /* 0xc9c2 */
-    byte field51500_0xc9c3; /* 0xc9c3 */
-    byte field51501_0xc9c4; /* 0xc9c4 */
+    short field51476_0xc99c; /* 0xc99c */
+    byte nameLen; /* 0xc99e */
+    byte textKeyHeld; /* 0xc99f */
+    short lastKeyDik; /* 0xc9a0 */
+    short keyRepeatCounter; /* 0xc9a2 */
+    int field51481_0xc9a4; /* 0xc9a4 */
+    int field51482_0xc9a8; /* 0xc9a8 */
+    int field51483_0xc9ac; /* 0xc9ac */
+    int field51484_0xc9b0; /* 0xc9b0 */
+    short field51485_0xc9b4; /* 0xc9b4 */
+    byte codeLen; /* 0xc9b6 */
+    byte codeErrorShown; /* 0xc9b7 */
+    byte keyLeftEdge; /* 0xc9b8 */
+    byte keyRightEdge; /* 0xc9b9 */
+    byte keyUpEdge; /* 0xc9ba */
+    byte keyDownEdge; /* 0xc9bb */
+    byte keyEnterEdge; /* 0xc9bc */
+    byte keyEscapeEdge; /* 0xc9bd */
+    byte keyDeleteEdge; /* 0xc9be */
+    byte keyLeftPrev; /* 0xc9bf */
+    byte keyRightPrev; /* 0xc9c0 */
+    byte keyUpPrev; /* 0xc9c1 */
+    byte keyDownPrev; /* 0xc9c2 */
+    byte keyEnterPrev; /* 0xc9c3 */
+    byte keyEscapePrev; /* 0xc9c4 */
     dword time; /* 0xc9c5 */
-    byte field51503_0xc9c9; /* 0xc9c9 */
-    byte field51504_0xc9ca; /* 0xc9ca */
+    byte field51502_0xc9c9; /* 0xc9c9 */
+    byte field51503_0xc9ca; /* 0xc9ca */
     uint8_t _gap_0xc9cb[0x2];
     bool_ cheatsAreActive; /* 0xc9cd */
-    uint8_t _gap_0xc9ce[0x23e7];
+    uint8_t _gap_0xc9ce[0x2];
+    dword idleTimerStart; /* 0xc9d0 */
+    uint8_t _gap_0xc9d4[0x23e1];
     undefined1 vector_8; /* 0xedb5 Created by retype action */
-    uint8_t _gap_0xedb6[0x3e];
-    byte movie2; /* 0xedf4 */
+    uint8_t _gap_0xedb6[0x1e];
+    FrontendSaveSlotInfo saveSlots[8]; /* 0xedd4 */
+    byte backgroundId; /* 0xedf4 */
     uint8_t _gap_0xedf5[0x1];
-    short field60764_0xedf6; /* 0xedf6 */
-    byte field60765_0xedf8; /* 0xedf8 */
-    byte field60766_0xedf9; /* 0xedf9 */
+    short deleteConfirmY; /* 0xedf6 */
+    byte deleteConfirmArmed; /* 0xedf8 */
+    byte hiScoreTableIndex; /* 0xedf9 */
     uint8_t _gap_0xedfa[0xfd22];
-    short field125569_0x1eb1c; /* 0x1eb1c */
+    short creditsTick; /* 0x1eb1c */
     uint8_t _gap_0x1eb1e[0x2];
-    int unkPtr; /* 0x1eb20 */
-    short field125573_0x1eb24; /* 0x1eb24 */
-    uint8_t _gap_0x1eb26[0x8];
-    byte buf8[8]; /* 0x1eb2e */
-    byte field125583_0x1eb36; /* 0x1eb36 */
-    byte field125584_0x1eb37; /* 0x1eb37 */
-    byte field125585_0x1eb38; /* 0x1eb38 */
-    byte field125586_0x1eb39; /* 0x1eb39 */
-    byte field125587_0x1eb3a; /* 0x1eb3a */
-    byte field125588_0x1eb3b; /* 0x1eb3b */
-    uint8_t _gap_0x1eb3c[0x4];
+    int creditsScrollY; /* 0x1eb20 */
+    short creditsLineIndex; /* 0x1eb24 */
+    byte selectedAreaPerProfile[8]; /* 0x1eb26 */
+    byte selectedBonusPerProfile[8]; /* 0x1eb2e */
+    byte profileArrowLeft; /* 0x1eb36 */
+    byte profileArrowRight; /* 0x1eb37 */
+    byte areaArrowLeft; /* 0x1eb38 */
+    byte areaArrowRight; /* 0x1eb39 */
+    byte bonusArrowLeft; /* 0x1eb3a */
+    byte bonusArrowRight; /* 0x1eb3b */
+    byte areaCount; /* 0x1eb3c */
+    byte levelCountPerArea[3]; /* 0x1eb3d */
 };
 
 // /_game/Game  size 0x40
@@ -3562,19 +3836,31 @@ struct GameStats {
 struct Menu {
     char gmpFile[256]; /* 0x0 */
     char styFile[256]; /* 0x100 */
-    char styFile2[256]; /* 0x200 */
-    char unk2[256]; /* 0x300 */
-    byte playerArea; /* 0x400 */
-    byte bonusStage; /* 0x401 */
-    uint8_t _gap_0x402[0x1];
-    byte playerProfile; /* 0x403 */
-    uint8_t _gap_0x404[0x37];
-    byte field63_0x43b; /* 0x43b */
-    short fraglimit; /* 0x43c */
-    uint8_t _gap_0x43e[0x5e];
-    int field159_0x49c; /* 0x49c */
-    uint8_t _gap_0x4a0[0xd4];
-    int unk1; /* 0x574 */
+    char scrFile[256]; /* 0x200 */
+    char savePath[256]; /* 0x300 */
+    byte startArea; /* 0x400 */
+    byte bonusLevelId; /* 0x401 */
+    byte isBonusLevel; /* 0x402 */
+    byte profileSlot; /* 0x403 */
+    byte levelEndReason; /* 0x404 */
+    uint8_t _gap_0x405[0x3];
+    int crimeStats[10]; /* 0x408 */
+    int totalEarned; /* 0x430 */
+    int wantedStarSeconds; /* 0x434 */
+    ushort bonusRatingTextId; /* 0x438 */
+    byte bonusLevelSelected; /* 0x43a */
+    byte mpGameType; /* 0x43b */
+    int fragLimit; /* 0x43c */
+    byte mpLocalPlayerIndex; /* 0x440 */
+    byte mpPlayerCount; /* 0x441 */
+    byte mpWinner; /* 0x442 */
+    uint8_t _gap_0x443[0x1];
+    int mpTimeLimitMinutes; /* 0x444 */
+    ushort mpKillMatrix[36]; /* 0x448 */
+    ushort mpFrags[6]; /* 0x490 */
+    int mpPoints[6]; /* 0x49c */
+    wchar_t mpPlayerNames[96]; /* 0x4b4 */
+    int unsure_field574; /* 0x574 */
 };
 
 // /imported/seuko-mod/CameraPos  size 0x10
@@ -3629,7 +3915,7 @@ struct Player {
     uint8_t _gap_0x1[0x3];
     uint inputWord; /* 0x4 */
     short turnRate; /* 0x8 */
-    short unsure_turnStep; /* 0xa */
+    short turnStep; /* 0xa */
     SCR_f moveSpeed; /* 0xc */
     SCR_f unused_0x10; /* 0x10 */
     short savedPedWeapon; /* 0x14 */
@@ -3661,7 +3947,7 @@ struct Player {
     Car *lastCarMiddle; /* 0x58 */
     Car *lastCarNewest; /* 0x5c */
     int scoreTargetReached; /* 0x60 */
-    byte unsure_turnProfile; /* 0x64 */
+    byte turnProfile; /* 0x64 */
     uint8_t _gap_0x65[0x3];
     PLAYER_CONTROL_STATE controlState; /* 0x68 */
     int viewCamDetached; /* 0x6c */
@@ -3759,7 +4045,7 @@ struct Ped {
     Player *player; /* 0x15c */
     Ped *nextPed; /* 0x160 */
     PedGroup *group; /* 0x164 */
-    Sprite *sprite; /* 0x168 */
+    GameObject *gameObject; /* 0x168 */
     Car *currentCar; /* 0x16c */
     WEAPON_STRUCT *selectedWeapon; /* 0x170 */
     WEAPON_STRUCT *altWeapon; /* 0x174 */
@@ -4024,16 +4310,22 @@ struct HudManager {
     uint8_t _gap_0x0[0x2e];
     char field46_0x2e; /* 0x2e */
     uint8_t _gap_0x2f[0x1d];
-    void *field76_0x4c; /* 0x4c */
-    uint8_t _gap_0x50[0x94];
+    HudZoneNameLabel zoneName; /* 0x4c */
     HudBriefQueue briefQueue; /* 0xe4 */
-    uint8_t _gap_0x7e8[0x1f78];
-    void *field8282_0x2760; /* 0x2760 */
-    uint8_t _gap_0x2764[0x51];
+    HudPagerArray pagerArray; /* 0x7e8 */
+    HudDebugLabelPool debugLabels; /* 0x818 */
+    HudArrowPool arrowPool; /* 0x1f18 */
+    HudWantedStars wantedStars; /* 0x2760 */
+    uint8_t _gap_0x27b4[0x1];
     undefined1 displayDebugPedInfo; /* 0x27b5 Created by retype action */
-    uint8_t _gap_0x27b6[0x9e];
-    undefined4 ptrToSomeStructRelToBIG_LABEL; /* 0x2854 */
-    uint8_t _gap_0x2858[0x29c];
+    uint8_t _gap_0x27b6[0x2];
+    HudPickupLabel pickupLabel; /* 0x27b8 */
+    uint8_t _gap_0x2840[0x4];
+    HudPlayerMarker playerMarker; /* 0x2844 */
+    HudBigLabel bigLabel; /* 0x2854 */
+    HudPausePage pausePage; /* 0x2a1c */
+    HudKillFeedLine killFeedLine; /* 0x2a20 */
+    uint8_t _gap_0x2af0[0x4];
     int text_speed; /* 0x2af4 */
 };
 
@@ -4318,7 +4610,7 @@ struct Position {
     uint8_t _gap_0x2[0x2];
     Position *prev_; /* 0x4 */
     int field4_0x8; /* 0x8 */
-    Position *next_; /* 0xc */
+    void *bounds; /* 0xc */
     int field6_0x10; /* 0x10 */
     int x; /* 0x14 Created by retype action */
     int y; /* 0x18 Created by retype action */
@@ -4330,10 +4622,10 @@ struct Position {
     int field15_0x28; /* 0x28 */
     byte field16_0x2c; /* 0x2c */
     uint8_t _gap_0x2d[0x3];
-    int field20_0x30; /* 0x30 */
+    int collisionKind; /* 0x30 */
     int field21_0x34; /* 0x34 */
     byte field22_0x38; /* 0x38 */
-    byte field23_0x39; /* 0x39 */
+    byte boundsDirty; /* 0x39 */
     uint8_t _gap_0x3a[0x2];
 };
 
@@ -5898,6 +6190,12 @@ struct sprite_entry {
     byte w; /* 0x4 */
     byte h; /* 0x5 */
     ushort pad; /* 0x6 */
+};
+
+// /math/Vec2  size 0x8
+struct Vec2 {
+    Fix16 x; /* 0x0 */
+    Fix16 y; /* 0x4 */
 };
 
 // /scr_structs.h/_struct_17  size 0x4

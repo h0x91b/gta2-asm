@@ -7,7 +7,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x004a49c0,?KeyDown,,USER_DEFINED,.text,Player_OnKeyUp,,
 0x004b7666,aaa,PlayerScore_AddMoney,USER_DEFINED,.text,PlayerScore_AddMoney,,
 0x004c6060,?ShowBigOnScreenLabel,,USER_DEFINED,.text,ShowBigOnScreenLabel,,
-0x004c8c20,?showDebugLabel,,USER_DEFINED,.text,showDebugLabel,,
+0x004c8c20,?showDebugLabel,,USER_DEFINED,.text,Hud_DebugLabel_Show,,
 0x004d04f4,prt_4d04f4_b293fec6,Ped_UpdateWeaponFiring::override,USER_DEFINED,.text,Ped_UpdateWeaponFiring,,
 0x0056e980,floatEncodingMask,,USER_DEFINED,.rdata,,/double,8
 0x00575904,MaxAmmoArray,,USER_DEFINED,.rdata,,/byte[15],15
@@ -105,6 +105,16 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005d25f4,g_FileIsOpen,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005d31d8,g_NetDialogLocaleSettings,,USER_DEFINED,.data.exp,,/auto_structs/LocaleSettings *,4
 0x005d351c,g_RoadNetwork,,USER_DEFINED,.data.exp,,/RoadNetwork *,4
+0x005d3900,g_Ang16_0,,USER_DEFINED,.data.exp,,/math/Ang16,2
+0x005d3938,g_Fix16SinTable,,USER_DEFINED,.data.exp,,/math/Fix16[1440],5760
+0x005d4fe4,g_Fix16Zero_Math,,USER_DEFINED,.data.exp,,/math/Fix16,4
+0x005d4ffc,g_Ang16_270,,USER_DEFINED,.data.exp,,/math/Ang16,2
+0x005d5040,g_Ang16PerDegree,,USER_DEFINED,.data.exp,,/math/Ang16,2
+0x005d5074,g_Ang16_180,,USER_DEFINED,.data.exp,,/math/Ang16,2
+0x005d5090,g_Fix16TanTable,,USER_DEFINED,.data.exp,,/math/Fix16[1440],5760
+0x005d6718,g_Fix16CosTable,,USER_DEFINED,.data.exp,,/math/Fix16[1440],5760
+0x005d7de8,g_Fix16TwoPi,,USER_DEFINED,.data.exp,,/math/Fix16,4
+0x005d7e2c,g_Ang16_90,,USER_DEFINED,.data.exp,,/math/Ang16,2
 0x005d7e58,g_TrailerPool,,USER_DEFINED,.data.exp,,/imported/seuko-mod/TrailerControllerPool *,4
 0x005d81dc,g_SoundEventQueue,,USER_DEFINED,.data.exp,,/SoundEventQueue *,4
 0x005dcb08,g_LevelStem,,USER_DEFINED,.data.exp,,/undefined1,1
