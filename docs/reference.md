@@ -17,7 +17,7 @@ file is now `docs/formats/specs/GTA2 Map Format.txt` / `GTA2 Style Format.txt`.
 
 Decompilation used by the ported findings: [CriminalRETeam/gta2_re](https://github.com/CriminalRETeam/gta2_re)
 revision `51d2ce3d4b8d32b6d48ff5c938cc98521061691b`. Its function names are useful search
-keys, but its `_XXXXXX` address suffixes are **not** 11.44 VAs (see `docs/formats/loader-map.md`).
+keys, but its `_XXXXXX` address suffixes are **not** 11.44 VAs: it targets GTA2 10.5 (see `docs/formats/loader-map.md`).
 The other reference repos (seuko-mod, gta2-resurection, gta2-mouse) are listed in
 [AGENTS.md](../AGENTS.md), "Reference material"; every source with its terms is in
 [CREDITS.md](../CREDITS.md).

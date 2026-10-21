@@ -29,6 +29,11 @@ The old `gta2.gpr` also holds `gta2.segments.fixed2.exe` (same bytes, an extra `
 section, no names or types) and `miss2.exe` (the official mission-script compiler, base
 0x400000, 577 named functions — not exported here).
 
+> Names and types in the Ghidra DB come from the user's own analysis plus imports from
+> gta2-seuko-mod by izawartka (https://github.com/izawartka/gta2-seuko-mod, @25b1985; credit +
+> link required, not for sale), h0x91b/gta2-resurection and h0x91b/gta2-mouse (MIT) — see
+> [re/external/README.md](external/README.md) and [../CREDITS.md](../CREDITS.md).
+
 ## Files
 
 | file | what |

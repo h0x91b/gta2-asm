@@ -82,5 +82,5 @@ dropped; what is left is about the data, plus the two RE-hygiene lessons at the 
 
 - Reverse-engineered handler names are hypotheses, not identities: a gta2_re "engine" sound
   handler turned out to be a horn when listened to. Keep provenance next to every mapping.
-- gta2_re `_XXXXXX` suffixes are not 11.44 addresses: verify each one in our binary
+- gta2_re `_XXXXXX` suffixes are not 11.44 addresses (gta2_re targets GTA2 10.5): verify each one in our binary
   (`docs/formats/loader-map.md`) before using it.
