@@ -1,4 +1,3 @@
-// Ported from the user's my-games project (rts-dots2, bf84820c), tooling/assets/png.ts.
 import { deflateSync } from 'node:zlib';
 function crc32(bytes:Uint8Array):number { let crc=0xffffffff; for(const b of bytes){crc^=b;for(let i=0;i<8;i++)crc=(crc>>>1)^((crc&1)?0xedb88320:0);} return (crc^0xffffffff)>>>0; }
 function chunk(type:string,bytes:Uint8Array) { const b=Buffer.alloc(bytes.length+12);b.writeUInt32BE(bytes.length);b.write(type,4,4,'ascii');b.set(bytes,8);b.writeUInt32BE(crc32(b.subarray(4,8+bytes.length)),8+bytes.length);return b; }

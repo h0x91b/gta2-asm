@@ -1,4 +1,3 @@
-// Ported from the user's my-games project (rts-dots2/games/gta2, bf84820c), src/assets/gci.ts.
 /** Shipped NYC.GCI subset: four byte fields then seventeen f-prefixed source values.
  * Values remain in the source clock/units. This is data extraction, not a handling conversion.
  */

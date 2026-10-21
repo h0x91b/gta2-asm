@@ -1,4 +1,3 @@
-// Ported from the user's my-games project (rts-dots2/games/gta2, bf84820c), tests/gci.test.ts.
 import {expect,test} from 'bun:test';
 import {GCI_FIELDS,parseGci} from '../gci.ts';
 import {hasPak,pak} from './helpers.ts';

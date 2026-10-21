@@ -1,4 +1,3 @@
-// Ported from the user's my-games project (rts-dots2/games/gta2, bf84820c), tests/assets.test.ts, deltas.test.ts, import.test.ts and car-colors.test.ts.
 // Dropped: atlas/exported-asset round-trips and the reimplementation's damage simulation.
 import { expect,test } from 'bun:test';
 import { decodeTga } from '../tga.ts';

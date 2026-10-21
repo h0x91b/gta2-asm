@@ -1,4 +1,3 @@
-// Ported from the user's my-games project (rts-dots2/games/gta2, bf84820c), src/assets/sound.ts.
 /** Offline GTA2 SDT/RAW reader. See docs/formats/sound-banks.md for encoding evidence. */
 export interface SoundEntry {
  id:number;offset:number;size:number;sampleRate:number;variationSampleRate:number;

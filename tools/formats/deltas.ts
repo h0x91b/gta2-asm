@@ -1,4 +1,3 @@
-// Ported from the user's my-games project (rts-dots2/games/gta2, bf84820c), src/assets/deltas.ts.
 import type {Style} from './style.ts';
 const cache=new WeakMap<Style,Map<number,Uint8Array[]>>();
 /** DELX describes variable-length sets; DELS uses cumulative 256-byte page offsets. */

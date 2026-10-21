@@ -1,4 +1,3 @@
-// Ported from the user's my-games project (rts-dots2/games/gta2, bf84820c), tools/style-metadata.ts.
 import { spriteCounts, type Style } from './style.ts';
 export function styleMetadata(style:Style) {
   let base=0;

@@ -1,4 +1,3 @@
-// Ported from the user's my-games project (rts-dots2/games/gta2, bf84820c), src/assets/tga.ts.
 /** GTA frontend RGB555 ignores bit 15 (as its opaque original presentation does).
  * True-colour TGA (raw and RLE), decoding into top-left-origin RGBA. */
 export function decodeTga(bytes:Uint8Array): {width:number;height:number;rgba:Uint8Array} {

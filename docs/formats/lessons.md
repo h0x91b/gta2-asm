@@ -2,7 +2,7 @@
 
 Traps in reading the game's files, each one found the hard way and verified against the
 shipped 11.44 data (the tests in `tools/formats/tests/` cover most of them). Adapted from
-the user's my-games project (`rts-dots2/games/gta2/docs/lessons.md`, `bf84820c`): its
+the lessons of an earlier browser reimplementation of GTA2: its
 reimplementation rules (sim/render layering, browser checks, physics, saves) were
 dropped; what is left is about the data, plus the two RE-hygiene lessons at the end.
 
@@ -32,8 +32,8 @@ dropped; what is left is about the data, plus the two RE-hygiene lessons at the 
   cursor advances **through the written run** before the next offset; stride is 256. Index 0
   in a run erases base pixels: a dent is an indexed replacement, not an overlay. Damage bits
   0–4: rear right, rear left, front left, front right, windscreen (DMA spec, Car Delta
-  Usage); my-games used deltas 7–10 as the door frames.
-- Exploding score digits are **user** sprites 163–172 (as cited by my-games; global vs
+  Usage); the reimplementation used deltas 7–10 as the door frames.
+- Exploding score digits are **user** sprites 163–172 (as cited by the reimplementation; global vs
   category-relative not recorded), not font glyphs. Always cite a
   sprite id with its style and whether it is global or category-relative.
 

@@ -5,8 +5,7 @@ read straight from `data.pak` (`pak.ts`, same rules as `host/w32_vfs.asm`: Store
 only, case-insensitive paths) and document the on-disk layouts that `gta2.exe` parses into
 memory — the starting point for reversing its loaders (`docs/formats/loader-map.md`).
 
-Ported from the user's my-games project (`rts-dots2/games/gta2`, commit `bf84820c`), where
-they were written and battle-tested for a browser reimplementation. Format notes and
+They were first written and battle-tested for an earlier browser reimplementation of GTA2. Format notes and
 traps: `docs/formats/`.
 
 | File | Format |

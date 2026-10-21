@@ -19,6 +19,10 @@
 ;          show_player_names, is read by value with default 1
 ;          (GetSettingBooleanWithDefaultValue 0x4B5AE0) and is written as dword 0/1.
 ;          Applied before the game starts: a change needs a restart.
+;          From gta2-seuko-mod by izawartka (https://github.com/izawartka/gta2-seuko-mod),
+;          src/modules/modmenu/utils/categorized-native-cheats-data.cpp and
+;          src/events/after-debug-flags.cpp @25b1985 — the idea, the RISKY marks and the
+;          name GetSettingBooleanWithDefaultValue; the registry path is own analysis.
 ;   camera zoom: auto | percent (25..400). The camera's target zoom (cameraPosTarget.zoom,
 ;          the view scale) is multiplied by percent/100 on its way to the camera
 ;          (hk_CameraPosApply, w32_hooks.asm); smaller = more city. Vanilla 1280x960

@@ -1,7 +1,6 @@
-> **Ported** from the user's my-games project (`rts-dots2/games/gta2`, `bf84820c`,
-> `docs/reference/gta2/`), written for a browser reimplementation. Sentences about "our",
-> the importer, the sim, labs or runtime describe that project, not `gta2.exe`; paths under
-> `games/gta2/` are in that repo. Original-game evidence is the DMA format documents
+> **Ported** from an earlier browser reimplementation of GTA2 (not published). Sentences
+> about "our", the importer, the sim, labs or runtime describe that project, not `gta2.exe`;
+> paths under `games/gta2/` are in that project, not in this repository. Original-game evidence is the DMA format documents
 > (`formats/…` = [../specs/](../specs/README.md)) and CriminalRETeam/gta2_re
 > rev `51d2ce3d`. **gta2_re address suffixes (`_43DA90` etc.) are NOT 11.44 addresses**:
 > most land mid-function in our binary (checked byte-wise, see [../loader-map.md](../loader-map.md)).

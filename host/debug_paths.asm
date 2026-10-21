@@ -32,6 +32,10 @@
 ; so the camera.zoom factor is already in. Its result is in 640x480 units; times the
 ; main camera's uiScale gives back-buffer pixels, the space DrawFlatRect2D draws in.
 ; A cell becomes a world point as cell * 1.0 (0x40CE30 there), +0.5 for the centre.
+; WorldPointToScreen, PedSetObjective and PedManager from gta2-seuko-mod by izawartka
+; (https://github.com/izawartka/gta2-seuko-mod), src/game/functions.h, memory.h @25b1985;
+; SetZ and ShowJunctionIds (do_show_junc_id) were named in the user's 2021 Ghidra DB,
+; gta2-resurected.exe.gzf in https://github.com/h0x91b/gta2-resurection @87e1d98.
 
 PED_NEXT    equ 0x160
 PED_PATHCUR equ 0x18c

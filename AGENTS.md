@@ -144,7 +144,7 @@ Option 1 is implemented for the frontend in `host/w32_renderer.asm`
 
 TypeScript decoders for `.sty`, `.gmp`, `.sdt`/`.raw`, `nyc.gci` and frontend `.tga`, run
 with Bun (`/opt/homebrew/bin/bun`, no npm deps), reading straight from `data.pak` with the
-same rules as `w32_vfs.asm`. Ported from the user's my-games project. Use them to learn what
+same rules as `w32_vfs.asm`. Use them to learn what
 a loader function in `gta2.exe` is parsing: `bun tools/formats/cli.ts help`, e.g.
 `sty data/wil.sty --summary`, `gmp data/wil.gmp --block 40,135,3`. Tests: `bun test
 tools/formats`. They write only to an explicit `--out` (inside the repo only if git-ignored,
@@ -153,6 +153,9 @@ struct: `docs/formats/loader-map.md`; DMA's specs + example missions: `docs/form
 (`docs/reference.md`).
 
 ## Reference material
+
+Every source (repos, documents, libraries) with what was taken, where it lives and its
+license terms: [CREDITS.md](CREDITS.md). Cite a new one there and next to the code that uses it.
 
 All three repos target **GTA2 11.44**, the same build as our vanilla `gta2.exe`, so
 their absolute addresses apply 1:1. How this was checked:

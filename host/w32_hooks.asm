@@ -10,6 +10,9 @@
 ; Every stub is an ordinary import slot (DLL name "gta2.exe", bound by name through
 ; shimtab_gta2), so hooks go through host_dispatch and show up in --trace like imports.
 ; The expected original bytes are checked first: a different exe is refused.
+; CALLHOOK and JMPHOOK follow the hook kinds of gta2-seuko-mod by izawartka
+; (https://github.com/izawartka/gta2-seuko-mod), src/hook-types/ @25b1985 —
+; FunctionCallHook and JumpHook; the trampoline is our own.
 ;
 ; Handlers: HOOK/CALLHOOK ones get the game's stack arguments as any import handler
 ; (rdi = args) and the game's eax/ecx/edx at the call in G_EAX/G_ECX/G_EDX (thiscall
@@ -261,7 +264,8 @@ hk_CameraPosApply:
 ; (0x5E3CC4 +0xa8) and the result a sprite shadow's screen offset, which has to shrink
 ; with the zoom like the sprites do: out * cam_zoom_pct / 100.
 ; Hook site from gta2-seuko-mod by izawartka (https://github.com/izawartka/gta2-seuko-mod),
-; src/events/scale-shadow.cpp @25b1985.
+; src/events/scale-shadow.cpp @25b1985; ScaleScrf and MainCamera from src/game/functions.h,
+; memory.h.
 hk_ScaleShadow:
     HENTER
     mov edi, 0x401BD0
@@ -294,7 +298,8 @@ hk_ScaleShadow:
 ; 99 at 100%, 165 at 70%, 357 at 50% (2026-10-21). Safety valve: past QUEUE_SAFE the
 ; zoom-out is reduced by 5 points per layer drawn until it fits again.
 ; Hook site from gta2-seuko-mod by izawartka (https://github.com/izawartka/gta2-seuko-mod),
-; src/events/draw-map-layer.cpp @25b1985.
+; src/events/draw-map-layer.cpp @25b1985; DrawMapLayer from src/game/functions.h. The
+; crash and the custom render queue idea: src/modules/modmenu/utils/custom-render-queue-utils.cpp.
 QUEUE_CAP  equ (0x2efc - 0x1c) / 8
 QUEUE_SAFE equ QUEUE_CAP * 4 / 5
 hk_DrawMapLayer:

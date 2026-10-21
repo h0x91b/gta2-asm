@@ -1,4 +1,3 @@
-// Ported from the user's my-games project (rts-dots2/games/gta2, bf84820c), src/assets/style.ts.
 import {spriteDeltas,deltaPixels} from './deltas.ts';
 /** GBST chunk reader, based on DMA's supplied GTA2 Style Format v4.6.
  * The shipped user files report 700 (the document says 600); their palette/tile layouts agree.

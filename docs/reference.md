@@ -3,7 +3,7 @@
 DMA's format and scripting specs **are** committed: [docs/formats/specs/](formats/specs/README.md)
 (with their gtamp.com URLs and SHA-256). What is listed here stays out of the repository:
 binaries (the repo carries none) and documents that are not specs. SHA-256 values are of
-the copies the user's my-games project downloaded on 2026-09-04.
+the copies downloaded on 2026-09-04.
 
 | What | Source | Bytes | SHA-256 |
 |---|---|---|---|
@@ -11,7 +11,6 @@ the copies the user's my-games project downloaded on 2026-09-04.
 | Game manual | https://gtamp.com/GTA2/gta2manual.pdf | 650 951 | `76cd15ddc1e703b647516e24bfffbca0eb8140391a7ee0861d71de366184be05` |
 | District maps (geography, not the binary format) | https://gtamp.com/GTA2/gta2maps.pdf | 2 017 382 | `1a6786ea5d54b177c0dabbe8e32b3f18ae1e8831ea3d5024ae33b2f9a29cf9ff` |
 | Text/font generator page snapshot | https://gtamp.com/text/ | 4 670 | `19b742ad595a416c703ad5c8271919af9b42011ca5b82107c50be17ba299cfb7` |
-| Press screenshots (AdrenalineVault, ComputerGamesOnline, …) used by my-games as a visual gallery | my-games `docs/reference/gta2/screenshots/` (its `manifest.json` has the original URLs) | | |
 
 When a note cites `formats/GTA2 Map Format.txt` or `formats/GTA2 Style Format.txt`, the
 file is now `docs/formats/specs/GTA2 Map Format.txt` / `GTA2 Style Format.txt`.
@@ -20,4 +19,5 @@ Decompilation used by the ported findings: [CriminalRETeam/gta2_re](https://gith
 revision `51d2ce3d4b8d32b6d48ff5c938cc98521061691b`. Its function names are useful search
 keys, but its `_XXXXXX` address suffixes are **not** 11.44 VAs (see `docs/formats/loader-map.md`).
 The other reference repos (seuko-mod, gta2-resurection, gta2-mouse) are listed in
-[AGENTS.md](../AGENTS.md), "Reference material".
+[AGENTS.md](../AGENTS.md), "Reference material"; every source with its terms is in
+[CREDITS.md](../CREDITS.md).

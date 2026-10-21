@@ -61,3 +61,10 @@ bun tools/formats/cli.ts sty data/wil.sty --sprite 0 --out formats-out/car.png
 ```
 
 Format notes: [docs/formats/](docs/formats/README.md).
+
+## Credits
+
+Built on other people's work: gta2-seuko-mod by izawartka, the user's earlier
+gta2-resurection and gta2-mouse, DMA Design's format documents via gtamp.com, gta2_re,
+SDL3, NASM, Ghidra and more. Every source, what was taken from it and its terms:
+[CREDITS.md](CREDITS.md).

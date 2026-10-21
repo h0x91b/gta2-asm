@@ -42,6 +42,9 @@ G_WINDOW_W  equ 0x673578        ; window_width: BeginFrame2D's view width when m
 G_WINDOW_H  equ 0x6732e8        ; window_height
 G_GAME      equ 0x5EB4FC        ; ptrToGame (seuko-mod memory.h): set by InitGame 0x461de0,
                                 ; zeroed by DeinitGame 0x462060 -> nonzero = gameplay
+                                ; (InitGame/DeinitGame: gta2-seuko-mod by izawartka,
+                                ; https://github.com/izawartka/gta2-seuko-mod,
+                                ; src/game/functions.h @25b1985)
 MAX_TEX     equ 0x40000         ; texture cache entries (index 0 unused); wil registers 73104
 MAX_PAL     equ 16384           ; palette indices
 MAX_IMG     equ 64              ; image table slots (the game asks for 25)

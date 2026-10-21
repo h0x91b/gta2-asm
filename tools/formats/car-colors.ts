@@ -1,4 +1,3 @@
-// Ported from the user's my-games project (rts-dots2/games/gta2, bf84820c), tools/car-colors.ts.
 // Trimmed: no atlas packing, no damage/door composites for the reimplementation's
 // supported-model list. What is left is the palette arithmetic, which is the format fact.
 import {styleMetadata} from './style-metadata.ts';

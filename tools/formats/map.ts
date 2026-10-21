@@ -1,4 +1,3 @@
-// Ported from the user's my-games project (rts-dots2/games/gta2, bf84820c), src/assets/map.ts.
 /** DMA GBMP v500 reader: DMAP (32-bit words) preferred over CMAP (16-bit); other chunks are kept as sizes only. */
 export interface MapFace {tile:number;wall:boolean;bulletWall:boolean;flat:boolean;flip:boolean;rotation:number;shade:number}
 export interface MapBlock {faces:MapFace[];arrows:number;ground:number;slope:number}

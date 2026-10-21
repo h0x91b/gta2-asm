@@ -1,4 +1,3 @@
-// Ported from the user's my-games project (rts-dots2/games/gta2, bf84820c), tests/sound.test.ts.
 import {test,expect} from 'bun:test';
 import {parseSoundBank,soundWav} from '../sound.ts';
 import {hasPak,pak} from './helpers.ts';

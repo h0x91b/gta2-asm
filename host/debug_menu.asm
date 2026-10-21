@@ -54,6 +54,7 @@ DM_LINES   equ 24                   ; low line buffers
 DM_WCHARS  equ 64
 DM_TOAST_FRAMES equ 120
 
+; MainCamera, DefaultFontId, WindowedWidth: gta2-seuko-mod src/game/memory.h @25b1985
 UI_CAMERA  equ 0x5E3CC4             ; Camera* (main), uiScale at +0xa8
 FONT_ID    equ 0x672F24
 WINDOW_W   equ 0x673578
@@ -288,6 +289,8 @@ hk_DrawUI:
 ; ret 4. The player's position.y (Ped +0x1ac +4) is moved 1.0 back around the call as
 ; seuko does. Game* 0x5EB4FC +0x38 = current Player, Player +0x2c4 = Ped,
 ; S15 +0x344 = mission flag pointer.
+; From gta2-seuko-mod by izawartka (https://github.com/izawartka/gta2-seuko-mod),
+; src/modules/modmenu/utils/save-game.cpp @25b1985 — SaveGame 0x47EF40.
 dm_quick_save:
     push rbx
     push r12
@@ -354,6 +357,8 @@ dm_player_ped:
 
 ; dm_all_weapons: AddWeapon @0x43E4B0, fastcall(Ped* ecx, edx = 0; weapon, ammo), ret 8,
 ; for weapons 0..14 with 99 ammo (seuko-mod src/modules/modmenu/utils/get-all-weapons.cpp)
+; From gta2-seuko-mod by izawartka (https://github.com/izawartka/gta2-seuko-mod),
+; src/game/functions.h, get-all-weapons.cpp @25b1985 — AddWeapon 0x43E4B0.
 dm_all_weapons:
     push rbx
     push r12
@@ -390,6 +395,8 @@ dm_all_weapons:
 
 ; dm_add_money: Player +0x2d4 = animatedMoney (SaveSlotAnimatedValue: value +0, max +0x30;
 ; seuko-mod src/modules/modmenu/menus/player-stats-menu.cpp), += DM_MONEY up to max
+; From gta2-seuko-mod by izawartka (https://github.com/izawartka/gta2-seuko-mod),
+; src/modules/modmenu/menus/player-stats-menu.cpp @25b1985 — Player +0x2d4.
 DM_MONEY equ 100000
 dm_add_money:
     lea rax, [s_dm_noplayer2]
@@ -896,6 +903,9 @@ dm_call_car:
 ; SCR_f x, y, z, int rotation, CAR_MODEL4 model, int scale = [0x5E4D4C]) -> Car*, at
 ; DM_SPAWN_DIST in front of the player, facing the same way (the player's sprite:
 ; Ped +0x168 GameObject, +0x80 Sprite). Refused in a car.
+; From gta2-seuko-mod by izawartka (https://github.com/izawartka/gta2-seuko-mod),
+; src/game/functions.h, memory.h, src/modules/modmenu/utils/spawn-car.cpp @25b1985 —
+; SpawnCar 0x426AC0, TrafficManager 0x5E4CA4, CarsScale 0x5E4D4C.
 DM_SPAWN_DIST equ 0x6000            ; 1.5 blocks
 dm_spawn_car:
     push rbx
@@ -987,6 +997,8 @@ dm_spawn_car:
 ; dm_repair_car: windscreen and lights back, engine damage 0, fire out (TurnOnCarLights
 ; @0x425590, TurnOnCarBrakeLights @0x4213D0, FixCarBrokenEngine @0x421570, ExtinguishCar
 ; @0x4BF070, all fastcall(Car* ecx))
+; From gta2-seuko-mod by izawartka (https://github.com/izawartka/gta2-seuko-mod),
+; src/game/functions.h, src/modules/modmenu/utils/fix-car-utils.cpp @25b1985 — the four calls.
 dm_repair_car:
     push rbx
     lea rax, [s_dm_nocar]
@@ -1029,6 +1041,8 @@ dm_repair_car:
 
 ; dm_explode_car: ExplodeCar @0x426FA0, fastcall(Car* ecx, edx = 0; EXPLOSION_SIZE), ret 4;
 ; carDamage >= 32001 means it already blew up
+; From gta2-seuko-mod by izawartka (https://github.com/izawartka/gta2-seuko-mod),
+; src/game/functions.h, src/modules/modmenu/utils/explode-last-car.cpp @25b1985 — ExplodeCar 0x426FA0.
 dm_explode_car:
     sub rsp, 24
     lea rax, [s_dm_nocar]
@@ -1354,6 +1368,8 @@ dmp_vehicle_end:
 
 ; flag addresses: HiddenDebugFlags 0x451930 (each RegGet result is stored with
 ; `mov [addr], al`; own disassembly, 74 of 74 flags; matches seuko-mod's Cheats @0x5EAD51)
+; Flag names as in h0x91b/gta2-resurection (https://github.com/h0x91b/gta2-resurection),
+; gta2-resurected.ct and its Ghidra archive gta2-resurected.exe.gzf @87e1d98.
 dmp_flags_items:
     DMITEM DM_FLAG,   "Show FPS: ", 0x5EAD79                  ; do_show_timing
     DMITEM DM_FLAG,   "Show camera info: ", 0x5EAD82          ; do_show_camera

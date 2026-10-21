@@ -1,4 +1,3 @@
-// Ported from the user's my-games project (rts-dots2/games/gta2, bf84820c), tests/map.test.ts.
 // Dropped: mesh/ramp geometry tests (they test the reimplementation's renderer, not the format).
 import {test,expect} from 'bun:test';
 import {parseMap,mapFace} from '../map.ts';

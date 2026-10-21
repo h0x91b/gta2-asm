@@ -14,7 +14,7 @@ game's loaders (`../loader-map.md`) and for the decoders in `tools/formats/`.
 | `scripting/example/bil.mis`, `scripting/example/bil/*.mis` | example sources: the Industrial main script and its 22 missions | same archive |
 
 The `.doc` files are the originals and authoritative for tables and diagrams. The `.txt`
-files are plain-text exports made for grepping (in the user's my-games project), not DMA's.
+files are plain-text exports made for grepping, not DMA's.
 
 `sources.json` records the archives' URLs, sizes and SHA-256 as downloaded on 2026-09-04;
 `SHA256SUMS` covers every file in this directory (`shasum -a 256 -c SHA256SUMS`).

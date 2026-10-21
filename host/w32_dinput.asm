@@ -1046,6 +1046,9 @@ input_keys_frame:
 ;      detection into FrontEnd+0xC9B8..0xC9BE), then GetDeviceData on 0x5E8F4C one
 ;      record at a time like 0x44C0F0, then the mouse state.
 ; --input-selftest pushes a scripted sequence of SDL events and checks the results.
+; InitMouseExclusive and GameWindow (0x673D18) are named in gta2-seuko-mod by izawartka
+; (https://github.com/izawartka/gta2-seuko-mod), src/game/functions.h, memory.h @25b1985;
+; the rest is own analysis.
 G_DINPUT        equ 0x5E8FA4            ; IDirectInput8A* (DirectInput8CreateIfEmpty)
 G_GAME_KBD      equ 0x5E8F4C            ; in-game keyboard device (diutil.cpp)
 G_MOUSE         equ 0x6735A8            ; exclusive mouse device
