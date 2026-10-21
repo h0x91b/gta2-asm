@@ -1,6 +1,11 @@
 ; debug_paths.asm — "Ped paths" in the debug menu (K): every gameplay frame, for each
-; live ped on foot, a dotted line from the ped (green) to the next waypoint of its path
-; (yellow) and on to the one after it (orange). A ped with no path left but a moveTarget
+; live ped on foot, a dotted line from the ped through the next DP_WAYPOINTS waypoints of
+; its path, each with a square and its number (1 = the next one), all in the ped's own
+; colour: a hue from its id (+0x200) stepped by the golden ratio, so neighbouring ids
+; get far-apart hues and a ped keeps its colour from frame to frame. The numbers are our
+; own 3x5 digits drawn with DrawFlatRect2D on a dark plate rather than DrawGTAText: the
+; game's font only takes palette remaps, not an arbitrary colour, and the colour is what
+; ties a label to its ped. A ped with no path left but a moveTarget
 ; gets a cyan line to that instead, and one with neither a grey tick one block along its
 ; rotation (+0x12c, the convention dm_spawn_car uses; checked against the player walking
 ; north). Measured in Downtown (2026-10-21): the wandering dummies have neither — no
@@ -42,6 +47,8 @@ WINDOW_H    equ 0x6732E8
 DP_MAXPEDS  equ 400                 ; the pool has 200; a broken list cannot hang us
 DP_MAXDOTS  equ 256                 ; per segment
 DP_STATS_FRAMES equ 300
+DP_WAYPOINTS equ 10
+PED_ID      equ 0x200
 
 section .text
 
@@ -124,9 +131,11 @@ dm_draw_paths:
     mov r13d, edx
     mov [dp_pedx], eax
     mov [dp_pedy], edx
-    xor r14d, r14d                  ; waypoint 0, 1
+    call dp_ped_color
+    mov [dp_pcol], eax
+    xor r14d, r14d                  ; waypoint 0 .. DP_WAYPOINTS-1
 .wp:
-    cmp r14d, 2
+    cmp r14d, DP_WAYPOINTS
     jae .wpdone
     mov eax, [rbx + PED_PATHCUR]
     lea eax, [rax + r14*2]
@@ -148,31 +157,52 @@ dm_draw_paths:
     or esi, 0x2000
     shl edx, 14
     call dp_project
-    mov [rsp], eax
-    mov [rsp + 4], edx
-    lea rcx, [dp_colors]
-    mov r8d, [rcx + r14*4]
+    lea rcx, [dp_pts]
+    mov [rcx + r14*8], eax
+    mov [rcx + r14*8 + 4], edx
+    mov r8d, [dp_pcol]
     mov edi, r12d
     mov esi, r13d
     mov ecx, edx
     mov edx, eax
     call dp_line
-    mov edi, [rsp]
-    mov esi, [rsp + 4]
-    mov r12d, edi
-    mov r13d, esi
-    mov edx, 3
-    sub edx, r14d                   ; marker half size: 3, then 2 (640x480 units)
-    lea rcx, [dp_colors]
-    mov ecx, [rcx + r14*4]
-    call dp_mark
+    lea rcx, [dp_pts]
+    mov r12d, [rcx + r14*8]
+    mov r13d, [rcx + r14*8 + 4]
     inc r14d
     jmp .wp
 .wpdone:
     test r14d, r14d
     jz .target
     inc dword [dp_onpath]
-    jmp .self
+    mov [rsp + 8], r14d             ; markers and labels over the whole line
+    xor r14d, r14d
+.lab:
+    lea rcx, [dp_pts]
+    mov edi, [rcx + r14*8]
+    mov esi, [rcx + r14*8 + 4]
+    mov edx, 2
+    test r14d, r14d
+    jnz .m
+    mov edx, 3                      ; the next waypoint: a bigger square (640x480 units)
+.m:
+    mov ecx, [dp_pcol]
+    call dp_mark
+    lea rcx, [dp_pts]
+    mov edi, [rcx + r14*8]
+    mov esi, [rcx + r14*8 + 4]
+    lea edx, [r14 + 1]
+    mov ecx, [dp_pcol]
+    call dp_label
+    inc r14d
+    cmp r14d, [rsp + 8]
+    jb .lab
+    mov edi, [dp_pedx]
+    mov esi, [dp_pedy]
+    mov edx, 2
+    mov ecx, [dp_pcol]
+    call dp_mark
+    jmp .next
 .target:                            ; no path: the moveTarget, if any
     mov edi, [rbx + PED_MOVETGT]
     mov esi, [rbx + PED_MOVETGT + 4]
@@ -376,35 +406,35 @@ dp_mark:
     shr edx, 14
     jmp dp_rect
 
-; dp_rect(edi = x, esi = y, edx = half size, ecx = argb; pixels): a square, skipped
-; when it is off the back buffer
+; dp_rect(edi = x, esi = y, edx = half size, ecx = argb; pixels): a square
 dp_rect:
-    mov eax, edi
-    add eax, edx
+    mov r8d, ecx
+    lea eax, [rdi + rdx]
+    lea ecx, [rsi + rdx]
+    sub edi, edx
+    sub esi, edx
+    mov edx, eax
+    jmp dp_box
+
+; dp_box(edi = x1, esi = y1, edx = x2, ecx = y2, r8d = argb; pixels), skipped when it is
+; off the back buffer
+dp_box:
+    test edx, edx
     js .out
-    mov eax, esi
-    add eax, edx
+    test ecx, ecx
     js .out
-    mov eax, edi
-    sub eax, edx
-    cmp eax, [abs WINDOW_W]
+    cmp edi, [abs WINDOW_W]
     jge .out
-    mov eax, esi
-    sub eax, edx
-    cmp eax, [abs WINDOW_H]
+    cmp esi, [abs WINDOW_H]
     jge .out
     sub rsp, 40
-    mov [rsp + 16], ecx
-    lea eax, [rdi + rdx]
-    cvtsi2ss xmm0, eax
+    mov [rsp + 16], r8d
+    cvtsi2ss xmm0, edx
     movss [rsp + 8], xmm0           ; x2
-    lea eax, [rsi + rdx]
-    cvtsi2ss xmm0, eax
+    cvtsi2ss xmm0, ecx
     movss [rsp + 12], xmm0          ; y2
-    sub edi, edx
     cvtsi2ss xmm0, edi
     movss [rsp], xmm0               ; x1
-    sub esi, edx
     cvtsi2ss xmm0, esi
     movss [rsp + 4], xmm0           ; y1
     mov edi, 0x474110               ; DrawFlatRect2D
@@ -418,12 +448,169 @@ dp_rect:
 .out:
     ret
 
+; eax = dp_ped_color(rbx = Ped*): argb of the hue (id * 2^16/phi) mod 2^16, its lowest
+; channel at DP_LOW so even blue reads on the dark plate
+dp_ped_color:
+    sub rsp, 16
+    imul eax, [rbx + PED_ID], 40503
+    movzx eax, ax
+    imul eax, eax, 6
+    mov ecx, eax
+    shr ecx, 16                     ; sector 0..5
+    movzx eax, ax
+    imul eax, eax, 255 - DP_LOW
+    shr eax, 16                     ; how far into the sector
+    mov dword [rsp], 0xFF
+    mov dword [rsp + 4], DP_LOW
+    lea edx, [rax + DP_LOW]
+    mov [rsp + 8], edx              ; rising
+    mov edx, 0xFF
+    sub edx, eax
+    mov [rsp + 12], edx             ; falling
+    lea ecx, [rcx + rcx*2]
+    lea rdx, [dp_hue_sel]
+    add rdx, rcx
+    movzx ecx, byte [rdx]
+    mov eax, [rsp + rcx*4]
+    shl eax, 8
+    movzx ecx, byte [rdx + 1]
+    or eax, [rsp + rcx*4]
+    shl eax, 8
+    movzx ecx, byte [rdx + 2]
+    or eax, [rsp + rcx*4]
+    or eax, 0xFF000000
+    add rsp, 16
+    ret
+
+; dp_label(edi = x, esi = y pixels, edx = number 1..99, ecx = argb): the number up and
+; to the right of the point, in dp_font digits of 2 x 2 units on a DP_PLATE plate
+dp_label:
+    push rbx
+    push r12
+    push r13
+    push r14
+    push r15
+    push rbp
+    sub rsp, 24
+    mov [rsp], ecx
+    mov eax, [dp_scale]
+    shr eax, 13                     ; cell: 2 units in pixels
+    jnz .c
+    mov eax, 1
+.c:
+    mov r12d, eax
+    mov eax, edx                    ; digits, most significant first
+    xor edx, edx
+    mov ecx, 10
+    div ecx
+    mov [rsp + 4], eax
+    mov [rsp + 8], edx
+    mov dword [rsp + 12], 1         ; first digit index: 1 = ones only
+    test eax, eax
+    jz .one
+    mov dword [rsp + 12], 0
+.one:
+    mov eax, [dp_scale]
+    imul eax, eax, 3
+    shr eax, 14                     ; 3 units
+    lea r13d, [rdi + rax]           ; x0
+    sub esi, eax
+    lea eax, [r12 + r12*4]
+    sub esi, eax
+    mov r14d, esi                   ; y0
+    mov eax, 2                      ; plate: (4k - 1) cells wide, plus a cell around
+    sub eax, [rsp + 12]
+    shl eax, 2
+    dec eax
+    imul eax, r12d
+    lea edx, [r13 + rax]
+    add edx, r12d
+    lea ecx, [r12 + r12*2]
+    lea ecx, [r14 + rcx*2]          ; y0 + 6c
+    mov edi, r13d
+    sub edi, r12d
+    mov esi, r14d
+    sub esi, r12d
+    mov r8d, DP_PLATE
+    call dp_box
+.digit:
+    cmp dword [rsp + 12], 2
+    jae .out
+    mov eax, [rsp + 12]
+    mov eax, [rsp + 4 + rax*4]
+    lea eax, [rax + rax*4]
+    lea rbx, [dp_font]
+    add rbx, rax                    ; its 5 rows
+    xor r15d, r15d
+.row:
+    cmp r15d, 5
+    jae .ndigit
+    movzx eax, byte [rbx + r15]
+    mov [rsp + 16], eax
+    xor ebp, ebp                    ; column 0..2 = bit 2..0
+.col:
+    cmp ebp, 3
+    jae .nrow
+    mov ecx, 2
+    sub ecx, ebp
+    bt dword [rsp + 16], ecx
+    jnc .ncol
+    mov [rsp + 20], ebp             ; a run of set bits: one box
+.run:
+    inc ebp
+    cmp ebp, 3
+    jae .box
+    mov ecx, 2
+    sub ecx, ebp
+    bt dword [rsp + 16], ecx
+    jc .run
+.box:
+    mov edi, [rsp + 20]
+    imul edi, r12d
+    add edi, r13d
+    mov edx, ebp
+    imul edx, r12d
+    add edx, r13d
+    mov esi, r15d
+    imul esi, r12d
+    add esi, r14d
+    lea ecx, [rsi + r12]
+    mov r8d, [rsp]
+    call dp_box
+    jmp .col
+.ncol:
+    inc ebp
+    jmp .col
+.nrow:
+    inc r15d
+    jmp .row
+.ndigit:
+    lea eax, [r12*4]
+    add r13d, eax                   ; next digit: 4 cells on
+    inc dword [rsp + 12]
+    jmp .digit
+.out:
+    add rsp, 24
+    pop rbp
+    pop r15
+    pop r14
+    pop r13
+    pop r12
+    pop rbx
+    ret
+
 section .data
 DP_GREEN equ 0xFF20FF20
 DP_CYAN  equ 0xFF20E0FF
 DP_GREY  equ 0xC0C0C0C0
 dp_head_len: dd 0x4000              ; heading tick: 1 block
-dp_colors: dd 0xFFFFFF00, 0xFFFF8000 ; waypoint 0 yellow, 1 orange
+DP_PLATE equ 0xC0000000
+DP_LOW   equ 90                     ; lowest colour channel of a ped's hue
+; which of dp_ped_color's {0xFF, low, rising, falling} each of R, G, B is, per hue sector
+dp_hue_sel: db 0,2,1, 3,0,1, 1,0,2, 1,3,0, 2,1,0, 0,1,3
+; 3x5 digits, a byte per row, bit 2 = the left column
+dp_font: db 7,5,5,5,7, 2,6,2,2,7, 7,1,7,4,7, 7,1,7,1,7, 5,5,7,1,1
+         db 7,4,7,1,7, 7,4,7,5,7, 7,1,1,1,1, 7,5,7,5,7, 7,5,7,1,7
 
 section .rodata
 fmt_dp_stats: db "paths: %d peds listed, %d alive on foot, %d on a path, %d moveTarget only (zoom %d%%)", 10, 0
@@ -435,6 +622,8 @@ dp_cam:        resd 1
 dp_scale:      resd 1
 dp_pedx:       resd 1
 dp_pedy:       resd 1
+dp_pcol:       resd 1               ; this ped's argb
+dp_pts:        resd 2 * DP_WAYPOINTS ; its waypoints on screen
 dp_n:          resd 1
 dp_live:       resd 1
 dp_onpath:     resd 1
