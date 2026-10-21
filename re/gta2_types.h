@@ -5335,15 +5335,17 @@ struct GameObject {
     uint8_t _gap_0x20[0x4];
     ushort probablyRemap; /* 0x24 */
     uint8_t _gap_0x26[0x12];
-    int speed; /* 0x38 */
-    int field_0x3c; /* 0x3c */
+    SCR_f speed; /* 0x38 */
+    SCR_f walkSpeedTarget; /* 0x3c */
     short spriteRotation; /* 0x40 */
     short field_0x42; /* 0x42 */
     uint8_t _gap_0x44[0x2];
     short field_0x46; /* 0x46 */
     uint8_t _gap_0x48[0x2];
     short cigaretteIdleTimer; /* 0x4a */
-    uint8_t _gap_0x4c[0xc];
+    SCR_f pushX; /* 0x4c */
+    SCR_f pushY; /* 0x50 */
+    uint8_t _gap_0x54[0x4];
     SPRITE_BIT1 bit1; /* 0x58 */
     uint8_t _gap_0x59[0x13];
     int field_0x6c; /* 0x6c */

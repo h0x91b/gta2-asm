@@ -342,6 +342,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00662780,g_localPlayerIndex,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00662786,g_startAttractReplay,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00662c08,g_MapBlocks,,USER_DEFINED,.data.exp,,/auto_structs/MapBlocks *,4
+0x00662db0,g_SlopeTable,,USER_DEFINED,.data.exp,,/undefined,1
 0x006633a0,CurrentlyDrawnMapLayerIndex,,USER_DEFINED,.data.exp,,/int,4
 0x006633c8,g_MapRenderer,,USER_DEFINED,.data.exp,,/auto_structs/MapRenderer *,4
 0x00663764,eq_0,,USER_DEFINED,.data.exp,,/undefined4,4

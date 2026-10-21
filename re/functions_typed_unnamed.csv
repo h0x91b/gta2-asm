@@ -18,7 +18,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00433830,FUN_00433830,,DEFAULT,__fastcall,USER_DEFINED,13,,undefined __fastcall FUN_00433830(S3Bytes * param_1)
 0x004339c0,FUN_004339c0,,DEFAULT,__thiscall,USER_DEFINED,18,,"int __thiscall FUN_004339c0(void * sprite, int iParm1, undefined4 * param_3, Ped * ped)"
 0x004339e0,FUN_004339e0,,DEFAULT,__thiscall,USER_DEFINED,18,,"void __thiscall FUN_004339e0(void * this, int iParm1, undefined4 * param_2)"
-0x00433a80,FUN_00433a80,,DEFAULT,__fastcall,USER_DEFINED,4,,undefined4 __fastcall FUN_00433a80(PedS1 * param_1)
 0x00449f10,FUN_00449f10,,DEFAULT,default,USER_DEFINED,62,,"uint FUN_00449f10(ushort * puParm1, int param_2)"
 0x0044a1e0,CrimeStats_RearmOneShots,,DEFAULT,__fastcall,USER_DEFINED,5,CrimeStats_RearmOneShots,undefined __fastcall CrimeStats_RearmOneShots(CrimeStats * param_1)
 0x0044af70,FUN_0044af70,,DEFAULT,__fastcall,USER_DEFINED,7,,void __fastcall FUN_0044af70(void * iParm1)
@@ -54,7 +53,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004642a0,FUN_004642a0,,DEFAULT,default,USER_DEFINED,131,,"void FUN_004642a0(void * this, int * piParm1, int * param_3, int * param_4, int * param_5, int * param_6, int * * param_7, int * param_8)"
 0x00464330,FUN_00464330,,DEFAULT,__fastcall,USER_DEFINED,418,,void __fastcall FUN_00464330(MapBlocks * s11)
 0x00464d00,FUN_00464d00,,DEFAULT,default,USER_DEFINED,145,,"Uint16 * FUN_00464d00(MapBlocks * s11, uint uParm1, char * param_3, byte param_4)"
-0x00466b70,FUN_00466b70,,DEFAULT,__stdcall,USER_DEFINED,361,,"uint __stdcall FUN_00466b70(SCR_f x, SCR_f y, uint * param_3)"
 0x004744b0,GetTickCount,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::GetTickCount,DWORD __stdcall GetTickCount(void)
 0x004820a0,FUN_004820a0,,DEFAULT,__thiscall,USER_DEFINED,17,,"void __thiscall FUN_004820a0(void * this, undefined4 param_1)"
 0x00493710,FUN_00493710,,DEFAULT,__fastcall,USER_DEFINED,104,,void __fastcall FUN_00493710(PedS1 * param_1)
@@ -68,7 +66,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004af570,FUN_004af570,,DEFAULT,__thiscall,USER_DEFINED,35,,"bool __thiscall FUN_004af570(void * this, uint param_1)"
 0x004b1d80,FUN_004b1d80,,DEFAULT,__fastcall,USER_DEFINED,113,,void __fastcall FUN_004b1d80(S6 * s6)
 0x004b75a0,AnimatedValue_Get,,DEFAULT,__fastcall,USER_DEFINED,5,AnimatedValue_Get,int __fastcall AnimatedValue_Get(AnimatedValue * param_1)
-0x004b99f0,FUN_004b99f0,,DEFAULT,__fastcall,USER_DEFINED,27,,undefined __fastcall FUN_004b99f0(Position * pos)
 0x004b9e50,FUN_004b9e50,,DEFAULT,__fastcall,USER_DEFINED,7,,void __fastcall FUN_004b9e50(SpriteManager * param_1)
 0x004c4b70,FUN_004c4b70,,DEFAULT,__fastcall,USER_DEFINED,11,,void __fastcall FUN_004c4b70(void * param_1)
 0x004c4d60,FUN_004c4d60,,DEFAULT,__fastcall,USER_DEFINED,22,,void __fastcall FUN_004c4d60(int * param_1)

@@ -4115,15 +4115,17 @@ struc GameObject
     resb 4
     .probablyRemap                    resb 2      ; 0x24 ushort
     resb 18
-    .speed                            resb 4      ; 0x38 int
-    .field_0x3c                       resb 4      ; 0x3c int
+    .speed                            resb 4      ; 0x38 SCR_f
+    .walkSpeedTarget                  resb 4      ; 0x3c SCR_f
     .spriteRotation                   resb 2      ; 0x40 short
     .field_0x42                       resb 2      ; 0x42 short
     resb 2
     .field_0x46                       resb 2      ; 0x46 short
     resb 2
     .cigaretteIdleTimer               resb 2      ; 0x4a short
-    resb 12
+    .pushX                            resb 4      ; 0x4c SCR_f
+    .pushY                            resb 4      ; 0x50 SCR_f
+    resb 4
     .bit1                             resb 1      ; 0x58 SPRITE_BIT1
     resb 19
     .field_0x6c                       resb 4      ; 0x6c int
