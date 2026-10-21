@@ -24,12 +24,14 @@ typedef uint16_t wchar_t;
 /* ---- forward declarations */
 typedef struct AmbulanceManager AmbulanceManager;
 typedef struct AmbulanceSlot AmbulanceSlot;
+typedef struct BlockInfo BlockInfo;
 typedef struct C1 C1;
 typedef struct CLIENT_ID CLIENT_ID;
 typedef struct CarDriveOrder CarDriveOrder;
 typedef struct CarDriveOrderPool CarDriveOrderPool;
 typedef struct CarModelTable CarModelTable;
 typedef struct ChatInput ChatInput;
+typedef struct CollisionGrid CollisionGrid;
 typedef struct CollisionManager CollisionManager;
 typedef struct ComboEntry ComboEntry;
 typedef struct ComboList ComboList;
@@ -38,6 +40,7 @@ typedef struct CraneManager CraneManager;
 typedef struct CrimeStats CrimeStats;
 typedef struct Crusher Crusher;
 typedef struct CrusherManager CrusherManager;
+typedef struct DoorFace DoorFace;
 typedef struct DoorManager DoorManager;
 typedef struct DoorSlot DoorSlot;
 typedef struct EmergencyVehiclePool EmergencyVehiclePool;
@@ -56,6 +59,8 @@ typedef struct FrontendSaveSlotInfo FrontendSaveSlotInfo;
 typedef struct GTAVertex GTAVertex;
 typedef struct Generator Generator;
 typedef struct GeneratorManager GeneratorManager;
+typedef struct GridEntry GridEntry;
+typedef struct GridStrip GridStrip;
 typedef struct HudArrow HudArrow;
 typedef struct HudArrowPool HudArrowPool;
 typedef struct HudArrowTarget HudArrowTarget;
@@ -77,6 +82,8 @@ typedef struct HudZoneNameLabel HudZoneNameLabel;
 typedef struct IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct;
 typedef union IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion;
 typedef struct KanjiFont KanjiFont;
+typedef struct MapChangeEntry MapChangeEntry;
+typedef struct MapGrid MapGrid;
 typedef struct MapZoneInfo MapZoneInfo;
 typedef struct MissionCleanupEntry MissionCleanupEntry;
 typedef struct ObjectSpawner ObjectSpawner;
@@ -158,6 +165,7 @@ typedef struct GangRespect GangRespect;
 typedef struct GangRespectContainer GangRespectContainer;
 typedef struct HudManager HudManager;
 typedef struct LayerDrawQueues LayerDrawQueues;
+typedef struct Light Light;
 typedef struct LightManager LightManager;
 typedef struct ListNodePool ListNodePool;
 typedef struct LocaleSettings LocaleSettings;
@@ -182,7 +190,6 @@ typedef struct S30 S30;
 typedef struct S5 S5;
 typedef struct S6 S6;
 typedef struct S7 S7;
-typedef struct SNightArray SNightArray;
 typedef struct SRelToBonus2 SRelToBonus2;
 typedef struct Script4k Script4k;
 typedef struct ScriptThread ScriptThread;
@@ -2448,6 +2455,17 @@ struct AmbulanceManager {
     AmbulanceSlot slots[2]; /* 0xd0 */
 };
 
+// /BlockInfo  size 0xc
+struct BlockInfo {
+    ushort left; /* 0x0 */
+    ushort right; /* 0x2 */
+    ushort top; /* 0x4 */
+    ushort bottom; /* 0x6 */
+    ushort lid; /* 0x8 */
+    byte arrows; /* 0xa */
+    byte slopeType; /* 0xb */
+};
+
 // /C1  size 0x2478
 // PlaceHolder Class Structure
 struct C1 {
@@ -2473,7 +2491,8 @@ struct CarDriveOrder {
     Ped *driver; /* 0x4 */
     CAR_DRIVE_ORDER_MODE mode; /* 0x8 */
     int unsure_maneuver; /* 0xc */
-    uint8_t _gap_0x10[0x4];
+    byte unsure_driveFlag; /* 0x10 */
+    uint8_t _gap_0x11[0x3];
     SCR_f targetX; /* 0x14 */
     SCR_f targetY; /* 0x18 */
     SCR_f targetZ; /* 0x1c */
@@ -2482,9 +2501,13 @@ struct CarDriveOrder {
     byte followRoadActive; /* 0x22 */
     uint8_t _gap_0x23[0x3];
     bool_ arrived; /* 0x26 */
-    uint8_t _gap_0x27[0x9];
+    uint8_t _gap_0x27[0x3];
+    ushort unsure_counter2a; /* 0x2a */
+    ushort unsure_counter2c; /* 0x2c */
+    ushort unsure_counter2e; /* 0x2e */
     Ped *targetPed; /* 0x30 */
-    uint8_t _gap_0x34[0xb];
+    ushort retryCooldown; /* 0x34 */
+    uint8_t _gap_0x36[0x9];
     byte end; /* 0x3f */
 };
 
@@ -2508,6 +2531,11 @@ struct ChatInput {
     wchar_t text[80]; /* 0x2 */
     uint8_t _gap_0xa2[0x2];
     int length; /* 0xa4 */
+};
+
+// /CollisionGrid  size 0x400
+struct CollisionGrid {
+    GridStrip *rows[256]; /* 0x0 */
 };
 
 // /CollisionManager  size 0xc
@@ -2538,9 +2566,63 @@ struct ComboList {
     int lastFrame; /* 0x1bc */
 };
 
+// /math/Vec2  size 0x8
+struct Vec2 {
+    Fix16 x; /* 0x0 */
+    Fix16 y; /* 0x4 */
+};
+
 // /Crane  size 0x15c
 struct Crane {
-    byte unk[348]; /* 0x0 */
+    Vec2 hookOffsetCur; /* 0x0 */
+    Vec2 hookOffsetTarget; /* 0x8 */
+    Vec2 carMinusHookAtPickup; /* 0x10 */
+    Vec2 target1HookOffset; /* 0x18 */
+    Vec2 target2HookOffset; /* 0x20 */
+    void *cooldownCars; /* 0x28 */
+    void *objBase; /* 0x2c */
+    void *objWire[4]; /* 0x30 */
+    void *objPartB; /* 0x40 */
+    void *objPartC; /* 0x44 */
+    void *objPartD; /* 0x48 */
+    void *objPartE; /* 0x4c */
+    void *objHeadB; /* 0x50 */
+    void *objHook; /* 0x54 */
+    void *objTrigger; /* 0x58 */
+    void *objPartA; /* 0x5c */
+    void *probePos; /* 0x60 */
+    void *candTransporter; /* 0x64 */
+    void *candCar; /* 0x68 */
+    void *candCargo; /* 0x6c */
+    void *candCargoTransporter; /* 0x70 */
+    void *heldCar; /* 0x74 */
+    Crane *unsure_homeCrane; /* 0x78 */
+    void *sound; /* 0x7c */
+    Fix16 baseZ; /* 0x80 */
+    Fix16 hookDrop; /* 0x84 */
+    uint8_t _gap_0x88[0x4];
+    Fix16 boomAngle; /* 0x8c */
+    Fix16 hookExtension; /* 0x90 */
+    uint8_t _gap_0x94[0xc];
+    Fix16 headRotation; /* 0xa0 */
+    uint8_t _gap_0xa4[0x4];
+    Fix16 homeAngle; /* 0xa8 */
+    Fix16 targetAngle; /* 0xac */
+    Fix16 targetExtension; /* 0xb0 */
+    Fix16 targetRotation; /* 0xb4 */
+    Fix16 targetDrop; /* 0xb8 */
+    uint8_t _gap_0xbc[0x84];
+    ushort unsure_scriptEventId; /* 0x140 */
+    uint8_t _gap_0x142[0x2];
+    int kind; /* 0x144 */
+    int disabled; /* 0x148 */
+    byte cooldown; /* 0x14c */
+    byte motionSettled; /* 0x14d */
+    uint8_t _gap_0x14e[0x2];
+    int state; /* 0x150 */
+    uint8_t _gap_0x154[0x1];
+    byte phase; /* 0x155 */
+    uint8_t _gap_0x156[0x6];
 };
 
 // /CraneManager  size 0xd9c
@@ -2570,6 +2652,17 @@ struct Crusher {
 struct CrusherManager {
     Crusher crushers[3]; /* 0x0 */
     int count; /* 0x90 */
+};
+
+// /DoorFace  size 0x10
+struct DoorFace {
+    int state; /* 0x0 */
+    byte x; /* 0x4 */
+    byte y; /* 0x5 */
+    byte z; /* 0x6 */
+    byte doorInfoIdx; /* 0x7 */
+    int side; /* 0x8 */
+    undefined4 unk0C; /* 0xc */
 };
 
 // /DoorSlot  size 0x38
@@ -2779,6 +2872,20 @@ struct GeneratorManager {
     int activeCount; /* 0x14a4 */
     byte sliceSize; /* 0x14a8 */
     byte pad[3]; /* 0x14a9 */
+};
+
+// /GridEntry  size 0x8
+struct GridEntry {
+    void *sprite; /* 0x0 */
+    GridEntry *next; /* 0x4 */
+};
+
+// /GridStrip  size 0xc
+struct GridStrip {
+    byte col; /* 0x0 */
+    byte pad[3]; /* 0x1 */
+    GridEntry *entries; /* 0x4 */
+    GridStrip *next; /* 0x8 */
 };
 
 // /_s_HandlerType  size 0x10
@@ -3006,6 +3113,23 @@ struct KanjiFont {
     byte marker24; /* 0x24 */
     byte marker25; /* 0x25 */
     uint8_t _gap_0x26[0x2];
+};
+
+// /MapChangeEntry  size 0x8
+struct MapChangeEntry {
+    uint columnBase; /* 0x0 */
+    byte x; /* 0x4 */
+    byte y; /* 0x5 */
+    byte pad[2]; /* 0x6 */
+};
+
+// /MapGrid  size 0x40010
+struct MapGrid {
+    uint base[65536]; /* 0x0 */
+    uint columnWordCount; /* 0x40000 */
+    uint blockCount; /* 0x40004 */
+    uint *columns; /* 0x40008 */
+    BlockInfo *blocks; /* 0x4000c */
 };
 
 // /MapZoneInfo  size 0x16
@@ -4405,29 +4529,29 @@ struct LayerDrawQueues {
     int layerQueues[7]; /* 0x0 */
 };
 
-// /auto_structs/SNightArray  size 0x28
-struct SNightArray {
-    undefined4 field0_0x0; /* 0x0 */
-    SNightArray *ptr1; /* 0x4 */
-    SNightArray *ptr2; /* 0x8 */
-    SNightArray *field3_0xc; /* 0xc */
-    undefined4 field4_0x10; /* 0x10 */
-    byte field5_0x14; /* 0x14 */
-    byte field6_0x15; /* 0x15 */
-    byte field7_0x16; /* 0x16 */
-    byte field8_0x17; /* 0x17 */
-    byte field9_0x18; /* 0x18 */
+// /auto_structs/Light  size 0x28
+struct Light {
+    uint packedIntensityRadius; /* 0x0 */
+    Fix16 x; /* 0x4 */
+    Fix16 y; /* 0x8 */
+    Fix16 z; /* 0xc */
+    uint colour; /* 0x10 */
+    byte flashOnTicks; /* 0x14 */
+    byte flashOffTicks; /* 0x15 */
+    byte flashRandomJitter; /* 0x16 */
+    byte flashCounter; /* 0x17 */
+    byte baseIntensity; /* 0x18 */
     uint8_t _gap_0x19[0x3];
-    undefined4 field13_0x1c; /* 0x1c */
-    undefined4 field14_0x20; /* 0x20 */
-    undefined4 field15_0x24; /* 0x24 */
+    Light *nextInList; /* 0x1c */
+    Light *gridNext; /* 0x20 */
+    Light *gridPrev; /* 0x24 */
 };
 
 // /auto_structs/LightManager  size 0x1d4cc
 struct LightManager {
     void *freeHead; /* 0x0 */
     int activeHead; /* 0x4 */
-    SNightArray nightArr3000[3000]; /* 0x8 Created by retype action */
+    Light nightArr3000[3000]; /* 0x8 Created by retype action */
     short activeCount; /* 0x1d4c8 */
     uint8_t _gap_0x1d4ca[0x2];
 };
@@ -4457,10 +4581,11 @@ struct LocaleSettings {
 
 // /auto_structs/MapBlocks  size 0x370
 struct MapBlocks {
-    void *grid; /* 0x0 */
-    uint8_t _gap_0x4[0x31c];
-    int field797_0x320; /* 0x320 */
-    uint8_t _gap_0x324[0x4];
+    MapGrid *grid; /* 0x0 */
+    MapChangeEntry edits[99]; /* 0x4 */
+    uint edits99_columnBase; /* 0x31c */
+    undefined4 edits99_xyPad; /* 0x320 */
+    uint editCount; /* 0x324 */
     void *zoneData; /* 0x328 */
     void *zoneIndex; /* 0x32c */
     byte *zoneInfoSlot; /* 0x330 */
@@ -4470,22 +4595,22 @@ struct MapBlocks {
     void *tileAnims; /* 0x340 */
     uint mapObjectCount; /* 0x344 */
     uint lightCount; /* 0x348 */
-    uint blockCount; /* 0x34c */
+    uint blockCountLoaded; /* 0x34c */
     uint blockCapacity; /* 0x350 */
-    uint blockCountCopy; /* 0x354 */
-    uint columnWordCount; /* 0x358 */
+    uint blockCountLive; /* 0x354 */
+    uint columnWordsLoaded; /* 0x358 */
     uint columnWordCapacity; /* 0x35c */
-    uint columnWordCountCopy; /* 0x360 */
-    ushort lenOrCounter; /* 0x364 */
-    undefined2 field818_0x366; /* 0x366 */
-    byte field819_0x368; /* 0x368 */
-    byte field820_0x369; /* 0x369 */
-    byte field821_0x36a; /* 0x36a */
-    byte field822_0x36b; /* 0x36b */
-    byte field823_0x36c; /* 0x36c */
-    byte field824_0x36d; /* 0x36d */
-    byte field825_0x36e; /* 0x36e */
-    byte field826_0x36f; /* 0x36f */
+    uint columnWordsLive; /* 0x360 */
+    ushort zoneIter; /* 0x364 */
+    undefined2 field21_0x366; /* 0x366 */
+    byte zoneIterType; /* 0x368 */
+    byte field23_0x369; /* 0x369 */
+    byte zoneIterX; /* 0x36a */
+    byte zoneIterY; /* 0x36b */
+    byte zoneIterUsePoint; /* 0x36c */
+    byte field27_0x36d; /* 0x36d */
+    byte slopeStepBlockedFlag; /* 0x36e */
+    byte field29_0x36f; /* 0x36f */
 };
 
 // /imported/seuko-mod/RenderDistanceArrayItem  size 0x8
@@ -4495,25 +4620,25 @@ struct RenderDistanceArrayItem {
 
 // /auto_structs/MapRenderer  size 0x2f04
 struct MapRenderer {
-    uint _bitMask; /* 0x0 */
-    undefined4 field1_0x4; /* 0x4 */
-    MapRenderer *ptrToS12; /* 0x8 */
-    byte field3_0xc; /* 0xc */
-    byte field4_0xd; /* 0xd */
-    byte field5_0xe; /* 0xe */
-    byte field6_0xf; /* 0xf */
-    byte field7_0x10; /* 0x10 */
-    byte field8_0x11; /* 0x11 */
-    byte field9_0x12; /* 0x12 */
-    byte field10_0x13; /* 0x13 */
-    byte field11_0x14; /* 0x14 */
-    byte field12_0x15; /* 0x15 */
-    byte field13_0x16; /* 0x16 */
-    byte field14_0x17; /* 0x17 */
-    byte field15_0x18; /* 0x18 */
-    byte field16_0x19; /* 0x19 */
-    byte field17_0x1a; /* 0x1a */
-    byte field18_0x1b; /* 0x1b */
+    Fix16 ambientCurrent; /* 0x0 */
+    Fix16 ambientTarget; /* 0x4 */
+    Fix16 ambientStep; /* 0x8 */
+    byte shadeLeft; /* 0xc */
+    byte shadeRight; /* 0xd */
+    byte shadeBottom; /* 0xe */
+    byte shadeTop; /* 0xf */
+    byte shadeDiag45; /* 0x10 */
+    byte shadeDiag46; /* 0x11 */
+    byte shadeDiag47; /* 0x12 */
+    byte shadeDiag48; /* 0x13 */
+    byte unsure_shadeRamp0; /* 0x14 */
+    byte unsure_shadeRamp1; /* 0x15 */
+    byte unsure_shadeRamp2; /* 0x16 */
+    byte unsure_shadeRamp3; /* 0x17 */
+    byte shadeCornerTri0; /* 0x18 */
+    byte shadeCornerTri1; /* 0x19 */
+    byte shadeCornerTri2; /* 0x1a */
+    byte shadeCornerTri3; /* 0x1b */
     RenderDistanceArrayItem renderDistanceArr[1500]; /* 0x1c */
     int currentDrawLayerSize; /* 0x2efc */
     int tilesCount; /* 0x2f00 */
@@ -4995,21 +5120,26 @@ struct Object {
 // /imported/gta2-mouse/ObjectMotionState  size 0x3c
 struct ObjectMotionState {
     uint8_t _gap_0x0[0x4];
-    Pos *pos; /* 0x4 */
+    Ang16 heading; /* 0x4 */
+    uint8_t _gap_0x6[0x2];
     ObjectMotionState *ref1; /* 0x8 */
-    ObjectMotionState *ref2; /* 0xc */
-    int field_0x10; /* 0x10 */
+    Fix16 speed; /* 0xc */
+    Fix16 zVelocity; /* 0x10 */
     uint8_t _gap_0x14[0x4];
-    ObjectMotionState *ref3; /* 0x18 */
-    int field_0x1c; /* 0x1c */
-    int field_0x20; /* 0x20 */
+    Fix16 deceleration; /* 0x18 */
+    Fix16 verticalAccel; /* 0x1c */
+    int ownerSerial; /* 0x20 */
     int field_0x24; /* 0x24 */
-    short field_0x28; /* 0x28 */
-    short field_0x2a; /* 0x2a */
+    short lifetimeTicks; /* 0x28 */
+    short airborne; /* 0x2a */
     short field_0x2c; /* 0x2c */
-    uint8_t _gap_0x2e[0x6];
-    int field_0x34; /* 0x34 */
-    uint8_t _gap_0x38[0x3];
+    uint8_t _gap_0x2e[0x1];
+    byte onSlope; /* 0x2f */
+    byte stoppedOrHit; /* 0x30 */
+    uint8_t _gap_0x31[0x3];
+    int state; /* 0x34 */
+    byte packedPushOffsets; /* 0x38 */
+    uint8_t _gap_0x39[0x2];
     undefined1 field_0x3b; /* 0x3b */
 };
 
@@ -5423,7 +5553,8 @@ struct CarAI {
     uint8_t _gap_0x2d[0x2];
     byte unsure_laneTarget; /* 0x2f */
     byte haltTimer; /* 0x30 */
-    uint8_t _gap_0x31[0xb];
+    uint8_t _gap_0x31[0x7];
+    int routeExitCode; /* 0x38 */
     int unsure_unstickState; /* 0x3c */
     int unsure_laneDir; /* 0x40 */
     int turnExitDir; /* 0x44 */
@@ -5869,15 +6000,17 @@ struct ObjectPrefab {
     Fix16 boxX; /* 0x0 */
     Fix16 boxY; /* 0x4 */
     Fix16 boxZ; /* 0x8 */
-    uint8_t _gap_0xc[0x4];
+    Fix16 boxRadius; /* 0xc */
     Fix16 initialSpeed; /* 0x10 */
     Fix16 deceleration; /* 0x14 */
-    uint8_t _gap_0x18[0x4];
+    Fix16 unsure_initialZ; /* 0x18 */
     short remap; /* 0x1c */
     short defaultSpriteId; /* 0x1e */
-    uint8_t _gap_0x20[0x8];
+    byte spriteFlag; /* 0x20 */
+    uint8_t _gap_0x21[0x3];
+    OBJECT_TYPE objectType; /* 0x24 */
     SPRITE_TYPE defaultSpriteType; /* 0x28 */
-    uint8_t _gap_0x2c[0x4];
+    int spriteLayer; /* 0x2c */
     PALETTE_BASE paletteBase; /* 0x30 */
     OBJECT_KIND kind; /* 0x34 */
     int killTransform; /* 0x38 */
@@ -5885,9 +6018,12 @@ struct ObjectPrefab {
     int gridKind; /* 0x40 */
     int impactMode; /* 0x44 */
     int explosiveClass; /* 0x48 */
-    uint8_t _gap_0x4c[0x10];
+    int unsure_solidityVsCar; /* 0x4c */
+    int unsure_solidityVsPed; /* 0x50 */
+    uint8_t _gap_0x54[0x4];
+    int usesGravity; /* 0x58 */
     int category; /* 0x5c */
-    uint8_t _gap_0x60[0x1];
+    byte unsure_killOnOverlap; /* 0x60 */
     byte onActiveList; /* 0x61 */
     uint8_t _gap_0x62[0x2];
     byte ticksPerFrame; /* 0x64 */
@@ -6284,12 +6420,6 @@ struct sprite_entry {
     byte w; /* 0x4 */
     byte h; /* 0x5 */
     ushort pad; /* 0x6 */
-};
-
-// /math/Vec2  size 0x8
-struct Vec2 {
-    Fix16 x; /* 0x0 */
-    Fix16 y; /* 0x4 */
 };
 
 // /scr_structs.h/_struct_17  size 0x4

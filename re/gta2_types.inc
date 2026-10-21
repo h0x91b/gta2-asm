@@ -33,6 +33,17 @@ struc AmbulanceSlot
     resb 2
 endstruc
 
+; /BlockInfo  (12 bytes)
+struc BlockInfo
+    .left                             resb 2      ; 0x0 ushort
+    .right                            resb 2      ; 0x2 ushort
+    .top                              resb 2      ; 0x4 ushort
+    .bottom                           resb 2      ; 0x6 ushort
+    .lid                              resb 2      ; 0x8 ushort
+    .arrows                           resb 1      ; 0xa byte
+    .slopeType                        resb 1      ; 0xb byte
+endstruc
+
 ; /C1  (9336 bytes)
 struc C1
     .f1                               resb 1      ; 0x0 char
@@ -115,7 +126,8 @@ struc CarDriveOrder
     .driver                           resb 4      ; 0x4 Ped *
     .mode                             resb 4      ; 0x8 CAR_DRIVE_ORDER_MODE
     .unsure_maneuver                  resb 4      ; 0xc int
-    resb 4
+    .unsure_driveFlag                 resb 1      ; 0x10 byte
+    resb 3
     .targetX                          resb 4      ; 0x14 SCR_f
     .targetY                          resb 4      ; 0x18 SCR_f
     .targetZ                          resb 4      ; 0x1c SCR_f
@@ -124,9 +136,13 @@ struc CarDriveOrder
     .followRoadActive                 resb 1      ; 0x22 byte
     resb 3
     .arrived                          resb 1      ; 0x26 bool
-    resb 9
+    resb 3
+    .unsure_counter2a                 resb 2      ; 0x2a ushort
+    .unsure_counter2c                 resb 2      ; 0x2c ushort
+    .unsure_counter2e                 resb 2      ; 0x2e ushort
     .targetPed                        resb 4      ; 0x30 Ped *
-    resb 11
+    .retryCooldown                    resb 2      ; 0x34 ushort
+    resb 9
     .end                              resb 1      ; 0x3f byte
 endstruc
 
@@ -150,6 +166,11 @@ struc ChatInput
     .text                             resb 160    ; 0x2 wchar_t[80]
     resb 2
     .length                           resb 4      ; 0xa4 int
+endstruc
+
+; /CollisionGrid  (1024 bytes)
+struc CollisionGrid
+    .rows                             resb 1024   ; 0x0 GridStrip *[256]
 endstruc
 
 ; /CollisionManager  (12 bytes)
@@ -182,7 +203,55 @@ endstruc
 
 ; /Crane  (348 bytes)
 struc Crane
-    .unk                              resb 348    ; 0x0 byte[348]
+    .hookOffsetCur                    resb 8      ; 0x0 Vec2
+    .hookOffsetTarget                 resb 8      ; 0x8 Vec2
+    .carMinusHookAtPickup             resb 8      ; 0x10 Vec2
+    .target1HookOffset                resb 8      ; 0x18 Vec2
+    .target2HookOffset                resb 8      ; 0x20 Vec2
+    .cooldownCars                     resb 4      ; 0x28 void *
+    .objBase                          resb 4      ; 0x2c void *
+    .objWire                          resb 16     ; 0x30 void *[4]
+    .objPartB                         resb 4      ; 0x40 void *
+    .objPartC                         resb 4      ; 0x44 void *
+    .objPartD                         resb 4      ; 0x48 void *
+    .objPartE                         resb 4      ; 0x4c void *
+    .objHeadB                         resb 4      ; 0x50 void *
+    .objHook                          resb 4      ; 0x54 void *
+    .objTrigger                       resb 4      ; 0x58 void *
+    .objPartA                         resb 4      ; 0x5c void *
+    .probePos                         resb 4      ; 0x60 void *
+    .candTransporter                  resb 4      ; 0x64 void *
+    .candCar                          resb 4      ; 0x68 void *
+    .candCargo                        resb 4      ; 0x6c void *
+    .candCargoTransporter             resb 4      ; 0x70 void *
+    .heldCar                          resb 4      ; 0x74 void *
+    .unsure_homeCrane                 resb 4      ; 0x78 Crane *
+    .sound                            resb 4      ; 0x7c void *
+    .baseZ                            resb 4      ; 0x80 Fix16
+    .hookDrop                         resb 4      ; 0x84 Fix16
+    resb 4
+    .boomAngle                        resb 4      ; 0x8c Fix16
+    .hookExtension                    resb 4      ; 0x90 Fix16
+    resb 12
+    .headRotation                     resb 4      ; 0xa0 Fix16
+    resb 4
+    .homeAngle                        resb 4      ; 0xa8 Fix16
+    .targetAngle                      resb 4      ; 0xac Fix16
+    .targetExtension                  resb 4      ; 0xb0 Fix16
+    .targetRotation                   resb 4      ; 0xb4 Fix16
+    .targetDrop                       resb 4      ; 0xb8 Fix16
+    resb 132
+    .unsure_scriptEventId             resb 2      ; 0x140 ushort
+    resb 2
+    .kind                             resb 4      ; 0x144 int
+    .disabled                         resb 4      ; 0x148 int
+    .cooldown                         resb 1      ; 0x14c byte
+    .motionSettled                    resb 1      ; 0x14d byte
+    resb 2
+    .state                            resb 4      ; 0x150 int
+    resb 1
+    .phase                            resb 1      ; 0x155 byte
+    resb 6
 endstruc
 
 ; /CraneManager  (3484 bytes)
@@ -212,6 +281,17 @@ endstruc
 struc CrusherManager
     .crushers                         resb 144    ; 0x0 Crusher[3]
     .count                            resb 4      ; 0x90 int
+endstruc
+
+; /DoorFace  (16 bytes)
+struc DoorFace
+    .state                            resb 4      ; 0x0 int
+    .x                                resb 1      ; 0x4 byte
+    .y                                resb 1      ; 0x5 byte
+    .z                                resb 1      ; 0x6 byte
+    .doorInfoIdx                      resb 1      ; 0x7 byte
+    .side                             resb 4      ; 0x8 int
+    .unk0C                            resb 4      ; 0xc undefined4
 endstruc
 
 ; /DoorManager  (1236 bytes)
@@ -418,6 +498,20 @@ struc GeneratorManager
     .activeCount                      resb 4      ; 0x14a4 int
     .sliceSize                        resb 1      ; 0x14a8 byte
     .pad                              resb 3      ; 0x14a9 byte[3]
+endstruc
+
+; /GridEntry  (8 bytes)
+struc GridEntry
+    .sprite                           resb 4      ; 0x0 void *
+    .next                             resb 4      ; 0x4 GridEntry *
+endstruc
+
+; /GridStrip  (12 bytes)
+struc GridStrip
+    .col                              resb 1      ; 0x0 byte
+    .pad                              resb 3      ; 0x1 byte[3]
+    .entries                          resb 4      ; 0x4 GridEntry *
+    .next                             resb 4      ; 0x8 GridStrip *
 endstruc
 
 ; enum /HUD_DIGIT_SPRITE  (2 bytes)
@@ -641,6 +735,23 @@ struc KanjiFont
     .marker24                         resb 1      ; 0x24 byte
     .marker25                         resb 1      ; 0x25 byte
     resb 2
+endstruc
+
+; /MapChangeEntry  (8 bytes)
+struc MapChangeEntry
+    .columnBase                       resb 4      ; 0x0 uint
+    .x                                resb 1      ; 0x4 byte
+    .y                                resb 1      ; 0x5 byte
+    .pad                              resb 2      ; 0x6 byte[2]
+endstruc
+
+; /MapGrid  (262160 bytes)
+struc MapGrid
+    .base                             resb 262144 ; 0x0 uint[65536]
+    .columnWordCount                  resb 4      ; 0x40000 uint
+    .blockCount                       resb 4      ; 0x40004 uint
+    .columns                          resb 4      ; 0x40008 uint *
+    .blocks                           resb 4      ; 0x4000c BlockInfo *
 endstruc
 
 ; /MapZoneInfo  (22 bytes)
@@ -2731,11 +2842,29 @@ struc LayerDrawQueues
     .layerQueues                      resb 28     ; 0x0 int[7]
 endstruc
 
+; /auto_structs/Light  (40 bytes)
+struc Light
+    .packedIntensityRadius            resb 4      ; 0x0 uint
+    .x                                resb 4      ; 0x4 Fix16
+    .y                                resb 4      ; 0x8 Fix16
+    .z                                resb 4      ; 0xc Fix16
+    .colour                           resb 4      ; 0x10 uint
+    .flashOnTicks                     resb 1      ; 0x14 byte
+    .flashOffTicks                    resb 1      ; 0x15 byte
+    .flashRandomJitter                resb 1      ; 0x16 byte
+    .flashCounter                     resb 1      ; 0x17 byte
+    .baseIntensity                    resb 1      ; 0x18 byte
+    resb 3
+    .nextInList                       resb 4      ; 0x1c Light *
+    .gridNext                         resb 4      ; 0x20 Light *
+    .gridPrev                         resb 4      ; 0x24 Light *
+endstruc
+
 ; /auto_structs/LightManager  (120012 bytes)
 struc LightManager
     .freeHead                         resb 4      ; 0x0 void *
     .activeHead                       resb 4      ; 0x4 int
-    .nightArr3000                     resb 120000 ; 0x8 SNightArray[3000]
+    .nightArr3000                     resb 120000 ; 0x8 Light[3000]
     .activeCount                      resb 2      ; 0x1d4c8 short
     resb 2
 endstruc
@@ -2757,10 +2886,11 @@ endstruc
 
 ; /auto_structs/MapBlocks  (880 bytes)
 struc MapBlocks
-    .grid                             resb 4      ; 0x0 void *
-    resb 796
-    .field797_0x320                   resb 4      ; 0x320 int
-    resb 4
+    .grid                             resb 4      ; 0x0 MapGrid *
+    .edits                            resb 792    ; 0x4 MapChangeEntry[99]
+    .edits99_columnBase               resb 4      ; 0x31c uint
+    .edits99_xyPad                    resb 4      ; 0x320 undefined4
+    .editCount                        resb 4      ; 0x324 uint
     .zoneData                         resb 4      ; 0x328 void *
     .zoneIndex                        resb 4      ; 0x32c void *
     .zoneInfoSlot                     resb 4      ; 0x330 byte *
@@ -2770,45 +2900,45 @@ struc MapBlocks
     .tileAnims                        resb 4      ; 0x340 void *
     .mapObjectCount                   resb 4      ; 0x344 uint
     .lightCount                       resb 4      ; 0x348 uint
-    .blockCount                       resb 4      ; 0x34c uint
+    .blockCountLoaded                 resb 4      ; 0x34c uint
     .blockCapacity                    resb 4      ; 0x350 uint
-    .blockCountCopy                   resb 4      ; 0x354 uint
-    .columnWordCount                  resb 4      ; 0x358 uint
+    .blockCountLive                   resb 4      ; 0x354 uint
+    .columnWordsLoaded                resb 4      ; 0x358 uint
     .columnWordCapacity               resb 4      ; 0x35c uint
-    .columnWordCountCopy              resb 4      ; 0x360 uint
-    .lenOrCounter                     resb 2      ; 0x364 ushort
-    .field818_0x366                   resb 2      ; 0x366 undefined2
-    .field819_0x368                   resb 1      ; 0x368 byte
-    .field820_0x369                   resb 1      ; 0x369 byte
-    .field821_0x36a                   resb 1      ; 0x36a byte
-    .field822_0x36b                   resb 1      ; 0x36b byte
-    .field823_0x36c                   resb 1      ; 0x36c byte
-    .field824_0x36d                   resb 1      ; 0x36d byte
-    .field825_0x36e                   resb 1      ; 0x36e byte
-    .field826_0x36f                   resb 1      ; 0x36f byte
+    .columnWordsLive                  resb 4      ; 0x360 uint
+    .zoneIter                         resb 2      ; 0x364 ushort
+    .field21_0x366                    resb 2      ; 0x366 undefined2
+    .zoneIterType                     resb 1      ; 0x368 byte
+    .field23_0x369                    resb 1      ; 0x369 byte
+    .zoneIterX                        resb 1      ; 0x36a byte
+    .zoneIterY                        resb 1      ; 0x36b byte
+    .zoneIterUsePoint                 resb 1      ; 0x36c byte
+    .field27_0x36d                    resb 1      ; 0x36d byte
+    .slopeStepBlockedFlag             resb 1      ; 0x36e byte
+    .field29_0x36f                    resb 1      ; 0x36f byte
 endstruc
 
 ; /auto_structs/MapRenderer  (12036 bytes)
 struc MapRenderer
-    ._bitMask                         resb 4      ; 0x0 uint
-    .field1_0x4                       resb 4      ; 0x4 undefined4
-    .ptrToS12                         resb 4      ; 0x8 MapRenderer *
-    .field3_0xc                       resb 1      ; 0xc byte
-    .field4_0xd                       resb 1      ; 0xd byte
-    .field5_0xe                       resb 1      ; 0xe byte
-    .field6_0xf                       resb 1      ; 0xf byte
-    .field7_0x10                      resb 1      ; 0x10 byte
-    .field8_0x11                      resb 1      ; 0x11 byte
-    .field9_0x12                      resb 1      ; 0x12 byte
-    .field10_0x13                     resb 1      ; 0x13 byte
-    .field11_0x14                     resb 1      ; 0x14 byte
-    .field12_0x15                     resb 1      ; 0x15 byte
-    .field13_0x16                     resb 1      ; 0x16 byte
-    .field14_0x17                     resb 1      ; 0x17 byte
-    .field15_0x18                     resb 1      ; 0x18 byte
-    .field16_0x19                     resb 1      ; 0x19 byte
-    .field17_0x1a                     resb 1      ; 0x1a byte
-    .field18_0x1b                     resb 1      ; 0x1b byte
+    .ambientCurrent                   resb 4      ; 0x0 Fix16
+    .ambientTarget                    resb 4      ; 0x4 Fix16
+    .ambientStep                      resb 4      ; 0x8 Fix16
+    .shadeLeft                        resb 1      ; 0xc byte
+    .shadeRight                       resb 1      ; 0xd byte
+    .shadeBottom                      resb 1      ; 0xe byte
+    .shadeTop                         resb 1      ; 0xf byte
+    .shadeDiag45                      resb 1      ; 0x10 byte
+    .shadeDiag46                      resb 1      ; 0x11 byte
+    .shadeDiag47                      resb 1      ; 0x12 byte
+    .shadeDiag48                      resb 1      ; 0x13 byte
+    .unsure_shadeRamp0                resb 1      ; 0x14 byte
+    .unsure_shadeRamp1                resb 1      ; 0x15 byte
+    .unsure_shadeRamp2                resb 1      ; 0x16 byte
+    .unsure_shadeRamp3                resb 1      ; 0x17 byte
+    .shadeCornerTri0                  resb 1      ; 0x18 byte
+    .shadeCornerTri1                  resb 1      ; 0x19 byte
+    .shadeCornerTri2                  resb 1      ; 0x1a byte
+    .shadeCornerTri3                  resb 1      ; 0x1b byte
     .renderDistanceArr                resb 12000  ; 0x1c RenderDistanceArrayItem[1500]
     .currentDrawLayerSize             resb 4      ; 0x2efc int
     .tilesCount                       resb 4      ; 0x2f00 int
@@ -3132,24 +3262,6 @@ struc S7
     .field1892_0x788                  resb 2      ; 0x788 undefined2
 endstruc
 
-; /auto_structs/SNightArray  (40 bytes)
-struc SNightArray
-    .field0_0x0                       resb 4      ; 0x0 undefined4
-    .ptr1                             resb 4      ; 0x4 SNightArray *
-    .ptr2                             resb 4      ; 0x8 SNightArray *
-    .field3_0xc                       resb 4      ; 0xc SNightArray *
-    .field4_0x10                      resb 4      ; 0x10 undefined4
-    .field5_0x14                      resb 1      ; 0x14 byte
-    .field6_0x15                      resb 1      ; 0x15 byte
-    .field7_0x16                      resb 1      ; 0x16 byte
-    .field8_0x17                      resb 1      ; 0x17 byte
-    .field9_0x18                      resb 1      ; 0x18 byte
-    resb 3
-    .field13_0x1c                     resb 4      ; 0x1c undefined4
-    .field14_0x20                     resb 4      ; 0x20 undefined4
-    .field15_0x24                     resb 4      ; 0x24 undefined4
-endstruc
-
 ; /auto_structs/SRelToBonus2  (45 bytes)
 struc SRelToBonus2
     resb 44
@@ -3351,21 +3463,26 @@ endstruc
 ; /imported/gta2-mouse/ObjectMotionState  (60 bytes)
 struc ObjectMotionState
     resb 4
-    .pos                              resb 4      ; 0x4 Pos *
+    .heading                          resb 2      ; 0x4 Ang16
+    resb 2
     .ref1                             resb 4      ; 0x8 ObjectMotionState *
-    .ref2                             resb 4      ; 0xc ObjectMotionState *
-    .field_0x10                       resb 4      ; 0x10 int
+    .speed                            resb 4      ; 0xc Fix16
+    .zVelocity                        resb 4      ; 0x10 Fix16
     resb 4
-    .ref3                             resb 4      ; 0x18 ObjectMotionState *
-    .field_0x1c                       resb 4      ; 0x1c int
-    .field_0x20                       resb 4      ; 0x20 int
+    .deceleration                     resb 4      ; 0x18 Fix16
+    .verticalAccel                    resb 4      ; 0x1c Fix16
+    .ownerSerial                      resb 4      ; 0x20 int
     .field_0x24                       resb 4      ; 0x24 int
-    .field_0x28                       resb 2      ; 0x28 short
-    .field_0x2a                       resb 2      ; 0x2a short
+    .lifetimeTicks                    resb 2      ; 0x28 short
+    .airborne                         resb 2      ; 0x2a short
     .field_0x2c                       resb 2      ; 0x2c short
-    resb 6
-    .field_0x34                       resb 4      ; 0x34 int
+    resb 1
+    .onSlope                          resb 1      ; 0x2f byte
+    .stoppedOrHit                     resb 1      ; 0x30 byte
     resb 3
+    .state                            resb 4      ; 0x34 int
+    .packedPushOffsets                resb 1      ; 0x38 byte
+    resb 2
     .field_0x3b                       resb 1      ; 0x3b undefined1
 endstruc
 
@@ -4154,7 +4271,8 @@ struc CarAI
     resb 2
     .unsure_laneTarget                resb 1      ; 0x2f byte
     .haltTimer                        resb 1      ; 0x30 byte
-    resb 11
+    resb 7
+    .routeExitCode                    resb 4      ; 0x38 int
     .unsure_unstickState              resb 4      ; 0x3c int
     .unsure_laneDir                   resb 4      ; 0x40 int
     .turnExitDir                      resb 4      ; 0x44 int
@@ -4892,15 +5010,17 @@ struc ObjectPrefab
     .boxX                             resb 4      ; 0x0 Fix16
     .boxY                             resb 4      ; 0x4 Fix16
     .boxZ                             resb 4      ; 0x8 Fix16
-    resb 4
+    .boxRadius                        resb 4      ; 0xc Fix16
     .initialSpeed                     resb 4      ; 0x10 Fix16
     .deceleration                     resb 4      ; 0x14 Fix16
-    resb 4
+    .unsure_initialZ                  resb 4      ; 0x18 Fix16
     .remap                            resb 2      ; 0x1c short
     .defaultSpriteId                  resb 2      ; 0x1e short
-    resb 8
+    .spriteFlag                       resb 1      ; 0x20 byte
+    resb 3
+    .objectType                       resb 4      ; 0x24 OBJECT_TYPE
     .defaultSpriteType                resb 4      ; 0x28 SPRITE_TYPE
-    resb 4
+    .spriteLayer                      resb 4      ; 0x2c int
     .paletteBase                      resb 4      ; 0x30 PALETTE_BASE
     .kind                             resb 4      ; 0x34 OBJECT_KIND
     .killTransform                    resb 4      ; 0x38 int
@@ -4908,9 +5028,12 @@ struc ObjectPrefab
     .gridKind                         resb 4      ; 0x40 int
     .impactMode                       resb 4      ; 0x44 int
     .explosiveClass                   resb 4      ; 0x48 int
-    resb 16
+    .unsure_solidityVsCar             resb 4      ; 0x4c int
+    .unsure_solidityVsPed             resb 4      ; 0x50 int
+    resb 4
+    .usesGravity                      resb 4      ; 0x58 int
     .category                         resb 4      ; 0x5c int
-    resb 1
+    .unsure_killOnOverlap             resb 1      ; 0x60 byte
     .onActiveList                     resb 1      ; 0x61 byte
     resb 2
     .ticksPerFrame                    resb 1      ; 0x64 byte

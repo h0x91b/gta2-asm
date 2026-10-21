@@ -195,6 +195,8 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e5fbc,ptrToS30_relToChar,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e6340,g_CarDriveOrderPool,,USER_DEFINED,.data.exp,,/CarDriveOrderPool *,4
 0x005e6680,g_CollisionManager,,USER_DEFINED,.data.exp,,/CollisionManager *,4
+0x005e6684,g_CollisionEntryPool,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e6688,g_CollisionStripPool,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e668c,g_CollisionGridObstacles,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e6690,g_CollisionGridNotify,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e6694,g_CollisionGridAux,,USER_DEFINED,.data.exp,,/undefined4,4
