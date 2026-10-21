@@ -58,8 +58,8 @@ address,kind,function,comment
 0x00403950,plate,Ped_SetEngaged,Flags |= 4 (PED_FLAG_ENGAGED) at +0x21c (Seq 45)
 0x00403960,plate,Ped_ClearEngaged,Flags &= ~4 (PED_FLAG_ENGAGED) (Seq 45)
 0x004039c0,plate,Ped_GetEnterCarAsPassenger,Returns Ped+0x248 enterCarAsPassenger; pair of Ped_SetEnterCarAsPassenger (Seq 45)
-0x004039d0,plate,Ped_GetCarEnterExitStage,Returns byte +0x226 (unsure_carEnterExitStage) (Seq 45)
-0x00403a20,plate,Ped_ClearField228,Zeroes byte Ped+0x228 (field82_0x228); caller Ped_ElvisHandling (Seq 45)
+0x004039d0,plate,Ped_GetTaskStatus,Returns byte +0x226 (unsure_carEnterExitStage) (Seq 45)
+0x00403a20,plate,Ped_ClearMeleeHitCount,Zeroes byte Ped+0x228 (field82_0x228); caller Ped_ElvisHandling (Seq 45)
 0x00403a50,plate,Ped_SetGameObjectField3C,Writes gameObject(+0x168)+0x3c; caller Ped_ElvisHandling (Seq 45)
 0x00403a80,plate,Ped_GetObjective,Name from gta2_re (GTA2 10.5) Ped::get_objective_403A80: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
 0x00403a90,plate,Ped_GetTask,Returns Ped+0x25c task; Ped_GetObjective is +0x258 (Seq 45)
@@ -69,7 +69,7 @@ address,kind,function,comment
 0x00403b10,plate,Ped_GetTaskTargetCar,Returns Ped+0x154 taskTargetCar (setter Ped_SetTargetCar) (Seq 45)
 0x00403b20,plate,Ped_GetTaskTimer,Returns short Ped+0x21a taskTimer (Seq 45)
 0x00403b30,plate,Ped_GetObjectiveTimer,Returns short Ped+0x218 objectiveTimer (Seq 45)
-0x00403b50,plate,Ped_SetCarEnterExitStage,Writes byte Ped+0x226; pair of getter 0x4039d0 (Seq 45)
+0x00403b50,plate,Ped_SetTaskStatus,Writes byte Ped+0x226; pair of getter 0x4039d0 (Seq 45)
 0x00403b70,plate,Ped_HasGameObject,Returns Ped+0x168 gameObject != 0 (Seq 45)
 0x00403b90,plate,Ped_IsEngaged,Returns (flags>>2)&1 = PED_FLAG_ENGAGED (Seq 45)
 0x00403bc0,plate,Car_IsBankVanOrSwatVan,Car+0x84 carModel is 4 (BANKVAN) or 0x34 (SWATVAN) (Seq 45)
@@ -79,7 +79,7 @@ address,kind,function,comment
 0x00404450,plate,PedGroup_FindMemberNotEngaged,"Scans members from last to first, returns first with Ped_IsEngaged false else 0 (Seq 45)"
 0x00404480,plate,PedGroup_LeaderIsEngaged,Ped_IsEngaged(group+0x2c leader) (Seq 45)
 0x00404490,plate,PedGroup_FindFarthestMember,"Max Chebyshev Fix16 distance of members to leader; returns ped, out distance (Seq 45)"
-0x004045d0,plate,unsure_PedGroup_MakeMembersFollowLeader,"If leader on foot: sets members task 9 and Ped_SetTarget2Ped leader/neighbour, clears bit 11 (Seq 45)"
+0x004045d0,plate,PedGroup_MakeMembersFollowLeader,"If leader on foot: sets members task 9 and Ped_SetTarget2Ped leader/neighbour, clears bit 11 (Seq 45)"
 0x004046f0,plate,unsure_PedGroup_UpdateMemberNearLeader,"Member idx: if leader has gameObject and dist<DAT_005d304c sets task 9 follow, else resets task (Seq 45)"
 0x00404840,plate,PedGroup_AllMembersInCar,No members: leader in car; else all members Ped_GetState==10 (Seq 45)
 0x004048a0,plate,PedGroup_AllMembersInCarOrDead,All members have state 10 or 9 (Seq 45)
@@ -89,7 +89,7 @@ address,kind,function,comment
 0x00404ce0,plate,PedGroup_PromoteLeader,"Adds old leader as member, sets new leader slot 99, resets all member tasks; caller PedGroupSetLeader (Seq 45)"
 0x00404ef0,plate,PedGroup_ReactToAttacker,"Sets members/leader to kill attacker (KILL_CHAR_ON_FOOT, Ped_SetTarget2Ped); caller Ped_ReactToAttacker (Seq 45)"
 0x00405240,plate,PedGroup_UpdateEnterCar,"Leader state 3/10/5: sends members to enter car (ENTER_CAR task, door cursor 0x58f512); caller Ped_UpdateAI (Seq 45)"
-0x00405760,plate,unsure_PedGroup_UpdateMember,"Per-member AI: Ped_SetEngaged, follow/attack by task, uses 0x4045d0 and 0x404ad0; caller Ped_UpdateAI (Seq 45)"
+0x00405760,plate,PedGroup_UpdateMember,"Per-member AI: Ped_SetEngaged, follow/attack by task, uses 0x4045d0 and 0x404ad0; caller Ped_UpdateAI (Seq 45)"
 0x00405a40,plate,unsure_NetDlg_Dtor,Sets vtable PTR_0056e598 only; called by 0x406bc0 scalar-deleting dtor (Seq 45)
 0x00405a50,plate,NetDlg_SetHwnd,Stores HWND at this+0x20218; called from NetDlg_OnInitDialog (Seq 45)
 0x00405a60,plate,NetDlg_GetHwnd,"Returns this+0x20218, used as hDlg in SendDlgItemMessage/GetDlgItem (Seq 45)"
@@ -490,10 +490,10 @@ so an unsupported 3D setting is reset. Confidence: high."
 0x00433970,plate,Sprite_RampSpeedToward,"Seq37 slice1 (VERIFIED, disasm 0x433970): thiscall(ecx=ped Sprite, [esp+4]=target Fix16) ret 4. Moves Sprite.speed(+0x38) one step toward target: +/- 0x5E5E90 (= 1/256 tile/tick, raw 0x40). Called from PedGameObject_StateWalk with target=Sprite+0x3C (max speed, init 0.0625 = 0x66A504 in Sprite_Init) and from AI objective handlers."
 0x00433c10,plate,Ped_ApplyRemapToSprite,"Seq36 slice4 (V): sprite->+5 (byte) = remap; if remap != 0xFF -> Position_SetRemap(sprite->+0x80 body, remap) which writes body+0x24 (remap/palette index) and advances body+0x34 render state from body+0x30. 0xFF = no remap. NOTE: Sprite_UpdatePedAnimFrame (0x497df0) re-reads Ped.remap (+0x244) every anim tick, so Ped_SetRemap alone is enough after the next tick; Script_Op_CHANGE_CHAR_REMAP (0x47a4a0) only calls this without Ped_SetRemap (H: transient)."
 0x00434e60,plate,Ped_SelectWeaponForOccupation,"Seq36 slice4 (V): picks which weapon the ped uses vs its target: returns Ped.selectedWeapon (+0x170, primary) or Ped.altWeapon (+0x174, set by Ped_SetAltWeapon, PISTOL for cops) or 0 (hold fire). Ped flag |=0x2000 = using alt weapon, |=0x200 = holding fire. Only 4 occupations are special-cased (switch on Ped+0x240): 24 POLICE and 29 POLICE_ON_FOOT (target not firing -> alt; target firing on foot: <2 cops in screen range -> hold fire, designatedShooter==null/self -> primary, else hold fire; target in car: car speed > 0.00995 -> alt else hold fire), 26 FBI (target in car -> alt; else dist > 0.5 -> alt else primary), 37 ROAD_BLOCK_GUARD (target firing: in car -> alt, on foot -> primary; not firing -> alt). Every other occupation: primary. Caller: unsure_Ped_FollowTarget 0x4441b0 only. Statics: DAT_005e5c10=0.00995, DAT_005e5e74=0.5."
-0x00434ff0,pre,unsure_Ped_NotifyPlayerOfEvent,"Seq27: Ped+0x290 = lastAttackerWeapon (kill-method code, same codes as Car.lastAttackerWeapon +0x90: 1 = rammed/run over; copied from the car by Car_PassKillerToOccupants, set by Ped_TakeDamage, cleared with killerPedId when killerCreditTimer +0x264 runs out). Codes 1 and 3 give gang-respect delta 1 instead of 5."
+0x00434ff0,pre,Ped_ApplyKillRespectToGang,"Seq27: Ped+0x290 = lastAttackerWeapon (kill-method code, same codes as Car.lastAttackerWeapon +0x90: 1 = rammed/run over; copied from the car by Car_PassKillerToOccupants, set by Ped_TakeDamage, cleared with killerPedId when killerCreditTimer +0x264 runs out). Codes 1 and 3 give gang-respect delta 1 instead of 5."
 0x004350a0,plate,Ped_RegisterAsThreat,"Seq36 slice5: adds ped to the per-tick 'threat list' (head 0x5e5ee0 relToS24_unk35) and sets relToS24_unk32=1. Callers: per-weapon fire handlers FUN_004cdc20..004d0230 (12 callers, i.e. every shot) and CarPhysics_ScarePedsAndTickSwerve 0x49f350 (fast driving / honking). List is freed every tick by DummyPedManager_Update when unk32==0, and entries are removed in Ped_Remove/Ped_AttachToGame(death). Consumers: PedThreatList_FindNearest 0x445c30 via Ped_UpdateThreats / Ped_FindThreat*. This is the gunshot/fear detection."
 0x00436220,plate,Ped_GetDamageMultiplier,Seq33 slice5 (verified): ped with player that has powerup 7 -> 2 else 1. Multiplies bullet/flame damage in Car_OnDamage.
-0x004371d0,plate,unsure_Ped_ShouldReactToPed,"Seq36 slice5: THE hostility predicate. this=observer, param=candidate. Returns 1 = observer wants to attack/flee-from candidate.
+0x004371d0,plate,Ped_ShouldReactToPed,"Seq36 slice5: THE hostility predicate. this=observer, param=candidate. Returns 1 = observer wants to attack/flee-from candidate.
 Notes: Ped_CheckBitState2(x,2)/call site 'PUSH 2' at 0x437df5 == (pedClass==PED_CLASS_PLAYER); unsure_Ped_IsPlayerBitStateNotEmpty == pedClass==2 && occupation!=EMPTY.
 - observer.threatSearch(+0x288) 3/4: only reacts to player-class candidates; 5/6: player-class => true at once.
 - same group => false. observer.gang(+0x17c)!=0:
@@ -1611,7 +1611,7 @@ Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/sc
 6 per-player tag counters (+4..+0x1B), frame tick (+0x1C), 6 per-player left flags (+0x20..+0x25).
 Called by ctor 0x4820C0 (static init 0x535440) and InitGame 0x461E72 (MP branch).
 Evidence: FUN_004821c0/4820d0 ('yourit' label), death -> FUN_004822a0. Confidence: high."
-0x00482080,plate,Ped_ClearUnsureEffectFlag4000000,"[hypothesis, Seq 46] Evidence: clears PED_FLAG_UNSURE_EFFECT_4000000; callers MultiplayerTag_SetItPlayer, Player_ClearPowerupsKeepJailCard, Player_TickPowerups (powerup/""it"" visual effect flag)"
+0x00482080,plate,Ped_ClearElectrofingers,"[hypothesis, Seq 46] Evidence: clears PED_FLAG_UNSURE_EFFECT_4000000; callers MultiplayerTag_SetItPlayer, Player_ClearPowerupsKeepJailCard, Player_TickPowerups (powerup/""it"" visual effect flag)"
 0x00482090,plate,MultiplayerTag_GetGameType,"[verified, Seq 46] Evidence: wrapper Menu_GetMultiplayerGameType(&ptrToMenu); caller MultiplayerTag_Update"
 0x004820a0,plate,unsure_MultiplayerTag_SetItPlayerAndState6,"[hypothesis, Seq 46] Evidence: this+0xC=param, this+0x10=6; callers MultiplayerTag_SetItPlayer and Hud_OnGameStart (2nd caller means ""this"" may not be only MultiplayerTag)"
 0x00482400,plate,unsure_ObjectType_IsInRange27To2A,"[hypothesis, Seq 46] Evidence: eax in 0x27..0x2a; callers ExplodeBarrel/ExplodeAttachedCar/MorphTo (OBJECT_TYPE 39-42 unnamed in enum)"
@@ -2012,7 +2012,7 @@ Gang-car branch (slice 2/gangs link): CarManager_PickTrafficModel kind==5 -> gan
 0x004b7500,plate,PlayerScore_GetCarValue,"Seq33 slice3 VERIFIED: engineData[model].value (+2) scaled by kind param: 0 -> x1, 1 -> x2, 2 -> x5, else 0. Callers PlayerScore_OnCarDestroyed, PlayerScore_OnCarjack => 'value' in NYC.GCI is the score/bounty weight, not physics."
 0x004b7662,eol,PlayerScore_AddMoney,current money
 0x004b76a0,plate,PlayerScore_TrackAccuracy,"Seq41/A5: PlayerScore_TrackAccuracy(this, resultKind, weaponOrTarget, ped). Stores resultKind at +0x194; accuracyCount(+0x198) reset to 0 on kinds 0/1/3, on weapon ids 0x9a,0xc1,0xc2,0xc3,0xc6,0xc7,0x9f, or when a cop/army ped is hit (g_gxtAllFilesMissing set); ++ on kind 2. PlayerScore_Update pays 5000 + ""accurcy"" label at >24. Meaning of kinds hypothesis (2 = hit)."
-0x004b8a60,plate,unsure_PlayerScore_GiveCarKillFlat20,"Seq41/A5: GiveMoney(owner,20) flat bonus; callers Car_Explode and Car_OnWrecked. Hypothesis: small reward for wrecking/blowing a car. Note GiveMoney multiplies by Player.moneyMultiplier."
+0x004b8a60,plate,PlayerScore_GiveCarDestroyedBonus,"Seq41/A5: GiveMoney(owner,20) flat bonus; callers Car_Explode and Car_OnWrecked. Hypothesis: small reward for wrecking/blowing a car. Note GiveMoney multiplies by Player.moneyMultiplier."
 0x004b8d60,plate,FloatingScoreManager_NextColor,"Seq41/A5: ++colorCounter, wraps 13->9. Returns remap id for next popup (9..13)."
 0x004b8de0,plate,FloatingScore_Init,"Seq41/A5: FloatingScore_Init(this, worldX, worldY, worldZ, amount). Splits amount into decimal digits (digits[1]=ones .. digits[8]=1e7; digitCount = number of digits-1), stores world pos (+0x28/2c/30), colorId = FloatingScoreManager_NextColor (cycles 9..13), life=25 (0x19), delayTicks=2, growX=growY=1. Called only by FloatingScoreManager_Spawn."
 0x004b8f70,plate,FloatingScore_Tick,"Seq41/A5: FloatingScore_Tick (per GameTick via FloatingScoreManager_Update). Phase 1: delayTicks counts 2..0 (popup static). Phase 2 (delayTicks<0): growX/growY++ each tick (digits stretch), life -= 2; when life<3 -> life=0, FloatingScoreManager_IncFreeCount, returns 1 (expired -> caller moves node to free list)."
@@ -2055,7 +2055,7 @@ Seq 27: NO empty check: crash at 0x4BEC42 reading address 4 (same signature as t
 0x004bfcc0,plate,StyleData_SetFontRoles,"Sets the font-role globals 0x670640-0x670680 from the FONB font count (7 = in-game .sty, 14 = fstyle.sty). Role value = font index inside the style; 99 = role absent. 7-font: G0->0x670678, G1->0x670668, G2->0x670640, G3->0x67065c(kanji16), G4->0x670650(kanji32), G5->0x670674, G6->0x670654. 14-font: Fe0->0x670678, Fe1->0x67065c(kanji16), Fe2->0x670650(kanji32), Fe3->0x670654, Fe4->0x67066c, Fe5->0x67064c, Fe6->0x670658, Fe7->0x67067c, Fe8->0x670664, Fe9->0x670648, Fe10->0x670670, Fe11->0x670660, Fe12->0x670680, Fe13->0x670644. Verified from decompiler."
 0x004c08d0,plate,StyleData_Ctor,"Style (STY file) container singleton: sprite/palette/font bases, sprite index, physical palettes, car info chunk + AllCarsInfo, map object info. Created by ConstructGame and InitFrontend; freed in Game_Dtor via StyleData_Dtor."
 0x004c09c0,plate,TaxiList_Ctor,"TaxiList: list of for-hire taxi cars (4 B = head pointer). Nodes {Car*, next} from a shared 100-node pool (DAT_005e580c, taxi.cpp:0x1d), created here if null. Taxis with a driver are added each frame by relToCar; peds wanting a taxi take the nearest (TaxiList_FindNearestCar)."
-0x004c1f80,plate,unsure_Player_RunKeyAction,"Seq41/A5: Hypothesis: key-action dispatcher from Player_OnKeyDown: 3/4/5 -> Hud_Brief_EnqueueNoArg(""8011""/""8012""/""8013""), 6 -> Player multiplier +1 (FUN_004766b0), 7 -> create HUD arrow to car, 8 -> Player_ToggleCarControl, 10 -> HUD pager timer 0x28. Looks like debug/cheat actions; the codes are unverified."
+0x004c1f80,plate,Player_RunDebugKeyAction,"Seq41/A5: Hypothesis: key-action dispatcher from Player_OnKeyDown: 3/4/5 -> Hud_Brief_EnqueueNoArg(""8011""/""8012""/""8013""), 6 -> Player multiplier +1 (FUN_004766b0), 7 -> create HUD arrow to car, 8 -> Player_ToggleCarControl, 10 -> HUD pager timer 0x28. Looks like debug/cheat actions; the codes are unverified."
 0x004c2060,plate,GxtChunk_TKEY,"TKEY chunk: keyCount@+4 = size/12 (mul 0xAAAAAAAB, shr 3); keys@+0 = operator_new(keyCount*12); File_Read(keys, size) reads the ORIGINAL chunk size, so a size%12 != 0 would overflow the block (no assert). Entry = LocaleSingle {u32 offset, char id[8]}. NULL -> DisplayError(OUT_OF_MEMORY,""text.cpp"",0x7a). A second TKEY chunk would leak the first. Evidence: disassembly 0x4c2060-0x4c20a6; all shipped files have size%12==0."
 0x004c20b0,plate,Gxt_ResolveKeyPointers,"Walks keys[0..keyCount) (stride 12) and does entry.offset += textBase (textBase = LocaleSettings.text). So on-disk offset = BYTE offset from the start of TDAT data (not u16 units, no bounds check, no alignment check). Called once after File_Close in Gxt_LoadFromFile. Evidence: decompile + disassembly 0x4c257f tail (MOV ECX,[ESI+8]; CALL 0x4c20b0); data: all shipped offsets even and < TDAT size."
 0x004c20e0,plate,Gxt_CompareKeys,"bsearch comparator for Gxt_FindTextW: (const char *key, const LocaleSingle *entry). Plain unsigned-byte strcmp(key, entry+4) (loop unrolled x2); stops at the first NUL, so BOTH strings need a NUL: an 8-char key in TKEY (char id[8], no NUL) would run into the next entry's offset field and never match. Case-sensitive. Returns -1/0/+1. Verified in disassembly 004c20e0-004c211d (CMP/SBB trick)."

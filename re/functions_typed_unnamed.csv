@@ -2,8 +2,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x003f135c,FUN_003f135c,,DEFAULT,__fastcall,USER_DEFINED,33,,"undefined __fastcall FUN_003f135c(Game * param_1, char param_2)"
 0x0041eac0,unsure_Camera_UpdateBoundaries,,DEFAULT,__fastcall,USER_DEFINED,5,unsure_Camera_UpdateBoundaries,undefined __fastcall unsure_Camera_UpdateBoundaries(Camera * param_1)
 0x00433830,FUN_00433830,,DEFAULT,__fastcall,USER_DEFINED,13,,undefined __fastcall FUN_00433830(S3Bytes * param_1)
-0x004339c0,FUN_004339c0,,DEFAULT,__thiscall,USER_DEFINED,18,,"int __thiscall FUN_004339c0(void * sprite, int iParm1, undefined4 * param_3, Ped * ped)"
-0x004339e0,FUN_004339e0,,DEFAULT,__thiscall,USER_DEFINED,18,,"void __thiscall FUN_004339e0(void * this, int iParm1, undefined4 * param_2)"
 0x0044a1e0,CrimeStats_RearmOneShots,,DEFAULT,__fastcall,USER_DEFINED,5,CrimeStats_RearmOneShots,undefined __fastcall CrimeStats_RearmOneShots(CrimeStats * param_1)
 0x0045a700,FUN_0045a700,,DEFAULT,__fastcall,USER_DEFINED,33,,void __fastcall FUN_0045a700(Game * param_1)
 0x0045b0b0,FUN_0045b0b0,,DEFAULT,__fastcall,USER_DEFINED,7,,undefined4 __fastcall FUN_0045b0b0(AnimatedValue * param_1)
@@ -11,9 +9,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004744b0,GetTickCount,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::GetTickCount,DWORD __stdcall GetTickCount(void)
 0x0049ff70,CarPhysics_UpdateZOnRailway,CarPhysics,DEFAULT,__thiscall,USER_DEFINED,5,CarPhysics::CarPhysics_UpdateZOnRailway,"uint __thiscall CarPhysics_UpdateZOnRailway(CarPhysics * this, int step)"
 0x004a4fe0,FUN_004a4fe0,,DEFAULT,__fastcall,USER_DEFINED,4,,undefined2 __fastcall FUN_004a4fe0(Car * param_1)
-0x004a5040,FUN_004a5040,,DEFAULT,__fastcall,USER_DEFINED,11,,bool __fastcall FUN_004a5040(Ped * param_1)
 0x004a50e0,AnimatedValue_Set,,DEFAULT,__fastcall,USER_DEFINED,5,AnimatedValue_Set,"void __fastcall AnimatedValue_Set(AnimatedValue * param_1, int * param_1_00, int param_3)"
-0x004a5180,FUN_004a5180,,DEFAULT,__fastcall,USER_DEFINED,8,,void __fastcall FUN_004a5180(Player * param_1)
 0x004af570,FUN_004af570,,DEFAULT,__thiscall,USER_DEFINED,35,,"bool __thiscall FUN_004af570(void * this, uint param_1)"
 0x004b75a0,AnimatedValue_Get,,DEFAULT,__fastcall,USER_DEFINED,5,AnimatedValue_Get,int __fastcall AnimatedValue_Get(AnimatedValue * param_1)
 0x004d17b0,DirectInput8Create,DINPUT8.DLL,DEFAULT,__stdcall,USER_DEFINED,6,DINPUT8.DLL::DirectInput8Create,"HRESULT __stdcall DirectInput8Create(HINSTANCE hinst, DWORD dwVersion, DWORD riidltf, LPVOID * ppvOut, LPUNKNOWN punkOuter)"
