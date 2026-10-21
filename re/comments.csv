@@ -1,4 +1,20 @@
 address,kind,function,comment
+0x00401ae0,plate,Fix16_FromInt16,"Seq33 slice1 (VERIFIED): Fix16 from int16: *this = (int)x << 14. (Same as 0x401AF0 bitShiftLeft14 = Fix16_FromInt, which takes a 32-bit int.)"
+0x00401af0,plate,bitShiftLeft14,"Seq33 slice1 (VERIFIED; confirmed existing name 'bitShiftLeft14' = Fix16_FromInt): thiscall(this=dest, ?, int v): *dest = v << 14. Used for all Fix16 constants (0 -> g_Fix16Zero 0x66ACDC, 1 -> g_Fix16One 0x66AC4C). Constants given as raw Q14 use WriteToFirstArg (0x401AD0) instead (e.g. 0x800 = 0.125, 0x100 = 1/64)."
+0x00401b20,plate,Fix16_Add,"Seq33 slice1 (VERIFIED): Fix16 (Q14) add, thiscall: *out = *this + *b (returns out). Fix16 ints are plain int32; 1.0 = 0x4000."
+0x00401b40,plate,Fix16_Sub,"Seq33 slice1 (VERIFIED): Fix16 sub, thiscall: *out = *this - *b (returns out)."
+0x00401b60,plate,Fix16_Mul,"Seq33 slice1 (VERIFIED, disasm): Fix16 mul, thiscall(this=&a, out, &b) RET 8: *out = (int64(a)*b) >> 14 (IMUL + __allshr by 14, arithmetic, truncation toward -inf). Returns out. The decompiler's older 1-arg __stdcall prototype was wrong."
+0x00401b90,plate,Fix16_Div,"Seq33 slice1 (VERIFIED): Fix16 div, thiscall: *out = (int64(a)<<14) / b (signed __alldiv). No zero check. Returns out."
+0x00401bf0,plate,Fix16_DivInt,"Seq33 slice1 (VERIFIED): Fix16 / plain int: *out = *this / *b with raw integer division (no <<14). Used e.g. thrust/2, thrust/5 in CarPhysicsData_Build."
+0x00401c10,plate,Ang16_Wrap,Seq33 slice1 (VERIFIED): wrap an int16 angle into 0..0x59F: while <0 add 0x5A0; while >0x59F subtract 0x5A0. => Ang16 full turn = 1440 (0x5A0) units = 0.25 degree each.
+0x00401c60,plate,Ang16_Assign,Seq33 slice1 (VERIFIED): Ang16 assign with normalisation: *this=*p then Ang16_Wrap (keeps 0..1439).
+0x00401c80,plate,Ang16_Neg,"Seq33 slice1 (VERIFIED): *out = Ang16_Assign(-*this) (negated, wrapped)."
+0x00401d20,plate,Vec2_Set,"Seq33 slice1 (VERIFIED): Vec2 ctor/assign: this.x=*x, this.y=*y (thiscall(this, &x, &y))."
+0x00403780,plate,Fix16_Neg,Seq33 slice1 (VERIFIED): Fix16 negate: *out = -*this (returns out).
+0x004037e0,plate,Fix16_IsLess,Seq33 slice1 (VERIFIED): returns *this < *p (signed).
+0x00403800,plate,Fix16_IsGreater,"Seq33 slice1 (VERIFIED): returns *this > *p (signed). Operand order: (this, p) => this > p."
+0x00403820,plate,Fix16_IsNotEqual,Seq33 slice1 (VERIFIED): returns *this != *p.
+0x00403840,plate,Fix16_Abs,"Seq33 slice1 (VERIFIED): Fix16 abs: *out = |*in| (stdcall(out, in))."
 0x00409c40,plate,Network_GetLocalPlayerIndex,"Returns this->localPlayerIndex (+0x5D0): this machine's slot (0..5) in the network session player table (+0x764, 6 x 0x2C).
 Written by host/join (0x40A6EC, from AddPlayer 0x409360), on msg 7 when DPID matches ours (+0x5D4),
 decremented when a lower slot leaves (DPSYS_DELETEPLAYER 0x21, 0x40B5AE), zeroed on close (0x40BCFE).
@@ -10,20 +26,133 @@ InitGame passes ExitGameCallback 0x461A50 and the new Game*. this = network sess
 0x00409f90,plate,Network_GetPlayerCount,"Returns number of occupied MP player slots (0..6): counts non-zero dwords at this+0x764 + i*0x2C, i=0..5.
 this = network session global 0x674268. Result is the Game player count (ConstructGame arg1 -> Game+0x23; SP passes 1).
 Pure, no side effects. Confidence: high (count), medium (object kind)."
+0x0040ce50,plate,Fix16_IsLessEqual,Seq33 slice1 (VERIFIED): returns *this <= *p.
+0x0040ce70,plate,Fix16_IsGreaterEqual,Seq33 slice1 (VERIFIED): returns *this >= *p.
 0x0040e100,plate,RoadNetwork_Ctor,"RoadNetwork ctor (0xCC68; name is a hypothesis). Road-junction graph for car AI: 545 x 16 B junction nodes at +8 (second 545x16 array at +0x861c), 50 per-car route slots of 256 u16 junction ids at +0x2218. Debug key 7 prints 'Junc: %d'."
+0x0040e530,plate,Fix16_AddAssign,Seq33 slice1 (VERIFIED): *this += *p (Fix16 or any int32).
+0x0040e550,plate,Fix16_SubAssign,"Seq33 slice1 (RENAMED, was 'GoForward'): body is *this -= *arg (int32/Fix16 -=). Old name misleading. Used by CarPhysics_SubExternalAngVel and UpdateSurface (zVelocity -= gravity)."
+0x0040e570,plate,Fix16_IsEqual,"Seq33 slice1 (RENAMED, was 'relToPlayerPosZ'): body is return *this == *p (int32/Fix16 equality; 3rd param unused). Old name was misleading; used everywhere as Fix16 ==."
+0x0040e590,plate,Ang16_SetZero,Seq33 slice1 (VERIFIED): Ang16 = 0.
+0x0040e5a0,plate,Ang16_Add,"Seq33 slice1 (VERIFIED): fastcall(a, ?, out, b): *out = Ang16_Assign(*a + *b) i.e. angle addition wrapped to 0..1439."
+0x0040e5d0,plate,Ang16_Sub,Seq33 slice1 (VERIFIED): *out = Ang16_Assign(*this - *b): wrapped angle difference (0..1439). gta2_re 10.5: Ang16 operator-.
+0x0040e670,plate,Ang16_IsGreater,"Seq33 slice1 (VERIFIED): returns *this > *p for Ang16 (int16, no wrap)."
+0x0040f500,plate,Ang16_Sin,"Seq33 slice1 (VERIFIED): *out = sin-table[(int16)angle] as Fix16 (Q14), table at DAT_005D3938 (4 bytes/entry, index = Ang16 0..1439)."
+0x0040f520,plate,Ang16_Cos,"Seq33 slice1 (VERIFIED): *out = cos-table[(int16)angle] as Fix16 (Q14), table at DAT_005D6718."
+0x0040f540,plate,Fix16_ToAng16,"Seq33 slice1 (VERIFIED): Fix16 radians-ish -> Ang16: *out = Ang16_Assign(*in / 0x47). 0x47 = 71 Q14 units per Ang16 unit (=> 1440*71/16384 = 6.2402 rad per turn, ~0.7% short of 2*pi: the game's own approximation). Inverse Ang16_ToFix16. gta2_re 10.5: Ang16::Fix16_To_Ang16_40F540."
+0x0040f580,plate,Ang16_ToFix16,Seq33 slice1 (VERIFIED): Ang16 -> Fix16: *out = (int16)*in * 0x47 (71). So angVel is stored as Fix16 'angle units * 71 / 16384' per tick; Ang16 = Fix16/71. gta2_re 10.5: Ang16::Ang16_to_Fix16.
+0x0040f5c0,plate,Vec2_Add,"Seq33 slice1 (VERIFIED): Vec2 add, thiscall: *out = *this + *b."
+0x0040f600,plate,Vec2_Sub,"Seq33 slice1 (VERIFIED): Vec2 sub, thiscall: *out = *this - *b (component-wise) via Fix16_Sub + Vec2_Set."
+0x0040f680,plate,Vec2_AddAssign,"Seq33 slice1 (VERIFIED): Vec2 += (Fix16_AddAssign x,y). gta2_re 10.5 Fix16_Point::operator+=."
+0x0040f6b0,plate,Vec2_RotateByAng16,"Seq33 slice1 (VERIFIED): rotate Vec2 in place by an Ang16: s=Ang16_Sin(a), c=Ang16_Cos(a); x' = c*x + s*y ... (uses Fix16_Mul/Add, 0x40F500/0x40F520 table lookups; note sign convention: y' = c*y - s*x). gta2_re 10.5: Fix16_Point::RotateByAngle_40F6B0. Used for cm/cp offset and all body->world transforms."
+0x0040f760,plate,Vec2_NegAssign,"Seq33 slice1 (VERIFIED): Vec2 negate in place (x=-x, y=-y)."
+0x0040f790,plate,Fix16Vec2_GetAngle,"Seq33 slice2: angle (Ang16, 1440=turn) of a Fix16 Vec2 = atan2(y,x). gta2_re 10.5: Fix16_Point::atan2_40F790."
+0x0040f840,plate,CarPhysics_IsVelocityAlignedWithHeading,"Seq33 slice2: velocity direction within +-90deg of heading (moving forward). angle(linVel) - heading, normalised 0..1440, true if <= 90deg(360) or >= 270deg(1080); consts 0x5D8178/0x5D7F84 built by static init from 90 and 270 * 1deg. gta2_re 10.5: IsVelocityAlignedWithHeading_40F840 (name used in their EnforceGearSensitiveMaxSpeed). Callers: SetControls, LimitSpeed."
+0x0040f900,plate,TrailerController_UpdateAlignment,"Seq33 slice1 (VERIFIED-structure, details hypothesis): hitch constraint for cab(+8)/trailer(+0xC) physics: positions the trailer behind the cab from both headings, hitch offsets (DAT_005D7FDC/8070...), clamps the relative angle (limit by FUN_0040F0A0, relaxed when cab is player-driven artic), writes trailer heading and cm via CmFromCpViaModel. gta2_re 10.5: Trailer::UpdateTrailerAlignment_407CE0."
+0x0040fb20,plate,TrailerController_UpdatePhysics,"Seq33 slice1 (VERIFIED): physics step of a trailer rig: if cab or trailer has physics: FUN_0040F450 (ensure both), CarPhysics_Update(cab->physics) (trailer is moved inside it via UpdateTrailerFromTowingCar/StepIntegrate); if it returns true or cab+0x54 set -> Car_CheckDeath(cab) else FUN_0040F470 (release both physics). Called from TrailerController_Update."
+0x0040fea0,plate,unsure_Sprite_GetPedSprite,Seq33 slice4 HYPOTHESIS: sprite -> ped sprite (non-NULL for ped sprites; +0x7c = Ped).
+0x0040feb0,plate,unsure_Sprite_GetCar,Seq33 slice4 HYPOTHESIS: sprite -> owning Car* (NULL if not a car sprite). Used by DispatchCollision / OnCollision (+0x58 = CarPhysics).
+0x0040fec0,plate,unsure_Sprite_GetObject,"Seq33 slice4 HYPOTHESIS: sprite -> map Object (non-car/non-ped), used as last fallback in DispatchCollision."
 0x004104b0,plate,SoundEventQueue_Ctor,"SoundEventQueue: 0x50 x 0x28-byte audio event slots + count at +0xC84, reset every GameTick. Pushed by collision/movement code (0x4102a0, 0x410370, 0x410210), gated on skip_audio; registers as sound client type 6. Name is a hypothesis (impact sound events)."
 0x00410560,plate,SoundManager_InitOnce_Thunk,"ConstructGame tail (skip_audio == 0): ECX = g_SoundManager, jumps to SoundManager_InitOnce (0x4B2F20). Was named NoSkipAudio."
 0x00410680,plate,Sound_Is3DSoundActive,"Returns true if 3D (DirectSound3D/MSS) sound is active: sound-manager object 0x5DCBC8 enabled (byte+0) && +0x1D.
 Tail chunk at 0x4166D0; incoming ECX ignored (thunk loads ECX=0x5DCBC8).
 Callers write the result back to registry do_3d_sound right after RelatedToAudio(0x410670) requested it,
 so an unsupported 3D setting is reset. Confidence: high."
+0x004118c0,plate,Car_IsEngineOn,Seq33 slice2 (confirmed): Car.engineState(+0x9C)==3 (ENGINE_ON). gta2_re 10.5: field_9C_engine_status == on_3.
+0x00414f60,plate,Car_HasFlag100,"Seq33 slice5: Car_HasFlags(Car+0x78, 0x100). In Car_OnDamage gates default (bullet) damage and 0x109 -> likely bullet-proof. Pair Car_HasFlag200 (gates types 10/0x80/0x8a, likely explosion/fire-proof), Car_HasFlag400 (gates type 0xc2)."
+0x00414f70,plate,Car_HasFlag2000,"Seq33 slice1 (VERIFIED): Car_HasFlags(car, 0x2000). Pair of Car_ClearFlag2000 (0x49EFD0). Flag 0x2000 = 'needs overlap check against other sprites' (hypothesis for meaning; set elsewhere). Used by CarPhysics_CheckPendingCollision, UpdateGroundZ, Car_Update."
+0x0041d3f0,plate,Gci_NextToken,"Seq33 slice3 VERIFIED (gta2_re 10.5: sub_430b10): tokenizer into EDI buffer: skips {...} comments (error -4 if unterminated), separators ' ' \t \n \r ( ), token max 254 chars (-5). Returns 0 token read, 1 EOF."
+0x0041d580,plate,Gci_StrToFix16,Seq33 slice3 VERIFIED (gta2_re 10.5: FloatStrToFix16_431000): decimal string -> Fix16 scanning right to left: digit*10^k*0x4000 accumulated; at '.' the accumulated fraction raw is DIVIDED (truncating) by 10^k. e.g. 0.145 -> 2375/16384 (=0.14496). Error -11 on a second '.' or non-digit. Negation applied by the caller.
+0x0041d620,plate,Gci_ParseToken,"Seq33 slice3 VERIFIED (gta2_re 10.5: sub_430C70). Token syntax [-][b|w|l|f][h][-]digits: b=byte(default, 0..255, negative >=-127), w=word, l=long, f=Fix16 decimal 'f16.500'; h=hex (uppercase). Written via Gci_PushData. NYC.GCI uses b-default for 4 bytes then 17 f-values = 72 B per car."
+0x0041d800,plate,Gci_ParseText,"Seq33 slice3 VERIFIED (gta2_re 10.5: CarInfo_808::parse_gci_file_430A30; 'binmake' text->binary compiler). Loop: Gci_NextToken, Gci_ParseToken until EOF; out total bytes in *param_5; returns NULL or Gci_FormatError text. Globals: input ptr 0x5E36A0, line 0x5E3698, out buffer 0x5E3688, out size 0x5E3694/limit 0x5E369C."
 0x0041dc54,eol,GiveMoney,pointer to money field
+0x0041e0d0,plate,Fix16_MulAssign,Seq33 slice3 VERIFIED (asm): *this = (*this * *arg) >> 14 (IMUL + 64-bit arithmetic shift 14). In-place Fix16 multiply; used by Fix16Vec2_MulAssign.
+0x0041e0f0,plate,Ang16_IsLess,Seq33 slice1 (VERIFIED): returns *this < *p for Ang16 (int16).
+0x0041e130,plate,Fix16_Max,"Seq33 slice1 (VERIFIED): *out = max(*a, *b) (Fix16_IsGreater(a,b) ? a : b)."
+0x0041e1a0,plate,Vec2_MulFix16,"Seq33 slice1 (VERIFIED): Vec2 * Fix16 scalar, thiscall(this=vec, out, scalar): out = (x*s, y*s) via Fix16_Mul. (decompiler hides ECX, so it looks like a 2-arg call). Used in StepIntegrate: cm += linVel*s."
+0x0041e1e0,plate,Vec2_SetZero,"Seq33 slice1 (VERIFIED): Vec2 = (0,0) (writes Fix16 0 twice via bitShiftLeft14)."
+0x0041e260,plate,Fix16Vec2_GetLength,"Seq33 slice2: length of a Fix16 Vec2 (|x| if y==0, |y| if x==0, else sqrt(x^2+y^2)). Used for speed = |linVel|. gta2_re 10.5: Fix16_Point::GetLength_41E260 (their name carries this address)."
+0x0041e460,plate,Car_IsTruckCabWithTrailer,Seq33 slice3 VERIFIED: car->trailerController(+0x64)!=0 && trailerController->cab(+8)==car. gta2_re 10.5 inline in GetTrailerAwareTurnRatio_55A100.
+0x0041f730,plate,Car_GetAntiStrength,"Seq33 slice3 VERIFIED: *out = engineData[car+0x84 model].anti_strength (+0x2C). Callers Car_AddDamage, Car_TriggerExplosion, Car_TryDamageArea => used as the damage resistance divisor (damage slice 5 to confirm the formula)."
+0x0041f770,plate,Car_GetValueTimes1000,"Seq33 slice3 VERIFIED: engineData.value (+2, byte) *1000, plus the trailer car's value when towing. No static callers (dead or vtable). value = car price/score weight."
+0x0041f940,plate,unsure_Car_IsOnScreenForAnyPlayer,"Seq33 slice5 (hypothesis): game->FUN_0045c420(sprite, DAT_005e4cb8) = car on screen for any player; gates skid emission and offscreen tick. gta2_re 10.5: IsOnScreenForAnyPlayer_43B730."
+0x004202e0,plate,Vec2_DivFix16,"Seq33 slice1 (VERIFIED): Vec2 / Fix16, thiscall: out = (x/s, y/s) via Fix16_Div. Used in ForcesToAccel: linAccel = force / mass."
+0x00420360,plate,Fix16Vec2_IsZero,"Seq33 slice2: Fix16 Vec2 == (0,0): both components equal DAT zero. Called with CarPhysics+0x40 (linVel) from SetControls/IsStandingStill."
 0x0042077c,pre,getUpgradeType,oil
 0x00420782,pre,getUpgradeType,Gun on car
 0x00420788,pre,getUpgradeType,"paint, suicide"
+0x00420950,plate,Car_AttachRoofLightObject,"Seq33 slice5 (hypothesis): spawn object type param_1 (siren/roof light) and attach to car sprite at zero offset, colour param_2. Used by Car_AttachEmergencyLights."
+0x00420dc0,plate,CarDeltas_SetBit,"Seq33 slice5: was TogglesEmergencyLightsAndBrakes. Body is *this |= 1<<(n&31) = SET bit (not toggle). Used on Car+8 deltasBitstate for damage/lights/doors bits. Pair: CarDeltas_ClearBit 0x420de0 (&= ~), CarDeltas_IsBitSet 0x420e20."
+0x00420de0,plate,CarDeltas_ClearBit,Seq33 slice5 (verified): *this &= ~(1<<(n&31)); clears delta/light bit in Car+8 deltasBitstate (Car_Repair clears bits 0..4 with it).
+0x00420e20,plate,CarDeltas_IsBitSet,Seq33 slice5 (verified): (*this & (1<<n)) != 0 on deltasBitstate.
+0x00420f80,plate,CarPhysicsPool_Ctor,"Seq33 slice1 (VERIFIED): CarPhysicsPool ctor: 306 (0x132) CarPhysics objects of 0xB0 bytes constructed in place (arr306), chained into a free list through CarPhysics.next(+0xC) (loop sets each element's link to the one 0x16 qwords = 176 bytes on), last link = NULL, pool->firstFree = &arr[0]. Pool object pointer: ptrToCarPhysicsPool (0x66AB7C), created in CarManager_Ctor. Max 306 simultaneous physics objects (cars+trailers)."
+0x00420fd0,plate,CarPhysicsPool_Alloc,"Seq33 slice1 (VERIFIED): pop the head of the free list (firstFree = head->next), CarPhysics_Init(head), return it. NO empty-check (306 slots; the caller Car_AllocPhysicsIfNeeded 0x423A50 relies on that). Free = FUN_004254F0(pool, physics)."
+0x00421100,plate,unsure_CarPhysics_IsSunkAndSlow,Seq33 slice5 (hypothesis): this = CarPhysics. true if surfaceType(+0x98)==8 (in water) and |linVel(+0x40)| <= DAT_005e4d28 (copy of DAT_005e4cbc). Only caller Car_CheckDeath = drowned car.
+0x00421130,plate,CarPhysics_IsKeptActive,"Seq33 slice1 (VERIFIED): returns g_FrameCounter->frame < physics->activeUntilFrame(+0x08), i.e. the car was bumped/pushed recently and must keep real physics. Only caller: unsure_Car_UpdateArticulatedCabTrailerSearch (0x4262E0)."
+0x004211a0,plate,CarPhysics_GetSpeed,Seq33 slice2: speed accessor = Fix16Vec2_GetLength(CarPhysics+0x40 linVel). show_instruments prints it as 'speed:%3.3f(gear)'.
+0x00421200,plate,CarPhysics_ClearSteering,"Seq33 slice2 (confirmed): steering(+0xAD)=0 (signed char: +1 left, -1 right)."
+0x00421210,plate,CarPhysics_SetGasForward,"Seq33 slice2 (confirmed): force forward gas: +0x93=1, brake +0x91=0, reverse +0x94=0, coast +0x95=0. gta2_re 10.5: ForceForwardAcceleration_453F70 (matched)."
+0x00421250,plate,CarPhysics_SetHandbrake,Seq33 slice2: isHandbrakeOn(+0x92)=1. Called by Car_BrakeHard (counterpart of ReleaseHandbrake 0x421260).
+0x00421260,plate,CarPhysics_ReleaseHandbrake,Seq33 slice2 (confirmed): isHandbrakeOn(+0x92)=0.
+0x00421270,plate,CarPhysics_IsHandbrakeOn,Seq33 slice2 (confirmed): returns isHandbrakeOn(+0x92).
+0x004212a0,plate,CarPhysics_SetModeAI,"Seq33 slice2 (confirmed): CarPhysics.mode(+0x8C)=1 (AI). Modes: 1 AI, 2 player, 3/other see CarPhysics_Update switch (slice 1)."
+0x004212b0,plate,CarPhysics_SetModePlayer,Seq33 slice2 (confirmed): CarPhysics.mode(+0x8C)=2 (player). Player mode enables gears (ComputeDriveForce) and speed-sensitive steering (UpdateSteerAngle).
+0x004213d0,plate,TurnOnCarBrakeLights,Seq33 slice2 (confirmed role): sets brake-light delta bits (bit 1->5 and 0->0x16 toggles in Car.deltasBitstate) unless already set; not a physics input. Slice-adjacent (Car lights).
+0x004217f0,plate,Car_IsTaxiModel,Seq33 slice5 (verified): carModel(+0x84) == 0x38 TAXI or 0x33 STYPECAB.
+0x00421910,plate,Car_ScaleByCarScale,Seq33 slice3 VERIFIED: out = (car->scale(+0x68) != CarsScale) ? v * car->scale : v. Used by Car_GetMass and UpdateSkidmarks for wheel offsets.
+0x00421b90,plate,Car_GetDamageFactorOnSpeed,"Seq33 slice5 (verified): damage>=16000 -> (32001-damage)/16000 (1.0 at 16000 -> ~0 at 32000) else 1.0 (CarsScale). Used by CarPhysics_ComputeForces (DAT_0066afc4) to scale engine force, and CarAI_Drive. gta2_re 10.5: Car_BC::GetDamageFactorOnSpeed_439EE0."
+0x00421cf0,plate,Car_GetMass,Seq33 slice3 VERIFIED: car mass (Fix16) = Car_ScaleByCarScale(engine.mass[Car_GetPhysicsModel]) (engine.mass already x1.1); x(CarsScale+0.05) when the driver is a Player whose Ped_GetOccupation!=EMPTY (FUN_004215c0). gta2_re 10.5: Car_BC::get_mass_43A120.
+0x00421d90,plate,Car_GetPhysicsSpeed,Seq33 slice3 VERIFIED: |linVel| of the car's physics (train: of the public-transport controller's car); defaultX if no physics. Calls CarPhysics_GetSpeed.
+0x004220a0,plate,Car_GetPhysicsModel,"Seq33 slice3 VERIFIED: model id used to index the GCI/physics tables (physics model remap): 0x1A if car scale < CarsScale, 0x40<->0x3F swaps for trailer pairs, some special models remapped (0x19/0x55) otherwise car+0x84 carModel. gta2_re 10.5: Car_BC::GetCarModelForPhysics_43A850."
+0x004221a0,plate,Car_FullStop,"Seq33 slice2 (confirmed): Car(+0x58 physics): footbrake on (+0x91=1), gas/reverse/coast off. Used by AI/scripts to stop a car. Compare Car_BrakeHard (also sets handbrake)."
+0x004221b0,plate,Car_BrakeHard,"Seq33 slice2 (confirmed): CarPhysics_SetHandbrake + footbrake on, gas/reverse/coast off."
+0x004222a0,plate,Car_CanExitCar,Seq33 orchestrator: may the player leave this car now? false if FUN_00421d80(car); true if car has no CarPhysics (+0x58); else |physics.linVel| < DAT_0066AFC8 (= copy of 0x66AD00 = 0x1333 = 0.3 Q14). Ghidra merged the tail-jumped 0x49EED0 body (gta2_re 10.5 CarPhysics_B0::IsNearlyStopped) into this function. Caller Player_HandleControls 0x4A76D0. gta2_re 10.5: Car_BC::CanExitCar.
+0x004226c0,plate,Car_SpawnDamageFireEffect,"Seq33 slice5 (verified): Car_AddDamage stage fire. param 1 = small fire (damage>=16000), 2 = big fire (>=25000). Picks rear/front window offsets (CarInfo), cycles g_CarManager+0x1a 0..3, spawns particle-system object (FUN_00485540) attached to car sprite. gta2_re 10.5: Car_BC::SpawnDamageFireEffect_43B870 + sub_43BB90."
+0x00422f00,plate,Car_DamageArea,"Seq33 slice5 (verified): set delta damage bit in Car+8 deltasBitstate. area0: clear bit6, (popup: clear 11-14), set bit2; area1: set bit3, clear 23 (+28-31); area2: Car roof-light reset, set bit1, clear 5; area3: reset, set bit0, clear 22; area4: set bit4 (windshield). gta2_re 10.5: Car_BC::DamageArea_43CF30 (matched)."
+0x00423180,plate,Car_TryDamageArea,"Seq33 slice5 (verified): impact side 0..3 -> Car_DamageArea(3,2,0,1). No-op if wrecked, flag 8, or anti_strength(+...)*? < CarsScale threshold. Called by CollideWithCar with DAT_0066ab6c/ab74 (contact side of each car) when impulse DAT_0066b034 > 0.3 (DAT_0066ad00). gta2_re 10.5: Car_BC::TryDamageArea_43D2C0 (switch 0->3,1->2,2->0,3->1 matched)."
+0x00423230,plate,Car_EmitExplosion,"Seq33 slice5 (verified structure): spawn explosion particle-system object (FUN_00485540, state=size 0x12/0x13/0x14.. timer 100, others 9999 = persistent fire) at the car and attach to car sprite (FUN_004b9d50). gta2_re 10.5: Car_BC::EmitExplosion_43D690."
+0x004234a0,plate,Car_GetSteerAssistLimit,"Seq33 slice3 VERIFIED (was relToCarWidth - wrong: it returns SPEED not width): speed(Car_GetPhysicsSpeed) * K, K=0.1300 (=10*0.75*0.01733, 0x5E4EB0) if CARI h>0x40 else 0.2600 (0x5E4DD0 = K*2.0). Used as the +-clamp of the steering-assist angVel nudge (and FUN_0040f900)."
+0x00424700,plate,Car_AttachEmergencyLights,"Seq33 slice5: was unsure_Car_AttachDeltaSprites. NOT damage deltas: attaches siren/roof-light objects (types 0xa5,0xab,0xac,0xad, colour 0xff2010) for model 0x22 MEDICAR, 0xc COPCAR, 0x34 SWATVAN, firetruck, FBI car. Called from CarManager_SpawnCar. Damage deformation = Car_DamageArea bits."
+0x00425760,plate,Car_HasFlag200,Seq33 slice5: Car_HasFlags(0x200). See Car_HasFlag100 (gating in Car_OnDamage for types 10/0x80/0x8a).
+0x00425770,plate,Car_HasFlag400,Seq33 slice5: Car_HasFlags(0x400). See Car_HasFlag100 (gating in Car_OnDamage for type 0xc2).
+0x00425ca0,plate,Car_RecordRamAttackers,"Seq33 slice5 (verified body): car-vs-car blame. For each car, if the OTHER car's responsible ped differs (and rules about player/non-player), set Car+0x70 lastAttackerPedId = other ped, +0x90 kill code = 1 (ram), +0x94 timer = 50. Called from CarPhysics_CollideWithCar before damage."
+0x00425d90,plate,Car_CreatePhysics,Seq33 slice1 (VERIFIED): if car has no physics: Car_AllocPhysicsIfNeeded -> CarPhysics_AttachCar -> CarPhysics_InitFromSprite(sprite); if it exists and car is a train: re-init pose from sprite. Called by Car_EnsurePhysics.
+0x00425dd0,plate,Car_EnsurePhysics,"Seq33 slice1 (VERIFIED): physics on demand: trailer rig -> FUN_0040F450(trailerController) (creates physics for both), else Car_CreatePhysics. 12 callers (driver enters car, pushed by collision, spawn...). Physics objects only exist for cars that are active/driven/recently hit (see KeepActiveFor)."
+0x00426030,plate,Car_UpdateEngineState,"Seq33 slice2 (confirmed): Car engineState machine tick. ENGINE_OFF: if physics exists and IsEngineAccelerates -> state 'REL_TO_CAR_SIREN' (=starting; enum name looks wrong, it is engine-starting). TURNING_OFF -> lights off -> OFF; starting -> EngineStartedLightsOn -> ON; TURN_ENGINE_OFF -> OFF2; NO_FUEL state copies sprite position block. So pressing gas starts a stopped engine."
+0x00426120,plate,Car_FreePhysics,"Seq33 slice1 (VERIFIED): return car->physics to the pool (FUN_004254F0(ptrToCarPhysicsPool, physics)) and set car->physics=NULL. Called from Car_Destroy, Car_FreePhysicsOrTrailerPhysics, FUN_0040F470."
+0x00426580,plate,unsure_Car_ApplyExplosionKnockback,"Seq33 slice4 HYPOTHESIS: explosion knockback: direction from explosion centre (param) to car sprite pos, scaled, passed to CarPhysics_ApplyImpact(…,10 ticks). Callers: Car_Explode, FUN_00490d60. Slice 5 owns Car_Explode."
+0x00426e00,plate,Car_EngineOn,Seq33 slice2 (confirmed): engineState=ENGINE_ON(3) + EngineStartedLightsOn.
+0x00426fa0,plate,Car_Explode,"Seq33 slice5 (verified): car explosion. If not wrecked: Car_StartWreckTimer, Car_EmitExplosion(size,size,0,0), passengers get killer, attachments burn, eject occupants, knockback (FUN_00426580 -> CarPhysics_ApplyImpact), Car+0x74 damage = 0x7d01 (32001 = wrecked), attachments explode (unsure_CarAttachments_ExplodeAll), scoring/respect/wanted for lastAttacker. Callers: Car_AddDamage (32000), CollideWithCar (train), Car_TriggerExplosion, Ped_UpdateBurning, scripts. gta2_re 10.5: Car_BC::HandleCarExplosion_43D840 (body matched, 32001)."
+0x00427180,plate,Car_AddDamage,"Seq33 slice5 (verified): accumulate integer damage into Car+0x74. d = int(damage * CarEngineData.anti_strength) (min 1 if anti_strength != 0; anti_strength==0 -> no damage), clamp 0..32000. Thresholds: >=16000 stage3 (Car_SpawnDamageFireEffect(1), Car+0x8c=3); >=25000 stage4 (attachments burn, SpawnDamageFireEffect(2), 0x8c=4); >31499 (0x7b0b) Car_ResetLightsAndEngine; ==32000 Car_Explode(MEDIUM). No-op if Car_IsWrecked. gta2_re 10.5: Car_BC::AccumulateDamage_43DA90 (body matched; 31500 there vs >0x7b0b here)."
+0x00427450,plate,Car_CheckDeath,"Seq33 slice5 (verified, disasm: ECX=Car+0x58 physics): water death. If unsure_CarPhysics_IsSunkAndSlow(physics) (surfaceType==8 && |linVel| <= DAT_005e4d28) -> Car_OnWrecked + splash effect (FUN_0048d1f0 at sprite pos). Called from Car_Update, TrailerController_UpdatePhysics."
+0x004274c0,plate,Car_OnDamage,"Seq33 slice5 (verified): projectile/explosion/flame hit on a car (param_1 = hit object, +0x18 = object type, +4 = its sprite). Sets lastAttacker (Car+0x70 ped id, 0x90 kill code via unsure_ObjectType_GetKillWeaponCode, 0x94 timer=50). Damage: type 0xc2 -> 100*mult (skip if Car_HasFlag400); type 10 (once/frame latch g_CarManager+0x68) and 0x80/0x8a -> 32000 (skip if Car_HasFlag200) + knockback + Car_EmitExplosion(0x12); type 0x109 -> 1600*mult; default (bullets) -> 800*mult (skip if Car_HasFlag100); types 0x9a,0x9f,0xc1,0xc3,199 harmless; 0xc6 extinguishes (Car_RemoveFlames). mult = Ped_GetDamageMultiplier (2 with powerup 7). Caller FUN_00486390."
+0x00427b40,plate,Car_UpdatePhysics,"Seq33 slice1 (VERIFIED): Car_UpdatePhysics = CarPhysics_Update(car->physics); if it returns true (car stationary >=20 ticks, no collision) and no driver -> Car_FreePhysicsOrTrailerPhysics (physics object released; re-created by Car_EnsurePhysics when needed). Callers: Car_Update, Car_UpdateTrain."
+0x00427b60,plate,Car_BecomeWreck,"Seq33 slice5 (verified): wreck conversion: sprite = CarInfo[CarInfo(model).wreck + 0x48].spriteIndex (wreck models 0x48..0x51), reset deltas (FUN_00420d90 on deltasBitstate), lights/engine off, horn clear. Called only by Car_TickWreckTimer at timer 0. gta2_re 10.5: Car_BC::TurnToWreck_4436A0."
 0x00428fa0,plate,CarManager_Ctor,"CarManager ctor (108 B). Creates the car sub-singletons (relToCars 0xe0c4, CarPhysicsPool 0xd264, CarsS4 0x8f74, PositionStruct), zeroes per-car-type counters (recycled/unit/mission cars), applies do_free_shopping. Freed in Game_Dtor."
+0x004292f0,plate,Car_ApplyImpactDamage,"Seq33 slice5 (verified): impact impulse (Q14, stack arg) -> damage. damage = int(impulse*200) -> Car_AddDamage(car, dmg, &zeroPos). Skipped (returns 0) if Car flag 0x8 (invincible). If Car_IsTaxiModel and impulse > 2.0 (DAT_005e4e34) -> Passengers_ForceTaxiPassengersToExit(car+4). Callers: CarPhysics_CollideWithCar (x2), ApplyWallImpulse, CollideWithObject, FUN_004b9a80. gta2_re 10.5: Car_BC::ApplyImpactDamage_43D5D0 (body matched: *200, taxi/stypecab, flag 8)."
+0x00429370,plate,Car_TriggerExplosion,"Seq33 slice5 (verified): was unsure_Car_ExplodeIfGrounded ('grounded' wrong). if (anti_strength != 0 && !Car_IsWrecked) Car_Explode(size) else Car_EmitExplosion(size,...) only (visual). gta2_re 10.5: Car_BC::TriggerExplosion_43D7B0 (anti_strength==0 || damage==32001 -> EmitExplosion else HandleCarExplosion). size 0x13/0x14 (callers FUN_004295c0 = car bomb, attachments)."
+0x004293d0,plate,unsure_Car_OnTouchObject,"Seq33 slice5 (hypothesis name, body verified): car touches a non-car object (obj type at +0x18): 8/9 -> CarPhysics_StartSwerve (oil slick spin-out), 0x81 bus stop, 0x82 shop (Car_OnEnterShop), 0x89 crane, 0x8b FUN_0049f460, 0x8d, 0x8f crusher, 0xa1 script trigger, 0xa7 door; pickup -> Ped_PickUp. Caller FUN_00483b50."
+0x00429660,plate,Car_TickWreckTimer,Seq33 slice5 (verified): if wreckTimer(+0xa9) != 0: --; at 0 -> Car_BecomeWreck. Timer started at 50 ticks by Car_StartWreckTimer (Car_Explode). gta2_re 10.5: CountDownToWreck.
+0x00429810,plate,Car_ApplyDriverControls,"Seq33 slice2 (confirmed): Car-level driver input. args(up, down, left, right, handbrake, horn/fire p7, hornEnable p8, trailerDetach p9). Roof turret (Car_RotateRoofTurret) eats left/right when p7 and a direction; p8 -> Car_ApplyHornInput(p7); p9 -> trailer controller action; Car flag 0x1000 forces up=1 (always accelerate). Then CarPhysics_SetControls. Callers Player_DriveCar, Player_StopControl."
+0x00429e50,plate,Car_Update,"Seq33 slice1 (VERIFIED): per-car update. Trailer rigs -> Car_UpdateTrailerPair; trains -> Car_UpdateTrain; else Car_StepLifeState, AI pre-update (CarAI_PreUpdate if driver), then Car_UpdatePhysics (0x427B40 -> CarPhysics_Update) when car->physics != NULL, then death/lights/offscreen/wreck timers. Physics runs exactly once per call = once per GameTick."
+0x0042a2d0,plate,CarPool_UpdateAll,"Seq33 slice1 (VERIFIED): iterates the active car list (linked via +4 of each node), counts them in manager+0x3830, calls Car_Update on each; if it returns true -> Car_Destroy and move the node to the free list."
+0x0042a4c0,plate,CarManager_Update,"Seq33 slice1 (VERIFIED): car manager tick from GameTick: FreeShopping, TaxiList_Clear, CarPool_UpdateAll(relToCars), TrafficSpawner_Update, decrement +0x54 counter. Runs once per 33 ms logic tick."
+0x0042ab90,plate,CarPhysics_SteerPlus,Seq33 slice2 (confirmed): steering(+0xAD)=+1 (left; gta2_re car_turn_direction clockwise_m1 is right = -1).
+0x0042aba0,plate,CarPhysics_SteerMinus,"Seq33 slice2 (confirmed): steering(+0xAD)=-1 (0xFF, right)."
+0x0042abb0,plate,CarPhysics_ClearSteeringAndAngle,Seq33 slice2 (confirmed): steering(+0xAD)=0 and steerAngle(+0x78)=DAT_005e5194 (zero angle).
+0x0042abc0,plate,CarPhysics_SetCoast,"Seq33 slice2 (confirmed): force neutral/coast: +0x95=1, +0x91=+0x94=+0x93=0. gta2_re 10.5: ForceNeutralInput_453F50 (matched)."
+0x0042ac00,plate,CarPhysics_ReleaseControls,"Seq33 slice2 (confirmed): clear driver inputs: +0x91,+0x93,+0x94,+0x95 = 0 (handbrake and steering untouched). gta2_re 10.5: ClearDriverInputs_453F90 (matched)."
 0x00432830,plate,CarModelTable_Ctor,"CarModelTable ctor (0x808 B). Zeroes two 256-entry tables indexed by car model id: +0x000 derived per-model data, +0x404 CarInfo*; counters at +0x400/+0x804. Filled after the STY load (FUN_00432aa0, carinfo.cpp)."
+0x00432880,plate,CarPhysicsData_ComputeInertia,"Seq33 slice3 VERIFIED (gta2_re 10.5: ComputeCarMassAndInertia_454410): regs ESI=&cmY out, EDI=&inertia out; args width w, height(length) h, mass, frontMassBias b. base=(h^2*0.25+w^2)/12 (rect w x h/2); hc=h*0.25; mf=mass*b (centre +hc), mr=mass*(1-b) (centre -hc); cmY=(hc*mf-hc*mr)/mass; I=mf*base+mf*(cmY-hc)^2+mr*base+mr*(cmY+hc)^2 (0.25 = 0x5E56E0). Units: mass[GCI*1.1], w,h [blocks], I [mass*blocks^2]."
+0x00432aa0,plate,CarPhysicsData_Build,"Seq33 slice3 VERIFIED (gta2_re 10.5: CarInfo_2C::CalculateCarInfo_4542A0). Fills one CarPhysicsData from CARI (style CarInfo: w,h,front/rear_wheel_offset indices into the size table) + CarEngineData. Fatal 0x3F6 (carinfo.cpp:0x5B) unless gear2_speed<=gear3_speed<=max_speed. +4/+8 wheel offsets=table[idx] (signed idx -> -table[-idx]); +0 inertia and +0xC/+0x10 cm offset=CarPhysicsData_ComputeInertia(table[w],table[h],mass,front_mass_bias); +0x14=thrust/2, +0x18=thrust/5 (raw int div), +0x1C=half+fifth*5*(turbo?1.5:1) (FUN_0049e710), +0x20=1-front_drive_bias, +0x24=skid*0.9, +0x28=skid*1.1."
+0x00432c60,plate,CarEngineData_ConvertMass,"Seq33 slice3 VERIFIED (gta2_re 10.5: ModelPhysics_48::ConvertMass_454680): engine->mass(+4) = mass * (1.0 + 0.1) = x1.1 (Fix16 mul, 0x5E5514 + 0x5E54A0). So runtime mass = NYC.GCI mass * 1.1."
+0x00432cd0,plate,CarModelTable_ValidateEngineData,Seq33 slice3 VERIFIED (gta2_re 10.5: CarInfo_808::ConvertAllMass_4549C0): for every GCI record call CarEngineData_ConvertMass (mass *= 1.1) BEFORE CarPhysicsData is built.
+0x00432d10,plate,CarEngineData_LoadGci,"Seq33 slice3 VERIFIED (gta2_re 10.5: CarInfo_808::LoadModelPhysics_4546D0). Reads g_CarModelTable_GciPath (NYC.GCI) whole, n=StyleData totalCars (CARI), new CarEngineData[n] (72 B each) -> CarModelTable+0x804, Gci_ParseText fills it (error: DisplayError 0x7DE carinfo.cpp:0xBC with parser msg; size%0x48 -> 0x7E2 line 0xBD; count!=n -> 0xBC5 line 0xBE), then engineData[record.model]=record (+0x404 table)."
+0x00432ea0,plate,CarModelTable_BuildPhysicsData,"Seq33 slice3 VERIFIED (gta2_re 10.5: CarInfo_808::CalculateAllCarInfo_454850): new CarPhysicsData[totalCars] (0x2C each, count cookie at -4) -> CarModelTable+0x400; for each existing model id (FUN_00420200 = does_car_exist) physicsData[id]=next slot and CarPhysicsData_Build(id)."
+0x00432fc0,plate,CarModelTable_Load,"Seq33 slice3 VERIFIED: copy path -> g_CarModelTable_GciPath, CarEngineData_LoadGci, CarModelTable_ValidateEngineData (mass*1.1), CarModelTable_BuildPhysicsData. Caller LoadGMP_and_STY_Files (after STY, needs CARI count). gta2_re 10.5: CarInfo_808::LoadFromGciFile_454A00."
+0x00436220,plate,Ped_GetDamageMultiplier,Seq33 slice5 (verified): ped with player that has powerup 7 -> 2 else 1. Multiplies bullet/flame damage in Car_OnDamage.
 0x004416b0,plate,DummyPedManager_Ctor,"Dummy-ped manager (char.cpp). Lazily creates PedManager (0x203ac B), sprite pool ptrTo_relSprites and S30; inits relToS24_unk* spawn globals. Object: ushort target dummy count (=0x32), byte[2]=dummy_chars. Name from skip_dummies flag + 'dummy_chars' debug label (medium)."
+0x00445e90,plate,Passengers_ForceTaxiPassengersToExit,Seq33 slice5 (hypothesis from body+caller): this = Car passenger list (Car+4); sets ped flag 0x20000000 on passengers with occupation 0x? (taxi fares) so they flee. Only caller Car_ApplyImpactDamage (taxi + impulse>2.0). gta2_re 10.5: ForceTaxiPassengersToExit_471680.
 0x00446710,plate,CarDriveOrderPool_Ctor,"CarDriveOrderPool: 20 x 0x40-byte slots; a car holds its slot at car+0x60. Slot: +0 in-use, +4 ped, +8 mode (1/2/4), +0x14..0x1C target xyz, +0x30 target id. Alloc 0x446200, Free 0x446290. Hypothesis: AI driving order for a ped-driven car."
 0x00446740,plate,Collision_GetRowStripList,"Seq33 slice4: grid row table lookup (row 0..255): returns first strip node of row whose start >= DAT_00662bd4, nodes sorted by start column; NULL if beyond DAT_00662bf8. Node: [0]=start col (byte), [4]=sprite entry list, [8]=next strip."
 0x00446de0,plate,unsure_Collision_CheckRowForBlocker,"Seq33 slice4 HYPOTHESIS: row scan collecting blockers (DAT_005e6698 list) using ShouldCollide(sprite,0) and flag DAT_005e6654. Only caller 0x4477B0."
@@ -37,6 +166,9 @@ so an unsupported 3D setting is reset. Confidence: high."
 0x00449c70,plate,CraneManager_Ctor,CraneManager ctor. Array of 10 Crane records (0x15c each) plus live count at +0xD98. Cranes are declared by script (SCRCMD_CRANE_*_DEC) and ticked each frame from GameTick (CraneManager_Update).
 0x0044a1f0,plate,CrimeEventQueue_Ctor,"CrimeEventQueue (S29, 0xCC; name is a hypothesis): 10 x 0x14 ring buffer (head/tail u16 at +0/+2) of crime events (type 1..4 + position). Pushed from kill/shoot/pickup code via DoSomethingRelatedToPedOcupation, consumed by police reaction code 0x41c600."
 0x0044aa00,plate,CrusherManager_Ctor,"CrusherManager ctor. Array of 3 Crusher records (0x30 each) plus count at +0x90. Created by SCRCMD_CRUSHER_BASIC, ticked from GameTick; car contact (object case 0x8f) grabs the car. Crusher logic itself not decompiled."
+0x0044aa30,plate,FrameCounter_Advance,"Seq33 slice1 (VERIFIED): ECX=g_FrameCounter (0x5E8108): frame++ ; frameRandom=random32(). Once per GameTick, after CarManager_Update. This is the clock CarPhysics.activeUntilFrame (+0x08) is compared with."
+0x0044ab20,plate,unsure_ObjectType_IsHarmlessToCar,"Seq33 slice5 (hypothesis): object types 0x9a,0x9f,0xc1,0xc3,199 -> true; Car_OnDamage returns early for them (no damage, still ped-exit)."
+0x0044ab80,plate,unsure_ObjectType_GetKillWeaponCode,"Seq33 slice5 (hypothesis): object type -> kill category 0x9..0x15 (default 9); stored at Car+0x90 lastAttackerWeapon by Car_OnDamage. 10->0x15, 0x80->0x11, 0x8a->0x10, 0xc0->0x13, 0xc2->0xe, 0xc6/0xfb->0x14, 0xfe/0x109->0xb ..."
 0x0044b8f0,plate,LayerDrawQueues_Ctor,"LayerDrawQueues ctor: 7 per-map-layer draw queues (4-byte list heads over node pools DAT_00672578/DAT_0067257c). Cleared each frame in eachFrame, objects enqueued sorted by Z, each queue flushed per layer in SetupFrameLighting. Name: medium."
 0x0044d2e0,plate,DoorManager_Ctor,"DoorManager ctor (door.cpp). 22 door slots (0x38 each), ensures helper singleton DAT_005e9374 (0x2C4) exists; +0x4D0 active door count, +0x4D2 = 0xCD. Updated by DoorManager_Update from GameTick. Semantics: medium."
 0x00451930,plate,Debug_LoadFlagsFromRegistry,"Loads ~90 debug/cheat byte flags at 0x5EAD50..0x5EADB3 by calling RegGet(name) for each original debug option string (do_blood, skip_trains, ...). Also sets g_replayKeyboardLive and g_replayInputEnabled = 1, g_gxtFileExists = CheckIFGXTexists(), g_showPlayerNames, and advances the 'replaynum' counter. Was HiddenDebugFlags."
@@ -45,6 +177,7 @@ so an unsupported 3D setting is reset. Confidence: high."
 "
 0x00459345,pre,ApplyCheats,give 200000 money
 0x004593e3,pre,ApplyCheats,give 10 millions
+0x0045a460,plate,nextFrameDeltaTime,"Seq33 slice1 (VERIFIED, disasm 45A460): returns the logic tick length in ms: 0x21 = 33 ms; if !isMultiplayer(0x673E2C) && Game.compensationFPSTime(+0x30)!=0 returns 0x21-0x16 = 11 ms (3x faster ticking, setter unknown). Multiplayer always 33. Also used by PlayerScore_Update (timers)."
 0x0045a960,plate,FrameCounter_Ctor,"FrameCounter ctor (8 bytes): [0]=frame number since session start, [1]=random32() sampled each tick by FrameCounter_Advance (called from GameTick). Freed with plain free() in Game_Dtor."
 0x0045ae60,plate,GangRespectContainer_Ctor,"GangRespectContainer (0xCA8): 10 x GangRespect (0x144 each), per-gang respect (+0x11c, clamped to 100) and gang id (+0x13c)."
 0x0045b050,plate,MapRenderer_Ctor,"Map/tile renderer state singleton (12036 bytes): visible-tile list and per-layer draw size, used by SetupFrameLighting (0x472110, really the map draw entry) and DrawMapLayer each frame. Freed in Game_Dtor with _free (no dtor). Confidence medium-high."
@@ -56,6 +189,8 @@ so an unsupported 3D setting is reset. Confidence: high."
 0x0045c0d0,plate,AmbulanceManager_Ctor,"AmbulanceManager ctor (medical.cpp). Sets enabled=1, builds the paramedic list and 2 x 0x20 ambulance records (+0xD0), calls reset FUN_00472fe0. Updated each frame by UpdateAmbulances (unless skip_ambulance)."
 0x0045c130,plate,PedPathfinder_Ctor,"PedPathfinder ctor (0x2FD4): ped on-foot pathfinding, queue of requesting peds (list head +0x3c) and search state/result buffer (+0x40..+0x2fd0, ready flag +0x2fd0). Used from ped walking logic FUN_004380d0 (FUN_0049cf70 = request path)."
 0x0045c150,plate,PoliceManager_Ctor,"PoliceManager (SPolice, 0x7B8): 20 x SPoliceSub cop-AI slots, 4 x 124 B per-player tracking records at +0x464, copLevel at +0x654. Ticked by UpdatePolice from GameTick (unless skip_police)."
+0x0045c1f0,plate,GameTick,"Seq33 slice1 (VERIFIED): the logic tick of the game (30.3 Hz, one call = 33 ms). Order: Player_Update x N, SoundEventQueue reset, collision manager reset, LightManager (night), Crane/Crusher/Generator/DummyPed/PublicTransport, CarManager_Update (-> all car physics), TrafficLights, spawner, missions, emergency/ambulance/police, particles, DrawGUI(HUD), FrameCounter_Advance (g_FrameCounter->frame++), doors, fire engines... Called only from Game_StepByStatus. NOTE: the frame counter increments AFTER cars update."
+0x0045c3b0,plate,Game_StepByStatus,"Seq33 slice1 (VERIFIED): per-logic-step entry. processPlayerKeys; gameStatus==0 -> GameTick + status:=PAUSED (single-step), ==GAME_RUN -> GameTick, ==PAUSED -> FUN_0045A690 (pause screen); audio(); FUN_0045A4D0. Caller: Game_RunLogicStep (0x461930). gta2_re 10.5 equivalent: do_network_and_local_inputs/ExecuteFrame chain (Game_0x40 state ExecuteFrameAndPause_0)."
 0x0045e3e0,plate,GeneratorManager_Ctor,"GeneratorManager ctor. 120 Generator records (0x2c each), count +0x14A0, active count +0x14A4, byte +0x14A8. Declared by SCRCMD_GENERATOR_DECSET*; each frame a quarter of them (frame & 3) are ticked and spawn map objects."
 0x0045e770,plate,Menu_SetPlayerName,"Stores a player's name into the session object: wcsncpy(this+0x4B4+idx*0x20, name, 16).
 Table = 6 x wchar_t[16] at Menu+0x4B4. InitGame fills it from Game->players[i]+0x83C;
@@ -66,6 +201,7 @@ load data\attract\attrN.rep (N cycles 1..3 via this+0x75345, FUN_0045f600), read
 debug flags (FUN_0045f270(0)), load events. Chosen in InitGame instead of input.cpp_PLayReplay when relToPlayReplay
 (0x662786) is set; WinMain2 sets it at 0x4D1591 when the frontend returns 4 (assumed: idle-timeout demo). Confidence: high."
 0x00460fb0,plate,KanjiFont_Ctor,"KanjiFont ctor (0x28 bytes), created only when locale is Japanese. Sets marker bytes +0x24/+0x25 (0xFE, 0xF7), then loads data\kanji.dat (magic KANJ, version 100) via KanjiFont_LoadKanjiDat."
+0x00461930,plate,Game_RunLogicStep,Seq33 slice1 (VERIFIED): one fixed-step logic update: Game_StepByStatus(ptrToGame) then FrameTimingStats hook. Called by drawAndLimitFrames once per 33 ms tick (not per rendered frame).
 0x00461a50,plate,ExitGameCallback,"Network exit-game handler: sprintf '(ExitGameCallback)Called with reason - %d', writes it to the debug
 stream 0x5EA6B8 (via 0x461560), then quitGame(game,0,1). Reason codes 0/1/2 not decoded yet. Confidence: high."
 0x00461af0,plate,Cheats_DisableDebugFlagsForMultiplayer,"Zeroes ~72 cheat/debug byte flags in the Cheats block 0x5EAD51..0x5EADB3 (seuko-mod memory.h GetCheats).
@@ -76,42 +212,875 @@ Written only by Menu setter 0x45E6C0 (arg5, from [0x673F4C] via 0x4D1131).
 InitGame clamps it to 60 into 0x6626E8; timer 0x462530 counts it down (min 0x6626E8 / sec 0x6626C0 / frames 0x662738)
 and ends the game with GXT 'g_over'. Confidence: medium-high."
 0x00461de0,plate,InitGame,MainMenu
+0x00462a30,plate,drawAndLimitFrames,"Seq33 slice1 (VERIFIED, THE PHYSICS CLOCK): fixed-timestep scheduler, called every idle iteration of WinMain2. t=timeGetTime(). SINGLE PLAYER: logic step ""due"" if (max_frame_rate==0 && relatedToTime==0) || lastFrameTime<=t; due is CANCELLED if relatedToTime>7 or (min_frame_rate==0 && relatedToTime!=0). If due (or draw skipped): [if min_frame_rate==0: lastFrameTime=t (no catch-up)]; Game_RunLogicStep(); lastFrameTime += nextFrameDeltaTime() (= 33 ms; 11 ms if Game.compensationFPSTime); relatedToTime++ (logic steps since last draw; with min_frame_rate=1 up to 8 catch-up steps per draw). If not due and relatedToTime!=0 -> draw() (eachFrame + Vid_FlipBuffers), relatedToTime=0. MULTIPLAYER: if lastFrameTime<=t: step, lastFrameTime=t+33 (lockstep). Registry defaults (loadRenderSettings1 0x4CB1D0): max_frame_rate=1, min_frame_rate=0 (MP forces both 1) => default = one 33 ms tick (30.3 Hz), game slows down instead of catching up when the machine is slow; rendering decoupled. There is no float dt anywhere: one logic tick == one physics step (dt = 1 tick)."
 0x00464a40,plate,MapBlocks_Ctor,"Map block store singleton (GMP data), looked up by (x,y,z). Created by ConstructGame; loaded in LoadGMP_and_STY_Files; freed in Game_Dtor via MapBlocks_Dtor."
+0x00466af0,plate,unsure_MapBlocks_GetSkidTileKind,"Seq33 slice5 (hypothesis): tile at (x,y,z-1): 7 if water tile (FUN_00462fb0), 0 if has lid, 5 otherwise. Used by CarPhysics_SpawnSkidSegment. gta2_re 10.5: Map::sub_4E52A0."
 0x00472640,plate,ResetRandomSeedTo1,Resets the game RNG seed (random_seed) to 1 via Crt_Srand. Called first in ConstructGame so every session starts deterministic.
+0x00475230,plate,Script_Decl_MAP_ZONE,"Mission script declaration handler (decl pass 0x481400). Opcodes: 102=MAP_ZONE
+gta2_re (10.5): SCRCMD_MAP_ZONE_SET_504150
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00475290,plate,Script_Decl_ARROW_DATA,"Mission script declaration handler (decl pass 0x481400). Opcodes: 23=ARROW_DATA
+gta2_re (10.5): SCRCMD_ARROW_DEC_5041B0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004752a0,plate,Script_Decl_CRUSHER,"Mission script declaration handler (decl pass 0x481400). Opcodes: 40=CRUSHER
+gta2_re (10.5): SCRCMD_CRUSHER_BASIC_5045A0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004752d0,plate,Script_Decl_DECLARE_DOOR_INFO,"Mission script declaration handler (decl pass 0x481400). Opcodes: 230=DECLARE_DOOR_INFO
+gta2_re (10.5): SCRCMD_SET_DOOR_INFO_504950
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004752f0,plate,Script_Decl_SET_STATION_INFO,"Mission script declaration handler (decl pass 0x481400). Opcodes: 285=SET_STATION_INFO 286=SET_STATION_INFO_EMPTY
+gta2_re (10.5): SCRCMD_SET_STATION_EMPTY_STATION_505030
+Confidence medium: dispatch group 1:1 with gta2_re; compiler-emitted, count != .mis. docs/re/script-engine.md (Seq 34)"
+0x004753b0,plate,Script_Decl_RADIO_STATION,"Mission script declaration handler (decl pass 0x481400). Opcodes: 287=RADIO_STATION
+gta2_re (10.5): SCRCMD_RADIOSTATION_DEC_5051D0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004753d0,plate,Script_Decl_SET_TRAIN_STATIONS,"Mission script declaration handler (decl pass 0x481400). Opcodes: 295=SET_STATION_4 296=SET_STATION_3 297=SET_STATION_2 298=SET_STATION_1
+gta2_re (10.5): CRCMD_SET_TRAIN_STATIONS_505210
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x00475420,plate,Script_Decl_DECLARE_POLICELEVEL,"Mission script declaration handler (decl pass 0x481400). Opcodes: 304=DECLARE_POLICELEVEL
+gta2_re (10.5): SCRCMD_DECLARE_POLICE_5052C0
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)
+Also the runtime target of op 418 CHANGE_POLICE_LEVEL (stub 0x47E720 jumps here). Writes PoliceManager+0x660 (max wanted stars) = cmd byte +0x0A; 0 also clears g_skipPolice (Seq 27 police research)."
+0x00475460,plate,Script_Decl_SOUND_SET,"Mission script declaration handler (decl pass 0x481400). Opcodes: 327=SOUND_SET
+gta2_re (10.5): SCRCMD_SOUND_DECSET_505340
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004754e0,plate,Script_Decl_DECLARE_MISSIONS_TOTAL,"Mission script declaration handler (decl pass 0x481400). Opcodes: 344=DECLARE_TOTAL_MISSIONS 345=DECLARE_TOTAL_SECRETS 386=DECLARE_GANG_ONE_MISSIONS_TOTAL 387=DECLARE_GANG_TWO_MISSIONS_TOTAL 388=DECLARE_GANG_THREE_MISSIONS_TOTAL
+gta2_re (10.5): SCRCMD_SET_MISSIONS_TOTAL_505430
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004755b0,plate,Script_Decl_DECLARE_FINISH_SCORE,"Mission script declaration handler (decl pass 0x481400). Opcodes: 343=DECLARE_FINISH_SCORE
+gta2_re (10.5): SCRCMD_FINISH_SCORE_505710
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004755d0,plate,Script_Decl_DECLARE_POWERUP_CARLIST,"Mission script declaration handler (decl pass 0x481400). Opcodes: 353=DECLARE_POWERUP_CARLIST
+gta2_re (10.5): SCRCMD_DECLARE_CARLIST_505750
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004755f0,plate,Script_Decl_DISPLAY_MESSAGE,"Mission script declaration handler (decl pass 0x481400). Opcodes: 117=DISPLAY_MESSAGE 118=DISPLAY_BRIEF 279=DISPLAY_BRIEF_NOW 321=DISPLAY_BRIEF_SOON
+gta2_re (10.5): SCRCMD_DISPLAY_MESSAGES_505F50
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00475650,plate,Script_Decl_DECLARE_DEATH_BASE_BRIEF,"Mission script declaration handler (decl pass 0x481400). Opcodes: 435=DECLARE_GANG_ONE_DEATH_BASE_BRIEF 436=DECLARE_GANG_TWO_DEATH_BASE_BRIEF 437=DECLARE_GANG_THREE_DEATH_BASE_BRIEF
+gta2_re (10.5): SCRCMD_DEC_DEATH_BASE_506010
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004756b0,plate,Script_Decl_START_BASIC_KF_TEMPLATE,"Mission script declaration handler (decl pass 0x481400). Opcodes: 422=START_BASIC_KF_TEMPLATE
+gta2_re (10.5): SCRCMD_START_BASIC_KF_506140
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004756f0,plate,Script_Op_LEVELEND,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 60=LEVELEND
+gta2_re (10.5): SCRCMD_LEVELEND_5069F0 @0x5069f0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
 0x004760ad,pre,MissionScript_LoadSubScripts,wil_tra.mis
 0x004760b9,pre,MissionScript_LoadSubScripts,"replase ""mis"" to ""SCR"""
+0x00476ea0,plate,Script_Decl_OBJ_DATA_SET,"Mission script declaration handler (decl pass 0x481400). Opcodes: 15=OBJ_DATA_SET_2D 16=OBJ_DATA_SET_3D
+gta2_re (10.5): SCRCMD_OBJ_DECSET_2D_3D_503680
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00476ff0,plate,Script_Decl_OBJ_DATA_SET_EXTRA,"Mission script declaration handler (decl pass 0x481400). Opcodes: 17=OBJ_DATA_SET_2D_INT 18=OBJ_DATA_SET_3D_INT 19=OBJ_DATA_SET_2D_STR 20=OBJ_DATA_SET_3D_STR
+gta2_re (10.5): SCRCMD_OBJ_DECSET_5038D0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00477140,plate,Script_Decl_PLAYER_PED,"Mission script declaration handler (decl pass 0x481400). Opcodes: 5=PLAYER_PED
+gta2_re (10.5): SCRCMD_PLAYER_PED_503A20
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00477290,plate,Script_Decl_CAR_DATA_SET,"Mission script declaration handler (decl pass 0x481400). Opcodes: 10=CAR_DATA_SET_2D 11=CAR_DATA_SET_3D 12=CAR_DATA_SET_2D_STR 13=CAR_DATA_SET_3D_STR
+gta2_re (10.5): SCRCMD_CAR_DECSET_503BC0
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x00477530,plate,Script_Decl_PARKED_CAR_DATA,"Mission script declaration handler (decl pass 0x481400). Opcodes: 425=PARKED_CAR_DATA_2D 426=PARKED_CAR_DATA_3D 427=PARKED_CAR_DATA_2D_STR 428=PARKED_CAR_DATA_3D_STR
+gta2_re (10.5): SCRCMD_PARKED_CAR_DECSET_503F80
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00477560,plate,Script_Decl_CHAR_DATA_SET,"Mission script declaration handler (decl pass 0x481400). Opcodes: 7=CHAR_DATA_SET_2D 8=CHAR_DATA_SET_3D
+gta2_re (10.5): SCRCMD_CHAR_DECSET_2D_3D_503FB0
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x00477660,plate,Script_Decl_CRANE_DATA,"Mission script declaration handler (decl pass 0x481400). Opcodes: 37=CRANE_DATA_BASIC 38=CRANE_DATA_TARGET 39=CRANE_DATA_2TARGET
+gta2_re (10.5): SCRCMD_CRANE_5041C0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004777e0,plate,Script_Decl_CONVEYOR_SET,"Mission script declaration handler (decl pass 0x481400). Opcodes: 26=CONVEYOR_SET1 27=CONVEYOR_SET2
+gta2_re (10.5): SCRCMD_CONVEYOR_DECSET1_2_5043A0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00477870,plate,Script_Decl_GENERATOR_SET,"Mission script declaration handler (decl pass 0x481400). Opcodes: 29=GENERATOR_SET1 30=GENERATOR_SET2 31=GENERATOR_SET3 32=GENERATOR_SET4
+gta2_re (10.5): SCRCMD_GENERATOR_DECSET_504420
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00477920,plate,Script_Decl_DESTRUCTOR_SET,"Mission script declaration handler (decl pass 0x481400). Opcodes: 34=DESTRUCTOR_SET1 35=DESTRUCTOR_SET2
+gta2_re (10.5): SCRCMD_DESTRUCTOR_DECSET_504530
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004779a0,plate,Script_Decl_THREAD_WAIT_FOR_CHAR_IN_CAR,"Mission script declaration handler (decl pass 0x481400). Opcodes: 211=THREAD_WAIT_FOR_CHAR_IN_CAR
+gta2_re (10.5): SCRCMD_THREAD_DECLARE2_5045D0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00477a00,plate,Script_Decl_THREAD_WAIT_FOR_CHAR_IN_BLOCK,"Mission script declaration handler (decl pass 0x481400). Opcodes: 212=THREAD_WAIT_FOR_CHAR_IN_BLOCK
+gta2_re (10.5): SCRCMD_THREAD_DECLARE3_504660
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x00477ac0,plate,Script_Decl_THREAD_WAIT_FOR_CHAR_IN_AREA,"Mission script declaration handler (decl pass 0x481400). Opcodes: 214=THREAD_WAIT_FOR_CHAR_IN_AREA 434=THREAD_WAIT_FOR_CHAR_IN_AREA_ANY_MEANS
+gta2_re (10.5): SCRCMD_THREAD_DECLARE5_504710
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00477b70,plate,Script_Decl_THREAD_WAIT_FOR_ANSWER_PHONE,"Mission script declaration handler (decl pass 0x481400). Opcodes: 213=THREAD_WAIT_FOR_ANSWER_PHONE
+gta2_re (10.5): SCRCMD_THREAD_DECLARE4_5047C0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00477bd0,plate,Script_Decl_SET_GANG_INFO,"Mission script declaration handler (decl pass 0x481400). Opcodes: 223=SET_GANG_INFO
+gta2_re (10.5): SCRCMD_SET_GANG_INFO1_504830
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00477d20,plate,Script_Decl_DOOR_DATA_1,"Mission script declaration handler (decl pass 0x481400). Opcodes: 375=DOOR_DATA_SINGLE_1 378=DOOR_DATA_DOUBLE_1
+gta2_re (10.5): SCRCMD_DOOR_DECLARE_D1_S1_504970
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00477ee0,plate,Script_Decl_DOOR_DATA_2,"Mission script declaration handler (decl pass 0x481400). Opcodes: 376=DOOR_DATA_SINGLE_2 379=DOOR_DATA_DOUBLE_2
+gta2_re (10.5): SCRCMD_DOOR_DECLARE_D2_S2_504B80
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x00478120,plate,Script_Decl_DECLARE_MISSION_FLAG,"Mission script declaration handler (decl pass 0x481400). Opcodes: 240=DECLARE_MISSION_FLAG 429=DECLARE_GANG_ONE_MISSION_FLAG 430=DECLARE_GANG_TWO_MISSION_FLAG 431=DECLARE_GANG_THREE_MISSION_FLAG
+gta2_re (10.5): SCRCMD_DECLARE_MISSION_504DD0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00478170,plate,Script_Decl_DECLARE_PASSED_FAILED_FLAG,"Mission script declaration handler (decl pass 0x481400). Opcodes: 346=DECLARE_MISSIONS_PASSED_FLAG 347=DECLARE_GANG_ONE_MISSIONS_PASSED_FLAG 348=DECLARE_GANG_TWO_MISSIONS_PASSED_FLAG 349=DECLARE_GANG_THREE_MISSIONS_PASSED_FLAG 389=DECLARE_SECRETS_PASSED_FLAG 390=DECLARE_SECRETS_FAILED_FLAG
+gta2_re (10.5): SCRCMD_PASSED_FAILED_FLAGS_505580
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004784a0,plate,Script_Decl_DECLARE_CRANE_POWERUP,"Mission script declaration handler (decl pass 0x481400). Opcodes: 439=DECLARE_CRANE_POWERUP
+gta2_re (10.5): SCRCMD_DO_CRANE_POWERUP_5060D0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004784d0,plate,Script_Op_LEVELSTART,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 59=LEVELSTART
+gta2_re (10.5): SCRCMD_LEVELSTART_5069C0 @0x5069c0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00478500,plate,Script_Op_STOP_THREAD,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 62=STOP_THREAD
+gta2_re (10.5): SCRCMD_STOP_THREAD_506A60 @0x506a60 args SCR_CMD_HEADER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x00478590,plate,Script_Op_IF_JUMP,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 98=IF_JUMP
+gta2_re (10.5): SCRCMD_IF_JUMP_506AF0 @0x506af0 args SCR_IF_JUMP
+Confidence medium: dispatch group 1:1 with gta2_re; compiler-emitted, count != .mis. docs/re/script-engine.md (Seq 34)"
+0x004785d0,plate,Script_Op_GOSUB,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 78=GOSUB
+gta2_re (10.5): SCRCMD_GOSUB_506B30 @0x506b30 args SCR_TWO_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00478610,plate,Script_Op_RETURN,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 68=RETURN 273=MISSIONEND
+gta2_re (10.5): SCRCMD_RETURN_506B80
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00478650,plate,Script_Op_S_OP_I,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 79=S_PLUS_I 82=S_MINUS_I 86=S_LESS_I 88=S_LEQUAL_I 90=S_GREATER_I 92=S_GEQUAL_I 94=S_EQUAL_I
+gta2_re (10.5): SCRCMD_S_OP_I_506D60 @0x506d60 args SCR_OPERATE_COUNTER_AND_INT
+Confidence medium: dispatch group 1:1 with gta2_re; compiler-emitted, count != .mis. docs/re/script-engine.md (Seq 34)"
+0x00478770,plate,Script_Op_S_OP_S,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 81=S_PLUS_S 84=S_MINUS_S 87=S_LESS_S 89=S_LEQUAL_S 91=S_GREATER_S 93=S_GEQUAL_S 95=S_EQUAL_S
+gta2_re (10.5): SCRCMD_S_OP_S_506ED0 @0x506ed0 args SCR_OPERATE_COUNTER_AND_COUNTER_2
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x004788a0,plate,Script_Op_I_OP_S,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 80=I_PLUS_S 83=I_MINUS_S
+gta2_re (10.5): SCRCMD_I_OP_S_507110 @0x507110 args SCR_OPERATE_INT_AND_COUNTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x004789c0,plate,Script_Op_NOT,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 71=NOT
+gta2_re (10.5): SCRCMD_NOT_507750 @0x507750
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004789e0,plate,Script_Op_EXEC,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 63=EXEC
+gta2_re (10.5): SCRCMD_START_EXEC_5078D0 @0x5078d0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00478a00,plate,Script_Op_ENDEXEC,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 64=ENDEXEC
+gta2_re (10.5): SCRCMD_STOP_EXEC_5079A0 @0x5079a0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00478a20,plate,Script_Op_INCREMENT,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 96=INCREMENT
+gta2_re (10.5): SCRCMD_INCREMENT_507A70 @0x507a70
+Confidence medium: dispatch group 1:1 with gta2_re; compiler-emitted, count != .mis. docs/re/script-engine.md (Seq 34)"
+0x00478a50,plate,Script_Op_DECREMENT,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 97=DECREMENT
+gta2_re (10.5): SCRCMD_DECREMENT_507B50 @0x507b50
+Confidence medium: dispatch group 1:1 with gta2_re; compiler-emitted, count != .mis. docs/re/script-engine.md (Seq 34)"
+0x00478a80,plate,Script_Op_CREATE_OBJ,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 47=CREATE_OBJ_2D 48=CREATE_OBJ_3D 49=CREATE_OBJ_3D_INT 50=CREATE_OBJ_2D_INT 51=CREATE_OBJ_3D_STR 52=CREATE_OBJ_2D_STR
+gta2_re (10.5): SCRCMD_CREATE_OBJ_507CE0 @0x507ce0 args SCR_OBJ_DATA
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00478b10,plate,Script_Op_CREATE_CAR,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 43=CREATE_CAR_2D 44=CREATE_CAR_3D 45=CREATE_CAR_2D_STR 46=CREATE_CAR_3D_STR 394=CREATE_GANG_CAR_1 395=CREATE_GANG_CAR_2 396=CREATE_GANG_CAR_3 397=CREATE_GANG_CAR_4
+gta2_re (10.5): SCRCMD_CREATE_CAR_507F80 @0x507f80 args SCR_CAR_DATA_DEC
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00478ba0,plate,Script_Op_MAKE_CAR_A_DUMMY,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 100=MAKE_CAR_A_DUMMY
+gta2_re (10.5): SCRCMD_MAKE_CAR_DUMMY_508220 @0x508220 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x00478c00,plate,Script_Op_SET_DENSITY_RATIO,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 103=SET_CAR_DENSITY 104=SET_GOODCAR_RATIO 105=SET_BADCAR_RATIO 106=SET_POLICECAR_RATIO 107=SET_PEDDENSITY 108=SET_MUGGER_RATIO 109=SET_CARTHIEF_RATIO 110=SET_ELVIS_RATIO 111=SET_GANG_RATIO 112=SET_POLICEPED_RATIO 372=SET_GANGCAR_RATIO
+gta2_re (10.5): SCRCMD_SET_DENSITY_508280 @0x508280 args SCR_MAP_SET_ZONE_INFO
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00478e10,plate,Script_Op_POINT_ARROW_AT_3D,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 114=POINT_ARROW_AT_3D 441=LEVEL_END_POINT_ARROW_AT_3D
+gta2_re (10.5): SCRCMD_POINT_ARROW_3D_508550
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00478e90,plate,Script_Op_POINT_ARROW_AT,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 113=POINT_ARROW_AT 440=LEVEL_END_POINT_ARROW_AT
+gta2_re (10.5): SCRCMD_POINT_ARROW_AT_5086F0 @0x5086f0 args SCR_POINT_ARROW_AT
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00478fb0,plate,Script_Op_SET_ARROW_COLOUR,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 115=SET_ARROW_COLOUR
+gta2_re (10.5): SCRCMD_ARROW_COLOUR_508DC0 @0x508dc0 args SCR_TWO_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x00479010,plate,Script_Op_REMOVE_ARROW,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 116=REMOVE_ARROW
+gta2_re (10.5): SCRCMD_REMOVE_ARROW_508E80 @0x508e80 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00479050,plate,Script_Op_CHECK_CAR_DAMAGE_LEVEL,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 129=CHECK_CAR_DAMAGE_LEVEL
+gta2_re (10.5): SCRCMD_CHECK_CAR_DAMAGE_508F00 @0x508f00 args SCR_TWO_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x004790a0,plate,Script_Op_CHECK_CHARACTER_HEALTH,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 126=CHECK_CHARACTER_HEALTH
+gta2_re (10.5): SCRCMD_CHECK_HEALTH_509030 @0x509030 args SCR_TWO_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004790f0,plate,Script_Op_STORE_CAR_CHARACTER_IS_IN,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 128=STORE_CAR_CHARACTER_IS_IN
+gta2_re (10.5): SCRCMD_STORE_CAR_INFO_509180
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004792b0,plate,Script_Op_DISPLAY_MESSAGE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 117=DISPLAY_MESSAGE 118=DISPLAY_BRIEF 279=DISPLAY_BRIEF_NOW 321=DISPLAY_BRIEF_SOON
+gta2_re (10.5): SCRCMD_DISPLAY_MESSAGE_5093C0 @0x5093c0 args SCR_TWO_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004795c0,plate,Script_Op_DISPLAY_TIMER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 119=DISPLAY_TIMER
+gta2_re (10.5): SCRCMD_DISPLAY_TIMER_5096E0 @0x5096e0 args SCR_TWO_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00479610,plate,Script_Op_CREATE_CHAR,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 41=CREATE_CHAR_2D 42=CREATE_CHAR_3D
+gta2_re (10.5): SCRCMD_CREATE_CHAR_509730 @0x509730 args SCR_CHAR_DATA_DEC
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00479660,plate,Script_Op_SET_CHAR_OCCUPATION,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 410=SET_CHAR_OCCUPATION
+gta2_re (10.5): SCRCMD_SET_CHAR_OCCUPATION_509790 @0x509790 args SCR_FOUR_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004796a0,plate,Script_Op_SET_CHAR_OBJECTIVE_1,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 131=SET_CHAR_OBJECTIVE_1
+gta2_re (10.5): SCRCMD_SET_CHAR_OBJ1_5097D0 @0x5097d0 args SCR_CHAR_OBJECTIVE
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004796e0,plate,Script_Op_IS_CHAR_OBJECTIVE_PASSED,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 134=IS_CHAR_OBJECTIVE_PASSED
+gta2_re (10.5): SCRCMD_IS_CHAR_OBJ_PASS_509810 @0x509810 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00479740,plate,Script_Op_IS_CHAR_OBJECTIVE_FAILED,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 135=IS_CHAR_OBJECTIVE_FAILED
+gta2_re (10.5): SCRCMD_IS_CHAR_OBJ_FAIL_509880 @0x509880 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x004797a0,plate,Script_Op_GIVE_WEAPON,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 138=GIVE_WEAPON_1 266=GIVE_WEAPON_2
+gta2_re (10.5): SCRCMD_GIVE_WEAPON_5098E0 @0x5098e0 args SCR_TWO_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00479850,plate,Script_Op_IS_CAR_IN_BLOCK,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 139=IS_CAR_IN_BLOCK
+gta2_re (10.5): SCRCMD_IS_CAR_IN_BLOCK_509990 @0x509990 args SCR_IS_CAR_IN_BLOCK
+Confidence medium: dispatch group 1:1 with gta2_re; compiler-emitted, count != .mis. docs/re/script-engine.md (Seq 34)"
+0x004799d0,plate,Script_Op_IS_CAR_IN_BLOCK_AREA,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 270=IS_CAR_IN_BLOCK_AREA
+gta2_re (10.5): SCRCMD_CAR_IN_AREA_509A70 @0x509a70 args SCR_ONEVAR_RECT
+Confidence medium: dispatch group 1:1 with gta2_re; compiler-emitted, count != .mis. docs/re/script-engine.md (Seq 34)"
+0x00479b20,plate,Script_Op_HAS_CHARACTER_DIED,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 127=HAS_CHARACTER_DIED
+gta2_re (10.5): SCRCMD_HAS_CHAR_DIED_509BB0 @0x509bb0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00479b70,plate,Script_Op_IS_CHARACTER_IN_CAR,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 121=IS_CHARACTER_IN_CAR
+gta2_re (10.5): SCRCMD_IS_CHAR_IN_CAR_509C10 @0x509c10 args SCR_TWO_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00479bf0,plate,Script_Op_IS_CHARACTER_IN_MODEL,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 122=IS_CHARACTER_IN_MODEL
+gta2_re (10.5): SCRCMD_IS_CHAR_IN_MODEL_509C90 @0x509c90 args SCR_TWO_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00479c60,plate,Script_Op_IS_CHARACTER_IN_ANY_CAR,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 123=IS_CHARACTER_IN_ANY_CAR
+gta2_re (10.5): SCRCMD_IS_CHAR_IN_ANY_CAR_509D00 @0x509d00 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00479cc0,plate,Script_Op_ADD_SCORE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 141=ADD_SCORE_1 392=ADD_SCORE_NO_MULT
+gta2_re (10.5): SCRCMD_ADD_SCORE_509D90 @0x509d90 args SCR_FOUR_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00479d40,plate,Script_Op_ADD_SCORE_2,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 342=ADD_SCORE_2
+gta2_re (10.5): SCRCMD_ADD_SCORE2_509E00 @0x509e00 args SCR_FOUR_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x00479da0,plate,Script_Op_IS_CHARACTER_STOPPED,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 124=IS_CHARACTER_STOPPED
+gta2_re (10.5): SCRCMD_IS_CHAR_STOPPED_509E70 @0x509e70 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x00479e10,plate,Script_Op_EXPLODE_POS,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 142=EXPLODE_POS 399=EXPLODE_LARGE_POS 404=EXPLODE_SMALL_POS 406=EXPLODE_NO_RING_POS
+gta2_re (10.5): SCRCMD_EXPLODE_509ED0 @0x509ed0 args SCR_EXPLODE
+Confidence medium: dispatch group 1:1 with gta2_re; compiler-emitted, count != .mis. docs/re/script-engine.md (Seq 34)"
+0x00479ea0,plate,Script_Op_EXPLODE_WALL,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 143=EXPLODE_WALL
+gta2_re (10.5): SCRCMD_EXPLODE_BUILDING_509F60 @0x509f60 args SCR_EXPLODE_WALL
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x00479f10,plate,Script_Op_LOCATE_CHARACTER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 145=LOCATE_CHARACTER_ANY_MEANS 146=LOCATE_CHARACTER_ON_FOOT 147=LOCATE_CHARACTER_BY_CAR 148=LOCATE_STOPPED_CHARACTER_ANY_MEANS 149=LOCATE_STOPPED_CHARACTER_ON_FOOT 150=LOCATE_STOPPED_CHARACTER_BY_CAR
+gta2_re (10.5): Locate_509FD0 @0x509fd0 args SCR_ONEVAR_RECT
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047a1e0,plate,Script_Op_SET_CHAR_OBJECTIVE_2,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 132=SET_CHAR_OBJECTIVE_2
+gta2_re (10.5): SCRCMD_SET_CHAR_OBJ2_50A200 @0x50a200 args SCR_CHAR_OBJECTIVE
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047a330,plate,Script_Op_SET_CHAR_OBJECTIVE_3,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 133=SET_CHAR_OBJECTIVE_3
+gta2_re (10.5): SCRCMD_SET_CHAR_OBJ3_50A3E0 @0x50a3e0 args SCR_CHAR_OBJ3
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047a3b0,plate,Script_Op_SET_CHAR_OBJECTIVE_FOLLOW,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 315=SET_CHAR_OBJECTIVE_FOLLOW
+gta2_re (10.5): SCRCMD_SET_CHAR_OBJ_FOLLOW_50A460 @0x50a460 args SCR_CHAR_OBJECTIVE
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047a460,plate,Script_Op_CHANGE_CAR_REMAP,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 155=CHANGE_CAR_REMAP
+gta2_re (10.5): SCRCMD_CHANGE_CAR_REMAP_50A570 @0x50a570 args SCR_TWO_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047a4a0,plate,Script_Op_CHANGE_CHAR_REMAP,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 156=CHANGE_CHAR_REMAP
+gta2_re (10.5): SCRCMD_CHANGE_CHAR_REMAP_50A5B0 @0x50a5b0 args SCR_TWO_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047a4e0,plate,Script_Op_CHECK_CAR_MODEL,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 157=CHECK_CAR_MODEL
+gta2_re (10.5): SCRCMD_CHECK_CAR_MODEL_50A610 @0x50a610 args SCR_TWO_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047a530,plate,Script_Op_CHECK_CAR_REMAP,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 158=CHECK_CAR_REMAP
+gta2_re (10.5): SCRCMD_CHECK_CAR_REMAP_50A670 @0x50a670 args SCR_TWO_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047a5a0,plate,Script_Op_CHECK_CAR_MODEL_AND_REMAP,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 159=CHECK_CAR_MODEL_AND_REMAP
+gta2_re (10.5): SCRCMD_CHECK_CAR_BOTH_50A6E0 @0x50a6e0 args SCR_FOUR_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047a620,plate,Script_Op_IS_ITEM_ONSCREEN,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 160=IS_ITEM_ONSCREEN 356=IS_ITEM_ACCURATELY_ONSCREEN
+gta2_re (10.5): IsOnScreen_50A760 @0x50a760 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047a7e0,plate,Script_Op_DELAY_HERE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 161=DELAY_HERE
+gta2_re (10.5): SCRCMD_DELAY_HERE_50A940 @0x50a940 args SCR_CMD_HEADER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047a810,plate,Script_Op_DELAY,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 162=DELAY
+gta2_re (10.5): SCRCMD_DELAY_50A980 @0x50a980 args SCR_CMD_HEADER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
 0x0047a914,pre,FUN_0047a860,save goes here
+0x0047aa50,plate,Script_Op_DISABLE_THREAD_TRIGGER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 216=DISABLE_THREAD_TRIGGER
+gta2_re (10.5): SCRCMD_DISABLE_THREAD_50ABC0 @0x50abc0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047aa80,plate,Script_Op_ENABLE_THREAD_TRIGGER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 215=ENABLE_THREAD_TRIGGER
+gta2_re (10.5): SCRCMD_ENABLE_THREAD_50ABF0 @0x50abf0
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047aab0,plate,Script_Op_SET_GANG_KILL_REACTION,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 224=SET_GANG_KILL_REACTION
+gta2_re (10.5): SCRCMD_SET_GANG_KILL_REACTION_50AC20 @0x50ac20 args SCR_FOUR_PARAMS
+Confidence low: keyword SET_GANG_RESPECT is never used in bil*.mis while bil.scr has 3x op 224; name from gta2_re enum, effect not decompiled yet. docs/re/script-engine.md (Seq 34)"
+0x0047ab80,plate,Script_Op_CHANGE_GANG_CHAR_RESPECT,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 225=SET_GANG_CHAR_RESPECT 262=CHANGE_GANG_CHAR_RESPECT 393=CHANGE_GANG_CHAR_RESPECT_AND_UPDATE
+gta2_re (10.5): SCRCMD_CHANGE_RESPECT_50ACF0 @0x50acf0 args SCR_FOUR_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047acc0,plate,Script_Op_CHECK_RESPECT,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 198=CHECK_RESPECT_GREATER 199=CHECK_RESPECT_LOWER 231=CHECK_RESPECT_EQUAL
+gta2_re (10.5): RespectOperator_50AEF0 @0x50aef0 args SCR_FOUR_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047adf0,plate,Script_Op_ADD_PATROL_POINT,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 205=ADD_PATROL_POINT
+gta2_re (10.5): SCRCMD_ADD_PATROL_POINT_50B0E0 @0x50b0e0 args SCR_ADD_PATROL_POINT
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047ae70,plate,Script_Op_SET_AMBIENT_LEVEL,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 226=SET_AMBIENT_LEVEL
+gta2_re (10.5): SCRCMD_SET_AMBIENT_50B150 @0x50b150 args SCR_SET_AMBIENT
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047aea0,plate,Script_Op_ANSWER_PHONE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 168=ANSWER_PHONE
+gta2_re (10.5): SCRCMD_ANSWER_PHONE_50B180 @0x50b180 args SCR_ANSWER_PHONE
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047af50,plate,Script_Op_CHECK_ANSWERED_PHONE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 227=CHECK_ANSWERED_PHONE
+gta2_re (10.5): SCRCMD_CHECK_PHONE_50B230 @0x50b230 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047afd0,plate,Script_Op_CHECK_FAIL_PHONE_TIMER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 228=CHECK_FAIL_PHONE_TIMER
+gta2_re (10.5): SCRCMD_CHECK_PHONETIMER_50B2C0 @0x50b2c0 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047b060,plate,Script_Op_STOP_PHONE_RINGING,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 229=STOP_PHONE_RINGING
+gta2_re (10.5): SCRCMD_STOP_PHONE_RING_50B360 @0x50b360 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047b0c0,plate,Script_Op_IS_CHAR_FIRING_ONSCREEN,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 165=IS_CHAR_FIRING_ONSCREEN
+gta2_re (10.5): SCRCMD_IS_CHAR_FIRE_ONSCREEN_50B3D0 @0x50b3d0 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047b130,plate,Script_Op_MAKE_CAR_DRIVE_AWAY,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 175=MAKE_CAR_DRIVE_AWAY
+gta2_re (10.5): SCRCMD_CAR_DRIVE_AWAY_50B440 @0x50b440 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047b160,plate,Script_Op_GET_CAR_INFO_FROM_CRANE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 188=GET_CAR_INFO_FROM_CRANE
+gta2_re (10.5): SCRCMD_GET_CAR_FROM_CRANE_50B470 @0x50b470 args SCR_TWO_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047b1d0,plate,Script_Op_ORDER_CHAR_TO_DRIVE_CAR,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 167=ORDER_CHAR_TO_DRIVE_CAR 171=ORDER_CHAR_TO_BACKDOOR
+gta2_re (10.5): SCRCMD_CHAR_TO_DRIVE_CAR_50B4F0 @0x50b4f0 args SCR_CHAR_ENTER_CAR
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047b270,plate,Script_Op_ORDER_DRIVER_OUT_CAR,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 166=ORDER_DRIVER_OUT_CAR
+gta2_re (10.5): SCRCMD_DRIVER_OUT_CAR_50B5A0 @0x50b5a0 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047b2d0,plate,Script_Op_GIVE_DRIVER_AND_BRAKE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 170=GIVE_DRIVER_AND_BRAKE
+gta2_re (10.5): SCRCMD_GIVE_DRIVER_BRAKE_50B600 @0x50b600 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047b340,plate,Script_Op_SET_GANG_INFO,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 223=SET_GANG_INFO
+gta2_re (10.5): SCRCMD_SET_GANG_INFO1_50B670 @0x50b670 args SCR_SET_GANG_INFO
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047b360,plate,Script_Op_CLEAR_TIMER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 120=CLEAR_TIMER
+gta2_re (10.5): SCRCMD_CLEAR_TIMERS_50B690 @0x50b690 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047b3c0,plate,Script_Op_CHECK_SCORE_GREATER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 194=CHECK_SCORE_GREATER
+gta2_re (10.5): SCRCMD_CHECK_SCORE_50B6F0 @0x50b6f0 args SCR_CHECK_SCORE_GREATER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047b430,plate,Script_Op_STORE_SCORE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 195=STORE_SCORE
+gta2_re (10.5): SCRCMD_GET_SCORE_50B760 @0x50b760 args SCR_GET_SCORE
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047b4a0,plate,Script_Op_IS_CHAR_IN_GANGZONE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 232=IS_CHAR_IN_GANGZONE
+gta2_re (10.5): SCRCMD_IS_CHAR_IN_GANG_50B7D0 @0x50b7d0 args SCR_IS_CHAR_IN_GANG_ZONE
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047b580,plate,Script_Op_SET_CAR_NO_COLLIDE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 173=SET_CAR_NO_COLLIDE
+gta2_re (10.5): SCRCMD_SET_NO_COLLIDE_50B8B0 @0x50b8b0 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047b5e0,plate,Script_Op_IS_CHAR_FIRING_IN_AREA,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 176=IS_CHAR_FIRING_IN_AREA
+gta2_re (10.5): SCRCMD_IS_CHAR_FIRING_AREA_50B910 @0x50b910 args SCR_ONEVAR_RECT
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047b710,plate,Script_Op_CHECK_PASSENGER_COUNT,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 201=CHECK_PASSENGER_COUNT
+gta2_re (10.5): SCRCMD_GET_PASSENGER_NUM_50B9C0 @0x50b9c0 args SCR_TWO_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047b780,plate,Script_Op_CLEAR_WANTED_LEVEL,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 163=CLEAR_WANTED_LEVEL
+gta2_re (10.5): SCRCMD_CLEAR_WANTED_LEVEL_50BA30 @0x50ba30 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047b7b0,plate,Script_Op_ALTER_WANTED_LEVEL,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 164=ALTER_WANTED_LEVEL 421=ALTER_WANTED_LEVEL_NO_DROP
+gta2_re (10.5): SCRCMD_ALT_WANTED_LEVEL_50BA70 @0x50ba70 args SCR_CMD_ALTER_WANTED_LEVEL
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)
+Op 421 skips when current stars > n, else Ped_SetCopStars (Seq 27, verified in code)."
+0x0047b810,plate,Script_Op_CHECK_CAR_WRECKED_IN_AREA,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 189=CHECK_CAR_WRECKED_IN_AREA
+gta2_re (10.5): SCRCMD_CAR_WRECK_IN_LOCATION_50BAD0 @0x50bad0 args SCR_ONEVAR_RECT
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047b950,plate,Script_Op_ORDER_CAR_TO_BLOCK,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 169=ORDER_CAR_TO_BLOCK
+gta2_re (10.5): SCRCMD_SEND_CAR_TO_BLOCK_50BB80 @0x50bb80 args SCR_CAR_DATA_DEC
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047b9a0,plate,Script_Op_SET_CHAR_AI_PARAM,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 151=SET_CHAR_THREAT_SEARCH 152=SET_CHAR_THREAT_REACTION 153=ADD_GROUP_TO_CHARACTER 238=SET_CHAR_SHOOTING_SKILL 239=SET_CHAR_BRAVERY_LEVEL
+gta2_re (10.5): SCRCMD_SET_CHAR_BRAVERY_50BBD0 @0x50bbd0 args SCR_CHAR_OBJECTIVE
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047ba20,plate,Script_Op_CHECK_NUMBER_ALIVE_IN_GROUP,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 234=CHECK_NUMBER_ALIVE_IN_GROUP
+gta2_re (10.5): SCRCMD_CHECK_NUM_ALIVE_50BC60 @0x50bc60 args SCR_CHAR_OBJECTIVE
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047ba80,plate,Script_Op_SET_MIN_MEMBERS_BEFORE_GROUP_SPLITS,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 237=SET_MIN_MEMBERS_BEFORE_GROUP_SPLITS
+gta2_re (10.5): SCRCMD_SET_MIN_ALIVE_50BCD0 @0x50bcd0 args SCR_CHAR_OBJECTIVE
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047bac0,plate,Script_Op_GROUP_MEMBERSHIP,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 235=ADD_EXISTING_CHAR_TO_GROUP 236=REMOVE_CHAR_FROM_GROUP 259=MAKE_NEW_LEADER_OF_GROUP
+gta2_re (10.5): SCRCMD_CHAR_GROUP_50BD10 @0x50bd10 args SCR_TWO_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047bb60,plate,Script_Op_SET_COUNTER_INT,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 340=SET_COUNTER_INT
+gta2_re (10.5): SCRCMD_SET_COUNTER_50BDC0
+Confidence medium: dispatch group 1:1 with gta2_re; compiler-emitted, count != .mis. docs/re/script-engine.md (Seq 34)"
+0x0047bb90,plate,Script_Op_HAS_CAR_GOT_WEAPON,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 241=HAS_CAR_GOT_WEAPON
+gta2_re (10.5): SCRCMD_HAS_CAR_WEAPON_50BE00 @0x50be00 args SCR_TWO_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047bbe0,plate,Script_Op_IS_CHAR_PRESSING_HORN,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 243=IS_CHAR_PRESSING_HORN
+gta2_re (10.5): SCRCMD_IS_CHAR_HORN_50BE70 @0x50be70 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047bc50,plate,Script_Op_IS_CHAR_CAR_CAPACITY,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 244=IS_CHAR_CAR_CAPACITY
+gta2_re (10.5): SCRCMD_CHECK_MAX_PASS_50BED0 @0x50bed0 args SCR_TWO_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047bcd0,plate,Script_Op_IS_CHAR_IN_ZONE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 242=IS_CHAR_IN_ZONE
+gta2_re (10.5): SCRCMD_IS_CHAR_IN_ZONE_50BF40 @0x50bf40 args SCR_TWO_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047be00,plate,Script_Op_IS_TRAILER_ATTACHED,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 246=IS_TRAILER_ATTACHED
+gta2_re (10.5): SCRCMD_IS_TRAILER_ATT_50C0E0 @0x50c0e0 args SCR_TWO_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047be90,plate,Script_Op_IS_CAR_ON_TRAILER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 247=IS_CAR_ON_TRAILER
+gta2_re (10.5): SCRCMD_IS_CAR_ON_TRAIL_50C1B0 @0x50c1b0 args SCR_TWO_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047bf00,plate,Script_Op_ENABLE_DISABLE_CRANE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 248=ENABLE_CRANE 249=DISABLE_CRANE
+gta2_re (10.5): SCRCMD_ENABLE_DISABLE_CRANE_50C230 @0x50c230 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047bf80,plate,Script_Op_HAS_CAR_GOT_DRIVER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 250=HAS_CAR_GOT_DRIVER
+gta2_re (10.5): SCRCMD_CAR_GOT_DRIVER_50C2A0 @0x50c2a0 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047bfc0,plate,Script_Op_HAS_CHAR_SPOTTED_PLAYER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 251=HAS_CHAR_SPOTTED_PLAYER
+gta2_re (10.5): SCRCMD_SPOTTED_PLAYER_50C2F0 @0x50c2f0 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047c000,plate,Script_Op_STORE_LAST_CHAR_PUNCHED,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 252=STORE_LAST_CHAR_PUNCHED
+gta2_re (10.5): SCRCMD_GET_LAST_PUNCHED_50C350 @0x50c350 args SCR_TWO_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047c050,plate,Script_Op_IS_CHAR_STUNNED,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 125=IS_CHAR_STUNNED
+gta2_re (10.5): SCRCMD_IS_CHAR_STUNNED_50C3B0 @0x50c3b0 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047c0b0,plate,Script_Op_KILL_ALL_PASSENGERS,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 253=KILL_ALL_PASSENGERS
+gta2_re (10.5): SCRCMD_KILL_ALL_PASSENG_50C410 @0x50c410 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047c110,plate,Script_Op_IS_GROUP_IN_CAR,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 254=IS_GROUP_IN_CAR
+gta2_re (10.5): SCRCMD_IS_GROUP_IN_CAR_50C470 @0x50c470 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047c150,plate,Script_Op_HAS_CHAR_PUNCHED_SOMEONE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 255=HAS_CHAR_PUNCHED_SOMEONE
+gta2_re (10.5): SCRCMD_PUNCHED_SOMEONE_50C4E0 @0x50c4e0 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047c190,plate,Script_Op_ADD_CHAR_TO_GANG,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 258=ADD_CHAR_TO_GANG
+gta2_re (10.5): SCRCMD_ADD_CHAR_TO_GANG_50C540 @0x50c540 args SCR_TWO_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047c1e0,plate,Script_Op_EXPLODE_ITEM,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 144=EXPLODE_ITEM 398=EXPLODE_LARGE_ITEM 403=EXPLODE_SMALL_ITEM 405=EXPLODE_NO_RING_ITEM
+gta2_re (10.5): SCRCMD_EXPLODE_50C5A0 @0x50c5a0 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re; compiler-emitted, count != .mis. docs/re/script-engine.md (Seq 34)"
+0x0047c360,plate,Script_Op_PARK,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 260=PARK 280=PARK_NO_RESPAWN
+gta2_re (10.5): SCRCMD_PARK_50C6F0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047c3c0,plate,Script_Op_CHECK_CHAR_BEEN_PUNCHED_BY,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 264=CHECK_CHAR_BEEN_PUNCHED_BY
+gta2_re (10.5): SCRCMD_BEEN_PUNCHED_BY_50C760 @0x50c760 args SCR_TWO_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047c410,plate,Script_Op_UPDATE_DOOR_TARGET,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 265=UPDATE_DOOR_TARGET
+gta2_re (10.5): SCRCMD_UPDATE_DOOR_50C7D0 @0x50c7d0 args SCR_UPDATE_DOOR
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047c4d0,plate,Script_Op_DOOR_CONTROL,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 177=OPEN_DOOR 178=CLOSE_DOOR 179=MAKE_DOOR_AUTOMATIC 180=MAKE_DOOR_MANUAL
+gta2_re (10.5): SCRCMD_DOOR_50C8A0 @0x50c8a0 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047c580,plate,Script_Op_REMOVE_WEAPONS,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 256=REMOVE_WEAPONS
+gta2_re (10.5): SCRCMD_REMOVE_WEAPON_50C990 @0x50c990 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047c5e0,plate,Script_Op_REMOVE_BLOCK,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 183=REMOVE_BLOCK
+gta2_re (10.5): SCRCMD_REMOVE_BLOCK_50C9F0 @0x50c9f0 args SCR_REMOVE_BLOCK
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047c620,plate,Script_Op_LOWER_LEVEL,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 184=LOWER_LEVEL
+gta2_re (10.5): SCRCMD_LOWER_LEVEL_50CA30 @0x50ca30 args SCR_LOWER_LEVEL
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047c660,plate,Script_Op_CHANGE_BLOCK,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 185=CHANGE_BLOCK_SIDE 186=CHANGE_BLOCK_LID 187=CHANGE_BLOCK_TYPE
+gta2_re (10.5): SCRCMD_CHANGE_BLOCK_50CA70 @0x50ca70 args SCR_CHANGE_BLOCK
+Confidence medium: dispatch group 1:1 with gta2_re; compiler-emitted, count != .mis. docs/re/script-engine.md (Seq 34)"
+0x0047c6a0,plate,Script_Op_ADD_NEW_BLOCK,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 182=ADD_NEW_BLOCK
+gta2_re (10.5): SCRCMD_ADD_NEW_BLOCK_50CAB0 @0x50cab0 args SCR_ADD_BLOCK
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047c6f0,plate,Script_Op_SWITCH_ROAD,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 181=SWITCH_ROAD
+gta2_re (10.5): SCRCMD_ROAD_ON_OFF_50CB20 @0x50cb20 args SCR_SWITCH_ROAD_ON_OFF
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047c740,plate,Script_Op_SWITCH_GENERATOR_1_2,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 268=SWITCH_GENERATOR_1 269=SWITCH_GENERATOR_2
+gta2_re (10.5): SCRCMD_SWITCH_GENERATOR1_50CCB0 @0x50ccb0 args SCR_TWO_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047c7d0,plate,Script_Op_SWITCH_GENERATOR_3_4,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 351=SWITCH_GENERATOR_3 352=SWITCH_GENERATOR_4
+gta2_re (10.5): SCRCMD_SWITCH_GENERATOR3_50CD30 @0x50cd30 args SCR_FOUR_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047c860,plate,Script_Op_CHECK_CAR_DAMAGE_POSITION,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 200=CHECK_CAR_DAMAGE_POSITION
+gta2_re (10.5): SCRCMD_CAR_DAMAGE_POS_50CDB0 @0x50cdb0 args SCR_TWO_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047c8a0,plate,Script_Op_HAS_PARK_FINISHED,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 261=HAS_PARK_FINISHED
+gta2_re (10.5): SCRCMD_PARK_FINISHED_50CE10 @0x50ce10
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047c910,plate,Script_Op_TAKE_REMOTE_CONTROL_OF_CAR,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 271=TAKE_REMOTE_CONTROL_OF_CAR
+gta2_re (10.5): SCRCMD_REMOTE_CONTROL_50D200 @0x50d200 args SCR_REMOTE_CONTROL
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047c980,plate,Script_Op_CHANGE_CAR_LOCK,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 278=CHANGE_CAR_LOCK
+gta2_re (10.5): SCRCMD_CHANGE_CAR_LOCK_50D680 @0x50d680 args SCR_CHANGE_CAR_LOCK
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047ca20,plate,Script_Op_CHANGE_INTENSITY,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 220=CHANGE_INTENSITY
+gta2_re (10.5): SCRCMD_CHANGE_INTENSITY_50D870 @0x50d870 args SCR_CHANGE_LIGHT_INTENSITY
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047ca60,plate,Script_Op_CHANGE_COLOUR,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 221=CHANGE_COLOUR
+gta2_re (10.5): SCRCMD_CHANGE_COLOUR_50D900 @0x50d900 args SCR_FOUR_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047caa0,plate,Script_Op_CHANGE_RADIUS,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 222=CHANGE_RADIUS
+gta2_re (10.5): SCRCMD_CHANGE_RADIUS_50D9A0 @0x50d9a0 args SCR_CHANGE_LIGHT_RADIUS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047cae0,plate,Script_Op_LIVES_MULTIPLIER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 192=CHECK_NUM_LIVES_GREATER 196=CHECK_MULTIPLIER_GREATER 281=ADD_LIVES 282=ADD_MULTIPLIER
+gta2_re (10.5): GetSetLivesAndMultiplier_50DB70 @0x50db70 args SCR_GET_NUM_LIVES_MULTIPLIERS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047cc50,plate,Script_Op_STORE_LIVES_MULTIPLIER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 193=STORE_NUM_LIVES 197=STORE_MULTIPLIER
+gta2_re (10.5): SCRCMD_GET_LIVES_MULT_50DD00
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047ccc0,plate,Script_Op_SET_DIR_OF_TV_VANS,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 283=SET_DIR_OF_TV_VANS
+gta2_re (10.5): SCRCMD_SET_DIR_OF_TVVAN_50DD90 @0x50dd90 args SCR_SET_DIR_OF_TVVAN
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047cd00,plate,Script_Op_IS_POINT_ONSCREEN,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 284=IS_POINT_ONSCREEN
+gta2_re (10.5): SCRCMD_POINT_ONSCREEN_50DE00 @0x50de00 args SCR_IS_POINT_ON_SCREEN
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047cd40,plate,Script_Op_IS_CHAR_FALLING,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 202=IS_CHAR_FALLING
+gta2_re (10.5): SCRCMD_CHAR_IN_AIR_50DE50 @0x50de50 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047cda0,plate,Script_Op_HAS_CHAR_JUST_SUNK,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 203=HAS_CHAR_JUST_SUNK
+gta2_re (10.5): SCRCMD_CHAR_SUNK_50DEB0 @0x50deb0 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047ce00,plate,Script_Op_START_BONUS_CHECK,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 288=START_BONUS_CHECK_1 289=START_BONUS_CHECK_2 290=START_BONUS_CHECK_3 291=START_BONUS_CHECK_4
+gta2_re (10.5): StartBonus_50DF10 @0x50df10 args SCR_START_BONUS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047cfa0,plate,Script_Op_CHECK_BONUS,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 292=HAS_BONUS_PASSED 293=HAS_BONUS_FAILED 294=HAS_BONUS_FINISHED
+gta2_re (10.5): SCRCMD_CHECK_BONUS_50E0B0 @0x50e0b0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047d010,plate,Script_Op_SETUP_MODELCHECK_DESTROY,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 299=SETUP_MODELCHECK_DESTROY
+gta2_re (10.5): SCRCMD_SETUP_MODEL_CHECK_50E120 @0x50e120
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047d040,plate,Script_Op_HAS_MODELCHECK_HAPPENED,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 300=HAS_MODELCHECK_HAPPENED
+gta2_re (10.5): SCRCMD_MODEL_CHECK_50E150 @0x50e150
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047d070,plate,Script_Op_STORE_SPEED,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 206=STORE_CAR_CURRENT_SPEED 207=STORE_CHAR_CAR_CURRENT_SPEED 209=STORE_CAR_MAX_SPEED
+gta2_re (10.5): GetSpeed_50E190 @0x50e190 args SCR_TWO_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047d170,plate,Script_Op_CHECK_CAR_SPEED,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 208=CHECK_CAR_SPEED
+gta2_re (10.5): SCRCMD_CHECK_CAR_SPEED_50E360 @0x50e360 args SCR_CHECK_CAR_SPEED
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047d1e0,plate,Script_Op_SET_CAR_NUMBER_GRAPHIC,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 303=SET_CAR_NUMBER_GRAPHIC
+gta2_re (10.5): SCRCMD_SET_CAR_GRAPHIC_50E460 @0x50e460 args SCR_SET_CAR_GRAPHIC
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047d220,plate,Script_Op_HAS_CHAR_BEEN_ARRESTED,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 355=HAS_CHAR_BEEN_ARRESTED
+gta2_re (10.5): SCRCMD_CHAR_ARRESTED_50E4A0 @0x50e4a0 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047d260,plate,Script_Op_S_IS_S_OP_S,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 308=S_IS_S_MINUS_S 309=S_IS_S_PLUS_S 337=S_IS_S_DIV_S 338=S_IS_S_MULT_S 339=S_IS_S_MOD_S
+gta2_re (10.5): SCRCMD_S_IS_S_OP_S_50E4F0 @0x50e4f0 args SCR_OPERATE_COUNTER_AND_COUNTER
+Confidence medium: dispatch group 1:1 with gta2_re; compiler-emitted, count != .mis. docs/re/script-engine.md (Seq 34)"
+0x0047d360,plate,Script_Op_S_IS_S_OP_I,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 332=S_IS_S_MINUS_I 333=S_IS_S_PLUS_I 334=S_IS_S_DIV_I 335=S_IS_S_MULT_I 336=S_IS_S_MOD_I
+gta2_re (10.5): SCRCMD_S_IS_S_OP_I_50E610 @0x50e610 args SCR_OPERATE_COUNTER_AND_OPERAND_INT
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047d450,plate,Script_Op_SET_CHAR_DRIVE_AGGRESSION,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 306=SET_CHAR_DRIVE_AGGRESSION
+gta2_re (10.5): SCRCMD_CHAR_DRIVE_AGGR_50E730 @0x50e730 args SCR_SET_CHAR_DRIVE_AGGR
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047d4a0,plate,Script_Op_SET_CHAR_MAX_SPEED,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 307=SET_CHAR_MAX_DRIVESPEED 383=SET_CHAR_MAX_RUNSPEED
+gta2_re (10.5): SCRCMD_SET_SPEED_50E780 @0x50e780 args SCR_SET_RUN_SPEED
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047d4f0,plate,Script_Op_GIVE_CAR_ALARM,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 310=GIVE_CAR_ALARM
+gta2_re (10.5): SCRCMD_GIVE_CAR_ALARM_50E7F0 @0x50e7f0 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047d520,plate,Script_Op_SET_CAR_PROOF,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 311=SET_CAR_BULLETPROOF 312=SET_CAR_ROCKETPROOF 313=SET_CAR_FLAMEPROOF
+gta2_re (10.5): SCRCMD_CAR_WEAPON_KIND_PROOF_50E820 @0x50e820 args SCR_SET_CAR_DAMAGE_PROOF
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047d5d0,plate,Script_Op_PUT_CAR_ON_TRAILER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 316=PUT_CAR_ON_TRAILER
+gta2_re (10.5): SCRCMD_PUT_CAR_ON_TRAILER_50E900 @0x50e900 args SCR_PUT_CAR_ON_TRAILER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047d650,plate,Script_Op_CLEAR_ALL_BRIEFS,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 317=CLEAR_ALL_BRIEFS
+gta2_re (10.5): SCRCMD_CLEAR_BRIEFS_50E9A0 @0x50e9a0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047d690,plate,Script_Op_CHECK_HEADS_GREATER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 318=CHECK_HEADS_GREATER
+gta2_re (10.5): SCRCMD_CHECK_HEADS_50E9E0 @0x50e9e0 args SCR_CHECK_HEADS_GREATER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047d6e0,plate,Script_Op_FINISH_LEVEL,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 319=FINISH_LEVEL
+gta2_re (10.5): SCRCMD_FINISH_LEVEL_50EA40 @0x50ea40 args SCR_FINISH_LEVEL
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047d7a0,plate,Script_Op_CHECK_WEAPON_TYPE_HIT_CHAR,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 320=CHECK_WEAPON_TYPE_HIT_CHAR
+gta2_re (10.5): SCRCMD_CHECK_WEAPONHIT_50EB00 @0x50eb00 args SCR_CHECK_WEAPONHIT
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047d860,plate,Script_Op_CHECK_WEAPON_HIT_CAR,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 358=CHECK_WEAPON_TYPE_HIT_CAR 366=CHECK_ANY_WEAPON_TYPE_HIT_CAR
+gta2_re (10.5): SCRCMD_WEAP_HIT_CAR_50EBD0 @0x50ebd0 args SCR_CHECK_WEAPONHIT
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047d920,plate,Script_Op_IS_CHAR_ON_FIRE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 324=IS_CHAR_ON_FIRE
+gta2_re (10.5): SCRCMD_IS_CHAR_ON_FIRE_50ECE0 @0x50ece0 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047d960,plate,Script_Op_IS_BRIEF_ONSCREEN,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 325=IS_BRIEF_ONSCREEN
+gta2_re (10.5): SCRCMD_BRIEF_ONSCREEN_50ED40 @0x50ed40
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047d990,plate,Script_Op_CREATE_SOUND,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 328=CREATE_SOUND
+gta2_re (10.5): SCRCMD_CREATE_SOUND_50ED80 @0x50ed80 args SCR_SOUND_DECSET
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047d9d0,plate,Script_Op_DECIDE_POWERUP_FOR_CRANE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 354=DECIDE_POWERUP_FOR_CRANE
+gta2_re (10.5): SCRCMD_DECIDE_POWERUP_50F150 @0x50f150 args SCR_TWO_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047da80,plate,Script_Op_SUPPRESS_THIS_CAR_MODEL,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 350=SUPPRESS_THIS_CAR_MODEL
+gta2_re (10.5): SCRCMD_SUPPRESS_MODEL_50F220 @0x50f220
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047dad0,plate,Script_Op_WARP_FROM_CAR_TO_POINT,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 357=WARP_FROM_CAR_TO_POINT
+gta2_re (10.5): SCRCMD_WARP_CHAR_50F270
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047dbd0,plate,Script_Op_SET_GROUP_TYPE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 359=SET_GROUP_TYPE
+gta2_re (10.5): SCRCMD_SET_GROUP_TYPE_50F3D0 @0x50f3d0 args SCR_SET_GROUP_TYPE
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047dc10,plate,Script_Op_MAKE_CHAR_DO_NOTHING,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 360=MAKE_CHAR_DO_NOTHING
+gta2_re (10.5): SCRCMD_CHAR_DO_NOTHING_50F410 @0x50f410 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047dc50,plate,Script_Op_CHECK_OBJ_MODEL,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 362=CHECK_OBJ_MODEL
+gta2_re (10.5): SCRCMD_CHECK_OBJ_MODEL_50F4D0 @0x50f4d0 args SCR_FOUR_PARAMS
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047dca0,plate,Script_Op_SET_CHAR_GRAPHIC_TYPE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 364=SET_CHAR_GRAPHIC_TYPE
+gta2_re (10.5): SCRCMD_PED_GRAPHIC_50F550 @0x50f550 args SCR_SET_CHAR_GRAPHIC_TYPE
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047dcf0,plate,Script_Op_SET_CHAR_FLAG,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 363=SET_CHAR_INVINCIBLE 384=SET_CHAR_TO_STAY_IN_CAR 385=SET_CHAR_TO_USE_CAR_WEAPON 432=SET_DEATHARREST_STATE
+gta2_re (10.5): SCRCMD_SET_CHAR_FLAGS_50F5E0 @0x50f5e0 args SCR_SET_STATE
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047de50,plate,Script_Op_MAKE_ALL_CHARS_MUGGERS,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 365=MAKE_ALL_CHARS_MUGGERS
+gta2_re (10.5): SCRCMD_MAKE_MUGGERS_50F770 @0x50f770 args SCR_SET_STATE
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047de70,plate,Script_Op_LOCATE_ANOTHER_CHARACTER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 367=LOCATE_ANOTHER_CHARACTER_ON_FOOT 381=LOCATE_ANOTHER_CHARACTER_BY_CAR 382=LOCATE_ANOTHER_CHARACTER_ANY_MEANS
+gta2_re (10.5): LocSecChar_50F7B0 @0x50f7b0 args SCR_LOC_SEC_CHAR
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047e040,plate,Script_Op_STOP_CHAR_DRIVING,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 368=STOP_CHAR_DRIVING
+gta2_re (10.5): SCRCMD_STOP_CAR_DRIVE_50F900 @0x50f900 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047e090,plate,Script_Op_IS_BUS_FULL,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 369=IS_BUS_FULL
+gta2_re (10.5): SCRCMD_IS_BUS_FULL_50F940 @0x50f940 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047e100,plate,Script_Op_STOP_CHARS_GETTING_OFF_BUS,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 370=STOP_CHARS_GETTING_OFF_BUS
+gta2_re (10.5): SCRCMD_NO_CHARS_OFF_BUS_50F9B0 @0x50f9b0 args SCR_SET_STATE
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047e130,plate,Script_Op_KILL_CHAR,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 371=KILL_CHAR
+gta2_re (10.5): SCRCMD_KILL_CHAR_50FA00 @0x50fa00 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047e170,plate,Script_Op_SET_SHADING_LEVEL,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 373=SET_SHADING_LEVEL
+gta2_re (10.5): SCRCMD_SET_SHADING_LEV_50FA40 @0x50fa40 args SCR_CMD_HEADER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047e1a0,plate,Script_Op_SET_CAR_JAMMED_ACCELERATOR,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 374=SET_CAR_JAMMED_ACCELERATOR
+gta2_re (10.5): SCRCMD_SET_CAR_JAMMED_50FA70 @0x50fa70 args SCR_SET_CAR_JAMMED
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047e1f0,plate,Script_Op_MISSION_HAS_FINISHED,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 391=MISSION_HAS_FINISHED
+gta2_re (10.5): SCRCMD_FINISH_MISSION_50FAD0 @0x50fad0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047e210,plate,Script_Op_STORE_BONUS_COUNT,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 402=STORE_BONUS_COUNT
+gta2_re (10.5): SCRCMD_STORE_BONUS_50FAF0 @0x50faf0 args SCR_STORE_BONUS_COUNT
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047e280,plate,Script_Op_SET_CONTROL_STATUS,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 400=SET_ENTER_CONTROL_STATUS 407=SET_ALL_CONTROLS_STATUS
+gta2_re (10.5): SCRCMD_SET_ENTER_STATUS_50FB60
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047e320,plate,Script_Op_SET_FAVOURITE_MODEL,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 408=SET_FAVOURITE_MODEL
+gta2_re (10.5): SCRCMD_SET_FAV_CAR_50FC20 @0x50fc20 args SCR_SET_FAV_CAR
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047e360,plate,Script_Op_IS_GROUP_IN_AREA,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 409=IS_GROUP_IN_AREA
+gta2_re (10.5): GroupInArea_50FC60 @0x50fc60 args SCR_ONEVAR_RECT
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047e5b0,plate,Script_Op_SET_KF_WEAPON,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 411=SET_KF_WEAPON
+gta2_re (10.5): SCRCMD_SET_KF_WEAPON_50FE00 @0x50fe00 args SCR_SET_KF_WEAPON
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047e620,plate,Script_Op_CLEAR_KF_WEAPON,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 412=CLEAR_KF_WEAPON
+gta2_re (10.5): SCRCMD_CLEAR_KF_WEAPON_50FED0 @0x50fed0 args SCR_POINTER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047e660,plate,Script_Op_ADD_ONSCREEN_COUNTER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 414=ADD_ONSCREEN_COUNTER
+gta2_re (10.5): SCRCMD_ADD_ONSCREEN_COUNTER_50FF50 @0x50ff50 args SCR_ADD_ONSCREEN_COUNTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047e6b0,plate,Script_Op_CLEAR_ONSCREEN_COUNTER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 415=CLEAR_ONSCREEN_COUNTER 416=CLEAR_CLOCK_ONLY
+gta2_re (10.5): SCRCMD_CLEAR_COUNTER_50FFB0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047e720,plate,Script_Op_CHANGE_POLICE_LEVEL,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 418=CHANGE_POLICE_LEVEL
+gta2_re (10.5): SCRCMD_CHANGE_POLICE_510030 @0x510030 args SCR_DECLARE_POLICELEVEL
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)
+Thin stub: tail-jumps to 0x475420 Script_Decl_DECLARE_POLICELEVEL (shared with the declaration pass; Seq 27)."
+0x0047e740,plate,Script_Op_DESTROY_GROUP,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 419=DESTROY_GROUP
+gta2_re (10.5): SCRCMD_DESTROY_GROUP_510050 @0x510050 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047e780,plate,Script_Op_CHECK_CHAR_CURR_WEAPON,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 420=CHECK_CHAR_CURR_WEAPON
+gta2_re (10.5): SCRCMD_CHECK_CURRENT_WEAPON_510090 @0x510090 args SCR_CHECK_CURRENT_WEAPON
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047e7f0,plate,Script_Op_DO_BASIC_KF_TEMPLATE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 423=DO_BASIC_KF_TEMPLATE
+gta2_re (10.5): SCRCMD_DO_BASIC_KF_510280 @0x510280 args SCR_DO_BASIC_KF_TEMPLATE
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047ea80,plate,Script_Op_SET_BONUS_RATING_TEXT_ID,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 424=SET_BONUS_RATING_TEXT_ID
+gta2_re (10.5): SCRCMD_SET_BONUS_RATING_510530 @0x510530 args SCR_CMD_HEADER
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047eab0,plate,Script_Op_ADD_TIME_TO_TIMER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 433=ADD_TIME_TO_TIMER
+gta2_re (10.5): SCRCMD_ADD_TIME_510560 @0x510560 args SCR_FOUR_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047eb00,plate,Script_Op_SET_RECYCLE_MODEL_WANTED,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 442=SET_RECYCLE_MODEL_WANTED
+gta2_re (10.5): SCRCMD_SET_MODEL_WANTED_5105B0 @0x5105b0 args SCR_TWO_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047eb40,plate,Script_Op_CHECK_DEATHARREST_EXECUTED,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 443=CHECK_DEATHARREST_EXECUTED
+gta2_re (10.5): SCRCMD_CHECK_DEATH_ARR_510600 @0x510600
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047eb70,plate,Script_Op_FORCE_CLEANUP,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 444=FORCE_CLEANUP
+gta2_re (10.5): SCRCMD_FORCE_CLEANUP_510660 @0x510660 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047ebe0,plate,Script_Op_SAVE_RESTORE_RESPECT,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 445=STORE_CURRENT_RESPECT 446=RESTORE_SAVED_RESPECT
+gta2_re (10.5): SCRCMD_SAVE_RESTORE_RESPECT_510780 @0x510780
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047f710,plate,Script_Decl_LIGHT_SET,"Mission script declaration handler (decl pass 0x481400). Opcodes: 217=LIGHT_SET_1 302=LIGHT_SET_2
+gta2_re (10.5): CreateLight_504EE0
+Confidence low: 217/302 reach the declaration pass; gta2_re enum names 218/301 as LIGHT_DECSET; probable gta2_re swap. docs/re/script-engine.md (Seq 34)"
+0x0047f890,plate,Script_Op_CREATE_THREAD,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 61=CREATE_THREAD
+gta2_re (10.5): SCRCMD_CREATE_THREAD_506A00 @0x506a00 args SCR_TWO_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047f8f0,plate,Script_Op_DELETE_ITEM,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 140=DELETE_ITEM
+gta2_re (10.5): SCRCMD_DELETE_ITEM_509D60 @0x509d60
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047f920,plate,Script_Op_SET_PHONE_DEAD,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 245=SET_PHONE_DEAD
+gta2_re (10.5): SCRCMD_SET_PHONE_DEAD_50C040 @0x50c040 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047f9f0,plate,Script_Op_CHECK_CAR_STATE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 130=CHECK_CAR_HAS_DRIVER 154=IS_CAR_WRECKED 190=HAS_CAR_JUST_SUNK 191=IS_CAR_IN_AIR 267=IS_CAR_CRUSHED 305=IS_CARBOMB_ACTIVE 417=ARE_EMERG_LIGHTS_ON
+gta2_re (10.5): SCRCMD_CHECK_CAR_DRIVER_50CB70 @0x50cb70 args SCR_POINTER
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047fac0,plate,Script_Op_DO_PHONE_TEMPLATE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 263=DO_PHONE_TEMPLATE
+gta2_re (10.5): SCRCMD_PHONE_TEMPLATE_50CE90 @0x50ce90 args SCR_PHONE_TEMPLATE
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047fe20,plate,Script_Op_LAUNCH_MISSION,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 274=LAUNCH_MISSION
+gta2_re (10.5): SCRCMD_LAUNCH_MISSION_50D2E0 @0x50d2e0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x0047fe50,plate,Script_Op_SAVE_GAME,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 277=SAVE_GAME
+gta2_re (10.5): SCRCMD_SAVE_GAME_50D340 @0x50d340
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047fe80,plate,Script_Op_PERFORM_SAVE_GAME,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 438=PERFORM_SAVE_GAME
+gta2_re (10.5): SCRCMD_DO_SAVE_GAME_50D3C0 @0x50d3c0 args SCR_DO_SAVE_GAME
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00480040,plate,Script_Op_CREATE_LIGHT,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 219=CREATE_LIGHT_1 301=CREATE_LIGHT_2
+gta2_re (10.5): SCRCMD_CREATE_LIGHT_50DA50
+Confidence low: gta2_re enum names 301 as a LIGHT_DECSET but 301 dispatches here at runtime next to 219; probable gta2_re swap of 301/302 (and 217/218). docs/re/script-engine.md (Seq 34)"
+0x00480080,plate,Script_Op_DO_EASY_PHONE_TEMPLATE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 329=DO_EASY_PHONE_TEMPLATE
+gta2_re (10.5): SCRCMD_DO_EASY_PHONE_50EDC0
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004802f0,plate,Script_Op_CREATE_CHAR_INSIDE_CAR,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 330=CREATE_CHAR_INSIDE_CAR
+gta2_re (10.5): SCRCMD_CHAR_INTO_CAR_50F060 @0x50f060 args SCR_CHAR_INTO_CAR
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004803c0,plate,Script_Op_SET_CAR_EMERG_LIGHTS,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 361=SET_CAR_EMERG_LIGHTS
+gta2_re (10.5): SCRCMD_EMERG_LIGHTS_50F450 @0x50f450 args SCR_TWO_PARAMS
+Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x00480430,plate,Script_Op_START_BASIC_KF_TEMPLATE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 422=START_BASIC_KF_TEMPLATE
+gta2_re (10.5): SCRCMD_START_BASIC_KF_510100
+Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
 0x00481960,plate,MissionScript_Ctor,"Mission script engine ctor (miss2.cpp). Zeroes script/string/base-pointer buffers, allocates S16 missions (2284 B) and S17_mission (0x25c B) if absent, opens test\MISS_LOG.TXT if do_miss_logging. Object ~794 KB."
 0x00482050,plate,MultiplayerTag_Reset,"Reset of the multiplayer Tag-mode state (global 0x665704, multip.cpp): zeroes it-player SaveSlot* (+0),
 6 per-player tag counters (+4..+0x1B), frame tick (+0x1C), 6 per-player left flags (+0x20..+0x25).
 Called by ctor 0x4820C0 (static init 0x535440) and InitGame 0x461E72 (MP branch).
 Evidence: FUN_004821c0/4820d0 ('yourit' label), death -> FUN_004822a0. Confidence: high."
+0x00482730,plate,Fix16_ApplyDeadZone,"Seq33 slice1 (VERIFIED): scalar dead zone: *out = (|*in| < DAT_006658DC) ? DAT_00665894 (0) : *in. Threshold = 1/(DAT_00665B28*DAT_00665AB4) (init at 0x536420, values not read). Used on angVel in IntegrateVelocity. gta2_re 10.5: Fix16::ApplyDeadZone_482730."
+0x004828c0,plate,Vec2_SubAssign,Seq33 slice1 (VERIFIED): Vec2 -= (Fix16_SubAssign on x and y).
+0x00482cc0,plate,CarPhysics_CollideWithObjectAtPoint,Seq33 slice4: sets g_CollisionContactPos from args then CarPhysics_CollideWithObject. Only caller FUN_00486c60 (object-driven collision into car).
 0x00484af0,plate,ObjectSpawner_Ctor,"ObjectSpawner ctor (object.cpp, 0x5C B). Creates BareGameObjectManager if null, plus pools DAT_0066577c (0x226c) and DAT_00665780 (0x5a40). +0x10/+0x14 counters per prefab category 2/3, +0x1c list head, +0x58 Position. 'this' of SpawnObject. Name: medium."
+0x00486410,plate,unsure_ImpactEvent_DispatchSound,"Seq33 slice4 HYPOTHESIS: impact event (gta2_re struct_4) one-shot dispatch: flag +0x24 set once, per owner type (+0x44 switch) validates and pushes a sound event into g_SoundEventQueue (by g_CollisionKind 4/5/other). gta2_re 10.5: struct_4::DispatchCarImpactEvents/PushImpactEvent."
 0x00488eb0,plate,ObjectPrefabsContainer_Ctor,"ObjectPrefabsContainer ctor (0x8CA8 B): 300 x 0x74 prefab entries from +4, 300 pointers at +0x87F4, length=0, eq99OnInit=99. Looked up by object id via FUN_00488170."
 0x00489ac0,plate,ParkingZone_Ctor,"park.cpp object (0x48 B). [0] car ptr, [0x0C] state (3 = active), [0x18..0x37] area rectangle from a map block, [0x3C] timer (=0x1E), [0x3D] flag, [0x3E] counter. Used by script commands and ped enter-car logic. Role (parking/garage target) is LOW confidence."
+0x0048a1a0,plate,Fix16_DivAssign,Seq33 slice1 (VERIFIED): Fix16 /= : *this = (int64(*this)<<14) / *p.
 0x0048a7b0,plate,ParticleStatePool40_Ctor,"Pool of 40 slots x 0x30 B + 40 in-use flags at +0x780. Alloc ParticleStatePool40_Alloc, release ParticleState_Release. Used for OBJECT_TYPE_PARTICLE_SYSTEM objects (FUN_00485540) and type-5 objects in FUN_00484e00."
 0x0048a880,plate,ParticleStatePool20_Ctor,"Pool of 20 slots x 0x30 B + 20 in-use flags at +0x3C0. Slot ctor ParticleState_Ctor (id byte +4, serial +6). Companion of the 40-slot pool g_ParticleStatePool40. Name is a hypothesis (medium-low)."
+0x0048db00,plate,Particle_EmitImpactParticles,"Seq33 slice5 (verified body): stdcall(x,y,z): spawns 6 spark/dust particles (FUN_0048c930) with random velocity/angle at the point. Callers: CarPhysics impact functions (wall/car/object), Car_OnDamage (bullet hits), landing. gta2_re 10.5: Particle_8::EmitImpactParticles_53FE40."
 0x00491b90,plate,ParticleManager_Ctor,"Particle manager ctor (8 B, particle.cpp). Zeroes two object pointers [0],[1] and lazily creates the particle pool DAT_00669e70 (0x947c B, ctor 0x48F1E0). [0]/[1] are cached game objects used by the car-explosion particle FUN_00490130 (medium)."
 0x00491da0,plate,PedPatrolRoutePool_Ctor,"PedPatrolRoutePool ctor (0x1D7E): 50 route buffers of 0x96 B (up to 50 xyz byte waypoints, 0-terminated) + 50 in-use flags at +0x1d4c. Allocated by PedSetObjective for PED_OBJECTIVE_PATROL_ON_FOOT; nothing frees slots."
 0x00497570,plate,unsure_PedSprite_HandleCarImpact,"Seq33 slice4 HYPOTHESIS: ped-side response to being hit by a car (this = ped sprite, +0x7c ped). Thresholds on impulse magnitude (DAT_0066a504 cap, 0066a3dc/0066a4f4/0066a6fc tiers): below -> Ped_AttachToGame only; above tiers -> spawns object type 0x6E (ped body-impact/blood), Ped_SetState FALL_ON_GROUND + Ped_SetState2 0x18/0x19. Invulnerable peds fall without damage state. Cop-related peds flag +0x30=100. Belongs to Seq 27 (Ped); named for call-graph only. gta2_re 10.5: Char_B4::HandleCarImpact."
+0x0049dd10,plate,CarPhysics_UpdateTrailerAlignment,Seq33 slice1 (VERIFIED vs 10.5 UpdateTrailerAlignment_559B40): if car has a trailer controller -> TrailerController_UpdateAlignment(controller) (re-aims trailer to the hitch of the cab). Called from StepIntegrate every step.
+0x0049dd20,plate,CarPhysics_SetSwerveState,"Seq33 slice3 VERIFIED: swerveState(+0xA0)=*param (0 none,1 swerve left(-1 steering),2 right(+1)). gta2_re 10.5: set_field_A0_559B90."
+0x0049dd30,plate,CarPhysics_ApplySwerveInput,"Seq33 slice3 VERIFIED: forced steering while swerving (needs a driver: car+0x54): state1 -> steering(+0xAD)=-1, state2 -> +1; also +0x95(reverse gas)=0, +0x93(forward gas)=1. gta2_re 10.5: ApplyForcedSteering_559DD0 (body matched)."
+0x0049dd80,plate,CarPhysics_IsInAir,Seq33 slice3 CONFIRMED (name by another slice): surfaceType(+0x98)==6 (air) for the car (both cab and trailer if towing). gta2_re 10.5: IsInAir_55A0B0. Both lateral force functions return 0 when true.
+0x0049ddc0,plate,CarPhysics_IsFootBrakeOn,"Seq33 orchestrator: footbrake byte +0x91 of this car, or of the towing cab's physics when it is a trailer (car+0x64 controller, +8 cab). Caller 0x423850. gta2_re 10.5: CarPhysics_B0::IsFootBrakeOn_55A150 (same shape)."
+0x0049ddf0,plate,IsEngineAccelerates,"Seq33 slice2 (confirmed): true if forward(+0x93) or reverse(+0x94) gas is on; with a trailer reads the truck cab's physics. gta2_re 10.5: IsAccelerationOrReverseOn_55A180 (body matched; keep existing 11.44 name). Callers: Car_UpdateEngineState (turns engine on), MoveAndCollide."
 0x0049de40,plate,CarPhysics_RestoreStartPose,"Seq33 slice4: inverse of SaveStartPose: restores car+trailer fields +30,+34,+6c,+58,+38,+3c,+70,+68 from DAT_0066acd0.. block."
 0x0049def0,plate,CarPhysics_SaveStartPose,"Seq33 slice4: copies car (+0x30/34 vel? pos, +0x6c z, +0x58 rot, +0x38/3c, +0x70, +0x68) and trailer fields into scratch globals DAT_0066acd0.. (""start pose""). Restore = CarPhysics_RestoreStartPose 0x49DE40. Fields copied: +30,+34,+6c,+58(word),+38,+3c,+70,+68."
 0x0049df90,plate,CarPhysics_RestoreTargetPose,Seq33 slice4: restores car+trailer fields from the DAT_0066abb8.. block saved by SaveTargetPose.
 0x0049e040,plate,CarPhysics_SaveTargetPose,"Seq33 slice4: saves same field set as SaveStartPose into second scratch block DAT_0066abb8.. (""target pose"" = full-step end state). Restore = 0x49DF90."
+0x0049e0e0,plate,Fix16_Square,"Seq33 orchestrator: out = Fix16_Mul(x, x) (decompiler hides the ECX operand; both operands are the same stack arg). Used by unsure_CarPhysics_ComputeCollisionImpulse."
+0x0049e100,plate,CarPhysics_GetSkidObjectType,"Seq33 slice5 (verified): (surface type in ESI, segment length stack) -> skid object type id. length buckets: <=0.0625 (DAT_0066ada0): {1:0x76,2:0x74,3:0x7e,else 0x75}; <=0.25: {0x78,0x79,0x77,0x7d}; <=0.375: {0x93,0x90,0x92,0x91}; else {0xfa,0xfd,0xf9,0x7c}. DisplayError physics.cpp:0x91b on bad type. gta2_re 10.5: get_skid_obj_type_55D490."
+0x0049e240,plate,Ang16_FormatDegrees,"Seq33 orchestrator: swprintf(""%3.2f"", ang16 * 0.25) into a static buffer: Ang16 -> degrees text for show_physics. Confirms 1 Ang16 unit = 0.25 degree."
 0x0049e270,plate,CarPhysics_CheckCarAndTrailerCollisions,"Seq33 slice4: resets g_CarManager+0x68, runs Collision_CheckAndNotifyAllForSprite(g_CollisionGridNotify, car sprite) and the same for trailer sprite; returns OR. Caller: CarPhysics_Update. gta2_re 10.5: CheckAndHandleCarAndTrailerCollisions."
+0x0049e330,plate,CarPhysics_ApplyAngularImpulse,Seq33 orchestrator: torqueAccum(+0x7C) -= arg * g_CurCarPhysicsData->inertia (CarPhysicsData+0). Callers: the three unsure_CarPhysics_NudgeOutOf* (collision un-stick). gta2_re 10.5: CarPhysics_B0::ApplyAngularImpulse_55F970.
 0x0049e360,plate,unsure_Fix16Vec2_DivScalar,Seq33 slice4 HYPOTHESIS: out = Vec2(this) / scalar (two calls of FUN_00401bf0 which divides Q14 by value; same fn used for /2 in BinarySearchCollisionTime).
-0x0049e5a0,plate,unsure_CarPhysics_GetPointVelocity,"Seq33 slice4 HYPOTHESIS: (this, out, point) -> velocity of a body point: (point - pos(+0x38)) rotated by -heading(+0x58) ... + lin. vel (+0x30) and angular term (+0x74). 6 callers all in collision response / FUN_004a0d10."
-0x0049f930,plate,unsure_CarPhysics_ComputeSweepFraction,"Seq33 slice4 HYPOTHESIS: computes how far (Q14 steps) the car moves this frame: median3 of velocity-derived limits with DAT_0066ac54.. constants, scaled by remaining fraction; used to decide sweep step count. gta2_re 10.5: ComputeRequiredSweepSteps (shape only)."
+0x0049e3a0,plate,Fix16Vec2_MulAssign,Seq33 slice3 VERIFIED (was unsure_Fix16Vec2_Ctor): vec2 *= scalar (calls 0x41E0D0 in-place Fix16 mul on x and y; scalar is the stdcall arg). Used by RearAxleLateralForce (x rear_end_stability) and CarPhysics_DampVelocity. gta2_re 10.5: Fix16_Point::MultiplyByFix16_49E3A0.
+0x0049e3c0,plate,Vec2_ApplyDeadZone,"Seq33 slice1 (VERIFIED): velocity dead zone: if |x| + |y| < DAT_0066AD48 (= 1.0/(64*4) = 1/256 block per tick, init 0x5442E0) then x=y=0. Called by IntegrateVelocity on linVel. gta2_re 10.5: Fix16_Point::ApplyDeadZone_49E3C0."
+0x0049e420,plate,Vec2_Perpendicular,"Seq33 orchestrator: out = (-v.y, v.x) (rotate +90). Used by unsure_CarPhysics_ComputeCollisionImpulse for the 2D cross product."
+0x0049e450,plate,Vec2_HasZeroComponent,Seq33 slice1 (VERIFIED): returns (v.x == 0) || (v.y == 0) (Fix16_IsEqual vs g_Fix16Zero on both components). NOT 'both zero'. Single caller: StepAndResolveCollisions (train case).
+0x0049e480,plate,Fix16Vec2_ClampTowardsZero,"Seq33 slice2: per component: replace dst with src only if it shrinks |dst| (clamp toward zero, never grows speed). Used by LimitSpeed. gta2_re 10.5: Fix16_Point::ClampTowardsZero_49E480 (name used in their EnforceGearSensitiveMaxSpeed; body consistent)."
+0x0049e500,plate,Vec2_Dot,Seq33 orchestrator: out = a.x*b.x + a.y*b.y (Fix16_Mul twice + Fix16_Add). Used by unsure_CarPhysics_ComputeCollisionImpulse.
+0x0049e5a0,plate,CarPhysics_ComputeRelativePointVelocity,"Seq33 slice3 VERIFIED (was unsure_CarPhysics_GetPointVelocity): velocity of a WORLD point rigidly attached to the body = [(rot(p-cp1, -heading)-cmOffset rotated by heading+angVel) + cm + linVel] - p. gta2_re 10.5: ComputeRelativePointVelocity_561130. Body matched."
+0x0049e650,plate,CarPhysics_ComputePointVelocity,"Seq33 slice3 VERIFIED: velocity of a LOCAL point (body frame, relative to physicsData+0xC cm offset): rot(r,heading)+cm vs rot(r,heading+angVel)+cm+linVel => v = diff. Used by CarPhysics_ApplyAxleForce for tyre slip. gta2_re 10.5: ComputePointVelocity_561380."
+0x0049e710,plate,CarPhysicsData_ComputeMaxThrust,Seq33 slice3 VERIFIED (gta2_re 10.5: ComputeThrustWithTurbo_5618F0): out = half + fifth*5*(turbo ? (1.0+0.5) : 1.0) = thrust/2 + thrust*(1 or 1.5). Stored in CarPhysicsData+0x1C (max_thrust_turbo).
+0x0049e820,plate,CarPhysics_IsTurboRevving,Seq33 slice2: engine 'turbo' active = CarEngineData.turbo(+1) && revs(CarPhysics+0x60) >= 3.0 (DAT_0066afbc = 3<<14). Doubles the revs term of thrust. gta2_re 10.5: get_revs_561940 (body matched: field_1_turbo && gas_pedal >= const).
+0x0049e850,plate,CarPhysics_ComputeThrustDamaged,"Seq33 slice2: thrust with engine-damage scale: thrust1(PhysData+0x14) + revs(+0x60) * damageFactor(DAT_0066afc4, set in ComputeForces from Car_GetDamageFactorOnSpeed) * thrust2(PhysData+0x18), revs term x2 when IsTurboRevving. Stack arg = out Fix16. gta2_re 10.5: ComputeTorqueFromThrottle_561DD0 (body matched, dword_6FE348 = damage factor). Used for gears 2/3 (player), and fwd/rev for AI."
+0x0049e8e0,plate,CarPhysics_ComputeThrust,"Seq33 slice2: thrust WITHOUT damage factor: thrust1(PhysData+0x14) + revs(+0x60) * thrust2(PhysData+0x18), revs term x2 when IsTurboRevving. gta2_re 10.5: ComputeTorqueUnknown_49E8E0 (body matched). Used for gear 1 and for reverse (player mode)."
+0x0049e950,plate,CarPhysics_UpdateThrottleRamp,"Seq33 slice2 (confirmed): revs/gas pedal (+0x60) ramp each tick. fwd gas: +=0.25 (DAT_0066afa0=0x1000) clamp 5.0; reverse gas: same clamp 5.0 (DAT_0066abb0); no gas: -=0.25 (af54) floor 0. Fix16 Q14: 0x1000=0.25, 5.0=0x14000. gta2_re 10.5: ApplyThrottleInput_562480 (matched)."
+0x0049e980,plate,CarPhysics_UpdateBrakeRamp,"Seq33 slice2 (confirmed): footbrake ramp. If isBrakeOn(+0x91) and surface not 7/8: brakeLevel(+0x64) += 0.25 (DAT_0066af48), clamp 1.0 (ad88); global DAT_0066ac28 = brakeLevel * CarEngineData.brake_friction(+0x10) (read by Front/RearAxleLateralForce). Else brakeLevel=0, DAT_0066ac28=0. gta2_re 10.5: ApplyBrakePhysics_5624F0 (matched)."
+0x0049ea00,plate,CarPhysics_GetMinGasPedal,"Seq33 slice3 VERIFIED: minimum gas-pedal level for 'pressed enough': 2.0 (0x66AD5C = Fix16 2) if car+0x7C driverClass==2 (player), else 0. gta2_re 10.5: MinGasPedalPressure_5626C0."
+0x0049ea30,plate,Sprite_GetBoundingBoxCorner,"Seq33 slice5 (verified): this=Sprite, idx 0..3 -> world (x,y) of bounding-box corner (sprite+0xc box +0xc+idx*8). gta2_re 10.5: Sprite::GetBoundingBoxCorner_562450."
+0x0049ea60,plate,CarPhysics_SubExternalAngVel,Seq33 slice1 (VERIFIED): angVel(+0x74) -= g_CarExternalAngVel(0x66AE0C). gta2_re 10.5: Field74Subtract. (No matching 'add' in the player/AI path: the angular term is only removed.)
+0x0049ea70,plate,CarPhysics_DampVelocity,"Seq33 slice3 CONFIRMED (name by another slice). Damps BODY-FRAME velocity and angVel: if |v.x|,|v.y|<=0.0078 (0x80): v*=k else rotate v by -heading; x*=kx; y*=ky (ky trailer variant); rotate back; angVel*=ka. Ground (per gta2_re 10.5 constants): kx=0.9, ky=0.97, ka=0.88; air: kx=0.95, ky=0.985, ka=0.94. gta2_re 10.5: StabilizeVelocityAtSpeed_562910. Lateral (x) damping is 3x stronger than forward -> grip-like."
+0x0049ebe0,plate,unsure_MapBlocks_GetCarSurfaceTypeAt,"Seq33 slice5 (hypothesis): (blocks, x,y,z, out slopeLen, out slopeLeft) -> CAR_SURFACE: 7 if tile is water-flagged, 9 if wet-flagged, 5 if no tile/no lid, else slope code from table DAT_00662db0[(slopeIdx)*12]. Only caller CarPhysics_UpdateSurface."
+0x0049ec80,plate,CarPhysics_SelectEngineData,Seq33 slice3 VERIFIED: g_pEngineData(0x66AB70) = CarModelTable->engineData[Car_GetPhysicsModel(car)]. gta2_re 10.5: SetModelPhysicsGlobal_562EB0.
+0x0049eca0,plate,CarPhysics_SelectPhysicsData,Seq33 slice3 VERIFIED: g_pPhysicsData(0x66AB78) = CarModelTable->physicsData[Car_GetPhysicsModel(car)]. gta2_re 10.5: SetCarInfoGlobal_562ED0.
+0x0049ecc0,plate,CarPhysics_SelectModelData,"Seq33 slice3 CONFIRMED (name by another slice): sets both globals: g_CurCarPhysicsData(0x66AB78)=physicsData[m], g_CurCarEngineData(0x66AB70)=engineData[m], m=Car_GetPhysicsModel(car). gta2_re 10.5: SetCurrentCarInfoAndModelPhysics_562EF0. Called at the top of CarPhysics_Update and by 12 other functions (every physics routine that reads GCI data must call it first)."
+0x0049ed00,plate,CarPhysics_CpFromCm,"Seq33 slice1 (VERIFIED): centerPos(+0x38) = cmPos(+0x30) + R(heading) * (-cmOffset), cmOffset = g_CurCarPhysicsData->cmOffset (+0xC/+0x10, car-local). I.e. reference point (sprite position) derived from centre of mass. Inverse = CmFromCp. gta2_re 10.5: UpdateCp1FromCm1_563280."
+0x0049ed60,plate,CarPhysics_CmFromCpViaModel,Seq33 slice1 (VERIFIED): same maths as CmFromCp but looks the model data up from car (FUN_004220A0 model id -> CarModelTable physics data) instead of using g_CurCarPhysicsData. Used by InitFromSprite and TrailerController_UpdateAlignment.
+0x0049edc0,plate,CarPhysics_CmFromCp,Seq33 slice1 (VERIFIED): cmPos(+0x30) = centerPos(+0x38) + R(heading)*cmOffset (g_CurCarPhysicsData +0xC/+0x10). Called when the car model changes (cachedModelId). gta2_re 10.5: UpdateCenterOfMassPoint_563350 / UpdateReferencePoint_563460.
+0x0049ee10,plate,CarPhysics_InitFromSprite,"Seq33 slice1 (VERIFIED): init physics pose from the car sprite: centerPos=sprite xy, zPos=sprite z, heading=sprite rotation, +0x78 steerAngle=0, then CmFromCpViaModel. Called by Car_CreatePhysics. gta2_re 10.5: SetSprite_563560."
+0x0049ee50,plate,CarPhysics_SnapVelocityToSpriteDirection,"Seq33 slice3 VERIFIED: linVel(+0x40) = polar(|linVel|, sprite angle param) then CarPhysics_InitFromSprite (sets heading/position from the sprite). gta2_re 10.5: SnapVelocityToSpriteDirection_563590. Caller FUN_00424ff0."
+0x0049ee80,plate,CarPhysics_WriteSprite,"Seq33 slice1 (VERIFIED): physics -> sprite sync: SetPosition(sprite, centerPos.x(+0x38), centerPos.y(+0x3C), zPos(+0x6C)); SetRotation(sprite, heading(+0x58)). sprite = car->sprite (car+0x50). The sprite position is the car's reference point cp, NOT the centre of mass. gta2_re 10.5: UpdateSpriteFromPhysics_563670."
+0x0049eeb0,plate,CarPhysics_WriteSpriteAndTrailer,"Seq33 slice1 (VERIFIED): WriteSprite(this) and, if a trailer rig, WriteSprite(partner physics = trailerController+0xC car ->physics). gta2_re 10.5: UpdateCarAndTrailerSpriteFromPhysics_5636C0."
+0x0049eed0,plate,CarPhysics_IsNearlyStopped,"Seq33 orchestrator: returns |linVel (+0x40)| < DAT_0066AFC8 (= 0x1333 = 0.3 Q14, copied from 0x66AD00 at 0x544CA0). Only reached by tail-jump from Car_CanExitCar 0x4222B8 (function created here by Seq 33; before, Ghidra had folded it into Car_CanExitCar). gta2_re 10.5: CarPhysics_B0::IsNearlyStopped."
+0x0049ef00,plate,CarPhysics_ClearModelData,Seq33 slice3 VERIFIED: g_pPhysicsData(0x66AB78)=g_pEngineData(0x66AB70)=NULL.
+0x0049ef10,plate,CollisionResult_SetMoverSprite,"Seq33 orchestrator: record +0x24 = sprite (g_CollisionKind struct, +0x24 = g_CollisionMoverSprite). Caller CarPhysics_TestCollision."
+0x0049ef20,plate,CollisionResult_IsHitPed,Seq33 orchestrator: kind(+0) == 3 (sprite hit) && unsure_Sprite_GetPedSprite(hit sprite +0x20) != 0. Caller CarPhysics_StepAndResolveCollisions (ped hits allow extra iterations).
+0x0049ef50,plate,CarPhysics_KeepActiveFor,"Seq33 slice1 (VERIFIED, disasm): activeUntilFrame(+0x08) = max(activeUntilFrame, g_FrameCounter->frame + n). Clock = g_FrameCounter (0x5E8108), +1 per GameTick (33 ms), so n is in ticks. Callers: ApplyImpact (collision), StartSwerve, FUN_0049F460, NudgeAndWake. Read by CarPhysics_IsKeptActive."
+0x0049ef80,plate,CarPhysics_IsStandingStill,Seq33 slice2: linVel == 0 && angVel(+0x74) == 0. gta2_re 10.5: CarPhysics_B0::sub_49EF80 (their name literally carries the 11.44-ish address 49EF80; called by IsNotMoving_5599D0).
+0x0049efe0,plate,unsure_Car_CanCrushCars,"Seq33 orchestrator (hypothesis): IsCollideOver(car) (CARI flag) && (IsTank || !FUN_004214f0). Caller CarPhysics_CollideWithCar: vehicles that drive over / flatten other cars (tank, monster truck)."
+0x0049f010,plate,show_instruments,"Seq33 slice2 (confirmed): debug overlay (g_doShowInstruments): 'speed:%3.3f(%d)' = |linVel| and gear (3 if speed>gear3_speed, 2 if >gear2_speed, else 1); 'revs:%3.3f %c' = CarPhysics+0x60 plus 'T' flag when IsTurboRevving; third line = Car+0x74 damage*100/32000 (percent). gta2_re 10.5: ShowSpeedRevsDamage_5597B0."
+0x0049f170,plate,CarPhysics_IsNotMoving,"Seq33 slice2: trailer-aware 'car is not moving': IsStandingStill(this), or for a rig both cab and trailer physics. gta2_re 10.5: IsNotMoving_5599D0 (body matched). Caller: UpdateStationaryTimer."
+0x0049f1b0,plate,CarPhysics_UpdateTrailerFromTowingCar,"Seq33 slice1 (VERIFIED vs 10.5 UpdateTrailerPhysicsFromTowingCar_559A40): after the full-step move, derive the trailer's velocities from its pose delta: trailer.linVel = (centerPos - startCenterPos(DAT_0066AE54..)) * (1/g_CollisionRemainingFraction); angVel = Ang16_ToFix16(angle delta)/remaining; zStep = (zPos - startZ)/remaining. Keeps trailer velocity consistent with how it was dragged."
+0x0049f280,plate,CarPhysics_EnforceTrailerControlLimits,"Seq33 slice1 (VERIFIED vs 10.5 EnforceTrailerControlLimits_559B50; name from another slice confirmed): for a towing cab: reverse gas (+0x94) is turned into foot brake (+0x91); if forward gas (+0x93) is off, turn direction (+0xAD) is cleared."
+0x0049f2d0,plate,CarPhysics_StartSwerve,"Seq33 slice3 VERIFIED: start a swerve (not for trains): if state not 1/2 pick random(2)==0?2:1; swerveTimer(+0xA4)=30 ticks; KeepActiveFor(30). Timer is decremented in CarPhysics_ScarePedsAndTickSwerve, state reset to 0 at 0. Caller FUN_004293d0 (oil/impact trigger). Probably gta2_re 10.5 SpinOutOnOil_559BA0."
+0x0049f350,plate,CarPhysics_ScarePedsAndTickSwerve,"Seq33 slice5 (verified body vs 10.5): (1) if car at slope tile (blockType&3 in 2,3) driven by ped, not train, and speed > 0.03 (DAT_0066af5c) or honking -> FUN_004350a0(driver) (threaten peds). (2) swerve timer: if swerveState(+0xa0) in 1..2: --swerveTimer(+0xa4); at 0 -> swerveState=0. gta2_re 10.5: ScarePedsOnDrivingFast_559C30 (+ swerve countdown tail)."
+0x0049f460,plate,unsure_CarPhysics_ApplyObjectPush,"Seq33 orchestrator (hypothesis): direction bytes of a touched object (FUN_00493090) * DAT_0066AC10 added to g_CarExternalLinVel (x) and 0x66B008 (y), KeepActiveFor(15). Caller unsure_Car_OnTouchObject (object type 0x8B per slice 3: conveyor/push). Added before and removed after the move each tick, like the steering assist."
+0x0049f4e0,plate,CarPhysics_AddExternalVelocity,Seq33 slice1 (VERIFIED): linVel(+0x40) += g_CarExternalLinVel. gta2_re 10.5: Field40Add. Called just before MoveAndCollide.
+0x0049f4f0,plate,CarPhysics_SubExternalVelocity,Seq33 slice1 (VERIFIED): linVel(+0x40) -= g_CarExternalLinVel (undoes AddExternalVelocity after the move). gta2_re 10.5: Field40Subtract.
+0x0049f500,plate,CarPhysics_ResetExternalVelocity,"Seq33 slice1 (VERIFIED vs 10.5 ResetPoint6FDF50): g_CarExternalLinVel(0x66B004) := (0,0). This global accumulates per-tick 'external' velocity from impacts/ped-on-roof etc (gta2_re ApplyObjectImpact writes it); it is ADDED to linVel before the move and SUBTRACTED afterwards so it only moves the car this tick."
+0x0049f510,plate,unsure_CarPhysics_GetLookAheadZ,"Seq33 orchestrator (hypothesis): zStep(+0x70) > 0 ? min(zPos + 1.0, DAT_0066AD1C = 7.984) : zPos. Only caller 0x420270. Purpose unconfirmed."
+0x0049f570,plate,CarPhysics::CarPhysics_GetCombinedCm,Seq33 slice1 (VERIFIED): *out = centre of mass of the whole rig: without trailer cmPos(+0x30); with trailer mass-weighted average (cab.cm*mCab/(mCab+mTr) + trailer.cm*mTr/...). gta2_re 10.5: ComputeCombinedCenterOfMass_559EC0. Used by impulse code (slice 4).
+0x0049f660,plate,CarPhysics_GetMass,"Seq33 slice3 VERIFIED: total mass = Car_GetMass(car) or, when towing (car+0x64 trailerController), mass(cab)+mass(trailer car). gta2_re 10.5: CalculateMass_559FF0."
+0x0049f6c0,plate,CarPhysics_GetInertia,"Seq33 slice3 VERIFIED: moment of inertia = physicsData[model].inertia(+0) or, when towing, sum for cab + trailer car (FUN_00425790 reads CarPhysicsData+0). Not scaled by car scale. gta2_re 10.5: GetEffectiveMomentOfInertia_55A050."
+0x0049f720,plate,CarPhysics_GetTrailerAwareTurnRatio,Seq33 slice3 VERIFIED: max steer angle = engineData.turn_ratio (+0x18); x2.5 (0x66ADB0) when the car is a truck cab with a trailer (Car_IsTruckCabWithTrailer). out->Fix16. gta2_re 10.5: GetTrailerAwareTurnRatio_55A100.
+0x0049f760,plate,CarPhysics_SetVelocityTowardTarget,"Seq33 orchestrator: kinematic placement: linVel = (target + R(heading)*cmOffset) - cmPos, angVel = targetAngle - Ang16_ToFix16(heading) unwrapped by turn direction (1: +360 if negative, 2: -360 if positive); mode(+0x8C) := 0 PUSHED unless 4. Callers CarAI_FollowRoad, unsure_Car_UpdateArticulatedCabTrailerSearch. gta2_re 10.5: CarPhysics_B0::SetVelocityTowardTarget_55A1D0."
+0x0049f930,plate,CarPhysics_ComputeRequiredSweepSteps,"Seq33 slice1 (RENAMED, was unsure_CarPhysics_ComputeSweepFraction; VERIFIED vs 10.5 ComputeRequiredSweepSteps_55A6A0): returns the NUMBER OF SWEEP STEPS (a Fix16, moved distance in units of the car's smaller half-dimension; caller uses FixedToIntB = integer count), not a 0..1 fraction. steps = max( Median3(|dx|,|dy|,|dz|)(start pose vs target pose, DAT_0066ABB8.. vs DAT_0066AC88..) / FUN_00421EF0(car) [min(carInfo.w,h) scaled], angleDelta(Ang16 FUN_0040EC20 with DAT_005D5074 wrap) ) ; for a rig max with the trailer's value."
+0x0049fac0,plate,CarPhysics_ClearForces,"Seq33 slice1 (VERIFIED): zero forceAccum(+0x48), linAccel(+0x50), torqueAccum(+0x7C), angAccel(+0x80). Called by IntegrateVelocity and Reset. gta2_re 10.5: ResetForceAccumulators_55A840."
+0x0049fb00,plate,CarPhysics_SetControls,"Seq33 slice2 (confirmed): driver input -> CarPhysics control bytes. args(fwdKey, backKey, left, right, handbrake). Stationary (linVel==0): 0x93=fwd, 0x94=back, 0x91=0. Moving forward (aligned): if reverse was on -> all cleared; else 0x93=fwd, 0x91(footbrake)=back. Moving backward: if fwd was on -> all cleared; else 0x91=fwd(brakes), 0x94=back. 0x92=handbrake, 0x95(coast)=0. Steering 0xAD: left-only=+1, right-only=-1(0xFF), else 0. gta2_re 10.5: HandleUserInputs_55A860 (body matched)."
+0x0049fbe0,plate,CarPhysics_ComputeSlopeCorrection,"Seq33 slice1 (VERIFIED vs 10.5 ComputeSlopeCorrection_55AB50): *out1/*out2 = z gained by moving along the slope this step. d = centerPos - savedStartCenterPos(FUN_0040F600 sub), sign chosen by slope direction surfaceType 1(N)/2(S)/3(W)/4(E); times slope gradient FUN_004634E0(slopeLength +0xA5: 1 gentle,2,8 steep). If on the last slope tile (slopeLeftTiles==0 && climbing && tileZ matches) value is bounded below by 1-frac(zPos). Other surface -> 0. Used by UpdateGroundZ and UpdateZOnRailway."
+0x0049fdc0,plate,CarPhysics::CarPhysics_UpdateZOnRailway,"Seq33 slice1 (VERIFIED vs 10.5 UpdateZPosition_55B4F0; thunk at 0x49FF70): Z update for trains: z from railway height (FUN_00466F70/00466E20 MapBlocks lookup at centerPos), same zStep=(newZ-zPos)/step convention as UpdateGroundZ, uses ComputeSlopeCorrection when it must come down, sprite z probe via Sprite_TestMapCollision."
+0x0049ff80,plate,CarPhysics_EmitImpactParticles,Seq33 slice5 (verified): landing puffs. Skipped if sprite on water (FUN_004baa90) or car wrecked. mask (0 -> Sprite_CheckCornerZCollisions) bit i -> Particle_EmitImpactParticles at corner i (Sprite_GetBoundingBoxCorner) with z=+0x6c; then sound event FUN_004102a0. gta2_re 10.5: CarPhysics_B0::EmitImpactParticles_55B7E0.
 0x004a0020,plate,CarPhysics_TestCollision,Seq33 slice4: narrow+broad phase for a car. Tests car sprite (and trailer sprite) vs map (Sprite_TestMapCollisionAndRecord) then vs sprites (Sprite_FindObstacleAndRecord -> Collision_FindObstacle grid). On hit stores mover sprite into g_CollisionKind struct +0x24 and returns 1. gta2_re 10.5: TestCollision.
 0x004a0080,plate,CarPhysics_DebugAssertCollisionKind,"Seq33 slice4: 0 callers (debug leftover). After restoring pose and TestCollision, asserts collision kind==3 and hit sprite is type 3 else DisplayError(physics.cpp 0x7a0/0x7a9)."
-0x004a05c0,plate,unsure_CarPhysics_ComputeCollisionImpulse,"Seq33 slice4 HYPOTHESIS: 2D rigid-body collision impulse (returns Vec2 Q14). args: massA, massB (g_Fix16MinusOne = immovable branch), body A vel/rot-state, body B, contact point, cm A, cm B. If either body has special flag (FUN_00420360) returns zero vec DAT_0066abd8. Branch A (finite B): sums 1/m + cross^2/I terms; branch B (immovable): only A terms; scaled by DAT_0066ac4c (Q14 1.0 -> restitution-like factor, runtime-initialised constant). 7 callers. gta2_re 10.5 candidate: CalculateImpulse / AccumulateImpulse (not byte-matched)."
+0x004a0120,plate,CarPhysics_SpawnSkidSegment,"Seq33 slice5 (verified): (this=CarPhysics, wheelIdx, localOffset(x,y)->rotate by heading + centerPos(+0x38), surface type). Tile check unsure_MapBlocks_GetSkidTileKind: kind 5 (no lid) or (type 3 and kind != 7 water) -> clear anchor. Else if previous anchor (+0x10+idx*8) non-null: segment = anchor->new point; len; if len > 0 spawn skid object (CarPhysics_GetSkidObjectType(type,len)) at midpoint, rot = atan2; then anchor = new point. gta2_re 10.5: CarPhysics_B0::SpawnSkidSegment_55D200 (matched)."
+0x004a0290,plate,CarPhysics_UpdateSkidmarks,"Seq33 slice5 (verified, disasm): per-frame skid emission for 4 wheels (anchors CarPhysics+0x10 rr, 0x18 rl, 0x20 fr, 0x28 fl; idx 0,1=rear 2,3=front). If car not on screen (unsure_Car_IsOnScreenForAnyPlayer) clear all anchors. type = 2 if groundMaterial(+0x9c) in {2,10} else 0. REAR: surfaceType(+0x98) in {7,8,9} -> segment type 3 (water wake); else if rearSlip(+0x88) >= CarPhysicsData.skid_threshhold2(+0x28) OR (wheelSpinTimer(+0xac)>0 && CarPhysicsData+0x20>0) -> segment (unless surface==6 air) else clear rear anchors. FRONT same with frontSlip(+0x84) >= skid_threshhold1(+0x24) OR (+0xac>0 && CarEngineData.front_drive_bias>0). Wheel half-width/offsets from DAT_0066ab78. +0xac decremented each call. gta2_re 10.5: UpdateWheelSkidEffects_55DC00 (matched)."
+0x004a0560,plate,CarPhysics_DoSkidmarks,"Seq33 slice5 (verified): if !g_skipSkidmarks: CarPhysics_UpdateSkidmarks(this); then for towed trailer car: SelectModelData, zero its slips (+0x84/+0x88), UpdateSkidmarks, restore. Called from CarPhysics_Update. gta2_re 10.5: CarPhysics_B0::DoSkidmarks_55E260."
+0x004a05c0,plate,CarPhysics_ComputeCollisionImpulse,"Seq33 orchestrator (verified, decoded with the named helpers): 2D rigid-body collision impulse. cdecl(out, mA, mB, vRel*, n*, P*, cmA*, cmB*, IA, IB, e). Zero vector if vRel or n is zero. nh = Vec2_Normalize(n); rA = perp(P - cmA); rB = perp(P - cmB); num = -(1 + e) * dot(vRel, nh); denom = dot(n,n)*(1/mA + 1/mB) + dot(rA,n)^2/IA + dot(rB,n)^2/IB; if mB == g_Fix16MinusOne (immovable: wall/static) the B terms are dropped. out = nh * (num/denom). Restitution e by caller: wall 0x66AE38 = 0.25 (ApplyWallImpulse 0x4A32D0), car-car 0x66B04C = 0.5 (CollideWithCar 0x4A34A0), car-ped 0x66AE88 = 1.0 with ped mass 0x66AC44 = 0.5 and ped inertia 0x66AEA0 = 1.0 (CollideWithSprite 0x4A0A30), car-object 0x66AEA4 = 1.0 with object inertia 0x66AFD8 = 1.0 (CollideWithObject 0x4A3A40). n is g_CollisionNormal 0x66AFB4, P is g_CollisionContactPos 0x66AD08. Was unsure_ (slice 4: role verified, formula not decoded)."
+0x004a0850,plate,CarPhysics_ApplyForceAtPoint,"Seq33 slice4 (confirmed name): ApplyForceAtPoint(force, point, mode). mode 1: point is body-local (rotate by heading +0x58, add pos +0x38). Linear: +0x48 += force; torque: +0x7c += r x F scaled by +0x34 (inv-inertia) and +0x30 (inv-mass)."
 0x004a0900,plate,unsure_CarPhysics_ApplyKickFromGlobalTable,"Seq33 slice4 HYPOTHESIS: velocity(+0x48) += vector from table at DAT_0066ab70+4 (FUN_0041e1a0 = unary op, probably neg/scale). Only caller 0x4A0960."
+0x004a0930,plate,CarPhysics_ApplyMassKick,Seq33 slice4 (confirmed name): +0x48 (accumulated force) += f(GetMass); used by NudgeOutOfWall/Sprite and FUN_00489680.
 0x004a0960,plate,unsure_CarPhysics_ApplyKickWithTrailerRedirect,"Seq33 slice4 HYPOTHESIS: wrapper of 0x4A0900 with trailer redirect (FUN_00421720 => apply to linked CarPhysics). Callers: UpdateSurface, NudgeAndWake."
 0x004a09b0,plate,unsure_CarPhysics_NudgeAndWake,"Seq33 slice4 HYPOTHESIS: post-contact nudge for non-train cars: optional scale by DAT_0066ad80 if +0x92 set, kick (0x4A0960), CarPhysics_KeepActiveFor(ticks), release handbrake if no player driver. Called from CollideWithCar (train-vs-player case) and CollideWithObject with 0x32 ticks."
 0x004a0a30,plate,CarPhysics_CollideWithSprite,"Seq33 slice4 (confirmed name): car hits a PED sprite (param_1 = ped sprite, owner at +0x7c). Ped treated with mass DAT_0066ac44 (runtime const, NOT -1: ped is pushed). impulse=ComputeCollisionImpulse; g_CollisionImpactMagnitude = |impulse|/..; sets ped+0x204 = driver ped id, +0x264=0x32, +0x290 flag (driven by player/own car); then calls PedSprite_HandleCarImpact(ped, car, flag, impulseXY) which decides knock-down/death. Car itself gets no ApplyImpact here (pedestrians don't decelerate cars). gta2_re 10.5: Char_B4::HandleCarImpact / ProcessPedImpact caller."
+0x004a0c60,plate,CarPhysics_ForcesToAccel,"Seq33 slice1 (VERIFIED): linAccel(+0x50) = forceAccum(+0x48) / mass (CarPhysics_GetMass, rig = cab+trailer); angAccel(+0x80) = -torqueAccum(+0x7C) / inertia (GetInertia). NOTE the minus sign on angular. Units: per-tick^2 (no dt factor). gta2_re 10.5: UpdateLinearAndAngularAccel_560EB0."
+0x004a0cc0,plate,CarPhysics_IntegrateVelocity,"Seq33 slice1 (VERIFIED): semi-implicit Euler, dt = 1 tick: linVel(+0x40) += linAccel(+0x50); angVel(+0x74) += angAccel(+0x80); ClearForces (zero +0x48,+0x50,+0x7C,+0x80); Vec2_ApplyDeadZone(linVel) (|vx|+|vy| < 1/256 block/tick -> 0); angVel = Fix16_ApplyDeadZone(angVel). gta2_re 10.5: IntegrateAndClampVelocities_5610B0. Positions are integrated later in StepIntegrate."
+0x004a0d10,plate,CarPhysics_ComputeRelativePointVelocityForModel,"Seq33 orchestrator: CarPhysics_SelectPhysicsData(this) then CarPhysics_ComputeRelativePointVelocity(out, point). Entry point for non-physics callers (weapons/objects 0x48D4E0, 0x4CFBE0..)."
+0x004a0d40,plate,CarPhysics_ApplyAxleForce,"Seq33 slice3 VERIFIED (gta2_re 10.5: ApplyDriveForce_5615D0), lateral part. v=ComputePointVelocity(point) rotated into wheel frame (-angle): force.x=-v.x*coef.x (LATERAL tyre friction), force.y=-v.y*coef.y+drive (ROLLING/BRAKE drag + drive); skipped (zero) if +0x95. Returns |force.x| = slip. Rotated by angle, ApplyForceAtPoint(point,force,rotate=1). Longitudinal/wheel-lock byte +0xAC (player cars, non-tank, handbrake) belongs to slices 2/5."
+0x004a0f30,plate,CarPhysics_ComputeDriveForce,"Seq33 slice2 (confirmed): longitudinal drive force (Fix16) for one axle. 0 unless engine ON(car+0x9C==3) and surfaceType(+0x98) not 7/8. Player mode(+0x8C==2), speed=|linVel|: reverse gas(+0x94) -> -ComputeThrust*gear1_mul(Eng+0x34); fwd gas(+0x93): speed>gear3_speed(+0x44)-> ThrustDamaged*gear3_mul(+0x3C); speed>gear2_speed(+0x40)-> ThrustDamaged*gear2_mul(+0x38); else ComputeThrust*gear1_mul. Blocked iff speed==0 && handbrake(+0x92). AI mode: +-ThrustDamaged, no gears. Callers Front/RearAxleLateralForce. gta2_re 10.5: ComputeEngineTorque_561970 (body matched; their reverse adds thrust1 twice - WIP error)."
+0x004a1130,plate,CarPhysics_FrontAxleLateralForce,"Seq33 slice3 VERIFIED (gta2_re 10.5: CalculateFrontWheelForce_561E50). Front tyre force. Returns |lateral force| (-> frontSlip +0x84). Air: 0. wheel point=(0,physData.front_wheel_offset +4). drive=ComputeDriveForce*engine.front_drive_bias(+8). cx=1.0*(1+turn_in(+0x14) if steering!=0). swerveState==0: cy=0.1387(0x8E5)+brakeRamp(0x66AC28)*0.8, wheel angle=heading+steerAngle. swerve 1/2: forces zero unless drive!=0, cy=0.1387, angle=steer+-30deg. Calls CarPhysics_ApplyAxleForce(point, angle, (cx,cy), drive)."
+0x004a1360,plate,CarPhysics_RearAxleLateralForce,"Seq33 slice3 VERIFIED (gta2_re 10.5: CalculateRearWheelForce_5620D0). Rear tyre force; returns |lateral force| (-> rearSlip +0x88). Air: 0. wheel point=(0,physData.rear_wheel_offset +8). drive=ComputeDriveForce*physData.rear_drive(+0x20 =1-front_drive_bias). cx=1.0*(1-turn_in if steering!=0); cy=0.1387+brakeRamp*0.2; handbrake (+0x92): counter +0xA8 counts up to 128, cx*=engine.handbrake_slide_value(+0x20), cy+=engine.brake_friction(+0x10)*counter/128. Then (cx,cy)*=engine.rear_end_stability(+0x1C) (Fix16Vec2_MulAssign). Rear wheel angle = heading - (0.6-|v|)/(0.6*3.8)*steerAngle (counter-steer 26% at standstill, 0 at |v|=0.6). Swerve 1/2 as front with opposite sign."
+0x004a16b0,plate,CarPhysics_UpdateSteerAngle,"Seq33 slice3 VERIFIED. Front-wheel steer angle (+0x78, Fix16 '1deg=0x11C') = GetTrailerAwareTurnRatio(GCI turn_ratio) * steering(-1/0/1 at +0xAD). Player-driven cars (car+0x7C driverClass==2) additionally scale by max(0.6-|linVel|,0.25)/(0.6*0.8): x1.25 standing still, x0.52 from speed 0.35. gta2_re 10.5: UpdateSteeringAngle_562560 (body matched). Caller CarPhysics_Update."
+0x004a17a0,plate,CarPhysics_IsGasPedalPressedEnough,Seq33 slice3 VERIFIED: throttle(+0x60) >= CarPhysics_GetMinGasPedal. gta2_re 10.5: IsGasPedalPressedEnough_5626A0. Used by the steering assist.
+0x004a17c0,plate,CarPhysics_ApplySteeringAssist,"Seq33 slice3 VERIFIED. Road-arrow lane assist: global g_steerAssist(0x66AE0C)=0; only for human-driven cars (ai==NULL or ai.flags&0x2000), steerAngle==0, gas pressed enough, velocity aligned with heading, speed!=0, swerveState==0, tile at (cp1.x,cp1.y,z-1) is road (blk+0xB&3==1) with arrows: (blk+0xA&0x33)=left/right arrows -> snap targets heading 90/270deg; (&0xCC)=up/down -> 0/180/360deg; only if within +-25deg of a target. delta=target-heading (Fix16, 1deg=0x11C), clamped to +-Car_GetSteerAssistLimit (speed*0.13, *0.26 short cars), then angVel(+0x74) += delta (shows 'snap' debug label). CarPhysics_SubExternalAngVel (0x49EA60) subtracts g_steerAssist after MoveAndCollide => temporary per-tick nudge, angVel is net unchanged. gta2_re 10.5: ApplyArrowSteerAssist_5626F0 (MATCH)."
+0x004a1b20,plate,CarPhysics_LimitSpeed,"Seq33 slice2 (confirmed): top-speed cap. Skipped when IsInAir. cap = IsVelocityAlignedWithHeading ? CarEngineData.max_speed(+0x28) : gear2_speed(+0x40) (reverse/backward cap). If |linVel| > cap: linVel = clampTowardsZero(linVel, polar(cap, angle(linVel))). Note max_speed is NOT damage-scaled here (damage only scales thrust). gta2_re 10.5: EnforceGearSensitiveMaxSpeed_562D00 (body matched)."
+0x004a1ba0,plate,CarPhysics_UpdateStationaryTimer,Seq33 slice1 (VERIFIED): framesStationary(+0x90): if IsNotMoving -> ++ (saturate 255) and return true when >=20 (0x14 ticks = 0.66 s); else reset to 0. gta2_re 10.5: UpdateLastMovementTimer_562FA0.
+0x004a1be0,plate,CarPhysics_Reset,"Seq33 slice1 (VERIFIED): reset all dynamic state: linVel=0, angVel=0, zStep=0, ClearForces, input flags +0x91..95=0, +0xAD steering=0, cachedModelId(+0xA9)=0xFF, +0xA8=0, framesStationary=0, swerveState=0 (SetSwerveState), +0xA4/A5/A6=0, surfaceType(+0x98)=0, groundMaterial(+0x9C)=0, skid vectors(+0x10..0x28)=0, mode(+0x8C)=1 (AI), activeUntilFrame(+8)=0, throttle/brake init from globals (DAT_0066AE74/0066ABE4), zVelocity(+0x68)=0, front/rearSlip=0, +0xAA/AB=0. Does NOT touch positions. Called by Init and FUN_004AF8A0."
+0x004a1cf0,plate,CarPhysics_Init,"Seq33 slice1 (VERIFIED): initialise a pool slot: cmPos=0, heading(+0x58)=DAT_0066AC08 (0), centerPos=0, next(+0xC)=NULL, Reset, cmDelta(+0)=0. Called by CarPhysicsPool_Alloc and Ctor."
+0x004a1d30,plate,CarPhysics::CarPhysics_AttachCar,Seq33 slice1 (VERIFIED): physics->car(+0x5C)=car; mode := PLAYER(2) if Car_HasPlayerDriver else AI(1). Called by Car_CreatePhysics. gta2_re 10.5: SetCar_5638C0.
+0x004a1d60,plate,CarPhysics_Ctor,"Seq33 slice1 (VERIFIED): CarPhysics constructor for the pool vector-ctor: constructs the 4 skid Vec2 members (+0x10..+0x2F, 8 bytes each, FUN_0040F5B0), heading(+0x58)=0 (Ang16_SetZero), next(+0xC)=NULL, then CarPhysics_Init."
+0x004a1da0,plate,show_physics,"Seq33 slice2 (confirmed): debug overlay (g_doShowPhysics). Format strings name fields: CM=(+0x30,+0x34) CP=(+0x38,+0x3C,+0x6C); linvel=(+0x40,+0x44) angvelrad=+0x74; theta=+0x58 (Ang16*0.25 = degrees); pointingangrad=+0x78 (steerAngle); mass=GetMass; front skid=+0x84, rear skid=+0x88 (highlight when >= threshold); surface_mode/sbw/tpa (+0x98, +0xAA, +0xAC?)."
+0x004a20e0,plate,CarPhysics_ApplySlopeGravity,Seq33 slice5 (verified vs 10.5): slope gravity. If slopeLength(+0xa5)==1 && !handbrake(+0x92) && !brake(+0x91) && not train: surfaceType 1..4 (slope up/down/left/right) -> CarPhysics_ApplyMassKick with unit vector along slope * DAT (FUN_004634e0). gta2_re 10.5: HandleGravityOnSlope_55AA00. Called from CarPhysics_ComputeForces.
+0x004a2240,plate,CarPhysics::CarPhysics_UpdateGroundZ,"Seq33 slice1 (VERIFIED structure vs 10.5 UpdateZPhysics_55AD90): per-step Z following. surfaceType(+0x98)==6 (AIR): zPos capped at DAT_0066AD1C, new z = zPos + savedZVelocity(+0x68 at start)*step (not below ground); 7/8 (water): z unchanged; else GROUND/SLOPE: z_ground = FindMaxZ(centerPos); if ground is above the car the car climbs only if the step is small (kerb), else z stays; if ground is below, z drops to ground and ComputeSlopeCorrection sets zVelocity(+0x68) (momentum when leaving a ramp). Probes the sprite at the new z with Sprite_TestMapCollision to refuse z that would put the car inside a block. If Car_HasFlag2000 additionally rises z in DAT_0066AF60 increments until Collision_CheckAndNotifyFiltered finds no overlap (g_CarManager+0x60/0x64). End: zStep(+0x70) = newZ - zPos; zPos += zStep (then zStep /= step in the caller's units, see 10.5 Fix16_DivAssign). Callers: UpdateZWithTrailer."
+0x004a2640,plate,CarPhysics::CarPhysics_UpdateZWithTrailer,"Seq33 slice1 (VERIFIED vs 10.5 SyncZWithTrailer_55B3F0): UpdateGroundZ(this); if trailer rig: UpdateGroundZ(partner) under its SelectModelData, then both physics get the HIGHER zPos (+0x6C) and its zStep (+0x70) so cab and trailer never float apart."
+0x004a26c0,plate,CarPhysics_UpdateSurface,"Seq33 slice5 (verified role, details partly hypothesis): per-frame ground contact + surface. Writes +0x98 surfaceType, +0x9c groundMaterial, +0xa5..a7 (slope len/left/tileZ), +0xab. If no block at centre (unsure FUN_00469b00): groundMaterial=0, corner mask via Sprite_CheckCornerZCollisions; no corner -> surfaceType=6 (air) unless on slope and corner near; corners unsupported get a kick (unsure_CarPhysics_ApplyKickWithTrailerRedirect, overhang tipping). Else groundMaterial=FUN_00465650 (style tile material). Then tile lookup unsure_MapBlocks_GetCarSurfaceTypeAt: 7 (water tile)/9 (wet)/5 none/slope code; if 7 and all 4 corners in water -> 8 (IN_WATER). Returns (previous surface was 6) = landed this frame -> caller emits landing dust. gta2_re 10.5: ProcessGroundCollisionAndSurfaceType_55B970."
+0x004a2980,plate,CarPhysics_UpdateSurfaceAndEmitLanding,Seq33 slice5 (verified body): CarPhysics_UpdateSurface for car and its trailer partner; if landed (returned !=0) -> CarPhysics_EmitImpactParticles(mask). Called from CarPhysics_Update (kinematic mode) and FUN_004a4310. gta2_re 10.5: ProcessGroundCollisionAndEmitImpactParticles_55BFE0.
+0x004a2a30,plate,unsure_CarPhysics_NudgeOutOfWallY,Seq33 slice4 HYPOTHESIS: Y twin of NudgeOutOfWallX (uses contact rel-cm x).
+0x004a2b40,plate,unsure_CarPhysics_NudgeOutOfWallX,"Seq33 slice4 HYPOTHESIS: wall-X stuck fix: from heading (+0x58, half-turn flip if +0x94), compares contact rel-cm y (g_CollisionContactRelCm+4) sign with heading ranges, snaps heading (0x49E330) and adds a kick vector DAT_0066aea8 via ApplyMassKick; sets +0xaa=1."
+0x004a2c70,plate,unsure_CarPhysics_NudgeOutOfSprite,"Seq33 slice4 HYPOTHESIS: stuck-vs-sprite nudge: kick strength chosen by hit sprite (obj type 0xA6 weak DAT_0066aea8, player driver DAT_0066af80, AI DAT_0066abcc), direction from contact point; ApplyMassKick. Called from NudgeOutOfCollision kind 3."
+0x004a2d70,plate,unsure_CarPhysics_NudgeOutOfCollision,"Seq33 slice4 HYPOTHESIS: called by MoveAndCollide after a hit when engine accelerates: switch g_CollisionKind 1 -> NudgeOutOfWallX, 2 -> WallY, 3 -> NudgeOutOfSprite; returns 1 for walls (retry movement). Computes a corrective kick via ApplyMassKick so the car does not stay jammed."
+0x004a2db0,plate,CarPhysics_CheckPendingCollision,"Seq33 slice1 (VERIFIED vs 10.5 CheckPendingCollision_55F360): if Car_HasFlag2000: g_CarManager+0x60=1, Collision_CheckAndNotifyFilteredForSprite(car sprite, 2) (overlap check vs. sprites with mask 2); returns 1 if it hit something, else Car_ClearFlag2000. Called after MoveAndCollide in modes PUSHED/3/AI/PLAYER."
 0x004a2e00,plate,CarPhysics_ApplyImpulseAndIntegrate,Seq33 slice4: ApplyForceAtPoint(mode 0 = already world-space) + ForcesToAccel + IntegrateVelocity: applies a collision impulse immediately.
+0x004a2e30,plate,CarPhysics::CarPhysics_StepIntegrate,"Seq33 slice1 (VERIFIED, disasm+decomp): advance the car by fraction `step` (Q14, 1.0=whole tick) of the REMAINING movement. gta2_re 10.5: ApplyMovementStep_560F20.
+ s = step * g_CollisionRemainingFraction(0x66AFC0); if s != 0:
+  heading += Fix16_ToAng16(angVel * s)      (Ang16 wrap 0..1439)
+  cmPos(+0x30) += linVel(+0x40) * s
+  CpFromCm (centerPos +0x38 = cm - R(heading)*cmOffset)
+  zPos(+0x6C) += savedZStep(DAT_0066ABC4 = zStep at start pose) * step   (NOT scaled by remaining)
+  UpdateTrailerAlignment; train -> UpdateZOnRailway(step) else UpdateZWithTrailer(step)
+ WriteSpriteAndTrailer.  Called for full step (1.0), sweep sub-steps and bisection by slice-4 code and by StepKinematic."
+0x004a2f20,plate,CarPhysics_ComputeForces,Seq33 slice1 (VERIFIED): force->velocity part of the tick (gta2_re 10.5: ApplyInputsAndIntegratePhysics_562F30). Order: DAT_0066AFC4 = FUN_00421B90(car) [damage speed factor]; UpdateThrottleRamp; UpdateBrakeRamp; frontSlip=FrontAxleLateralForce; rearSlip=RearAxleLateralForce; ApplySlopeGravity; ForcesToAccel; IntegrateVelocity. Velocity is updated BEFORE the movement/collision step of the same tick.
 0x004a2f90,plate,CarPhysics_SweepForCollision,"Seq33 slice4: sweep test. Saves target pose, ComputeSweepFraction -> total fraction; steps pose in integer-count increments (FixedToIntB(frac)), each StepIntegrate+TestCollision; first colliding step -> *param1 = time at hit, *param2 = last free time. If none, tests final pose. gta2_re 10.5: SweepTestMovementForCollision."
 0x004a30a0,plate,CarPhysics_BinarySearchCollisionTime,"Seq33 slice4: 3 bisection iterations between free time (*p2) and hit time (*p1): mid=(a+b)/2, restore start pose, StepIntegrate(mid), TestCollision -> move hi or lo. Narrows collision time to 1/8 of the sweep step. gta2_re 10.5: BinarySearchCollisionTime."
+0x004a3120,plate,CarPhysics_StepKinematic,Seq33 slice1 (VERIFIED vs 10.5 StepPhysics_55F330): kinematic step (mode 4): g_CollisionRemainingFraction=1.0; SaveStartPose; StepIntegrate(1.0) with no collision handling at all (car just integrates velocity). Used by CarPhysics_Update mode KINEMATIC.
 0x004a3140,plate,CarPhysics_ApplyImpulseWithTrailerRedirect,"Seq33 slice4: if car has a trailer link (FUN_00421720) redirect the impulse to the cab/other half's CarPhysics (SelectModelData swap), then ApplyImpulseAndIntegrate. gta2_re 10.5: ApplyImpulseWithTrailerRedirect (body matched)."
 0x004a31b0,plate,CarPhysics_ApplyImpact,"Seq33 slice4 (confirmed name): ApplyImpact(contact, impulse*, keepActiveTicks). Returns the impulse unchanged in out. If |impulse|/mass (Q14) >= threshold g(DAT_0066aeb0 = copy of DAT_0066ab9c): AI cars (flag 0x800, non-player, +0x92) get impulse scaled by DAT_0066ac48; Car_TryStartAlarm; if car flag 2 is clear: redirects via ApplyImpulseWithTrailerRedirect, CarPhysics_KeepActiveFor(ticks), releases handbrake for non-player. Callers: CollideWithCar, ApplyWallImpulse, CollideWithObject, explosion knockback."
 0x004a32d0,plate,CarPhysics_ApplyWallImpulse,"Seq33 slice4: wall/map collision response. impulse = ComputeCollisionImpulse(mass, other mass = -1 (g_Fix16MinusOne => immovable), contact vel, ...); ApplyImpact(contact, impulse, 0xF ticks keep-active); g_CollisionImpactMagnitude = result; then Car_ApplyImpactDamage (slice5) and, if magnitude above threshold DAT_0066af5c, particle/sparks (FUN_0048db00) + FUN_00423180 sound/event. Player-car special case: caps magnitude to DAT_0066aff4. Called by WallX / WallY."
@@ -122,13 +1091,45 @@ Evidence: FUN_004821c0/4820d0 ('yourit' label), death -> FUN_004822a0. Confidenc
 0x004a4170,plate,CarPhysics_DispatchCollision,"Seq33 slice4: switch on g_CollisionKind: 1 -> CollideWithWallX, 2 -> CollideWithWallY, 3 -> sprite hit: computes contact point (Sprite_ComputeCollisionContactPoint) then Sprite_GetCar -> CollideWithCar, else Sprite_GetPedSprite -> CollideWithSprite (ped), else Sprite_GetObject -> CollideWithObject. Finally pushes sound event with g_CollisionImpactMagnitude. gta2_re 10.5: CarPhysics_B0::DispatchCollision."
 0x004a4270,plate,CarPhysics_OnCollision,"Seq33 slice4 (confirmed): replays pose at collision fraction (RestoreStartPose+StepIntegrate with remaining t), then CarPhysics_DispatchCollision(this_of_hit_car, hit pos, rot). Hit car switched in via SelectModelData. gta2_re 10.5: ReplayAndDispatchCollision."
 0x004a4310,plate,CarPhysics_StepAndResolveCollisions,"Seq33 slice4: per-frame collision loop of a car (called by CarPhysics_MoveAndCollide). Up to 2 (3-4 if car-vs-ped/object) iterations: SaveStartPose -> StepIntegrate -> ComputeSweepFraction/SweepForCollision finds first hit; if hit, BinarySearchCollisionTime refines, CarPhysics_OnCollision dispatches; g_CollisionRemainingFraction (Q14 1.0 start) is reduced by the used fraction. Skips repeat hits on same sprite (aiStack list). Trains: zeroes frac if no overlap. gta2_re 10.5: CarPhysics_B0::StepMovementAndCollisions (call shape matched)."
+0x004a4490,plate,CarPhysics_MoveAndCollide,"Seq33 slice1 (VERIFIED; slice4 added the collision part): movement for the tick. gta2_re 10.5: ProcessCollisionAndClampVelocity_55F280.
+ cm0 = cmPos; loop { g_CollisionRemainingFraction=1.0; hit = StepAndResolveCollisions;
+   first pass: unmovedByCollision(+0xAA)=0; if remaining!=1.0 (something moved) or !hit -> done;
+   if IsEngineAccelerates && NudgeOutOfCollision()!=0 -> ForcesToAccel+IntegrateVelocity and run ONE more pass; else done.
+   second pass: if remaining still == 1.0 (blocked at once) -> linVel=0, angVel=0 }.
+ cmDelta(+0,+4) = cmPos - cm0 (displacement this tick, block units). Returns hit."
+0x004a4570,plate,CarPhysics_Update,"Seq33 slice1 (VERIFIED): per-car physics tick, once per GameTick (33 ms) via Car_Update -> Car_UpdatePhysics(0x427B40) or TrailerController_UpdatePhysics. gta2_re 10.5: ProcessCarPhysicsStateMachine_562FE0.
+Order: SelectModelData; if model!=cachedModelId -> CmFromCp; frontSlip=rearSlip=0; switch(mode +0x8C):
+ AI(1)/PLAYER(2): ResetExternalVelocity, CheckCarAndTrailerCollisions, [AI: ApplySwerveInput], EnforceTrailerControlLimits, UpdateSteerAngle, ComputeForces (throttle/brake ramps, axle lateral forces, slope gravity, ForcesToAccel, IntegrateVelocity), DampAngularVelocity, LimitSpeed, AddExternalVelocity, ApplySteeringAssist, ScarePedsAndTickSwerve, MoveAndCollide, CheckPendingCollision, DoSkidmarks, SubExternalVelocity, SubExternalAngVel.
+ PUSHED(0): CheckCarAndTrailerCollisions, ScarePeds, MoveAndCollide, CheckPendingCollision, DoSkidmarks, then mode := Player/AI by driver.
+ 3: CheckCollisions, ComputeForces, ScarePeds, CheckPendingCollision, MoveAndCollide, CheckPending, DoSkidmarks, then mode := Player/AI.
+ KINEMATIC(4): CheckCollisions, StepKinematic (StepIntegrate with remaining=1.0, no collision), UpdateSurfaceAndEmitLanding, DoSkidmarks, mode := Player/AI.
+Finally UpdateStationaryTimer; returns 1 (=free me) if stationary>=20 ticks && no collision flag && surface not 6/7/8."
 0x004a49c0,plate,Player_OnKeyUp,KeyDown
+0x004a4c40,plate,Player_DriveCar,"Seq33 slice2 (confirmed): Player input struct -> Car_ApplyDriverControls: Player+0x78 up, +0x79 down, +0x7a left, +0x7b right, +0x7e handbrake, +0x81 horn/fire, +0x84 hornEnable, +0x7c extra (zeroed when Player+0x788 >= 15). Names of the Player bytes are hypotheses from SetControls usage."
 0x004af780,plate,PublicTransportManager_Ctor,"PublicTransportManager ctor. 100 x 0x34 stop/track entries at +0, 10 x 0x58 train/bus actors at +0x1450, one extra 0x58 actor at +0x17C0. Loaded from map by relToTrainsAndBuses (trak0..4); updated by PublicTransportManager_Update (honours skip_trains/skip_buses)."
 0x004b2f20,plate,SoundManager_InitOnce,"One-shot (unknown_used_with_s6 guard) SoundManager init: clears 5 channel slots, queues sound 1, creates the stream at +0x5508. Hypothesis name."
+0x004b7500,plate,PlayerScore_GetCarValue,"Seq33 slice3 VERIFIED: engineData[model].value (+2) scaled by kind param: 0 -> x1, 1 -> x2, 2 -> x5, else 0. Callers PlayerScore_OnCarDestroyed, PlayerScore_OnCarjack => 'value' in NYC.GCI is the score/bounty weight, not physics."
 0x004b7662,eol,PlayerScore_AddMoney,current money
 0x004b9490,plate,FloatingScoreManager_Ctor,"FloatingScoreManager: floating money popups on kills/rewards. Created only when the exploding_on debug flag is 0. 3 popups x 0x50 with free/active lists. Spawn 0x4b91f0, Update 0x4b9260 (GameTick), Draw 0x4b98b0 (eachFrame)."
 0x004b9960,plate,OwnerSlotTable_Ctor,"Owner slot table, 255 x 8 bytes: [+0 ped id][+4 refcount byte]. A ped gets a 1..254 slot (ped+0x267) via OwnerSlotTable_AllocSlot; projectiles/objects keep it at obj+0x26 so damage is credited to the shooter (OwnerSlotTable_GetPedId)."
+0x004b9a30,plate,Sprite_ShouldCollideWithSprite,"Seq33 slice4: filter: should entry (this, type at +0x30: 1..5) collide with param sprite? Types 1,4,5 (map objects) -> FUN_004835e0; type 2 = car entry (flags, wreck, public transport, driver-owned ped checks, trailer cases); type 3 = ped entry (state, weapon, car-passenger exceptions). gta2_re 10.5: Sprite::ShouldCollideWithSprite."
+0x004bab70,plate,unsure_Sprite_OnOverlapNotifyImpactEvent,Seq33 slice4 HYPOTHESIS: on overlap of grid entry (type 1 or 4-5) with the moving sprite: fires ImpactEvent (0x486410) and notifies object (0x484dd0).
+0x004bb3c0,plate,unsure_Sprite_FindRectEdgeCrossings,"Seq33 slice4 HYPOTHESIS: loops over this sprite's 4 corners, counts those inside other's bounds; stores first/second corner index in out bytes; returns count (0 if >2)."
+0x004bb560,plate,unsure_Sprite_RectCornersOverlap,Seq33 slice4 HYPOTHESIS: one-way test: any of the 4 (+ center?) corners of this sprite lies inside other's bounds (via FUN_0042a720 corner transform + range checks).
+0x004bcac0,plate,Sprite_CollisionCheck,"Seq33 slice4: narrow phase overlap test of two sprites: z-range overlap (FUN_0041e2f0), then rotated-rect corners-inside test both ways (RectCornersOverlap a,b || b,a), with special cases for flat sprites. gta2_re 10.5: Sprite::CollisionCheck (RotatedRectCollisionSAT variant)."
+0x004bcb40,plate,unsure_Sprite_UpdateBoundsIfDirty,"Seq33 slice4 HYPOTHESIS: if sprite bounds (+0xc obj) not yet current (flag +0x48==0) recompute corners via FUN_004bbd40. 17 callers, called before every collision test."
+0x004bcd00,plate,unsure_Sprite_ComputeWallContactPointX,"Seq33 slice4 HYPOTHESIS: X-wall contact point of sprite vs block: tests sprite corners (iVar1 = bounds object +0xc..0x28) against the block's X boundary, returns corner pos + kind id (1..3 corner, 5 = penalty); used by CollideWithWallX."
+0x004bcfa0,plate,unsure_Sprite_ComputeWallContactPointY,Seq33 slice4 HYPOTHESIS: Y twin of Sprite_ComputeWallContactPointX; used by CollideWithWallY.
+0x004bd350,plate,Sprite_CheckCornerZCollisions,"Seq33 slice5 (verified): for the 4 sprite corners test FUN_00469c20 (block at corner x,y,z); returns bitmask (bit i = corner i blocked/supported), *out = count. gta2_re 10.5: Sprite::CheckCornerZCollisions_5A1CA0."
+0x004bd490,plate,unsure_Sprite_IsAnyCornerBlockedNearZ,Seq33 slice5 (hypothesis): true if any of the 4 sprite corners is blocked (FUN_00466cf0) at z or z-1. Used by CarPhysics_UpdateSurface to keep slope surface when mask==0.
+0x004bd670,plate,unsure_Sprite_TestMapCollisionAndRecord,"Seq33 slice4 HYPOTHESIS: map collision test of sprite: fast path against block edges (wall X/Y kinds written into g_CollisionKind struct via FUN_004ba250/280: kind 1..5), else FUN_0046b440 tile-based test (slopes). Stores z (struct+0x1c). 17 callers."
+0x004bd8a0,plate,unsure_Sprite_ComputeCollisionContactPoint,"Seq33 slice4 HYPOTHESIS: contact point of two overlapping sprites. Temporarily places this at (pos,rot), FindRectEdgeCrossings both ways -> 1 corner: contact = that corner; 2 corners: midpoint of corners (FUN_0049e360 /2). Outputs edge ids (param_5/6) and corner count (param_7). gta2_re 10.5: FindCollisionIntersectionPoint."
+0x004bdd40,plate,unsure_Sprite_GetCornersOverWaterMask,Seq33 slice5 (hypothesis): 4-bit mask of sprite corners for which FUN_004b9f40 (water tile at corner) is true. CarPhysics_UpdateSurface: all 4 (0xf) -> surface 8.
+0x004bdfe0,plate,unsure_Sprite_FindObstacleAndRecord,Seq33 slice4 HYPOTHESIS: sprite-vs-sprite obstacle query used by TestCollision: map-block shortcut (FUN_00466170) else Collision_FindObstacle(g_CollisionGridObstacles); on hit stores hit sprite in g_CollisionKind struct (+0x20).
 0x004be5b0,plate,SpriteManager_Ctor,"Sprite manager root (sprite.cpp 0xca7-0xcae). Creates PositionsArray_S21, S22, S23 and the 0x1c24-B object at 0x6702bc. Object itself: {field0 = sprites drawn this frame, inc = Position id generator}. Name: medium."
+0x004bea20,plate,unsure_CarAttachments_ExplodeAll,Seq33 slice5 (hypothesis): Car_Explode: for each attachment -> unsure_CarAttachment_Explode (0x4be920: turret/gun objects explode with code 0x13 via Car_TriggerExplosion). gta2_re 10.5: field_0_qq.sub_5A6BB0().
+0x004bea40,plate,unsure_CarAttachments_WreckAll,Seq33 slice5 (hypothesis): Car_OnWrecked: for each attachment -> unsure_CarAttachment_WreckCar (0x4be950) which calls Car_OnWrecked on the linked car if not being removed.
+0x004beb70,plate,unsure_CarAttachments_StartBurning,"Seq33 slice5 (hypothesis): Car_AddDamage stage4 (>=25000) and Car_Explode: for each car attachment whose type is 1 or 4..5 and FUN_004be830 passes, set attachment state (+0x1a)=2. gta2_re 10.5: field_0_qq.sub_5A71F0()."
 0x004c08d0,plate,StyleData_Ctor,"Style (STY file) container singleton: sprite/palette/font bases, sprite index, physical palettes, car info chunk + AllCarsInfo, map object info. Created by ConstructGame and InitFrontend; freed in Game_Dtor via StyleData_Dtor."
 0x004c09c0,plate,TaxiList_Ctor,"TaxiList: list of for-hire taxi cars (4 B = head pointer). Nodes {Car*, next} from a shared 100-node pool (DAT_005e580c, taxi.cpp:0x1d), created here if null. Taxis with a driver are added each frame by relToCar; peds wanting a taxi take the nearest (TaxiList_FindNearestCar)."
 0x004c2620,plate,LocaleSettings_Ctor,"LocaleSettings ctor. Builds two sub-structs, then reads registry value 'language'; accepts e/f/g/i/s/j (English, French, German, Italian, Spanish, Japanese), otherwise falls back to 'e'. Also created by InitFrontend."
@@ -140,6 +1141,7 @@ Evidence: FUN_004821c0/4820d0 ('yourit' label), death -> FUN_004822a0. Confidenc
 0x004c8c20,plate,showDebugLabel,showDebugLabel
 0x004cac60,plate,HudManager_Ctor,"HUD / on-screen text manager (11000 B): message queue (txtMessage +0xE4), 29 debug text labels (+0x818, showDebugLabel), 17 mission arrows (+0x1F18), displayDebugPedInfo (+0x27B5), text_speed (+0x2AF4). Name is a guess from usage (medium-high)."
 0x004d0740,plate,WeaponManager::WeaponManager_Ctor,"WeaponManager (weapon.cpp:0x97C). 8 bytes: [+0] list head of cars already hit this shot (dedupe in FUN_004cf380), [+4] short live weapon count. Lazily creates the weapon pool (0x2FDC B, 255 x 0x30 slots) in ptrToWeaponRelStruct."
+0x004d11b8,plate,WinMain2,Seq33 slice1: WinMain main loop: PeekMessage pump; when no message and not paused/quit: drawAndLimitFrames() (0x462A30) = the fixed-step scheduler (33 ms logic tick). Frontend branch (isExit) uses FUN_0045A320 instead.
 0x004d5ce1,plate,__heap_alloc,"Library Function - Single Match
 Name: __heap_alloc
 Library: Visual Studio 2003 Release"
@@ -1525,6 +2527,13 @@ Library: Visual Studio 2003 Release"
 0x00669e7c,eol,,Pool of 40 particle-system state slots (0x30 each)
 0x0066a228,eol,,PedPatrolRoutePool singleton (0x1D7E): 50 patrol waypoint buffers
 0x0066a7e4,eol,,PedPathfinder singleton (0x2FD4): ped on-foot path search + request queue
+0x0066ac4c,eol,,Seq33 slice1: Fix16 constant 1.0 = 0x4000 (bitShiftLeft14(1) at 0x543320). Also the initial value of g_CollisionRemainingFraction each MoveAndCollide pass.
+0x0066acdc,eol,,"Seq33 slice1: Fix16 constant 0 (bitShiftLeft14(0) at 0x543310, static init)."
+0x0066ad4c,eol,,"Seq33 slice1: Fix16 raw 0x800 = 0.125 (init 0x5435A0). Used (a) in StepAndResolveCollisions: the collision loop continues only while g_CollisionRemainingFraction >= 0.125 (0x4A4310), (b) as terminal fall speed: zVelocity only decreases while > -0.125 (UpdateSurface 0x4A26F0)."
+0x0066ae0c,eol,,"Seq33 slice1: external angular velocity, subtracted from angVel after the move (CarPhysics_SubExternalAngVel). No writer seen in slice 1; hypothesis: stays 0."
+0x0066af58,eol,,Seq33 slice1: gravity: Fix16 raw 0x100 = 1/64 = 0.015625 block/tick^2 (init 0x543520). zVelocity(+0x68) -= this each tick while IsInAir and zVelocity > -0.125 (CarPhysics_UpdateSurface 0x4A2706).
+0x0066afb4,eol,,"Seq33: collision normal (Vec2 Fix16, not normalised), passed as n to CarPhysics_ComputeCollisionImpulse (which normalises it). Renamed from g_CollisionContactRelCm by the orchestrator."
+0x0066b004,eol,,"Seq33 slice1: Vec2 (8 bytes) external per-tick velocity: zeroed by ResetExternalVelocity, added to linVel before and subtracted after MoveAndCollide (player/AI path)."
 0x0066b7a0,eol,,"PoliceManager singleton (SPolice, 0x7B8); UpdatePolice each GameTick"
 0x0066bb50,eol,,PublicTransportManager singleton (0x181C): buses + trains
 0x0066f5dc,eol,,"FloatingScoreManager (0x100), score popups, only when exploding_on==0"

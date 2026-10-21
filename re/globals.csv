@@ -113,17 +113,23 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e4ca0,relToCars,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e4ca4,g_CarManager,,USER_DEFINED,.data.exp,,/_car/CarManager *,4
 0x005e4cac,ptrToPositionStruct,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e4cbc,g_Fix16PlayerOccupationMassBonus,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e4cc4,interestingStruct,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e4d14,defaultRotation,,USER_DEFINED,.data.exp,,/undefined2,2
 0x005e4d4c,CarsScale,,USER_DEFINED,.data.exp,,/int,4
 0x005e4d64,TankCannonRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
 0x005e4db8,defaultX,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e4dd0,g_Fix16SteerAssistLimitKShortCar,,USER_DEFINED,.data.exp,,/undefined,1
+0x005e4eb0,g_Fix16SteerAssistLimitK,,USER_DEFINED,.data.exp,,/undefined,1
 0x005e4eb8,WaterCannonRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
 0x005e500c,JeepGunRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
 0x005e5014,AntennaRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
 0x005e508c,pCarsS4,,USER_DEFINED,.data.exp,,/imported/gzf-2021/CarsS4 *,4
 0x005e5448,g_CarModelTable_GciPath,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005e5488,g_CarModelTable,,USER_DEFINED,.data.exp,,/CarModelTable *,4
+0x005e54a0,g_Fix16MassBonus10Pct,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e5514,g_Fix16OneCarModelTable,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e56e0,g_Fix16InertiaQuarter,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e5bbc,ptrToPedManager,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e5bc0,g_DummyPedManager,,USER_DEFINED,.data.exp,,/auto_structs/DummyPedManager *,4
 0x005e5bc4,ptrToPed,,USER_DEFINED,.data.exp,,/_ped/Ped *,4
@@ -348,12 +354,38 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x0066a3bc,nextSpriteId,,USER_DEFINED,.data.exp,,/uint,4
 0x0066a480,playerPedX?,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0066a7e4,g_PedPathfinder,,USER_DEFINED,.data.exp,,/PedPathfinder *,4
+0x0066ab70,g_CurCarEngineData,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066ab78,g_CurCarPhysicsData,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0066ab7c,ptrToCarPhysicsPool,,USER_DEFINED,.data.exp,,/_car/MaybeCarEngineHolder *,4
+0x0066ab80,g_Fix16TyreRollingDrag,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066ac1c,g_Fix16Angle90Deg,,USER_DEFINED,.data.exp,,/undefined,1
+0x0066ac44,g_Fix16PedImpactMass,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066ac4c,g_Fix16One,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0066ac60,g_Fix16MinusOne,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066acdc,g_Fix16Zero,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066acfc,g_Fix16Angle270Deg,,USER_DEFINED,.data.exp,,/undefined,1
 0x0066ad08,g_CollisionContactPos,,USER_DEFINED,.data.exp,,/undefined4,4
-0x0066afb4,g_CollisionContactRelCm,,USER_DEFINED,.data.exp,,/undefined,1
+0x0066ad4c,g_Fix16MinStepRemaining,,USER_DEFINED,.data.exp,,/undefined,1
+0x0066add0,g_Fix16SteerSpeedRef,,USER_DEFINED,.data.exp,,/undefined,1
+0x0066ae0c,g_CarExternalAngVel,,USER_DEFINED,.data.exp,,/undefined,1
+0x0066ae38,g_Fix16RestitutionCarWall,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066ae88,g_Fix16RestitutionCarPed,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066aea0,g_Fix16PedImpactInertia,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066aea4,g_Fix16RestitutionCarObject,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066aed0,g_Fix16Angle180Deg,,USER_DEFINED,.data.exp,,/undefined,1
+0x0066af30,g_Fix16RearBrakeShare,,USER_DEFINED,.data.exp,,/undefined,1
+0x0066af34,g_Fix16Angle360Deg,,USER_DEFINED,.data.exp,,/undefined,1
+0x0066afb4,g_CollisionNormal,,USER_DEFINED,.data.exp,,/undefined,1
 0x0066afc0,g_CollisionRemainingFraction,,USER_DEFINED,.data.exp,,/undefined,1
+0x0066afd0,g_Fix16FrontBrakeShare,,USER_DEFINED,.data.exp,,/undefined,1
+0x0066afd8,g_Fix16ObjectImpactInertia,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066afdc,g_Fix16TyreLateralCoef,,USER_DEFINED,.data.exp,,/undefined,1
+0x0066afe4,g_Fix16OneDegree,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066b004,g_CarExternalLinVel,,USER_DEFINED,.data.exp,,/undefined,1
 0x0066b034,g_CollisionImpactMagnitude,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066b038,g_Fix16SteerAssistWindow25Deg,,USER_DEFINED,.data.exp,,/undefined,1
+0x0066b04c,g_Fix16RestitutionCarCar,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066b060,g_Fix16SteerSpeedFloor,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0066b404,ptrToS28PlayerData,,USER_DEFINED,.data.exp,,/auto_structs/S28 *,4
 0x0066b7a0,g_PoliceManager,,USER_DEFINED,.data.exp,,/auto_structs/PoliceManager *,4
 0x0066bb50,g_PublicTransportManager,,USER_DEFINED,.data.exp,,/PublicTransportManager *,4

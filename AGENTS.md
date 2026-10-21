@@ -196,6 +196,21 @@ their absolute addresses apply 1:1. How this was checked:
 - **Grep `re/` instead of opening Ghidra**: named functions, globals, imports, comments
   (CSV), structs as C header + NASM `struc`, and `re/gta2_addresses.inc`. Addresses are
   1:1 vanilla gta2.exe VAs. Regenerate with `re/tools/export.sh`; see `re/README.md`.
+- **Ghidra MCP struct edits destroy data silently** (measured 2026-10-21):
+  - `modify_struct_field` with `new_type` and no `new_name` **erases the field name**
+    (CarEngineData lost all 17). Always pass `new_name` together with `new_type`, and
+    `get_struct_layout` after every edit; restore a lost name with `field_name="offset:N"`.
+  - `remove_struct_field` on a non-packed struct deletes the bytes and shifts every later
+    field (Ped went 660 → 645, no undo); `recreate_struct` fails on referenced types;
+    `add_struct_field` only fills undefined bytes. Never call the first two. If a wrong
+    field overlaps the layout you need, ask the user for a Structure Editor Clear of the
+    exact offset ranges, then `add_struct_field`.
+- Other MCP traps: several programs are open (the renderer DLLs too), so pass
+  `program="gta2.segments.fixed.exe"` on every call; `rename_function` needs
+  `strict_mode="off"` (its PascalCase gate rejects `Module_Verb` names); `rename_symbol`
+  at an address that already has a label adds a second one — `delete_label` the old name.
+- Many `DAT_` constants are zero on disk and set by CRT static initialisers: read their
+  values from `re/static_constants.csv` (`re/tools/static_constants.py`), not the file image.
 
 ## Toolchain
 

@@ -2,7 +2,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x003f113c,FUN_003f113c,,DEFAULT,__fastcall,USER_DEFINED,108,,int __fastcall FUN_003f113c(Game * param_1)
 0x003f11a8,FUN_003f11a8,,DEFAULT,__fastcall,USER_DEFINED,96,,undefined __fastcall FUN_003f11a8(Game * param_1)
 0x003f135c,FUN_003f135c,,DEFAULT,__fastcall,USER_DEFINED,33,,"undefined __fastcall FUN_003f135c(Game * param_1, char param_2)"
-0x00401c80,FUN_00401c80,,DEFAULT,default,USER_DEFINED,37,,"undefined4 FUN_00401c80(void * this, short * psParm1, undefined4 param_3)"
 0x00401cf0,FUN_00401cf0,,DEFAULT,__stdcall,USER_DEFINED,42,,"void __stdcall FUN_00401cf0(undefined4 param_1, undefined4 param_2, int length, undefined * param_4)"
 0x00403940,FUN_00403940,,DEFAULT,__thiscall,USER_DEFINED,13,,"void __thiscall FUN_00403940(void * this, int param_1_00, Ped * param_2)"
 0x00403d10,FUN_00403d10,,DEFAULT,__fastcall,USER_DEFINED,8,,undefined __fastcall FUN_00403d10(Ped * param_1)
@@ -12,17 +11,13 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00416b40,FUN_00416b40,,DEFAULT,__fastcall,USER_DEFINED,4,,undefined4 __fastcall FUN_00416b40(Car * param_1)
 0x00416b50,FUN_00416b50,,DEFAULT,__thiscall,USER_DEFINED,15,,"void __thiscall FUN_00416b50(void * this, Ped * param_1_00, undefined4 * param_2)"
 0x00418050,FUN_00418050,,DEFAULT,__fastcall,USER_DEFINED,167,,void __fastcall FUN_00418050(S6 * param_1)
-0x0041e1e0,FUN_0041e1e0,,DEFAULT,__fastcall,USER_DEFINED,42,,void __fastcall FUN_0041e1e0(CarsS3 * param_1)
 0x0041e540,FUN_0041e540,,DEFAULT,__fastcall,USER_DEFINED,53,,void __fastcall FUN_0041e540(undefined param_1)
 0x0041eac0,unsure_Camera_UpdateBoundaries,,DEFAULT,__fastcall,USER_DEFINED,5,unsure_Camera_UpdateBoundaries,undefined __fastcall unsure_Camera_UpdateBoundaries(Camera * param_1)
-0x00420360,FUN_00420360,,DEFAULT,__stdcall,USER_DEFINED,45,,undefined4 __stdcall FUN_00420360(CarInfo * car)
 0x00420700,FUN_00420700,,DEFAULT,__fastcall,USER_DEFINED,8,,undefined __fastcall FUN_00420700(Position * param_1)
 0x00421310,FUN_00421310,,DEFAULT,__fastcall,USER_DEFINED,23,,undefined __fastcall FUN_00421310(SRelToCars2 * param_1)
 0x00421f40,FUN_00421f40,,DEFAULT,default,USER_DEFINED,58,,"uint FUN_00421f40(Car * car, int iParm1, byte param_3)"
 0x00422020,FUN_00422020,,DEFAULT,__fastcall,USER_DEFINED,125,,undefined __fastcall FUN_00422020(Car * param_1)
-0x004226c0,FUN_004226c0,,DEFAULT,__thiscall,USER_DEFINED,511,,"void __thiscall FUN_004226c0(Car * car, char param_2)"
 0x004233b0,FUN_004233b0,,DEFAULT,__fastcall,USER_DEFINED,208,,void __fastcall FUN_004233b0(Car * param_1)
-0x00427b40,FUN_00427b40,,DEFAULT,__fastcall,USER_DEFINED,32,,undefined __fastcall FUN_00427b40(Car * param_1)
 0x0042a630,FUN_0042a630,,DEFAULT,__stdcall,USER_DEFINED,33,,"undefined __stdcall FUN_0042a630(SCR_f * x, SCR_f * y)"
 0x0042a9e0,FUN_0042a9e0,,DEFAULT,__fastcall,USER_DEFINED,215,,undefined __fastcall FUN_0042a9e0(CarsS5 * param_1)
 0x0042c030,FUN_0042c030,,DEFAULT,__fastcall,USER_DEFINED,2127,,undefined __fastcall FUN_0042c030(CarAI * ai)
@@ -66,7 +61,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0045bba0,FUN_0045bba0,,DEFAULT,__thiscall,USER_DEFINED,98,,"bool __thiscall FUN_0045bba0(void * this, Game * pGame, CarSprite * param_2, byte playerIndex, undefined4 param_4)"
 0x0045bd00,FUN_0045bd00,,DEFAULT,__stdcall,USER_DEFINED,56,,"undefined4 __stdcall FUN_0045bd00(Game * game, undefined4 param_2)"
 0x0045c1e0,LightManager_Update,,DEFAULT,__fastcall,USER_DEFINED,5,LightManager_Update,void __fastcall LightManager_Update(LightManager * this)
-0x0045c3b0,FUN_0045c3b0,,DEFAULT,__fastcall,USER_DEFINED,104,,void __fastcall FUN_0045c3b0(Game * game)
 0x0045c420,FUN_0045c420,,DEFAULT,default,USER_DEFINED,79,,"uint FUN_0045c420(Game * game, uint uParm1, undefined4 param_3, undefined4 param_4)"
 0x0045c470,FUN_0045c470,,DEFAULT,default,USER_DEFINED,92,,"uint FUN_0045c470(Game * game, uint uParm1, undefined4 param_3, undefined4 param_4)"
 0x0045e550,FUN_0045e550,,DEFAULT,__fastcall,USER_DEFINED,7,,undefined __fastcall FUN_0045e550(void * param_1)
@@ -84,6 +78,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00493850,FUN_00493850,,DEFAULT,__fastcall,USER_DEFINED,77,,undefined __fastcall FUN_00493850(Sprite * param_1)
 0x00496880,FUN_00496880,,DEFAULT,__fastcall,USER_DEFINED,2815,,undefined __fastcall FUN_00496880(Sprite * param_1)
 0x00497c20,FUN_00497c20,,DEFAULT,__fastcall,USER_DEFINED,457,,undefined __fastcall FUN_00497c20(Sprite * param_1)
+0x0049ff70,CarPhysics_UpdateZOnRailway,CarPhysics,DEFAULT,__thiscall,USER_DEFINED,5,CarPhysics::CarPhysics_UpdateZOnRailway,"uint __thiscall CarPhysics_UpdateZOnRailway(CarPhysics * this, int step)"
 0x004a4fe0,FUN_004a4fe0,,DEFAULT,__fastcall,USER_DEFINED,4,,undefined2 __fastcall FUN_004a4fe0(Car * param_1)
 0x004a5040,FUN_004a5040,,DEFAULT,__fastcall,USER_DEFINED,11,,bool __fastcall FUN_004a5040(Ped * param_1)
 0x004a50e0,AnimatedValue_Set,,DEFAULT,__fastcall,USER_DEFINED,5,AnimatedValue_Set,"void __fastcall AnimatedValue_Set(AnimatedValue * param_1, int * param_1_00, int param_3)"

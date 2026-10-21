@@ -2475,7 +2475,7 @@ struct DoorManager {
 struct EmergencyVehicleSlot {
     void *car; /* 0x0 */
     void *driver; /* 0x4 */
-    byte unk8[16]; /* 0x8 */
+    uint8_t _gap_0x8[0x10];
     short timer; /* 0x18 */
     byte unk1a[4]; /* 0x1a */
     byte inUse; /* 0x1e */
@@ -4945,24 +4945,24 @@ struct CarEngineData {
     byte model; /* 0x0 */
     bool_ turbo; /* 0x1 */
     byte value; /* 0x2 */
-    uint8_t _gap_0x3[0x1];
-    undefined4 mass; /* 0x4 */
-    undefined4 front_drive_bias; /* 0x8 */
-    undefined4 front_mass_bias; /* 0xc */
-    undefined4 brake_friction; /* 0x10 */
-    undefined4 turn_in; /* 0x14 */
-    undefined4 turn_ratio; /* 0x18 */
-    undefined4 rear_end_stability; /* 0x1c */
-    undefined4 handbrake_slide_value; /* 0x20 */
-    undefined4 thrust; /* 0x24 */
-    undefined4 max_speed; /* 0x28 */
-    undefined4 anti_strength; /* 0x2c */
-    undefined4 skid_threshhold; /* 0x30 */
-    undefined4 gear1_multiplier; /* 0x34 */
-    undefined4 gear2_multiplier; /* 0x38 */
-    undefined4 gear3_multiplier; /* 0x3c */
-    undefined4 gear2_speed; /* 0x40 */
-    undefined4 gear3_speed; /* 0x44 */
+    byte pad; /* 0x3 */
+    SCR_f mass; /* 0x4 */
+    SCR_f front_drive_bias; /* 0x8 */
+    SCR_f front_mass_bias; /* 0xc */
+    SCR_f brake_friction; /* 0x10 */
+    SCR_f turn_in; /* 0x14 */
+    SCR_f turn_ratio; /* 0x18 */
+    SCR_f rear_end_stability; /* 0x1c */
+    SCR_f handbrake_slide_value; /* 0x20 */
+    SCR_f thrust; /* 0x24 */
+    SCR_f max_speed; /* 0x28 */
+    SCR_f anti_strength; /* 0x2c */
+    SCR_f skid_threshhold; /* 0x30 */
+    SCR_f gear1_multiplier; /* 0x34 */
+    SCR_f gear2_multiplier; /* 0x38 */
+    SCR_f gear3_multiplier; /* 0x3c */
+    SCR_f gear2_speed; /* 0x40 */
+    SCR_f gear3_speed; /* 0x44 */
 };
 
 // /imported/seuko-mod/CarInfoChunk  size 0x404
@@ -5024,7 +5024,7 @@ struct CarPhysics {
     byte handbrakeHeldFrames; /* 0xa8 */
     CAR_MODEL cachedModelId; /* 0xa9 */
     bool_ unsure_movedByCollision; /* 0xaa */
-    bool_ unsure_partlyAirborne; /* 0xab */
+    bool_ unsure_someCornersUnsupported; /* 0xab */
     byte wheelSpinTimer; /* 0xac */
     char steering; /* 0xad */
     uint8_t _gap_0xae[0x1];
@@ -5033,13 +5033,14 @@ struct CarPhysics {
 
 // /imported/seuko-mod/CarPhysicsData  size 0x2c
 struct CarPhysicsData {
-    uint8_t _gap_0x0[0x4];
-    undefined4 front_wheel_offset; /* 0x4 */
-    undefined4 rear_wheel_offset; /* 0x8 */
-    uint8_t _gap_0xc[0x8];
-    undefined4 thrust1; /* 0x14 */
-    undefined4 thrust2; /* 0x18 */
-    uint8_t _gap_0x1c[0x8];
+    SCR_f inertia; /* 0x0 */
+    SCR_f front_wheel_offset; /* 0x4 */
+    SCR_f rear_wheel_offset; /* 0x8 */
+    SCR_Vector2 cmOffset; /* 0xc */
+    SCR_f half_thrust; /* 0x14 */
+    SCR_f fifth_thrust; /* 0x18 */
+    SCR_f max_thrust_turbo; /* 0x1c */
+    SCR_f rear_drive_bias; /* 0x20 */
     SCR_f skid_threshhold1; /* 0x24 */
     SCR_f skid_threshhold2; /* 0x28 */
 };

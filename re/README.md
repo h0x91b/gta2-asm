@@ -48,6 +48,7 @@ section, no names or types) and `miss2.exe` (the official mission-script compile
 | `gta2_types.inc` | same structs as NASM `struc` (`Name.field`, `Name_size`), unions as `Name.member equ 0`, enums as `Enum.VALUE equ n` |
 | `gta2_addresses.inc` | NASM `equ`s: `fn_<name>` functions, `g_<name>` globals (a name already starting with `g_` is kept as is), `lbl_<func>__<name>` code labels (`::` → `__`, other non-identifier chars → `_`) |
 | `stats.txt` | counts from the last export |
+| `static_constants.csv` | values of globals set by CRT static initialisers (zero in the file image): address, kind (`raw`, `shl14`, `copy`, `add/sub/mul/div`), operands, raw, Q14 value, thunk address. Generated separately: `re/tools/static_constants.py path/to/gta2.ebin > re/static_constants.csv` (not by `export.sh`) |
 
 Examples: `grep -i ped re/functions.csv`, `grep -n 'struct Car ' re/gta2_types.h`,
 `%include "re/gta2_addresses.inc"` then `call fn_SomeFunction`.
@@ -56,11 +57,11 @@ Examples: `grep -i ped re/functions.csv`, `grep -n 'struct Car ' re/gta2_types.h
 
 | | named (exported) | auto-named (skipped) |
 |---|---|---|
-| functions | **861** (527 by hand + 333 library/analysis + 1 imported) | 3762 `FUN_` (190 of them with a hand-set signature → `functions_typed_unnamed.csv`) |
-| labels/globals | **370** (362 by hand + 8 imported) | 58626 `DAT_`/`LAB_`; 11360 analysis labels (strings, switch tables) skipped; 108 `DAT_` with a user type → `globals_typed_unnamed.csv` |
-| types | **330**: 232 structs, 6 unions, 74 enums, 12 typedefs, 6 function types | Ghidra-generated PE/DOS/PDB/Demangler types and the Windows type archive (only pulled in as dependencies) |
+| functions | **1970** (1636 by hand + 333 library/analysis + 1 imported) | 2901 `FUN_` (114 of them with a hand-set signature → `functions_typed_unnamed.csv`) |
+| labels/globals | **462** (446 by hand + 16 imported) | 58320 `DAT_`/`LAB_`; 11446 analysis labels (strings, switch tables) skipped; 108 `DAT_` with a user type → `globals_typed_unnamed.csv` |
+| types | **381**: 278 structs, 6 unions, 79 enums, 12 typedefs, 6 function types | Ghidra-generated PE/DOS/PDB/Demangler types and the Windows type archive (only pulled in as dependencies) |
 | imports | 216 | |
-| comments | 897 | |
+| comments | 1655 | | |
 
 Types under `/imported/seuko-mod`, `/imported/gzf-2021` and `/imported/gta2-mouse` were
 imported from the external sources in `re/external/` (see its README, "Imported into Ghidra");

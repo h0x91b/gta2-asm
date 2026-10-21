@@ -196,7 +196,7 @@ endstruc
 struc EmergencyVehicleSlot
     .car                              resb 4      ; 0x0 void *
     .driver                           resb 4      ; 0x4 void *
-    .unk8                             resb 16     ; 0x8 byte[16]
+    resb 16
     .timer                            resb 2      ; 0x18 short
     .unk1a                            resb 4      ; 0x1a byte[4]
     .inUse                            resb 1      ; 0x1e byte
@@ -3722,24 +3722,24 @@ struc CarEngineData
     .model                            resb 1      ; 0x0 byte
     .turbo                            resb 1      ; 0x1 bool
     .value                            resb 1      ; 0x2 byte
-    resb 1
-    .mass                             resb 4      ; 0x4 undefined4
-    .front_drive_bias                 resb 4      ; 0x8 undefined4
-    .front_mass_bias                  resb 4      ; 0xc undefined4
-    .brake_friction                   resb 4      ; 0x10 undefined4
-    .turn_in                          resb 4      ; 0x14 undefined4
-    .turn_ratio                       resb 4      ; 0x18 undefined4
-    .rear_end_stability               resb 4      ; 0x1c undefined4
-    .handbrake_slide_value            resb 4      ; 0x20 undefined4
-    .thrust                           resb 4      ; 0x24 undefined4
-    .max_speed                        resb 4      ; 0x28 undefined4
-    .anti_strength                    resb 4      ; 0x2c undefined4
-    .skid_threshhold                  resb 4      ; 0x30 undefined4
-    .gear1_multiplier                 resb 4      ; 0x34 undefined4
-    .gear2_multiplier                 resb 4      ; 0x38 undefined4
-    .gear3_multiplier                 resb 4      ; 0x3c undefined4
-    .gear2_speed                      resb 4      ; 0x40 undefined4
-    .gear3_speed                      resb 4      ; 0x44 undefined4
+    .pad                              resb 1      ; 0x3 byte
+    .mass                             resb 4      ; 0x4 SCR_f
+    .front_drive_bias                 resb 4      ; 0x8 SCR_f
+    .front_mass_bias                  resb 4      ; 0xc SCR_f
+    .brake_friction                   resb 4      ; 0x10 SCR_f
+    .turn_in                          resb 4      ; 0x14 SCR_f
+    .turn_ratio                       resb 4      ; 0x18 SCR_f
+    .rear_end_stability               resb 4      ; 0x1c SCR_f
+    .handbrake_slide_value            resb 4      ; 0x20 SCR_f
+    .thrust                           resb 4      ; 0x24 SCR_f
+    .max_speed                        resb 4      ; 0x28 SCR_f
+    .anti_strength                    resb 4      ; 0x2c SCR_f
+    .skid_threshhold                  resb 4      ; 0x30 SCR_f
+    .gear1_multiplier                 resb 4      ; 0x34 SCR_f
+    .gear2_multiplier                 resb 4      ; 0x38 SCR_f
+    .gear3_multiplier                 resb 4      ; 0x3c SCR_f
+    .gear2_speed                      resb 4      ; 0x40 SCR_f
+    .gear3_speed                      resb 4      ; 0x44 SCR_f
 endstruc
 
 ; /imported/seuko-mod/CarInfoChunk  (1028 bytes)
@@ -3801,7 +3801,7 @@ struc CarPhysics
     .handbrakeHeldFrames              resb 1      ; 0xa8 byte
     .cachedModelId                    resb 1      ; 0xa9 CAR_MODEL
     .unsure_movedByCollision          resb 1      ; 0xaa bool
-    .unsure_partlyAirborne            resb 1      ; 0xab bool
+    .unsure_someCornersUnsupported    resb 1      ; 0xab bool
     .wheelSpinTimer                   resb 1      ; 0xac byte
     .steering                         resb 1      ; 0xad char
     resb 1
@@ -3810,13 +3810,14 @@ endstruc
 
 ; /imported/seuko-mod/CarPhysicsData  (44 bytes)
 struc CarPhysicsData
-    resb 4
-    .front_wheel_offset               resb 4      ; 0x4 undefined4
-    .rear_wheel_offset                resb 4      ; 0x8 undefined4
-    resb 8
-    .thrust1                          resb 4      ; 0x14 undefined4
-    .thrust2                          resb 4      ; 0x18 undefined4
-    resb 8
+    .inertia                          resb 4      ; 0x0 SCR_f
+    .front_wheel_offset               resb 4      ; 0x4 SCR_f
+    .rear_wheel_offset                resb 4      ; 0x8 SCR_f
+    .cmOffset                         resb 8      ; 0xc SCR_Vector2
+    .half_thrust                      resb 4      ; 0x14 SCR_f
+    .fifth_thrust                     resb 4      ; 0x18 SCR_f
+    .max_thrust_turbo                 resb 4      ; 0x1c SCR_f
+    .rear_drive_bias                  resb 4      ; 0x20 SCR_f
     .skid_threshhold1                 resb 4      ; 0x24 SCR_f
     .skid_threshhold2                 resb 4      ; 0x28 SCR_f
 endstruc
