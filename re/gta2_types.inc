@@ -30,6 +30,39 @@ struc C1
     .s5Arr1020                        resb 4080   ; 0x1488 S5 *[1020]
 endstruc
 
+; enum /CAR_DOOR_STATE  (4 bytes)
+CAR_DOOR_STATE.CAR_DOOR_NONE equ 0
+CAR_DOOR_STATE.CAR_DOOR_OPEN_HOLD equ 1
+CAR_DOOR_STATE.CAR_DOOR_OPENING equ 2
+CAR_DOOR_STATE.CAR_DOOR_CLOSING equ 3
+CAR_DOOR_STATE.CAR_DOOR_CLOSE_PENDING_2 equ 4
+CAR_DOOR_STATE.CAR_DOOR_CLOSE_PENDING_1 equ 5
+CAR_DOOR_STATE.CAR_DOOR_CLOSED equ 6
+
+; enum /CAR_DRIVE_ORDER_MODE  (4 bytes)
+CAR_DRIVE_ORDER_MODE.DRIVE_ORDER_NONE equ 0
+CAR_DRIVE_ORDER_MODE.DRIVE_ORDER_GO_TO_POINT equ 1
+CAR_DRIVE_ORDER_MODE.DRIVE_ORDER_FOLLOW_TARGET equ 2
+CAR_DRIVE_ORDER_MODE.DRIVE_ORDER_UNSURE_ATTACK_A equ 4
+CAR_DRIVE_ORDER_MODE.DRIVE_ORDER_UNSURE_ATTACK_B equ 5
+
+; enum /CAR_LIFE_STATE  (4 bytes)
+CAR_LIFE_STATE.CAR_LIFE_NONE equ 0
+CAR_LIFE_STATE.CAR_LIFE_ACTIVE equ 1
+CAR_LIFE_STATE.CAR_LIFE_REMOVE_WHEN_UNSEEN equ 2
+CAR_LIFE_STATE.CAR_LIFE_REMOVE_NOW equ 3
+CAR_LIFE_STATE.CAR_LIFE_REMOVE_REQUESTED equ 4
+CAR_LIFE_STATE.CAR_LIFE_REMOVING equ 5
+CAR_LIFE_STATE.CAR_LIFE_REMOVED equ 6
+CAR_LIFE_STATE.CAR_LIFE_DETACHED equ 7
+
+; enum /CAR_PHYSICS_MODE  (4 bytes)
+CAR_PHYSICS_MODE.CAR_PHYSICS_UNSURE_PUSHED equ 0
+CAR_PHYSICS_MODE.CAR_PHYSICS_AI equ 1
+CAR_PHYSICS_MODE.CAR_PHYSICS_PLAYER equ 2
+CAR_PHYSICS_MODE.CAR_PHYSICS_UNSURE_3 equ 3
+CAR_PHYSICS_MODE.CAR_PHYSICS_UNSURE_KINEMATIC equ 4
+
 ; /CLIENT_ID  (8 bytes)
 struc CLIENT_ID
     .UniqueProcess                    resb 4      ; 0x0 void *
@@ -40,17 +73,20 @@ endstruc
 struc CarDriveOrder
     .inUse                            resb 1      ; 0x0 byte
     resb 3
-    .ped                              resb 4      ; 0x4 Ped *
-    .mode                             resb 4      ; 0x8 int
-    resb 8
-    .targetX                          resb 4      ; 0x14 int
-    .targetY                          resb 4      ; 0x18 int
-    .targetZ                          resb 4      ; 0x1c int
-    .flag20                           resb 1      ; 0x20 byte
+    .driver                           resb 4      ; 0x4 Ped *
+    .mode                             resb 4      ; 0x8 CAR_DRIVE_ORDER_MODE
+    .unsure_maneuver                  resb 4      ; 0xc int
+    resb 4
+    .targetX                          resb 4      ; 0x14 SCR_f
+    .targetY                          resb 4      ; 0x18 SCR_f
+    .targetZ                          resb 4      ; 0x1c SCR_f
+    .isUrgent                         resb 1      ; 0x20 byte
     resb 1
-    .flag22                           resb 1      ; 0x22 byte
-    resb 13
-    .targetId                         resb 4      ; 0x30 int
+    .followRoadActive                 resb 1      ; 0x22 byte
+    resb 3
+    .arrived                          resb 1      ; 0x26 bool
+    resb 9
+    .targetPed                        resb 4      ; 0x30 Ped *
     resb 11
     .end                              resb 1      ; 0x3f byte
 endstruc
@@ -62,10 +98,10 @@ endstruc
 
 ; /CarModelTable  (2056 bytes)
 struc CarModelTable
-    .modelData                        resb 1024   ; 0x0 void *[256]
-    .countA                           resb 4      ; 0x400 int
-    .field2_0x404                     resb 1024   ; 0x404 CarInfo *[256]
-    .countB                           resb 4      ; 0x804 int
+    .physicsData                      resb 1024   ; 0x0 CarPhysicsData *[256]
+    .physicsDataBlock                 resb 4      ; 0x400 CarPhysicsData *
+    .engineData                       resb 1024   ; 0x404 CarEngineData *[256]
+    .engineDataBlock                  resb 4      ; 0x804 CarEngineData *
 endstruc
 
 ; /CollisionManager  (12 bytes)
@@ -785,48 +821,54 @@ CAR_UPGRADE.UPGRADE_25k_GUN equ 18
 
 ; /_car/Car  (188 bytes)
 struc Car
-    .roof                             resb 4      ; 0x0 Roof *
-    .lastPassenger                    resb 4      ; 0x4 Passenger *
+    .attachments                      resb 4      ; 0x0 CarAttachment *
+    .passengers                       resb 4      ; 0x4 Passenger *
     .deltasBitstate                   resb 4      ; 0x8 CAR_DELTAS_BITSTATE
     .carDoor                          resb 64     ; 0xc CarDoor[4]
-    .lastCar                          resb 4      ; 0x4c Car *
+    .next                             resb 4      ; 0x4c Car *
     .sprite                           resb 4      ; 0x50 Sprite *
     .driver                           resb 4      ; 0x54 Ped *
     .physics                          resb 4      ; 0x58 CarPhysics *
-    .notEngineStruct                  resb 4      ; 0x5c CarManager4_S1 *
-    resb 4
+    .ai                               resb 4      ; 0x5c CarAI *
+    .driveOrder                       resb 4      ; 0x60 CarDriveOrder *
     .trailerController                resb 4      ; 0x64 TrailerController *
-    .scale                            resb 4      ; 0x68 uint
+    .scale                            resb 4      ; 0x68 SCR_f
     .id                               resb 4      ; 0x6c uint
-    .latelyShot                       resb 1      ; 0x70 bool
-    resb 3
-    .carDamage                        resb 2      ; 0x74 short
+    .lastAttackerPedId                resb 4      ; 0x70 int
+    .damage                           resb 2      ; 0x74 short
+    .offscreenTicks                   resb 2      ; 0x76 short
+    .flags                            resb 2      ; 0x78 ushort
     resb 2
-    .physicsBitmask                   resb 2      ; 0x78 short
-    resb 2
-    .field_0x7c                       resb 4      ; 0x7c int
-    .field_0x80                       resb 1      ; 0x80 bool
+    .driverClass                      resb 4      ; 0x7c PED_CLASS
+    .isAbandoned                      resb 1      ; 0x80 bool
     resb 3
     .carModel                         resb 4      ; 0x84 CAR_MODEL4
-    .mask                             resb 4      ; 0x88 uint
-    .fireState                        resb 1      ; 0x8c byte
-    resb 1
+    .lifeState                        resb 4      ; 0x88 CAR_LIFE_STATE
+    .unsure_fireState                 resb 1      ; 0x8c byte
+    .unsure_scriptFlags               resb 1      ; 0x8d byte
     .alarmTimer                       resb 1      ; 0x8e byte
     resb 1
-    .latelyShotBulletType             resb 4      ; 0x90 int
-    .latelyShotTimer                  resb 1      ; 0x94 byte
-    resb 3
+    .lastAttackerWeapon               resb 4      ; 0x90 int
+    .lastAttackerTimer                resb 1      ; 0x94 byte
+    .lastPlayerDriverId               resb 1      ; 0x95 byte
+    resb 2
     .lockState                        resb 4      ; 0x98 CAR_LOCK_STATE
     .engineState                      resb 4      ; 0x9c CAR_ENGINE_STATE
-    .trafficCarType                   resb 4      ; 0xa0 TRAFFIC_CAR_TYPE
+    .counterCategory                  resb 4      ; 0xa0 CAR_COUNTER
     .lightsBitstate                   resb 1      ; 0xa4 CAR_LIGHTS_BITSTATE
-    .sirenPhase                       resb 1      ; 0xa5 byte
-    resb 1
-    .horn                             resb 1      ; 0xa7 HORN
-    resb 12
-    .currentUpgradeSound              resb 1      ; 0xb4 byte
-    .isTurretBeingRotated             resb 1      ; 0xb5 bool
-    resb 6
+    .lightPhase                       resb 1      ; 0xa5 char
+    .aiFlags                          resb 1      ; 0xa6 byte
+    .hornState                        resb 1      ; 0xa7 char
+    .hornCooldown                     resb 1      ; 0xa8 byte
+    .wreckTimer                       resb 1      ; 0xa9 byte
+    resb 2
+    .unsure_honkReason                resb 4      ; 0xac int
+    resb 4
+    .shopReaction                     resb 1      ; 0xb4 byte
+    .unused_0xB5                      resb 1      ; 0xb5 bool
+    resb 2
+    .isTurretBeingRotated             resb 1      ; 0xb8 bool
+    resb 3
 endstruc
 
 ; /_car/CarManager  (108 bytes)
@@ -3562,9 +3604,9 @@ CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_RR_3 equ 30
 CAR_DELTAS_INDEX.CAR_DELTAS_INDEX_DOOR_RR_4 equ 31
 
 ; enum /imported/seuko-mod/CAR_DOOR_STATE  (4 bytes)
-CAR_DOOR_STATE.CAR_DOOR_STATE_LOCKED equ 1
-CAR_DOOR_STATE.CAR_DOOR_STATE_UNLOCKED equ 2
-CAR_DOOR_STATE.CAR_DOOR_STATE_INITIAL_UNK3 equ 3
+_imported_seuko_mod_CAR_DOOR_STATE.CAR_DOOR_STATE_LOCKED equ 1
+_imported_seuko_mod_CAR_DOOR_STATE.CAR_DOOR_STATE_UNLOCKED equ 2
+_imported_seuko_mod_CAR_DOOR_STATE.CAR_DOOR_STATE_INITIAL_UNK3 equ 3
 
 ; enum /imported/seuko-mod/CAR_LIGHTS_BITSTATE  (1 bytes)
 CAR_LIGHTS_BITSTATE.CAR_LIGHTS_BITSTATE_BRAKE_LIGHTS_ON equ 1
@@ -3762,15 +3804,61 @@ struc CameraPos
     .zoom                             resb 4      ; 0xc int
 endstruc
 
+; /imported/seuko-mod/CarAI  (120 bytes)
+struc CarAI
+    .parentCar                        resb 4      ; 0x0 Car *
+    resb 8
+    .nextFree                         resb 4      ; 0xc CarAI *
+    .heading                          resb 2      ; 0x10 short
+    resb 2
+    .unsure_targetX                   resb 4      ; 0x14 SCR_f
+    .unsure_targetY                   resb 4      ; 0x18 SCR_f
+    .unsure_targetZ                   resb 4      ; 0x1c SCR_f
+    resb 4
+    .flags                            resb 4      ; 0x24 uint
+    .routeSlot                        resb 1      ; 0x28 char
+    resb 3
+    .avoidTimer                       resb 1      ; 0x2c byte
+    resb 31
+    .travelDir                        resb 4      ; 0x4c int
+    resb 6
+    .routeStep                        resb 2      ; 0x56 ushort
+    .stuckTicks                       resb 2      ; 0x58 ushort
+    resb 14
+    .unsure_nearbyCar                 resb 4      ; 0x68 Car *
+    .blockingCar                      resb 4      ; 0x6c Car *
+    .obstacleHit                      resb 4      ; 0x70 void *
+    resb 3
+    .field_0x77                       resb 1      ; 0x77 undefined1
+endstruc
+
+; /imported/seuko-mod/CarAIPool  (36724 bytes)
+struc CarAIPool
+    .last                             resb 4      ; 0x0 CarAI *
+    .arr306                           resb 36720  ; 0x4 CarAI[306]
+endstruc
+
+; /imported/seuko-mod/CarAttachment  (24 bytes)
+struc CarAttachment
+    .sprite                           resb 4      ; 0x0 Sprite *
+    .next                             resb 4      ; 0x4 CarAttachment *
+    .xOffset                          resb 4      ; 0x8 int
+    .yOffset                          resb 4      ; 0xc int
+    .rotation                         resb 2      ; 0x10 short
+    resb 5
+    .field_0x17                       resb 1      ; 0x17 undefined1
+endstruc
+
 ; /imported/seuko-mod/CarDoor  (16 bytes)
 struc CarDoor
     .animationFrame                   resb 1      ; 0x0 byte
-    resb 1
+    .frameDelay                       resb 1      ; 0x1 byte
     .deltaID                          resb 1      ; 0x2 byte
     resb 1
-    .doorState                        resb 4      ; 0x4 uint
+    .state                            resb 4      ; 0x4 CAR_DOOR_STATE
     .pedInDoor                        resb 4      ; 0x8 Ped *
-    resb 3
+    .holdTimer                        resb 1      ; 0xc byte
+    resb 2
     .field_0xf                        resb 1      ; 0xf undefined1
 endstruc
 
@@ -3799,41 +3887,10 @@ struc CarEngineData
     .gear3_speed                      resb 4      ; 0x44 undefined4
 endstruc
 
-; /imported/seuko-mod/CarEnginePrefab  (53860 bytes)
-struc CarEnginePrefab
-    .first                            resb 4      ; 0x0 CarPhysics *
-    .arr306                           resb 53856  ; 0x4 CarPhysics[306]
-endstruc
-
 ; /imported/seuko-mod/CarInfoChunk  (1028 bytes)
 struc CarInfoChunk
     .last                             resb 4      ; 0x0 CarInfo *
     .carInfoArray                     resb 1024   ; 0x4 CarInfo *[256]
-endstruc
-
-; /imported/seuko-mod/CarManager4  (36724 bytes)
-struc CarManager4
-    .last                             resb 4      ; 0x0 CarManager4_S1 *
-    .arr306                           resb 36720  ; 0x4 CarManager4_S1[306]
-endstruc
-
-; /imported/seuko-mod/CarManager4_S1  (120 bytes)
-struc CarManager4_S1
-    .parentCar                        resb 4      ; 0x0 Car *
-    resb 8
-    .prev                             resb 4      ; 0xc CarManager4_S1 *
-    resb 20
-    .field_0x24                       resb 4      ; 0x24 uint
-    resb 72
-    .ptr                              resb 4      ; 0x70 void *
-    resb 3
-    .field_0x77                       resb 1      ; 0x77 undefined1
-endstruc
-
-; /imported/seuko-mod/CarManager5  (164 bytes)
-struc CarManager5
-    .field_0x0                        resb 4      ; 0x0 int *
-    .arr10                            resb 160    ; 0x4 CarManager5_S1[10]
 endstruc
 
 ; /imported/seuko-mod/CarManager5_S1  (16 bytes)
@@ -3844,49 +3901,53 @@ endstruc
 
 ; /imported/seuko-mod/CarPhysics  (176 bytes)
 struc CarPhysics
-    .xVelocityReadOnly                resb 4      ; 0x0 int
-    .yVelocityReadOnly                resb 4      ; 0x4 int
-    .totalDamageMaybe                 resb 4      ; 0x8 int
+    .cmDeltaX                         resb 4      ; 0x0 SCR_f
+    .cmDeltaY                         resb 4      ; 0x4 SCR_f
+    .activeUntilFrame                 resb 4      ; 0x8 uint
     .next                             resb 4      ; 0xc CarPhysics *
     .rrSkid                           resb 8      ; 0x10 SCR_Vector2
     .rlSkid                           resb 8      ; 0x18 SCR_Vector2
     .frSkid                           resb 8      ; 0x20 SCR_Vector2
     .flSkid                           resb 8      ; 0x28 SCR_Vector2
-    .position                         resb 8      ; 0x30 SCR_Vector2
-    .positionReadOnly                 resb 8      ; 0x38 SCR_Vector2
-    .velocity                         resb 8      ; 0x40 SCR_Vector2
-    .jumpFromEdgeForce                resb 8      ; 0x48 SCR_Vector2
-    resb 8
-    .rotation                         resb 2      ; 0x58 short
+    .cmPos                            resb 8      ; 0x30 SCR_Vector2
+    .centerPos                        resb 8      ; 0x38 SCR_Vector2
+    .linVel                           resb 8      ; 0x40 SCR_Vector2
+    .forceAccum                       resb 8      ; 0x48 SCR_Vector2
+    .linAccel                         resb 8      ; 0x50 SCR_Vector2
+    .heading                          resb 2      ; 0x58 short
     resb 2
-    .prev                             resb 4      ; 0x5c CarPhysics *
-    .gasPedal                         resb 4      ; 0x60 int
-    .alsoRefToAnotherEngine           resb 4      ; 0x64 CarPhysics *
-    .zVelocityRelated                 resb 4      ; 0x68 int
+    .car                              resb 4      ; 0x5c Car *
+    .throttle                         resb 4      ; 0x60 SCR_f
+    .brakeLevel                       resb 4      ; 0x64 SCR_f
+    .zVelocity                        resb 4      ; 0x68 SCR_f
     .zPos                             resb 4      ; 0x6c SCR_f
-    .zVelocityReadOnly                resb 4      ; 0x70 int
-    .rotationForce                    resb 4      ; 0x74 int
-    .pointingAngle                    resb 4      ; 0x78 int
-    resb 8
-    .frontSkid                        resb 4      ; 0x84 uint
-    .rearSkid                         resb 4      ; 0x88 uint
-    resb 4
-    .timerSinceLastMove               resb 1      ; 0x90 byte
+    .zStep                            resb 4      ; 0x70 SCR_f
+    .angVel                           resb 4      ; 0x74 SCR_f
+    .steerAngle                       resb 4      ; 0x78 SCR_f
+    .torqueAccum                      resb 4      ; 0x7c SCR_f
+    .angAccel                         resb 4      ; 0x80 SCR_f
+    .frontSlip                        resb 4      ; 0x84 SCR_f
+    .rearSlip                         resb 4      ; 0x88 SCR_f
+    .mode                             resb 4      ; 0x8c CAR_PHYSICS_MODE
+    .framesStationary                 resb 1      ; 0x90 byte
     .isBrakeOn                        resb 1      ; 0x91 byte
     .isHandbrakeOn                    resb 1      ; 0x92 byte
     .isForwardGasOn                   resb 1      ; 0x93 byte
-    .isBackwardGasOn                  resb 1      ; 0x94 byte
-    resb 3
-    .surfaceType                      resb 4      ; 0x98 CAR_SURFACE
-    .surfaceType2                     resb 4      ; 0x9c CAR_SURFACE2
-    resb 5
-    .currentSlopeLength               resb 1      ; 0xa5 byte
-    .currentSlopeLeftTiles            resb 1      ; 0xa6 byte
-    .currentTileZ                     resb 1      ; 0xa7 byte
-    .handbrakeForce                   resb 1      ; 0xa8 byte
-    .carModel                         resb 1      ; 0xa9 CAR_MODEL
+    .isReverseGasOn                   resb 1      ; 0x94 byte
+    .isCoasting                       resb 1      ; 0x95 byte
     resb 2
-    .driveWheelsLockedProbably        resb 1      ; 0xac byte
+    .surfaceType                      resb 4      ; 0x98 CAR_SURFACE
+    .groundMaterial                   resb 4      ; 0x9c CAR_SURFACE2
+    .swerveState                      resb 4      ; 0xa0 int
+    .swerveTimer                      resb 1      ; 0xa4 byte
+    .slopeLength                      resb 1      ; 0xa5 byte
+    .slopeLeftTiles                   resb 1      ; 0xa6 byte
+    .tileZ                            resb 1      ; 0xa7 byte
+    .handbrakeHeldFrames              resb 1      ; 0xa8 byte
+    .cachedModelId                    resb 1      ; 0xa9 CAR_MODEL
+    .unsure_movedByCollision          resb 1      ; 0xaa bool
+    .unsure_partlyAirborne            resb 1      ; 0xab bool
+    .wheelSpinTimer                   resb 1      ; 0xac byte
     .steering                         resb 1      ; 0xad char
     resb 1
     .field_0xaf                       resb 1      ; 0xaf undefined1
@@ -3903,6 +3964,12 @@ struc CarPhysicsData
     resb 8
     .skid_threshhold1                 resb 4      ; 0x24 SCR_f
     .skid_threshhold2                 resb 4      ; 0x28 SCR_f
+endstruc
+
+; /imported/seuko-mod/CarPhysicsPool  (53860 bytes)
+struc CarPhysicsPool
+    .first                            resb 4      ; 0x0 CarPhysics *
+    .arr306                           resb 53856  ; 0x4 CarPhysics[306]
 endstruc
 
 ; /imported/seuko-mod/Collide  (12 bytes)
@@ -4741,7 +4808,7 @@ POWERUP_TYPE.POWERUP_TYPE_16 equ 16
 ; /imported/seuko-mod/Passenger  (8 bytes)
 struc Passenger
     .ped                              resb 4      ; 0x0 Ped *
-    .prev                             resb 4      ; 0x4 Passenger *
+    .next                             resb 4      ; 0x4 Passenger *
 endstruc
 
 ; /imported/seuko-mod/PedGameObjectManager  (72004 bytes)
@@ -4863,21 +4930,10 @@ struc RenderDistanceArrayItem
     .position                         resb 8      ; 0x0 SCR_Vector2
 endstruc
 
-; /imported/seuko-mod/Roof  (24 bytes)
-struc Roof
-    .sprite                           resb 4      ; 0x0 Sprite *
-    .next                             resb 4      ; 0x4 Roof *
-    .xOffset                          resb 4      ; 0x8 int
-    .yOffset                          resb 4      ; 0xc int
-    .rotation                         resb 2      ; 0x10 short
-    resb 5
-    .field_0x17                       resb 1      ; 0x17 undefined1
-endstruc
-
 ; /imported/seuko-mod/RoofSpritesHolder  (7204 bytes)
 struc RoofSpritesHolder
-    .last                             resb 4      ; 0x0 Roof *
-    .arr                              resb 7200   ; 0x4 Roof[300]
+    .last                             resb 4      ; 0x0 CarAttachment *
+    .arr                              resb 7200   ; 0x4 CarAttachment[300]
 endstruc
 
 ; /imported/seuko-mod/S10_TxtMessage  (1796 bytes)
@@ -5224,8 +5280,15 @@ endstruc
 
 ; /imported/seuko-mod/TrailerController  (16 bytes)
 struc TrailerController
-    resb 12
+    resb 8
+    .cab                              resb 4      ; 0x8 Car *
     .trailer                          resb 4      ; 0xc Car *
+endstruc
+
+; /imported/seuko-mod/TrailerControllerPool  (164 bytes)
+struc TrailerControllerPool
+    .field_0x0                        resb 4      ; 0x0 int *
+    .arr10                            resb 160    ; 0x4 CarManager5_S1[10]
 endstruc
 
 ; /imported/seuko-mod/Vert  (32 bytes)

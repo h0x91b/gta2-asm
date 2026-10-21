@@ -217,16 +217,16 @@ typedef struct BusAndTrains2 BusAndTrains2;
 typedef struct BusAndTrainsHolder BusAndTrainsHolder;
 typedef struct Camera Camera;
 typedef struct CameraPos CameraPos;
+typedef struct CarAI CarAI;
+typedef struct CarAIPool CarAIPool;
+typedef struct CarAttachment CarAttachment;
 typedef struct CarDoor CarDoor;
 typedef struct CarEngineData CarEngineData;
-typedef struct CarEnginePrefab CarEnginePrefab;
 typedef struct CarInfoChunk CarInfoChunk;
-typedef struct CarManager4 CarManager4;
-typedef struct CarManager4_S1 CarManager4_S1;
-typedef struct CarManager5 CarManager5;
 typedef struct CarManager5_S1 CarManager5_S1;
 typedef struct CarPhysics CarPhysics;
 typedef struct CarPhysicsData CarPhysicsData;
+typedef struct CarPhysicsPool CarPhysicsPool;
 typedef struct Collide Collide;
 typedef struct Collide1 Collide1;
 typedef struct Collide2 Collide2;
@@ -254,7 +254,6 @@ typedef struct PedGroup PedGroup;
 typedef struct PhysicalPalette PhysicalPalette;
 typedef struct Player Player;
 typedef struct RenderDistanceArrayItem RenderDistanceArrayItem;
-typedef struct Roof Roof;
 typedef struct RoofSpritesHolder RoofSpritesHolder;
 typedef struct S10_TxtMessage S10_TxtMessage;
 typedef struct S21 S21;
@@ -280,6 +279,7 @@ typedef struct Texture_S2 Texture_S2;
 typedef struct Tick Tick;
 typedef struct TrafficManager TrafficManager;
 typedef struct TrailerController TrailerController;
+typedef struct TrailerControllerPool TrailerControllerPool;
 typedef struct Vert Vert;
 typedef struct Verts Verts;
 typedef struct WorldRect WorldRect;
@@ -311,6 +311,51 @@ typedef union _union_19 _union_19;
 typedef union _union_23 _union_23;
 
 /* ---- enums (stored as fixed-size integers to keep layout) */
+
+// /CAR_DOOR_STATE
+typedef uint32_t CAR_DOOR_STATE;
+enum CAR_DOOR_STATE_values {
+    CAR_DOOR_NONE = 0,
+    CAR_DOOR_OPEN_HOLD = 1,
+    CAR_DOOR_OPENING = 2,
+    CAR_DOOR_CLOSING = 3,
+    CAR_DOOR_CLOSE_PENDING_2 = 4,
+    CAR_DOOR_CLOSE_PENDING_1 = 5,
+    CAR_DOOR_CLOSED = 6,
+};
+
+// /CAR_DRIVE_ORDER_MODE
+typedef uint32_t CAR_DRIVE_ORDER_MODE;
+enum CAR_DRIVE_ORDER_MODE_values {
+    DRIVE_ORDER_NONE = 0,
+    DRIVE_ORDER_GO_TO_POINT = 1,
+    DRIVE_ORDER_FOLLOW_TARGET = 2,
+    DRIVE_ORDER_UNSURE_ATTACK_A = 4,
+    DRIVE_ORDER_UNSURE_ATTACK_B = 5,
+};
+
+// /CAR_LIFE_STATE
+typedef uint32_t CAR_LIFE_STATE;
+enum CAR_LIFE_STATE_values {
+    CAR_LIFE_NONE = 0,
+    CAR_LIFE_ACTIVE = 1,
+    CAR_LIFE_REMOVE_WHEN_UNSEEN = 2,
+    CAR_LIFE_REMOVE_NOW = 3,
+    CAR_LIFE_REMOVE_REQUESTED = 4,
+    CAR_LIFE_REMOVING = 5,
+    CAR_LIFE_REMOVED = 6,
+    CAR_LIFE_DETACHED = 7,
+};
+
+// /CAR_PHYSICS_MODE
+typedef uint32_t CAR_PHYSICS_MODE;
+enum CAR_PHYSICS_MODE_values {
+    CAR_PHYSICS_UNSURE_PUSHED = 0,
+    CAR_PHYSICS_AI = 1,
+    CAR_PHYSICS_PLAYER = 2,
+    CAR_PHYSICS_UNSURE_3 = 3,
+    CAR_PHYSICS_UNSURE_KINEMATIC = 4,
+};
 
 // /PED_CLASS
 typedef uint32_t PED_CLASS;
@@ -1417,8 +1462,8 @@ enum CAR_DELTAS_INDEX_values {
 };
 
 // /imported/seuko-mod/CAR_DOOR_STATE
-typedef uint32_t CAR_DOOR_STATE;
-enum CAR_DOOR_STATE_values {
+typedef uint32_t _imported_seuko_mod_CAR_DOOR_STATE;
+enum _imported_seuko_mod_CAR_DOOR_STATE_values {
     CAR_DOOR_STATE_LOCKED = 1,
     CAR_DOOR_STATE_UNLOCKED = 2,
     CAR_DOOR_STATE_INITIAL_UNK3 = 3,
@@ -2313,17 +2358,20 @@ struct CLIENT_ID {
 struct CarDriveOrder {
     byte inUse; /* 0x0 */
     uint8_t _gap_0x1[0x3];
-    Ped *ped; /* 0x4 */
-    int mode; /* 0x8 */
-    uint8_t _gap_0xc[0x8];
-    int targetX; /* 0x14 */
-    int targetY; /* 0x18 */
-    int targetZ; /* 0x1c */
-    byte flag20; /* 0x20 */
+    Ped *driver; /* 0x4 */
+    CAR_DRIVE_ORDER_MODE mode; /* 0x8 */
+    int unsure_maneuver; /* 0xc */
+    uint8_t _gap_0x10[0x4];
+    SCR_f targetX; /* 0x14 */
+    SCR_f targetY; /* 0x18 */
+    SCR_f targetZ; /* 0x1c */
+    byte isUrgent; /* 0x20 */
     uint8_t _gap_0x21[0x1];
-    byte flag22; /* 0x22 */
-    uint8_t _gap_0x23[0xd];
-    int targetId; /* 0x30 */
+    byte followRoadActive; /* 0x22 */
+    uint8_t _gap_0x23[0x3];
+    bool_ arrived; /* 0x26 */
+    uint8_t _gap_0x27[0x9];
+    Ped *targetPed; /* 0x30 */
     uint8_t _gap_0x34[0xb];
     byte end; /* 0x3f */
 };
@@ -2335,10 +2383,10 @@ struct CarDriveOrderPool {
 
 // /CarModelTable  size 0x808
 struct CarModelTable {
-    void *modelData[256]; /* 0x0 */
-    int countA; /* 0x400 */
-    CarInfo *field2_0x404[256]; /* 0x404 */
-    int countB; /* 0x804 */
+    CarPhysicsData *physicsData[256]; /* 0x0 */
+    CarPhysicsData *physicsDataBlock; /* 0x400 */
+    CarEngineData *engineData[256]; /* 0x404 */
+    CarEngineData *engineDataBlock; /* 0x804 */
 };
 
 // /CollisionManager  size 0xc
@@ -2888,59 +2936,66 @@ struct StyleFileHeader {
 // /imported/seuko-mod/CarDoor  size 0x10
 struct CarDoor {
     byte animationFrame; /* 0x0 */
-    uint8_t _gap_0x1[0x1];
+    byte frameDelay; /* 0x1 */
     byte deltaID; /* 0x2 */
     uint8_t _gap_0x3[0x1];
-    uint doorState; /* 0x4 */
+    CAR_DOOR_STATE state; /* 0x4 */
     Ped *pedInDoor; /* 0x8 */
-    uint8_t _gap_0xc[0x3];
+    byte holdTimer; /* 0xc */
+    uint8_t _gap_0xd[0x2];
     undefined1 field_0xf; /* 0xf */
 };
 
 // /_car/Car  size 0xbc
 struct Car {
-    Roof *roof; /* 0x0 */
-    Passenger *lastPassenger; /* 0x4 */
+    CarAttachment *attachments; /* 0x0 */
+    Passenger *passengers; /* 0x4 */
     CAR_DELTAS_BITSTATE deltasBitstate; /* 0x8 */
     CarDoor carDoor[4]; /* 0xc */
-    Car *lastCar; /* 0x4c */
+    Car *next; /* 0x4c */
     Sprite *sprite; /* 0x50 */
     Ped *driver; /* 0x54 */
     CarPhysics *physics; /* 0x58 */
-    CarManager4_S1 *notEngineStruct; /* 0x5c */
-    uint8_t _gap_0x60[0x4];
+    CarAI *ai; /* 0x5c */
+    CarDriveOrder *driveOrder; /* 0x60 */
     TrailerController *trailerController; /* 0x64 */
-    uint scale; /* 0x68 */
+    SCR_f scale; /* 0x68 */
     uint id; /* 0x6c */
-    bool_ latelyShot; /* 0x70 */
-    uint8_t _gap_0x71[0x3];
-    short carDamage; /* 0x74 */
-    uint8_t _gap_0x76[0x2];
-    short physicsBitmask; /* 0x78 */
+    int lastAttackerPedId; /* 0x70 */
+    short damage; /* 0x74 */
+    short offscreenTicks; /* 0x76 */
+    ushort flags; /* 0x78 */
     uint8_t _gap_0x7a[0x2];
-    int field_0x7c; /* 0x7c */
-    bool_ field_0x80; /* 0x80 */
+    PED_CLASS driverClass; /* 0x7c */
+    bool_ isAbandoned; /* 0x80 */
     uint8_t _gap_0x81[0x3];
     CAR_MODEL4 carModel; /* 0x84 */
-    uint mask; /* 0x88 */
-    byte fireState; /* 0x8c */
-    uint8_t _gap_0x8d[0x1];
+    CAR_LIFE_STATE lifeState; /* 0x88 */
+    byte unsure_fireState; /* 0x8c */
+    byte unsure_scriptFlags; /* 0x8d */
     byte alarmTimer; /* 0x8e */
     uint8_t _gap_0x8f[0x1];
-    int latelyShotBulletType; /* 0x90 */
-    byte latelyShotTimer; /* 0x94 */
-    uint8_t _gap_0x95[0x3];
+    int lastAttackerWeapon; /* 0x90 */
+    byte lastAttackerTimer; /* 0x94 */
+    byte lastPlayerDriverId; /* 0x95 */
+    uint8_t _gap_0x96[0x2];
     CAR_LOCK_STATE lockState; /* 0x98 */
     CAR_ENGINE_STATE engineState; /* 0x9c */
-    TRAFFIC_CAR_TYPE trafficCarType; /* 0xa0 */
+    CAR_COUNTER counterCategory; /* 0xa0 */
     CAR_LIGHTS_BITSTATE lightsBitstate; /* 0xa4 */
-    byte sirenPhase; /* 0xa5 */
-    uint8_t _gap_0xa6[0x1];
-    HORN horn; /* 0xa7 */
-    uint8_t _gap_0xa8[0xc];
-    byte currentUpgradeSound; /* 0xb4 */
-    bool_ isTurretBeingRotated; /* 0xb5 */
-    uint8_t _gap_0xb6[0x6];
+    char lightPhase; /* 0xa5 */
+    byte aiFlags; /* 0xa6 */
+    char hornState; /* 0xa7 */
+    byte hornCooldown; /* 0xa8 */
+    byte wreckTimer; /* 0xa9 */
+    uint8_t _gap_0xaa[0x2];
+    int unsure_honkReason; /* 0xac */
+    uint8_t _gap_0xb0[0x4];
+    byte shopReaction; /* 0xb4 */
+    bool_ unused_0xB5; /* 0xb5 */
+    uint8_t _gap_0xb6[0x2];
+    bool_ isTurretBeingRotated; /* 0xb8 */
+    uint8_t _gap_0xb9[0x3];
 };
 
 // /_car/CarManager  size 0x6c
@@ -5006,6 +5061,51 @@ struct Camera {
     CameraPos cameraVelocity; /* 0xac */
 };
 
+// /imported/seuko-mod/CarAI  size 0x78
+struct CarAI {
+    Car *parentCar; /* 0x0 */
+    uint8_t _gap_0x4[0x8];
+    CarAI *nextFree; /* 0xc */
+    short heading; /* 0x10 */
+    uint8_t _gap_0x12[0x2];
+    SCR_f unsure_targetX; /* 0x14 */
+    SCR_f unsure_targetY; /* 0x18 */
+    SCR_f unsure_targetZ; /* 0x1c */
+    uint8_t _gap_0x20[0x4];
+    uint flags; /* 0x24 */
+    char routeSlot; /* 0x28 */
+    uint8_t _gap_0x29[0x3];
+    byte avoidTimer; /* 0x2c */
+    uint8_t _gap_0x2d[0x1f];
+    int travelDir; /* 0x4c */
+    uint8_t _gap_0x50[0x6];
+    ushort routeStep; /* 0x56 */
+    ushort stuckTicks; /* 0x58 */
+    uint8_t _gap_0x5a[0xe];
+    Car *unsure_nearbyCar; /* 0x68 */
+    Car *blockingCar; /* 0x6c */
+    void *obstacleHit; /* 0x70 */
+    uint8_t _gap_0x74[0x3];
+    undefined1 field_0x77; /* 0x77 */
+};
+
+// /imported/seuko-mod/CarAIPool  size 0x8f74
+struct CarAIPool {
+    CarAI *last; /* 0x0 */
+    CarAI arr306[306]; /* 0x4 */
+};
+
+// /imported/seuko-mod/CarAttachment  size 0x18
+struct CarAttachment {
+    Sprite *sprite; /* 0x0 */
+    CarAttachment *next; /* 0x4 */
+    int xOffset; /* 0x8 */
+    int yOffset; /* 0xc */
+    short rotation; /* 0x10 */
+    uint8_t _gap_0x12[0x5];
+    undefined1 field_0x17; /* 0x17 */
+};
+
 // /imported/seuko-mod/CarEngineData  size 0x48
 struct CarEngineData {
     byte model; /* 0x0 */
@@ -5031,85 +5131,10 @@ struct CarEngineData {
     undefined4 gear3_speed; /* 0x44 */
 };
 
-// /imported/seuko-mod/CarPhysics  size 0xb0
-struct CarPhysics {
-    int xVelocityReadOnly; /* 0x0 */
-    int yVelocityReadOnly; /* 0x4 */
-    int totalDamageMaybe; /* 0x8 */
-    CarPhysics *next; /* 0xc */
-    SCR_Vector2 rrSkid; /* 0x10 */
-    SCR_Vector2 rlSkid; /* 0x18 */
-    SCR_Vector2 frSkid; /* 0x20 */
-    SCR_Vector2 flSkid; /* 0x28 */
-    SCR_Vector2 position; /* 0x30 */
-    SCR_Vector2 positionReadOnly; /* 0x38 */
-    SCR_Vector2 velocity; /* 0x40 */
-    SCR_Vector2 jumpFromEdgeForce; /* 0x48 */
-    uint8_t _gap_0x50[0x8];
-    short rotation; /* 0x58 */
-    uint8_t _gap_0x5a[0x2];
-    CarPhysics *prev; /* 0x5c */
-    int gasPedal; /* 0x60 */
-    CarPhysics *alsoRefToAnotherEngine; /* 0x64 */
-    int zVelocityRelated; /* 0x68 */
-    SCR_f zPos; /* 0x6c */
-    int zVelocityReadOnly; /* 0x70 */
-    int rotationForce; /* 0x74 */
-    int pointingAngle; /* 0x78 */
-    uint8_t _gap_0x7c[0x8];
-    uint frontSkid; /* 0x84 */
-    uint rearSkid; /* 0x88 */
-    uint8_t _gap_0x8c[0x4];
-    byte timerSinceLastMove; /* 0x90 */
-    byte isBrakeOn; /* 0x91 */
-    byte isHandbrakeOn; /* 0x92 */
-    byte isForwardGasOn; /* 0x93 */
-    byte isBackwardGasOn; /* 0x94 */
-    uint8_t _gap_0x95[0x3];
-    CAR_SURFACE surfaceType; /* 0x98 */
-    CAR_SURFACE2 surfaceType2; /* 0x9c */
-    uint8_t _gap_0xa0[0x5];
-    byte currentSlopeLength; /* 0xa5 */
-    byte currentSlopeLeftTiles; /* 0xa6 */
-    byte currentTileZ; /* 0xa7 */
-    byte handbrakeForce; /* 0xa8 */
-    CAR_MODEL carModel; /* 0xa9 */
-    uint8_t _gap_0xaa[0x2];
-    byte driveWheelsLockedProbably; /* 0xac */
-    char steering; /* 0xad */
-    uint8_t _gap_0xae[0x1];
-    undefined1 field_0xaf; /* 0xaf */
-};
-
-// /imported/seuko-mod/CarEnginePrefab  size 0xd264
-struct CarEnginePrefab {
-    CarPhysics *first; /* 0x0 */
-    CarPhysics arr306[306]; /* 0x4 */
-};
-
 // /imported/seuko-mod/CarInfoChunk  size 0x404
 struct CarInfoChunk {
     CarInfo *last; /* 0x0 */
     CarInfo *carInfoArray[256]; /* 0x4 */
-};
-
-// /imported/seuko-mod/CarManager4_S1  size 0x78
-struct CarManager4_S1 {
-    Car *parentCar; /* 0x0 */
-    uint8_t _gap_0x4[0x8];
-    CarManager4_S1 *prev; /* 0xc */
-    uint8_t _gap_0x10[0x14];
-    uint field_0x24; /* 0x24 */
-    uint8_t _gap_0x28[0x48];
-    void *ptr; /* 0x70 */
-    uint8_t _gap_0x74[0x3];
-    undefined1 field_0x77; /* 0x77 */
-};
-
-// /imported/seuko-mod/CarManager4  size 0x8f74
-struct CarManager4 {
-    CarManager4_S1 *last; /* 0x0 */
-    CarManager4_S1 arr306[306]; /* 0x4 */
 };
 
 // /imported/seuko-mod/CarManager5_S1  size 0x10
@@ -5118,10 +5143,58 @@ struct CarManager5_S1 {
     undefined1 field_0xf; /* 0xf */
 };
 
-// /imported/seuko-mod/CarManager5  size 0xa4
-struct CarManager5 {
-    int *field_0x0; /* 0x0 */
-    CarManager5_S1 arr10[10]; /* 0x4 */
+// /imported/seuko-mod/CarPhysics  size 0xb0
+struct CarPhysics {
+    SCR_f cmDeltaX; /* 0x0 */
+    SCR_f cmDeltaY; /* 0x4 */
+    uint activeUntilFrame; /* 0x8 */
+    CarPhysics *next; /* 0xc */
+    SCR_Vector2 rrSkid; /* 0x10 */
+    SCR_Vector2 rlSkid; /* 0x18 */
+    SCR_Vector2 frSkid; /* 0x20 */
+    SCR_Vector2 flSkid; /* 0x28 */
+    SCR_Vector2 cmPos; /* 0x30 */
+    SCR_Vector2 centerPos; /* 0x38 */
+    SCR_Vector2 linVel; /* 0x40 */
+    SCR_Vector2 forceAccum; /* 0x48 */
+    SCR_Vector2 linAccel; /* 0x50 */
+    short heading; /* 0x58 */
+    uint8_t _gap_0x5a[0x2];
+    Car *car; /* 0x5c */
+    SCR_f throttle; /* 0x60 */
+    SCR_f brakeLevel; /* 0x64 */
+    SCR_f zVelocity; /* 0x68 */
+    SCR_f zPos; /* 0x6c */
+    SCR_f zStep; /* 0x70 */
+    SCR_f angVel; /* 0x74 */
+    SCR_f steerAngle; /* 0x78 */
+    SCR_f torqueAccum; /* 0x7c */
+    SCR_f angAccel; /* 0x80 */
+    SCR_f frontSlip; /* 0x84 */
+    SCR_f rearSlip; /* 0x88 */
+    CAR_PHYSICS_MODE mode; /* 0x8c */
+    byte framesStationary; /* 0x90 */
+    byte isBrakeOn; /* 0x91 */
+    byte isHandbrakeOn; /* 0x92 */
+    byte isForwardGasOn; /* 0x93 */
+    byte isReverseGasOn; /* 0x94 */
+    byte isCoasting; /* 0x95 */
+    uint8_t _gap_0x96[0x2];
+    CAR_SURFACE surfaceType; /* 0x98 */
+    CAR_SURFACE2 groundMaterial; /* 0x9c */
+    int swerveState; /* 0xa0 */
+    byte swerveTimer; /* 0xa4 */
+    byte slopeLength; /* 0xa5 */
+    byte slopeLeftTiles; /* 0xa6 */
+    byte tileZ; /* 0xa7 */
+    byte handbrakeHeldFrames; /* 0xa8 */
+    CAR_MODEL cachedModelId; /* 0xa9 */
+    bool_ unsure_movedByCollision; /* 0xaa */
+    bool_ unsure_partlyAirborne; /* 0xab */
+    byte wheelSpinTimer; /* 0xac */
+    char steering; /* 0xad */
+    uint8_t _gap_0xae[0x1];
+    undefined1 field_0xaf; /* 0xaf */
 };
 
 // /imported/seuko-mod/CarPhysicsData  size 0x2c
@@ -5135,6 +5208,12 @@ struct CarPhysicsData {
     uint8_t _gap_0x1c[0x8];
     SCR_f skid_threshhold1; /* 0x24 */
     SCR_f skid_threshhold2; /* 0x28 */
+};
+
+// /imported/seuko-mod/CarPhysicsPool  size 0xd264
+struct CarPhysicsPool {
+    CarPhysics *first; /* 0x0 */
+    CarPhysics arr306[306]; /* 0x4 */
 };
 
 // /imported/seuko-mod/Collide  size 0xc
@@ -5456,7 +5535,7 @@ struct ObjectPrefabsContainer {
 // /imported/seuko-mod/Passenger  size 0x8
 struct Passenger {
     Ped *ped; /* 0x0 */
-    Passenger *prev; /* 0x4 */
+    Passenger *next; /* 0x4 */
 };
 
 // /imported/seuko-mod/PedGameObjectManager  size 0x11944
@@ -5567,21 +5646,10 @@ struct Player {
     undefined1 field_0x85b; /* 0x85b */
 };
 
-// /imported/seuko-mod/Roof  size 0x18
-struct Roof {
-    Sprite *sprite; /* 0x0 */
-    Roof *next; /* 0x4 */
-    int xOffset; /* 0x8 */
-    int yOffset; /* 0xc */
-    short rotation; /* 0x10 */
-    uint8_t _gap_0x12[0x5];
-    undefined1 field_0x17; /* 0x17 */
-};
-
 // /imported/seuko-mod/RoofSpritesHolder  size 0x1c24
 struct RoofSpritesHolder {
-    Roof *last; /* 0x0 */
-    Roof arr[300]; /* 0x4 */
+    CarAttachment *last; /* 0x0 */
+    CarAttachment arr[300]; /* 0x4 */
 };
 
 // /imported/seuko-mod/S21  size 0x59aa3
@@ -5851,8 +5919,15 @@ struct TrafficManager {
 
 // /imported/seuko-mod/TrailerController  size 0x10
 struct TrailerController {
-    uint8_t _gap_0x0[0xc];
+    uint8_t _gap_0x0[0x8];
+    Car *cab; /* 0x8 */
     Car *trailer; /* 0xc */
+};
+
+// /imported/seuko-mod/TrailerControllerPool  size 0xa4
+struct TrailerControllerPool {
+    int *field_0x0; /* 0x0 */
+    CarManager5_S1 arr10[10]; /* 0x4 */
 };
 
 // /imported/seuko-mod/Vert  size 0x20

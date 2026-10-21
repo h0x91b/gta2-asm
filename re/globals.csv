@@ -1,14 +1,14 @@
 address,name,namespace,name_source,section,in_function,datatype,size
 0x003f1000,EXE,,USER_DEFINED,.text,,/undefined,1
 0x003f130d,relToCarRecycle,,USER_DEFINED,.text,,,
-0x00434daa,prt_434daa_5c0dd4ac,getSelectedWeapon::override,USER_DEFINED,.text,getSelectedWeapon,,
+0x00434daa,prt_434daa_5c0dd4ac,Ped_GetSelectedWeapon::override,USER_DEFINED,.text,Ped_GetSelectedWeapon,,
 0x00461de0,?MainMenu,,USER_DEFINED,.text,InitGame,,
 0x00475d72,buf4k,ParseStrings,USER_DEFINED,.text,ParseStrings,,
 0x004a49c0,?KeyDown,,USER_DEFINED,.text,KeyUp,,
 0x004b7666,aaa,ChangeMoney2,USER_DEFINED,.text,ChangeMoney2,,
 0x004c6060,?ShowBigOnScreenLabel,,USER_DEFINED,.text,ShowBigOnScreenLabel,,
 0x004c8c20,?showDebugLabel,,USER_DEFINED,.text,showDebugLabel,,
-0x004d04f4,prt_4d04f4_b293fec6,FUN_00445230::override,USER_DEFINED,.text,FUN_00445230,,
+0x004d04f4,prt_4d04f4_b293fec6,Ped_UpdateWeaponFiring::override,USER_DEFINED,.text,Ped_UpdateWeaponFiring,,
 0x0056e980,floatEncodingMask,,USER_DEFINED,.rdata,,/double,8
 0x00575904,MaxAmmoArray,,USER_DEFINED,.rdata,,/byte[15],15
 0x005787c8,vftable,type_info,IMPORTED,.rdata,,/pointer,4
