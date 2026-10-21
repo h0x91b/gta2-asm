@@ -6,7 +6,7 @@
 ;
 ; While the menu is open every key press goes to it, not to the game; keys held when it
 ; opens are released, so the player stops. Key releases always reach the game.
-; Items: quick save (seuko-mod #37), camera zoom (camera.zoom, live), a few of the game's
+; Items: quick save (seuko-mod #37), all weapons, +$100000, camera zoom (camera.zoom, live), a few of the game's
 ; debug flags (written straight into their bytes, which HiddenDebugFlags 0x451930 filled
 ; from the registry at startup; the game reads them as it goes).
 ;
@@ -31,10 +31,13 @@ DM_ACTION  equ 0                    ; item kinds
 DM_ZOOM    equ 1
 DM_FLAG    equ 2                    ; data = address of the game's debug flag byte
 DM_CLOSE   equ 3
+DMA_SAVE    equ 1                   ; DM_ACTION data: what hk_DrawUI does
+DMA_WEAPONS equ 2
+DMA_MONEY   equ 3
 
 DM_X       equ 16                   ; 640x480 layout
 DM_Y       equ 104                  ; below the HUD bars
-DM_W       equ 250
+DM_W       equ 200                  ; fits "Show camera info: off"
 DM_LINE    equ 17
 DM_PAD     equ 6
 DM_TEXT_SCALE equ 0x3000            ; 0.75 (SCR_f, 14 fraction bits)
@@ -162,7 +165,8 @@ dm_change:
 .action:
     test esi, esi
     jnz .out
-    mov byte [dm_save_req], 1       ; done on the game's side, in hk_DrawUI
+    mov eax, [rcx + DMI_DATA]
+    mov [dm_action_req], al         ; done on the game's side, in hk_DrawUI
 .out:
     ret
 .zoom:
@@ -199,10 +203,19 @@ hk_DrawUI:
     mov eax, [r_frames]
     mov [dm_ui_frame], eax
     mov byte [dm_ui_seen], 1
-    cmp byte [dm_save_req], 0
-    je .draw
-    mov byte [dm_save_req], 0
+    movzx r13d, byte [dm_action_req]
+    mov byte [dm_action_req], 0
+    cmp r13d, DMA_SAVE
+    jne .a1
     call dm_quick_save
+.a1:
+    cmp r13d, DMA_WEAPONS
+    jne .a2
+    call dm_all_weapons
+.a2:
+    cmp r13d, DMA_MONEY
+    jne .draw
+    call dm_add_money
 .draw:
     mov edi, 0x4CA440
     mov rsi, rbx
@@ -269,6 +282,81 @@ dm_quick_save:
     pop rbx
     ret
 
+; eax = dm_player_ped(): the player's Ped* (Game* 0x5EB4FC +0x38 = Player, +0x2c4), or 0;
+; ecx = the Player*
+dm_player_ped:
+    xor eax, eax
+    xor ecx, ecx
+    mov edx, [abs 0x5EB4FC]
+    test edx, edx
+    jz .out
+    mov ecx, [rdx + 0x38]
+    test ecx, ecx
+    jz .out
+    mov eax, [rcx + 0x2c4]
+.out:
+    ret
+
+; dm_all_weapons: AddWeapon @0x43E4B0, fastcall(Ped* ecx, edx = 0; weapon, ammo), ret 8,
+; for weapons 0..14 with 99 ammo (seuko-mod src/modules/modmenu/utils/get-all-weapons.cpp)
+dm_all_weapons:
+    push rbx
+    push r12
+    push r13
+    sub rsp, 16
+    lea r13, [s_dm_noplayer2]
+    call dm_player_ped
+    test eax, eax
+    jz .toast
+    mov r12d, eax
+    xor ebx, ebx
+.w:
+    mov [rsp], ebx
+    mov dword [rsp + 4], 99
+    mov edi, 0x43E4B0
+    mov rsi, rsp
+    mov edx, 2
+    xor ecx, ecx
+    mov r8d, r12d
+    xor r9d, r9d
+    call call32
+    inc ebx
+    cmp ebx, 15
+    jb .w
+    lea r13, [s_dm_weapons]
+.toast:
+    mov [dm_toast], r13
+    mov dword [dm_toast_left], DM_TOAST_FRAMES
+    add rsp, 16
+    pop r13
+    pop r12
+    pop rbx
+    ret
+
+; dm_add_money: Player +0x2d4 = animatedMoney (SaveSlotAnimatedValue: value +0, max +0x30;
+; seuko-mod src/modules/modmenu/menus/player-stats-menu.cpp), += DM_MONEY up to max
+DM_MONEY equ 100000
+dm_add_money:
+    lea rax, [s_dm_noplayer2]
+    call dm_player_ped
+    test ecx, ecx
+    jz .toast
+    mov eax, [rcx + 0x2d4]
+    add eax, DM_MONEY
+    mov edx, [rcx + 0x2d4 + 0x30]
+    test edx, edx
+    jle .set                        ; no max set
+    cmp eax, edx
+    jbe .set
+    mov eax, edx
+.set:
+    mov [rcx + 0x2d4], eax
+    lea rax, [s_dm_money]
+.toast:
+    mov [dm_toast], rax
+    mov dword [dm_toast_left], DM_TOAST_FRAMES
+    ret
+
 ; dm_draw: the menu (when open) and the toast line, in 640x480 units times uiScale
 dm_draw:
     push rbx
@@ -293,9 +381,9 @@ dm_draw:
     cmp byte [dm_open], 0
     je .toast
     ; box: DM_X..DM_X+DM_W, DM_Y..DM_Y + 2*pad + (title + items + 1) lines
-    mov eax, DM_NITEMS + 2
+    mov eax, DM_NITEMS + 1
     imul eax, eax, DM_LINE
-    add eax, DM_Y + 2 * DM_PAD
+    add eax, DM_Y + DM_LINE / 2 + DM_PAD
     mov edi, DM_X - DM_PAD
     mov esi, DM_Y - DM_PAD
     mov edx, DM_X + DM_W
@@ -497,7 +585,9 @@ section .data
 ; flag addresses: HiddenDebugFlags 0x451930 (each RegGet result is stored with
 ; `mov [addr], al`; own disassembly, 74 of 74 flags; matches seuko-mod's Cheats @0x5EAD51)
 dm_items:
-    DMITEM DM_ACTION, "Quick save", 0
+    DMITEM DM_ACTION, "Quick save", DMA_SAVE
+    DMITEM DM_ACTION, "Get all weapons", DMA_WEAPONS
+    DMITEM DM_ACTION, "Add $100000", DMA_MONEY
     DMITEM DM_ZOOM,   "Camera zoom: ", 0
     DMITEM DM_FLAG,   "Show FPS: ", 0x5EAD79                  ; do_show_timing
     DMITEM DM_FLAG,   "Show camera info: ", 0x5EAD82          ; do_show_camera
@@ -525,12 +615,15 @@ s_dm_saved:    db "Game saved", 0
 s_dm_mission:  db "Cannot save during a mission", 0
 s_dm_noplayer: db "Cannot save: no player", 0
 s_dm_nosave:   db "Cannot save here", 0
+s_dm_noplayer2: db "No player", 0
+s_dm_weapons:  db "Got all weapons", 0
+s_dm_money:    db "Got $100000", 0     ; the font has no "+"
 fmt_dm_saved:  db "menu: quick save -> %s", 10, 0
 
 section .bss
 dm_open:       resb 1
 dm_ui_seen:    resb 1
-dm_save_req:   resb 1
+dm_action_req: resb 1               ; DMA_* to run in hk_DrawUI, 0 = none
 alignb 8
 dm_low:        resq 1               ; low memory: 2 PALETTE_BASE dwords, then line buffers
 dm_toast:      resq 1
