@@ -4,3 +4,4 @@
 /.external/
 __pycache__/
 /data.pak
+/formats-out/
