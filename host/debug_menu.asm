@@ -33,7 +33,7 @@ DM_FLAG    equ 2                    ; data = address of the game's debug flag by
 DM_CLOSE   equ 3
 
 DM_X       equ 16                   ; 640x480 layout
-DM_Y       equ 84                   ; below the HUD bars
+DM_Y       equ 104                  ; below the HUD bars
 DM_W       equ 250
 DM_LINE    equ 17
 DM_PAD     equ 6
@@ -300,7 +300,7 @@ dm_draw:
     mov esi, DM_Y - DM_PAD
     mov edx, DM_X + DM_W
     mov ecx, eax
-    mov r8d, 0xB0000000
+    mov r8d, 0x80000000
     call dm_rect
     lea rdi, [s_dm_title]
     mov esi, DM_Y
@@ -505,7 +505,7 @@ dm_items:
     DMITEM DM_FLAG,   "Show all arrows: ", 0x5EADB2           ; show_all_arrows
     DMITEM DM_FLAG,   "Invulnerable: ", 0x5EAD71              ; do_invulnerable
     DMITEM DM_FLAG,   "Infinite lives: ", 0x5EAD61            ; do_infinite_lives
-    DMITEM DM_FLAG,   "Keep weapons after death: ", 0x5EAD9E  ; keep_weapons_after_death
+    DMITEM DM_FLAG,   "Keep weapons: ", 0x5EAD9E  ; keep_weapons_after_death
     DMITEM DM_FLAG,   "Free shopping: ", 0x5EAD84             ; do_free_shopping
     DMITEM DM_FLAG,   "No police: ", 0x5EAD5E                 ; skip_police
     DMITEM DM_CLOSE,  "Close", 0
