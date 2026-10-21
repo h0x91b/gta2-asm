@@ -1370,8 +1370,8 @@ dmp_flags_end:
 dm_skin_idx:   dd -1
 dm_skin:       dd -1
 dm_body:       dd -1
-dm_spawn_sx:   dd -1                ; front = (-sin, -cos): rotation 0 faces north (-y), CCW; measured
-dm_spawn_sy:   dd -1
+dm_spawn_sx:   dd 1                 ; front = (sin, cos) of Sprite.rotation (user-checked in play)
+dm_spawn_sy:   dd 1
 i_dm_spawn_dist: dd DM_SPAWN_DIST
 align 8
 f_dm_rot2rad:  dq 0x3F71DF46A2529D39 ; 2*pi / 1440 (Sprite.rotation units)
