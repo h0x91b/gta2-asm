@@ -8,8 +8,9 @@
 ; opens are released, so the player stops. Key releases always reach the game.
 ; Pages: the main one (quick save, all weapons, +$100000, camera zoom, mouse turning and
 ; strafe toggles from player_move.asm, ped paths drawn by debug_paths.asm) leads to Player
-; (wanted level and its lock, skin, police roadblocks from debug_roadblocks.asm), Vehicle
-; (spawn a car; colour, repair, invincibility and explosion of the current or last car)
+; (wanted level and its lock, skin, police roadblocks from debug_roadblocks.asm, an
+; ambulance or a fire truck called from debug_emergency.asm), Vehicle (spawn a car;
+; colour, repair, invincibility and explosion of the current or last car)
 ; and Debug flags (a few of the game's own, written straight into their bytes, which
 ; HiddenDebugFlags 0x451930 filled from the registry at startup; the game reads them as
 ; it goes). ESC or K closes it from any page.
@@ -271,6 +272,7 @@ hk_DrawUI:
     jne .paths
     call dm_explode_car
 .paths:
+    call de_run                     ; debug_emergency.asm: ambulance / fire truck calls
     cmp byte [dm_paths], 0          ; under the HUD and the menu
     je .roads
     call dm_draw_paths
@@ -1366,6 +1368,8 @@ dmp_player_items:
     DMITEM DM_VALUE,  "Body: ", dmv_body
     DMITEM DM_VALUE,  "Place roadblock: ", dmv_rbplace
     DMITEM DM_VALUE,  "Remove roadblocks: ", dmv_rbclear
+    DMITEM DM_VALUE,  "Call ambulance", dmv_ambulance     ; debug_emergency.asm
+    DMITEM DM_VALUE,  "Call fire truck", dmv_firetruck
     DMITEM DM_BACK,   "Back", 0
 dmp_player_end:
 

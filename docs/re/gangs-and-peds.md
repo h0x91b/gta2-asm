@@ -451,6 +451,33 @@ guards[6] +0x88, collisionRect +0xA0 from `PoliceRoadblock_Ctor` 0x4ac040).
   `slot − 0x664` and never `Update`. Verified in Downtown: two of them stayed through ~1300
   frames out of view at wanted level 0.
 
+### Calling the services on demand (Seq 39, measured 2026-10-21)
+
+Used by the K menu's "Call ambulance" / "Call fire truck" (`host/debug_emergency.asm`).
+
+- **Bodies get dropped.** `unsure_Map_FindSpawnRoadTile` 0x49d7a0 (thiscall on
+  `g_PedPathfinder` 0x66A7E4; `(char kind, u8* x, u8* y, u8* z, char wide)`) returns 0 at
+  once while `PedPathfinder+0x38` is set and `wide == 0`; the flag flips every frame
+  (1, 0, 1, …). `AmbulanceManager_DispatchForQueuedPed` passes `wide = 0`, so a body
+  popped on a busy tick is dropped. Its give-up `PedSetObjective(50)` is ignored for a
+  dead ped (`PedSetObjective` only takes objective 28 while WASTED), so the body keeps
+  objective 28 and no ambulance ever comes. Queueing it again a frame later works.
+  Without `wide` the search stops after 6 rings: the Downtown start square has no road
+  in range, so no ambulance can come there at all.
+- **Fire-truck targets on a junction never get reached.** A drive order routes to "the
+  junction ahead of the goal tile" (`RoadNetwork_FindRoute` 0x40e030), so a target
+  inside a `RoadJunction` rectangle makes the truck drive through it and round the block
+  again (route J(142,115) J(142,149) J(122,149) J(122,115) for a car at 122,149).
+  Driven cars do not work either: the target keeps moving, `Car_HaltAIIfHasAI` does not
+  hold traffic, and the slot aborts. `CarManager_SpawnCarOnRoadAt` 0x42a120 snaps to a
+  segment end (often a junction), files the car as traffic, and `Car_UpdateOffscreenTicks`
+  0x424090 removes it after 0x81 ticks off screen (`Car_CanBeRecycled` 0x424030 keeps
+  `CAR_CAT_PARKED` cars until wrecked); it also reads the block's arrows without a null
+  check (crash at 0x462f91 on an air tile).
+- **Open: arrival.** Even with a still target mid-lane, the truck (and the MEDICAR) drove
+  on north along x = 144 past the target; the truck's route list (`CarAI+0x28`
+  routeSlot, `routes[]`) kept growing with the junctions behind it. Not resolved here.
+
 ## 8. Hooks for mods
 
 | goal | patch |

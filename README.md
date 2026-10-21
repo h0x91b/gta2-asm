@@ -44,7 +44,9 @@ In a game, **K** opens a debug menu (game font, arrows + RETURN): quick save whe
 stand (not during a mission), all weapons, +$100000, live camera zoom (70% by default, `camera.zoom` in config.yaml; 100 = vanilla), Ped paths (each ped's next
 10 path cells, numbered 1 = next, in a colour of its own; else a tick showing where it faces); a Player page (set
 or lock the wanted level, skin and body type; place real police, FBI or army roadblocks on the
-nearest road ahead, which stay until you remove them), a Vehicle page (spawn any car in front of
+nearest road ahead, which stay until you remove them; call an ambulance or a fire truck the
+game's own way: a nearby body is queued, or a ped killed, for the ambulance; a parked car
+mid-lane is set alight for the fire truck — `host/debug_emergency.asm`), a Vehicle page (spawn any car in front of
 you; colour, invincibility, repair or explode the car you are in or left last) and a
 Debug flags page (FPS / camera info / invulnerability / no police and a few other DMA
 flags, and the Road network overlay: lane arrows, the junction graph, live traffic lights,

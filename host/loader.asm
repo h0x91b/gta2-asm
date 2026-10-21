@@ -1181,6 +1181,7 @@ section .text
 %include "debug_roads.asm"
 %include "player_move.asm"
 %include "debug_roadblocks.asm"
+%include "debug_emergency.asm"
 %include "w32_renderer.asm"
 %include "w32_audio.asm"
 %include "w32_tables.asm"
