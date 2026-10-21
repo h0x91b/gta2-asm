@@ -21,6 +21,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00591e8c,relToS24_unk27,,USER_DEFINED,.data.exp,,/undefined,1
 0x00591f48,CHEATS_CODE,,USER_DEFINED,.data.exp,,/int[8],32
 0x00591f68,g_FrontendImages,,USER_DEFINED,.data.exp,,/imported/renderer-doc/FrontendImage[25],3400
+0x005931f8,g_ScriptNextThreadId,,USER_DEFINED,.data.exp,,/undefined2,2
 0x00595010,max_frame_rate,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00595011,isNight,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00595014,start_mode,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -330,11 +331,15 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00664168,g_MikeDebug,,USER_DEFINED,.data.exp,,/auto_structs/MikeDebug *,4
 0x006644b0,relToS15,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006644b4,relToS15_2,,USER_DEFINED,.data.exp,,/undefined4,4
-0x006644b8,ptrToS17Mission,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006644b8,g_MissionCleanup,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006644bc,g_MissionScript,,USER_DEFINED,.data.exp,,/auto_structs/MissionScript *,4
-0x006644c0,ptrToS16_missions,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006644c0,g_ScriptThreadPool,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006644c4,g_ListNodePool,,USER_DEFINED,.data.exp,,/auto_structs/ListNodePool *,4
+0x006644c8,g_ScriptPrevCmdIdx,,USER_DEFINED,.data.exp,,/undefined,1
+0x006644cc,g_ScriptCurCmd,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00664590,buf466,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006646bc,g_SavedAnsweredPhoneBits,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006646c0,g_SavedDoneBasicKfBits,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00664f58,ptrRelatedToPlayerPosZ,,USER_DEFINED,.data.exp,,/undefined,1
 0x00664ff0,unk1,,USER_DEFINED,.data.exp,,/int,4
 0x00664ff4,unk2,,USER_DEFINED,.data.exp,,/int,4
@@ -387,7 +392,14 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x0066b04c,g_Fix16RestitutionCarCar,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0066b060,g_Fix16SteerSpeedFloor,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0066b404,ptrToS28PlayerData,,USER_DEFINED,.data.exp,,/auto_structs/S28 *,4
+0x0066b788,g_crewSpawnType,,USER_DEFINED,.data.exp,,/EMERGENCY_CREW_TYPE,4
+0x0066b78c,g_crewSpawnTimer,,USER_DEFINED,.data.exp,,/short,2
+0x0066b790,g_crewSpawnState,,USER_DEFINED,.data.exp,,/POLICE_CREW_STATE,4
+0x0066b794,g_currentCrewPed,,USER_DEFINED,.data.exp,,/_ped/Ped *,4
+0x0066b798,g_crewSpawnKind,,USER_DEFINED,.data.exp,,/POLICE_CREW_KIND,4
 0x0066b7a0,g_PoliceManager,,USER_DEFINED,.data.exp,,/auto_structs/PoliceManager *,4
+0x0066b7a4,g_policeHaveCriminals,,USER_DEFINED,.data.exp,,/byte,1
+0x0066b7a8,g_policeCrewIdCounter,,USER_DEFINED,.data.exp,,/ushort,2
 0x0066bb50,g_PublicTransportManager,,USER_DEFINED,.data.exp,,/PublicTransportManager *,4
 0x0066beec,g_soundManagerInitDone,,USER_DEFINED,.data.exp,,/undefined1,1
 0x0066c6b4,g_Registry,,USER_DEFINED,.data.exp,,/undefined,1

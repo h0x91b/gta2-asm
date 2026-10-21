@@ -69,6 +69,18 @@ struc CLIENT_ID
     .UniqueThread                     resb 4      ; 0x4 void *
 endstruc
 
+; enum /CRIME_KIND  (4 bytes)
+CRIME_KIND.CRIME_NONE equ 0
+CRIME_KIND.CRIME_VEHICLE_DAMAGE equ 1
+CRIME_KIND.CRIME_FIRE_WEAPON equ 2
+CRIME_KIND.CRIME_CAR_DESTROYED_OR_STOLEN equ 3
+CRIME_KIND.CRIME_UNKNOWN_4 equ 4
+CRIME_KIND.CRIME_CARJACK equ 5
+CRIME_KIND.CRIME_KILL_PED_REL1_3 equ 6
+CRIME_KIND.CRIME_KILL_PED_OTHER equ 7
+CRIME_KIND.CRIME_KILL_LAW_ENFORCEMENT equ 8
+CRIME_KIND.CRIME_KILL_GANG_MEMBER equ 9
+
 ; /CarDriveOrder  (64 bytes)
 struc CarDriveOrder
     .inUse                            resb 1      ; 0x0 byte
@@ -158,7 +170,7 @@ struc CrimeStats
     .oneShotFlag                      resb 10     ; 0x28 byte[10]
     resb 2
     .unsure_totalEarned               resb 4      ; 0x34 int
-    .unsure_wantedStarSeconds         resb 4      ; 0x38 int
+    .wantedStarSeconds                resb 4      ; 0x38 int
 endstruc
 
 ; /Crusher  (48 bytes)
@@ -187,6 +199,14 @@ struc DoorSlot
     .raw                              resb 56     ; 0x0 byte[56]
 endstruc
 
+; enum /EMERGENCY_CREW_TYPE  (4 bytes)
+EMERGENCY_CREW_TYPE.EMERGENCY_CREW_NONE equ 0
+EMERGENCY_CREW_TYPE.EMERGENCY_CREW_PARAMEDIC equ 1
+EMERGENCY_CREW_TYPE.EMERGENCY_CREW_POLICE equ 3
+EMERGENCY_CREW_TYPE.EMERGENCY_CREW_FBI equ 4
+EMERGENCY_CREW_TYPE.EMERGENCY_CREW_SWAT equ 5
+EMERGENCY_CREW_TYPE.EMERGENCY_CREW_ARMY equ 6
+
 ; /EmergencyVehiclePool  (480 bytes)
 struc EmergencyVehiclePool
     .slots                            resb 480    ; 0x0 EmergencyVehicleSlot[10]
@@ -194,14 +214,17 @@ endstruc
 
 ; /EmergencyVehicleSlot  (48 bytes)
 struc EmergencyVehicleSlot
-    .car                              resb 4      ; 0x0 void *
-    .driver                           resb 4      ; 0x4 void *
-    resb 16
+    .car                              resb 4      ; 0x0 Car *
+    .driver                           resb 4      ; 0x4 Ped *
+    .group                            resb 4      ; 0x8 PedGroup *
+    .spawnX                           resb 4      ; 0xc SCR_f
+    .spawnY                           resb 4      ; 0x10 SCR_f
+    .spawnZ                           resb 4      ; 0x14 SCR_f
     .timer                            resb 2      ; 0x18 short
     .unk1a                            resb 4      ; 0x1a byte[4]
     .inUse                            resb 1      ; 0x1e byte
     .unk1f                            resb 1      ; 0x1f byte[1]
-    .state20                          resb 4      ; 0x20 int
+    .crewType                         resb 4      ; 0x20 EMERGENCY_CREW_TYPE
     .state24                          resb 4      ; 0x24 int
     .state28                          resb 4      ; 0x28 int
     .unk2c                            resb 4      ; 0x2c byte[4]
@@ -357,6 +380,28 @@ PED_FLAGS.PED_FLAG_GETTING_IN_OR_OUT_CAR equ 134217728
 PED_FLAGS.PED_FLAG_UNSURE_HAS_GUN_BUT_NOT_PISTOL equ 268435456
 PED_FLAGS.PED_FLAG_UNSURE_20000000 equ 536870912
 
+; enum /POLICE_CREW_KIND  (4 bytes)
+POLICE_CREW_KIND.POLICE_CREW_KIND_NONE equ 0
+POLICE_CREW_KIND.POLICE_CREW_KIND_POLICE equ 1
+POLICE_CREW_KIND.POLICE_CREW_KIND_SWAT equ 2
+POLICE_CREW_KIND.POLICE_CREW_KIND_FBI equ 3
+POLICE_CREW_KIND.POLICE_CREW_KIND_ARMY equ 4
+
+; enum /POLICE_CREW_STATE  (4 bytes)
+POLICE_CREW_STATE.POLICE_CREW_FREE equ 0
+POLICE_CREW_STATE.POLICE_CREW_PATROL equ 1
+POLICE_CREW_STATE.POLICE_CREW_FINISHED equ 2
+POLICE_CREW_STATE.POLICE_CREW_ALERTED equ 3
+POLICE_CREW_STATE.POLICE_CREW_PURSUE equ 5
+POLICE_CREW_STATE.POLICE_CREW_SHUTDOWN equ 6
+
+; enum /PURSUIT_STATE  (4 bytes)
+PURSUIT_STATE.PURSUIT_IDLE equ 0
+PURSUIT_STATE.PURSUIT_RESPONDING equ 1
+PURSUIT_STATE.PURSUIT_ACTIVE equ 3
+PURSUIT_STATE.PURSUIT_ENDED equ 4
+PURSUIT_STATE.PURSUIT_SEARCHING equ 5
+
 ; /ParkingZone  (72 bytes)
 struc ParkingZone
     .car                              resb 4      ; 0x0 void *
@@ -453,6 +498,51 @@ struc PlayerScore
     resb 3
     .comboList                        resb 448    ; 0x1a8 ComboList
     .owner                            resb 4      ; 0x368 Player *
+endstruc
+
+; /PolicePursuitTarget  (124 bytes)
+struc PolicePursuitTarget
+    .criminal                         resb 4      ; 0x0 Ped *
+    .wantedLevel                      resb 4      ; 0x4 int
+    .state                            resb 4      ; 0x8 PURSUIT_STATE
+    .sightTimer                       resb 2      ; 0xc ushort
+    .unsure_escalated                 resb 1      ; 0xe byte
+    resb 1
+    .lastSeenX                        resb 4      ; 0x10 SCR_f
+    .lastSeenY                        resb 4      ; 0x14 SCR_f
+    .lastSeenZ                        resb 4      ; 0x18 SCR_f
+    .unsure_searchDone                resb 1      ; 0x1c byte
+    resb 3
+    .crews                            resb 24     ; 0x20 PoliceCrew *[6]
+    resb 56
+    .numPoliceCrews                   resb 1      ; 0x70 byte
+    .targetPoliceCrews                resb 1      ; 0x71 byte
+    .numSwatCrews                     resb 1      ; 0x72 byte
+    .numFbiCrews                      resb 1      ; 0x73 byte
+    .numArmyCrews                     resb 1      ; 0x74 byte
+    .numCrews                         resb 1      ; 0x75 byte
+    .unused_0x76                      resb 2      ; 0x76 short
+    .isActivelyChased                 resb 1      ; 0x78 byte
+    resb 1
+    .noSightTicks                     resb 2      ; 0x7a ushort
+endstruc
+
+; /PoliceRoadblock  (164 bytes)
+struc PoliceRoadblock
+    .active                           resb 1      ; 0x0 byte
+    resb 3
+    .unk4                             resb 4      ; 0x4 int
+    .unsure_tileX                     resb 1      ; 0x8 byte
+    .unsure_tileY                     resb 1      ; 0x9 byte
+    .unkA                             resb 1      ; 0xa byte
+    resb 1
+    .lifeTimer                        resb 2      ; 0xc ushort
+    .offscreenTicks                   resb 2      ; 0xe ushort
+    .cars                             resb 24     ; 0x10 Car *[6]
+    .barrierObjs                      resb 48     ; 0x28 BareGameObject *[12]
+    .barrierObjIds                    resb 48     ; 0x58 int[12]
+    .guards                           resb 24     ; 0x88 Ped *[6]
+    .collisionRect                    resb 4      ; 0xa0 void *
 endstruc
 
 ; /PublicTransportManager  (6172 bytes)
@@ -918,7 +1008,7 @@ struc Car
     resb 3
     .carModel                         resb 4      ; 0x84 CAR_MODEL4
     .lifeState                        resb 4      ; 0x88 CAR_LIFE_STATE
-    .unsure_fireState                 resb 1      ; 0x8c byte
+    .damageFireStage                  resb 1      ; 0x8c byte
     .unsure_scriptFlags               resb 1      ; 0x8d byte
     .alarmTimer                       resb 1      ; 0x8e byte
     resb 1
@@ -1689,7 +1779,7 @@ struc Ped
     .ownerSlot                        resb 1      ; 0x267 byte
     .unsure_hitCooldown               resb 1      ; 0x268 byte
     resb 1
-    .unsure_witnessTimer              resb 1      ; 0x26a byte
+    .witnessTimer                     resb 1      ; 0x26a byte
     resb 1
     .graphicType                      resb 4      ; 0x26c PED_GRAPHIC_TYPE
     .unsure_walkHeadingMode           resb 4      ; 0x270 int
@@ -2280,6 +2370,12 @@ struc MikeDebug
     .field2011_0xa7c                  resb 4      ; 0xa7c int
 endstruc
 
+; /auto_structs/MissionCleanupList  (604 bytes)
+struc MissionCleanupList
+    .len                              resb 4      ; 0x0 int
+    .vec3i50                          resb 600    ; 0x4 Vec3i[50]
+endstruc
+
 ; /auto_structs/MissionScript  (794280 bytes)
 struc MissionScript
     .f0                               resb 2      ; 0x0 short
@@ -2353,19 +2449,54 @@ struc OwnerSlotTable
     .slots                            resb 2040   ; 0x0 OwnerSlot[255]
 endstruc
 
+; /auto_structs/PoliceCrew  (56 bytes)
+struc PoliceCrew
+    .id                               resb 2      ; 0x0 ushort
+    .spawnTileX                       resb 1      ; 0x2 byte
+    .spawnTileY                       resb 1      ; 0x3 byte
+    .spawnTileZ                       resb 1      ; 0x4 byte
+    resb 3
+    .distToTarget                     resb 4      ; 0x8 SCR_f
+    .unused_0xc                       resb 4      ; 0xc SCR_f
+    .vehSlot                          resb 4      ; 0x10 EmergencyVehicleSlot *
+    .target                           resb 4      ; 0x14 PolicePursuitTarget *
+    .unused_0x18                      resb 2      ; 0x18 ushort
+    .unsure_alertedFlag               resb 1      ; 0x1a byte
+    resb 1
+    .active                           resb 4      ; 0x1c int
+    .kind                             resb 4      ; 0x20 POLICE_CREW_KIND
+    .state                            resb 4      ; 0x24 POLICE_CREW_STATE
+    .unsure_onFootEngaging            resb 1      ; 0x28 byte
+    .countedAsTrafficCrew             resb 1      ; 0x29 byte
+    .unused_0x2a                      resb 2      ; 0x2a ushort
+    .unused_0x2c                      resb 2      ; 0x2c ushort
+    resb 2
+    .unsure_targetGroupTag            resb 4      ; 0x30 int
+    .releaseRequested                 resb 1      ; 0x34 byte
+    .stuckTicks                       resb 1      ; 0x35 byte
+    resb 2
+endstruc
+
 ; /auto_structs/PoliceManager  (1976 bytes)
 struc PoliceManager
-    resb 4
-    .arr20                            resb 1120   ; 0x4 SPoliceSub[20]
-    .arr124_4                         resb 496    ; 0x464 byte[124][4]
+    .unusedFlag                       resb 1      ; 0x0 byte
+    resb 3
+    .crews                            resb 1120   ; 0x4 PoliceCrew[20]
+    .pursuitTargets                   resb 496    ; 0x464 PolicePursuitTarget[4]
     .copLevel                         resb 4      ; 0x654 int
-    .field7_0x658                     resb 1      ; 0x658 byte
-    .field8_0x659                     resb 1      ; 0x659 byte
+    .liveTrafficCrews                 resb 1      ; 0x658 byte
+    .crewSpawnBudget                  resb 1      ; 0x659 byte
     resb 2
-    .relToAi                          resb 4      ; 0x65c int
-    resb 333
+    .highestCrewType                  resb 4      ; 0x65c EMERGENCY_CREW_TYPE
+    .maxWantedStars                   resb 1      ; 0x660 byte
+    resb 3
+    .roadblocks                       resb 328    ; 0x664 PoliceRoadblock[2]
+    .roadblockCooldown                resb 1      ; 0x7ac byte
     .numPolicePedsInRangeScreen       resb 1      ; 0x7ad byte
-    resb 10
+    resb 2
+    .designatedShooter                resb 4      ; 0x7b0 Ped *
+    .crewLeaderOnScreen               resb 1      ; 0x7b4 byte
+    resb 3
 endstruc
 
 ; /auto_structs/Position  (60 bytes)
@@ -2404,39 +2535,6 @@ struc S14_sub1
     .arr30i                           resb 120    ; 0x0 int[30]
     .f1                               resb 4      ; 0x78 int
     .f2                               resb 4      ; 0x7c int
-endstruc
-
-; /auto_structs/S16  (2284 bytes)
-struc S16
-    resb 4
-    .field4_0x4                       resb 4      ; 0x4 int
-    .arr_s16sub                       resb 2272   ; 0x8 S16_sub1[8]
-    resb 4
-endstruc
-
-; /auto_structs/S16_sub1  (284 bytes)
-struc S16_sub1
-    .field0_0x0                       resb 4      ; 0x0 undefined4
-    .field1_0x4                       resb 2      ; 0x4 undefined2
-    .field2_0x6                       resb 1      ; 0x6 byte
-    resb 1
-    .field4_0x8                       resb 4      ; 0x8 undefined4
-    .field5_0xc                       resb 1      ; 0xc byte
-    resb 1
-    .field7_0xe                       resb 2      ; 0xe undefined2
-    .field8_0x10                      resb 1      ; 0x10 byte
-    resb 3
-    .arr64i                           resb 256    ; 0x14 int[64]
-    .vec2i                            resb 4      ; 0x114 Vec2i *
-    .field14_0x118                    resb 1      ; 0x118 byte
-    resb 1
-    .field16_0x11a                    resb 2      ; 0x11a short
-endstruc
-
-; /auto_structs/S17_mission  (604 bytes)
-struc S17_mission
-    .len                              resb 4      ; 0x0 int
-    .vec3i50                          resb 600    ; 0x4 Vec3i[50]
 endstruc
 
 ; /auto_structs/S18_sub  (12 bytes)
@@ -2590,33 +2688,6 @@ struc SNightArray
     .field15_0x24                     resb 4      ; 0x24 undefined4
 endstruc
 
-; /auto_structs/SPoliceSub  (56 bytes)
-struc SPoliceSub
-    resb 2
-    .field2_0x2                       resb 1      ; 0x2 byte
-    .field3_0x3                       resb 1      ; 0x3 byte
-    .field4_0x4                       resb 1      ; 0x4 byte
-    resb 3
-    .field8_0x8                       resb 4      ; 0x8 undefined4
-    .field9_0xc                       resb 4      ; 0xc undefined4
-    .field10_0x10                     resb 4      ; 0x10 undefined4
-    .field11_0x14                     resb 4      ; 0x14 undefined4
-    .field12_0x18                     resb 2      ; 0x18 undefined2
-    .field13_0x1a                     resb 1      ; 0x1a byte
-    resb 1
-    .field15_0x1c                     resb 4      ; 0x1c undefined4
-    resb 4
-    .field20_0x24                     resb 4      ; 0x24 undefined4
-    .field21_0x28                     resb 1      ; 0x28 byte
-    .field22_0x29                     resb 1      ; 0x29 byte
-    .field23_0x2a                     resb 2      ; 0x2a undefined2
-    .field24_0x2c                     resb 2      ; 0x2c undefined2
-    resb 2
-    .field27_0x30                     resb 4      ; 0x30 undefined4
-    .field28_0x34                     resb 1      ; 0x34 byte
-    resb 3
-endstruc
-
 ; /auto_structs/SRelToBonus2  (45 bytes)
 struc SRelToBonus2
     resb 44
@@ -2628,6 +2699,35 @@ struc Script4k
     .numOfStrings                     resb 2      ; 0x0 ushort
     resb 2
     .strings                          resb 3996   ; 0x4 SCR_STRING_HEADER *[999]
+endstruc
+
+; /auto_structs/ScriptThread  (284 bytes)
+struc ScriptThread
+    .pool_next                        resb 4      ; 0x0 ScriptThread *
+    .next_cmd                         resb 2      ; 0x4 ushort
+    .flag_6                           resb 1      ; 0x6 byte
+    resb 1
+    .cond_result                      resb 4      ; 0x8 int
+    .cmd_initialised                  resb 1      ; 0xc byte
+    resb 1
+    .phone_timer                      resb 2      ; 0xe short
+    .stopped                          resb 1      ; 0x10 byte
+    resb 1
+    .exec_flag                        resb 2      ; 0x12 short
+    .str                              resb 256    ; 0x14 char[256]
+    .gosub_stack                      resb 4      ; 0x114 void *
+    .in_level_start                   resb 1      ; 0x118 byte
+    resb 1
+    .thread_id                        resb 2      ; 0x11a short
+endstruc
+
+; /auto_structs/ScriptThreadPool  (2284 bytes)
+struc ScriptThreadPool
+    .free_list                        resb 4      ; 0x0 ScriptThread *
+    .active_list                      resb 4      ; 0x4 ScriptThread *
+    .threads                          resb 2272   ; 0x8 ScriptThread[8]
+    .active_count                     resb 2      ; 0x8e8 short
+    resb 2
 endstruc
 
 ; /auto_structs/Sprite  (256 bytes)
@@ -2839,7 +2939,7 @@ endstruc
 ; /imported/gta2-mouse/Police  (1976 bytes)
 struc Police
     resb 4
-    .arr20                            resb 1120   ; 0x4 SPoliceSub[20]
+    .arr20                            resb 1120   ; 0x4 PoliceCrew[20]
     .arr124_4                         resb 496    ; 0x464 byte[124][4]
     .copLevel                         resb 4      ; 0x654 int
     resb 4

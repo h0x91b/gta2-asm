@@ -56,7 +56,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0045b040,FUN_0045b040,,DEFAULT,__fastcall,USER_DEFINED,11,,void __fastcall FUN_0045b040(MapRenderer * param_1)
 0x0045b0b0,FUN_0045b0b0,,DEFAULT,__fastcall,USER_DEFINED,7,,undefined4 __fastcall FUN_0045b0b0(AnimatedValue * param_1)
 0x0045b130,FUN_0045b130,,DEFAULT,__fastcall,USER_DEFINED,8,,void __fastcall FUN_0045b130(S18_sub * param_1)
-0x0045b210,InitPoliceVector,,DEFAULT,__fastcall,USER_DEFINED,12,InitPoliceVector,undefined __fastcall InitPoliceVector(SPoliceSub * param_1)
 0x0045b420,FUN_0045b420,,DEFAULT,__fastcall,USER_DEFINED,11,,void __fastcall FUN_0045b420(Menu * param_1)
 0x0045bba0,FUN_0045bba0,,DEFAULT,__thiscall,USER_DEFINED,98,,"bool __thiscall FUN_0045bba0(void * this, Game * pGame, CarSprite * param_2, byte playerIndex, undefined4 param_4)"
 0x0045bd00,FUN_0045bd00,,DEFAULT,__stdcall,USER_DEFINED,56,,"undefined4 __stdcall FUN_0045bd00(Game * game, undefined4 param_2)"
@@ -72,7 +71,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00464d00,FUN_00464d00,,DEFAULT,default,USER_DEFINED,145,,"Uint16 * FUN_00464d00(MapBlocks * s11, uint uParm1, char * param_3, byte param_4)"
 0x00466b70,FUN_00466b70,,DEFAULT,__stdcall,USER_DEFINED,361,,"uint __stdcall FUN_00466b70(SCR_f x, SCR_f y, uint * param_3)"
 0x004744b0,GetTickCount,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::GetTickCount,DWORD __stdcall GetTickCount(void)
-0x004766d0,FUN_004766d0,,DEFAULT,__fastcall,USER_DEFINED,4,,undefined4 __fastcall FUN_004766d0(undefined param_1)
 0x004820a0,FUN_004820a0,,DEFAULT,__thiscall,USER_DEFINED,17,,"void __thiscall FUN_004820a0(void * this, undefined4 param_1)"
 0x00493710,FUN_00493710,,DEFAULT,__fastcall,USER_DEFINED,104,,void __fastcall FUN_00493710(PedS1 * param_1)
 0x00493850,FUN_00493850,,DEFAULT,__fastcall,USER_DEFINED,77,,undefined __fastcall FUN_00493850(Sprite * param_1)
@@ -83,8 +81,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004a5040,FUN_004a5040,,DEFAULT,__fastcall,USER_DEFINED,11,,bool __fastcall FUN_004a5040(Ped * param_1)
 0x004a50e0,AnimatedValue_Set,,DEFAULT,__fastcall,USER_DEFINED,5,AnimatedValue_Set,"void __fastcall AnimatedValue_Set(AnimatedValue * param_1, int * param_1_00, int param_3)"
 0x004a5180,FUN_004a5180,,DEFAULT,__fastcall,USER_DEFINED,8,,void __fastcall FUN_004a5180(Player * param_1)
-0x004a9590,FUN_004a9590,,DEFAULT,__thiscall,USER_DEFINED,115,,"uint __thiscall FUN_004a9590(void * this, Police_s5 * param_1_00, Ped * param_2)"
-0x004aa030,FUN_004aa030,,DEFAULT,__fastcall,USER_DEFINED,1677,,void __fastcall FUN_004aa030(PoliceManager * param_1)
 0x004af570,FUN_004af570,,DEFAULT,__thiscall,USER_DEFINED,35,,"bool __thiscall FUN_004af570(void * this, uint param_1)"
 0x004b1d80,FUN_004b1d80,,DEFAULT,__fastcall,USER_DEFINED,113,,void __fastcall FUN_004b1d80(S6 * s6)
 0x004b75a0,AnimatedValue_Get,,DEFAULT,__fastcall,USER_DEFINED,5,AnimatedValue_Get,int __fastcall AnimatedValue_Get(AnimatedValue * param_1)
@@ -98,7 +94,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004c6f80,FUN_004c6f80,,DEFAULT,__fastcall,USER_DEFINED,35,,uint __fastcall FUN_004c6f80(int param_1)
 0x004c7b10,FUN_004c7b10,,DEFAULT,__fastcall,USER_DEFINED,94,,void __fastcall FUN_004c7b10(void * param_1)
 0x004c8620,FUN_004c8620,,DEFAULT,__fastcall,USER_DEFINED,35,,void __fastcall FUN_004c8620(HudManager * param_1)
-0x004ca8e0,FUN_004ca8e0,,DEFAULT,__fastcall,USER_DEFINED,45,,int __fastcall FUN_004ca8e0(HudManager * param_1)
 0x004cc810,FUN_004cc810,,DEFAULT,__fastcall,USER_DEFINED,75,,undefined __fastcall FUN_004cc810(SoundClient * param_1)
 0x004cc9e0,FUN_004cc9e0,,DEFAULT,__fastcall,USER_DEFINED,26,,int __fastcall FUN_004cc9e0(void * ptr)
 0x004ccb10,FUN_004ccb10,,DEFAULT,__fastcall,USER_DEFINED,42,,undefined __fastcall FUN_004ccb10(Car * param_1)

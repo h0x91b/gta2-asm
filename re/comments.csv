@@ -15,6 +15,7 @@ address,kind,function,comment
 0x00403800,plate,Fix16_IsGreater,"Seq33 slice1 (VERIFIED): returns *this > *p (signed). Operand order: (this, p) => this > p."
 0x00403820,plate,Fix16_IsNotEqual,Seq33 slice1 (VERIFIED): returns *this != *p.
 0x00403840,plate,Fix16_Abs,"Seq33 slice1 (VERIFIED): Fix16 abs: *out = |*in| (stdcall(out, in))."
+0x00403a80,plate,Ped_GetObjective,Name from gta2_re (GTA2 10.5) Ped::get_objective_403A80: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
 0x00409c40,plate,Network_GetLocalPlayerIndex,"Returns this->localPlayerIndex (+0x5D0): this machine's slot (0..5) in the network session player table (+0x764, 6 x 0x2C).
 Written by host/join (0x40A6EC, from AddPlayer 0x409360), on msg 7 when DPID matches ours (+0x5D4),
 decremented when a lower slot leaves (DPSYS_DELETEPLAYER 0x21, 0x40B5AE), zeroed on close (0x40BCFE).
@@ -59,6 +60,7 @@ Tail chunk at 0x4166D0; incoming ECX ignored (thunk loads ECX=0x5DCBC8).
 Callers write the result back to registry do_3d_sound right after RelatedToAudio(0x410670) requested it,
 so an unsupported 3D setting is reset. Confidence: high."
 0x004118c0,plate,Car_IsEngineOn,Seq33 slice2 (confirmed): Car.engineState(+0x9C)==3 (ENGINE_ON). gta2_re 10.5: field_9C_engine_status == on_3.
+0x00411940,plate,Car_GetCarInfoIdx,Name from gta2_re (GTA2 10.5) Car_BC::GetCarInfoIdx_411940: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
 0x00414f60,plate,Car_HasFlag100,"Seq33 slice5: Car_HasFlags(Car+0x78, 0x100). In Car_OnDamage gates default (bullet) damage and 0x109 -> likely bullet-proof. Pair Car_HasFlag200 (gates types 10/0x80/0x8a, likely explosion/fire-proof), Car_HasFlag400 (gates type 0xc2)."
 0x00414f70,plate,Car_HasFlag2000,"Seq33 slice1 (VERIFIED): Car_HasFlags(car, 0x2000). Pair of Car_ClearFlag2000 (0x49EFD0). Flag 0x2000 = 'needs overlap check against other sprites' (hypothesis for meaning; set elsewhere). Used by CarPhysics_CheckPendingCollision, UpdateGroundZ, Car_Update."
 0x0041d3f0,plate,Gci_NextToken,"Seq33 slice3 VERIFIED (gta2_re 10.5: sub_430b10): tokenizer into EDI buffer: skips {...} comments (error -4 if unterminated), separators ' ' \t \n \r ( ), token max 254 chars (-5). Returns 0 token read, 1 EOF."
@@ -98,10 +100,13 @@ so an unsupported 3D setting is reset. Confidence: high."
 0x004212a0,plate,CarPhysics_SetModeAI,"Seq33 slice2 (confirmed): CarPhysics.mode(+0x8C)=1 (AI). Modes: 1 AI, 2 player, 3/other see CarPhysics_Update switch (slice 1)."
 0x004212b0,plate,CarPhysics_SetModePlayer,Seq33 slice2 (confirmed): CarPhysics.mode(+0x8C)=2 (player). Player mode enables gears (ComputeDriveForce) and speed-sensitive steering (UpdateSteerAngle).
 0x004213d0,plate,TurnOnCarBrakeLights,Seq33 slice2 (confirmed role): sets brake-light delta bits (bit 1->5 and 0->0x16 toggles in Car.deltasBitstate) unless already set; not a physics input. Slice-adjacent (Car lights).
+0x00421720,plate,Car_IsOnTrailer,Name from gta2_re (GTA2 10.5) Car_BC::IsOnTrailer_421720: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
 0x004217f0,plate,Car_IsTaxiModel,Seq33 slice5 (verified): carModel(+0x84) == 0x38 TAXI or 0x33 STYPECAB.
 0x00421910,plate,Car_ScaleByCarScale,Seq33 slice3 VERIFIED: out = (car->scale(+0x68) != CarsScale) ? v * car->scale : v. Used by Car_GetMass and UpdateSkidmarks for wheel offsets.
+0x00421980,plate,Player_GetScore,Name from gta2_re (GTA2 10.5) Player::GetScore_421980: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
 0x00421b90,plate,Car_GetDamageFactorOnSpeed,"Seq33 slice5 (verified): damage>=16000 -> (32001-damage)/16000 (1.0 at 16000 -> ~0 at 32000) else 1.0 (CarsScale). Used by CarPhysics_ComputeForces (DAT_0066afc4) to scale engine force, and CarAI_Drive. gta2_re 10.5: Car_BC::GetDamageFactorOnSpeed_439EE0."
 0x00421cf0,plate,Car_GetMass,Seq33 slice3 VERIFIED: car mass (Fix16) = Car_ScaleByCarScale(engine.mass[Car_GetPhysicsModel]) (engine.mass already x1.1); x(CarsScale+0.05) when the driver is a Player whose Ped_GetOccupation!=EMPTY (FUN_004215c0). gta2_re 10.5: Car_BC::get_mass_43A120.
+0x00421d80,plate,Car_HasSpriteZoom,Name from gta2_re (GTA2 10.5) Car_BC::HasSpriteZoom_43A230: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
 0x00421d90,plate,Car_GetPhysicsSpeed,Seq33 slice3 VERIFIED: |linVel| of the car's physics (train: of the public-transport controller's car); defaultX if no physics. Calls CarPhysics_GetSpeed.
 0x004220a0,plate,Car_GetPhysicsModel,"Seq33 slice3 VERIFIED: model id used to index the GCI/physics tables (physics model remap): 0x1A if car scale < CarsScale, 0x40<->0x3F swaps for trailer pairs, some special models remapped (0x19/0x55) otherwise car+0x84 carModel. gta2_re 10.5: Car_BC::GetCarModelForPhysics_43A850."
 0x004221a0,plate,Car_FullStop,"Seq33 slice2 (confirmed): Car(+0x58 physics): footbrake on (+0x91=1), gas/reverse/coast off. Used by AI/scripts to stop a car. Compare Car_BrakeHard (also sets handbrake)."
@@ -123,7 +128,7 @@ so an unsupported 3D setting is reset. Confidence: high."
 0x00426580,plate,unsure_Car_ApplyExplosionKnockback,"Seq33 slice4 HYPOTHESIS: explosion knockback: direction from explosion centre (param) to car sprite pos, scaled, passed to CarPhysics_ApplyImpact(…,10 ticks). Callers: Car_Explode, FUN_00490d60. Slice 5 owns Car_Explode."
 0x00426e00,plate,Car_EngineOn,Seq33 slice2 (confirmed): engineState=ENGINE_ON(3) + EngineStartedLightsOn.
 0x00426fa0,plate,Car_Explode,"Seq33 slice5 (verified): car explosion. If not wrecked: Car_StartWreckTimer, Car_EmitExplosion(size,size,0,0), passengers get killer, attachments burn, eject occupants, knockback (FUN_00426580 -> CarPhysics_ApplyImpact), Car+0x74 damage = 0x7d01 (32001 = wrecked), attachments explode (unsure_CarAttachments_ExplodeAll), scoring/respect/wanted for lastAttacker. Callers: Car_AddDamage (32000), CollideWithCar (train), Car_TriggerExplosion, Ped_UpdateBurning, scripts. gta2_re 10.5: Car_BC::HandleCarExplosion_43D840 (body matched, 32001)."
-0x00427180,plate,Car_AddDamage,"Seq33 slice5 (verified): accumulate integer damage into Car+0x74. d = int(damage * CarEngineData.anti_strength) (min 1 if anti_strength != 0; anti_strength==0 -> no damage), clamp 0..32000. Thresholds: >=16000 stage3 (Car_SpawnDamageFireEffect(1), Car+0x8c=3); >=25000 stage4 (attachments burn, SpawnDamageFireEffect(2), 0x8c=4); >31499 (0x7b0b) Car_ResetLightsAndEngine; ==32000 Car_Explode(MEDIUM). No-op if Car_IsWrecked. gta2_re 10.5: Car_BC::AccumulateDamage_43DA90 (body matched; 31500 there vs >0x7b0b here)."
+0x00427180,plate,Car::Car_AddDamage,"Seq33 slice5 (verified): accumulate integer damage into Car+0x74. d = int(damage * CarEngineData.anti_strength) (min 1 if anti_strength != 0; anti_strength==0 -> no damage), clamp 0..32000. Thresholds: >=16000 stage3 (Car_SpawnDamageFireEffect(1), Car+0x8c=3); >=25000 stage4 (attachments burn, SpawnDamageFireEffect(2), 0x8c=4); >31499 (0x7b0b) Car_ResetLightsAndEngine; ==32000 Car_Explode(MEDIUM). No-op if Car_IsWrecked. gta2_re 10.5: Car_BC::AccumulateDamage_43DA90 (body matched; 31500 there vs >0x7b0b here)."
 0x00427450,plate,Car_CheckDeath,"Seq33 slice5 (verified, disasm: ECX=Car+0x58 physics): water death. If unsure_CarPhysics_IsSunkAndSlow(physics) (surfaceType==8 && |linVel| <= DAT_005e4d28) -> Car_OnWrecked + splash effect (FUN_0048d1f0 at sprite pos). Called from Car_Update, TrailerController_UpdatePhysics."
 0x004274c0,plate,Car_OnDamage,"Seq33 slice5 (verified): projectile/explosion/flame hit on a car (param_1 = hit object, +0x18 = object type, +4 = its sprite). Sets lastAttacker (Car+0x70 ped id, 0x90 kill code via unsure_ObjectType_GetKillWeaponCode, 0x94 timer=50). Damage: type 0xc2 -> 100*mult (skip if Car_HasFlag400); type 10 (once/frame latch g_CarManager+0x68) and 0x80/0x8a -> 32000 (skip if Car_HasFlag200) + knockback + Car_EmitExplosion(0x12); type 0x109 -> 1600*mult; default (bullets) -> 800*mult (skip if Car_HasFlag100); types 0x9a,0x9f,0xc1,0xc3,199 harmless; 0xc6 extinguishes (Car_RemoveFlames). mult = Ped_GetDamageMultiplier (2 with powerup 7). Caller FUN_00486390."
 0x00427b40,plate,Car_UpdatePhysics,"Seq33 slice1 (VERIFIED): Car_UpdatePhysics = CarPhysics_Update(car->physics); if it returns true (car stationary >=20 ticks, no collision) and no driver -> Car_FreePhysicsOrTrailerPhysics (physics object released; re-created by Car_EnsurePhysics when needed). Callers: Car_Update, Car_UpdateTrain."
@@ -171,6 +176,8 @@ so an unsupported 3D setting is reset. Confidence: high."
 0x0044ab80,plate,unsure_ObjectType_GetKillWeaponCode,"Seq33 slice5 (hypothesis): object type -> kill category 0x9..0x15 (default 9); stored at Car+0x90 lastAttackerWeapon by Car_OnDamage. 10->0x15, 0x80->0x11, 0x8a->0x10, 0xc0->0x13, 0xc2->0xe, 0xc6/0xfb->0x14, 0xfe/0x109->0xb ..."
 0x0044b8f0,plate,LayerDrawQueues_Ctor,"LayerDrawQueues ctor: 7 per-map-layer draw queues (4-byte list heads over node pools DAT_00672578/DAT_0067257c). Cleared each frame in eachFrame, objects enqueued sorted by Z, each queue flushed per layer in SetupFrameLighting. Name: medium."
 0x0044d2e0,plate,DoorManager_Ctor,"DoorManager ctor (door.cpp). 22 door slots (0x38 each), ensures helper singleton DAT_005e9374 (0x2C4) exists; +0x4D0 active door count, +0x4D2 = 0xCD. Updated by DoorManager_Update from GameTick. Semantics: medium."
+0x0044d670,plate,Door_RegisterDoubleDoor,Name from gta2_re (GTA2 10.5) Door_4D4::RegisterDoubleDoor_49D1F0: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
+0x0044db00,plate,Door_RegisterDoubleDoorNoCheck,Name from gta2_re (GTA2 10.5) Door_4D4::RegisterDoubleDoorNoCheck_49CFA0: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
 0x00451930,plate,Debug_LoadFlagsFromRegistry,"Loads ~90 debug/cheat byte flags at 0x5EAD50..0x5EADB3 by calling RegGet(name) for each original debug option string (do_blood, skip_trains, ...). Also sets g_replayKeyboardLive and g_replayInputEnabled = 1, g_gxtFileExists = CheckIFGXTexists(), g_showPlayerNames, and advances the 'replaynum' counter. Was HiddenDebugFlags."
 0x004590f0,plate,ApplyCheats,"Profile-name cheat handler: hashes the player name against CHEATS_CODE. GOURANGA enables cheats; other hashes toggle the g_cheat* / debug flags in 0x5EAD50..0x5EADB3 and play CHEAT_SOUND. E.g. GOREFEST=g_doBlood, EATSOUP=free shopping, ARSESTAR=keep weapons, GODOFGTA=all weapons, RSJABBER=invulnerable."
 0x004591e0,pre,ApplyCheats,"Ваш персонаж приобретёт высшую степень уважения во всех бандах.
@@ -213,9 +220,17 @@ InitGame clamps it to 60 into 0x6626E8; timer 0x462530 counts it down (min 0x662
 and ends the game with GXT 'g_over'. Confidence: medium-high."
 0x00461de0,plate,InitGame,MainMenu
 0x00462a30,plate,drawAndLimitFrames,"Seq33 slice1 (VERIFIED, THE PHYSICS CLOCK): fixed-timestep scheduler, called every idle iteration of WinMain2. t=timeGetTime(). SINGLE PLAYER: logic step ""due"" if (max_frame_rate==0 && relatedToTime==0) || lastFrameTime<=t; due is CANCELLED if relatedToTime>7 or (min_frame_rate==0 && relatedToTime!=0). If due (or draw skipped): [if min_frame_rate==0: lastFrameTime=t (no catch-up)]; Game_RunLogicStep(); lastFrameTime += nextFrameDeltaTime() (= 33 ms; 11 ms if Game.compensationFPSTime); relatedToTime++ (logic steps since last draw; with min_frame_rate=1 up to 8 catch-up steps per draw). If not due and relatedToTime!=0 -> draw() (eachFrame + Vid_FlipBuffers), relatedToTime=0. MULTIPLAYER: if lastFrameTime<=t: step, lastFrameTime=t+33 (lockstep). Registry defaults (loadRenderSettings1 0x4CB1D0): max_frame_rate=1, min_frame_rate=0 (MP forces both 1) => default = one 33 ms tick (30.3 Hz), game slows down instead of catching up when the machine is slow; rendering decoupled. There is no float dt anywhere: one logic tick == one physics step (dt = 1 tick)."
+0x00463f10,plate,LightIntensityRadius_SetRadius,Name from gta2_re (GTA2 10.5) LightIntensityRadius::SetRadius_463F10: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
 0x00464a40,plate,MapBlocks_Ctor,"Map block store singleton (GMP data), looked up by (x,y,z). Created by ConstructGame; loaded in LoadGMP_and_STY_Files; freed in Game_Dtor via MapBlocks_Dtor."
 0x00466af0,plate,unsure_MapBlocks_GetSkidTileKind,"Seq33 slice5 (hypothesis): tile at (x,y,z-1): 7 if water tile (FUN_00462fb0), 0 if has lid, 5 otherwise. Used by CarPhysics_SpawnSkidSegment. gta2_re 10.5: Map::sub_4E52A0."
+0x00469010,plate,Light_Init,Name from gta2_re (GTA2 10.5) Light_1D4CC::Init_469010: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00469070,plate,Light_SetFlashing,Name from gta2_re (GTA2 10.5) Light_1D4CC::SetFlashing_469070: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
 0x00472640,plate,ResetRandomSeedTo1,Resets the game RNG seed (random_seed) to 1 via Crt_Srand. Called first in ConstructGame so every session starts deterministic.
+0x00474e50,plate,MissionCleanup_Ctor,"Was initS17_mission. Clears the 50 x 12-byte entries and the count at +0x258 of the mission cleanup list (gta2_re Miss2_25C, 0x25C bytes). Seq 34."
+0x00475010,plate,ScriptThread_GetEntityTypeOfCommand,Name from gta2_re (GTA2 10.5) miss2_0x11C::GetEntityTypeOfCommand_503410: 4 script handlers align their call sequence to it. Seq 34 callee alignment.
+0x004751b0,plate,ScriptThread_AssignId,"Called by ScriptThreadPool_Allocate: in_level_start(+0x118)=0, thread_id(+0x11A)=DAT_005931F8++ . Seq 34."
+0x004751e0,plate,ScriptThread_EndCmd,= gta2_re miss2_0x11C::EndCmd_503670 (next_cmd = 0xFFFF). Called from ScriptThread_Next / JumpToCmd. Seq 34.
+0x004751f0,plate,ScriptThread_SetCharObjective,Name from gta2_re (GTA2 10.5) miss2_0x11C::SetCharObjective_504110: 4 script handlers align their call sequence to it. Seq 34 callee alignment.
 0x00475230,plate,Script_Decl_MAP_ZONE,"Mission script declaration handler (decl pass 0x481400). Opcodes: 102=MAP_ZONE
 gta2_re (10.5): SCRCMD_MAP_ZONE_SET_504150
 Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
@@ -244,6 +259,7 @@ Also the runtime target of op 418 CHANGE_POLICE_LEVEL (stub 0x47E720 jumps here)
 0x00475460,plate,Script_Decl_SOUND_SET,"Mission script declaration handler (decl pass 0x481400). Opcodes: 327=SOUND_SET
 gta2_re (10.5): SCRCMD_SOUND_DECSET_505340
 Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004754d0,plate,Fix16_GetValue,Name from gta2_re (GTA2 10.5) Fix16::get_value_4754D0: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
 0x004754e0,plate,Script_Decl_DECLARE_MISSIONS_TOTAL,"Mission script declaration handler (decl pass 0x481400). Opcodes: 344=DECLARE_TOTAL_MISSIONS 345=DECLARE_TOTAL_SECRETS 386=DECLARE_GANG_ONE_MISSIONS_TOTAL 387=DECLARE_GANG_TWO_MISSIONS_TOTAL 388=DECLARE_GANG_THREE_MISSIONS_TOTAL
 gta2_re (10.5): SCRCMD_SET_MISSIONS_TOTAL_505430
 Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
@@ -265,8 +281,35 @@ Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/sc
 0x004756f0,plate,Script_Op_LEVELEND,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 60=LEVELEND
 gta2_re (10.5): SCRCMD_LEVELEND_5069F0 @0x5069f0
 Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00475700,plate,ScriptThread_GetOperationType,Maps an arithmetic/compare opcode to its operation (1=plus/... 2..9 = compare kinds) for S_OP_I / S_OP_S / I_OP_S. = gta2_re miss2_0x11C::GetOperationType_506BC0. Seq 34.
+0x004758a0,plate,Gang_SetRemap,Name from gta2_re (GTA2 10.5) Gang_144::SetRemap_4758A0: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x004758b0,plate,Gang_SetBasicWeapon,Name from gta2_re (GTA2 10.5) Gang_144::SetBasicWeapon_4758B0: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x004758c0,plate,Gang_SetAngryWeapon,Name from gta2_re (GTA2 10.5) Gang_144::SetAngryWeapon_4758C0: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x004758d0,plate,Gang_SetHateWeapon,Name from gta2_re (GTA2 10.5) Gang_144::SetHateWeapon_4758D0: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x004758e0,plate,Gang_SetGangCarModel,Name from gta2_re (GTA2 10.5) Gang_144::SetGangCarModel_4758E0: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x004758f0,plate,Gang_SetGangCarRemap,Name from gta2_re (GTA2 10.5) Gang_144::SetGangCarRemap_4758F0: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00475900,plate,Gang_SetKillAffectsRespect,Name from gta2_re (GTA2 10.5) Gang_144::SetKillAffectsRespect_475900: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00475940,plate,Gang_SetArrowColour,Name from gta2_re (GTA2 10.5) Gang_144::SetArrowColour_475940: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00475b40,plate,Ped_ClearLastCharPunched,Name from gta2_re (GTA2 10.5) Ped::clear_last_char_punched_475B40: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00475b50,plate,Ped_IsOnFire,Name from gta2_re (GTA2 10.5) Ped::IsOnFire_475B50: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00475b70,plate,ScriptThread_Init,"Initialises a thread: next_cmd, flags. Called by both SpawnThread variants and ScriptLevelStart. = gta2_re miss2_0x11C::InitThread_511930. Seq 34."
 0x004760ad,pre,MissionScript_LoadSubScripts,wil_tra.mis
 0x004760b9,pre,MissionScript_LoadSubScripts,"replase ""mis"" to ""SCR"""
+0x004763b0,plate,MissionScript_RemovePhoneThread,Name from gta2_re (GTA2 10.5) ScriptManager_C1EA8::RemovePhoneThread_512A70: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
+0x004763e0,plate,MissionScript_FindPhoneThreadByObjId,Name from gta2_re (GTA2 10.5) ScriptManager_C1EA8::FindPhoneThreadByObjId_512AD0: 3 script handlers align their call sequence to it. Seq 34 callee alignment.
+0x004766d0,plate,Player_GetGangCurrLocation,Name from gta2_re (GTA2 10.5) Player::get_gang_curr_location_4766D0: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00476790,plate,Game_GetLocalPlayerIdx,Name from gta2_re (GTA2 10.5) Game_0x40::GetLocalPlayerIdx_476790: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x004767a0,plate,ScriptThreadPool_Allocate,"Pops a thread from the free list (+0), pushes it on the active list (+4), resets it. = gta2_re Pool<miss2_0x11C> allocate. Seq 34."
+0x00476840,plate,Hud_Arrow_SetArrowAim,Name from gta2_re (GTA2 10.5) Hud_Arrow_7C::SetArrowAim_476840: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00476850,plate,Hud_Arrow_SetArrowTargetPed,Name from gta2_re (GTA2 10.5) Hud_Arrow_7C::SetArrowTargetPed_476850: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00476860,plate,Hud_Arrow_SetArrowTargetCar,Name from gta2_re (GTA2 10.5) Hud_Arrow_7C::SetArrowTargetCar_476860: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00476870,plate,Hud_Arrow_SetArrowTargetObject,Name from gta2_re (GTA2 10.5) Hud_Arrow_7C::SetArrowTargetObject_476870: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00476930,plate,Generator_Activate,Name from gta2_re (GTA2 10.5) Generator_2C::Activate_4C1A70: 4 script handlers align their call sequence to it. Seq 34 callee alignment.
+0x00476a90,plate,Door_GetState,Name from gta2_re (GTA2 10.5) Door_38::get_state_476A90: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00476ae0,plate,Light_SetIntensity,Name from gta2_re (GTA2 10.5) Light_28::SetIntensity_476AE0: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00476d50,plate,MissionCleanup_PushObject,Was ScriptFramePool_PushType2 (wrong class). = gta2_re Miss2_25C::push_type_2_502FF0: register an object in the 50-entry mission cleanup list. Seq 34.
+0x00476e50,plate,ScriptThread_Next,"Advance the thread: if cmd.cmd_next != 0xFFFF, g_ScriptPrevCmdIdx(0x6644C8)=next_cmd, next_cmd=cmd_next, cmd_initialised(+0xC)=0; else EndCmd. Called by almost every handler. = gta2_re miss2_0x11C::Next_503620. Seq 34."
+0x00476e80,plate,ScriptThread_JumpToCmd,Name from gta2_re (GTA2 10.5) miss2_0x11C::JumpToCmd_503650: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
 0x00476ea0,plate,Script_Decl_OBJ_DATA_SET,"Mission script declaration handler (decl pass 0x481400). Opcodes: 15=OBJ_DATA_SET_2D 16=OBJ_DATA_SET_3D
 gta2_re (10.5): SCRCMD_OBJ_DECSET_2D_3D_503680
 Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
@@ -324,6 +367,8 @@ Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/sc
 0x00478170,plate,Script_Decl_DECLARE_PASSED_FAILED_FLAG,"Mission script declaration handler (decl pass 0x481400). Opcodes: 346=DECLARE_MISSIONS_PASSED_FLAG 347=DECLARE_GANG_ONE_MISSIONS_PASSED_FLAG 348=DECLARE_GANG_TWO_MISSIONS_PASSED_FLAG 349=DECLARE_GANG_THREE_MISSIONS_PASSED_FLAG 389=DECLARE_SECRETS_PASSED_FLAG 390=DECLARE_SECRETS_FAILED_FLAG
 gta2_re (10.5): SCRCMD_PASSED_FAILED_FLAGS_505580
 Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x00478240,plate,ScriptThread_DisableThread,Name from gta2_re (GTA2 10.5) miss2_0x11C::DisableThread_505790: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
+0x00478450,plate,ScriptThread_GetBonusResult,Name from gta2_re (GTA2 10.5) miss2_0x11C::GetBonusResult_505EA0: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
 0x004784a0,plate,Script_Decl_DECLARE_CRANE_POWERUP,"Mission script declaration handler (decl pass 0x481400). Opcodes: 439=DECLARE_CRANE_POWERUP
 gta2_re (10.5): SCRCMD_DO_CRANE_POWERUP_5060D0
 Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
@@ -492,7 +537,8 @@ Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/sc
 0x0047a810,plate,Script_Op_DELAY,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 162=DELAY
 gta2_re (10.5): SCRCMD_DELAY_50A980 @0x50a980 args SCR_CMD_HEADER
 Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
-0x0047a914,pre,FUN_0047a860,save goes here
+0x0047a860,plate,ScriptThread_EnableThread,Name from gta2_re (GTA2 10.5) miss2_0x11C::EnableThread_50A9E0: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
+0x0047a914,pre,ScriptThread_EnableThread,save goes here
 0x0047aa50,plate,Script_Op_DISABLE_THREAD_TRIGGER,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 216=DISABLE_THREAD_TRIGGER
 gta2_re (10.5): SCRCMD_DISABLE_THREAD_50ABC0 @0x50abc0
 Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
@@ -894,6 +940,9 @@ Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/sc
 0x0047ebe0,plate,Script_Op_SAVE_RESTORE_RESPECT,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 445=STORE_CURRENT_RESPECT 446=RESTORE_SAVED_RESPECT
 gta2_re (10.5): SCRCMD_SAVE_RESTORE_RESPECT_510780 @0x510780
 Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/script-engine.md (Seq 34)"
+0x0047ecb0,plate,ScriptThread_SpawnThread,CREATE_THREAD helper: allocates a thread and inits it with the caller in_level_start flag. = gta2_re miss2_0x11C::SpawnThread_511960. Seq 34.
+0x0047f200,plate,MissionScript_SpawnThread,Allocates a thread from the pool and initialises it at start_cmd. = gta2_re ScriptManager_C1EA8::SpawnThread_5120C0. Seq 34.
+0x0047f550,plate,ScriptThread_MissionFailOnArrest,"Was JobFailed. If on a mission and the player died/was arrested: returns from the mission sub, shows ""mfail"" big label, plays JOB FAILED, clears the mission flag. = gta2_re miss2_0x11C::MissionFailOnArrest_503200. Seq 34."
 0x0047f710,plate,Script_Decl_LIGHT_SET,"Mission script declaration handler (decl pass 0x481400). Opcodes: 217=LIGHT_SET_1 302=LIGHT_SET_2
 gta2_re (10.5): CreateLight_504EE0
 Confidence low: 217/302 reach the declaration pass; gta2_re enum names 218/301 as LIGHT_DECSET; probable gta2_re swap. docs/re/script-engine.md (Seq 34)"
@@ -936,7 +985,17 @@ Confidence medium: dispatch group 1:1 with gta2_re, unused in bil.scr. docs/re/s
 0x00480430,plate,Script_Op_START_BASIC_KF_TEMPLATE,"Mission script opcode handler (dispatcher 0x4805B0). Opcodes: 422=START_BASIC_KF_TEMPLATE
 gta2_re (10.5): SCRCMD_START_BASIC_KF_510100
 Confidence high: bil.scr opcode counts = DMA bil*.mis keyword counts. docs/re/script-engine.md (Seq 34)"
+0x004805b0,plate,ScriptThread_ExecOpCode,"Runtime opcode dispatcher. thread in EDX; jump tables 0x480F80 (byte, index type-0x29, 0..0x195) -> 0x480C50 (dword) -> stubs ""mov ecx,edx; pop esi; jmp handler""; default 0x480C46 -> Next. = gta2_re miss2_0x11C::ExecOpCode_5061C0. Seq 34."
+0x00481120,plate,ScriptThread_Update,Runs one thread for one frame: returns 1 when stopped (+0x10) or next_cmd(+4)==-1. EXEC blocks loop while exec_flag(+0x12)>0; commands with return_value==1 keep executing in the same frame. Calls MissionFailOnArrest first. = gta2_re miss2_0x11C::PoolUpdate_511840. Seq 34.
+0x00481200,plate,MissionScript_RestoreAnsweredPhones,After a save load: for every bit set in DAT_006646bc (32 phones) marks the phone object done and removes its phone thread. = gta2_re ScriptManager_C1EA8::RestoreAnsweredPhones_511C60. Seq 34.
+0x00481270,plate,ScriptThread_DisableBasicKfsFromSave,After a save load: for every bit set in DAT_006646c0 (25 basic kill frenzies) disables the KF thread and deletes its item. = gta2_re miss2_0x11C::DisableBasicKfsFromSave_511CD0. Seq 34.
+0x004812e0,plate,ScriptThreadPool_Dtor,Thread pool destructor (vector destructor over 8 x 0x11C). Seq 34.
+0x00481310,plate,ScriptThreadPool_Ctor,Constructs the 8 x 0x11C thread pool and links the free list. Called from MissionScript_Ctor. Seq 34.
+0x00481380,plate,ScriptThreadPool_UpdateNoDeallocate,"Walks the active list of the 8-thread pool, runs ScriptThread_Update, moves finished threads to the free list; counts active threads in +0x8E8. = gta2_re Pool::UpdatePoolNoDeallocate on miss2_0x11C_Pool_6F8064. Seq 34."
+0x00481400,plate,ScriptThread_PreExecOpCode,"Declaration pass run once at level start (from ScriptLevelStart 0x481890): walks every command and runs the load-time declarations. Tables 0x4816B0[type-5]->0x481658, type 0xF0 -> 0x481583, 0x4817E8[type-0x113]->0x481794, default 0x48162C. Ends with MissionScript_RestoreAnsweredPhones + DisableBasicKfsFromSave. = gta2_re miss2_0x11C::PreExecOpCode_5108D0. Seq 34."
+0x00481900,plate,MissionScript_ExecuteScriptThreads,"Per-frame entry from GameTick: optional miss2 logging, then ScriptThreadPool_UpdateNoDeallocate; clears CarManager+0x5C (model_check_destroyed). = gta2_re ScriptManager_C1EA8::ExecuteScriptThreads_5127A0. Seq 34."
 0x00481960,plate,MissionScript_Ctor,"Mission script engine ctor (miss2.cpp). Zeroes script/string/base-pointer buffers, allocates S16 missions (2284 B) and S17_mission (0x25c B) if absent, opens test\MISS_LOG.TXT if do_miss_logging. Object ~794 KB."
+0x00481c10,plate,ScriptThreadPool_DeletingDtor,Scalar deleting destructor of the thread pool. Seq 34.
 0x00482050,plate,MultiplayerTag_Reset,"Reset of the multiplayer Tag-mode state (global 0x665704, multip.cpp): zeroes it-player SaveSlot* (+0),
 6 per-player tag counters (+4..+0x1B), frame tick (+0x1C), 6 per-player left flags (+0x20..+0x25).
 Called by ctor 0x4820C0 (static init 0x535440) and InitGame 0x461E72 (MP branch).
@@ -944,7 +1003,12 @@ Evidence: FUN_004821c0/4820d0 ('yourit' label), death -> FUN_004822a0. Confidenc
 0x00482730,plate,Fix16_ApplyDeadZone,"Seq33 slice1 (VERIFIED): scalar dead zone: *out = (|*in| < DAT_006658DC) ? DAT_00665894 (0) : *in. Threshold = 1/(DAT_00665B28*DAT_00665AB4) (init at 0x536420, values not read). Used on angVel in IntegrateVelocity. gta2_re 10.5: Fix16::ApplyDeadZone_482730."
 0x004828c0,plate,Vec2_SubAssign,Seq33 slice1 (VERIFIED): Vec2 -= (Fix16_SubAssign on x and y).
 0x00482cc0,plate,CarPhysics_CollideWithObjectAtPoint,Seq33 slice4: sets g_CollisionContactPos from args then CarPhysics_CollideWithObject. Only caller FUN_00486c60 (object-driven collision into car).
+0x00483c50,plate,Object_PoolGiveAndMarkDone,Name from gta2_re (GTA2 10.5) Object_2C::PoolGiveAndMarkDone_5291D0: 3 script handlers align their call sequence to it. Seq 34 callee alignment.
+0x00483c60,plate,Object_PoolGiveAndSetDone,Name from gta2_re (GTA2 10.5) Object_2C::PoolGiveAndSetDone_5291E0: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
 0x00484af0,plate,ObjectSpawner_Ctor,"ObjectSpawner ctor (object.cpp, 0x5C B). Creates BareGameObjectManager if null, plus pools DAT_0066577c (0x226c) and DAT_00665780 (0x5a40). +0x10/+0x14 counters per prefab category 2/3, +0x1c list head, +0x58 Position. 'this' of SpawnObject. Name: medium."
+0x00485320,plate,Object_NewWithPedRefIdx,Name from gta2_re (GTA2 10.5) Object_5C::NewWithPedRefIdx_5299F0: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
+0x00485480,plate,Object_NewPhysicsObjUnlessBlocked,Name from gta2_re (GTA2 10.5) Object_5C::NewPhysicsObjUnlessBlocked_529BC0: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
+0x00485540,plate,Object_CreateExplosion,Name from gta2_re (GTA2 10.5) Object_5C::CreateExplosion_52A3D0: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
 0x00486410,plate,unsure_ImpactEvent_DispatchSound,"Seq33 slice4 HYPOTHESIS: impact event (gta2_re struct_4) one-shot dispatch: flag +0x24 set once, per owner type (+0x44 switch) validates and pushes a sound event into g_SoundEventQueue (by g_CollisionKind 4/5/other). gta2_re 10.5: struct_4::DispatchCarImpactEvents/PushImpactEvent."
 0x00488eb0,plate,ObjectPrefabsContainer_Ctor,"ObjectPrefabsContainer ctor (0x8CA8 B): 300 x 0x74 prefab entries from +4, 300 pointers at +0x87F4, length=0, eq99OnInit=99. Looked up by object id via FUN_00488170."
 0x00489ac0,plate,ParkingZone_Ctor,"park.cpp object (0x48 B). [0] car ptr, [0x0C] state (3 = active), [0x18..0x37] area rectangle from a map block, [0x3C] timer (=0x1E), [0x3D] flag, [0x3E] counter. Used by script commands and ped enter-car logic. Role (parking/garage target) is LOW confidence."
@@ -1106,6 +1170,7 @@ Order: SelectModelData; if model!=cachedModelId -> CmFromCp; frontSlip=rearSlip=
 Finally UpdateStationaryTimer; returns 1 (=free me) if stationary>=20 ticks && no collision flag && surface not 6/7/8."
 0x004a49c0,plate,Player_OnKeyUp,KeyDown
 0x004a4c40,plate,Player_DriveCar,"Seq33 slice2 (confirmed): Player input struct -> Car_ApplyDriverControls: Player+0x78 up, +0x79 down, +0x7a left, +0x7b right, +0x7e handbrake, +0x81 horn/fire, +0x84 hornEnable, +0x7c extra (zeroed when Player+0x788 >= 15). Names of the Player bytes are hypotheses from SetControls usage."
+0x004af660,plate,PublicTransport_TrainStationForZone,Name from gta2_re (GTA2 10.5) PublicTransport_181C::TrainStationForZone_57B4B0: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
 0x004af780,plate,PublicTransportManager_Ctor,"PublicTransportManager ctor. 100 x 0x34 stop/track entries at +0, 10 x 0x58 train/bus actors at +0x1450, one extra 0x58 actor at +0x17C0. Loaded from map by relToTrainsAndBuses (trak0..4); updated by PublicTransportManager_Update (honours skip_trains/skip_buses)."
 0x004b2f20,plate,SoundManager_InitOnce,"One-shot (unknown_used_with_s6 guard) SoundManager init: clears 5 channel slots, queues sound 1, creates the stream at +0x5508. Hypothesis name."
 0x004b7500,plate,PlayerScore_GetCarValue,"Seq33 slice3 VERIFIED: engineData[model].value (+2) scaled by kind param: 0 -> x1, 1 -> x2, 2 -> x5, else 0. Callers PlayerScore_OnCarDestroyed, PlayerScore_OnCarjack => 'value' in NYC.GCI is the score/bounty weight, not physics."
@@ -1137,8 +1202,13 @@ Finally UpdateStationaryTimer; returns 1 (=free me) if stationary>=20 ticks && n
 0x004c35a0,plate,TileAnimManager::TileAnimManager_Ctor,"TileAnimManager. The 2-byte object is a short counter = next tile-anim id (starts at 1). Lazily creates the tile-anim pool g_TileAnimPool (0x671C0C, 0x4BC B: 50 x 0x18 entries + free list; tileanim.cpp:0xDC). Used when map blocks change state (0x44C560, 0x44C610)."
 0x004c3700,plate,FrameTimingStats_Ctor,"Frame timing / FPS profiler (0x54). Counts update and draw frames over 100-frame windows (timeGetTime): update FPS +8, draw FPS +0x14, 5 per-subsystem time slots. Updated in drawAndLimitFrames (FrameTimingStats_EndFrame), shown by the do_show_timing overlay."
 0x004c3980,plate,TrafficLights::TrafficLights_Ctor,"Traffic light controller (0x194 B): up to 100 light pointers, ushort count +0x190, phase +0x192 (starts at 1), timer +0x193. Phases 1..8 cycle in UpdateTrafficLights; phase 7 = peds cross."
+0x004c5e60,plate,Hud_Arrow_SetArrowColour,Name from gta2_re (GTA2 10.5) Hud_Arrow_7C::SetArrowColour_5D0510: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
 0x004c6060,plate,ShowBigOnScreenLabel,ShowBigOnScreenLabel
+0x004c6860,plate,Hud_Brief_ClearAllBriefsWithPriority,Name from gta2_re (GTA2 10.5) Hud_Brief_704::ClearAllBriefsWithPriority_5D4890: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
 0x004c8c20,plate,showDebugLabel,showDebugLabel
+0x004c9310,plate,Hud_Pager_C_Array_CreateTimer,Name from gta2_re (GTA2 10.5) Hud_Pager_C_Array::CreateTimer_5D31F0: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
+0x004c9360,plate,Hud_Pager_C_Array_AddOnScreenCounter,Name from gta2_re (GTA2 10.5) Hud_Pager_C_Array::AddOnScreenCounter_5D3220: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
+0x004ca8e0,plate,Hud_Arrow_7C_Array_AllocArrow,Name from gta2_re (GTA2 10.5) Hud_Arrow_7C_Array::AllocArrow_5D1050: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
 0x004cac60,plate,HudManager_Ctor,"HUD / on-screen text manager (11000 B): message queue (txtMessage +0xE4), 29 debug text labels (+0x818, showDebugLabel), 17 mission arrows (+0x1F18), displayDebugPedInfo (+0x27B5), text_speed (+0x2AF4). Name is a guess from usage (medium-high)."
 0x004d0740,plate,WeaponManager::WeaponManager_Ctor,"WeaponManager (weapon.cpp:0x97C). 8 bytes: [+0] list head of cars already hit this shot (dedupe in FUN_004cf380), [+4] short live weapon count. Lazily creates the weapon pool (0x2FDC B, 255 x 0x30 slots) in ptrToWeaponRelStruct."
 0x004d11b8,plate,WinMain2,Seq33 slice1: WinMain main loop: PeekMessage pump; when no message and not paused/quit: drawAndLimitFrames() (0x462A30) = the fixed-step scheduler (33 ms logic tick). Frontend branch (isExit) uses FUN_0045A320 instead.
@@ -2381,6 +2451,7 @@ Library: Visual Studio 2003 Release"
 0x0057b690,plate,,IMAGE_IMPORT_BY_NAME
 0x0057b6a8,plate,,IMAGE_IMPORT_BY_NAME
 0x0057b6ba,plate,,IMAGE_IMPORT_BY_NAME
+0x005931f8,plate,,"Thread id counter, ScriptThread_AssignId. Seq 34."
 0x0059534c,plate,,class ios RTTI Type Descriptor
 0x00595354,eol,,TypeDescriptor.name
 0x00595360,plate,,class ostream RTTI Type Descriptor
@@ -2517,8 +2588,14 @@ Library: Visual Studio 2003 Release"
 0x006633c8,eol,,"Map renderer singleton, 12036 bytes; ctor MapRenderer_Ctor"
 0x00663de4,eol,,"AmbulanceManager singleton (0x110), medical.cpp"
 0x00664168,eol,,Debug-only object (do_mike flag; GameTick call is a no-op stub)
+0x006644b8,plate,,Mission cleanup list (gta2_re gMiss2_25C_6F805C; 10.5->11.44 delta 0x93BA4 holds for this block). Seq 34.
 0x006644bc,eol,,"Mission script VM singleton (S15_script, ~794 KB); destroyed in Game_Dtor via 0x45a9f0"
+0x006644c0,plate,,8-thread pool (gta2_re miss2_0x11C_Pool_6F8064). Seq 34.
 0x006644c4,eol,,Free-list pool of 50 x 12-byte list nodes
+0x006644c8,plate,,"Previous next_cmd, written by ScriptThread_Next (gta2_re gPrevCmdIdx_6F806C). Seq 34."
+0x006644cc,plate,,Command being executed; handlers read their args through it (gta2_re gBasePtr_6F8070). Seq 34.
+0x006646bc,plate,,"Bit per phone answered, restored from the save by MissionScript_RestoreAnsweredPhones. Seq 34."
+0x006646c0,plate,,"Bit per finished basic kill frenzy, applied by ScriptThread_DisableBasicKfsFromSave. Seq 34."
 0x00665788,eol,,"ObjectSpawner: object.cpp singleton, 'this' of SpawnObject (seuko-mod: S33)"
 0x00665b40,eol,,Object prefab table (300 entries); lookup FUN_00488170(id)
 0x00669ae4,eol,,"Parking-zone object (park.cpp, 0x48 B): car + area rectangle (low confidence)"
@@ -2534,7 +2611,14 @@ Library: Visual Studio 2003 Release"
 0x0066af58,eol,,Seq33 slice1: gravity: Fix16 raw 0x100 = 1/64 = 0.015625 block/tick^2 (init 0x543520). zVelocity(+0x68) -= this each tick while IsInAir and zVelocity > -0.125 (CarPhysics_UpdateSurface 0x4A2706).
 0x0066afb4,eol,,"Seq33: collision normal (Vec2 Fix16, not normalised), passed as n to CarPhysics_ComputeCollisionImpulse (which normalises it). Renamed from g_CollisionContactRelCm by the orchestrator."
 0x0066b004,eol,,"Seq33 slice1: Vec2 (8 bytes) external per-tick velocity: zeroed by ResetExternalVelocity, added to linVel before and subtracted after MoveAndCollide (player/AI path)."
+0x0066b788,plate,,"Spawn parameter for PoliceManager_DispatchCrewToPursuit 0x4A9EF0: EmergencyVehicleSlot.crewType (3 police, 5 SWAT). Set in 0x4AA030 before each call."
+0x0066b78c,plate,,"Spawn parameter for 0x4A9EF0: EmergencyVehicleSlot.timer (200 for the first crew, 0x32 for follow-ups). Set in 0x4AA030."
+0x0066b790,plate,,"Spawn parameter for 0x4A9EF0: initial PoliceCrew.state (3 first crew, 5 follow-up). Set in 0x4AA030."
+0x0066b794,plate,,Scratch: crew ped currently processed by PoliceCrew_Update 0x4AD600; read by 0x4AB930 / 0x4ABAE0.
+0x0066b798,plate,,"Spawn parameter for 0x4A9EF0 and the roadblock builder: PoliceCrew.kind (1 police, 2 SWAT, 3 FBI, 4 army). Set in 0x4AA030 / 0x4AEE70."
 0x0066b7a0,eol,,"PoliceManager singleton (SPolice, 0x7B8); UpdatePolice each GameTick"
+0x0066b7a4,plate,,"Police has at least one registered criminal: set to 1 by PoliceManager_RegisterCriminal 0x4A9D60, decremented when a pursuit ends in 0x4AA030; PoliceManager_Update runs the target passes only when == 1 (gta2_re bHaveCriminals)."
+0x0066b7a8,plate,,"Running id stamped into PoliceCrew.id by 0x4A9EF0 and 0x4AA7B0, incremented per spawned crew."
 0x0066bb50,eol,,PublicTransportManager singleton (0x181C): buses + trains
 0x0066f5dc,eol,,"FloatingScoreManager (0x100), score popups, only when exploding_on==0"
 0x0066fb0c,eol,,"OwnerSlotTable singleton: shooter slot byte -> ped id (+refcount), 255 entries"

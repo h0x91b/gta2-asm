@@ -64,6 +64,8 @@ typedef struct PatrolRoute PatrolRoute;
 typedef struct PedPathfinder PedPathfinder;
 typedef struct PedPatrolRoutePool PedPatrolRoutePool;
 typedef struct PlayerScore PlayerScore;
+typedef struct PolicePursuitTarget PolicePursuitTarget;
+typedef struct PoliceRoadblock PoliceRoadblock;
 typedef struct PublicTransportManager PublicTransportManager;
 typedef struct RoadNetwork RoadNetwork;
 typedef struct RoadNode RoadNode;
@@ -131,15 +133,14 @@ typedef struct LocaleSettings LocaleSettings;
 typedef struct MapBlocks MapBlocks;
 typedef struct MapRenderer MapRenderer;
 typedef struct MikeDebug MikeDebug;
+typedef struct MissionCleanupList MissionCleanupList;
 typedef struct MissionScript MissionScript;
 typedef struct OwnerSlotTable OwnerSlotTable;
+typedef struct PoliceCrew PoliceCrew;
 typedef struct PoliceManager PoliceManager;
 typedef struct Position Position;
 typedef struct PositionsArray_S21 PositionsArray_S21;
 typedef struct S14_sub1 S14_sub1;
-typedef struct S16 S16;
-typedef struct S16_sub1 S16_sub1;
-typedef struct S17_mission S17_mission;
 typedef struct S18_sub S18_sub;
 typedef struct S2 S2;
 typedef struct S22 S22;
@@ -151,9 +152,10 @@ typedef struct S5 S5;
 typedef struct S6 S6;
 typedef struct S7 S7;
 typedef struct SNightArray SNightArray;
-typedef struct SPoliceSub SPoliceSub;
 typedef struct SRelToBonus2 SRelToBonus2;
 typedef struct Script4k Script4k;
+typedef struct ScriptThread ScriptThread;
+typedef struct ScriptThreadPool ScriptThreadPool;
 typedef struct Sprite Sprite;
 typedef struct SpriteManager SpriteManager;
 typedef struct SubScript SubScript;
@@ -356,6 +358,32 @@ enum CAR_PHYSICS_MODE_values {
     CAR_PHYSICS_UNSURE_KINEMATIC = 4,
 };
 
+// /CRIME_KIND
+typedef uint32_t CRIME_KIND;
+enum CRIME_KIND_values {
+    CRIME_NONE = 0,
+    CRIME_VEHICLE_DAMAGE = 1,
+    CRIME_FIRE_WEAPON = 2,
+    CRIME_CAR_DESTROYED_OR_STOLEN = 3,
+    CRIME_UNKNOWN_4 = 4,
+    CRIME_CARJACK = 5,
+    CRIME_KILL_PED_REL1_3 = 6,
+    CRIME_KILL_PED_OTHER = 7,
+    CRIME_KILL_LAW_ENFORCEMENT = 8,
+    CRIME_KILL_GANG_MEMBER = 9,
+};
+
+// /EMERGENCY_CREW_TYPE
+typedef uint32_t EMERGENCY_CREW_TYPE;
+enum EMERGENCY_CREW_TYPE_values {
+    EMERGENCY_CREW_NONE = 0,
+    EMERGENCY_CREW_PARAMEDIC = 1,
+    EMERGENCY_CREW_POLICE = 3,
+    EMERGENCY_CREW_FBI = 4,
+    EMERGENCY_CREW_SWAT = 5,
+    EMERGENCY_CREW_ARMY = 6,
+};
+
 // /HUD_DIGIT_SPRITE
 typedef uint16_t HUD_DIGIT_SPRITE;
 enum HUD_DIGIT_SPRITE_values {
@@ -398,6 +426,37 @@ enum PED_FLAGS_values {
     PED_FLAG_GETTING_IN_OR_OUT_CAR = 134217728,
     PED_FLAG_UNSURE_HAS_GUN_BUT_NOT_PISTOL = 268435456,
     PED_FLAG_UNSURE_20000000 = 536870912,
+};
+
+// /POLICE_CREW_KIND
+typedef uint32_t POLICE_CREW_KIND;
+enum POLICE_CREW_KIND_values {
+    POLICE_CREW_KIND_NONE = 0,
+    POLICE_CREW_KIND_POLICE = 1,
+    POLICE_CREW_KIND_SWAT = 2,
+    POLICE_CREW_KIND_FBI = 3,
+    POLICE_CREW_KIND_ARMY = 4,
+};
+
+// /POLICE_CREW_STATE
+typedef uint32_t POLICE_CREW_STATE;
+enum POLICE_CREW_STATE_values {
+    POLICE_CREW_FREE = 0,
+    POLICE_CREW_PATROL = 1,
+    POLICE_CREW_FINISHED = 2,
+    POLICE_CREW_ALERTED = 3,
+    POLICE_CREW_PURSUE = 5,
+    POLICE_CREW_SHUTDOWN = 6,
+};
+
+// /PURSUIT_STATE
+typedef uint32_t PURSUIT_STATE;
+enum PURSUIT_STATE_values {
+    PURSUIT_IDLE = 0,
+    PURSUIT_RESPONDING = 1,
+    PURSUIT_ACTIVE = 3,
+    PURSUIT_ENDED = 4,
+    PURSUIT_SEARCHING = 5,
 };
 
 // /_STY/CarInfoFlags
@@ -2442,7 +2501,7 @@ struct CrimeStats {
     byte oneShotFlag[10]; /* 0x28 */
     uint8_t _gap_0x32[0x2];
     int unsure_totalEarned; /* 0x34 */
-    int unsure_wantedStarSeconds; /* 0x38 */
+    int wantedStarSeconds; /* 0x38 */
 };
 
 // /Crusher  size 0x30
@@ -2473,14 +2532,17 @@ struct DoorManager {
 
 // /EmergencyVehicleSlot  size 0x30
 struct EmergencyVehicleSlot {
-    void *car; /* 0x0 */
-    void *driver; /* 0x4 */
-    uint8_t _gap_0x8[0x10];
+    Car *car; /* 0x0 */
+    Ped *driver; /* 0x4 */
+    PedGroup *group; /* 0x8 */
+    SCR_f spawnX; /* 0xc */
+    SCR_f spawnY; /* 0x10 */
+    SCR_f spawnZ; /* 0x14 */
     short timer; /* 0x18 */
     byte unk1a[4]; /* 0x1a */
     byte inUse; /* 0x1e */
     byte unk1f[1]; /* 0x1f */
-    int state20; /* 0x20 */
+    EMERGENCY_CREW_TYPE crewType; /* 0x20 */
     int state24; /* 0x24 */
     int state28; /* 0x28 */
     byte unk2c[4]; /* 0x2c */
@@ -2743,6 +2805,51 @@ struct PlayerScore {
     uint8_t _gap_0x1a5[0x3];
     ComboList comboList; /* 0x1a8 */
     Player *owner; /* 0x368 */
+};
+
+// /PolicePursuitTarget  size 0x7c
+struct PolicePursuitTarget {
+    Ped *criminal; /* 0x0 */
+    int wantedLevel; /* 0x4 */
+    PURSUIT_STATE state; /* 0x8 */
+    ushort sightTimer; /* 0xc */
+    byte unsure_escalated; /* 0xe */
+    uint8_t _gap_0xf[0x1];
+    SCR_f lastSeenX; /* 0x10 */
+    SCR_f lastSeenY; /* 0x14 */
+    SCR_f lastSeenZ; /* 0x18 */
+    byte unsure_searchDone; /* 0x1c */
+    uint8_t _gap_0x1d[0x3];
+    PoliceCrew *crews[6]; /* 0x20 */
+    uint8_t _gap_0x38[0x38];
+    byte numPoliceCrews; /* 0x70 */
+    byte targetPoliceCrews; /* 0x71 */
+    byte numSwatCrews; /* 0x72 */
+    byte numFbiCrews; /* 0x73 */
+    byte numArmyCrews; /* 0x74 */
+    byte numCrews; /* 0x75 */
+    short unused_0x76; /* 0x76 */
+    byte isActivelyChased; /* 0x78 */
+    uint8_t _gap_0x79[0x1];
+    ushort noSightTicks; /* 0x7a */
+};
+
+// /PoliceRoadblock  size 0xa4
+struct PoliceRoadblock {
+    byte active; /* 0x0 */
+    uint8_t _gap_0x1[0x3];
+    int unk4; /* 0x4 */
+    byte unsure_tileX; /* 0x8 */
+    byte unsure_tileY; /* 0x9 */
+    byte unkA; /* 0xa */
+    uint8_t _gap_0xb[0x1];
+    ushort lifeTimer; /* 0xc */
+    ushort offscreenTicks; /* 0xe */
+    Car *cars[6]; /* 0x10 */
+    BareGameObject *barrierObjs[12]; /* 0x28 */
+    int barrierObjIds[12]; /* 0x58 */
+    Ped *guards[6]; /* 0x88 */
+    void *collisionRect; /* 0xa0 */
 };
 
 // /TransportStop  size 0x34
@@ -3060,7 +3167,7 @@ struct Car {
     uint8_t _gap_0x81[0x3];
     CAR_MODEL4 carModel; /* 0x84 */
     CAR_LIFE_STATE lifeState; /* 0x88 */
-    byte unsure_fireState; /* 0x8c */
+    byte damageFireStage; /* 0x8c */
     byte unsure_scriptFlags; /* 0x8d */
     byte alarmTimer; /* 0x8e */
     uint8_t _gap_0x8f[0x1];
@@ -3607,7 +3714,7 @@ struct Ped {
     byte ownerSlot; /* 0x267 */
     byte unsure_hitCooldown; /* 0x268 */
     uint8_t _gap_0x269[0x1];
-    byte unsure_witnessTimer; /* 0x26a */
+    byte witnessTimer; /* 0x26a */
     uint8_t _gap_0x26b[0x1];
     PED_GRAPHIC_TYPE graphicType; /* 0x26c */
     int unsure_walkHeadingMode; /* 0x270 */
@@ -3959,6 +4066,19 @@ struct MikeDebug {
     int field2011_0xa7c; /* 0xa7c */
 };
 
+// /auto_structs/Vec3i  size 0xc
+struct Vec3i {
+    int x; /* 0x0 */
+    int y; /* 0x4 */
+    int z; /* 0x8 */
+};
+
+// /auto_structs/MissionCleanupList  size 0x25c
+struct MissionCleanupList {
+    int len; /* 0x0 */
+    Vec3i vec3i50[50]; /* 0x4 */
+};
+
 // /auto_structs/MissionScript  size 0xc1ea8
 // Map or something related to missions
 struct MissionScript {
@@ -4033,46 +4153,54 @@ struct OwnerSlotTable {
     OwnerSlot slots[255]; /* 0x0 */
 };
 
-// /auto_structs/SPoliceSub  size 0x38
-struct SPoliceSub {
-    uint8_t _gap_0x0[0x2];
-    byte field2_0x2; /* 0x2 */
-    byte field3_0x3; /* 0x3 */
-    byte field4_0x4; /* 0x4 */
+// /auto_structs/PoliceCrew  size 0x38
+struct PoliceCrew {
+    ushort id; /* 0x0 */
+    byte spawnTileX; /* 0x2 */
+    byte spawnTileY; /* 0x3 */
+    byte spawnTileZ; /* 0x4 */
     uint8_t _gap_0x5[0x3];
-    undefined4 field8_0x8; /* 0x8 */
-    undefined4 field9_0xc; /* 0xc */
-    undefined4 field10_0x10; /* 0x10 */
-    undefined4 field11_0x14; /* 0x14 */
-    undefined2 field12_0x18; /* 0x18 */
-    byte field13_0x1a; /* 0x1a */
+    SCR_f distToTarget; /* 0x8 */
+    SCR_f unused_0xc; /* 0xc */
+    EmergencyVehicleSlot *vehSlot; /* 0x10 */
+    PolicePursuitTarget *target; /* 0x14 */
+    ushort unused_0x18; /* 0x18 */
+    byte unsure_alertedFlag; /* 0x1a */
     uint8_t _gap_0x1b[0x1];
-    undefined4 field15_0x1c; /* 0x1c */
-    uint8_t _gap_0x20[0x4];
-    undefined4 field20_0x24; /* 0x24 */
-    byte field21_0x28; /* 0x28 */
-    byte field22_0x29; /* 0x29 */
-    undefined2 field23_0x2a; /* 0x2a */
-    undefined2 field24_0x2c; /* 0x2c */
+    int active; /* 0x1c */
+    POLICE_CREW_KIND kind; /* 0x20 */
+    POLICE_CREW_STATE state; /* 0x24 */
+    byte unsure_onFootEngaging; /* 0x28 */
+    byte countedAsTrafficCrew; /* 0x29 */
+    ushort unused_0x2a; /* 0x2a */
+    ushort unused_0x2c; /* 0x2c */
     uint8_t _gap_0x2e[0x2];
-    undefined4 field27_0x30; /* 0x30 */
-    byte field28_0x34; /* 0x34 */
-    uint8_t _gap_0x35[0x3];
+    int unsure_targetGroupTag; /* 0x30 */
+    byte releaseRequested; /* 0x34 */
+    byte stuckTicks; /* 0x35 */
+    uint8_t _gap_0x36[0x2];
 };
 
 // /auto_structs/PoliceManager  size 0x7b8
 struct PoliceManager {
-    uint8_t _gap_0x0[0x4];
-    SPoliceSub arr20[20]; /* 0x4 */
-    byte arr124_4[124][4]; /* 0x464 */
+    byte unusedFlag; /* 0x0 */
+    uint8_t _gap_0x1[0x3];
+    PoliceCrew crews[20]; /* 0x4 */
+    PolicePursuitTarget pursuitTargets[4]; /* 0x464 */
     int copLevel; /* 0x654 */
-    byte field7_0x658; /* 0x658 */
-    byte field8_0x659; /* 0x659 */
+    byte liveTrafficCrews; /* 0x658 */
+    byte crewSpawnBudget; /* 0x659 */
     uint8_t _gap_0x65a[0x2];
-    int relToAi; /* 0x65c */
-    uint8_t _gap_0x660[0x14d];
+    EMERGENCY_CREW_TYPE highestCrewType; /* 0x65c */
+    byte maxWantedStars; /* 0x660 */
+    uint8_t _gap_0x661[0x3];
+    PoliceRoadblock roadblocks[2]; /* 0x664 */
+    byte roadblockCooldown; /* 0x7ac */
     byte numPolicePedsInRangeScreen; /* 0x7ad */
-    uint8_t _gap_0x7ae[0xa];
+    uint8_t _gap_0x7ae[0x2];
+    Ped *designatedShooter; /* 0x7b0 */
+    byte crewLeaderOnScreen; /* 0x7b4 */
+    uint8_t _gap_0x7b5[0x3];
 };
 
 // /auto_structs/Position  size 0x3c
@@ -4104,46 +4232,6 @@ struct Position {
 struct PositionsArray_S21 {
     Position *last; /* 0x0 */
     Position arr[5031]; /* 0x4 */
-};
-
-// /auto_structs/S16_sub1  size 0x11c
-struct S16_sub1 {
-    undefined4 field0_0x0; /* 0x0 */
-    undefined2 field1_0x4; /* 0x4 */
-    byte field2_0x6; /* 0x6 */
-    uint8_t _gap_0x7[0x1];
-    undefined4 field4_0x8; /* 0x8 */
-    byte field5_0xc; /* 0xc */
-    uint8_t _gap_0xd[0x1];
-    undefined2 field7_0xe; /* 0xe */
-    byte field8_0x10; /* 0x10 */
-    uint8_t _gap_0x11[0x3];
-    int arr64i[64]; /* 0x14 */
-    Vec2i *vec2i; /* 0x114 */
-    byte field14_0x118; /* 0x118 */
-    uint8_t _gap_0x119[0x1];
-    short field16_0x11a; /* 0x11a */
-};
-
-// /auto_structs/S16  size 0x8ec
-struct S16 {
-    uint8_t _gap_0x0[0x4];
-    int field4_0x4; /* 0x4 */
-    S16_sub1 arr_s16sub[8]; /* 0x8 */
-    uint8_t _gap_0x8e8[0x4];
-};
-
-// /auto_structs/Vec3i  size 0xc
-struct Vec3i {
-    int x; /* 0x0 */
-    int y; /* 0x4 */
-    int z; /* 0x8 */
-};
-
-// /auto_structs/S17_mission  size 0x25c
-struct S17_mission {
-    int len; /* 0x0 */
-    Vec3i vec3i50[50]; /* 0x4 */
 };
 
 // /auto_structs/S2  size 0x8
@@ -4284,6 +4372,35 @@ struct Script4k {
     SCR_STRING_HEADER *strings[999]; /* 0x4 */
 };
 
+// /auto_structs/ScriptThread  size 0x11c
+struct ScriptThread {
+    ScriptThread *pool_next; /* 0x0 */
+    ushort next_cmd; /* 0x4 */
+    byte flag_6; /* 0x6 */
+    uint8_t _gap_0x7[0x1];
+    int cond_result; /* 0x8 */
+    byte cmd_initialised; /* 0xc */
+    uint8_t _gap_0xd[0x1];
+    short phone_timer; /* 0xe */
+    byte stopped; /* 0x10 */
+    uint8_t _gap_0x11[0x1];
+    short exec_flag; /* 0x12 */
+    char str[256]; /* 0x14 */
+    void *gosub_stack; /* 0x114 */
+    byte in_level_start; /* 0x118 */
+    uint8_t _gap_0x119[0x1];
+    short thread_id; /* 0x11a */
+};
+
+// /auto_structs/ScriptThreadPool  size 0x8ec
+struct ScriptThreadPool {
+    ScriptThread *free_list; /* 0x0 */
+    ScriptThread *active_list; /* 0x4 */
+    ScriptThread threads[8]; /* 0x8 */
+    short active_count; /* 0x8e8 */
+    uint8_t _gap_0x8ea[0x2];
+};
+
 // /auto_structs/Sprite  size 0x100
 struct Sprite {
     uint id; /* 0x0 */
@@ -4410,7 +4527,7 @@ struct PedManager {
 // /imported/gta2-mouse/Police  size 0x7b8
 struct Police {
     uint8_t _gap_0x0[0x4];
-    SPoliceSub arr20[20]; /* 0x4 */
+    PoliceCrew arr20[20]; /* 0x4 */
     byte arr124_4[124][4]; /* 0x464 */
     int copLevel; /* 0x654 */
     uint8_t _gap_0x658[0x4];
