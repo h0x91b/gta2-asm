@@ -459,16 +459,6 @@ u32_RegisterClassA:         ; (WNDCLASSA*) -> ATOM
     xor eax, eax
     HRET
 
-; WIN_SCALE w, h: the SDL window is 1.5x the size the game asked for. The game sees
-; (and is laid out for) 640x480 (advapi32 reg_force_screen); the renderer letterboxes
-; its 640x480 back buffer into whatever the window is, so this is cosmetic.
-%macro WIN_SCALE 2
-    lea %1, [%1 + %1*2]
-    shr %1, 1
-    lea %2, [%2 + %2*2]
-    shr %2, 1
-%endmacro
-
 ; CreateWindowExA(exstyle, class, title, style, x, y, w, h, parent, menu, hinst, param)
 u32_CreateWindowExA:
     HENTER
@@ -514,7 +504,6 @@ u32_CreateWindowExA:
 .wok:
     mov [r14 + WN_W], esi
     mov [r14 + WN_H], edx
-    WIN_SCALE esi, edx
     mov ecx, SDL_WINDOW_HIDDEN      ; shown by ShowWindow, like WS_VISIBLE-less Win32
     call [sdl_SDL_CreateWindow]
     test rax, rax
@@ -757,7 +746,6 @@ u32_SetWindowPos:
     mov edx, ARG(5)
     mov [r12 + WN_W], esi
     mov [r12 + WN_H], edx
-    WIN_SCALE esi, edx
     mov rdi, [r12 + WN_SDL]
     call [sdl_SDL_SetWindowSize]
 .move:

@@ -14,7 +14,7 @@
 ; exit 3), except decorated mss32/binkw32 names (`_Foo@N`), which get h_silent:
 ; return 0, pop N bytes, log the first call.
 
-extern _strcasecmp, _strncasecmp, _strlen, _strcpy, _strrchr, _atoi, _strdup
+extern _strcasecmp, _strncasecmp, _strlen, _strcpy, _strrchr, _atoi, _strtol, _strdup
 extern _memcmp, _putchar
 extern _usleep, _getpid, _clock_gettime_nsec_np, _write, _read, _fflush
 ; x86_64 macOS: the 64-bit-inode struct stat / struct dirent layouts we use need the

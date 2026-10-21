@@ -2,11 +2,13 @@
 ; (gbh_*), reimplemented on SDL3's SDL_Renderer. API: docs/renderer-api.md; design and
 ; gaps: docs/renderer-sdl.md.
 ;
-; Backend: one SDL_Renderer on the game's window. Everything the game draws goes into a
-; 640x480 ARGB8888 render-target texture (the "back buffer"); Vid_FlipBuffers presents it
-; letterboxed into the window. Next to it lives a 640x480 RGB565 CPU buffer in low memory
-; that Vid_GetSurface hands out (ctx->surface); when the game had it locked, it is
-; uploaded and drawn into the target at gbh_BeginScene / Vid_FlipBuffers.
+; Backend: one SDL_Renderer on the game's window. Everything the game draws goes into an
+; ARGB8888 render-target texture (the "back buffer") of the windowed size the game lays
+; itself out for (screen\window_width x window_height, at least 640x480); Vid_FlipBuffers
+; presents the top-left 640x480 of it in the frontend and all of it in gameplay,
+; letterboxed into the window. Next to it lives an RGB565 CPU buffer of the same size in
+; low memory that Vid_GetSurface hands out (ctx->surface); when the game had it locked,
+; it is uploaded and drawn into the target at gbh_BeginScene / Vid_FlipBuffers.
 ;   gbh_DrawQuad/Triangle/Tile -> SDL_RenderGeometry (DrawTile permutes the tile UVs
 ;   first; GBH_F_LIGHTING applies the gbh_AddLight point lights + ambient per vertex); 8-bit textures are expanded through
 ;   their palette to ARGB8888 (index 0 = transparent) and cached per GbhTexture, keyed
@@ -34,7 +36,12 @@ SDL_LOGICAL_PRESENTATION_LETTERBOX equ 2
 
 FB_W        equ 640             ; the frontend is laid out for 640x480 (renderer-api.md §4)
 FB_H        equ 480
-FB_PITCH    equ FB_W * 2
+FB_PITCH    equ FB_W * 2        ; of the one advertised mode; the CPU buffer's is r_pitch
+; gta2.exe globals the back buffer follows (re/globals.csv, own analysis of 0x4caec0)
+G_WINDOW_W  equ 0x673578        ; window_width: BeginFrame2D's view width when mode_id = -2
+G_WINDOW_H  equ 0x6732e8        ; window_height
+G_GAME      equ 0x5EB4FC        ; ptrToGame (seuko-mod memory.h): set by InitGame 0x461de0,
+                                ; zeroed by DeinitGame 0x462060 -> nonzero = gameplay
 MAX_TEX     equ 0x40000         ; texture cache entries (index 0 unused); wil registers 73104
 MAX_PAL     equ 16384           ; palette indices
 MAX_IMG     equ 64              ; image table slots (the game asks for 25)
@@ -158,7 +165,7 @@ r_upload_fb:
     mov rdi, [r_fbtex]
     xor esi, esi
     mov edx, [r_cpu_fb]
-    mov ecx, FB_PITCH
+    mov ecx, [r_pitch]
     call [r_SDL_UpdateTexture]
     mov rdi, [r_renderer]
     mov rsi, [r_fbtex]
@@ -371,13 +378,37 @@ vid_CloseScreen:                ; (ctx): the renderer survives mode changes
     mov dword [rcx + VidCtx.mode_id], 0
     ret
 
-; Vid_SetMode(ctx, hwnd, mode_id) -> 0 ok / 1 fail. First call creates the renderer, the
-; back buffer and the CPU buffer on the game's SDL window; the game always gets 640x480.
+; Vid_SetMode(ctx, hwnd, mode_id) -> 0 ok / 1 fail. First call creates the renderer on
+; the game's SDL window. The back buffer is sized for what the game will lay out: windowed
+; (-2) = window_width x window_height (BeginFrame2D 0x4caec0 reads them for the view),
+; anything else = the 640x480 mode; never smaller than the 640x480 frontend. A later call
+; with another size recreates the back buffer and the CPU buffer.
 vid_SetMode:
     HENTER 16
     mov r12d, ARG(0)
+    mov eax, FB_W
+    mov ecx, FB_H
+    cmp ARG(2), VID_MODE_WINDOWED
+    jne .gsize
+    mov edx, [abs G_WINDOW_W]
+    mov esi, [abs G_WINDOW_H]
+    test edx, edx
+    jle .gsize
+    test esi, esi
+    jle .gsize
+    mov eax, edx
+    mov ecx, esi
+.gsize:
+    mov [r_gw], eax
+    mov [r_gh], ecx
+    mov r13d, FB_W                  ; target = max(game size, 640x480)
+    cmp eax, r13d
+    cmovg r13d, eax
+    mov r14d, FB_H
+    cmp ecx, r14d
+    cmovg r14d, ecx
     cmp qword [r_renderer], 0
-    jne .fill
+    jne .have_rend
     mov edi, ARG(1)
     call win_get
     test rax, rax
@@ -396,56 +427,26 @@ vid_SetMode:
     mov rdi, rax
     mov esi, 1
     call [r_SDL_SetRenderVSync]
-    mov rdi, [r_renderer]           ; window target: 640x480 logical, letterboxed
-    mov esi, FB_W
-    mov edx, FB_H
-    mov ecx, SDL_LOGICAL_PRESENTATION_LETTERBOX
-    call [r_SDL_SetRenderLogicalPresentation]
     mov rdi, [r_renderer]
     mov esi, SDL_BLENDMODE_NONE
     call [r_SDL_SetRenderDrawBlendMode]
-    mov edi, SDL_PIXELFORMAT_ARGB8888
-    mov esi, SDL_TEXTUREACCESS_TARGET
-    mov edx, FB_W
-    mov ecx, FB_H
-    call r_texture
-    test rax, rax
-    jz .fail
-    mov [r_target], rax
-    mov rdi, rax
-    mov esi, SDL_SCALEMODE_LINEAR
-    call [r_SDL_SetTextureScaleMode]
-    mov edi, SDL_PIXELFORMAT_RGB565
-    mov esi, SDL_TEXTUREACCESS_STREAMING
-    mov edx, FB_W
-    mov ecx, FB_H
-    call r_texture
-    test rax, rax
-    jz .fail
-    mov [r_fbtex], rax
-    mov edi, FB_PITCH * FB_H
-    mov esi, 16
-    call low_alloc
-    mov [r_cpu_fb], eax
-    mov rdi, [r_renderer]
-    mov rsi, [r_target]
-    call [r_SDL_SetRenderTarget]
-    mov rdi, [r_renderer]
-    xor esi, esi
-    xor edx, edx
-    xor ecx, ecx
-    mov r8d, 255
-    call [r_SDL_SetRenderDrawColor]
-    mov rdi, [r_renderer]
-    call [r_SDL_RenderClear]
     mov rdi, [r_renderer]
     call [r_SDL_GetRendererName]
     lea rdi, [fmt_vid_renderer]
     mov rsi, rax
-    mov edx, FB_W
-    mov ecx, FB_H
     xor eax, eax
     call _printf
+.have_rend:
+    cmp r13d, [r_tw]
+    jne .make
+    cmp r14d, [r_th]
+    je .fill
+.make:
+    mov edi, r13d
+    mov esi, r14d
+    call r_make_buffers
+    test eax, eax
+    jz .fail
 .fill:
     call vid_fill_format
     mov eax, ARG(2)
@@ -459,6 +460,11 @@ vid_SetMode:
     lea rdi, [fmt_vid_setmode]
     mov esi, ARG(2)
     mov edx, ARG(1)
+    mov ecx, [r_gw]
+    mov r8d, [r_gh]
+    mov r9d, [r_tw]
+    mov eax, [r_th]
+    mov [rsp], rax
     xor eax, eax
     call _printf
     xor eax, eax
@@ -469,6 +475,97 @@ vid_SetMode:
 .fail:
     mov eax, 1
     HRET
+
+; eax = r_make_buffers(edi = w, esi = h): (re)create the back buffer, the RGB565 streaming
+; texture and the CPU buffer at w x h, leave the back buffer as the render target, cleared
+; to black. 0 on failure. A replaced CPU buffer stays allocated (low arena, no free).
+r_make_buffers:
+    push rbx
+    push r12
+    push r13
+    mov r12d, edi
+    mov r13d, esi
+    mov rdi, [r_renderer]
+    xor esi, esi
+    call [r_SDL_SetRenderTarget]
+    mov rdi, [r_target]
+    test rdi, rdi
+    jz .no_old_target
+    call [r_SDL_DestroyTexture]
+.no_old_target:
+    mov rdi, [r_fbtex]
+    test rdi, rdi
+    jz .no_old_fbtex
+    call [r_SDL_DestroyTexture]
+.no_old_fbtex:
+    mov qword [r_target], 0
+    mov qword [r_fbtex], 0
+    mov edi, SDL_PIXELFORMAT_ARGB8888
+    mov esi, SDL_TEXTUREACCESS_TARGET
+    mov edx, r12d
+    mov ecx, r13d
+    call r_texture
+    test rax, rax
+    jz .fail
+    mov [r_target], rax
+    mov rdi, rax
+    mov esi, SDL_SCALEMODE_LINEAR
+    call [r_SDL_SetTextureScaleMode]
+    mov edi, SDL_PIXELFORMAT_RGB565
+    mov esi, SDL_TEXTUREACCESS_STREAMING
+    mov edx, r12d
+    mov ecx, r13d
+    call r_texture
+    test rax, rax
+    jz .fail
+    mov [r_fbtex], rax
+    lea eax, [r12 + r12]
+    mov [r_pitch], eax
+    mov edi, eax
+    imul edi, r13d
+    mov esi, 16
+    call low_alloc                  ; zeroed: the arena is fresh anonymous memory
+    mov [r_cpu_fb], eax
+    mov [r_tw], r12d
+    mov [r_th], r13d
+    mov dword [r_pw], 0             ; re-set the window's logical size at the next flip
+    mov rdi, [r_renderer]
+    mov rsi, [r_target]
+    call [r_SDL_SetRenderTarget]
+    mov rdi, [r_renderer]
+    xor esi, esi
+    xor edx, edx
+    xor ecx, ecx
+    mov r8d, 255
+    call [r_SDL_SetRenderDrawColor]
+    mov rdi, [r_renderer]
+    call [r_SDL_RenderClear]
+    lea rdi, [fmt_vid_buffers]
+    mov esi, r12d
+    mov edx, r13d
+    xor eax, eax
+    call _printf
+    mov eax, 1
+    jmp .out
+.fail:
+    xor eax, eax
+.out:
+    pop r13
+    pop r12
+    pop rbx
+    ret
+
+; eax, edx = r_present_size: the part of the back buffer a flip shows. Gameplay
+; (ptrToGame set) is laid out for the windowed size, the frontend for 640x480.
+r_present_size:
+    mov eax, FB_W
+    mov edx, FB_H
+    cmp dword [abs G_GAME], 0
+    je .out
+    mov eax, [r_gw]
+    mov edx, [r_gh]
+.out:
+    ret
 
 vid_SetGamma:                   ; (ctx, r, g, b) -> 0 (no gamma ramp yet)
     xor eax, eax
@@ -483,7 +580,8 @@ vid_lock_quiet:                 ; same, without marking the buffer as written
     test eax, eax
     jz .fail
     mov [rcx + VidCtx.surface], eax
-    mov dword [rcx + VidCtx.pitch], FB_PITCH
+    mov edx, [r_pitch]
+    mov [rcx + VidCtx.pitch], edx
     or dword [rcx + VidCtx.flags], VID_F_LOCKED | VID_F_WRITES
     xor eax, eax
     ret
@@ -498,10 +596,10 @@ vid_FreeSurface:                ; (ctx) = DisableWrites + ReleaseSurface
     xor eax, eax
     ret
 
-; Vid_FlipBuffers(ctx): present the back buffer. --shot=PATH saves it as BMP and
-; --frames=N exits (status 0) after N flips.
+; Vid_FlipBuffers(ctx): present the back buffer (r_present_size of it). --shot=PATH saves
+; that part as BMP and --frames=N exits (status 0) after N flips.
 vid_FlipBuffers:
-    HENTER
+    HENTER 16
     cmp qword [r_renderer], 0
     je .out
     cmp byte [r_fb_touched], 0
@@ -542,6 +640,25 @@ vid_FlipBuffers:
     mov rdi, [r_renderer]
     xor esi, esi
     call [r_SDL_SetRenderTarget]
+    call r_present_size
+    cmp eax, [r_pw]
+    jne .logical
+    cmp edx, [r_ph]
+    je .logical_ok
+.logical:                           ; window target: that size, letterboxed
+    mov [r_pw], eax
+    mov [r_ph], edx
+    mov rdi, [r_renderer]
+    mov esi, eax
+    mov ecx, SDL_LOGICAL_PRESENTATION_LETTERBOX
+    call [r_SDL_SetRenderLogicalPresentation]
+    lea rdi, [fmt_vid_present]
+    mov esi, [r_pw]
+    mov edx, [r_ph]
+    mov ecx, [r_frames]
+    xor eax, eax
+    call _printf
+.logical_ok:
     mov rdi, [r_renderer]
     xor esi, esi
     xor edx, edx
@@ -550,9 +667,15 @@ vid_FlipBuffers:
     call [r_SDL_SetRenderDrawColor]
     mov rdi, [r_renderer]
     call [r_SDL_RenderClear]
+    mov dword [rsp], 0              ; SDL_FRect src = {0, 0, pw, ph}
+    mov dword [rsp + 4], 0
+    cvtsi2ss xmm0, dword [r_pw]
+    movss [rsp + 8], xmm0
+    cvtsi2ss xmm0, dword [r_ph]
+    movss [rsp + 12], xmm0
     mov rdi, [r_renderer]
     mov rsi, [r_target]
-    xor edx, edx
+    mov rdx, rsp
     xor ecx, ecx
     call [r_SDL_RenderTexture]
     mov rdi, [r_renderer]
@@ -574,11 +697,17 @@ vid_FlipBuffers:
 .out:
     HRET
 
-; save the back buffer (current render target) to [r_shot_path]
+; save the presented part of the back buffer (current render target) to [r_shot_path]
 r_save_shot:
     push rbx
+    sub rsp, 16
+    call r_present_size
+    mov dword [rsp], 0              ; SDL_Rect {0, 0, w, h}
+    mov dword [rsp + 4], 0
+    mov [rsp + 8], eax
+    mov [rsp + 12], edx
     mov rdi, [r_renderer]
-    xor esi, esi
+    mov rsi, rsp
     call [r_SDL_RenderReadPixels]
     test rax, rax
     jz .fail
@@ -593,11 +722,13 @@ r_save_shot:
     mov edx, [r_frames]
     xor eax, eax
     call _printf
+    add rsp, 16
     pop rbx
     ret
 .fail:
     lea rdi, [s_readpixels]
     call r_sdl_error
+    add rsp, 16
     pop rbx
     ret
 
@@ -648,10 +779,10 @@ vid_ClearScreen:
     cmovl r10d, eax
     cmp r12d, 0
     cmovl r12d, eax
-    mov eax, FB_W
+    mov eax, [r_tw]
     cmp r11d, eax
     cmovg r11d, eax
-    mov eax, FB_H
+    mov eax, [r_th]
     cmp r13d, eax
     cmovg r13d, eax
     sub r11d, r10d                  ; width
@@ -659,7 +790,8 @@ vid_ClearScreen:
 .row:
     cmp r12d, r13d
     jge .out
-    imul edi, r12d, FB_PITCH
+    mov edi, r12d
+    imul edi, [r_pitch]
     add edi, [r_cpu_fb]
     lea edi, [rdi + r10*2]
     mov ecx, r11d
@@ -1825,8 +1957,10 @@ s_createrend:   db "SDL_CreateRenderer", 0
 s_readpixels:   db "SDL_RenderReadPixels", 0
 fmt_r_sdlerr:   db "  [vid] %s failed: %s", 10, 0
 fmt_vid_init:   db "  [vid] Vid_Init_SYS -> ctx 0x%x (1 device, mode 1 = 640x480x16 RGB565)", 10, 0
-fmt_vid_renderer: db "  [vid] SDL renderer '%s', back buffer %dx%d ARGB8888 target, letterboxed", 10, 0
-fmt_vid_setmode: db "  [vid] Vid_SetMode(mode %d, hwnd 0x%x) -> 640x480", 10, 0
+fmt_vid_renderer: db "  [vid] SDL renderer '%s', letterboxed into the window", 10, 0
+fmt_vid_buffers: db "  [vid] back buffer %dx%d ARGB8888 target + RGB565 CPU buffer", 10, 0
+fmt_vid_setmode: db "  [vid] Vid_SetMode(mode %d, hwnd 0x%x) -> game view %dx%d, back buffer %dx%d", 10, 0
+fmt_vid_present: db "  [vid] presenting %dx%d of the back buffer (flip %u)", 10, 0
 fmt_vid_flip:   db "  [vid] flip %u: %u quads, %u blits, %u texture uploads so far, %u textures registered", 10, 0
 fmt_vid_shot:   db "  [vid] back buffer saved to %s (frame %u)", 10, 0
 fmt_vid_exit:   db "  [vid] --frames: %u frames presented, exiting", 10, 0
@@ -1848,6 +1982,13 @@ sdl_lib:        resq 1
 r_renderer:     resq 1
 r_target:       resq 1
 r_fbtex:        resq 1
+r_tw:           resd 1          ; back buffer / CPU buffer size
+r_th:           resd 1
+r_pitch:        resd 1          ; CPU buffer pitch (r_tw * 2)
+r_gw:           resd 1          ; gameplay view size (window_width/height when windowed)
+r_gh:           resd 1
+r_pw:           resd 1          ; size the window target presents now (0 = not set yet)
+r_ph:           resd 1
 r_shot_path:    resq 1          ; --shot=PATH
 r_exit_frame:   resd 1          ; --frames=N
 r_frames:       resd 1

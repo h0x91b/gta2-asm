@@ -171,12 +171,13 @@ reg_val_set:
     pop rbx
     ret
 
-; reg_force_screen: windowed play (start_mode 0) lays out the game for
-; screen\window_width x window_height, but the renderer's back buffer is 640x480
-; (docs/renderer-sdl.md), so pin both to 640x480 whatever the .reg says; the SDL window
-; is then scaled up by the window shim (u32 WIN_SCALE). The install's 960x720 otherwise
-; centres the camera at (480, 360) and crops the right/bottom of the HUD.
-reg_force_screen:
+; reg_window_override: --window=WxH replaces screen\window_width/height for this run
+; (the install seeds 960x720). Windowed play (start_mode 0) sizes the window and lays the
+; game view out for that size, and the renderer's gameplay back buffer follows it
+; (docs/renderer-sdl.md, "Resolution"). No flag = the registry's values as seeded.
+reg_window_override:
+    cmp dword [reg_win_w], 0
+    je .out
     push rbx
     lea rdi, [s_reg_screen]
     call reg_key_find
@@ -186,23 +187,29 @@ reg_force_screen:
     call reg_key_add
 .have:
     mov ebx, eax
-    mov dword [reg_data], 640
+    mov eax, [reg_win_w]
+    mov [reg_data], eax
     mov edi, ebx
     lea rsi, [s_reg_ww]
     mov edx, 4
     lea rcx, [reg_data]
     mov r8d, 4
     call reg_val_set
-    mov dword [reg_data], 480
+    mov eax, [reg_win_h]
+    mov [reg_data], eax
     mov edi, ebx
     lea rsi, [s_reg_wh]
     mov edx, 4
     lea rcx, [reg_data]
     mov r8d, 4
     call reg_val_set
-    lea rdi, [msg_reg_screen]
-    call _puts
+    lea rdi, [fmt_reg_screen]
+    mov esi, [reg_win_w]
+    mov edx, [reg_win_h]
+    xor eax, eax
+    call _printf
     pop rbx
+.out:
     ret
 
 ; rax = reg_path(edi = HKEY, rsi = subkey or 0) -> full path in reg_pathbuf, or 0
@@ -503,13 +510,14 @@ setup_registry:
     mov ecx, [reg_nvals]
     xor eax, eax
     call _printf
-    call reg_force_screen
+    call reg_window_override
     jmp .out
 .no_file:
     lea rdi, [fmt_reg_none]
     lea rsi, [s_regfile]
     xor eax, eax
     call _printf
+    call reg_window_override
 .out:
     pop r15
     pop r14
@@ -740,7 +748,7 @@ s_regfile:   db "gta2_install.reg", 0
 s_reg_screen: db "HKEY_CURRENT_USER\Software\DMA Design Ltd\GTA2\screen", 0
 s_reg_ww:    db "window_width", 0
 s_reg_wh:    db "window_height", 0
-msg_reg_screen: db "registry: screen\window_width/height forced to 640x480 (renderer back buffer)", 0
+fmt_reg_screen: db "registry: screen\window_width/height = %dx%d (--window)", 10, 0
 s_mode_r:    db "r", 0
 s_dword:     db "dword:", 0
 s_hexc:      db "hex:", 0
@@ -755,6 +763,8 @@ fmt_reg_noval: db "  [w32] registry value not found: %s", 10, 0
 section .bss
 alignb 8
 reg_file_buf: resq 1
+reg_win_w:   resd 1              ; --window=WxH (0 = keep the registry's)
+reg_win_h:   resd 1
 reg_nkeys:   resd 1
 reg_nvals:   resd 1
 reg_end:     resq 1

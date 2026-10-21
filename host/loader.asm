@@ -850,6 +850,42 @@ _main:
     mov [keys_arg], rax
     jmp .arg
 .not_keys:
+    mov rdi, [rbx]                  ; --window=WxH: screen\window_width/height for this run
+    lea rsi, [arg_window]
+    mov edx, 9
+    call _strncmp
+    test eax, eax
+    jnz .not_window
+    mov rdi, [rbx]
+    add rdi, 9
+    lea rsi, [win_arg_end]
+    mov edx, 10
+    call _strtol
+    mov [reg_win_w], eax
+    mov rdi, [win_arg_end]
+    movzx ecx, byte [rdi]
+    or ecx, 0x20
+    cmp ecx, 'x'
+    jne .bad_window
+    inc rdi
+    xor esi, esi
+    mov edx, 10
+    call _strtol
+    mov [reg_win_h], eax
+    mov ecx, [reg_win_w]
+    cmp ecx, 320
+    jl .bad_window
+    cmp eax, 240
+    jl .bad_window
+    cmp ecx, 4096
+    jg .bad_window
+    cmp eax, 4096
+    jg .bad_window
+    jmp .arg
+.bad_window:
+    lea rdi, [msg_bad_window]
+    call fail
+.not_window:
     mov rdi, [rbx]                  ; --audio-dump=PATH: also write the mixed output as WAV
     lea rsi, [arg_audio_dump]
     mov edx, 13
@@ -1054,6 +1090,8 @@ arg_hold:    db "--hold", 0
 arg_frames:  db "--frames=", 0
 arg_shot:    db "--shot=", 0
 arg_keys:    db "--keys=", 0
+arg_window:  db "--window=", 0
+msg_bad_window: db "--window=WxH: expected e.g. --window=1280x720 (320x240 .. 4096x4096)", 0
 arg_audio_dump: db "--audio-dump=", 0
 s_wb:        db "wb", 0
 s_opt_trace_input: db "--trace-input", 0
@@ -1127,6 +1165,7 @@ file:        resq 1
 file_size:   resq 1
 nt:          resq 1
 exe_path:    resq 1
+win_arg_end: resq 1                 ; --window: strtol end pointer
 sa_handler:  resq 1                 ; struct sigaction (macOS): handler, mask, flags
 sa_mask:     resd 1
 sa_flags:    resd 1

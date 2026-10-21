@@ -26,9 +26,9 @@ renderer.
 
 | piece | what it is |
 |---|---|
-| back buffer | a 640×480 `ARGB8888` render-target texture. All drawing goes into it. |
-| present | `Vid_FlipBuffers`: render target → window, letterboxed by `SDL_SetRenderLogicalPresentation(640, 480, LETTERBOX)` on the window target, linear scaling, vsync on. The window stays the size the game asked for (960×720 from the registry's `window_width/height`). |
-| 2D surface | a 640×480 `RGB565` CPU buffer in low memory, handed out as `ctx->surface` by `Vid_GetSurface` (Bink writes there). If the game locked it since the last upload, it is uploaded to a streaming texture and drawn into the back buffer at `gbh_BeginScene` (under the 3D primitives) or at `Vid_FlipBuffers` (Bink-only frames). `Vid_ClearScreen` clears both. |
+| back buffer | an `ARGB8888` render-target texture of the game's windowed size, `window_width × window_height` (960×720 by default, never smaller than 640×480; see "Resolution"). All drawing goes into it. |
+| present | `Vid_FlipBuffers`: the top-left 640×480 of the render target in the frontend, all of it in gameplay → window, letterboxed by `SDL_SetRenderLogicalPresentation(w, h, LETTERBOX)` on the window target (re-set when the size changes), linear scaling, vsync on. The window is exactly the size the game asked for. |
+| 2D surface | an `RGB565` CPU buffer of the back buffer's size (pitch = width × 2) in low memory, handed out as `ctx->surface` by `Vid_GetSurface` (Bink writes there). If the game locked it since the last upload, it is uploaded to a streaming texture and drawn into the back buffer at `gbh_BeginScene` (under the 3D primitives) or at `Vid_FlipBuffers` (Bink-only frames). `Vid_ClearScreen` clears both. |
 | textures | up to 262 143 (`MAX_TEX`; `wil` registers 73 104, plus ~29 000 for the frontend, which are not freed). `gbh_RegisterTexture` allocates a real 0x20-byte `GbhTexture` in low memory (the game pokes `width/height/pixels`) plus a host cache entry (index in `GbhTexture.cache`). On draw, the 8-bit indices (pitch 256) are expanded through the palette into an `ARGB8888` SDL texture of exactly `w×h`, index 0 = alpha 0. The cache key is (pixels, width, height, palette, palette generation), and Lock/Unlock/AssignPalette mark it dirty, so retargeted textures rebuild. |
 | palettes | `gbh_RegisterPalette` copies the 256 colours (stride 64 dwords) into a host table as `0xFF000000 \| rgb`, and applies the original's in-place edits to the game's data (`pal[0] = 0`, other zeros → `0x10000`). Re-registering bumps the palette's generation. |
 | tiles | `gbh_DrawTile` (= `gbh_DrawTilePart`, d3ddll `0xe043f0`): unless `GBH_F_TILE_CUSTOM_UV`, UVs = 0.5…63.4999 of the 64×64 tile; rotate `0x20` (new[i] = old[i+3]), `0x40` (= both mirrors), `0x60` (new[i] = old[i+1]), FLIPX swaps the (u,v) of vertices 0↔1 / 2↔3, FLIPY 0↔3 / 1↔2; written back into the caller's vertices like the original; then the DrawQuad path. |
@@ -47,7 +47,7 @@ dmavideo (all 22 resolve):
 | export | status |
 |---|---|
 | `Vid_InitDLL`, `Vid_Init_SYS`, `Vid_CheckMode`, `Vid_FindDevice`, `Vid_SetDevice`, `Vid_FindMode`, `Vid_FindFirstMode`, `Vid_FindNextMode` | real. One device (id 1, can render windowed), one mode (id 1 = 640×480×16, RGB565). The VidCtx, device and mode lists live in low memory with the original layout. |
-| `Vid_SetMode` | first call creates renderer, back buffer, CPU buffer on the game's SDL window. Always 640×480, `fullscreen = (mode != -2)`; returns 0. Fullscreen requests stay windowed. |
+| `Vid_SetMode` | first call creates the renderer on the game's SDL window; back buffer + CPU buffer are (re)created whenever the wanted size changes: windowed (-2) = `window_width × window_height` (read from the game, `0x673578`/`0x6732e8`), any other mode = 640×480, at least 640×480. `fullscreen = (mode != -2)`; returns 0. Fullscreen requests stay windowed. The advertised mode list stays one 640×480 mode. |
 | `Vid_CloseScreen` | `mode_id = 0`; the renderer survives mode changes, so nothing has to be invalidated |
 | `Vid_GetSurface`/`GrabSurface`/`EnableWrites`, `Vid_FreeSurface`/`ReleaseSurface`/`DisableWrites` | real (CPU buffer, flags 1\|2) |
 | `Vid_FlipBuffers`, `Vid_ClearScreen` | real |
@@ -83,7 +83,8 @@ game never calls (renderer-api.md §2.2): `gbh_DrawQuadClipped`, `gbh_ConvertCol
 | flag | effect |
 |---|---|
 | `--frames=N` | exit (status 0) after N presented frames |
-| `--shot=PATH` | with `--frames`, save the back buffer of the last frame as BMP (`SDL_RenderReadPixels` + `SDL_SaveBMP`) |
+| `--shot=PATH` | with `--frames`, save the presented part of the last frame's back buffer as BMP (`SDL_RenderReadPixels` + `SDL_SaveBMP`): 640×480 in the frontend, the window size in gameplay |
+| `--window=WxH` | (`win32-shims.md`) override `screen\window_width/height` for the run: window size and gameplay resolution |
 
 Example: `host/build.sh --load --entry --frames=300 --shot=/tmp/menu.bmp`.
 
@@ -150,6 +151,40 @@ A screenshot shows the city from above, the player in the middle of the screen, 
 the district name banner (`AVALON`), the respect bars on the left and money, the
 multiplier and lives on the right.
 
+## Resolution (2026-10-21)
+
+Gameplay renders natively at the window size; the frontend stays 640×480.
+
+- **Where the size comes from.** Windowed play (`start_mode` 0, the install's choice):
+  `SetWindowedMode` `0x4cb730` resizes the window to `screen\window_width ×
+  window_height` (globals `0x673578` / `0x6732e8`) and calls `Vid_SetMode(ctx, hwnd, -2)`.
+  Every frame `BeginFrame2D` `0x4caec0` takes the view size from those two globals when
+  `ctx->mode_id == -2` (else from `ctx->width/height`), stores `w-1`/`h-1` at
+  `0x673584`/`0x673474` and passes them to `gbh_SetWindow`; gameplay centres the camera
+  and anchors the HUD on that size. So `Vid_SetMode` sizes the back buffer to the same two
+  globals (at least 640×480) — nothing is forced in the registry any more, and
+  `--window=WxH` overrides both values for one run.
+- **Frontend vs gameplay.** The frontend draws at fixed 640×480 coordinates into the
+  top-left of the same back buffer; a flip presents that 640×480 part, letterboxed into the
+  window. Gameplay is told apart by `ptrToGame` (`0x5EB4FC`, seuko-mod `memory.h`): set by
+  `InitGame` `0x461de0`, zeroed by `DeinitGame` `0x462060`. While it is set, the flip
+  presents the full `window_width × window_height`. The presented size is logged when it
+  changes (`[vid] presenting WxH of the back buffer (flip N)`).
+- **What a bigger window shows.** Measured on the frame-900 shots of the same run
+  (downscale each by k, centre-crop, mean absolute grey difference against the 640×480
+  shot, best k): 960×720 matches at k = 1.5 (diff 1.3/255), 1280×960 at k = 2.0 (1.2),
+  1280×720 at k = 2.0 against the centre 640×360 of the 640×480 view (1.9). So the game
+  scales the view with the window **width**: every 4:3 size shows exactly the same city,
+  just sharper (the HUD scales too), and a wider-than-4:3 window keeps the horizontal
+  extent and crops top and bottom (1280×720 shows 75 % of the 4:3 height). More pixels,
+  not more city.
+- **Checked**: `--window=1280x720 --keys=150:RETURN,250:RETURN,600:ESCAPE --frames=660`
+  draws the in-game quit prompt ("Is that it?") centred at 1280×720. The main menu at
+  the default size is unchanged (640×480 shot). Quitting play (`…,660:RETURN`) reloads
+  the frontend (`e.gxt`, `fstyle.sty`, the 25 TGAs) but the screen then stays on the last
+  game frame — `ptrToGame` is still set and no frontend blit is drawn. That is not this
+  change: master's 640×480 build gives a byte-identical frame-1000 shot. Open.
+
 ## Known gaps
 
 - **Input**: none yet (DirectInput reports nothing pressed), so the menu cannot be
@@ -157,11 +192,8 @@ multiplier and lives on the right.
 - **Version string** shows `V0.0`: `GetFileVersionInfoSizeA` reports no version
   resources (`win32-shims.md`). Reading `VS_VERSION_INFO` from the exe's `.rsrc` would
   fix it.
-- **Resolution** is fixed at 640×480 for the frontend and gameplay alike: the registry
-  shim forces `screen\window_width/height` to 640×480 (`win32-shims.md`, Registry) and
-  the SDL window shows it at 960×720. Native gameplay at the window size would need a
-  back buffer of that size during gameplay only (the frontend is hard-wired to 640×480)
-  and `Vid_SetMode` to honour it.
+- **Resolution**: only windowed sizes; the frontend stays 640×480 letterboxed (hard-wired
+  in the game). See "Resolution".
 - **Lighting** follows the decompiled original, but has not been compared against a
   Windows run of the same scene; the level looks dark and greenish-tinted (ambient 0.3).
 - **Depth/z**: none (back-to-front like the original).
