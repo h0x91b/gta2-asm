@@ -1,6 +1,9 @@
 address,kind,function,comment
 0x003f130d,plate,,"Ambient (recycled + protected-recycled) car budget, byte[7] in .text, indexed by Game.playerCount: 16,16,30,42,52,60,66. Read by TrafficSpawner_TrySpawnSide 0x4B34E6 and by the 11.44 patch code at 0x3F1314 reached from TrafficSpawner_TrySpawnForPlayer 0x4B4A86."
 0x003f1664,plate,Patch1144_LoadGXT_ClearFlagAndContinue,"MOV byte [0x676204],0 (clear g_Patch1144_LoadingLevel) ; JMP Gxt_LoadFromFile 0x4c257f. Tail of the 11.44 GXT patch; entered every time with the path already pushed."
+0x00401050,plate,unsure_Node3DSubPart_RelocatePointers,"If type==0 adds base delta to nonzero pointers at +0x10,+0x18; called per 32-byte entry from mesh relocator (Seq 45)"
+0x00401080,plate,unsure_Node3DMesh_RelocatePointers,"Adds delta to pointers of mesh header (+0xc, entries array, +0x10/+0x18), loops count entries calling SubPart relocator (Seq 45)"
+0x004010e0,plate,unsure_Node3D_RelocatePointers,"Recursive: adds delta to child/sibling/data pointers (+0x10..+0x24), per-mesh relocate, stores param at +0x3c; file-load fixup (Seq 45)"
 0x00401180,plate,Mat34f_Mul,"out = a * b for row-major 3x4 float affine matrices (implicit last row 0 0 0 1): out[r][c] = sum_k a[r][k]*b[k][c], out[r][3] += a[r][3]. Part of an unreferenced float 3D node library at 0x401000-0x402FFF (dead code: the whole call graph has no outside callers). Seq 42."
 0x004012c0,plate,unsure_Mat34f_StackPushMul,"Pushes onto a float matrix stack (top index 0x5D22D0, +12 floats per level, storage 0x599EC0): stack[top+1] = m * stack[top] via Mat34f_Mul. Dead code (see Mat34f_Mul). Seq 42."
 0x004012f0,plate,unsure_Mat34f_StackPop,Pops the float matrix stack: top index 0x5D22D0 -= 12. Dead code (see Mat34f_Mul). Seq 42.
@@ -28,19 +31,148 @@ address,kind,function,comment
 0x00402180,plate,unsure_Node3D_Dtor,"Destructor of the float 3D node: deletes children +0x78/+0x7C, the part array +0x64 (count +0x58) and frees +0x68. Dead code (see Mat34f_Mul). Seq 42."
 0x004021e0,plate,unsure_Node3D_ScalarDeletingDtor,"MSVC scalar deleting destructor of the float 3D node (calls unsure_Node3D_Dtor, frees if flags & 1). Dead code. Seq 42."
 0x00402200,plate,unsure_Node3D_UpdateHierarchy,"Was 'someMath'. Walks a float 3D node tree (siblings +0x7C, children +0x78): adds Euler deltas wrapped to 0..360 degrees, builds each local matrix, pushes it on the matrix stack, transforms vertices, recurses, pops. Only caller is itself: dead code (see Mat34f_Mul). Seq 42."
+0x004023e0,plate,unsure_Node3D_ProjectVerticesToScreen,"Projects float vertex list by matrix to screen via g_ViewCamera center and Fix16 scale, tracks min/max bounds; no xrefs (Seq 45)"
+0x004029a0,plate,File_Write,"Fastcall wrapper over fwrite(buf,size,count,FILE); mirror of fread at 0x402980 (Seq 45)"
+0x004029c0,plate,File_GetSize,Ftell/fseek END/ftell/fseek back with DisplayError File.cpp lines 0x38-0x3e; used by ReadWholeFile (Seq 45)
+0x00402cf0,plate,File_WriteWhole,"CopyScriptNameToBuffer, fopen ""wb"", write once, fclose, DisplayError File.cpp (Seq 45)"
+0x00402da0,plate,File_AppendWhole,"Same as File_WriteWhole but fopen ""ab""; only SaveGame calls it (Seq 45)"
+0x00402f00,plate,File_CloseGlobal,Fcloses g_File if g_FileIsOpen then clears flag; called from error() (Seq 45)
+0x00403130,plate,File_GetCharSkipBlanks,Getc loop skipping space/CR/tab; returns 0 on newline/EOF; caller Seq_ReadLabelLine (Seq 45)
+0x004035a0,plate,unsure_PedGroup_ResetDoorCursor,Sets DAT_0058f512=1; that byte is the seat/door cursor used in PedGroup enter-car update 0x405240 (Seq 45)
+0x004035b0,plate,PedGroup_Init,"Fastcall zeroes PedGroup fields (leader 0x2c,count 0x34, mode 0x38=2); called by PedGroupPool_Alloc (Seq 45)"
+0x004035e0,plate,PedGroup_ClearAllObjectives,PedSetObjective+Ped_SetTask NO_OBJ for leader and every member (Seq 45)
+0x00403650,plate,unsure_PedGroup_RemoveMembersInCarAndCompact,"Ped_OnDeath on members with currentCar, nulls slots, compacts member array; returns bool (Seq 45)"
 0x00403770,plate,Fix16_DefaultCtor,"Empty Fix16 constructor (returns this, value left uninitialised). Passed as the element ctor to vector_constructor_iterator for the trig tables."
 0x00403780,plate,Fix16_Neg,Seq33 slice1 (VERIFIED): Fix16 negate: *out = -*this (returns out).
+0x004037a0,plate,PedGroup_AllMembersOnFoot,"Returns 0 if any member's currentCar(+0x16c) nonzero, else 1 (Seq 45)"
 0x004037e0,plate,Fix16_IsLess,Seq33 slice1 (VERIFIED): returns *this < *p (signed).
 0x00403800,plate,Fix16_IsGreater,"Seq33 slice1 (VERIFIED): returns *this > *p (signed). Operand order: (this, p) => this > p."
 0x00403820,plate,Fix16_IsNotEqual,Seq33 slice1 (VERIFIED): returns *this != *p.
 0x00403840,plate,Fix16_Abs,"Seq33 slice1 (VERIFIED): Fix16 abs: *out = |*in| (stdcall(out, in))."
+0x00403870,plate,PedGroupPool_Init,"StartGame; calls 0x4035a0, then PedGroup_Init for 20 groups at 0x5D28C8 stride 0x44 (Seq 45)"
+0x004038e0,plate,PedGroup_SetActive,Sets byte +0x40=1; paired with PedGroupPool_Alloc (Seq 45)
+0x004038f0,plate,PedGroup_IsActive,Returns byte +0x40 used by pool alloc (Seq 45)
+0x00403900,plate,GameObject_GetCar,Returns +0x84 (GameObject.car per gta2_types.h); callers pass ped->gameObject (Seq 45)
+0x00403930,plate,Ped_SetGroup,Writes Ped+0x164 (group); called from PedGroup_SetLeader/SetMember (Seq 45)
+0x00403940,plate,Ped_SetGroupSlot,Writes byte Ped+0x23c groupSlot; PedGroup_SetLeader passes 99 (Seq 45)
+0x00403950,plate,Ped_SetEngaged,Flags |= 4 (PED_FLAG_ENGAGED) at +0x21c (Seq 45)
+0x00403960,plate,Ped_ClearEngaged,Flags &= ~4 (PED_FLAG_ENGAGED) (Seq 45)
+0x004039c0,plate,Ped_GetEnterCarAsPassenger,Returns Ped+0x248 enterCarAsPassenger; pair of Ped_SetEnterCarAsPassenger (Seq 45)
+0x004039d0,plate,Ped_GetCarEnterExitStage,Returns byte +0x226 (unsure_carEnterExitStage) (Seq 45)
+0x00403a20,plate,Ped_ClearField228,Zeroes byte Ped+0x228 (field82_0x228); caller Ped_ElvisHandling (Seq 45)
+0x00403a50,plate,Ped_SetGameObjectField3C,Writes gameObject(+0x168)+0x3c; caller Ped_ElvisHandling (Seq 45)
 0x00403a80,plate,Ped_GetObjective,Name from gta2_re (GTA2 10.5) Ped::get_objective_403A80: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00403a90,plate,Ped_GetTask,Returns Ped+0x25c task; Ped_GetObjective is +0x258 (Seq 45)
+0x00403ab0,plate,Ped_GetObjectiveTargetCar,Returns Ped+0x150 objectiveTargetCar (Seq 45)
+0x00403ad0,plate,Ped_GetObjectiveTargetPed,Returns Ped+0x148 objectiveTargetPed (Seq 45)
+0x00403af0,plate,Ped_GetTaskTargetPed,Returns Ped+0x14c taskTargetPed (setter Ped_SetTarget2Ped) (Seq 45)
+0x00403b10,plate,Ped_GetTaskTargetCar,Returns Ped+0x154 taskTargetCar (setter Ped_SetTargetCar) (Seq 45)
+0x00403b20,plate,Ped_GetTaskTimer,Returns short Ped+0x21a taskTimer (Seq 45)
+0x00403b30,plate,Ped_GetObjectiveTimer,Returns short Ped+0x218 objectiveTimer (Seq 45)
+0x00403b50,plate,Ped_SetCarEnterExitStage,Writes byte Ped+0x226; pair of getter 0x4039d0 (Seq 45)
+0x00403b70,plate,Ped_HasGameObject,Returns Ped+0x168 gameObject != 0 (Seq 45)
+0x00403b90,plate,Ped_IsEngaged,Returns (flags>>2)&1 = PED_FLAG_ENGAGED (Seq 45)
+0x00403bc0,plate,Car_IsBankVanOrSwatVan,Car+0x84 carModel is 4 (BANKVAN) or 0x34 (SWATVAN) (Seq 45)
+0x00403d10,plate,PedGroup_LeaderIsInCar,Ped_IsInCar(group+0x2c leader) (Seq 45)
+0x00403d50,plate,unsure_PedGroup_ReleaseAllMembers,"Ped_ClearGroup+Ped_OnDeath for leader and members, active=0; no xrefs (Seq 45)"
+0x00403da0,plate,PedGroup_DisbandToAmbient,"If active: members clear group/objectives, class ambient, flag 0x400 removal request, then PedGroup_Reset (Seq 45)"
+0x00404450,plate,PedGroup_FindMemberNotEngaged,"Scans members from last to first, returns first with Ped_IsEngaged false else 0 (Seq 45)"
+0x00404480,plate,PedGroup_LeaderIsEngaged,Ped_IsEngaged(group+0x2c leader) (Seq 45)
+0x00404490,plate,PedGroup_FindFarthestMember,"Max Chebyshev Fix16 distance of members to leader; returns ped, out distance (Seq 45)"
+0x004045d0,plate,unsure_PedGroup_MakeMembersFollowLeader,"If leader on foot: sets members task 9 and Ped_SetTarget2Ped leader/neighbour, clears bit 11 (Seq 45)"
+0x004046f0,plate,unsure_PedGroup_UpdateMemberNearLeader,"Member idx: if leader has gameObject and dist<DAT_005d304c sets task 9 follow, else resets task (Seq 45)"
+0x00404840,plate,PedGroup_AllMembersInCar,No members: leader in car; else all members Ped_GetState==10 (Seq 45)
+0x004048a0,plate,PedGroup_AllMembersInCarOrDead,All members have state 10 or 9 (Seq 45)
+0x00404900,plate,PedGroup_IsMemberFarFromLeader,Chebyshev Fix16 distance member idx to leader > DAT_005d2814 (Seq 45)
+0x004049f0,plate,unsure_PedGroup_IsLeaderNearTarget,Leader XY vs target(+0x50 sprite pos) Chebyshev dist not greater than DAT_005d2814 (Seq 45)
+0x00404ad0,plate,unsure_PedGroup_FindNearestAimingMember,Nearest member to idx within limit for which unsure_Ped_IsAimingWithTarget true; returns ped (Seq 45)
+0x00404ce0,plate,PedGroup_PromoteLeader,"Adds old leader as member, sets new leader slot 99, resets all member tasks; caller PedGroupSetLeader (Seq 45)"
+0x00404ef0,plate,PedGroup_ReactToAttacker,"Sets members/leader to kill attacker (KILL_CHAR_ON_FOOT, Ped_SetTarget2Ped); caller Ped_ReactToAttacker (Seq 45)"
+0x00405240,plate,PedGroup_UpdateEnterCar,"Leader state 3/10/5: sends members to enter car (ENTER_CAR task, door cursor 0x58f512); caller Ped_UpdateAI (Seq 45)"
+0x00405760,plate,unsure_PedGroup_UpdateMember,"Per-member AI: Ped_SetEngaged, follow/attack by task, uses 0x4045d0 and 0x404ad0; caller Ped_UpdateAI (Seq 45)"
+0x00405a40,plate,unsure_NetDlg_Dtor,Sets vtable PTR_0056e598 only; called by 0x406bc0 scalar-deleting dtor (Seq 45)
+0x00405a50,plate,NetDlg_SetHwnd,Stores HWND at this+0x20218; called from NetDlg_OnInitDialog (Seq 45)
+0x00405a60,plate,NetDlg_GetHwnd,"Returns this+0x20218, used as hDlg in SendDlgItemMessage/GetDlgItem (Seq 45)"
+0x00405aa0,plate,NetDlg_ShowPage,"ShowWindow(HIDE) 30 controls of current page, show 30 of new page (0x78 stride), stores prev/cur page (Seq 45)"
+0x00405b10,plate,NetDlg_GetPage,Returns this+0x2020c current page (Seq 45)
+0x00405b20,plate,NetDlg_ClearListControl,SendDlgItemMessage msg 0x1009 (LVM_DELETEALLITEMS) on hDlg; no direct callers (Seq 45)
+0x00405ec0,plate,NetDlg_AppendChatLine,"Formats ""name : text"" with Network_GetPlayerName, appends to edit 0x3fe/0x41b via EM_SETSEL/EM_REPLACESEL (Seq 45)"
+0x004061c0,plate,NetDlg_ShowPlayerName,"WideCharToMultiByte of name at +0x1fd78, SetDlgItemText id 0x3ec (Seq 45)"
+0x00406210,plate,NetDlg_IncPlayerCount,Increments dword this+0x1fd6c (count compared >1 to enable start button) (Seq 45)
+0x00406220,plate,NetDlg_GetPlayerCount,Returns this+0x1fd6c (Seq 45)
+0x00406230,plate,NetDlg_DecPlayerCount,Decrements this+0x1fd6c (Seq 45)
+0x00406240,plate,NetDlg_ResetPlayerCount,Zeroes this+0x1fd6c (Seq 45)
+0x00406250,plate,unsure_NetDlg_SetExitFlag,Writes this+0x1fd68; getter 0x406260 decides EndDialog in 0x406e40 (Seq 45)
+0x00406260,plate,unsure_NetDlg_GetExitFlag,Returns this+0x1fd68; nonzero makes 0x406e40 EndDialog(1) (Seq 45)
+0x00406270,plate,NetDlg_LoadPlayerNameFromRegistry,"Reads HKCU Software\DMA Design Ltd\GTA2\Network ""PlayerName"" into wchar +0x1fd78 (Seq 45)"
+0x00406320,plate,NetDlg_SetPlayerName,"Copies wstring to +0x1fd78 and writes ""PlayerName"" registry value (Seq 45)"
+0x004063c0,plate,NetDlg_SendChatFromEdit,"GetDlgItemText, converts to wide, sends via session 0x409d00, clears edit, echoes AppendChatLine (Seq 45)"
+0x00406450,plate,NetDlg_CopyMapInfo,Copies 0x48 dwords from this+0x1ff84 into out buffer (Seq 45)
+0x00406470,plate,NetDlg_LoadSettingsFromRegistry,Reg_Network_GetDwordOrInit map_index/game_time_limit/game_speed/game_type/police/f_limit|s_limit (Seq 45)
+0x0040653e,plate,unsure_NetDlg_CopyMapNameFragment,Mid-function tail inside 0x56dbe0: strcpy param into ESI+0x1ff84 (Seq 45)
+0x00406550,plate,NetDlg_GetSelectedMapStr0,Session+4 array entry stride 0x518 indexed by +0x20088; offset 0 (Seq 45)
+0x00406570,plate,NetDlg_GetSelectedMapStr1,"Same entry array, offset 0x104 (Seq 45)"
+0x00406590,plate,NetDlg_GetSelectedMapStr2,"Same entry array, offset 0x208 (Seq 45)"
+0x004065b0,plate,Network_ReportMmpFileOpenError,"Sprintf ""Unable to open file: %s in mmpfile: %s"" + MessageBox; caller Network_ReadMmpMapFiles (Seq 45)"
+0x00406660,plate,unsure_NetDlg_UpdateNextMapText,Calls 0x56dc04 with mapIndex+1 and *0x51 (like 0x406470); guarded by player count (Seq 45)
+0x0040667c,plate,unsure_NetDlg_EnableStartButtonsFragment,Mid-function tail inside 0x56dc04: EnableWindow ctrl 0x3fd/0x3fc by player count >1 (Seq 45)
+0x004066e0,plate,NetDlg_SetCheckBox403,SendDlgItemMessage id 0x403 BM_SETCHECK(0xF1) 1 or 0 (Seq 45)
+0x00406b80,plate,NetDlg_SetNumericText40e,"Sprintf ""%d"" into SetDlgItemText id 0x40e (Seq 45)"
+0x00406bc0,plate,unsure_NetDlg_ScalarDeletingDtor,"Calls 0x405a40 vtable reset, _free if flag&1 (Seq 45)"
+0x00406c92,plate,unsure_NetDlg_EnableControlFragment,"Mid-function tail in 0x56dec0: EnableWindow(GetDlgItem(hDlg,id),flag) (Seq 45)"
+0x00406e40,plate,unsure_NetDlg_OnJoinOrRefresh,"If exit flag EndDialog(1) and frees locale; else listbox 1000 get sel text, Network refresh 0x40c380, reselect (Seq 45)"
+0x00407070,plate,NetDlg_InitListColumns,"Adds ""Player Name""/""Ping"" columns to list controls 0x400/0x41a (LVM_INSERTCOLUMN), then combo init; called by NetDlg_OnInitDialog (Seq 45)"
+0x0040720d,plate,NetDlg_InitControls_Frag,Detached tail of NetDlg_InitListColumns: fills map list 0x402 (stride 0x518) and combo 0x40c with netui19/20/22 [conf: medium] (Seq 45)
+0x00407362,plate,NetDlg_UpdateSettingTexts_Frag,"Detached fragment calling NetDlg_Set{PlayersRequired,ScoreLimit,GameSpeed}Text on dialog state [conf: medium] (Seq 45)"
+0x004073d0,plate,NetDlg_SetSessionDesc,Copies 0x120-byte game-settings blob into dialog+0x1ff84 [conf: medium] (Seq 45)
+0x00407402,plate,NetDlg_FindMapByName_Frag,"Detached loop: wcscmp over map table stride 0x518, copies match to +0x1ff84, sets selected index +0x20088 [conf: medium] (Seq 45)"
+0x00407476,plate,NetDlg_UpdateGameSpeedText_Frag,"Detached fragment: netui10/11/12 text into control 0x41f, then Cops/GameType/TimeLimit texts [conf: medium] (Seq 45)"
+0x0040748d,plate,NetDlg_ShowMissingMapError_Frag,"sprintf ""### ERROR ### Do Not Have Map %s"", posts as chat text then refreshes texts (Seq 45)"
+0x004075c0,plate,NetDlg_SetSetting,"switch(1..7): map, score limit, game type, speed, police, time limit; saves to registry (Reg_Network_SetDword) and syncs (Seq 45)"
+0x00407605,plate,NetDlg_SelectMap_Frag,"Detached tail: copies map name, players-required text, Reg ""map_index"", pushes 0x120 settings blob [conf: medium] (Seq 45)"
+0x00407c90,plate,NetDlg_OnHScroll,WM_HSCROLL handler (0x114): trackbar 0x407 -> NetDlg_SetSetting(5=game speed) (Seq 45)
+0x00407d10,plate,NetDlg_Ctor,"Sets vtable 0x56e598, zeroes dialog state, GetTickCount; called by FUN_004d0ed0 init (Seq 45)"
+0x00407d8b,plate,NetDlg_Ctor_Frag,"Detached ctor tail: zero loop, FUN_00406270 + Network_ReadMmpMapFiles [conf: medium] (Seq 45)"
 0x004086a0,plate,NetDlg_CreateControls,"Creates the network-lobby dialog controls from a table at 0x58F584 (stride 0x74, 3x30 entries; key string at +0 e.g. ""netui01"" at 0x58F5F8, ""netui02"" 0x58F66C...; empty key = empty caption) via Gxt_FindTextW(g_NetDialogLocaleSettings,key) + WideCharToMultiByte(CP_ACP, 260-byte buffer): the lobby is a Win32 dialog, so its text goes through the ANSI codepage (unmappable chars become '?'). Also window title ""netui08"", item 0x404 ""netui14"", 0x40d ""netui21"". Keys netui01..netui22 exist in e.gxt. Verified (decompiler + memory reads)."
 0x00408840,plate,NetDlg_OnInitDialog,Net-lobby dialog init: creates a SECOND LocaleSettings (LocaleSettings_Ctor + LoadGXT -> g_NetDialogLocaleSettings 0x5D31D8) independent of g_LocaleSettings; it is deleted when the dialog ends (FUN_00407db0 / FUN_00406e40). So the lobby loads <lang>.gxt (or the .mmp GXTFile) again. Verified decompiler.
+0x00408920,plate,NetDlg_DialogProc,"DLGPROC: WM_INITDIALOG(0x110), WM_COMMAND(0x111), WM_TIMER(0x113), WM_HSCROLL(0x114) (Seq 45)"
+0x00408954,plate,NetDlg_CommandThunk,Splits wParam and forwards to NetDlg_OnCommand; callers are detached fragments [conf: medium] (Seq 45)
+0x004089c0,plate,NetDlg_Run,"Registers 8 network event handlers then DialogBoxParamA(resource 0x67, NetDlg_DialogProc) (Seq 45)"
+0x00408a90,plate,Network_AddConnectionEntry,"Appends 0x1c-byte entry (GUID, wide name copy, connection blob copy) to list +0x2c, max 8; called from Network_Connect [conf: medium] (Seq 45)"
+0x00408c40,plate,Network_ReleaseDirectPlay,"Release (vtbl+8) on COM ptrs +0x5e0 (IDirectPlay4) and +0x5dc, nulls them (Seq 45)"
+0x00408c80,plate,Network_CreateLobbyInterface,CoCreateInstance + DirectPlayLobbyCreateW + QueryInterface into +0x5dc/+0x5e0 (Seq 45)
+0x00408cf0,plate,Network_CopyConnectionNames,"Unused: duplicates wide names of connection entries into caller array, returns count [conf: medium] (Seq 45)"
+0x00408e80,plate,Network_AddNameString,Unused: appends wcsdup of string to list +0x30 (max 8) [conf: medium] (Seq 45)
+0x00409460,plate,Network_AddSessionDesc,"Copies DPSESSIONDESC2 (0x50) + wide name into session table at +0xc0 (max 16), count +0x5c0 [conf: medium] (Seq 45)"
+0x00409620,plate,Network_SetEventHandler5,Stores callback+ctx in slot 5 (+0x84); event 5 = session list updated (dispatched by Network_Update) (Seq 45)
+0x00409650,plate,Network_SendTo,IDirectPlay4::Send (vtbl+0x68) from local player to given dpid (Seq 45)
+0x00409680,plate,Network_PackMessage,"Wraps payload into header-framed message by type 1..9; DisplayError ""NetworkX.cpp"" [conf: medium] (Seq 45)"
+0x00409890,plate,Network_FreePlayerSlot,"_free two buffers of 0x2c player slot, zero it, decrement player count (Seq 45)"
+0x004099b0,plate,Network_SetEventHandler2,Stores callback+ctx in slot 2 (+0x60); event 2 = player added (Seq 45)
+0x004099d0,plate,Network_AddPlayerFromEvent,"Unused: calls Network_AddPlayerRecord on args, returns success [conf: medium] (Seq 45)"
+0x00409a30,plate,unsure_Network_SetGroupId,"stores this+0x754, passed as idGroup to DeletePlayerFromGroup (vtbl+0x1C); local dpid is +0x5D4 (Send idFrom) (Seq 45)
+earlier: Stores param at +0x754 (local player id) [conf: medium] (Seq 45)"
+0x00409a40,plate,Network_FreeAllPlayerSlots,"Loops Network_FreePlayerSlot, frees +0x150 buffer, zeroes block (Seq 45)"
+0x00409a90,plate,Network_FindPlayerIndexByDpid,Scans 6 slots stride 0x2c comparing +0x20; returns 0xEEEEEEEE if none (Seq 45)
+0x00409ac0,plate,Network_SetEventHandler3,Stores callback+ctx in slot 3 (+0x6c) (Seq 45)
+0x00409ae0,plate,Network_SetEventHandler1,Stores callback+ctx in slot 1 (+0x54) (Seq 45)
+0x00409b10,plate,Network_UpdatePlayerPing,"Running average ping per player, dispatches event 6 with name+ping (Seq 45)"
+0x00409b90,plate,Network_SetEventHandler6,Stores callback+ctx in slot 6 (+0x90); event 6 = ping update (Seq 45)
+0x00409bc0,plate,Network_DeletePlayerFromGroupByName,"IDirectPlay4 vtbl+0x1C = DeletePlayerFromGroup(idGroup=this+0x754, idPlayer) after wcscmp on player names (dplay.h vtable order; coordinator check) (Seq 45)
+earlier: wcscmp player names, then COM vtbl+0x1c (host removes player) [conf: medium] (Seq 45)"
 0x00409c40,plate,Network_GetLocalPlayerIndex,"Returns this->localPlayerIndex (+0x5D0): this machine's slot (0..5) in the network session player table (+0x764, 6 x 0x2C).
 Written by host/join (0x40A6EC, from AddPlayer 0x409360), on msg 7 when DPID matches ours (+0x5D4),
 decremented when a lower slot leaves (DPSYS_DELETEPLAYER 0x21, 0x40B5AE), zeroed on close (0x40BCFE).
 InitGame passes it to ConstructGame -> Game+0x24 and stores it in 0x662780. Confidence: high."
+0x00409c50,plate,Network_SeqDelta,Signed byte difference of two sequence counters (Seq 45)
+0x00409c80,plate,Network_DeletePlayerFromGroupByIndex,"IDirectPlay4 vtbl+0x1C = DeletePlayerFromGroup(this+0x754, player dpid), frees the player slot (coordinator check) (Seq 45)
+earlier: Frees slot and COM vtbl+0x1c on player's dpid; called from game frame code [conf: medium] (Seq 45)"
+0x00409ce0,plate,Network_ClearPendingPackets,Zeroes 0x30 pending-packet flags (stride 0x14 at +0x8f4) and count +0xcb4 (Seq 45)
+0x00409d00,plate,Network_SendChatMessage,IDirectPlay3::SendChatMessage (vtbl+0xa0) with 0xC-byte DPCHAT (Seq 45)
+0x00409d70,plate,Network_SetEventHandler7,Stores callback+ctx in slot 7 (+0x9c) (Seq 45)
+0x00409de0,plate,Network_SetEventHandler8,Stores callback+ctx in slot 8 (+0xa8); event 8 = session joined (Seq 45)
+0x00409e10,plate,Network_PublishSettings,Copies settings blob to +0x86c and calls COM vtbl+0x6c (SetGroupData) with it [conf: medium] (Seq 45)
+0x00409e90,plate,Network_SetEventHandler9,Stores callback+ctx in slot 9 (+0xb4); event 9 = game start (Seq 45)
 0x00409f70,plate,Network_SetExitGameCallback,"Registers the network 'exit game' handler: slot 4 of the event table at this+0x48 (12-byte entries {cb, ctx, tag});
 writes this+0x78=cb, +0x7C=ctx, +0x80=4. Fired by FUN_004098e0 (dispatch) as cb(ctx, *arg) from the DirectPlay
 message handler 0x40B520 with reason 0/1/2, which then sets this+0x8EC=1.
@@ -48,12 +180,38 @@ InitGame passes ExitGameCallback 0x461A50 and the new Game*. this = network sess
 0x00409f90,plate,Network_GetPlayerCount,"Returns number of occupied MP player slots (0..6): counts non-zero dwords at this+0x764 + i*0x2C, i=0..5.
 this = network session global 0x674268. Result is the Game player count (ConstructGame arg1 -> Game+0x23; SP passes 1).
 Pure, no side effects. Confidence: high (count), medium (object kind)."
+0x0040a0f0,plate,Network_QueuePendingPacket,Finds/inserts out-of-order packet in 0x30-entry table stride 0x14 [conf: medium] (Seq 45)
+0x0040a190,plate,Network_PopOldestPendingPacket,"Scans pending table for lowest seq via Network_SeqDelta, returns slot [conf: medium] (Seq 45)"
+0x0040a250,plate,Network_StoreLastSeqInfo,unsure: Writes per-player last seq/ids into globals 0x5d3370/0x5d3378 [conf: low] (Seq 45)
+0x0040a2a0,plate,Network_FreePendingPacketSlot,"Clears slot in-use flag, decrements count (Seq 45)"
+0x0040a2c0,plate,Network_Ctor,"Sets vtable 0x56e740, CreateEvent, allocs 0x1800/0x800 buffers, inits tables (Seq 45)"
+0x0040a3a0,plate,Network_Dtor,"Releases DirectPlay via vtbl 0x24/0x20/0x10, frees lists and buffers, CloseHandle (Seq 45)"
+0x0040a7f0,plate,Network_EncodePacket,Converts internal packet (types 1..4 / subtypes) into wire bytes 1..9; DisplayError NetworkX.cpp 0x8df [conf: medium] (Seq 45)
+0x0040aaa0,plate,Network_PromotePendingPlayer,"Matches pending slot by dpid, Network_AddPlayerRecord, frees slot [conf: medium] (Seq 45)"
+0x0040ab90,plate,Network_SendStartAndLockSession,"Sends start packet, sets session flags |=0x20 (DPSESSION_JOINDISABLED), SetSessionDesc, state=2 (Seq 45)"
+0x0040ac50,plate,Network_SendSyncPacket,Encodes type-2 packet and Sends broadcast; used by WaitForAllPlayersSync [conf: medium] (Seq 45)
+0x0040acc0,plate,Network_SendFrameDataToPlayer,"Encodes type-3 frame packet with seq, sends to one player; called from game loop [conf: medium] (Seq 45)"
+0x0040ad70,plate,Network_BroadcastFrameData,"Encodes type-3 packet with seq, broadcasts, increments local seq [conf: medium] (Seq 45)"
+0x0040af70,plate,Network_SendDisconnectNotice,Broadcasts 1-byte payload 2; called from Network_CloseSession [conf: medium] (Seq 45)
+0x0040b000,plate,Network_BroadcastCommand5,"unsure: Broadcasts 2-byte payload {1,param}; code 5 on wire [conf: low] (Seq 45)"
+0x0040b090,plate,Network_BroadcastCommand1F,unsure: Broadcasts payload byte 0x1f; used by WaitForAllPlayersSync [conf: low] (Seq 45)
+0x0040b120,plate,Network_ScalarDeletingDtor,"Calls Network_Dtor, frees this if flag&1 (Seq 45)"
+0x0040b140,plate,Network_InitDirectPlay,"DirectPlayCreate, QI to IDirectPlay4, enumerates connections into list +0x30; called by Network_Connect [conf: medium] (Seq 45)"
+0x0040b290,plate,Network_SelectConnectionAndEnumSessions,"Finds GUID in list, InitializeConnection (vtbl+0x98), EnumSessions (vtbl+0x34), state=1 [conf: medium] (Seq 45)"
+0x0040b380,plate,Network_SendPingRequest,Sends packet with timeGetTime stamp for RTT; called from Network_Update (Seq 45)
+0x0040b8f0,plate,Network_JoinSession,"Open session (vtbl+0x60), CreatePlayer, enum players, GetPlayerData, dispatches events 2 and 8 (Seq 45)"
+0x0040bec0,plate,Network_ReceiveMessage,IDirectPlay4::Receive (vtbl+0x64) loop; system messages go to Network_HandleSystemMessage (Seq 45)
+0x0040bf80,plate,Network_HandleReceivedPacket,Dispatches ping/pong (RTT -> Network_UpdatePlayerPing) and start-game (event 9) [conf: medium] (Seq 45)
+0x0040c120,plate,Network_ReceiveFrameData,"Waits up to 500ms for next in-order frame packet from player, uses pending table [conf: medium] (Seq 45)"
+0x0040c380,plate,Network_UpdateLobby,"Per-state poll: state1 EnumSessions refresh (event 5), state 3/4 pings and packet receive (Seq 45)"
 0x0040ce00,plate,Fix16_FromIntB,*self = value << 14. Byte-identical copy of Fix16_FromInt 0x401AF0 (unfolded inline copy).
 0x0040ce30,plate,Fix16_FromUChar,*self = (value & 0xFF) << 14.
 0x0040ce50,plate,Fix16_IsLessEqual,Seq33 slice1 (VERIFIED): returns *this <= *p.
 0x0040ce70,plate,Fix16_IsGreaterEqual,Seq33 slice1 (VERIFIED): returns *this >= *p.
+0x0040cf60,plate,Fix16Rect_ContainsPoint,Four Fix16 compares of two stack args against bounds at +0x78..+0x84 (Seq 45)
 0x0040e030,plate,RoadNetwork_FindRoute,"Seq27 traffic pass: A*-like junction graph search over RoadNetwork (RGEN). Start = junction behind the car on its h/v segment, goal = junction ahead of the goal tile; expands 4 links per junction, skipping visited, closed links (bit15 == 0, SWITCH_ROAD) and incompatible junction arrowKind. Stores the junction id path in the first free routes[slot] (slots 1..49, 0 terminated) and returns slot or 0xFFFF. Used only by drive orders (CarAI_SetRouteTarget); ambient traffic navigates by arrows and never routes."
 0x0040e100,plate,RoadNetwork_Ctor,"RoadNetwork ctor (0xCC68; name is a hypothesis). Road-junction graph for car AI: 545 x 16 B junction nodes at +8 (second 545x16 array at +0x861c), 50 per-car route slots of 256 u16 junction ids at +0x2218. Debug key 7 prints 'Junc: %d'."
+0x0040e490,plate,unsure_Ang16_QuantizeWalkDir,"unsure: Clamps *short into 0, 0x168 or 0x438 buckets; used by PedGameObject_StateWalk [conf: low] (Seq 45)"
 0x0040e4d0,plate,Ang16_GetQuadrant,"*self / 360 (signed, toward zero): 0..3 for a wrapped angle (90-degree sector)."
 0x0040e4f0,plate,Ang16_GetOctant,"*self / 180 (signed, toward zero; magic 0xB60B60B7 >> 7): 0..7 for a wrapped angle (45-degree sector). Single caller unsure_PedGameObject_SlideAlongWallPlayer."
 0x0040e510,plate,Fix16_FromDouble,*self = __ftol(value * 16384.0) (0x56E7D0): truncates toward zero. Used to build the sin/cos/tan tables and by Fix16_Sqrt.
@@ -78,7 +236,14 @@ Pure, no side effects. Confidence: high (count), medium (object kind)."
 0x0040ebb0,plate,Ang16_SignedDeltaDivFix16,"*out = (shortest signed delta from a to b) / *d, wrapped: d0 = wrap(*b - *a); d0 > 720 ? -((1440-d0) / *d) : d0 / *d. No callers (dead code; Ghidra body is 1 byte, decompiles fine)."
 0x0040ec20,plate,Ang16_AbsDeltaDivAng16,*out = |shortest delta between a and b| / *d as a Fix16 ratio (Ang16_DivAng16).
 0x0040ec80,plate,Ang16_IsWithinHalfTurnAhead,"return wrap(*b - *a) <= 720: b lies within half a turn ahead of a (the shortest turn from a to b is in the +angle direction, or exactly 180)."
+0x0040ecb0,plate,Fix16_SteerAngleToward,"Wraps delta to +-pi, ramps rate toward target with limits, WrapRadians; used by Car_UpdateSystems [conf: medium] (Seq 45)"
+0x0040ee60,plate,TrailerController_ClampAngleDelta,"Same wrap/clamp pattern, returns wrapped angle; sole caller TrailerController_UpdateAlignment [conf: medium] (Seq 45)"
+0x0040ef80,plate,TrailerController_IsAngleNearTarget,Checks angle within window of target also +-2pi; called by ClampAngleToLimits [conf: medium] (Seq 45)
+0x0040f0a0,plate,TrailerController_ClampAngleToLimits,Clamps angle to limit zones around constants 0x5d3910/0x5d4ff0; sole caller UpdateAlignment [conf: medium] (Seq 45)
 0x0040f390,plate,Fix16Table_InitSin,"Static ctor of g_Fix16SinTable 0x5D3938 (from 0x4EBCD0): table[i] = Fix16_FromDouble(sin(i * pi / 720)) for i = 0..1439, after vector_constructor_iterator(table, 4, 1440, Fix16_DefaultCtor)."
+0x0040f410,plate,TrailerController_GetOtherCar,Returns +0xc if arg equals +8 else +8 (Seq 45)
+0x0040f450,plate,TrailerController_CreatePhysics,Car_CreatePhysics on cab (+8) and trailer (+0xc) (Seq 45)
+0x0040f470,plate,TrailerController_FreePhysics,Car_FreePhysics on cab (+8) and trailer (+0xc) (Seq 45)
 0x0040f4b0,plate,Fix16_GetRaw,return *self (raw Q14). Only caller Fix16_ToAng16.
 0x0040f4c0,plate,Ang16_IsLessEqual,"return *a <= *b (signed int16, no wrap)."
 0x0040f4e0,plate,Ang16_IsGreaterEqual,"return *a >= *b (signed int16, no wrap)."
@@ -86,6 +251,7 @@ Pure, no side effects. Confidence: high (count), medium (object kind)."
 0x0040f520,plate,Ang16_Cos,"Seq33 slice1 (VERIFIED): *out = cos-table[(int16)angle] as Fix16 (Q14), table at DAT_005D6718."
 0x0040f540,plate,Fix16_ToAng16,"Seq33 slice1 (VERIFIED): Fix16 radians-ish -> Ang16: *out = Ang16_Assign(*in / 0x47). 0x47 = 71 Q14 units per Ang16 unit (=> 1440*71/16384 = 6.2402 rad per turn, ~0.7% short of 2*pi: the game's own approximation). Inverse Ang16_ToFix16. gta2_re 10.5: Ang16::Fix16_To_Ang16_40F540."
 0x0040f580,plate,Ang16_ToFix16,Seq33 slice1 (VERIFIED): Ang16 -> Fix16: *out = (int16)*in * 0x47 (71). So angVel is stored as Fix16 'angle units * 71 / 16384' per tick; Ang16 = Fix16/71. gta2_re 10.5: Ang16::Ang16_to_Fix16.
+0x0040f5b0,plate,Nop_ReturnThis,Returns its ecx argument; trivial ctor used by CarPhysics_Ctor/Init_S22_1 [conf: medium] (Seq 45)
 0x0040f5c0,plate,Vec2_Add,"Seq33 slice1 (VERIFIED): Vec2 add, thiscall: *out = *this + *b."
 0x0040f600,plate,Vec2_Sub,"Seq33 slice1 (VERIFIED): Vec2 sub, thiscall: *out = *this - *b (component-wise) via Fix16_Sub + Vec2_Set."
 0x0040f640,plate,Vec2_Neg,"*out = (-a.x, -a.y)."
@@ -93,29 +259,83 @@ Pure, no side effects. Confidence: high (count), medium (object kind)."
 0x0040f6b0,plate,Vec2_RotateByAng16,"Seq33 slice1 (VERIFIED): rotate Vec2 in place by an Ang16: s=Ang16_Sin(a), c=Ang16_Cos(a); x' = c*x + s*y ... (uses Fix16_Mul/Add, 0x40F500/0x40F520 table lookups; note sign convention: y' = c*y - s*x). gta2_re 10.5: Fix16_Point::RotateByAngle_40F6B0. Used for cm/cp offset and all body->world transforms."
 0x0040f760,plate,Vec2_NegAssign,"Seq33 slice1 (VERIFIED): Vec2 negate in place (x=-x, y=-y)."
 0x0040f790,plate,Fix16Vec2_GetAngle,"Seq33 slice2: angle (Ang16, 1440=turn) of a Fix16 Vec2 = atan2(y,x). gta2_re 10.5: Fix16_Point::atan2_40F790."
+0x0040f7b0,plate,Sprite_SetLayer,Setter this+0x28; called by Car_SetSpriteLayer (40 callers) [conf: medium] (Seq 45)
+0x0040f7c0,plate,CarPhysics_GetCenterPos,copies Vec2 CarPhysics+0x38 centerPos to out (offsets confirmed by Seq 43 from re/gta2_types.h) (Seq 45)
+0x0040f7e0,plate,CarPhysics_SetCenterPos,"writes Vec2 CarPhysics+0x38 centerPos (Seq 43 confirmed) (Seq 45)
+earlier: unsure: Writes 2 dwords to this+0x38; used by UpdateAlignment [conf: low] (Seq 45)"
+0x0040f800,plate,CarPhysics_GetZPos,"reads CarPhysics+0x6C zPos (Seq 43 confirmed) (Seq 45)
+earlier: unsure: Reads dword this+0x6c; used by UpdateAlignment [conf: low] (Seq 45)"
+0x0040f810,plate,CarPhysics_SetZPos,"writes CarPhysics+0x6C zPos (Seq 43 confirmed) (Seq 45)
+earlier: unsure: Writes dword this+0x6c [conf: low] (Seq 45)"
+0x0040f820,plate,CarPhysics_GetHeading,"reads short CarPhysics+0x58 heading (Seq 43 confirmed) (Seq 45)
+earlier: unsure: Reads short this+0x58 (angle); used by UpdateAlignment and cab-trailer search [conf: low] (Seq 45)"
+0x0040f830,plate,CarPhysics_SetHeading,"writes short CarPhysics+0x58 heading (Seq 43 confirmed) (Seq 45)
+earlier: unsure: Writes short this+0x58 [conf: low] (Seq 45)"
 0x0040f840,plate,CarPhysics_IsVelocityAlignedWithHeading,"Seq33 slice2: velocity direction within +-90deg of heading (moving forward). angle(linVel) - heading, normalised 0..1440, true if <= 90deg(360) or >= 270deg(1080); consts 0x5D8178/0x5D7F84 built by static init from 90 and 270 * 1deg. gta2_re 10.5: IsVelocityAlignedWithHeading_40F840 (name used in their EnforceGearSensitiveMaxSpeed). Callers: SetControls, LimitSpeed."
 0x0040f900,plate,TrailerController_UpdateAlignment,"Seq33 slice1 (VERIFIED-structure, details hypothesis): hitch constraint for cab(+8)/trailer(+0xC) physics: positions the trailer behind the cab from both headings, hitch offsets (DAT_005D7FDC/8070...), clamps the relative angle (limit by FUN_0040F0A0, relaxed when cab is player-driven artic), writes trailer heading and cm via CmFromCpViaModel. gta2_re 10.5: Trailer::UpdateTrailerAlignment_407CE0."
 0x0040fb20,plate,TrailerController_UpdatePhysics,"Seq33 slice1 (VERIFIED): physics step of a trailer rig: if cab or trailer has physics: FUN_0040F450 (ensure both), CarPhysics_Update(cab->physics) (trailer is moved inside it via UpdateTrailerFromTowingCar/StepIntegrate); if it returns true or cab+0x54 set -> Car_CheckDeath(cab) else FUN_0040F470 (release both physics). Called from TrailerController_Update."
+0x0040fb70,plate,TrailerController_ExplodeIfEitherWrecked,"If one of cab/trailer is wrecked, set other's hp 32000 and Car_Explode (Seq 45)"
+0x0040fd40,plate,TrailerController_ComputeHitchPosition,Vec2 rotate/add of hitch offsets by cab and trailer angles; sole caller CarManager_SpawnArticulated [conf: medium] (Seq 45)
+0x0040fe30,plate,CollisionHit_SetPosition,Stores 3 dwords at this+4..0xc; callers are collision-record fillers [conf: medium] (Seq 45)
+0x0040fe60,plate,unsure_List_PushFront,Unlinks node then makes it head (next at +0xc); used by Weapon_Release/Player_Dtor [conf: medium] (Seq 45)
+0x0040fe80,plate,unsure_Sprite_IsKind1or4or5,"unsure: Returns whether field +0x30 is 1, 4 or 5 [conf: low] (Seq 45)"
 0x0040fea0,plate,unsure_Position_GetOwnerSpriteIfPed,"Seq36 slice4 (V): this is a Position (0x3c collision/render body, the object gzf calls 'PedSprite'): +0x30 = body kind (2 car, 3 ped), +8 = owner back-pointer. Returns owner Sprite (whose +0x7c is the Ped) iff kind==3. Callers pass Collision_FindObstacle results (CollisionResult_IsHitPed, unsure_Ped_FindNearestObjectInRange: *(ret+0x7c))."
 0x0040feb0,plate,unsure_Sprite_GetCar,Seq33 slice4 HYPOTHESIS: sprite -> owning Car* (NULL if not a car sprite). Used by DispatchCollision / OnCollision (+0x58 = CarPhysics).
 0x0040fec0,plate,unsure_Sprite_GetObject,"Seq33 slice4 HYPOTHESIS: sprite -> map Object (non-car/non-ped), used as last fallback in DispatchCollision."
+0x0040fee0,plate,CollisionHit_SetKindObject,"Sets this+0=3, +0x20=param [conf: medium] (Seq 45)"
+0x0040fef0,plate,Object_GetModel,Returns field +0x18; caller Script_Op_CHECK_OBJ_MODEL [conf: medium] (Seq 45)
+0x0040ff00,plate,unsure_GetByte_Ptr8_Plus99,unsure: Returns byte at (*(this+8))+99 [conf: low] (Seq 45)
+0x0040ff10,plate,CollisionHit_SetField24,unsure: Writes this+0x24 [conf: low] (Seq 45)
+0x0040ff20,plate,CollisionHit_FillFromGlobals,Sets kind 2/3/4/5 from g_CollisionKind/g_CollisionHitSprite [conf: medium] (Seq 45)
+0x00410010,plate,SoundEvent_InitFromPedHit,"SoundEvent (this) init from the globals g_CollisionKind / g_CollisionHitSprite when the source is a ped (sibling of FUN_0040ff20 for cars, SoundEvent_InitFromObjectHit for objects). kind 1/2 -> type 8 + block surface (+0x20); kind 3: car -> type 4 (+0x10 car), ped -> 6, object -> 7 (or 8 if objType 0xa6). Event types: 1..12, see SoundEventQueue_AddHit."
+0x00410210,plate,SoundEventQueue_AddHit,"SoundEventQueue (this) append of a collision/impact event for sprite param_1: classifies the sprite (car -> FUN_0040ff20, ped -> SoundEvent_InitFromPedHit, else object -> SoundEvent_InitFromObjectHit), stores pos from sprite+0x14..0x1c and volume at event+0x24, bumps count (+0xc84). 40-byte events at queue+4+i*0x28 (max 80). Skipped when g_unsure_skipAudio."
 0x004104b0,plate,SoundEventQueue_Ctor,"SoundEventQueue: 0x50 x 0x28-byte audio event slots + count at +0xC84, reset every GameTick. Pushed by collision/movement code (0x4102a0, 0x410370, 0x410210), gated on skip_audio; registers as sound client type 6. Name is a hypothesis (impact sound events)."
 0x00410560,plate,SoundManager_InitOnce_Thunk,"ConstructGame tail (skip_audio == 0): ECX = g_SoundManager, jumps to SoundManager_InitOnce (0x4B2F20). Was named NoSkipAudio."
 0x00410680,plate,Sound_Is3DSoundActive,"Returns true if 3D (DirectSound3D/MSS) sound is active: sound-manager object 0x5DCBC8 enabled (byte+0) && +0x1D.
 Tail chunk at 0x4166D0; incoming ECX ignored (thunk loads ECX=0x5DCBC8).
 Callers write the result back to registry do_3d_sound right after RelatedToAudio(0x410670) requested it,
 so an unsupported 3D setting is reset. Confidence: high."
+0x004106a0,plate,SoundClientPool_InitFreeList,"SoundClientPool init: 1000 nodes x 16 bytes, singly linked free list (node[+0xc] = next, pool[0] = head). Same pool as g @0x5D85A0 used by returnPtrToNewWeapon(pool, owner, type). SoundClient node = {int type +0, byte inactive +4, voice/channel +8 (ff1 result), owner/next +0xc}."
 0x00410ba0,plate,Fix16_ToFloatB,"(float)*self / 16384 (FILD + FMUL double 0x56E980), result in ST0. Copy of Fix16_ToFloat used by debug displays and Fix16_Sqrt."
 0x00410c10,plate,Fix16_Sqrt,"*out = Fix16_FromDouble(fsqrt(Fix16_ToFloatB(v))): x87 square root, truncated. Used by Fix16Vec2_GetLength."
+0x00411330,plate,SoundMgr_UpdateVocalClient,"Type 10 SoundClient (S6+0x5450 relToAudio, made by SoundMgr_CreateVocalClient): maps pending VOCAL id S6+0x5464 (1..0x3d, enum VOCAL) to a stream track and plays it via MssAudio_Stream_OpenTrack(dev,1,track,1)+SetVolume; ids 0x1e/0x1f pick from bank by S6+0x1454 %13 + 0x55; clears S6+0x5464. Caller FUN_004163a0 case 10."
+0x004116b0,plate,SoundMgr_IsVoiceInRange,"SoundMgr (this=S6): true if voice distance^2 (this+0x28, from SoundMgr_GetDistSqToListener) < arg (Fix16 max dist^2). Lazily computes sqrt into +0x58 and sets flag +0x2c. Called as first gate by every CarSound_Add* / client updater."
+0x004116f0,plate,SoundMgr_ComputeVoiceVolume,"SoundMgr: (volume, maxDist Fix16, muffled) -> FUN_00416da0 attenuation by distance; stores final byte volume at S6+0x54 (halved when param_3 != 0, e.g. indoor/under-roof) and returns volume != 0. Gate before submitting a voice via FUN_004171a0."
 0x004118c0,plate,Car_IsEngineOn,Seq33 slice2 (confirmed): Car.engineState(+0x9C)==3 (ENGINE_ON). gta2_re 10.5: field_9C_engine_status == on_3.
 0x00411940,plate,Car_GetCarInfoIdx,Name from gta2_re (GTA2 10.5) Car_BC::GetCarInfoIdx_411940: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00411a50,plate,SoundMgr_UpdateMusicClient,"Type 2 SoundClient (music/jingle): owner(+0xc) = {int track 1..9, char flag}. Re-opens MssAudio_MusicStream when the current one IsDone (mode by S6+3 / flag), volume = S6+0x25*6/10; track n starts two looping sample voices (bank 2n-2, 2n-1) at S6+0x44. Caller FUN_004163a0 after the type switch. Hypothesis on which music this is (radio vs level jingle): radio is type 3 (SoundManager_UpdateRadio)."
+0x004121f0,plate,SoundMgr_CalcImpactVolume,Volume (0..127-ish) for one SoundEvent (param_1): by event type 2..5 normalises event+0x24 (impact magnitude) against per-type max constants (DAT_005dc8f0/dca70/dc9d8/dc800) times DAT_005dcad8 and rounds (Fix16_RoundToInt). Type 3 with objType 0xc0/0xfe/0x109 returns fixed 0x25. Default: pseudo-random 5..14. Caller FUN_00415f90 (type 6 client = SoundEventQueue).
+0x00412eb0,plate,unsure_CarSound_AddBombTick,"Car has OBJECT_TYPE_CAR_BOMB attachment (Car_HasBomb) -> repeating tick voice, layer 0xf, vol 0x28. Hypothesis: bomb timer beep."
+0x00412fe0,plate,CarSound_AddShopReaction,"One-shot shop/respray reaction: Car_TakeShopReaction (Car+0xb4, read-and-clear): 1->sample 0x43, 2/3->0x42, 4->0x41, 5->0x3e, 6->0x3f, 7->0x40; layer 3, one-shot flag S6+0x48=1."
+0x00413160,plate,CarSound_AddEngine,"Per-car engine sound: Car_IsEngineOn, speed/Car_GetPhysicsSpeed vs g_CurCarEngineData+0x28 (max speed) -> pitch/volume byte; voice layer S6+0x34=0 (engine), sample S6+0x44=1, ref dist 0xc. Called from FUN_00415d20 (car sound dispatcher). Submits via FUN_004171a0."
+0x004139a0,plate,CarSound_AddAlarm,"Car alarm: Car.alarmTimer (+0x8e) != 0 -> layer 6, sample ref dist 0x19, vol 0x32. Called from FUN_00415d20."
+0x00413bd0,plate,CarSound_AddDamagedEngine,"Damaged-engine noise: engine on and Car.damage (short +0x74) > 16000 -> layer 1, volume = (damage-16000)*60/16000, ref dist 0xe."
+0x004143b0,plate,CarSound_AddDoors,"Door sounds: for each door (FUN_0041f880 count) of the car: CarDoor_IsOpeningStart -> layer 9 (open), CarDoor_IsClosingAtFrame1 -> layer 0xa (close); sample from unsure_CarSound_PickDoorSample by car model; at most one of each per call."
+0x00414780,plate,CarSound_AddSiren,"Siren sound: active when Car.engineState == 4 (REL_TO_CAR_SIREN, Car_IsEngineStateSiren); layer 0xc, sample 1 or 2 chosen by carInfoIdx parity (two siren types). Called from FUN_00415d20."
 0x00414f60,plate,Car_HasFlag100,"Seq33 slice5: Car_HasFlags(Car+0x78, 0x100). In Car_OnDamage gates default (bullet) damage and 0x109 -> likely bullet-proof. Pair Car_HasFlag200 (gates types 10/0x80/0x8a, likely explosion/fire-proof), Car_HasFlag400 (gates type 0xc2)."
 0x00414f70,plate,Car_HasFlag2000,"Seq33 slice1 (VERIFIED): Car_HasFlags(car, 0x2000). Pair of Car_ClearFlag2000 (0x49EFD0). Flag 0x2000 = 'needs overlap check against other sprites' (hypothesis for meaning; set elsewhere). Used by CarPhysics_CheckPendingCollision, UpdateGroundZ, Car_Update."
+0x00415df0,plate,SoundMgr_UpdateCarSource,"Car sound source dispatcher: stores Car_HasPlayerDriver in source+4, then by Car_GetCarInfoIdx: 0x36->Model36 variant, 0x3c->Model3C, 6/0x3b/0x3d->engine only (thunk_FUN_004143b0), others -> Default (engine, siren, horn, skid, ...)."
+0x00415f90,plate,SoundMgr_UpdateEventQueueSource,"Kind-6 source: slot+0xc = SoundEventQueue (events 0x28 each, count at +0xc84). Resolves each event to a sample (SoundMgr_ResolveEventSample), picks the audible one with best score and queues it."
+0x004162c0,plate,SoundMgr_UpdateSpriteSource,"Kind-1 source (slot+0xc = Sprite): fills pending request pos (S6+0x38..0x40) + zone, then ped -> SoundMgr_UpdatePedSource, car -> SoundMgr_UpdateCarSource, object -> SoundMgr_UpdateObjectSource (via unsure_Position_GetOwnerSpriteIfPed / unsure_Sprite_GetCar / unsure_Sprite_GetObject)."
+0x004163a0,plate,SoundMgr_UpdateSource,"Per-source dispatcher: this=S6 (SoundManager), param = source slot idx. Source kind (*slot ptr): 1=sprite(ped/car/obj) 2=music 3=radio 6=event queue 7=weapon 8/9/10/0xb=misc. Slot table at S6+0x147c (stride 0xc)."
+0x00417030,plate,SoundMgr_UpdateListenerAndSources,"Sets listener pos (S6+0x1468..0x1470, rot +0x1474) from the local player's ped/car (slot S6+0x1478), then calls SoundMgr_UpdateSource for every active slot (list S6+0x444c, count +0x543c)."
+0x004171a0,plate,SoundMgr_QueueRequest,"Commits the pending request record (S6+0x30, 0x68 bytes) to the per-frame request queue (double buffer S6+0x98, 16 entries x 0x68 at S6+0x9c). Priority key = (0x7f-vol)*S6[0x4c]; when full replaces the worst entry if better. 39 callers."
+0x00417410,plate,SoundMgr_ApplyRequestsToVoices,"Maps this frame's sorted requests onto the Miles voices (S6+0xdc0, 0x68 each): matches existing voice by (emitter slot, emitter id), updates rate/volume/pan or 3D pos+distances (MssAudio_Sample[3D]_*), ends unmatched voices, then starts new requests on free voices."
+0x00417ea0,plate,SoundMgr_UpdateFrame,"One sound frame (skipped if S6+2==0): flip request buffer S6+0x98, reset sort index, UpdateListenerAndSources, RequeueRepeatingRequests, Apply3DDistanceFade, ApplyRequestsToVoices, then age slot counters (S6[slot*0xc+0x147d] up to 10)."
+0x00417ef0,plate,SoundMgr_Ctor,"S6 ctor: 32 requests (+0x9c) + 16 voices (+0xdc0) via vector_constructor_iterator(0x68), vocal slots 5x0x1c at +0x5468, listener zero, slot table (1020 x 0xc at +0x147c) cleared, defaults: sample rate 0x5622 at +0x14, volumes +0x24/+0x25 = 0x7f."
+0x00418050,plate,SoundMgr_Update,"Public per-frame entry: caches IsGamePaused into S6+1, pause music stream, every 5th frame sets S6+0x544c=1 (slow tick), then SoundMgr_UpdateFrame."
+0x004181e0,plate,SoundMgr_UpdateAmbientObjectSource,"Map ambient emitters: switch on SoundObj_GetAmbientType (byte +0x26 of object info, cases 3..0x33): sample id, radius, volume; random per-type cooldown counters at DAT_005e24xx."
+0x0041b0d0,plate,SoundMgr_UpdatePedSpeech,"Ped speech: event from Ped_ConsumePendingSpeechEvent (cases 1..0x1c), sample ranges 0xd2..0x13x chosen by random S6+0x1454; cooldown via DAT_005e2b9x; Elvis occupations get 0x12f..; cops/tank drivers use alt set."
+0x0041bf90,plate,PoliceRadio_QueuePhrase,"Police radio phrase queue: ring buffer of 15 ids at S6+0x552c, read idx +0x5528, write idx +0x5529; id clamped to 0x45..0x88 (ExtraSample bank entries)."
+0x0041c000,plate,PoliceRadio_PumpQueue,Pops the next phrase from the police radio ring buffer and plays it as MssAudio_ExtraSample_PlayEntry once the previous one finished (flag S6+0x5520).
+0x0041c150,plate,PoliceRadio_FindDistrictAtPos,"Looks up the map zone at (x,y) (type 3, name 'm'+2 digits) and returns the district phrase index (0..14); *out=zone ptr or 0."
 0x0041d3f0,plate,Gci_NextToken,"Seq33 slice3 VERIFIED (gta2_re 10.5: sub_430b10): tokenizer into EDI buffer: skips {...} comments (error -4 if unterminated), separators ' ' \t \n \r ( ), token max 254 chars (-5). Returns 0 token read, 1 EOF."
 0x0041d580,plate,Gci_StrToFix16,Seq33 slice3 VERIFIED (gta2_re 10.5: FloatStrToFix16_431000): decimal string -> Fix16 scanning right to left: digit*10^k*0x4000 accumulated; at '.' the accumulated fraction raw is DIVIDED (truncating) by 10^k. e.g. 0.145 -> 2375/16384 (=0.14496). Error -11 on a second '.' or non-digit. Negation applied by the caller.
 0x0041d620,plate,Gci_ParseToken,"Seq33 slice3 VERIFIED (gta2_re 10.5: sub_430C70). Token syntax [-][b|w|l|f][h][-]digits: b=byte(default, 0..255, negative >=-127), w=word, l=long, f=Fix16 decimal 'f16.500'; h=hex (uppercase). Written via Gci_PushData. NYC.GCI uses b-default for 4 bytes then 17 f-values = 72 B per car."
 0x0041d800,plate,Gci_ParseText,"Seq33 slice3 VERIFIED (gta2_re 10.5: CarInfo_808::parse_gci_file_430A30; 'binmake' text->binary compiler). Loop: Gci_NextToken, Gci_ParseToken until EOF; out total bytes in *param_5; returns NULL or Gci_FormatError text. Globals: input ptr 0x5E36A0, line 0x5E3698, out buffer 0x5E3688, out size 0x5E3694/limit 0x5E369C."
 0x0041dc54,eol,GiveMoney,pointer to money field
+0x0041df70,plate,Camera_StorePrevPos,Camera.cameraPos2(0x88) := cameraPos(0x98). Only caller Camera_Tick. [Seq43]
+0x0041e010,plate,Camera_ResetSmoothing,"Camera: cameraPos(0x98) := cameraPosTarget2(0x0), cameraVelocity(0xac..) := 0. Called by Player_Watch*/TakeControlOfCar/OnWasted/OnBusted/OnLevelStart/WARP_FROM_CAR_TO_POINT (teleport => no smoothing lag). [Seq43]"
 0x0041e0d0,plate,Fix16_MulAssign,Seq33 slice3 VERIFIED (asm): *this = (*this * *arg) >> 14 (IMUL + 64-bit arithmetic shift 14). In-place Fix16 multiply; used by Fix16Vec2_MulAssign.
 0x0041e0f0,plate,Ang16_IsLess,Seq33 slice1 (VERIFIED): returns *this < *p for Ang16 (int16).
 0x0041e110,plate,Ang16_IsRightAngle,"return *self is 0, 360, 720 or 1080 (0/90/180/270 degrees). Called through thunk 0x41E3C0."
@@ -127,31 +347,51 @@ so an unsupported 3D setting is reset. Confidence: high."
 0x0041e260,plate,Fix16Vec2_GetLength,"Seq33 slice2: length of a Fix16 Vec2 (|x| if y==0, |y| if x==0, else sqrt(x^2+y^2)). Used for speed = |linVel|. gta2_re 10.5: Fix16_Point::GetLength_41E260 (their name carries this address)."
 0x0041e2f0,plate,unsure_Box3_Overlaps,"thiscall(this, other) ret 4: returns true when the three Fix16 [min,max] pairs at +0x00/+0x04, +0x08/+0x0C, +0x10/+0x14 of both objects overlap (Fix16_RangesOverlap per axis): an axis-aligned 3D box test. Callers: Sprite_CollisionCheck, unsure_Collision_CheckRowForBlocker, 0x41F180. Seq 42 (struct owner: collision, Seq 37)."
 0x0041e3c0,plate,thunk_Ang16_IsRightAngle,JMP Ang16_IsRightAngle 0x41E110.
+0x0041e3d0,plate,Camera_SetTarget,"Camera: target x,y = p1,p2; target z = p3 + targetElevation(0x40); target zoom/4th = p4. Callers: Camera_Ctor, Camera_FollowCar, Camera_FollowPed. [Seq43]"
 0x0041e460,plate,Car_IsTruckCabWithTrailer,Seq33 slice3 VERIFIED: car->trailerController(+0x64)!=0 && trailerController->cab(+8)==car. gta2_re 10.5 inline in GetTrailerAwareTurnRatio_55A100.
+0x0041e480,plate,Camera_IsTrackingSprite,"True if the sprite's car is Camera.followCar(0x38) or the ped(0x34)'s current car, or the sprite is the camera ped's car-owner. Only caller FUN_0045a7a0. [Seq43]"
+0x0041e710,plate,Camera_IsWorldPointOnScreen,"WorldPointToScreen then 0<=x<640 && 0<=y<480 (Fix16_FromIntB 0x280/0x1e0). Callers Hud_DrawPlayerNames, Hud_ArrowTarget_UpdatePosition. [Seq43]"
+0x0041eb00,plate,unsure_Camera_ApplyShake,"HYPOTHESIS: damped camera shake: adds Camera+0x30 (Fix16, NOT a bitmask) to cameraPos x/y/z (0x98/0x9c/0xa0, z>=0), then +0x30 = -(+0x30)*DAT_005e4008 (decay, sign flip). Called from Camera_Tick when +0x30 != 0; +0x30 set by unsure_Camera_SetShake. [Seq43]"
+0x0041eb70,plate,Camera_SetViewSize,"Camera: screenPxWidth(0x68)=w, Height(0x6c)=h, CenterX(0x70)=w/2, CenterY(0x74)=h/2, 0x60/0x64 = Fix16(-1), uiScale(0xa8)=w/640. [Seq43]"
+0x0041f2f0,plate,Camera_Tick,"Per-frame camera smoothing. followState(0x3c)==1: spring-smooth cameraPos(0x98..) toward cameraPosTarget2 via FUN_00472670/4727e0, velocity at 0xac; ==2: snap. Then shake (0x30 != 0 -> unsure_Camera_ApplyShake), unsure_Camera_UpdateBoundaries, and cameraPosTarget2 := cameraPosTarget. Only caller side: camera update loop. [Seq43]"
+0x0041f680,plate,CarDoor_RequestOpen,"CarDoor open request: state(+4) 1/2 (opening/open) -> refresh timer byte +0xc=0x32; state 3..6 (closing/closed) -> byte+1=4, state=2 (open). Counterpart of CarDoor_RequestClose (1..2 -> 5). Called only via Car_OpenAllDoors. [Seq43]"
+0x0041f6e0,plate,Car_IsPoliceModel,"Car+0x84 model in {COPCAR(12), SWATVAN(52), EDSELFBI(84)}. Used by CarAI drive orders, PlayerScore_OnCarDestroyed, Ped_UpdateCarThief. [Seq43]"
 0x0041f700,plate,GetCarModelName,"car name = Gxt_FindTextW(sprintf(""car%d"", car->carModel)) (the extra %c args are NULs, unused). e.gxt has car0..car86 except car15/car20/car43 (those models would show L"" "" = blank). Max 5-char key ""car86"". Verified decompiler + e.gxt key list."
 0x0041f730,plate,Car_GetAntiStrength,"Seq33 slice3 VERIFIED: *out = engineData[car+0x84 model].anti_strength (+0x2C). Callers Car_AddDamage, Car_TriggerExplosion, Car_TryDamageArea => used as the damage resistance divisor (damage slice 5 to confirm the formula)."
 0x0041f770,plate,Car_GetValueTimes1000,"Seq33 slice3 VERIFIED: engineData.value (+2, byte) *1000, plus the trailer car's value when towing. No static callers (dead or vtable). value = car price/score weight."
+0x0041f880,plate,Car_GetDoorCount,"Returns CarInfo_GetDoorInfo(model)[0] = number of doors (loop bound in Car_OpenAllDoors/CloseAllDoors). Callers incl. Ped_FindFreeCarDoor, TransportActor_SpawnLeavingPassengers. [Seq43]"
+0x0041f8a0,plate,Car_OpenAllDoors,"for i < doorCount: CarDoor_RequestOpen(Car_GetDoor(car,i)). Callers TransportActor_OpenDoors, PublicTransportManager_UpdateBus. [Seq43]"
+0x0041f8f0,plate,Car_CloseAllDoors,"for i < doorCount: CarDoor_RequestClose(Car_GetDoor(car,i)). Callers TransportActor_CloseDoors, PublicTransportManager_UpdateBus. [Seq43]"
 0x0041f940,plate,unsure_Car_IsOnScreenForAnyPlayer,"Seq33 slice5 (hypothesis): game->FUN_0045c420(sprite, DAT_005e4cb8) = car on screen for any player; gates skid emission and offscreen tick. gta2_re 10.5: IsOnScreenForAnyPlayer_43B730."
 0x0041f980,plate,Fix16_FromIntC,*self = value << 14. Byte-identical copy of Fix16_FromInt 0x401AF0 (unfolded inline copy).
 0x0041f990,plate,Fix16_FromUShort,*self = (value & 0xFFFF) << 14.
 0x0041f9e0,plate,Fix16_ToIntD,*self >> 14. Byte-identical copy of Fix16_ToInt 0x401B00.
 0x0041f9f0,plate,Car_RequestFireTruckAndSpawnFlames,"Called by Car_BecomeWreck (0x427bc2). Requests a fire truck for the wrecked car (FireEngineManager_RequestForCar on g_FireEngineManager). If a slot was granted, spawns an explosion/fire object (Object_CreateExplosion, arg type H) at the car and attaches it to the sprite (FUN_004b9d50); so wreck flames and the truck request go together (decompiler reading, H for the flame type)."
+0x0041fa60,plate,unsure_Car_IsInCrusherList,"Wrapper for FUN_0044a3a0(g_CrusherManager, car): linear search of crusher entries (count at +0x90, stride 0x30, car at +0x14). Callers Script_Op_CHECK_CAR_STATE, unsure_Car_IsExplosionDamageCredited. [Seq43]"
 0x0041fa70,plate,Ang16_AddAssign,"*a += *b, then Ang16_Wrap."
 0x0041fa90,plate,Ang16_SubAssign,"*a -= *b, then Ang16_Wrap."
+0x0041fac0,plate,Car_GetCornerAngle,"Ang16_ATan2(h/2, w/2) of the model's CarInfo w/h: angle from centre to a body corner. [Seq43]"
 0x0041fc20,plate,Ang16_PolarToXY,"Seq37 slice4 (verified, ret 0x10): *outX = len*Ang16_Sin(angle) (table 0x5d3938), *outY = len*Ang16_Cos(angle) (table 0x5d6718), Fix16 Q14 (1.0=0x4000), Ang16 full circle = 0x5A0 = 1440 (4 units/deg, normalise 0x401c10). 35 callers (cars, peds, bullets)."
+0x0041fc90,plate,Ang16_RotateXY,"In-place 2D rotation of (*x,*y) by Ang16: x' = x*cos + y*sin, y' = y*cos - x*sin. [Seq43]"
 0x004202a0,plate,Vec2_MulInt,"*out = (a.x * n, a.y * n) via Fix16_MulInt. Vec2_Normalize uses n = 128 to rescue tiny vectors."
 0x004202e0,plate,Vec2_DivFix16,"Seq33 slice1 (VERIFIED): Vec2 / Fix16, thiscall: out = (x/s, y/s) via Fix16_Div. Used in ForcesToAccel: linAccel = force / mass."
 0x00420360,plate,Fix16Vec2_IsZero,"Seq33 slice2: Fix16 Vec2 == (0,0): both components equal DAT zero. Called with CarPhysics+0x40 (linVel) from SetControls/IsStandingStill."
 0x00420390,plate,Vec2_Normalize,*out = self / |self| (Fix16Vec2_GetLength + Vec2_DivFix16). If the length comes out 0 (tiny vector: x*x underflows in Q14) the vector is first scaled by 128 (Vec2_MulInt) and the length recomputed.
+0x00420660,plate,Position_SetZ,"Position.z(+0x1c) = v if changed, then Position_MarkBoundsDirty. [Seq43]"
+0x004206f0,plate,Position_SetCollisionKind,"Position.collisionKind(+0x30)=v then unsure_Position_SetDefaultField28ByKind. 27 callers (CarManager_SpawnCar, particle emitters, projectiles). [Seq43]"
 0x0042077c,pre,getUpgradeType,oil
 0x00420782,pre,getUpgradeType,Gun on car
 0x00420788,pre,getUpgradeType,"paint, suicide"
 0x00420950,plate,Car_AttachRoofLightObject,"Seq33 slice5 (hypothesis): spawn object type param_1 (siren/roof light) and attach to car sprite at zero offset, colour param_2. Used by Car_AttachEmergencyLights."
+0x00420b50,plate,Ped_GetOwnerSlot,Returns Ped.ownerSlot (+0x267). [Seq43]
+0x00420b60,plate,Ped_GetId,Returns Ped.id (+0x200). [Seq43]
+0x00420c30,plate,OwnerSlot_IsValid,"slot < 13 (OwnerSlotTable size). Callers Car_GetResponsiblePedId, Car_RecordRamAttackers. [Seq43]"
 0x00420dc0,plate,CarDeltas_SetBit,"Seq33 slice5: was TogglesEmergencyLightsAndBrakes. Body is *this |= 1<<(n&31) = SET bit (not toggle). Used on Car+8 deltasBitstate for damage/lights/doors bits. Pair: CarDeltas_ClearBit 0x420de0 (&= ~), CarDeltas_IsBitSet 0x420e20."
 0x00420de0,plate,CarDeltas_ClearBit,Seq33 slice5 (verified): *this &= ~(1<<(n&31)); clears delta/light bit in Car+8 deltasBitstate (Car_Repair clears bits 0..4 with it).
 0x00420e20,plate,CarDeltas_IsBitSet,Seq33 slice5 (verified): (*this & (1<<n)) != 0 on deltasBitstate.
 0x00420f80,plate,CarPhysicsPool_Ctor,"Seq33 slice1 (VERIFIED): CarPhysicsPool ctor: 306 (0x132) CarPhysics objects of 0xB0 bytes constructed in place (arr306), chained into a free list through CarPhysics.next(+0xC) (loop sets each element's link to the one 0x16 qwords = 176 bytes on), last link = NULL, pool->firstFree = &arr[0]. Pool object pointer: ptrToCarPhysicsPool (0x66AB7C), created in CarManager_Ctor. Max 306 simultaneous physics objects (cars+trailers)."
 0x00420fd0,plate,CarPhysicsPool_Alloc,"Seq33 slice1 (VERIFIED): pop the head of the free list (firstFree = head->next), CarPhysics_Init(head), return it. NO empty-check (306 slots; the caller Car_AllocPhysicsIfNeeded 0x423A50 relies on that). Free = FUN_004254F0(pool, physics)."
+0x00421030,plate,unsure_PositionPool_Free,"Free-list push: FUN_004bdc40(pos) unlink; pos->next(+0xc)=*head; *head=pos. Callers Car_Destroy, Object_Destroy, Particle_FreePosition, ObjectSpawner_Dtor. [Seq43]"
 0x00421100,plate,unsure_CarPhysics_IsSunkAndSlow,Seq33 slice5 (hypothesis): this = CarPhysics. true if surfaceType(+0x98)==8 (in water) and |linVel(+0x40)| <= DAT_005e4d28 (copy of DAT_005e4cbc). Only caller Car_CheckDeath = drowned car.
 0x00421130,plate,CarPhysics_IsKeptActive,"Seq33 slice1 (VERIFIED): returns g_FrameCounter->frame < physics->activeUntilFrame(+0x08), i.e. the car was bumped/pushed recently and must keep real physics. Only caller: unsure_Car_UpdateArticulatedCabTrailerSearch (0x4262E0)."
 0x004211a0,plate,CarPhysics_GetSpeed,Seq33 slice2: speed accessor = Fix16Vec2_GetLength(CarPhysics+0x40 linVel). show_instruments prints it as 'speed:%3.3f(gear)'.
@@ -162,8 +402,14 @@ so an unsupported 3D setting is reset. Confidence: high."
 0x00421270,plate,CarPhysics_IsHandbrakeOn,Seq33 slice2 (confirmed): returns isHandbrakeOn(+0x92).
 0x004212a0,plate,CarPhysics_SetModeAI,"Seq33 slice2 (confirmed): CarPhysics.mode(+0x8C)=1 (AI). Modes: 1 AI, 2 player, 3/other see CarPhysics_Update switch (slice 1)."
 0x004212b0,plate,CarPhysics_SetModePlayer,Seq33 slice2 (confirmed): CarPhysics.mode(+0x8C)=2 (player). Player mode enables gears (ComputeDriveForce) and speed-sensitive steering (UpdateSteerAngle).
+0x00421310,plate,CarDoor_Ctor,"CarDoor ctor (16 bytes): byte0=0, byte1=3, byte2=0, state(+4)=0, +8=0, byte+0xc=0. Caller Car_Ctor. Compare CarDoor_Init (state=6, byte2 from DAT_00591e74[idx]). [Seq43]"
+0x00421360,plate,CarDoor_IsActive,"CarDoor.state(+4) not in {0,6}, i.e. door is open/opening/closing. Callers Sprite_UpdatePedAnimFrame, FUN_00423a70. [Seq43]"
 0x004213d0,plate,TurnOnCarBrakeLights,Seq33 slice2 (confirmed role): sets brake-light delta bits (bit 1->5 and 0->0x16 toggles in Car.deltasBitstate) unless already set; not a physics input. Slice-adjacent (Car lights).
+0x00421430,plate,unsure_Car_ClearLightDeltaBits,"CarDeltas_ClearBit(car+8, 5) and (car+8, 0x16). Callers Car_AlarmStop, Car_BrakeLightsOff, Car_UpdateLightsAndSiren: light/alarm/siren visual bits (which bit is which: unverified). [Seq43]"
+0x004214f0,plate,Car_IsDrivenByNonPlayer,Car+0x54 (driver ped) != null && !Ped_IsPedClass(PLAYER). [Seq43]
+0x00421610,plate,Car_IsTrainModel,Car+0x84 model == 0x3b (TRAIN). Only caller Ped_FindEnterableCarInFront. [Seq43]
 0x00421720,plate,Car_IsOnTrailer,Name from gta2_re (GTA2 10.5) Car_BC::IsOnTrailer_421720: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00421780,plate,Car_IsMedicar,"Car+0x84 model == 0x22 (MEDICAR). Callers Car_UpdateAiHonk, Car_AttachEmergencyLights, PlayerScore_OnCarDestroyed. [Seq43]"
 0x004217f0,plate,Car_IsTaxiModel,Seq33 slice5 (verified): carModel(+0x84) == 0x38 TAXI or 0x33 STYPECAB.
 0x00421910,plate,Car_ScaleByCarScale,Seq33 slice3 VERIFIED: out = (car->scale(+0x68) != CarsScale) ? v * car->scale : v. Used by Car_GetMass and UpdateSkidmarks for wheel offsets.
 0x00421980,plate,Player_GetScore,Name from gta2_re (GTA2 10.5) Player::GetScore_421980: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
@@ -258,28 +504,62 @@ Loops over every active player camera (Game_CameraIter_Begin/Next: Player+0x90 m
 0x00445a20,plate,DummyPedManager_Update,"Seq36 slice2 (V): per-logic-tick ped population step. 1) clear per-tick counters 2) PedManager_UpdateActivePeds (Ped_Update on every active ped; finished peds -> free list) 3) DummyPedManager_SpawnForAllCameras (if !g_skipDummies) 4) publish counters into DummyPedManager: ambientPeds(+2)=0x5e5bea, activePeds(+3)=0x5e5be8, missionPeds(+4)=0x5e5beb, emergencyPeds(+5)=0x5e5bec, onScreenPeds(+6)=low byte of 0x5e5bf4. NB counters read by the spawner are the PREVIOUS tick's DummyPedManager copy (+6) but THIS tick's globals (ambient count)."
 0x00445e90,plate,Passengers_ForceTaxiPassengersToExit,Seq33 slice5 (hypothesis from body+caller): this = Car passenger list (Car+4); sets ped flag 0x20000000 on passengers with occupation 0x? (taxi fares) so they flee. Only caller Car_ApplyImpactDamage (taxi + impulse>2.0). gta2_re 10.5: ForceTaxiPassengersToExit_471680.
 0x00446710,plate,CarDriveOrderPool_Ctor,"CarDriveOrderPool: 20 x 0x40-byte slots; a car holds its slot at car+0x60. Slot: +0 in-use, +4 ped, +8 mode (1/2/4), +0x14..0x1C target xyz, +0x30 target id. Alloc 0x446200, Free 0x446290. Hypothesis: AI driving order for a ped-driven car."
-0x00446740,plate,Collision_GetRowStripList,"Seq33 slice4: grid row table lookup (row 0..255): returns first strip node of row whose start >= DAT_00662bd4, nodes sorted by start column; NULL if beyond DAT_00662bf8. Node: [0]=start col (byte), [4]=sprite entry list, [8]=next strip."
+0x00446740,plate,Collision_GetRowStripList,"Seq44/collision: grid layout = 256 row pointers (this[row]) -> strip nodes {+0 start col (byte), +4 entry list, +8 next strip}, sorted by col; entry node {+0 sprite, +4 next}. Pools: CollisionEntryPool 4096x8 (DAT_005E6684), CollisionStripPool 6000x12 (DAT_005E6688)."
+0x00446920,plate,SpriteBounds_SetQueryStamp,"Seq44/collision (verified): this = sprite bounds block (Position+0x0C, CollisionBox 0x2C bytes); +0x2C = last query stamp. Set/Has pair is the 'already visited in this query' mark (g_CollisionManager->queryStamp)."
+0x00446d60,plate,CollisionGrid_EnqueueSpritesInCellRect,"Seq44/collision (verified): for each row in [rowMin,rowMax], for strips with col in [colMin,colMax], for every entry whose sprite+0x30 (kind) > 1 -> LayerDrawQueues_Enqueue(g_LayerDrawQueues, sprite). Only caller: CollisionGrid_EnqueueVisibleSprites. A sprite spanning several cells is enqueued several times (no stamp check here; presumably deduped in the queue - hypothesis)."
 0x00446de0,plate,unsure_Collision_CheckRowForBlocker,"Seq33 slice4 HYPOTHESIS: row scan collecting blockers (DAT_005e6698 list) using ShouldCollide(sprite,0) and flag DAT_005e6654. Only caller 0x4477B0."
 0x00446f30,plate,Collision_CheckRowAndNotify,Seq33 slice4: one row of Collision_CheckAndNotifyAllForSprite: for each unstamped entry Sprite_CollisionCheck then Sprite_OnOverlapNotifyImpactEvent; returns 1 if any overlap.
 0x00446fd0,plate,unsure_Collision_CheckRowFilteredAndNotify,"Seq33 slice4 HYPOTHESIS: row variant of 0x4474E0 (mask DAT_005e6670), calls FUN_004b9a80 on overlap."
 0x004470b0,plate,Collision_FindObstacleInRow,"Seq33 slice4: scans one grid row strip list: skip self (DAT_005e6664), skip already-stamped sprites, Sprite_ShouldCollideWithSprite filter, Sprite_CollisionCheck overlap, mask test; returns hit entry."
 0x004471b0,plate,CollisionManager_Ctor,"CollisionManager ctor (collide.cpp). Object 0xC: [0] visit counter, [4] query stamp, [8] 'moving check active' flag. Builds 5 sub-objects into DAT_005e6684..5e6694 (0x8004 and 0x11944 grid/lists, 3 x 0x400 lists). Name: medium confidence."
+0x00447390,plate,CollisionGrid_EnqueueVisibleSprites,Seq44/collision (verified): called from eachFrame 0x45A5A0. Camera bounds +-margin (DAT_005E672C/5E6944) -> clamp 0..255 -> CollisionGrid_EnqueueSpritesInCellRect. The collision grid is ALSO the sprite draw list: visible cells' sprites go to g_LayerDrawQueues.
 0x00447480,plate,Collision_CheckAndNotifyAllForSprite,"Seq33 slice4: broad phase over grid rows DAT_00662bac..DAT_00662bfc covered by the sprite (after bounds update): queryStamp++, per row Collision_CheckRowAndNotify. Returns OR of hits. gta2_re 10.5: PurpleDoom::CheckAndHandleAllCollisionsForSprite."
 0x004474e0,plate,unsure_Collision_CheckAndNotifyFilteredForSprite,"Seq33 slice4 HYPOTHESIS: like 0x447480 but only entries whose +0x30 mask matches DAT_005e6670 (arg), per row 0x446FD0 -> FUN_004b9a80. Callers: UpdateGroundZ, 0x4A2DB0."
+0x00447540,plate,unsure_ThreatSearch_SpiralFindNearest,"Seq44/collision (hypothesis): spiral search of grid cells around a sprite (alternates column strips FUN/ScanColumn and row strips ScanRow, radius step 2, up to (param_4&0xff)*2). Candidate filter: z range DAT_005E66DC..5E67A4, stamps DAT_005E6650/667C, nearest by Chebyshev/Manhattan distance into DAT_005E665C/DAT_005E6940. Callers: Ped_FindThreatArea, Ped_FindEnterableCarInFront, Ped_FindNearestObjectInRange/OnPath."
 0x00447740,plate,Collision_FindObstacle,"Seq33 slice4 (was unsure_Collision_FindObstacle, now verified): broad phase returning first obstacle sprite overlapping param sprite (queryStamp++, rows DAT_00662bac..bfc, Collision_FindObstacleInRow); DAT_005e6674 = filter mask param_4. Returns obstacle pointer or DAT_005e665c (first candidate). 16 callers incl. CarAI."
 0x00447740,pre,Collision_FindObstacle,"Seq37: __thiscall (ecx=grid, [esp+4]=Position body, [esp+8]=preferredKind), RET 8 verified. Returns first overlapping obstacle whose entry kind(+0x30)==preferredKind, else first overlapping candidate (any kind) or 0. Filter Sprite_ShouldCollideWithSprite(entry, body). Side effects: queryStamp++, stamps (+0x2c of entry bounds), DAT_005e665c/5e6674, visitCount; does NOT notify."
+0x00447900,plate,CollisionGrid_RemoveSpriteFromRow,Seq44/collision (verified): removes sprite from one row for cols DAT_00662BD4..BF8; frees emptied entry nodes and strips back to the pools. Caller CollisionGrid_RemoveSprite.
+0x00447a60,plate,CollisionGrid_InsertSpriteIntoRow,"Seq44/collision (verified): inserts sprite into every strip of one row for cols DAT_00662BD4..DAT_00662BF8 (bounds from FUN_004BC580), creating strips (CollisionStripPool_Alloc) when a column is missing. Caller CollisionGrid_InsertSprite."
+0x00447ba0,plate,CollisionGrid_InsertSpriteAtPoint,"Seq44/collision (verified): single-cell insert at the sprite's centre (Position +0x14 x, +0x18 y as ints). 42 callers: all particles and objects use this point variant (sprites with a bbox use CollisionGrid_InsertSprite)."
+0x00447bd0,plate,CollisionGrid_RemoveSpriteAtPoint,Seq44/collision (verified): single-cell remove at the sprite's centre; pair of CollisionGrid_InsertSpriteAtPoint.
 0x00447c00,plate,CollisionGrid_InsertSprite,"Seq37 slice3: grid insert. this = CollisionGrid (g_CollisionGridObstacles/Notify/Aux), param_1 = body Position. UpdateBoundsIfDirty(body), FUN_004bc580 -> cell range DAT_00662bd4..bf8 (cols) x DAT_00662bac..bfc (rows), per row FUN_00447a60 adds an entry node into every covered strip. Call AFTER changing the body pose; pair of CollisionGrid_RemoveSprite which must be called with the OLD bounds (before the move). Verified from FUN_0049c460 usage order."
 0x00447c40,plate,CollisionGrid_RemoveSprite,"Seq37 slice3: grid remove, inverse of CollisionGrid_InsertSprite; uses the body's CURRENT cached bounds (FUN_004bc580 on body+0xc), so call BEFORE moving the body. Ped tick FUN_0049c460 removes the ped body from g_CollisionGridObstacles before the move so the ped never collides with itself."
+0x00447f60,plate,Crane_SetDisabled,"Seq44/crane (verified): +0x148 = disabled flag. Script_Op_ENABLE_DISABLE_CRANE 0x47BF00: ENABLE (248) -> 0, DISABLE (249) -> 1. Crane_Update skips motion while set. Crane_Init zeroes it."
+0x00448450,plate,Crane_PickUpCar,"Seq44/crane (verified body): hook grabs candidate car (+0x68): unlink from g_CarPool used list, Car_SetDetached, free physics, remove from g_CollisionGridObstacles, held=+0x74, +0x10/+0x14 = car pos - hook pos; state(+0x150)=1 (crane kind 0/3 no target) or 4 (target crane); +0x159=1 'picked this frame'."
+0x00448a80,plate,Crane_OnCarTouched,"Seq44/crane (verified caller chain): unsure_Car_OnTouchObject 0x4293D0 case 0x89 (object type 137) -> CraneManager_OnCarTouchedTrigger(g_CraneManager, car, craneIdx=obj+0x26) -> here. Decides whether the touching car is a pickup candidate: not removing, not already in cooldown list (+0x28), car must be empty (driver==0, FUN_00423A70), liftable (not artic cab/trailer/train/long car) else 'nespray' brief; transporter trucks (model 66) go to unsure_Crane_OnTransporterTouched."
+0x00448c60,plate,Crane_StepMotion,"Seq44/crane (hypothesis, structure verified): motion integrator. current (+0x84 drop, +0x8C angle, +0x90 extension, +0xA0 head rot) steered toward targets (+0xB8 drop, +0xAC angle, +0xB0 extension, +0xB4 rot) via Fix16_SteerAngleToward / FUN_00472670 (accel/max-speed constants DAT_005E7xxx). Sets moving flags +0x156 (angle), +0x157 (extension), +0x158 (drop). Returns 1 when all reached and +0x14D set."
+0x00448e30,plate,Crane_UpdateObjectPoses,"Seq44/crane (verified): removes the 10 boom objects (+0x30..+0x54) from the object grid, repositions them from boom angle (+0x8C), hook extension (+0x90), hook drop (+0x84) and head rotation (+0xA0), then re-inserts them; moves the held car (+0x74) with the hook (+offset +0x10). Called when angle/extension/height/rot changed."
+0x00449130,plate,Crane_Init,"Seq44/crane (verified): called only from CraneManager_AddCrane (script CRANE_DATA decl). Spawns 14 objects: base (type 135) at x,y,z=FindMaxZ(map,x,y); 4x wire(134), partB/C/D/E (252/260/261/262), headB(263), partA(140), headA(136) and a trigger object type 137 (z-1, ExtraByte26 = crane index) that routes car touches to CraneManager_OnCarTouchedTrigger. Zeroes state, allocates probe Position (+0x60) and sound client (+0x7C)."
+0x004495f0,plate,Crane_SetTarget1,"Seq44/crane (verified): called from Script_Decl_CRANE_DATA (opcodes 37/38/39). Stores target 1 (FIRST): polar to base (+0x120 length, +0x124 angle), rotation +0x128, hook offset +0x18, drop height +0x12C = baseZ - FindMaxZ(target). Crane kind (+0x144): 0 basic, 1 FIRST only, 2 FIRST+SECOND, 3 SECOND only."
+0x004496e0,plate,Crane_SetTarget2,"Seq44/crane (verified): SECOND target: +0x130 length, +0x134 angle, +0x138 rot, hook offset +0x20, drop +0x13C. Kind +0x144: 1->2, else ->3; +0x155 phase=2."
+0x004497e0,plate,CraneManager_OnCarTouchedTrigger,"Seq44/crane (verified): this = g_CraneManager, craneIdx = trigger object +0x26. Forwards to Crane_OnCarTouched(cranes[idx], car). Only caller unsure_Car_OnTouchObject case 0x89."
+0x00449880,plate,Crane_UpdateCandidatesAndTargets,"Seq44/crane (hypothesis): re-validates the three pickup candidates (+0x64 transporter, +0x68 car, +0x6C cargo; snapshots +0xBC.. +0xD8.. +0xF4..) - lost candidate -> cooldown +0x14C = 60 frames; then chooses the targets for the current state (+0x150): 1 -> pose of candidate +0x2F.., 2/3/4 -> phase pose (+0x110..0x11C), idle -> home (+0xA8 angle, DAT_005E7554 extension)."
+0x00449ba0,plate,Crane_Update,Seq44/crane (verified flow): per-crane tick from CraneManager_Update (GameTick). clear 'released' flag (+0x159); expire old entries of the +0x28 cooldown list; remove held car (+0x74) from Aux grid; Crane_UpdateCandidatesAndTargets; if enabled (+0x148==0) and (no homecrane or this not at home or homecrane at home) -> Crane_UpdateMotionAndTransitions; tick the held car (FUN_00429FC0); re-insert held car into g_CollisionGridAux.
 0x00449c70,plate,CraneManager_Ctor,CraneManager ctor. Array of 10 Crane records (0x15c each) plus live count at +0xD98. Cranes are declared by script (SCRCMD_CRANE_*_DEC) and ticked each frame from GameTick (CraneManager_Update).
 0x00449d70,plate,Credits_ParseText,"Seq35 slice3 (verified decompile + parsed all 5 shipped credits keys). Parses the GXT key ""credits"" (one huge wchar string, 9.7-10.4k wchars) into this->lines: count int16 @+0; entries from +2, stride 0x6C (0x36 shorts): +0 active byte, +2 x=300, +4 y/gap, +6 colour, +8.. text wchar[<=49]+NUL. Grammar (whitespace=0x20/0x09/0x0A skipped between entries): '*' alone = 20px vertical gap (stack: each extra '*'); entry = ['#' colourLetter] text '*'. colourLetter: W=0, B=2, G=3, C=4, any other letter=1; no '#' = 0. Text runs to the next '*'; TAB/LF inside text are dropped, spaces kept. No bounds checks (shipped max text 28 chars, 506..535 entries; error strings elsewhere claim max 600 lines/50 chars)."
 0x0044a1f0,plate,CrimeEventQueue_Ctor,"CrimeEventQueue (S29, 0xCC; name is a hypothesis): 10 x 0x14 ring buffer (head/tail u16 at +0/+2) of crime events (type 1..4 + position). Pushed from kill/shoot/pickup code via DoSomethingRelatedToPedOcupation, consumed by police reaction code 0x41c600."
+0x0044a470,plate,CrusherSlot_Update,"CrusherSlot_Update (slot 0x30 bytes: +0 +4 +8 +0xc = 4 piston objects (OBJECT_TYPE_CAR_CRUSHER), +0x10 base object, +0x14 captured car, +0x18 sound, +0x1c/+0x20 left/right piston offsets (Fix16), +0x24/+0x28 position, +0x2c state). State machine: 1 = pistons close (offset 1 -= step) ; when closed -> state 2 and the car explodes (Car_Explode MEDIUM + Car_RemoveFlames, credits kill to player if single player); 2 = pistons open (offset += step) ; 3 = second pair closes -> unsure_Car_SetCrushedState, 4 = reopen, then slot freed. Every frame the car is shrunk toward pistons (FUN_004233b0) and the 4 piston objects repositioned in the collision grid. evidence: CrusherManager_Update caller."
 0x0044aa00,plate,CrusherManager_Ctor,"CrusherManager ctor. Array of 3 Crusher records (0x30 each) plus count at +0x90. Created by SCRCMD_CRUSHER_BASIC, ticked from GameTick; car contact (object case 0x8f) grabs the car. Crusher logic itself not decompiled."
 0x0044aa30,plate,FrameCounter_Advance,"Seq33 slice1 (VERIFIED): ECX=g_FrameCounter (0x5E8108): frame++ ; frameRandom=random32(). Once per GameTick, after CarManager_Update. This is the clock CarPhysics.activeUntilFrame (+0x08) is compared with."
 0x0044ab20,plate,unsure_ObjectType_IsHarmlessToCar,"Seq33 slice5 (hypothesis): object types 0x9a,0x9f,0xc1,0xc3,199 -> true; Car_OnDamage returns early for them (no damage, still ped-exit)."
 0x0044ab80,plate,unsure_ObjectType_GetKillWeaponCode,"Seq33 slice5 (hypothesis): object type -> kill category 0x9..0x15 (default 9); stored at Car+0x90 lastAttackerWeapon by Car_OnDamage. 10->0x15, 0x80->0x11, 0x8a->0x10, 0xc0->0x13, 0xc2->0xe, 0xc6/0xfb->0x14, 0xfe/0x109->0xb ..."
+0x0044b0c0,plate,unsure_S23_GetOrCreateCarSpriteSlot,"hypothesis: S23 (g_S23 / ptrToS23) is a 48-entry x 0x14-byte cache of remapped car sprites (two bins: entries 0..0x1f for sprites with h<=0x40, 0x20..0x2f for taller). Entry: +4 spriteId(u16), +8 delta bitmask, +0xc LRU stamp, +0x10 texture slot id (u16), +0x12 palette/remap. This function: find a cached entry whose delta mask is equal or a subset (S23_FindEntry), else take the oldest (FindOldestEntry), copy sprite rows/clear, apply deltas (damage layers) and stamp. Returns the texture slot or 0xffff if mask==0. evidence: only caller FUN_004be060 (sprite draw) which then uses TextureCache_GetSpriteTextureSlot with the result."
 0x0044b8f0,plate,LayerDrawQueues_Ctor,"LayerDrawQueues ctor: 7 per-map-layer draw queues (4-byte list heads over node pools DAT_00672578/DAT_0067257c). Cleared each frame in eachFrame, objects enqueued sorted by Z, each queue flushed per layer in SetupFrameLighting. Name: medium."
+0x0044c0f0,plate,DInput_ProcessKeyEvents,"DInput_ProcessKeyEvents(keyboardObj, consume): drains buffered DirectInput events (keyboard DAT_005e8f4c, joystick DAT_005e8f58): fills KeyPressCode/KeyPressState (bit7 = down), Alt tracking (0x38), swallows Alt+Space/Tab/Enter; Hud_IsKeyConsumedByOverlay; compares with Controls[12] bindings (keyboard or joystick axis 0xe0..0xe3 / buttons) setting/clearing the _keyboard mapped-bit word; otherwise forwards to OnKeyUpDown. g_logDirectinput logs 'KEY ON/OFF'. evidence: caller GetKeyState (0x45fd10)."
+0x0044c560,plate,DoorFace_Open,"DoorFace (16 bytes, pool DAT_005e9374): +0 state (1=closed, 2=open), +4/+5/+6 block x/y/z (u8), +7 DoorInfo index, +8 face side (1 left,2 right,3 top,4 bottom; opposite via FUN_00462b90). OPEN: state=2, rewrites that block face (via FUN_00463f60 = set face word in MapBlocks) to the DoorInfo tile remap slot with wall flags 0x1000/0x2000(flip) and the opposite side of the neighbour block, then TileAnimManager_StartAnim plays the door tile animation. evidence: Script_Op_DOOR_CONTROL OPEN_DOOR(0xb1)->0x476a60->here; docs/re/script-engine.md DoorData_10::Open."
+0x0044c610,plate,DoorFace_Close,"DoorFace CLOSE: mirror of DoorFace_Open: state=1, face word = DoorInfo remap tile | 0x1c00 (wall+bullet wall+flat) (| 0x2000 flip for the B face), anim played in reverse order. evidence: Script_Op_DOOR_CONTROL CLOSE_DOOR(0xb2)->0x476a30->here; also called from Door_UpdateAutoClose when the timer expires."
+0x0044c700,plate,Door_Open,"Door_Open: open both faces (A, then B with the flip flag +0x2a) via DoorFace_Open; flags +0x2d=1 (open sound pending) if face A was not already open; clears +0x28 (close timer disarmed). Callers: Door_OnCarTouch, Door_OnPedTouch. Script OPEN_DOOR uses 0x476a60 directly (skips the sound/flag)."
+0x0044c760,plate,DoorInfo_Register,"DoorInfo_Register: table DAT_005e9340, 5 entries x 10 bytes {u16 firstTile, u16 lastTile, u16 remapSlotA, u16 remapSlotB, u8 framesPerTile, pad}. Takes first free (both tile fields 0) entry, allocates two StyleData tile-remap slots. evidence: only caller Script_Decl_DECLARE_DOOR_INFO (script op 230); matches gta2_re RegisterDoorInfo_49D2D0 (docs script-engine.md)."
 0x0044c840,plate,BlockInfo_Clear,"Was ""unclear"". Zeroes one 12-byte GMP block_info: u16 faces left/right/top/bottom/lid at +0..+8, u8 arrows at +0xA, u8 slope_type at +0xB. Callers: MapBlocks_Ctor, Script_Op_ADD_NEW_BLOCK, 0x44C8A0. = gta2_re gmp_block_info::init_44C840 (same address in 10.5). Seq 34."
+0x0044c8a0,plate,DoorFace_Setup,"DoorFace_Setup: initial setup of one door face = state 1 (closed): stores x/y/z/side/doorinfo, allocates tile remap (StyleData_SetTileRemap) and writes the closed face word into the block; if the cell has no block (MapBlocks_GetBlock==0) builds a fresh BlockInfo (BlockInfo_Clear + face words) and adds it via FUN_00464060. evidence: callee BlockInfo_Clear, caller DoorFace_AllocAndSetup."
+0x0044ca70,plate,unsure_Door_CarMayOpen,"unsure_Door_CarMayOpen(car): switch on Door mode (+0x20, Door_GetState 1..6): 1 = any player-driven car, or car+0x7c==2; 2 = player-driven car only; 3 = only the one remembered car (+0x10) whose +0x6c id matches +0x14; 4 = car+0x84 == +0x10 (owner match); 5 = never; 6 = remembered car and a rectangle/occupancy test (FUN_0044c6d0 / unsure_Door_IsTargetCar, ParkingZone). hypothesis: mode semantic labels from script DOOR_DATA 'unlock type' switch in Script_Decl_DOOR_DATA_1 (0..6 -> 1,2,3,5,0,6); not verified against script text."
+0x0044cc30,plate,Door_SpawnObjects,"Door_SpawnObjects: after the faces are added, spawn the physical objects of a door: object type 0xa9 (door body, stored Door+8) at the block centre (+DAT_005e951c = 0.5) shifted by one 'opens-to' offset when Door+0x2b is set, and, if arg set, trigger object 0xa7 (OBJECT_TYPE 0xa7; Door+0xc) which fires DoorManager_On{Car,Ped}TouchDoorObject through the object collision handlers. Sets Door+0x1c/0x1e = open duration = (last-first)*framesPerTile+0x28, Door+0x28=1, +0x2c=1. evidence: caller Door_RegisterDoubleDoor; 0xa7 handled in unsure_Car_OnTouchObject (case 0xa7 -> DoorManager_OnCarTouchDoorObject)."
+0x0044cdd0,plate,Door_SpawnObjectsRotated,"Door_SpawnObjectsRotated: variant that spawns the door sprite object (type 0xa9 / OBJECT_TYPE_UNK_169) with an Ang16 rotation chosen per door side (case 1..4 = side) and a 0xa7 trigger object; sets Door +0x1c/+0x1e open-time = (lastTile-firstTile)*framesPerTile+0x28, +0x30/+0x34 sound position. hypothesis: rotated/diagonal-door variant, differs from Door_SpawnObjects only by the angle. evidence: reads, callers unsure_DoorManager_RegisterRotatedDoor*."
+0x0044cff0,plate,Door_UpdateAutoClose,"Door_UpdateAutoClose: only for automatic doors (+0x29) that are currently open (faceA/B state 2) and mode (+0x24) != 3/0. Mode 4: if the tracked car/ped (+0x10) no longer qualifies/overlaps, arm the close (+0x28=1, timer +0x1e=0). Then count the timer (+0x1e) down; at 0 reload it from +0x1c, play door-close sound (Object_NewWithPedRefIdx 0x117/0x33 at Door +0x30,+0x34) and DoorFace_Close both faces. evidence: DoorFace_Close callee; Door fields via Door_Ctor."
+0x0044d0f0,plate,Door_Update,"Door_Update: per-door tick from DoorManager_Update (GameTick). Plays the pending open sound (+0x2d -> sound 0x117/0x32), runs Door_UpdateAutoClose if automatic, and re-arms +0x28=1. evidence: DoorManager_Update loop."
+0x0044d1e0,plate,DoorManager_ShouldDoorBlock,"DoorManager_ShouldDoorBlock(sprite, doorIdx): called from unsure_Object_ShouldCollide (0x4835e0) for door objects (0xa7): returns 0 = pass through (door open, or this car/ped is allowed to open it) , 1 = collide. evidence: caller + Door_IsFaceAOpen/CarMayOpen/PedMayOpen callees."
 0x0044d2e0,plate,DoorManager_Ctor,"DoorManager ctor (door.cpp). 22 door slots (0x38 each), ensures helper singleton DAT_005e9374 (0x2C4) exists; +0x4D0 active door count, +0x4D2 = 0xCD. Updated by DoorManager_Update from GameTick. Semantics: medium."
+0x0044d3c0,plate,Door_AddFace,"Door_AddFace: fill Door.faceA (+0, side flag 0) first, then Door.faceB (+4, flip flag from +0x2a) from the DoorFacePool (DAT_005e9374). Called twice per door (the two blocks on both sides of the doorway). evidence: Door_RegisterDoubleDoor calls it twice before spawning objects."
 0x0044d670,plate,Door_RegisterDoubleDoor,Name from gta2_re (GTA2 10.5) Door_4D4::RegisterDoubleDoor_49D1F0: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
 0x0044db00,plate,Door_RegisterDoubleDoorNoCheck,Name from gta2_re (GTA2 10.5) Door_4D4::RegisterDoubleDoorNoCheck_49CFA0: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
 0x00450f10,plate,FireEngineSlot_Update,"FireEngineSlot_Update: state machine on FireEngineSlot.state (+8). 1 spawn truck model 0x11 (FIRETRUCK) on road at spawnX/Y/Z via CarManager_SpawnCarOnRoadAt, driverClass 4, driver = FIREMAN(38) with objective GO_TO_AREA_IN_CAR(14) to targetCar position, siren on -> 2; spawn fail: timer++ and at 0x32 -> 6.
@@ -391,22 +671,88 @@ InitGame clamps it to 60 into 0x6626E8; timer 0x462530 counts it down (min 0x662
 and ends the game with GXT 'g_over'. Confidence: medium-high."
 0x00461de0,plate,InitGame,MainMenu
 0x00462a30,plate,drawAndLimitFrames,"Seq33 slice1 (VERIFIED, THE PHYSICS CLOCK): fixed-timestep scheduler, called every idle iteration of WinMain2. t=timeGetTime(). SINGLE PLAYER: logic step ""due"" if (max_frame_rate==0 && relatedToTime==0) || lastFrameTime<=t; due is CANCELLED if relatedToTime>7 or (min_frame_rate==0 && relatedToTime!=0). If due (or draw skipped): [if min_frame_rate==0: lastFrameTime=t (no catch-up)]; Game_RunLogicStep(); lastFrameTime += nextFrameDeltaTime() (= 33 ms; 11 ms if Game.compensationFPSTime); relatedToTime++ (logic steps since last draw; with min_frame_rate=1 up to 8 catch-up steps per draw). If not due and relatedToTime!=0 -> draw() (eachFrame + Vid_FlipBuffers), relatedToTime=0. MULTIPLAYER: if lastFrameTime<=t: step, lastFrameTime=t+33 (lockstep). Registry defaults (loadRenderSettings1 0x4CB1D0): max_frame_rate=1, min_frame_rate=0 (MP forces both 1) => default = one 33 ms tick (30.3 Hz), game slows down instead of catching up when the machine is slow; rendering decoupled. There is no float dt anywhere: one logic tick == one physics step (dt = 1 tick)."
+0x00462b90,plate,HeadingClass_Opposite,"Seq44 (VERIFIED): heading class 1<->2, 3<->4 (N<->S, W<->E as used by g_SlopeTable dir and MapBlock arrow code), else 0. Callers: DoorFace_Open/Close and door builder (opposite face of a door block)."
 0x00462be0,plate,Zone_GetDisplayName,"ECX = ZONE record from the .gmp ({u8 type; u8 x,y,w,h; u8 nameLen; char name[nameLen]}, name at +6, len at +5). If nameLen == 3 the 3 chars are a GXT key (copied to a stack buf + NUL) -> Gxt_FindTextW_thunk(g_LocaleSettings) -> wchar_t* (area names: m01..m44 districts/areas, s01..s09 / w01..w03 special places, B01..B25 bonus-stage names - verified: wil/ste/bil.gmp navigation/local_navigation zones have exactly these 3-char names, all exist in e.gxt). Otherwise the raw ASCII name (nameLen chars) is widened into DAT_006718d0 and returned as the text. Only caller: FUN_004c6af0 (area-name banner, via DrawGUI -> FUN_004c6b70). Verified by disasm 00462be0."
+0x00462e80,plate,MapBlocks_TakeSlopeStepBlockedFlag,"Seq44 mapdata: read-and-clear byte MapBlocks+0x36E. Flag set by MapBlocks_IsBlockEdgeCrossingBlocked (""blocked by slope step""). evidence: callers PedGameObject_CanMovePlayer / StateWalk."
+0x00462ea0,plate,Fix16_Floor,"Seq44 mapdata (VERIFIED): Fix16_Floor: out = raw & 0xFFFFC000 (Fix16 has 14 fraction bits; frac twin is FUN_0042a630 = raw & 0x3FFF). 17 callers, all ground-Z code."
+0x00462ed0,plate,Fix16_FromMapFixed87,"Seq44 mapdata (VERIFIED): map-file fixed 1.8.7 (s16, 7 fraction bits) -> Fix16: raw = value << 7. Used for LGHT x,y,z,radius and MOBJ x,y (DMA map spec ""Fix16 x,y"")."
+0x00462ef0,plate,Ang16_FromMapAng8,"Seq44 mapdata (VERIFIED): MOBJ rotation Ang8 (u8, 256 = full turn) -> Ang16: byte/256*0x5A0 (0x5A0 = 1440 = 360*4, so Ang16 = quarter-degrees). Only caller MapBlocks_SpawnMapObjects."
+0x00462fb0,plate,StyleData_IsTileSurfaceWet,"Seq44 mapdata: StyleData.tileSurfaceType[tile] (+0x6C, filled from .sty SPEC) == 4 (wet/water, CAR_SURFACE2_WET). evidence: sole caller unsure_MapBlocks_GetSkidTileKind returns 7 (water) on true."
+0x00462fd0,plate,StyleData_GetTileSurfaceTypeMerged,"Seq44 mapdata: StyleData.tileSurfaceType[tile & 0x3ff] with type 3 collapsed to 1 (ped/car footstep+physics material). Callers: lid/face material getters 0x465510/0x4655b0/0x465650, 0x483cc0."
+0x00463080,plate,MapChangeEntry_Set,"Seq44 mapdata (VERIFIED): init one map-edit entry {+0 u32 newBase, +4 u8 x, +5 u8 y} (8 bytes). The list lives at MapBlocks+4..+0x324 (100 entries), count at MapBlocks+0x324."
+0x00463480,plate,BlockInfo_IsSlopeDirWestEast,Seq44 (VERIFIED code): g_SlopeTable[(slope_type>>2)*12].dir is 3 or 4 (rises west/east) -> 1. Caller unsure_MapBlocks_ScanColumnsForWalls.
+0x004634b0,plate,BlockInfo_IsSlopeDirNorthSouth,Seq44 (VERIFIED code): g_SlopeTable[(slope_type>>2)*12].dir is 1 or 2 (rises north/south) -> 1. Caller unsure_MapBlocks_ScanColumnsForWalls.
+0x004634e0,plate,SlopeTable_GetGradientForLen,"Seq44 (VERIFIED code): slope gradient constant by table len (1 -> DAT_00662cec, 2 -> DAT_00662c38, 8 -> DAT_00663154, else 0). Used by MapBlocks_GetSlopeSurfaceZ and car slope physics."
+0x00463570,plate,unsure_MapBlocks_FindTopRailBlock,"Seq44 (code VERIFIED, 'rail' meaning HYPOTHESIS): topmost block in column with ground type (slope_type&3)==3 (field) AND (arrows&0xF)!=0 (green arrows); *z out. Rail/tram track tiles. Callers PublicTransportManager_SpawnInitialTrains, unsure_MapBlocks_GetTopRailSurfaceZ."
+0x00463850,plate,unsure_MapBlocks_IsPointCoveredByLid,"Seq44 (HYPOTHESIS): starting at z in column (x,y) find the first block whose lid word != 0 and not flat (0x1000) and whose slope code is not a diagonal-slope (0xB4..0xF4): TRUE = something solid with a lid is overhead/at this point. Callers HUD player marker, radio static, several FUN_004xxxxx map tests."
+0x00463940,plate,MapGrid_ApplyChangedCells,"Seq44 mapdata (VERIFIED): replay the edit list (MapBlocks+4, count +0x324) onto the grid: grid.base[y*256+x] = entry.base. Called by MapBlocks_RestoreEditsFromSave on savegame load."
+0x00463990,plate,MapChangeList_Record,"Seq44 mapdata (VERIFIED): record ""cell (x,y) now uses column word offset base"" into the edit list (this = &MapBlocks+4; count at MapBlocks+0x324). Finds an existing entry for (x,y) or appends. Called by every runtime map edit (ChangeBlockField/AddBlockAt/RemoveBlockAt) so saves can replay edits."
+0x00463a00,plate,MapBlocks_AppendBlockInfo,"Seq44 mapdata (VERIFIED): append a 12-byte BlockInfo copy at block[blockCountCopy++] (MapBlocks+0x354 is the live count; +0x34C the count as loaded). No capacity check (capacity = loaded+200, +0x350)."
+0x00463a40,plate,MapBlocks_CloneBlockInfo,Seq44 mapdata (VERIFIED): copy-on-write for a loaded block: if idx < loaded count (+0x34C) clone block[idx] to a new slot (+0x354++) and return the new index; else return idx (already a runtime block).
+0x00463a90,plate,MapBlocks_CloneColumnToEnd,Seq44 mapdata (VERIFIED): copy-on-write for a loaded column: if colIdx < loaded columnWordCount (+0x358) copy its (height-offset+1) words to the end of the column array (+0x360 live count). Returns nothing; caller reads the new index from +0x360 before the call.
+0x00463ae0,plate,MapBlocks_PrepareColumnForZ,"Seq44 mapdata (VERIFIED structure): make column colIdx writable and long enough to contain z; writes a new col_info{height,offset,pad,words[]} at the end of the column array (+0x360), zero-fills new slots, returns the new column word index. Used by MapBlocks_AddBlockAt (script ADD_NEW_BLOCK)."
+0x00463c30,plate,MapBlocks_CutBlockFromColumn,"Seq44 mapdata (VERIFIED structure): remove the block at z from column colIdx (flag!=0: shift upper blocks down; flag==0: zero it / shrink height or offset). Writes a copy at the end of the column array when colIdx is a loaded column, else edits in place. Returns new column index, or -1 if z is outside the column. Caller MapBlocks_RemoveBlockAt (script REMOVE_BLOCK)."
 0x00463f10,plate,LightIntensityRadius_SetRadius,Name from gta2_re (GTA2 10.5) LightIntensityRadius::SetRadius_463F10: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x00463f60,plate,MapBlocks_ChangeBlockField,"Seq44 mapdata (VERIFIED): runtime edit of one field of block (x,y,z): clones column + block (copy-on-write), records the cell in the edit list, then field 1..5 = left,right,top,bottom,lid u16 face word; 6 = slope_type byte (+0xB); 7 = arrows byte (+0xA). Used by Script_Op_CHANGE_BLOCK and by DoorFace_Open/Close (doors are map face edits + tile anim). Mod hook: call this to retexture tiles at runtime."
+0x00464060,plate,MapBlocks_AddBlockAt,"Seq44 mapdata (VERIFIED): add/replace the whole 12-byte BlockInfo at (x,y,z): PrepareColumnForZ -> new column, record edit, append (or overwrite a runtime) BlockInfo. Callers Script_Op_ADD_NEW_BLOCK, door code FUN_0044c8a0."
+0x00464110,plate,MapBlocks_RemoveBlockAt,"Seq44 mapdata (VERIFIED): remove block at (x,y,z) (CutBlockFromColumn flag param_4) and record the edit. Caller Script_Op_REMOVE_BLOCK and MapBlocks_LowerColumnAt."
+0x00464160,plate,MapBlocks_LowerColumnAt,Seq44 mapdata (VERIFIED): script LOWER_LEVEL for one cell: if the column is a single block floating at z=offset>0 just lower offset/height by 1 (on a copy for loaded columns); else RemoveBlockAt(top block).
+0x00464250,plate,MapBlocks_RestoreEditsFromSave,"Seq44 mapdata (VERIFIED): after a savegame load filled the spare capacity (see MapBlocks_GetEditBuffersForSave): live columnWordCount(+0x360) = base columns + bytes/4, live blockCount(+0x354) = base blocks + bytes/12, editCount(+0x324) = bytes/8, then MapGrid_ApplyChangedCells. Caller MissionScript_LoadSaveGame."
+0x004642a0,plate,MapBlocks_GetEditBuffersForSave,"Seq44 mapdata (VERIFIED): return the runtime-added regions for savegame I/O: extra column words (ptr, bytes), extra BlockInfos (ptr, bytes), edit list (&MapBlocks+4, bytes = count*8). Callers SaveGame, MissionScript_LoadSaveGame."
+0x00464330,plate,MapBlocks_AllocZoneInfoSlots,"Seq44 mapdata (VERIFIED code): ZONE post-pass (via MapBlocks_BuildZoneInfoSlots 0x464980). zoneInfoSlot[i] (+0x330, u8 per zone) = 0 unless zone type is 1/10/15 (nav, info, local nav); zones with same name share one slot (strncmp on name). Then zoneInfo (+0x334) = (slots+1) x 0x16-byte MapZoneInfo records, every one initialised to {500,300,300,100,0,500,50,40,10,200,40}. Slot 0 = default for points outside any zone (GetDensity). Mod hook: patch these 11 defaults to change default traffic/ped density."
 0x00464a40,plate,MapBlocks_Ctor,"Map block store singleton (GMP data), looked up by (x,y,z). Created by ConstructGame; loaded in LoadGMP_and_STY_Files; freed in Game_Dtor via MapBlocks_Dtor."
+0x00464b30,plate,MapBlocks_FreeAll,"Seq44 mapdata: free every MapBlocks allocation (+0x328 zoneData, +0x32C zoneIndex, +0x330 zoneInfoSlot, +0x334 zoneInfo, +0x338 mapObjects, +0x33C lights, +0x340 tileAnims, grid columns+blocks+grid). evidence: only caller MapBlocks_Dtor; field offsets = MapBlocks_Ctor/ReadChunk stores."
+0x00464c40,plate,LightManager_AllocLight,"Seq44 mapdata (VERIFIED): pop one Light from LightManager free list (this+0, next ptr at light+0x1C), clear its header. Only caller Light_Init."
+0x00464c60,plate,LightManager_PushActive,"Seq44 mapdata (VERIFIED): push light on LightManager active list (activeHead = this+4, next = light+0x1C). Called by Light_SetFlashing (so only flashing lights are in the per-frame active list; LightManager_Update steps them)."
+0x00464c70,plate,MapBlocks_FindZoneByName,"Seq44 mapdata (VERIFIED): find zone record by exact name (length + byte compare; leaves iterator MapBlocks+0x364 on the hit). Callers SET_STATION_INFO, SET_TRAIN_STATIONS, START_BONUS_CHECK."
+0x00464d00,plate,MapBlocks_FindZoneIndexByNameNoCase,"Seq44 mapdata (VERIFIED): zone index by name, case-insensitive (_strnicmp); -1 if none. Caller MissionScript_ParseStrings (script zone names -> index)."
+0x00464da0,plate,MapBlocks_PickNextZoneOfType,Seq44 mapdata (VERIFIED): collect up to 40 zones of the given type and return the NEXT one round-robin via g_zonePickCounter (0x663290). Not random. Only caller Player_RespawnPed (restart zones).
+0x00464e70,plate,MapBlocks_FindFirstZoneOfType,"Seq44 mapdata (VERIFIED): iterator start: first ZONE record of type param_1 (stores type at MapBlocks+0x368, point-filter flag +0x36C=0, index +0x364). Continue with MapBlocks_FindNextZoneOfType. Used for gang zones, traffic light zones, station points."
 0x00464fe0,plate,MapBlocks_FindZoneAtPos,"Find first ZONE record of the given type (0x? 1 nav,5 arrow blocker,14 gang,15 local nav) containing tile (x,y). Zone record = {u8 type,x,y,w,h,u8 nameLen,name...}; name at +6. Callers: Player_UpdateZones, Hud_ZoneName_Update, ambient ped spawn, IS_CHAR_IN_GANGZONE/ZONE ops. Seq36 gangs."
+0x00465130,plate,MapBlocks_FindFirstZoneAtPoint,"Seq44 mapdata (VERIFIED): first zone of ANY type containing block point (x,y) (sets +0x36A/+0x36B/+0x36C=1; leaves type filter +0x368 stale). Callers PlayerScore_On* (crime area), Ped_TryStartPublicTransportTask."
+0x004651c0,plate,MapBlocks_FindNextZoneOfType,"Seq44 mapdata (VERIFIED): iterator continue: next zone after MapBlocks+0x364 with type +0x368 (and, if +0x36C set, containing point (+0x36A,+0x36B))."
 0x00465350,plate,MapBlocks_FindGangAtPos,"Gang at world pos: FindZoneAtPos(x,y,type 14) then FindByName(zone+6). Stored per frame into Player+0x34 (gangZone) by Player_UpdateZones 0x4a6100. Seq36 gangs."
 0x00465390,plate,MapBlocks_RegisterGangZones,"At startGame: for every map ZONE of type 14 (gang zone, 'gang' in DMA spec) register its gang via GangRespectContainer_AddFromZone. Seq36 gangs."
 0x00465410,plate,MapBlocks_GetBlockForCollision,"Seq37 slice2 (VERIFIED): GetBlock for collision. __thiscall ECX=MapBlocks (x,y,z): same column lookup as MapBlocks_GetBlock but filters by slope idx=(slope_type&0xfc)>>2: idx 53..61 (partial blocks, 0xd4..0xf4) -> NULL; idx 49..52 (0xc4..0xd0) -> &DAT_00662b94 (a dummy zero block, i.e. no walls); everything else the real block."
+0x00465490,plate,MapBlocks_GetBlockClamped,"Seq44 mapdata (VERIFIED): MapBlocks_GetBlock with x,y clamped to 0..255; NULL if z outside [offset,height). Caller DrawTileBlock (renderer)."
 0x004656d0,plate,MapBlocks_IsBlockEdgeCrossingBlocked,"Seq37 slice2 (VERIFIED structure, case details partly hypothesis): PED tile-edge test. __thiscall ECX=g_MapBlocks; (xBlk,yBlk,zBlk, dir 1=N(y-1) 2=S(y+1) 3=E(x+1) 4=W(x-1), byte* outZAdjust, char flag). Returns nonzero = BLOCKED crossing out of block (x,y,z) in dir. Checks the wall bit 0x400 of the face of the current block facing dir (byte[5]&4 north/top, [7]&4 south/bottom, [3]&4 east/right, [1]&4 west/left) and of the opposite face of the neighbour (also at z+1 / z-1 for slopes via g_SlopeTable dir/len/step); map border (x or y at 0/255) = blocked. Sets MapBlocks+0x36E=1 for some 'blocked by slope step' results and *outZAdjust 1/0xFF. Callers: FUN_00495980 (ped move), FUN_00492190, FUN_00495220, FUN_0049c680, FUN_0049cb60."
+0x00465fe0,plate,unsure_MapBlocks_BoxIntersectsDiagonalBlocks,"Seq44 (HYPOTHESIS, structure verified): for every block under the box at its centre Z with slope idx 45..52 (slope_type&0xFC in 0xB4..0xD0 = diagonals + diagonal slopes) build the diagonal edge segment and test CollisionBox_IntersectsSegment. DMA map spec: diagonals collide only via this special segment test. Caller FUN_00425a40."
+0x00466170,plate,unsure_MapBlocks_FindDiagonalCollisionDummy,"Seq44 (HYPOTHESIS): same diagonal scan as BoxIntersectsDiagonalBlocks but on hit spawns/places an invisible dummy object (FUN_004828f0(g_ObjectSpawner, slope_type&0xFC)) centred in the block (+0.5,+0.5) and registers it as g_CollisionKind obstacle - matches DMA spec 'temporary dummy invisible object for diagonals'. Caller unsure_Sprite_FindObstacleAndRecord."
+0x00466380,plate,MapBlocks_AreaHasWallFaces,"Seq44 mapdata (VERIFIED): (x0,x1,y0,y1,z) rect test: TRUE if any block (via GetBlockForCollision) in the rect has a face with the wall bit (0x400 = high byte bit 2): east/west faces in row y, north/south faces when y<y1. Callers ParkingZone_ValidateBlocks, PoliceRoadblock_Create."
+0x00466620,plate,unsure_MapBlocks_ClassifyBoxSlopeOverlap,"Seq44 (HYPOTHESIS): over the collision-box block range at z: returns 2 if (flag) and a block has slope code 63 (0xFC, 'slope in block above'), 1 if overlapping a slope (with flag false: only slope tops), else 0. Caller FUN_004bd290."
+0x00466730,plate,unsure_MapBlocks_IsBoxOverGroundEdge,"Seq44 (HYPOTHESIS): TRUE if the collision-box block range at z mixes ground cells (ground type != 0, slope idx<45) and non-ground cells (box straddles an edge). Caller FUN_004bd250."
+0x00466a00,plate,MapBlocks_FindGroundBlockAtOrBelow,"Seq44 mapdata (VERIFIED): topmost block with ground type (slope_type&3) != 0 at or below *z in column (x,y); writes found z to *z. Used by MapBlocks_GetGroundZBelow and the GroundZBelow variants."
 0x00466af0,plate,unsure_MapBlocks_GetSkidTileKind,"Seq33 slice5 (hypothesis): tile at (x,y,z-1): 7 if water tile (FUN_00462fb0), 0 if has lid, 5 otherwise. Used by CarPhysics_SpawnSkidSegment. gta2_re 10.5: Map::sub_4E52A0."
 0x00466b70,plate,MapBlocks_GetSlopeSurfaceZ,"Seq37 slice2 (VERIFIED): ground z on a slope block. __thiscall ECX=MapBlocks, stack (x,y Fix16, SCR_f* zInOut) ret 0xC. Block at (floor x, floor y, floor *zInOut). Returns 0 if no block / ground type (slope_type&3)==0 / g_SlopeTable dir==0 (flat). Else frac = dir1: 1-frac(y), dir2: frac(y), dir3: 1-frac(x), dir4: frac(x); z = gradient(len)*frac + table.z0 (+4), gradient(len): len1=1.0, len2=0.4985(0x1fe8), len8=0.1272(0x824) via FUN_004634e0; a result of exactly 0 is replaced by 1/64 (DAT_006631ec); *zInOut = floor(*zInOut) + z. Returns dir (1..4). Used by FindMaxZ, MapBlocks_GetGroundZBelow, ped Z follow FUN_00494180."
+0x00466e20,plate,unsure_MapBlocks_GetRailSurfaceZ,"Seq44 (HYPOTHESIS): rail ground Z: like MapBlocks_GetGroundZBelow but uses unsure_MapBlocks_FindRailBlockAtOrBelowZ (rail blocks only), default 1.0. Callers CarPhysics_UpdateZOnRailway, MoveAlongRail*."
+0x00466f70,plate,unsure_MapBlocks_GetTopRailSurfaceZ,"Seq44 (HYPOTHESIS): Z of topmost rail block at (x,y) (slope-aware), default 0.0. Callers CarManager_SpawnCarOnGround, CarPhysics_UpdateZOnRailway."
 0x00469010,plate,Light_Init,Name from gta2_re (GTA2 10.5) Light_1D4CC::Init_469010: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
 0x00469070,plate,Light_SetFlashing,Name from gta2_re (GTA2 10.5) Light_1D4CC::SetFlashing_469070: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
+0x004690b0,plate,ZoneRecord_IsVisibleToAnyCamera,"Seq44 mapdata (VERIFIED): zone record (+1 x,+2 y,+3 w,+4 h) -> Rect_SetFromXYWH -> Game_AnyCameraSeesBox. TRUE if any player camera sees the zone."
+0x00469110,plate,MapBlocks_FindBestZoneOfTypeNearPoint,"Seq44 mapdata: among zones of type param_3 pick best around block point: prefers zones NOT on any camera (ZoneRecord_IsVisibleToAnyCamera) at distance < DAT_00662cf8..; falls back to nearest, then to the last zone of that type. Only caller Player_RespawnPed (restart zones). Details of the distance thresholds = hypothesis."
+0x004693a0,plate,unsure_Map_IsSpiralCandidateTile,"Seq44 (VERIFIED): candidate test for spiral search at (g_spiralX,g_spiralY,g_spiralZ), bounds 0..255: type 2 -> MapBlocks_FindPavementTopBlock != 0; else ground type of block == 1 (road)."
+0x00469400,plate,unsure_Map_SpiralSearchGroundTile,"Seq44 (VERIFIED structure): square spiral outward from (*x,*y,*z): checks each cell with unsure_Map_IsSpiralCandidateTile for ground type (ECX: 2 = pavement top block, else road). Writes first hit back through the pointers. Caller Ped_SetTask."
 0x00469570,plate,MapBlocks_GetGroundZBelow,"Seq37 slice2 (VERIFIED decompile): level-aware ground z. __thiscall ECX=MapBlocks, stack (Fix16* out, x, y, zHint). If block at (x,y,floor zHint) has ground and is slope 1..44 (MapBlocks_IsSlope1to44At) and slope surface z <= zHint -> that z. Else uses FUN_00466a00 (top solid block below zHint-1): none -> out=1.0; slope -> slope z; else out = level+1. Returns out. The 'ground z at (x,y,z)' primitive (FindMaxZ 0x46A420 is the same without a z hint, topmost block)."
+0x004696c0,plate,unsure_MapBlocks_GetGroundZUpwards,"Seq44 (HYPOTHESIS): scan upward from z (one block range) for the first floor: empty cell above a ground cell, or slope surface >= z. Callers Ped_Obj2_LeaveCar, Sprite_UpdatePedAnimFrame."
+0x00469850,plate,MapBlocks_GetGroundZBelowOrZero,Seq44 (VERIFIED): identical to MapBlocks_GetGroundZBelow except returns 0.0 (DAT_00662cfc) instead of 1.0 when no ground below. Caller CarPhysics_UpdateGroundZ.
+0x004699a0,plate,unsure_MapBlocks_GetGroundZBelowWithFlag,"Seq44 (HYPOTHESIS): GetGroundZBelow variant; *param_5 byte cleared at entry and set to 1 when the slope at the hint block lies above z. Callers FUN_00484090, FUN_004843a0 (objects)."
+0x00469b00,plate,unsure_MapBlocks_IsPointOnGroundSurface,"Seq44 (HYPOTHESIS): TRUE if point (x,y,z) rests on a ground surface: a slope block whose surface z == z, or (z==1.0 / block below has ground). Callers CarPhysics_UpdateSurface, MapBlocks_ScanBoxFacesForWalls."
+0x00469c20,plate,unsure_MapBlocks_IsZRangeTouchingSlopeSurface,"Seq44 (HYPOTHESIS): (x,y,z0,z1): TRUE if slope/ground surface at the column lies between z0 and z1 (corner support test). Callers Sprite_CheckCornerZCollisions, FUN_004bbbe0."
+0x00469dc0,plate,unsure_MapBlocks_FindDropGroundZ,"Seq44 (HYPOTHESIS): ground Z for a dropped item between z0 and z1 (oil/mine): returns TRUE and *out = surface Z. Callers CarWeapon_FireMine, CarWeapon_FireOil."
 0x00469f90,plate,unsure_MapBlocks_SweepBodyIsClear,"Seq37 slice2 (disasm of callee VERIFIED, call-site arg layout OPEN): __stdcall, 9 stack args (ret 0x24), returns AL: 1 = path clear, 0 = blocked (g_CollisionKind filled). Moves the temporary Position g_ObjectSpawner->position ([0x665788]+0x58) in steps from point A to point B, sizing it with FUN_004bcb90(pos, arg1, arg2, arg3) (body w,h,zsize), at each step MapBlocks_GetGroundZBelow / slope handling then unsure_Sprite_TestMapCollisionAndRecord. Callee reads arg4..6 as start x,y,z and arg7..9 as end x,y,z (Fix16). Callers: Ped_UpdateThreats (line-of-sight between peds), TrafficSpawner/FindSpawnRoadTile, FUN_004cef40/4cf380. WARNING: at call sites the 2nd pushed arg is [0x662C08]; arg order not reconciled, do not call from host before re-checking."
 0x0046a570,plate,MapBlocks_ScanBoxFacesForWalls,"Seq37 slice2 (VERIFIED decompile, details hypothesis): face scan under MapBlocks_IsBodyBlockedByWalls. __thiscall ECX=MapBlocks, 7 stack args (xmin,xmax,ymin,ymax,cx,cy,z block ints). Block word offsets: left +0, right +2, top(north,y-1 side) +4, bottom(south) +6, lid +8; tests (face & DAT_00662bec). Slope table g_SlopeTable[(slope_type>>2)*12]: byte0 dir 1..4 (up N / S / W / E) makes the test use z+1 on the rising side so a ramp is not a wall; unknown/dir 0 => plain. If mover!=NULL and the mover centre is not over ground (FUN_00469b00/466cf0 false) it falls back to unsure_MapBlocks_ScanColumnsForWalls (0x466430). Returns 1 = blocked."
 0x0046b440,plate,MapBlocks_IsBodyBlockedByWalls,"Seq37 slice2 (VERIFIED, disasm): THE map-vs-body wall test. __thiscall ECX=g_MapBlocks(0x662C08), 5 stack args, ret 0x14: (xBlk,yBlk,zBlk = body centre block ints, Position* mover or NULL, u16 faceMask). Reads the body AABB (block ints) from globals DAT_00662bd4/f8/bac/bfc = xmin/xmax/ymin/ymax (set by CollisionBox_LoadBlockBoundsToGlobals 0x4BA5E0 from Position->body+0x30), stores mover->DAT_00662bf0 and mask->DAT_00662bec, then runs MapBlocks_ScanBoxFacesForWalls (0x46A570) on the 1-3 block wide strips. Returns AL=1 blocked. faceMask: 0x400 = wall bit (bit10 of block face word), 0x800 = bullet wall (bit11). mover==NULL -> any face with the mask bit set counts (no rect test); mover!=NULL -> each hit face edge is confirmed against the body rotated rect (FUN_004bb860/bb910) and recorded in g_CollisionKind (kind 1/2). Callers: unsure_Sprite_TestMapCollisionAndRecord 0x4BD670, unsure_CollisionBox_HitsMapSolid 0x4BA720 (mover NULL mask 0x400), FUN_004bd610 (mask 0x800)."
+0x0046b5e0,plate,MapRenderer_GetLidBrightness,"Lid brightness from the lid face word's bits 10-11 (a lighting level on lids): 0 -> 0xff (full), 1 -> left shade (+0xc), 2 -> bottom shade (+0xe), 3 -> top shade (+0xf). evidence: called with (lidWord>>10)&3 from DrawLidFace/DrawPartialLidFace/DrawRampBlock; result is gbh_DrawTile brightness arg."
+0x0046b620,plate,MapRenderer_SetShadingLevel,"Was relS12. Sets the per-face-direction brightness bytes MapRenderer+0xc..+0x1b from a shading level (0..15, ctor passes 0xf, script op SET_SHADING_LEVEL 0x47e170 passes the script value). t=(2*level)/3, base=(-4*level-1)&0xff, hi=(51-level)*5: +0xc left=base+2t, +0xd right=hi-3t, +0xe bottom=base, +0xf top=hi-t, +0x10..+0x1b = intermediate shades for diagonal/slope/triangle faces. These bytes are the brightness arg of gbh_DrawTile/DrawTriangle. evidence: callers MapRenderer_Ctor and Script_Op_SET_SHADING_LEVEL; face drawers read this+0xc..0x1b as 4th arg to gbh_DrawTile."
+0x0046bb50,plate,TextureCache_GetTileTexture,return this[*tile] (u32 array indexed by remapped tile id) = gbh texture handle for a map tile. this = g_TextureCache. evidence: every map face drawer passes g_TextureCache + &StyleData_GetTileRemap(...)  and hands the result to gbh_DrawTile as the texture.
+0x0046bb90,plate,MapRenderer_AddUniqueBlockXY,"Appends {x,y} to renderDistanceArr[currentDrawLayerSize] (MapRenderer+0x1c, 8 bytes each, capacity 1500, no bounds check) and keeps it only if no earlier entry is equal (IntPair_Equals scan; size++ only if unique). evidence: only caller is MapRenderer_DrawFrame's visible-rect loop."
+0x0046bbf0,plate,MapRenderer_StoreVertexWorldPos,"Stdcall(xRel*, yRel*, z*, vtxOut): stores the WORLD position (camera x/y + rel, and z) as floats into the parallel slot vtxOut+0x80 (vertex array g_MapRenderVerts stride 0x20, world pos kept 4 vertices after the screen vertex). d3ddll point-light code reads it for per-vertex lighting. evidence: index math ((vtx-0x6632a0)>>5)+4, called by all three ProjectVertex* helpers."
+0x0046bc70,plate,MapRenderer_ProjectVertexAtZ,"Generic projection of rel (x,y) at height z to screen vertex out[0..2]: rhw=1/(cam.z+8-z); sx=screenPxCenterX + x*cam.field_0x60*rhw; sy likewise with CenterY; out[2]=rhw (D3DTLVERTEX sz). Also stores world pos via StoreVertexWorldPos. Used for ramp/partial heights between layer planes. evidence: decompiled formula; callers are the face drawers' slope branches."
+0x0046bd40,plate,MapRenderer_ProjectVertexAtLayerTop,"Projects rel (x,y) onto the TOP plane of the current layer (z = g_MapRenderTopPlaneZ = L+1): sx=centerX + x*g_MapRenderScaleTop, out[2]=g_MapRenderRhwTop. Lid and the top edge of walls use this."
+0x0046bdf0,plate,MapRenderer_ProjectVertexAtLayerBottom,"Projects rel (x,y) onto the BOTTOM plane of the current layer (z = CurrentlyDrawnMapLayerIndex = L): sx=centerX + x*g_MapRenderScaleBottom, out[2]=g_MapRenderRhwBottom."
+0x00471f20,plate,DrawTileBlock,"One map cell at (x,y,z=CurrentlyDrawnMapLayerIndex). FUN_00465490 = block_info lookup (12-byte: left,right,top,bottom,lid u16 face words + arrows + slope_type; NULL when z>=column top or z<offset). Copies faces to g_MapRenderFace{Left,Right,Top,Bottom,Lid}; g_showHiddenFaces replaces empty wall/lid faces with tile 0x260. Stores block position relative to camera in g_MapRenderBlockRelX/Y, then dispatches on slope_type&0xfc: 0xb4..0xc0 (slopes 45-48) DrawDiagonalBlock; 0xc4..0xd0 (49-52) DrawCornerRoofBlock; 0xd4..0xf4 (53-61) DrawPartialBlock; 1..0xb0 (1-44) DrawRampBlock; else (0, 62, 63) DrawCubeBlock."
+0x004720e0,plate,DrawMapLayer,"Draws every cell of the current layer's renderDistanceArr (MapRenderer+0x1c, 8-byte {x,y} pairs) from the LAST entry down to entry 0 via DrawTileBlock, i.e. centre rows first, outermost last (painter order). evidence: loop reads currentDrawLayerSize and steps x-1."
+0x00472110,plate,MapRenderer_DrawFrame,"Map frame entry (called from eachFrame 0x45a5a0). Per frame: if g_lightingEnabled: gbh_SetAmbient(ambientCurrent) + MapRenderer_StepAmbient. Then for layer L=0..6 (z levels): FlushLayer(L>0) of g_LayerDrawQueues (sprites of that layer), compute view rect from g_ViewCamera->cameraPos (width=(8-L+cam.z)/zoom, height=width*0.75) -> fill renderDistanceArr via MapRenderer_AddUniqueBlockXY (ring-sorted, dedup), set per-layer perspective scales g_MapRenderScale{Bottom,Top}=cam.field_0x60/(8-h+cam.z) for planes h=L and L+1, on L==0 reset+add point lights (FUN_00461400) and gbh_SetCamera(rect); DrawMapLayer. After loop FlushLayer(7). g_skipTiles skips the layer body. evidence: decompiled in Seq44 renderer pass."
 0x00472640,plate,ResetRandomSeedTo1,Resets the game RNG seed (random_seed) to 1 via Crt_Srand. Called first in ConstructGame so every session starts deterministic.
 0x00472e90,plate,Random_U8,Seq27 traffic pass (VERIFIED bytes): was misnamed PauseGame. *outValue = random32() % *max; returns the low byte. Logs the roll when g_logRandom (0x5EAD63) is set. Used for every rand(N) in spawner/AI code.
 0x00473170,plate,AmbulanceSlot_SpawnParamedicCrew,"AmbulanceSlot_SpawnParamedicCrew: needs PedGroupPool_Alloc and g_DummyPedManager+5 < 0x1e. Creates 2 peds (100 hp): driver + passenger, both occupation MEDIC(0x17), remap 0x10, graphicType DUMMY, threatReaction REACT_AS_EMERGENCY, threatSearch NO_THREATS, bitstate2 UNK_4_POLICE, field230=2. Driver: PutInCar, objective GO_TO_AREA_IN_CAR to slot spawn tile, carSpeed = DAT_006640b4 (0.4). Group leader=driver, member=passenger. Car driverClass 4, EnsurePhysics, StartDriving, stage -> 6. Verified 2026-10-21."
@@ -1572,8 +1918,63 @@ dest may NOT be shorter than strlen(src)+hardBreaks+1."
 Seq 27: SpawnObject result is NOT checked: if it returns NULL (category-2 cap 360, Pool40 full for kind 5) the next line reads NULL->position (address 4). Player pistol 0x109, NPC 0xFE, rocket 0x80, shotgun 0xC0; probe clones 0x9A/0x9F/0xC1/0xC3/0xC7 when WEAPON_STRUCT.probeMode != 0."
 0x004ce970,plate,Weapon_ThrowMolotovOrGrenade,"Throw handler for MOLOTOV (id 4, obj 0x8a, with fire explosion child) and GRENADE (id 5, obj 0xb7); throw power from Player throwCharge (+0x50): at 0x60 detonates in hand (Object_CreateExplosion). FireFromGun dispatch case 4/5 and Ped_UpdateWeaponFiring."
 0x004d0740,plate,WeaponManager::WeaponManager_Ctor,"WeaponManager (weapon.cpp:0x97C). 8 bytes: [+0] list head of cars already hit this shot (dedupe in FUN_004cf380), [+4] short live weapon count. Lazily creates the weapon pool (0x2FDC B, 255 x 0x30 slots) in ptrToWeaponRelStruct."
+0x004d07e0,plate,WeaponPool_ScalarDeletingDtor,calls WeaponPool_Dtor then _free if flag&1 (Seq 45)
+0x004d0800,plate,WeaponPool_Destroy,"deletes g_WeaponPool via scalar deleting dtor, nulls global (Seq 45)"
 0x004d0820,plate,FrontEnd_LaunchGta2Manager,"Misnamed WinMain (actual WinMain2 = 0x4D11B8): launches/focuses the separate settings program gta2manager.exe. ShowWindow(main,7); if OpenMutexA(""GBH_BOB_MUTEX"") fails: PostMessage WM_ACTIVATE(WA_INACTIVE) + ShellExecuteA(""gta2manager.exe"", cwd), <=32 -> DisplayError 0x7e; else FindWindowEx(""GTA2 Manager"") + SetForegroundWindow. Callers: FrontEnd_UpdateMenuMode (OPTIONS, action 0x101, call at 0x4599A1) and 0x56DD67 stub (from Player_OnKeyDown). Suggested name Frontend_LaunchGta2Manager."
+0x004d09b0,plate,Keyboard_SetActiveFlag,writes byte at this+0x75344 of _keyboard; called only from WndProc helper (Seq 45)
+0x004d09d0,plate,WndProc_ForwardKeyboardActive,WndProc helper: if !isExit set _keyboard flag else FrontEnd_SetKeyboardActive (Seq 45)
+0x004d0ed0,plate,Startup_ConnectMultiplayerFromRegistry,"reads UseProtocol/UseConnection registry blobs, Network_Connect, sets menu gmp/sty/scr paths; called from WinMain2 (Seq 45)"
 0x004d11b8,plate,WinMain2,Seq33 slice1: WinMain main loop: PeekMessage pump; when no message and not paused/quit: drawAndLimitFrames() (0x462A30) = the fixed-step scheduler (33 ms logic tick). Frontend branch (isExit) uses FUN_0045A320 instead.
+0x004d48d0,plate,ios_Ctor,"old MSVC iostream ios init: vptr, bp=0, state=4(badbit), fill=' ' at +0x2c, width at +0x30 [old MSVC iostream] (Seq 45)"
+0x004d4940,plate,ios_Dtor,"ios dtor: deletes bp if delbuf(+0x1c), clears bp, state=badbit [old MSVC iostream] (Seq 45)"
+0x004d4969,plate,ios_Init,"ios::init(streambuf*): frees old delbuf bp, sets bp, state=badbit if null [old MSVC iostream] (Seq 45)"
+0x004d4998,plate,ios_Assign,"ios::operator=: copies tie, flags, precision, fill, width, state from other [old MSVC iostream] (Seq 45)"
+0x004d4a49,plate,ios_ScalarDeletingDtor,"calls ios_Dtor, _free if flag&1 [old MSVC iostream] (Seq 45)"
+0x004d4ac8,plate,ofstream_Ctor,"iostream ofstream() ctor: vbase ios, allocs 0x38 filebuf, ios::init [old MSVC iostream] (Seq 45)"
+0x004d4b4e,plate,ofstream_CtorOpen,"ofstream(const char*,mode,prot): ctor plus filebuf::open(mode OR ios::out), sets failbit [old MSVC iostream] (Seq 45)"
+0x004d4c03,plate,ofstream_CtorFd,ofstream(int fd): allocs filebuf(fd) [old MSVC iostream] (Seq 45)
+0x004d4c8c,plate,ofstream_CtorFdBuf,"ofstream(int fd,char*,int): allocs filebuf(fd,buf,len) [old MSVC iostream] (Seq 45)"
+0x004d4d1b,plate,ofstream_DtorVbaseFixup,unsure: sets ios-relative vptrs only; called from FUN_0044dbf0 dtor path [old MSVC iostream] (Seq 45)
+0x004d4d2e,plate,ofstream_Setbuf,ofstream::setbuf-like: if filebuf fd==-1 call vfn[2]; else set failbit [old MSVC iostream] (Seq 45)
+0x004d4d97,plate,ofstream_Open,"ofstream::open(name,mode,prot): filebuf::open(mode OR out) else failbit; caller do_miss_logging [old MSVC iostream] (Seq 45)"
+0x004d4dd2,plate,ofstream_Close,calls filebuf::close; clears state or sets failbit [old MSVC iostream] (Seq 45)
+0x004d4e2d,plate,streambuf_Sputc,inline sputc: store at pptr++ if pptr<epptr else virtual overflow vfn+0x1c [old MSVC iostream] (Seq 45)
+0x004d4e49,plate,ostream_Put,"ostream::put(char): opfx, sputc/overflow, writepad if width, osfx [old MSVC iostream] (Seq 45)"
+0x004d4eca,plate,ostream_Osfx,"ostream::osfx: width=0, flush if unitbuf(0x20), fflush stdout/stderr if stdio flag(0x40) [old MSVC iostream] (Seq 45)"
+0x004d4f46,plate,ostream_Flush,"ostream::flush: calls streambuf sync vfn+4, sets failbit on -1 [old MSVC iostream] (Seq 45)"
+0x004d4f6c,plate,ostream_CtorBase,"ostream() base ctor: ios vptr, bp stays null state; vbase flag [old MSVC iostream] (Seq 45)"
+0x004d4fa2,plate,ostream_CtorStreambuf,ostream(streambuf*): vbase ios ctor + ios::init(sb) [old MSVC iostream] (Seq 45)
+0x004d5007,plate,ostream_CtorCopyBuf,ostream(ostream&): ios::init with other's streambuf [old MSVC iostream] (Seq 45)
+0x004d5084,plate,ostream_withassign_AssignStreambuf,"operator=(streambuf*): frees bp, ios assign from default temp, init(sb) [old MSVC iostream] (Seq 45)"
+0x004d510a,plate,ostream_withassign_Ctor,"vptr 0x5786b8 variant, ostream base ctor [old MSVC iostream] (Seq 45)"
+0x004d5165,plate,ostream_withassign_CtorStreambuf,vptr 0x5786b8 variant of ostream(streambuf*) [old MSVC iostream] (Seq 45)
+0x004d51c3,plate,ostream_withassign_DtorVbaseFixup,unsure: resets vptrs to base; no callers found [old MSVC iostream] (Seq 45)
+0x004d51e0,plate,ostream_Writepad,"ostream::writepad(left,right): fill chars by width per adjustfield flags [old MSVC iostream] (Seq 45)"
+0x004d532e,plate,ostream_Opfx,"ostream::opfx: fail if state!=0, flush tie ostream [old MSVC iostream] (Seq 45)"
+0x004d5357,plate,ostream_OperatorShiftString,"ostream::operator<<(const char*): opfx, writepad, osfx; used by DebugLog_WriteLine [old MSVC iostream] (Seq 45)"
+0x004d539f,plate,ostream_Dtor,"ostream dtor: reset vptr, destroy embedded ios at +8 [old MSVC iostream] (Seq 45)"
+0x004d5465,plate,filebuf_Ctor,"filebuf(): streambuf ctor, fd=-1, vptr 0x5786dc [old MSVC iostream] (Seq 45)"
+0x004d547f,plate,filebuf_CtorFd,"filebuf(int fd): streambuf ctor, fd at +0x30 [old MSVC iostream] (Seq 45)"
+0x004d549e,plate,filebuf_Close,"filebuf::close: sync (vfn+4) then _close(fd), fd=-1 [old MSVC iostream] (Seq 45)"
+0x004d54d5,plate,filebuf_Setbuf,"filebuf::setbuf(char*,int): only if fd==-1 or unbuffered; calls setb [old MSVC iostream] (Seq 45)"
+0x004d5524,plate,filebuf_CtorFdBuf,"filebuf(int fd,char*,int): ctor + setbuf [old MSVC iostream] (Seq 45)"
+0x004d556c,plate,filebuf_Sync,"filebuf::sync: _write pending put area, _lseek back unread get area (CRLF count) [old MSVC iostream] (Seq 45)"
+0x004d564b,plate,filebuf_Dtor,"filebuf dtor: close if opened by filebuf else sync, then streambuf dtor [old MSVC iostream] (Seq 45)"
+0x004d5690,plate,filebuf_Overflow,"filebuf::overflow(int): allocate, sync, reset put area, write/sputc char [old MSVC iostream] (Seq 45)"
+0x004d5701,plate,filebuf_Underflow,filebuf::underflow: _read into buffer or single char [old MSVC iostream] (Seq 45)
+0x004d57a2,plate,filebuf_Seekoff,"filebuf::seekoff: SEEK_CUR/END mapping, sync then _lseek (dir arg in EAX) [old MSVC iostream] (Seq 45)"
+0x004d57de,plate,filebuf_ScalarDeletingDtor,"calls filebuf_Dtor, _free if flag&1 [old MSVC iostream] (Seq 45)"
+0x004d57fa,plate,filebuf_Attach,"filebuf::attach(fd): sets fd if -1, allocs 0x200 buffer [old MSVC iostream] (Seq 45)"
+0x004d584e,plate,filebuf_Open,"filebuf::open: maps ios open modes to _O_ flags, _sopen, 0x200 buffer, ate seek [old MSVC iostream] (Seq 45)"
+0x004d59e3,plate,streambuf_Ctor,"streambuf(): zeroes base/get/put pointers, unbuffered, vptr 0x57870c [old MSVC iostream] (Seq 45)"
+0x004d5ae4,plate,streambuf_Xsgetn,streambuf::xsgetn: memcpy loop calling underflow (vfn+0x20) [old MSVC iostream] (Seq 45)
+0x004d5b7c,plate,streambuf_Sync,default sync: 0 if get/put areas empty else -1; used by dtor [old MSVC iostream] (Seq 45)
+0x004d5b93,plate,streambuf_Allocate,"streambuf::allocate: if no buffer and buffered, call doallocate vfn+0x28 [old MSVC iostream] (Seq 45)"
+0x004d5bb1,plate,streambuf_Setb,"streambuf::setb(base,ebuf,del): free old if allocated, set base/ebuf/alloc [old MSVC iostream] (Seq 45)"
+0x004d5bf9,plate,streambuf_Sputbackc,inline sputbackc: --gptr store else pbackfail vfn+0x24 [old MSVC iostream] (Seq 45)
+0x004d5c1e,plate,streambuf_Dtor,"streambuf dtor: sync, free base buffer if allocated [old MSVC iostream] (Seq 45)"
+0x004d5c6b,plate,streambuf_Pbackfail,"streambuf::pbackfail: seekoff(-1,cur) and shift buffer [old MSVC iostream] (Seq 45)"
+0x004d5cc5,plate,streambuf_ScalarDeletingDtor,"calls streambuf_Dtor, _free if flag&1 [old MSVC iostream] (Seq 45)"
 0x004d5ce1,plate,__heap_alloc,"Library Function - Single Match
 Name: __heap_alloc
 Library: Visual Studio 2003 Release"
@@ -1583,6 +1984,8 @@ Library: Visual Studio 2003 Release"
 0x004d5d53,plate,_malloc,"Library Function - Single Match
 Name: _malloc
 Library: Visual Studio 2003 Release"
+0x004d5d66,plate,__cfltcvt_init,"fills _cfltcvt_tab with __cfltcvt, __fassign, __forcdecpt (CRT cfltcvt.c) (Seq 45)"
+0x004d5dae,plate,__fpmath,__cfltcvt_init + __ms_p5_mp_test_fdiv + setdefaultprecision (VC7 fpinit.c) (Seq 45)
 0x004d5dca,plate,operator_new,"Library Function - Single Match
 Name: ??2@YAPAXI@Z
 Library: Visual Studio 2003 Release"
@@ -1604,15 +2007,19 @@ Library: Visual Studio 2003 Release"
 0x004d5e6f,plate,___CxxFrameHandler,"Library Function - Single Match
 Name: ___CxxFrameHandler
 Library: Visual Studio 2003 Release"
+0x004d5ee3,plate,CatchGuardHandler,"EH frame.cpp: calls ___InternalCxxFrameHandler with FuncInfo from frame, UnwindNestedFrames (Seq 45)"
 0x004d5f54,plate,_GetRangeOfTrysToCheck,"Library Function - Single Match
 Name: ?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z
 Library: Visual Studio 2003 Release"
 0x004d5fce,plate,_CreateFrameInfo,"Library Function - Single Match
 Name: ?_CreateFrameInfo@@YAPAUFrameInfo@@PAU1@PAX@Z
 Library: Visual Studio 2003 Release"
+0x004d5fe7,plate,__IsExceptionObjectToBeDestroyed,walks global list for exception object pointer (EH ehstate) (Seq 45)
 0x004d6002,plate,_FindAndUnlinkFrame,"Library Function - Single Match
 Name: ?_FindAndUnlinkFrame@@YAXPAUFrameInfo@@@Z
 Library: Visual Studio 2003 Release"
+0x004d603b,plate,unsure_CallCatchBlock_CallSettingFrameGuarded,unsure: Builds FS:[0] SEH frame (handler 4d5ebf) around __CallSettingFrame@12; only caller CallCatchBlock (Seq 45)
+0x004d608c,plate,_CallSETranslator,Calls __pSETranslator (DAT_0067503c) with SEH frame; only caller FindHandlerForForeignException (Seq 45)
 0x004d613c,plate,__global_unwind2,"Library Function - Single Match
 Name: __global_unwind2
 Library: Visual Studio"
@@ -1643,10 +2050,12 @@ Library: Visual Studio 2003 Release"
 0x004d63c4,plate,_atexit,"Library Function - Single Match
 Name: _atexit
 Library: Visual Studio 2003 Release"
-0x004d63fe,plate,FID_conflict:__fread_lk,"Library Function - Multiple Matches With Different Base Names
+0x004d63fe,plate,__fread_lk,"No lock/unlock inside; body is fread core loop (FID said __fread_lk vs _fread) (Seq 45)
+Library Function - Multiple Matches With Different Base Names
 Name: __fread_lk, _fread
 Library: Visual Studio 2003 Release"
-0x004d64e7,plate,FID_conflict:__fwrite_lk,"Library Function - Multiple Matches With Different Base Names
+0x004d64e7,plate,__fwrite_lk,"No lock/unlock inside; fwrite core loop via __flush/_write (FID conflict resolved) (Seq 45)
+Library Function - Multiple Matches With Different Base Names
 Name: __fwrite_lk, _fwrite
 Library: Visual Studio 2003 Release"
 0x004d65ee,plate,_fseek,"Library Function - Single Match
@@ -1655,31 +2064,37 @@ Library: Visual Studio 2003 Release"
 0x004d667c,plate,_ftell,"Library Function - Single Match
 Name: _ftell
 Library: Visual Studio 2003 Release"
+0x004d682d,plate,__scprintf,"FILE{cnt=INT_MAX,flag=0x42,base=0} then __output over varargs: counts chars without storing (Seq 45)"
 0x004d685e,plate,_fclose,"Library Function - Single Match
 Name: _fclose
 Library: Visual Studio 2003 Release"
 0x004d68b4,plate,__fsopen,"Library Function - Single Match
 Name: __fsopen
 Library: Visual Studio 2003 Release"
-0x004d68f1,plate,FID_conflict:_getc,"Library Function - Multiple Matches With Different Base Names
+0x004d68f1,plate,__getc_lk,"Inline getc macro body with __filbuf, no locking (FID conflict _fgetc/_getc) (Seq 45)
+Library Function - Multiple Matches With Different Base Names
 Name: _fgetc, _getc
 Library: Visual Studio 2003 Release"
 0x004d6925,plate,eh_vector_constructor_iterator,"Library Function - Single Match
 Name: ??_L@YGXPAXIHP6EX0@Z1@Z
 Library: Visual Studio 2003 Release
 void __stdcall `eh vector constructor iterator'(void *,unsigned int,int,void (__thiscall*)(void *),void (__thiscall*)(void *))"
+0x004d696f,plate,Unwind@004d696f,Unwind funclet of eh_vector_constructor_iterator: __ArrayUnwind (Seq 45)
 0x004d6999,plate,__ArrayUnwind,"Library Function - Single Match
 Name: ?__ArrayUnwind@@YGXPAXIHP6EX0@Z@Z
 Library: Visual Studio 2003 Release"
 0x004d69f7,plate,`eh_vector_destructor_iterator',"Library Function - Single Match
 Name: ??_M@YGXPAXIHP6EX0@Z@Z
 Library: Visual Studio 2003 Release"
+0x004d6a3f,plate,Unwind@004d6a3f,Unwind funclet of eh_vector_destructor_iterator: __ArrayUnwind (Seq 45)
 0x004d6a60,plate,__chkstk,"Library Function - Single Match
 Name: __chkstk
 Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release"
+0x004d6ac7,plate,_wcscpy,"Copies 16-bit units until 0, returns dest (Seq 45)"
 0x004d6ae3,plate,__stricmp,"Library Function - Single Match
 Name: __stricmp
 Library: Visual Studio 2003 Release"
+0x004d6b26,plate,__chdir,"SetCurrentDirectoryA then sets =X: env var via SetEnvironmentVariableA, __dosmaperr (Seq 45)"
 0x004d6bc2,plate,_atol,"Library Function - Single Match
 Name: _atol
 Library: Visual Studio 2003 Release"
@@ -1692,6 +2107,7 @@ Library: Visual Studio 2003 Release"
 0x004d6d29,plate,_wcscmp,"Library Function - Single Match
 Name: _wcscmp
 Library: Visual Studio 2003 Release"
+0x004d6dca,plate,__scwprintf,Same as __scprintf but wide __woutput (4dd5ec) (Seq 45)
 0x004d6dfc,plate,__ftol2,"Library Function - Single Match
 Name: __ftol2
 Library: Visual Studio"
@@ -1701,18 +2117,36 @@ Library: Visual Studio 2003 Release"
 0x004d6eb0,plate,_memmove,"Library Function - Single Match
 Name: _memmove
 Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release"
+0x004d721a,plate,__crtExitProcess,"GetModuleHandle mscoree.dll, CorExitProcess then ExitProcess (Seq 45)"
+0x004d7280,plate,__cinit,"Runs fp init ptr, xi_a..xi_z initterm, _atexit, xc table initterm (Seq 45)"
+0x004d72e5,plate,_doexit,"Runs onexit table, pre-terminators, terminators; TerminateProcess if re-entered; args (code,quick,retcaller) (Seq 45)"
 0x004d73b8,plate,__exit,"Library Function - Single Match
 Name: __exit
 Library: Visual Studio 2003 Release"
+0x004d73c9,plate,__cexit,"doexit(0,0,1) (Seq 45)"
+0x004d73d8,plate,__c_exit,"doexit(0,1,1) (Seq 45)"
+0x004d73e7,plate,_xtoa,Digit loop with '0'/'W' (lowercase hex) and reverse; backs itoa/ltoa/ultoa (Seq 45)
 0x004d7425,plate,__itoa,"Library Function - Single Match
 Name: __itoa
 Library: Visual Studio 2003 Release"
 0x004d744f,plate,__ltoa,"Library Function - Single Match
 Name: __ltoa
 Library: Visual Studio 2003 Release"
+0x004d7476,plate,__ultoa,"Calls xtoa unsigned (neg=0), returns buf (Seq 45)"
+0x004d7490,plate,_x64toa,64-bit xtoa using __aulldvrm (Seq 45)
+0x004d74fd,plate,__i64toa,x64toa with neg flag when radix==10 and value<0 (Seq 45)
+0x004d752e,plate,__ui64toa,x64toa with neg=0 (Seq 45)
+0x004d7549,plate,__findclose,FindClose; errno=EINVAL on failure (Seq 45)
 0x004d7568,plate,___timet_from_ft,"Library Function - Single Match
 Name: ___timet_from_ft
 Library: Visual Studio 2003 Release"
+0x004d75cc,plate,__findfirst,"FindFirstFileA, fills _finddata_t via timet_from_ft, ENOENT/EINVAL mapping (Seq 45)"
+0x004d76ac,plate,__findnext,"FindNextFileA, same fill as findfirst (Seq 45)"
+0x004d7787,plate,__itow,_itoa into local buffer then widen (Seq 45)
+0x004d77c8,plate,__ltow,_ltoa into buffer then widen (Seq 45)
+0x004d7809,plate,__ultow,_ultoa into buffer then widen (Seq 45)
+0x004d784a,plate,__i64tow,_i64toa into buffer then widen (0x50 buffer) (Seq 45)
+0x004d788e,plate,__ui64tow,_ui64toa into buffer then widen (Seq 45)
 0x004d78e0,plate,copySomething,"Library Function - Single Match
  _strncpy
 
@@ -1720,10 +2154,12 @@ Library: Visual Studio 2003 Release"
 0x004d7a04,plate,__strnicmp,"Library Function - Single Match
 Name: __strnicmp
 Library: Visual Studio 2003 Release"
-0x004d7a59,plate,FID_conflict:__wctime,"Library Function - Multiple Matches With Different Base Names
+0x004d7a59,plate,_ctime,"_localtime then asctime (FUN_004de277); FID conflict __wctime vs _ctime (Seq 45)
+Library Function - Multiple Matches With Different Base Names
 Name: __wctime, _ctime
 Library: Visual Studio 2003 Release"
-0x004d7a72,plate,FID_conflict:__time32,"Library Function - Multiple Matches With Different Base Names
+0x004d7a72,plate,_time,"GetSystemTimeAsFileTime minus 1970 epoch / 1e7 (FID conflict __time32 vs _time; VS2003 CRT) (Seq 45)
+Library Function - Multiple Matches With Different Base Names
 Name: __time32, _time
 Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release"
 0x004d7ab0,plate,_strncmp,"Library Function - Single Match
@@ -1738,6 +2174,11 @@ Library: Visual Studio 2003 Release"
 0x004d7ca1,plate,_IsRootUNCName,"Library Function - Single Match
 Name: _IsRootUNCName
 Library: Visual Studio 2003 Release"
+0x004d7d0e,plate,__stat,"FindFirstFileA, __dtoxmode, IsRootUNCName, GetDriveTypeA, fills struct stat (Seq 45)"
+0x004d7fe6,plate,_vsprintf,"FILE over buffer cnt=INT_MAX flag 0x42, __output, then NUL via _flsbuf (Seq 45)"
+0x004d803d,plate,__vscprintf,Like __scprintf but takes va_list (Seq 45)
+0x004d806d,plate,_vswprintf,"Wide output into buffer, two NUL bytes appended (Seq 45)"
+0x004d80db,plate,__vscwprintf,Wide count-only with va_list (Seq 45)
 0x004d8110,plate,appendMissionNameToBuf,"Library Function - Single Match
  _strncat
 
@@ -1748,12 +2189,20 @@ Library: Visual Studio 2003 Release"
 0x004d829a,plate,_bsearch,"Library Function - Single Match
 Name: _bsearch
 Library: Visual Studio 2003 Release"
+0x004d8326,plate,__validdrive,"GetDriveTypeA on ""X:\\""; 0 for unknown/no-root (Seq 45)"
+0x004d835d,plate,__getdcwd,"GetCurrentDirectory/GetFullPathName for ""X:.""; caller __getcwd; malloc if buf NULL (Seq 45)"
 0x004d8447,plate,__getcwd,"Library Function - Single Match
 Name: __getcwd
 Library: Visual Studio 2003 Release"
 0x004d845a,plate,__amsg_exit,"Library Function - Single Match
 Name: __amsg_exit
 Library: Visual Studio 2003 Release"
+0x004d8500,plate,WinMainCRTStartup_Body,"VC7.0 crt0.c WinMainCRTStartup after its first instruction: the 11.44 patch overwrote entry 0x4D84F9 with JMP 0x56DCDA, whose stub redoes the SEH_prolog setup and jumps here. GetVersionExA, _heap_init, _ioinit, GetCommandLineA, setargv/setenvp, _cinit, WinMain, exit. Coordinator check (Seq 45)
+earlier: GetVersionEx, heap init, __ioinit, GetCommandLine, setargv/envp, __cinit, WinMain call, exit (Seq 45)"
+0x004d86d2,plate,type_info_Dtor,"Sets type_info vftable, frees m_data (Seq 45)"
+0x004d86e7,plate,type_info_ScalarDeletingDtor,dtor then free if flag&1 (Seq 45)
+0x004d8770,plate,__EH_prolog,"C++ EH prolog: push -1; push eax(handler); link FS:[0]; ebp=esp+0xC; every iostream ctor starts with it. Not __SEH_prolog (that is 0x4DC5E4). Coordinator check (Seq 45)
+earlier: push -1 and builds FS:[0] frame, EBP=ESP+0xc; disassembly matches CRT SEH_prolog (Seq 45)"
 0x004d878f,plate,__flush,"Library Function - Single Match
 Name: __flush
 Library: Visual Studio 2003 Release"
@@ -1769,9 +2218,15 @@ Library: Visual Studio 2003 Release"
 0x004d8960,plate,_strlen,"Library Function - Single Match
 Name: _strlen
 Library: Visual Studio"
+0x004d89eb,plate,__close_lk,"CloseHandle on osfhnd, __free_osfhnd, clears flag; no lock (callers _fclose, _sopen) (Seq 45)"
 0x004d8a9e,plate,__lseek,"Library Function - Single Match
 Name: __lseek
 Library: Visual Studio 2003 Release"
+0x004d8b2a,plate,__ioinit,"malloc 0x100 lowio array, GetStartupInfo lpReserved2 inherit, GetStdHandle for 0..2 (Seq 45)"
+0x004d8cf8,plate,__write_lk,WriteFile with LF->CRLF 1KB buffer; __lseeki64 for append (Seq 45)
+0x004d8eac,plate,__read_lk,ReadFile with CRLF translation and ctrl-Z handling (Seq 45)
+0x004d908c,plate,__sopen,"CreateFileA with access/share/creation mapping, GetFileType (Seq 45)"
+0x004d9373,plate,__setmode_lk,Toggles 0x80 text flag in lowio; returns old mode 0x4000/0x8000 (Seq 45)
 0x004d9400,plate,_memcpy,"Library Function - Single Match
 Name: _memcpy
 Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release"
@@ -1814,9 +2269,14 @@ Library: Visual Studio 2003 Release"
 0x004da892,plate,__fassign,"Library Function - Single Match
 Name: __fassign
 Library: Visual Studio 2003 Release"
+0x004da8d0,plate,_shift,"memmove(p+n,p,strlen+1) (Seq 45)"
+0x004da8ed,plate,_cftoe,Builds d.ddde+000 exponent form (Seq 45)
+0x004daa07,plate,_cftof,Fixed-point formatting with shift of digits (Seq 45)
+0x004dab07,plate,_cftog,"Chooses e/f format by exponent, %g (Seq 45)"
 0x004dabb1,plate,__cfltcvt,"Library Function - Single Match
 Name: __cfltcvt
 Library: Visual Studio 2003 Release"
+0x004dac02,plate,__setdefaultprecision,"_controlfp(0x10000,0x30000): sets precision control to 53-bit; called from fp init (Seq 45)"
 0x004dac14,plate,__ms_p5_test_fdiv,"Library Function - Single Match
 Name: __ms_p5_test_fdiv
 Library: Visual Studio 2003 Release"
@@ -1829,21 +2289,28 @@ Library: Visual Studio 2003 Release"
 0x004dace5,plate,___FrameUnwindToState,"Library Function - Single Match
 Name: ___FrameUnwindToState
 Library: Visual Studio 2003 Release"
+0x004dad92,plate,Unwind@004dad92,Decrements __ProcessingThrow; unwind funclet of __FrameUnwindToState (Seq 45)
 0x004dadc8,plate,___DestructExceptionObject,"Library Function - Single Match
 Name: ___DestructExceptionObject
 Library: Visual Studio 2003 Release"
+0x004dae0d,plate,_AdjustPointer,this + PMD displacement with vbtable lookup; caller BuildCatchObject (Seq 45)
 0x004dafa7,plate,CallCatchBlock,"Library Function - Single Match
 Name: ?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z
 Library: Visual Studio 2003 Release"
+0x004db0df,plate,Unwind@004db0df,"CallCatchBlock cleanup: FindAndUnlinkFrame, restores ProcessingThrow state, __DestructExceptionObject (Seq 45)"
 0x004db13d,plate,BuildCatchObject,"Library Function - Single Match
 Name: ?BuildCatchObject@@YAXPAUEHExceptionRecord@@PAXPBU_s_HandlerType@@PBU_s_CatchableType@@@Z
 Library: Visual Studio 2003 Release"
+0x004db2b9,plate,___CxxExceptionFilter,"Checks 0x19930520 EH exception code, TypeMatch, BuildCatchObject (Seq 45)"
 0x004db3af,plate,CatchIt,"Library Function - Single Match
 Name: ?CatchIt@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@PBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_TryBlockMapEntry@@H1E@Z
 Library: Visual Studio 2003 Release"
+0x004db416,plate,FindHandlerForForeignException,"Non-C++ exception: SE translator, then CatchIt for catch(...) handlers (Seq 45)"
+0x004db4d8,plate,FindHandler,"Walks try blocks, matches handlers with TypeMatch and calls CatchIt; 0x19930520 magic (Seq 45)"
 0x004db6af,plate,___InternalCxxFrameHandler,"Library Function - Single Match
 Name: ___InternalCxxFrameHandler
 Library: Visual Studio 2003 Release"
+0x004db751,plate,_terminate,Calls terminate handler then raise(SIGABRT) and exit(3) (Seq 45)
 0x004db78e,plate,_inconsistency,"Library Function - Single Match
 Name: ?_inconsistency@@YAXXZ
 Library: Visual Studio 2003 Release"
@@ -1871,6 +2338,7 @@ Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release, Visual Studio
 0x004dbbf1,plate,_write_string,"Library Function - Single Match
 Name: _write_string
 Library: Visual Studio 2003 Release"
+0x004dbc47,plate,__output,printf formatter state machine over FILE; callers sprintf and _vsprintf wrappers (Seq 45)
 0x004dc3dc,plate,__freebuf,"Library Function - Single Match
 Name: __freebuf
 Library: Visual Studio 2003 Release"
@@ -1886,6 +2354,7 @@ Library: Visual Studio"
 0x004dc61f,plate,__SEH_epilog,"Library Function - Single Match
 Name: __SEH_epilog
 Library: Visual Studio"
+0x004dc638,plate,_tolower,"locale-aware tolower; callers __stricmp/__strnicmp; A-Z +0x20, LCMapString (Seq 45)"
 0x004dc710,plate,___ascii_stricmp,"Library Function - Single Match
 Name: ___ascii_stricmp
 Library: Visual Studio 2003 Release"
@@ -1910,6 +2379,7 @@ Library: Visual Studio 2003 Release"
 0x004dc976,plate,__inc,"Library Function - Single Match
 Name: __inc
 Library: Visual Studio 2003 Release"
+0x004dc9b6,plate,__input,"scanf engine; sscanf caller; %d/%s/%[ parsing, _ungetc, _inc (Seq 45)"
 0x004dd550,plate,_write_char,"Library Function - Single Match
 Name: _write_char
 Library: Visual Studio 2003 Release"
@@ -1919,6 +2389,8 @@ Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release"
 0x004dd59a,plate,_write_string,"Library Function - Single Match
 Name: _write_string
 Library: Visual Studio 2003 Release"
+0x004dd5ec,plate,__woutput,wide printf engine; swprintf caller; same structure as __output; write_char/_multi_char/_string (Seq 45)
+0x004dddbc,plate,unsure_CRT_RunInitTable_Empty,unsure: loops over empty function-pointer table (start==end) from startup; _initterm-like (Seq 45)
 0x004dde50,plate,__aulldvrm,"Library Function - Single Match
 Name: __aulldvrm
 Library: Visual Studio"
@@ -1931,39 +2403,49 @@ Library: Visual Studio"
 0x004de010,plate,_strcat,"Library Function - Single Match
 Name: _strcat
 Library: Visual Studio"
+0x004de0f8,plate,__mbstowcs_lk,"MultiByteToWideChar(cp,9,-1); ANSI copy fallback when locale C (Seq 45)"
 0x004de200,plate,___ascii_strnicmp,"Library Function - Single Match
 Name: ___ascii_strnicmp
 Library: Visual Studio 2003 Release"
+0x004de277,plate,_asctime_FormatBuf,formats 'Sun Mon dd hh:mm:ss yyyy' into static buffer (asctime body) (Seq 45)
 0x004de361,plate,_localtime,"Library Function - Single Match
 Name: _localtime
 Library: Visual Studio 2003 Release"
 0x004de4f0,plate,__aulldiv,"Library Function - Single Match
 Name: __aulldiv
 Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release"
+0x004de558,plate,__resetstkoflw,VirtualQuery/GetSystemInfo/VirtualProtect PAGE_GUARD on stack page (Seq 45)
 0x004de645,plate,___crtLCMapStringA,"Library Function - Single Match
 Name: ___crtLCMapStringA
 Library: Visual Studio 2003 Release"
+0x004dea01,plate,__mbsicmp,"mbcs case-insensitive compare via _mbctype, LCMapString, falls back to _stricmp (Seq 45)"
 0x004deb42,plate,__mbsrchr,"Library Function - Single Match
 Name: __mbsrchr
 Library: Visual Studio 2003 Release"
 0x004deb98,plate,__fullpath,"Library Function - Single Match
 Name: __fullpath
 Library: Visual Studio 2003 Release"
+0x004dec3c,plate,unsure_CRT_InitCurrentDriveCase,"unsure: GetCurrentDirectoryA, if 'X:' calls toupper on drive letter (Seq 45)"
+0x004dec95,plate,__chdrive,"SetCurrentDirectoryA(""X:""), errno=EACCES, doserrno=ERROR_INVALID_DRIVE for bad drive (Seq 45)"
 0x004decec,plate,__mbctolower,"Library Function - Single Match
 Name: __mbctolower
 Library: Visual Studio 2003 Release"
 0x004ded64,plate,__mbspbrk,"Library Function - Single Match
 Name: __mbspbrk
 Library: Visual Studio 2003 Release"
+0x004deddd,plate,__NMSG_WRITE,"callers __FF_MSGBANNER/__amsg_exit; builds runtime-error text, WriteFile or MessageBox (Seq 45)"
 0x004def7e,plate,__FF_MSGBANNER,"Library Function - Single Match
 Name: __FF_MSGBANNER
 Library: Visual Studio 2003 Release"
 0x004defee,plate,__XcptFilter,"Library Function - Single Match
 Name: __XcptFilter
 Library: Visual Studio 2003 Release"
+0x004df15f,plate,__wincmdln,"skips program name (quoted or not) in lpCmdLine, uses _ismbblead (Seq 45)"
 0x004df1c8,plate,__setenvp,"Library Function - Single Match
 Name: __setenvp
 Library: Visual Studio 2003 Release"
+0x004df28f,plate,_parse_cmdline,tokenises command line honouring quotes/backslashes into argv; called by __setargv (Seq 45)
+0x004df3fb,plate,__setargv,"GetModuleFileNameA, _parse_cmdline twice, malloc argv; sets __argc/__argv (Seq 45)"
 0x004df49d,plate,___crtGetEnvironmentStringsA,"Library Function - Single Match
 Name: ___crtGetEnvironmentStringsA
 Library: Visual Studio 2003 Release"
@@ -1976,6 +2458,7 @@ Library: Visual Studio 2003 Release"
 0x004df69f,plate,_calloc,"Library Function - Single Match
 Name: _calloc
 Library: Visual Studio 2003 Release"
+0x004df772,plate,__alloc_osfhnd,"finds free ioinfo slot in __pioinfo table, mallocs 0x100 block (0x20 entries) (Seq 45)"
 0x004df80f,plate,__set_osfhnd,"Library Function - Single Match
 Name: __set_osfhnd
 Library: Visual Studio 2003 Release"
@@ -1991,6 +2474,8 @@ Library: Visual Studio 2003 Release"
 0x004df9d9,plate,__lseeki64,"Library Function - Single Match
 Name: __lseeki64
 Library: Visual Studio 2003 Release"
+0x004dfa78,plate,__chsize,"_lseek/SetEndOfFile, pads with zeros to extend; osfile flag check (Seq 45)"
+0x004dfbf3,plate,_isctype,"ctype lookup via _pctype, else ___crtGetStringTypeA; callers __hextodec etc. (Seq 45)"
 0x004dfc71,plate,__ZeroTail,"Library Function - Single Match
 Name: __ZeroTail
 Library: Visual Studio 2003 Release"
@@ -2012,10 +2497,8 @@ Library: Visual Studio 2003 Release"
 0x004dfe1d,plate,__ld12cvt,"Library Function - Single Match
 Name: __ld12cvt
 Library: Visual Studio 2003 Release"
-0x004dff75,plate,FID_conflict:__ld12tod,"Library Function - Multiple Matches With Different Base Names
-Name: __ld12tod, __ld12tof
-Library: Visual Studio 2003 Release"
-0x004dff8b,plate,FID_conflict:__ld12tod,"Library Function - Multiple Matches With Different Base Names
+0x004dff75,plate,__ld12tod,"CRT intrncvt.c _ld12tod: passes DoubleFormat descriptor 0x5959C4 (max_exp 1024, precision 53) to _ld12cvt. Was FID_conflict. (Seq 45)"
+0x004dff8b,plate,__ld12tof,"Library Function - Multiple Matches With Different Base Names
 Name: __ld12tod, __ld12tof
 Library: Visual Studio 2003 Release"
 0x004dffa1,plate,__ld12told,"Library Function - Single Match
@@ -2024,10 +2507,13 @@ Library: Visual Studio 2003 Release"
 0x004e015e,plate,___dtold,"Library Function - Single Match
 Name: ___dtold
 Library: Visual Studio 2003 Release"
-0x004e02a0,plate,FUN_004e02a0,"Library Function - Single Match
+0x004e0218,plate,__fltout,___dtold then $I10_OUTPUT into static STRFLT; used by float formatting (Seq 45)
+0x004e02a0,plate,_memset,"word-aligned fill loop; 8 callers (Seq 45)
+Library Function - Single Match
  _memset
 
 Libraries: Visual Studio 2003 Debug, Visual Studio 2003 Release, Visual Studio 2019 Release"
+0x004e0300,plate,unsure__amsg_exit_2_Stub,unsure: single call __amsg_exit(2); invalid-format/parameter abort from scanf/printf (Seq 45)
 0x004e0333,plate,__abstract_cw,"Library Function - Single Match
 Name: __abstract_cw
 Library: Visual Studio 2003 Release"
@@ -2040,10 +2526,13 @@ Library: Visual Studio 2003 Release"
 0x004e04e3,plate,__controlfp,"Library Function - Single Match
 Name: __controlfp
 Library: Visual Studio 2003 Release"
-0x004e055f,plate,FID_conflict:ValidateRead,"Library Function - Multiple Matches With Different Base Names
+0x004e04f9,plate,__CxxUnhandledExceptionFilter,"checks 0xE06D7363 + 0x19930520 C++ EH magic, else calls registered filter after _ValidateExecute (Seq 45)"
+0x004e055f,plate,__ValidateRead,"IsBadReadPtr wrapper returning !bad (?_ValidateRead@@YAHPBXI@Z) (Seq 45)
+Library Function - Multiple Matches With Different Base Names
 Name: ?_ValidateRead@@YAHPBXI@Z, ?_ValidateWrite@@YAHPAXI@Z
 Library: Visual Studio 2003 Release"
-0x004e057b,plate,FID_conflict:ValidateRead,"Library Function - Multiple Matches With Different Base Names
+0x004e057b,plate,__ValidateWrite,"IsBadWritePtr wrapper returning !bad (?_ValidateWrite@@YAHPAXI@Z) (Seq 45)
+Library Function - Multiple Matches With Different Base Names
 Name: ?_ValidateRead@@YAHPBXI@Z, ?_ValidateWrite@@YAHPAXI@Z
 Library: Visual Studio 2003 Release"
 0x004e0597,plate,_ValidateExecute,"Library Function - Single Match
@@ -2061,19 +2550,25 @@ Library: Visual Studio 2003 Release"
 0x004e075d,plate,__seh_longjmp_unwind@4,"Library Function - Single Match
 Name: __seh_longjmp_unwind@4
 Libraries: Visual Studio 1998 Debug, Visual Studio 1998 Release, Visual Studio 2003 Debug, Visual Studio 2003 Release"
-0x004e07be,plate,FID_conflict:_CPtoLCID,"Library Function - Multiple Matches With Different Base Names
+0x004e07be,plate,__CPtoLCID,"maps CP 932/936/949/950 to LCID 0x411/0x804/0x412/0x404, else 0 (Seq 45)
+Library Function - Multiple Matches With Different Base Names
 Name: ?CPtoLCID@@YAHH@Z, _CPtoLCID
 Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release, Visual Studio 2008 Release, Visual Studio 2010 Release"
 0x004e07ed,plate,_setSBCS,"Library Function - Single Match
 Name: _setSBCS
 Library: Visual Studio 2003 Release"
+0x004e0816,plate,_setSBUpLow,GetCPInfo + LCMapString/GetStringType fills _mbctype upper/lower tables (Seq 45)
+0x004e09a8,plate,__setmbcp,"mbctype.c: GetACP/OEMCP, GetCPInfo lead bytes, _CPtoLCID, _setSBCS fallback (Seq 45)"
 0x004e0ba4,plate,___initmbctable,"Library Function - Single Match
 Name: ___initmbctable
 Library: Visual Studio 2003 Release"
+0x004e0bc2,plate,___security_init_cookie,"xors FILETIME/PID/TID/tick/QPC into __security_cookie (0x595880), default 0xBB40E64E (Seq 45)"
+0x004e0c18,plate,___report_gsfailure,caller __security_check_cookie; 'Buffer overrun detected!' MessageBox then _exit (Seq 45)
 0x004e0d8e,plate,___crtGetStringTypeA,"Library Function - Single Match
 Name: ___crtGetStringTypeA
 Library: Visual Studio 2003 Release"
-0x004e0f48,plate,FID_conflict:_ungetc,"Library Function - Multiple Matches With Different Base Names
+0x004e0f48,plate,_ungetc,"ungetc: __getbuf, ptr--, flag fixups; sole ungetc in range (Seq 45)
+Library Function - Multiple Matches With Different Base Names
 Name: __ungetc_lk, _ungetc
 Library: Visual Studio 2003 Release"
 0x004e108b,plate,_isspace,"Library Function - Single Match
@@ -2082,24 +2577,31 @@ Library: Visual Studio 2003 Release"
 0x004e121f,plate,_mbtowc,"Library Function - Single Match
 Name: _mbtowc
 Library: Visual Studio 2003 Release"
+0x004e12e7,plate,_write_wchar,wide write_char: wctomb to putc/_flsbuf or _flswbuf; caller _write_char (Seq 45)
 0x004e13c4,plate,__tzset,"Library Function - Single Match
 Name: __tzset
 Library: Visual Studio 2003 Release"
 0x004e1617,plate,_cvtdate,"Library Function - Single Match
 Name: _cvtdate
 Library: Visual Studio 2003 Release"
+0x004e17cf,plate,__isindst,"DST check using _cvtdate begin/end; callers localtime, __loctotime_t (Seq 45)"
 0x004e1960,plate,___tzset,"Library Function - Single Match
 Name: ___tzset
 Library: Visual Studio 2003 Release"
 0x004e1975,plate,_gmtime,"Library Function - Single Match
 Name: _gmtime
 Library: Visual Studio 2003 Release"
+0x004e1a6a,plate,__ansicp,GetLocaleInfoA(LOCALE_IDEFAULTANSICODEPAGE 0x1004) then atol (Seq 45)
+0x004e1ab3,plate,__convertcp,WideChar/MultiByte conversion between code pages via calloc buffer (Seq 45)
+0x004e1c8a,plate,_toupper,locale toupper; a-z -0x20 else LCMapString; caller drive-letter code (Seq 45)
 0x004e1d70,plate,_strpbrk,"Library Function - Single Match
 Name: _strpbrk
 Library: Visual Studio 2003 Release"
 0x004e1db0,plate,___crtMessageBoxA,"Library Function - Single Match
 Name: ___crtMessageBoxA
 Library: Visual Studio 2003 Release"
+0x004e1ea9,plate,__ismbbtype,(_mbctype[c]&mask)||(_ctype[c]&mask2) (Seq 45)
+0x004e1f6e,plate,__ismbblead,"_ismbbtype(c,0,_M1=4); caller __wincmdln (Seq 45)"
 0x004e1fb7,plate,___addl,"Library Function - Single Match
 Name: ___addl
 Library: Visual Studio 2003 Release"
@@ -2112,6 +2614,10 @@ Library: Visual Studio 2003 Release"
 0x004e2064,plate,___shr_12,"Library Function - Single Match
 Name: ___shr_12
 Libraries: Visual Studio 2003 Release, Visual Studio 2005 Release"
+0x004e2091,plate,___mtold12,string digits to 12-byte long double mantissa using ___add_12/___shl_12; exp base 0x404e (Seq 45)
+0x004e2175,plate,___strgtold12,string to _LDBL12 parser; callers __atodbl/__atoflt/__atoldbl (Seq 45)
+0x004e2602,plate,___STRINGTOLD,___strgtold12 then __ld12told; no callers (strtold-style wrapper) (Seq 45)
+0x004e2654,plate,__I10_OUTPUT,long double to decimal digits (STRFLT); called by __fltout; uses ___add_12/shl/shr (Seq 45)
 0x004e2920,plate,_siglookup,"Library Function - Single Match
 Name: _siglookup
 Library: Visual Studio 2003 Release"
@@ -2127,22 +2633,45 @@ Library: Visual Studio 2003 Release"
 0x004e2caf,plate,_getenv,"Library Function - Single Match
 Name: _getenv
 Library: Visual Studio 2003 Release"
+0x004e2d30,plate,__ld12mul,12-byte long double multiply using ___addl/___shl_12/___shr_12 (Seq 45)
+0x004e2f68,plate,___multtenpow12,multiplies by table power of ten (tenpow at 0x595bb0) via __ld12mul (Seq 45)
 0x004e2ff4,plate,__mbsnbicoll,"Library Function - Single Match
 Name: __mbsnbicoll
 Library: Visual Studio 2003 Release"
+0x004e3033,plate,__wtomb_environ,WideCharToMultiByte of wide environ to narrow; caller _getenv/__putenv_lk (Seq 45)
 0x004e309e,plate,_strncnt,"Library Function - Single Match
 Name: _strncnt
 Library: Visual Studio 2003 Release"
+0x004e30ba,plate,___crtCompareStringA,CompareStringW/A with MultiByteToWideChar; caller __mbsnbicoll (Seq 45)
 0x004e3444,plate,_findenv,"Library Function - Single Match
 Name: _findenv
 Library: Visual Studio 2003 Release"
 0x004e3491,plate,_copy_environ,"Library Function - Single Match
 Name: _copy_environ
 Library: Visual Studio 2003 Release"
+0x004e34f2,plate,__putenv_lk,"SetEnvironmentVariableA, _findenv, realloc _environ table, free/copy_environ (Seq 45)"
 0x004e36a7,plate,__strdup,"Library Function - Single Match
 Name: __strdup
 Library: Visual Studio 2003 Release"
+0x004e36d2,plate,__mbschr,"SWAR byte scan strchr, with _mbcs branch (_DAT_0067536c); caller __putenv_lk (Seq 45)"
+0x0051c730,plate,StaticInit_DebugFlagsDefaults,static-init ctor (data ref 0x584498): sets g_* debug flags false (Seq 45)
 0x0052b3b0,plate,MapBlocks_InitSlopeTable,"Seq37 slice2 (VERIFIED): static initialiser of g_SlopeTable (0x662DB0, 64 entries x 12 bytes) via FUN_00462ff0(entry, dir, len, step, z0, z1): byte0 dir (0 none,1 up/N-rising,2 down/S,3 left/W,4 right/E), byte1 len (2 = 26deg two-block ramp, 8 = 7deg eight-block ramp, 1 = 45deg), byte2 step (blocks remaining to the top: 1/0 for len2, 7..0 for len8, 0 for len1), +4 z0 / +8 z1 Fix16 height at the low/high edge of this block. Index = slope_type>>2: 1-8 len2 (1-2 dir1, 3-4 dir2, 5-6 dir3, 7-8 dir4), 9-16 len8 dir1, 17-24 dir2, 25-32 dir3, 33-40 dir4, 41-44 len1 dir1-4, 45-63 all zero (diagonals/partials: no table slope)."
+0x0052e0a0,plate,StaticInit_RandomGen_eq_0,"static-init ctor (data ref 0x586d48): ctor of global eq_0 at 0x663764, calls Crt_Srand (Seq 45)"
+0x0056dbe0,plate,Patch1144_NetLobby_MapSlotAddrHook,11.44 hook: ECX=[blk+4]+idx*8+0x410 then jumps back to 0x40653e; from lobby settings load 0x406470 (Seq 45)
+0x0056dbf2,plate,Patch1144_NetLobby_LoadSlotValueHook,EAX=[[this+4]+idx*8-4] then jmp 0x407362; hooks 0x40720d (Seq 45)
+0x0056dc04,plate,Patch1144_NetLobby_LoadSlotValueX3Hook,"idx*3 indexing of heap block, EDX=[blk+ECX*8-4], jmp 0x40667c; hooks 0x406660 (Seq 45)"
+0x0056dc16,plate,Patch1144_NetLobby_SlotTableBase30CHook,EAX=[this+4]+0x30c then jmp 0x40720d; hooks 0x407070 (Seq 45)
+0x0056dc28,plate,Patch1144_NetLobby_SlotTableBase410Hook,"EDI=[this+4]+0x410, jmp 0x407402; hooks 0x4073d0 (Seq 45)"
+0x0056dc3a,plate,Patch1144_NetLobby_SlotEntryAddr30CHook,"EDX=blk+ECX*8+0x30c, jmp 0x407476; hooks 0x407402 (Seq 45)"
+0x0056dc4c,plate,Patch1144_NetLobby_SlotEntryAddr414Hook,"EAX=blk+ECX*8+0x410, jmp 0x407605; hooks 0x4075c0 (case 1 map_index) (Seq 45)"
+0x0056dcab,plate,Patch1144_NetSession_AllocSlotBlock,"HeapAlloc(heap@0x676cd4,flags 9,0x518) into [this+4], then back to ctor tail 0x407d8b (Seq 45)"
+0x0056dcda,plate,Patch1144_EntryStub,"GetModuleHandle KERNEL32/GetProcAddress GetProcessHeap -> 0x676cd4, then jumps to original entry body 0x4d8500 (Seq 45)"
+0x0056dd18,plate,Patch1144_Mmp_StrToLowerInPlace,lowercases A-Z in a C string in place; called from Network_ReadMmpMapFiles (Seq 45)
+0x0056dd67,plate,Patch1144_OnKeyDown_LaunchManagerHook,"in Player_OnKeyDown: if [0x673e2c] flag set go on, else FrontEnd_LaunchGta2Manager (Seq 45)"
+0x0056de0c,plate,Patch1144_NetDlg_SetMapNameNAText,sprintf 'N/A: %s' + SetDlgItemTextA(dlg item 0x41e); hooks 0x407476 call (Seq 45)
+0x0056de95,plate,Patch1144_NetDlg_ChatFlagResetHook,if byte 0x676ff0==1 clears it and posts message 0x3ea; hooks lobby dlg proc 0x3f158c call (Seq 45)
+0x0056dec0,plate,Patch1144_NetDlg_StoreChatFlagHook,"stores byte 0x676ff2 from stack, pushes 0x3e9, jmp 0x406c92 (Seq 45)"
+0x0056ded4,plate,Patch1144_NetDlg_ChatFocusHook,if (0x676ff1 & 0x676ff2) clears 0x676ff1 and posts 0x3e9 (0xf000000); hooks dlg proc 0x408920 (Seq 45)
 0x0056df08,plate,Patch1144_LoadGXT_MmpOverrides,"11.44 patch hook reached by JMP from LoadGXT (0x4c257a). If flag 0x676204 (g_Patch1144_LoadingLevel, set by LoadGMP_and_STY_Files) == 1: copy ""data\nyc.gci"" (0x5736d4, 12 B) to g_GciPath 0x676eec and to mmp path buf 0x676ddc; if isMultiplayer (0x673e2c)==1: mmp path buf 0x676ddc = ""data\"" + map name from 0x673e30 (copied to 0x676de1); GetPrivateProfileStringA(""MapFiles"",""GCIFile"",default ""nyc.gci""(0x5736d9) -> 0x676ef1 = GciPath+5) and (""MapFiles"",""GXTFile"",default ""e.gxt""(0x572e05) -> 0x676cdd = strPathToGXT+5), size 0xfe, file = mmp path. If the GXTFile value == ""e.gxt"" exactly (dword ""e.gx"" + word ""t\0"", case-sensitive): path[5] = player's language letter (ESI+0x10). Else: language(+0x10) = 'e' PERMANENTLY on that LocaleSettings and expected magic[3] = 'E' ([ESP+0xf] in LoadGXT's frame). Then PUSH 0x676cd8; JMP 0x3f1664. Verified byte-by-byte against disassembly 0x56df08-0x56dfe1 and strings read from memory."
 0x0056e000,pre,,311  IsTextUnicode  <<not bound>>
 0x0056e004,pre,,465  RegDeleteValueA  <<not bound>>

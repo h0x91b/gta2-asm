@@ -29,7 +29,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00594ff8,g_trafficLightPhaseTicks,,USER_DEFINED,.data.exp,,/byte[9],9
 0x00595004,g_BriefWrapWidth,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00595010,max_frame_rate,,USER_DEFINED,.data.exp,,/undefined1,1
-0x00595011,isNight,,USER_DEFINED,.data.exp,,/undefined1,1
+0x00595011,g_lightingEnabled,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00595014,start_mode,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00595018,isExit,,USER_DEFINED,.data.exp,,/undefined1,1
 0x0059501c,dmavideo_Vid_GetVersion,,USER_DEFINED,.data.exp,,/pointer,4
@@ -215,6 +215,8 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e8f90,KeyPressState,,USER_DEFINED,.data.exp,,/uint,4
 0x005e8fa4,relatedToFronteמd,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e8fa8,g_pDirectInputObj,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e9340,g_DoorInfoTable,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e9374,g_pDoorFacePool,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e9378,g_DoorManager,,USER_DEFINED,.data.exp,,/DoorManager *,4
 0x005e9708,pTextGameResource,,USER_DEFINED,.data.exp,,/undefined,1
 0x005e9808,generalCharBuf,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -352,10 +354,41 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00662748,lastFrameTime,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00662780,g_localPlayerIndex,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00662786,g_startAttractReplay,,USER_DEFINED,.data.exp,,/undefined1,1
+0x00662b80,g_spiralX,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00662b90,g_pLastBlockInfo,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00662b94,g_DummyWallBlockInfo,,USER_DEFINED,.data.exp,,/undefined,1
+0x00662bb4,g_spiralY,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00662bb8,g_spiralZ,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00662bc0,g_EmptyBlockInfo,,USER_DEFINED,.data.exp,,/undefined2,2
 0x00662c08,g_MapBlocks,,USER_DEFINED,.data.exp,,/auto_structs/MapBlocks *,4
 0x00662db0,g_SlopeTable,,USER_DEFINED,.data.exp,,/undefined,1
+0x00663290,g_zonePickCounter,,USER_DEFINED,.data.exp,,/undefined2,2
+0x00663298,g_MapRenderCurBlock,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006632a0,g_MapRenderVerts,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006633a0,CurrentlyDrawnMapLayerIndex,,USER_DEFINED,.data.exp,,/int,4
+0x006633a4,g_MapRenderFaceRight,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006633a8,g_MapRenderRampStep,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006633ac,g_MapRenderTopPlaneZ,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006633b0,g_MapRenderFaceBottom,,USER_DEFINED,.data.exp,,/undefined,1
+0x006633b4,g_MapRenderRampLen,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006633b8,g_MapRenderTileFlags,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006633bc,g_MapRenderFaceLid,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006633c0,g_MapRenderFaceTop,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006633c4,g_MapRenderFaceLeft,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006633c8,g_MapRenderer,,USER_DEFINED,.data.exp,,/auto_structs/MapRenderer *,4
+0x006633cc,g_MapRenderScaleBottom,,USER_DEFINED,.data.exp,,/undefined,1
+0x00663450,g_Fix16_One,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006634b4,g_Fix16_Zero,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006634fc,g_Fix16_Pt375,,USER_DEFINED,.data.exp,,/undefined,1
+0x00663504,g_MapRenderScaleTop,,USER_DEFINED,.data.exp,,/undefined,1
+0x006635b8,g_Fix16_Pt625,,USER_DEFINED,.data.exp,,/undefined,1
+0x006635fc,g_MapRenderRhwTop,,USER_DEFINED,.data.exp,,/undefined,1
+0x00663600,g_MapRenderBlockRelX,,USER_DEFINED,.data.exp,,/undefined,1
+0x0066364c,g_MapRenderRhwBottom,,USER_DEFINED,.data.exp,,/undefined,1
+0x006636c8,g_Fix16_Pt75,,USER_DEFINED,.data.exp,,/undefined,1
+0x006636f0,g_MapRenderBlockRelY,,USER_DEFINED,.data.exp,,/undefined,1
+0x00663730,g_Fix16_64,,USER_DEFINED,.data.exp,,/undefined,1
+0x00663738,g_MapRenderLayerZFix,,USER_DEFINED,.data.exp,,/undefined,1
 0x00663764,eq_0,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006639a0,relToSpiteOfCar,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00663de4,g_AmbulanceManager,,USER_DEFINED,.data.exp,,/AmbulanceManager *,4
