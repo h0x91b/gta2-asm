@@ -17,6 +17,7 @@ traps: `docs/formats/`.
 | `gci.ts` | `nyc.gci` car handling (text) |
 | `scr.ts`, `scr-opcodes.ts` | `.scr` mission scripts (main and sub-script layouts, commands, strings); VM: `docs/re/script-engine.md` |
 | `gxt.ts` | `.gxt` GBL text tables: TKEY (sorted 8-byte keys + TDAT offsets) / TDAT (u16 strings); byte-identical `encodeGxt`, `buildGxt`, font code page `toUnicode`/`fromUnicode` (`docs/re/gxt.md`) |
+| `scr-mis.ts`, `scr-mis-ops.ts`, `scr-consts.ts` | `.scr` → `.mis` decompiler: per-opcode templates, enum names, IF / WHILE / AND / OR rebuilt from the jump graph |
 | `tga.ts`, `png.ts` | frontend TGA decode, PNG encode |
 | `cli.ts` | the command line below |
 
@@ -34,6 +35,7 @@ bun tools/formats/cli.ts sdt data/audio/wil --wav 1 --out formats-out/wil1.wav
 bun tools/formats/cli.ts gci --model 0
 bun tools/formats/cli.ts scr data/wil.scr --list           # one line per command: index, offset, opcode, next, args
 bun tools/formats/cli.ts gxt data/g.gxt --list --unicode  # key + text (non-printables escaped, accents decoded); --key 1001, --summary
+bun tools/formats/cli.ts scr data/bil.scr --mis --out formats-out/bil  # decompile bil + its 22 missions to .mis
 ```
 
 Extracted game data never goes into the repository: `--out` is required for anything that

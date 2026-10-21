@@ -119,6 +119,22 @@ License terms below are quoted as each source states them; this is not legal adv
   handler callees, each matched against the 11.44 binary before it was applied in Ghidra.
 - **License:** none stated on GitHub.
 
+### Epic GTA2 Script Decompiler — T.M. (2011), and Valps' fork
+
+- **URLs:** https://gitlab.com/classic-gta/gta2-scr-decompiler (T.M.'s original, cited at
+  revision `df4063f08784d0840e6cc97ae6e528d59c3d44d9`) and
+  https://github.com/Valps/gta2-tm-scr-decompiler (Valps' fork, revision
+  `1ec46d69a35252a77e9108f1ccec718a4d665be8`).
+- **What it is:** a C++ `.scr` → `.mis` decompiler for GTA2 mission scripts.
+- **What we took:** facts only, transcribed into our own TypeScript (`tools/formats/scr-mis-ops.ts`,
+  `scr-consts.ts`): the argument layout of each opcode, the DMA constant-name lists
+  (`scr_strings.h`: cars, objects, weapons, objectives, …) and the generated-variable prefixes.
+  No source code was copied; the control-flow rebuild is our own (`docs/re/script-engine.md`,
+  "Decompiler"). Every layout was then checked against DMA's bil sources, and a local build of the
+  fork served as a second oracle.
+- **License:** T.M.'s custom licence: non-commercial use, altered versions must be marked and
+  their source published, credit required (this entry). Valps' fork: GPL-3.0.
+
 ### OpenGTA2 — ikkentim
 
 - **URL:** https://github.com/ikkentim/opengta2 — an open-source GTA2 re-implementation (C#,

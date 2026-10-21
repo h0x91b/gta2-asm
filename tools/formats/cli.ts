@@ -16,6 +16,7 @@ import { decodeTga } from './tga.ts';
 import { png } from './png.ts';
 import { decodeGxt, escapeText, toUnicode } from './gxt.ts';
 import { parseScr, hex, STRING_TYPE_MISSION_FILE } from './scr.ts';
+import { decompileLevel } from './scr-mis.ts';
 
 const HELP = `bun tools/formats/cli.ts [--pak data.pak] <command> ...
   pak [--grep RE]                        list pak entries (size, data offset)
@@ -34,6 +35,7 @@ const HELP = `bun tools/formats/cli.ts [--pak data.pak] <command> ...
   tga <file> --out f.png
   scr <file> [--summary|--list|--strings] mission script: header, opcode counts / one line per command / strings
   gxt <file> [--summary|--list [--unicode]|--key KEY] text table: summary + validation / key<TAB>text, non-printables escaped (--unicode: font accent codes as letters) / one entry
+  scr <main.scr> --mis [--out DIR]       decompile a level script and its sub-missions to .mis (stdout, or DIR/*.mis)
 Paths inside the pak are case-insensitive; '\\\\' or '/' both work. JSON goes to stdout.`;
 
 const argv = process.argv.slice(2);
@@ -110,6 +112,11 @@ function sdt(pak: Pak, bank: string) {
 }
 
 function scr(pak: Pak, file: string) {
+  if (flag('--mis')) {
+    const out = option('--out'), files = decompileLevel(name => pak.read(name), file);
+    for (const f of files) if (out) writeOut(`${out}/${f.name}`, new TextEncoder().encode(f.text)); else console.log(`// ==== ${f.name}\n${f.text}`);
+    return;
+  }
   const s = parseScr(pak.read(file));
   if (flag('--list')) {
     for (const c of s.commands) console.log(`${String(c.index).padStart(4)} @${c.offset.toString(16).padStart(4, '0')} ${String(c.type).padStart(3)} ${c.name.padEnd(36)} next=${c.next ?? 'end'}${c.returnValue ? ` rv=${c.returnValue}` : ''}${c.args.length ? ` ${hex(c.args)}` : ''}`);

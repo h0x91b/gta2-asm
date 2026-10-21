@@ -37,7 +37,8 @@ GameTick ─► MissionScript_ExecuteScriptThreads 0x481900      every frame
 ## `.scr` file layout (V)
 
 All little-endian. Checked against the 85 `.scr` files in `data.pak`. Decoder:
-`tools/formats/scr.ts` (`bun tools/formats/cli.ts scr data/wil.scr --list`).
+`tools/formats/scr.ts` (`bun tools/formats/cli.ts scr data/wil.scr --list`); back to `.mis`:
+[Decompiler](#decompiler-toolsformatsscr-mists).
 
 ### Main script (`data/<map>.scr`, always 82656 bytes; 18 files)
 
@@ -269,7 +270,7 @@ Handlers shared by several opcodes are named after the group (`Script_Op_S_OP_I`
 | 64 | ENDEXEC | STOP_EXEC | `0x478a00` Script_Op_ENDEXEC | — | — | 10 | high |
 | 65 | FOR | FOR_LOOP | — | — | — | 0 | — |
 | 66 | DO_WHILE | DO_WHILE | — | — | — | 0 | — |
-| 67 | FUNCTION | FUNCTION | — | — | — | 85 | — |
+| 67 | FUNCTION | FUNCTION | — | — | — | 85 | high (label definition) |
 | 68 | RETURN | RETURN | `0x478610` Script_Op_RETURN | — | — | 196 | high |
 | 69 | WHILE | WHILE | — | — | — | 0 | — |
 | 70 | WHILE_EXEC | WHILE_EXEC | — | — | — | 0 | — |
@@ -426,7 +427,7 @@ Handlers shared by several opcodes are named after the group (`Script_Op_S_OP_I`
 | 221 | CHANGE_COLOUR | CHANGE_COLOUR | `0x47ca60` Script_Op_CHANGE_COLOUR | — | SCR_FOUR_PARAMS | 0 | medium |
 | 222 | CHANGE_RADIUS | CHANGE_RADIUS | `0x47caa0` Script_Op_CHANGE_RADIUS | — | SCR_CHANGE_LIGHT_RADIUS | 0 | medium |
 | 223 | SET_GANG_INFO | SET_GANG_INFO1 | `0x47b340` Script_Op_SET_GANG_INFO | `0x477bd0` Script_Decl_SET_GANG_INFO | SCR_SET_GANG_INFO | 4 | high |
-| 224 | SET_GANG_KILL_REACTION | SET_GANG_RESPECT | `0x47aab0` Script_Op_SET_GANG_KILL_REACTION | — | SCR_FOUR_PARAMS | 3 | low |
+| 224 | SET_GANG_KILL_REACTION | SET_GANG_RESPECT | `0x47aab0` Script_Op_SET_GANG_KILL_REACTION | — | SCR_FOUR_PARAMS | 3 | high |
 | 225 | SET_GANG_CHAR_RESPECT | SET_CHAR_RESPECT | `0x47ab80` Script_Op_CHANGE_GANG_CHAR_RESPECT | — | SCR_FOUR_PARAMS | 0 | high |
 | 226 | SET_AMBIENT_LEVEL | SET_AMBIENT | `0x47ae70` Script_Op_SET_AMBIENT_LEVEL | — | SCR_SET_AMBIENT | 1 | high |
 | 227 | CHECK_ANSWERED_PHONE | CHECK_PHONE | `0x47af50` Script_Op_CHECK_ANSWERED_PHONE | — | SCR_POINTER | 0 | medium |
@@ -503,8 +504,8 @@ Handlers shared by several opcodes are named after the group (`Script_Op_S_OP_I`
 | 298 | SET_STATION_1 | SET_STATION_1 | — | `0x4753d0` Script_Decl_SET_TRAIN_STATIONS | — | 0 | medium |
 | 299 | SETUP_MODELCHECK_DESTROY | SETUP_MODEL_CHECK | `0x47d010` Script_Op_SETUP_MODELCHECK_DESTROY | — | — | 3 | high |
 | 300 | HAS_MODELCHECK_HAPPENED | MODEL_CHECK | `0x47d040` Script_Op_HAS_MODELCHECK_HAPPENED | — | — | 3 | high |
-| 301 | CREATE_LIGHT_2 | LIGHT_DECSET2 | `0x480040` Script_Op_CREATE_LIGHT | — | — | 6 | low |
-| 302 | LIGHT_SET_2 | CREATE_LIGHT2 | — | `0x47f710` Script_Decl_LIGHT_SET | — | 0 | low |
+| 301 | CREATE_LIGHT_2 | LIGHT_DECSET2 | `0x480040` Script_Op_CREATE_LIGHT | — | — | 6 | high |
+| 302 | LIGHT_SET_2 | CREATE_LIGHT2 | — | `0x47f710` Script_Decl_LIGHT_SET | — | 0 | medium |
 | 303 | SET_CAR_NUMBER_GRAPHIC | SET_CAR_GRAPHIC | `0x47d1e0` Script_Op_SET_CAR_NUMBER_GRAPHIC | — | SCR_SET_CAR_GRAPHIC | 0 | medium |
 | 304 | DECLARE_POLICELEVEL | DECLARE_POLICE | — | `0x475420` Script_Decl_DECLARE_POLICELEVEL | — | 0 | medium |
 | 305 | IS_CARBOMB_ACTIVE | CARBOMB_ACTIVE | `0x47f9f0` Script_Op_CHECK_CAR_STATE | — | SCR_POINTER | 0 | high |
@@ -666,7 +667,12 @@ Handlers shared by several opcodes are named after the group (`Script_Op_S_OP_I`
 3. **Spot decompiles** of handlers, e.g. `DELAY`, `GOSUB` / `RETURN`, `STOP_THREAD`,
    `CLEAR_WANTED_LEVEL`, `ALTER_WANTED_LEVEL` (Seq 27), `KILL_CHAR` → `Ped::Kill`.
 
-**low** (3) are the open questions below.
+**low** (217, 219: never used in a shipped script) are open questions below.
+
+4. **Decompiled output against DMA's sources.** `tools/formats/scr-mis.ts` turns `data/bil.scr` and
+   its 22 sub-scripts back into `.mis` text; 9694 of the 9700 normalised lines of DMA's bil
+   sources come back (see [Decompiler](#decompiler-toolsformatsscr-mists)). This settled the
+   lights (301 / 302) and 224.
 
 ## Functions named in this pass
 
@@ -847,18 +853,58 @@ gta2_re's suffixes are 10.5 addresses, but two kinds of coincidence are real and
   `0x93BA4` for that block (checked on 6 globals with matching xrefs). Do not extrapolate the
   delta to other blocks without checking.
 
+## Decompiler (`tools/formats/scr-mis.ts`)
+
+`bun tools/formats/cli.ts scr data/bil.scr --mis --out <dir>` writes the main script and every
+sub-mission it names as `.mis` text (`<dir>` outside the repo or git-ignored: the output is
+Rockstar's scripts). Per-opcode argument templates live in `tools/formats/scr-mis-ops.ts`, enum
+names in `scr-consts.ts`. Variable names are not in a `.scr`: declarations get generated names
+(`chr3`, `auto12`); zones and gangs keep theirs, because their string id equals the declaring
+command's index.
+
+Control flow is rebuilt from the command graph, not from layout heuristics (V, `IF_JUMP` read in
+the 11.44 disassembly at `0x478590`):
+
+- `IF_JUMP` (98) args `{u8 is_or; u8 _; u16 target}`; `thread+8` is the last boolean result. It
+  jumps to `target` when `(is_or && result) || (!is_or && !result)`, otherwise follows `cmd_next`.
+- A condition is `term [NOT] IF_JUMP term [NOT] IF_JUMP ...`. `NOT` (71) is postfix. Each
+  intermediate `IF_JUMP` gets the pointer index right after the term it leads to; its `is_or`
+  gives the operator. The final `IF_JUMP` is numbered after the whole construct: `cmd_next` is the
+  first body command, `target` the `ELSE` branch (target below the `IF_JUMP`'s own index) or the
+  command after `ENDIF`.
+- `WHILE`: the span between the final `IF_JUMP` and its target holds a `GOTO` (77) whose `cmd_next`
+  is the first condition term and whose argument is the `IF_JUMP`'s index. `WHILE_EXEC`: the first
+  term has `return_value` 1 while the `IF_JUMP` has 0 (checked on the 22 bil missions).
+  `ENDEXEC` (64) is a keyword DMA writes by hand inside plain `WHILE` loops, not a loop marker.
+- `FUNCTION` (67) is a label definition (`name:`), `GOSUB` 78 / `RETURN` 68 call one,
+  `CREATE_THREAD` / `THREAD_TRIGGER` reference one. The decompiler emits a `FORWARD` per label.
+
+Validation: on bil, 9694 of DMA's 9700 normalised lines (comments, `#ifdef PSX` blocks and
+identifiers dropped, numbers rounded) match, multi-line conditions joined; the 6 left are
+`COUNTER x` vs `COUNTER x = 0`, which compile to the same bytes. Our output has 324 extra lines:
+code in the shipped scripts that the DMA source snapshot does not have, plus the `FORWARD`s.
+All 18 levels decompile with no unknown opcode or unstructured jump. Against T.M.'s decompiler on
+wil/ste main scripts, 1279/1305 and 1511/1535 lines agree. The rest are T.M. bugs: it drops a
+trailing 0 in `MAP_ZONE`, prints the light radius as a coordinate, prints 255 for a −1 gang
+value and calls every all-`return_value`-1 loop `WHILE_EXEC`.
+
+Community decompilers, used as cross-checks only (no code taken, see CREDITS.md): T.M.'s "Epic GTA2
+Script Decompiler" (2011) and Valps' fork of it. Their argument struct layouts agree with the
+11.44 handlers where we checked (`CAR_DATA_SET`, `GENERATOR_SET`, `SET_STATION_INFO` record offsets
+from Seq 27). Their opcode enum is the same as gta2_re's, so it is not an independent source for
+names.
+
+GXT side (Seq 35, `docs/re/gxt.md`): `DISPLAY_MESSAGE` reads the text id at arg +0 and a vocal
+byte at +2 (1 = JOB COMPLETE, 2 = JOB FAILED); 117 shows a big label, 118 / 321 / 279 queue a brief
+at priority 1 / 2 / 3.
+
 ## Open questions
 
-- **217 / 218 / 301 / 302 (lights)**: 219 and 301 dispatch to one runtime handler
-  (`Script_Op_CREATE_LIGHT`), 217 and 302 to `Script_Decl_LIGHT_SET`, and 218 has no handler.
-  gta2_re's enum calls 218 and 301 `LIGHT_DECSET*`, which contradicts the dispatch. Probably the
-  gta2_re enum swaps 301/302 (and 217/218). Confidence low until a handler is read.
-- **224**: `bil.scr` uses it 3 times, while the keyword `SET_GANG_RESPECT` never occurs in the
-  bil `.mis` files. The name `SET_GANG_KILL_REACTION` comes from gta2_re; its callee
-  `FUN_0045db20` aligns to `Gang::SetGangKillReaction`.
-- **67 `FUNCTION`**: 85 occurrences in bil.scr, the same count as `WHILE_EXEC`. It has no
-  handler, so it may be the compiled form of a `WHILE_EXEC` head rather than a `FUNCTION`
-  keyword.
+- **217 / 219 (lights, variant 1)**: never used in a shipped script. 217 goes to
+  `Script_Decl_LIGHT_SET` and 219 to `Script_Op_CREATE_LIGHT`, like 302 / 301; the decompiler
+  treats them as `LIGHT` / `CREATE_LIGHT` without the delay triple. 218 has no handler.
+- **`START_BONUS_CHECK` remap** (op 290): wil stores −2 there. How the compiler encodes `NONE`
+  is not pinned, so the decompiler prints the raw number.
 - **`GIVE_WEAPON_1` vs `_2`** (138 / 266): one handler. What the argument variants mean is not
   confirmed.
 - `SCR_CMD_TYPE` in Ghidra has only values 0..231; the remaining names (232..446) are in this
