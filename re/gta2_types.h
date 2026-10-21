@@ -2991,9 +2991,7 @@ struct Car {
     uint8_t _gap_0xaa[0x2];
     int unsure_honkReason; /* 0xac */
     uint8_t _gap_0xb0[0x4];
-    byte shopReaction; /* 0xb4 */
-    bool_ unused_0xB5; /* 0xb5 */
-    uint8_t _gap_0xb6[0x2];
+    int shopReaction; /* 0xb4 */
     bool_ isTurretBeingRotated; /* 0xb8 */
     uint8_t _gap_0xb9[0x3];
 };
@@ -5085,8 +5083,7 @@ struct CarAI {
     Car *unsure_nearbyCar; /* 0x68 */
     Car *blockingCar; /* 0x6c */
     void *obstacleHit; /* 0x70 */
-    uint8_t _gap_0x74[0x3];
-    undefined1 field_0x77; /* 0x77 */
+    SCR_f unsure_targetSpeed; /* 0x74 */
 };
 
 // /imported/seuko-mod/CarAIPool  size 0x8f74

@@ -864,9 +864,7 @@ struc Car
     resb 2
     .unsure_honkReason                resb 4      ; 0xac int
     resb 4
-    .shopReaction                     resb 1      ; 0xb4 byte
-    .unused_0xB5                      resb 1      ; 0xb5 bool
-    resb 2
+    .shopReaction                     resb 4      ; 0xb4 int
     .isTurretBeingRotated             resb 1      ; 0xb8 bool
     resb 3
 endstruc
@@ -3828,8 +3826,7 @@ struc CarAI
     .unsure_nearbyCar                 resb 4      ; 0x68 Car *
     .blockingCar                      resb 4      ; 0x6c Car *
     .obstacleHit                      resb 4      ; 0x70 void *
-    resb 3
-    .field_0x77                       resb 1      ; 0x77 undefined1
+    .unsure_targetSpeed               resb 4      ; 0x74 SCR_f
 endstruc
 
 ; /imported/seuko-mod/CarAIPool  (36724 bytes)
