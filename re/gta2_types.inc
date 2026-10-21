@@ -1834,7 +1834,7 @@ struc Ped
     .field30_0x178                    resb 4      ; 0x178 int
     .gang                             resb 4      ; 0x17c GangRespect *
     .carAttackerPed                   resb 4      ; 0x180 Ped *
-    resb 4
+    .carImpactObject                  resb 4      ; 0x184 void *
     .meleeTargetPed                   resb 4      ; 0x188 Ped *
     .pathCursor                       resb 4      ; 0x18c S3Bytes *
     .patrolRoute                      resb 4      ; 0x190 byte *
@@ -1858,7 +1858,7 @@ struc Ped
     .killerPedId                      resb 4      ; 0x204 int
     .invulnerability                  resb 2      ; 0x208 ushort
     .wantedPoints                     resb 2      ; 0x20a short
-    .field67_0x20c                    resb 2      ; 0x20c short
+    .field64_0x20c                    resb 2      ; 0x20c short
     .offscreenTicks                   resb 2      ; 0x20e ushort
     .knockdownMeter                   resb 2      ; 0x210 ushort
     .knockdownThreshold               resb 2      ; 0x212 ushort
@@ -1870,8 +1870,8 @@ struc Ped
     resb 5
     .objectiveDone                    resb 1      ; 0x225 byte
     .unsure_carEnterExitStage         resb 1      ; 0x226 byte
-    .field84_0x227                    resb 1      ; 0x227 byte
-    .field85_0x228                    resb 1      ; 0x228 byte
+    .field81_0x227                    resb 1      ; 0x227 byte
+    .field82_0x228                    resb 1      ; 0x228 byte
     resb 3
     .unsure_attitude                  resb 4      ; 0x22c int
     .unsure_hostility                 resb 4      ; 0x230 int
@@ -1891,7 +1891,7 @@ struc Ped
     .objective                        resb 4      ; 0x258 PED_OBJECTIVE
     .task                             resb 4      ; 0x25c PED_OBJECTIVE
     resb 1
-    .field118_0x261                   resb 1      ; 0x261 byte
+    .field115_0x261                   resb 1      ; 0x261 byte
     .attackersThisTick                resb 1      ; 0x262 byte
     .attackersLastTick                resb 1      ; 0x263 byte
     .killerCreditTimer                resb 1      ; 0x264 byte
@@ -1911,7 +1911,7 @@ struc Ped
     .savedState2                      resb 4      ; 0x284 PED_STATE2
     .threatSearch                     resb 4      ; 0x288 PED_THREAT_SEARCH
     .threatReaction                   resb 4      ; 0x28c PED_THREAT_REACTION
-    .relToMultiplayer                 resb 4      ; 0x290 int
+    .lastAttackerWeapon               resb 4      ; 0x290 int
 endstruc
 
 ; /_ped/PedManager_S25  (132012 bytes)

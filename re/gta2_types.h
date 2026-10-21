@@ -3766,7 +3766,7 @@ struct Ped {
     int field30_0x178; /* 0x178 */
     GangRespect *gang; /* 0x17c */
     Ped *carAttackerPed; /* 0x180 */
-    uint8_t _gap_0x184[0x4];
+    void *carImpactObject; /* 0x184 */
     Ped *meleeTargetPed; /* 0x188 */
     S3Bytes *pathCursor; /* 0x18c */
     byte *patrolRoute; /* 0x190 */
@@ -3790,7 +3790,7 @@ struct Ped {
     int killerPedId; /* 0x204 */
     ushort invulnerability; /* 0x208 9999 = infinity */
     short wantedPoints; /* 0x20a 600 = 1 star, 1600 = 2 */
-    short field67_0x20c; /* 0x20c */
+    short field64_0x20c; /* 0x20c */
     ushort offscreenTicks; /* 0x20e */
     ushort knockdownMeter; /* 0x210 */
     ushort knockdownThreshold; /* 0x212 */
@@ -3802,8 +3802,8 @@ struct Ped {
     uint8_t _gap_0x220[0x5];
     byte objectiveDone; /* 0x225 */
     byte unsure_carEnterExitStage; /* 0x226 */
-    byte field84_0x227; /* 0x227 */
-    byte field85_0x228; /* 0x228 */
+    byte field81_0x227; /* 0x227 */
+    byte field82_0x228; /* 0x228 */
     uint8_t _gap_0x229[0x3];
     int unsure_attitude; /* 0x22c */
     int unsure_hostility; /* 0x230 */
@@ -3823,7 +3823,7 @@ struct Ped {
     PED_OBJECTIVE objective; /* 0x258 */
     PED_OBJECTIVE task; /* 0x25c */
     uint8_t _gap_0x260[0x1];
-    byte field118_0x261; /* 0x261 */
+    byte field115_0x261; /* 0x261 */
     byte attackersThisTick; /* 0x262 */
     byte attackersLastTick; /* 0x263 */
     byte killerCreditTimer; /* 0x264 */
@@ -3843,7 +3843,7 @@ struct Ped {
     PED_STATE2 savedState2; /* 0x284 */
     PED_THREAT_SEARCH threatSearch; /* 0x288 */
     PED_THREAT_REACTION threatReaction; /* 0x28c */
-    int relToMultiplayer; /* 0x290 */
+    int lastAttackerWeapon; /* 0x290 */
 };
 
 // /_ped/PedManager_S25  size 0x203ac
