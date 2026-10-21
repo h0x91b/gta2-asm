@@ -10,7 +10,7 @@
 ; (wanted level and its lock, skin), Vehicle (spawn a car; colour, repair, invincibility
 ; and explosion of the current or last car) and Debug flags (a few of the game's own,
 ; written straight into their bytes, which HiddenDebugFlags 0x451930 filled from the
-; registry at startup; the game reads them as it goes). ESC goes back a page, K closes.
+; registry at startup; the game reads them as it goes). ESC or K closes it from any page.
 ;
 ; Layout is in 640x480 units, scaled by the main camera's uiScale like the game's HUD.
 ; Text: DrawGTAText @0x4CC100, stdcall(wchar_t* str, SCR_f x, SCR_f y, short font,
@@ -85,7 +85,7 @@ dbgmenu_key:
     cmp ebx, DIK_K
     je .close
     cmp ebx, DIK_ESCAPE
-    je .esc
+    je .close
     cmp ebx, DIK_UP
     je .up
     cmp ebx, DIK_DOWN
@@ -98,12 +98,6 @@ dbgmenu_key:
     je .enter
     cmp ebx, DIK_NUMPADENTER
     je .enter
-    jmp .eat
-.esc:
-    lea rax, [dmp_main]
-    cmp [dm_page], rax
-    je .close
-    call dm_back
     jmp .eat
 .close:
     mov byte [dm_open], 0
