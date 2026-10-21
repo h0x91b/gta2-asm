@@ -321,10 +321,14 @@ not yet applied: needs a Structure Editor Clear of HudManager +0x2854..+0x2A1B).
 
 ## 9. How to safely change text
 
-1. Edit with `tools/formats/gxt.ts`: `decodeGxt` → change `entries[i].raw` (build it with
-   `fromUnicode('…')`, which refuses characters the font cannot draw) → `encodeGxt(g, {repack:
-   true})`. For a whole new table, `buildGxt(lang, {key: text})` sorts the keys for you
-   (**not yet tested in the game**). Never hand-edit offsets.
+1. Edit with the CLI: `gxt data/e.gxt --export --out formats-out/e.txt` (one `key<TAB>text` line
+   per key, accents as letters, `\uXXXX` for raw units), edit, then `gxt data/e.gxt --import
+   formats-out/e.txt --out <overlay>/data/e.gxt`. The import file may hold every key or only the
+   changed ones; unchanged keys keep their bytes (an unedited export imports byte-identically) and
+   the checks below run on every edited line (errors stop the write unless `--force`). Verified in
+   the game 2026-10-21: an imported `e.gxt` in the overlay changed the main-menu labels (`play`,
+   `options` with Ö Ä Ü É) and loaded the level normally. In code: `gxt-edit.ts` `applyEdits`, or
+   `buildGxt(lang, {key: text})` for a table from scratch (not run in the game). Never hand-edit offsets.
 2. Keys: ≤ 7 ASCII bytes, unique, table sorted by unsigned bytes (`"7235" < "801" < "B01" < "c00"`).
    Script text ids are decimal strings; zone names are the 3-char `.gmp` names. Keep every key the
    game asks for (§3), or that text goes blank.
@@ -358,4 +362,5 @@ not yet applied: needs a Structure Editor Clear of HudManager +0x2854..+0x2A1B).
 - Why 2066 of 2184 numeric keys are not referenced by the display opcodes of the shipped scripts
   (other opcodes, or unused/placeholder briefs such as `3001…` "REPORT DEAD BRIEF").
 - `Player_GetDeathLocaleKey` 0x4A4E10 can return NULL and both callers pass it unchecked.
-- `buildGxt` / edited files have not been loaded by the game yet.
+- `buildGxt` (a table from scratch) has not been loaded by the game; `--import` over the original has.
+- Zone names that are not 3 characters (`training_mission` in wil.gmp) bypass the GXT: shown raw from the `.gmp`, upper-cased, `_` drawn as the font's blank glyph.

@@ -142,12 +142,12 @@ Option 1 is implemented for the frontend in `host/w32_renderer.asm`
 
 ## File-format decoders (`tools/formats/`)
 
-TypeScript decoders for `.sty`, `.gmp`, `.sdt`/`.raw`, `nyc.gci`, `.scr` and frontend `.tga`, run
+TypeScript decoders for `.sty`, `.gmp`, `.sdt`/`.raw`, `nyc.gci`, `.scr`, `.gxt` and frontend `.tga`, run
 with Bun (`/opt/homebrew/bin/bun`, no npm deps), reading straight from `data.pak` with the
 same rules as `w32_vfs.asm`. Use them to learn what
 a loader function in `gta2.exe` is parsing: `bun tools/formats/cli.ts help`, e.g.
 `sty data/wil.sty --summary`, `gmp data/wil.gmp --block 40,135,3`, `scr data/bil.scr --mis --out formats-out/bil`
-(mission scripts back to `.mis`). Tests: `bun test
+(mission scripts back to `.mis`), `gxt data/e.gxt --export`/`--import` (edit game text, `docs/re/gxt.md`). Tests: `bun test
 tools/formats`. They write only to an explicit `--out` (inside the repo only if git-ignored,
 e.g. `/formats-out/`). Format traps: `docs/formats/lessons.md`; format → reader function →
 struct: `docs/formats/loader-map.md`; DMA's specs + example missions: `docs/formats/specs/`; what is left out

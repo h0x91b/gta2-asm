@@ -2,8 +2,8 @@
 // GTA2 file-format CLI over data.pak. Reads straight from the pak (pak.ts); writes only to
 // an explicit --out path, and refuses one inside this repository unless git ignores it.
 // Usage: bun tools/formats/cli.ts help
-import { mkdirSync, writeFileSync } from 'node:fs';
-import { dirname, resolve, relative, isAbsolute } from 'node:path';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { basename, dirname, join, resolve, relative, isAbsolute } from 'node:path';
 import { openPak, DEFAULT_PAK, type Pak } from './pak.ts';
 import { parseStyle, decodeSprite, decodeTile, paletteColor, type Style } from './style.ts';
 import { styleMetadata } from './style-metadata.ts';
@@ -15,6 +15,8 @@ import { parseGci } from './gci.ts';
 import { decodeTga } from './tga.ts';
 import { png } from './png.ts';
 import { decodeGxt, escapeText, toUnicode } from './gxt.ts';
+import { exportText, parseText, applyEdits } from './gxt-edit.ts';
+import { fontSheet } from './font-sheet.ts';
 import { parseScr, hex, gangInfos, gangKillReactions, STRING_TYPE_MISSION_FILE } from './scr.ts';
 import { decompileLevel } from './scr-mis.ts';
 
@@ -25,6 +27,7 @@ const HELP = `bun tools/formats/cli.ts [--pak data.pak] <command> ...
   sty <file> --sprite N [--palette V] [--damage MASK] --out f.png
   sty <file> --tile N --out f.png
   sty <file> --palette-dump V            the 256 colours of virtual palette V
+  sty <file> --font-sheet N|all --out P  font glyphs as an editable PNG grid + .json manifest (+ empty Cyrillic cells); 'all': P is a directory
   gmp <file> --summary                   chunks, block count, zones
   gmp <file> --block x,y,z               block_info at that cell (faces, arrows, slope)
   gmp <file> --column x,y                block ids of the column, z=0 first
@@ -36,6 +39,8 @@ const HELP = `bun tools/formats/cli.ts [--pak data.pak] <command> ...
   tga <file> --out f.png
   scr <file> [--summary|--list|--strings|--gangs] mission script: header, opcode counts / one line per command / strings / gang declarations
   gxt <file> [--summary|--list [--unicode]|--key KEY] text table: summary + validation / key<TAB>text, non-printables escaped (--unicode: font accent codes as letters) / one entry
+  gxt <file> --export --out f.txt        editable text (key<TAB>text, accents as letters, \\uXXXX escapes; docs/re/gxt.md §9)
+  gxt <file> --import f.txt --out g.gxt [--force]  apply f.txt (all keys or only the changed ones) over <file>; errors stop unless --force
   scr <main.scr> --mis [--out DIR]       decompile a level script and its sub-missions to .mis (stdout, or DIR/*.mis)
 Paths inside the pak are case-insensitive; '\\\\' or '/' both work. JSON goes to stdout.`;
 
@@ -71,6 +76,16 @@ function sty(pak: Pak, file: string) {
     console.log(`sprite ${sprite}: ${r.width}x${r.height}`); return writeOut(out, png(r.width, r.height, r.rgba));
   }
   if (tile !== undefined) return writeOut(out, png(64, 64, decodeTile(s, int(tile, '--tile'))));
+  const sheet = option('--font-sheet');
+  if (sheet !== undefined) {
+    const ids = sheet === 'all' ? styleMetadata(s).fonts.map(f => f.id) : [int(sheet, '--font-sheet')];
+    for (const id of ids) {
+      const f = fontSheet(s, id), base = sheet === 'all' ? join(out ?? '', `${basename(file).replace(/\.sty$/i, '')}-font${id}`) : (out ?? '').replace(/\.png$/i, '');
+      if (!out) throw Error('--out is required');
+      writeOut(`${base}.png`, png(f.width, f.height, f.rgba)); writeOut(`${base}.json`, new TextEncoder().encode(JSON.stringify(f.manifest, null, 1)));
+    }
+    return;
+  }
   if (dump !== undefined) { const v = int(dump, '--palette-dump'); return json(Array.from({ length: 256 }, (_, i) => paletteColor(s, v, i).slice(0, 3).map(c => c.toString(16).padStart(2, '0')).join(''))); }
   const meta = styleMetadata(s);
   if (flag('--cars')) return json(meta.cars);
@@ -135,7 +150,17 @@ function scr(pak: Pak, file: string) {
 }
 
 function gxt(pak: Pak, file: string) {
-  const g = decodeGxt(pak.read(file)), key = option('--key');
+  const g = decodeGxt(pak.read(file)), key = option('--key'), imp = option('--import');
+  if (flag('--export')) return writeOut(option('--out'), new TextEncoder().encode(exportText(g, file)));
+  if (imp !== undefined) {
+    const force = flag('--force'), { bytes, report } = applyEdits(g, parseText(readFileSync(imp, 'utf8')));
+    for (const w of report.warnings) console.error(`warning: ${w}`);
+    for (const e of report.errors) console.error(`error: ${e}`);
+    console.error(`${report.changed.length} changed, ${report.added.length} added, ${report.unchanged} unchanged${report.added.length ? ` (new: ${report.added.join(' ')})` : ''}`);
+    if (report.errors.length && !force) throw Error(`${report.errors.length} error(s), nothing written (--force to write anyway)`);
+    const issues = decodeGxt(bytes).issues; if (issues.length) throw Error(`result fails validation: ${issues.join('; ')}`);
+    return writeOut(option('--out'), bytes);
+  }
   if (flag('--list')) { const uni = flag('--unicode'); for (const e of g.entries) console.log(`${e.key.padEnd(8)}\t${escapeText(uni ? toUnicode(e.raw) : e.text)}`); return; }
   if (key !== undefined) {
     const e = g.entries.find(x => x.key === key); if (!e) throw Error(`no key ${key} in ${file}`);

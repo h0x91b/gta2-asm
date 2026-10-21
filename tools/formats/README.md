@@ -17,6 +17,8 @@ traps: `docs/formats/`.
 | `gci.ts` | `nyc.gci` car handling (text) |
 | `scr.ts`, `scr-opcodes.ts` | `.scr` mission scripts (main and sub-script layouts, commands, strings); VM: `docs/re/script-engine.md` |
 | `gxt.ts` | `.gxt` GBL text tables: TKEY (sorted 8-byte keys + TDAT offsets) / TDAT (u16 strings); byte-identical `encodeGxt`, `buildGxt`, font code page `toUnicode`/`fromUnicode` (`docs/re/gxt.md`) |
+| `gxt-edit.ts` | editable text form (`key<TAB>text`), import over the original with checks (printf args, buffer limits, speaker marker, key rules, glyphs) |
+| `font-sheet.ts` | a `.sty` font as an editable PNG grid + JSON manifest, with empty Cyrillic cells |
 | `scr-mis.ts`, `scr-mis-ops.ts`, `scr-consts.ts` | `.scr` → `.mis` decompiler: per-opcode templates, enum names, IF / WHILE / AND / OR rebuilt from the jump graph |
 | `tga.ts`, `png.ts` | frontend TGA decode, PNG encode |
 | `cli.ts` | the command line below |
@@ -36,6 +38,9 @@ bun tools/formats/cli.ts sdt data/audio/wil --wav 1 --out formats-out/wil1.wav
 bun tools/formats/cli.ts gci --model 0
 bun tools/formats/cli.ts scr data/wil.scr --list           # one line per command: index, offset, opcode, next, args
 bun tools/formats/cli.ts gxt data/g.gxt --list --unicode  # key + text (non-printables escaped, accents decoded); --key 1001, --summary
+bun tools/formats/cli.ts gxt data/e.gxt --export --out formats-out/e.txt                 # edit it, keep only changed lines if you like
+bun tools/formats/cli.ts gxt data/e.gxt --import formats-out/e.txt --out formats-out/e.gxt
+bun tools/formats/cli.ts sty data/wil.sty --font-sheet all --out formats-out/fonts      # wil-font<N>.png + .json
 bun tools/formats/cli.ts scr data/bil.scr --mis --out formats-out/bil  # decompile bil + its 22 missions to .mis
 bun tools/formats/cli.ts scr data/wil.scr --gangs          # SET_GANG_INFO declarations + SET_GANG_KILL_REACTION pairs
 ```

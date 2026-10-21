@@ -90,12 +90,16 @@ function chunkBytes(tag: string, data: Uint8Array) {
 
 /** Serialise. Faithful mode (default) writes the decoded TDAT and each entry's offset/keyBytes verbatim,
  * so decode -> encode is byte-identical. `repack: true` instead lays TDAT out fresh from entries[].raw
- * (in entry order, no sharing, no padding) and recomputes the offsets: use it after editing texts. */
-export function encodeGxt(g: Gxt, opts: { repack?: boolean } = {}): Uint8Array {
+ * (in entry order, no sharing, no padding) and recomputes the offsets: use it after editing texts.
+ * `keepTdatOrder` lays the strings out in their original offset order instead (entries with no
+ * offset, e.g. offset Infinity for new keys, go last), so an edit keeps the authoring order. */
+export function encodeGxt(g: Gxt, opts: { repack?: boolean; keepTdatOrder?: boolean } = {}): Uint8Array {
   let tdat = g.tdat; const offsets = g.entries.map(e => e.offset);
   if (opts.repack) {
     const parts: Uint16Array[] = []; let at = 0;
-    g.entries.forEach((e, i) => { offsets[i] = at * 2; parts.push(e.raw, Uint16Array.of(0)); at += e.raw.length + 1; });
+    const order = g.entries.map((_, i) => i);
+    if (opts.keepTdatOrder) order.sort((a, b) => (g.entries[a]!.offset - g.entries[b]!.offset) || a - b);
+    for (const i of order) { const e = g.entries[i]!; offsets[i] = at * 2; parts.push(e.raw, Uint16Array.of(0)); at += e.raw.length + 1; }
     tdat = new Uint16Array(at); let p = 0; for (const x of parts) { tdat.set(x, p); p += x.length; }
   }
   const tk = new Uint8Array(g.entries.length * 12), kv = view(tk);
