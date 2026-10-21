@@ -48,3 +48,16 @@ you; colour, invincibility, repair or explode the car you are in or left last) a
 Debug flags page (FPS / camera info / invulnerability / no police and a few other DMA
 flags). Back returns to the main page; ESC or K closes the menu.
 Flags and internals: [host/README.md](host/README.md), [docs/](docs/).
+
+## Inspect the game files
+
+`tools/formats/` decodes styles, maps, sound banks and car handling straight from
+`data.pak` (needs [Bun](https://bun.sh)):
+
+```sh
+bun tools/formats/cli.ts sty data/wil.sty --summary
+bun tools/formats/cli.ts gmp data/wil.gmp --block 40,135,3
+bun tools/formats/cli.ts sty data/wil.sty --sprite 0 --out formats-out/car.png
+```
+
+Format notes: [docs/formats/](docs/formats/README.md).

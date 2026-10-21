@@ -140,6 +140,18 @@ Option 1 is implemented for the frontend in `host/w32_renderer.asm`
   `discord_game_sdk.dll`, `gta2-resurected.exe.*`). `gta2manager.exe` (the settings
   tool) is `gta2manager.ebin`.
 
+## File-format decoders (`tools/formats/`)
+
+TypeScript decoders for `.sty`, `.gmp`, `.sdt`/`.raw`, `nyc.gci` and frontend `.tga`, run
+with Bun (`/opt/homebrew/bin/bun`, no npm deps), reading straight from `data.pak` with the
+same rules as `w32_vfs.asm`. Ported from the user's my-games project. Use them to learn what
+a loader function in `gta2.exe` is parsing: `bun tools/formats/cli.ts help`, e.g.
+`sty data/wil.sty --summary`, `gmp data/wil.gmp --block 40,135,3`. Tests: `bun test
+tools/formats`. They write only to an explicit `--out` (inside the repo only if git-ignored,
+e.g. `/formats-out/`). Format traps: `docs/formats/lessons.md`; format → reader function →
+struct: `docs/formats/loader-map.md`; DMA's own specs are third-party, not committed
+(`docs/reference.md`).
+
 ## Reference material
 
 All three repos target **GTA2 11.44**, the same build as our vanilla `gta2.exe`, so
