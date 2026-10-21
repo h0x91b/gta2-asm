@@ -1,0 +1,429 @@
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Tanked XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+
+ 
+/*
+The player must sneak into an army base to steal a tank. In order to do this, they need an army 
+vehicle to use as a key for entrance to the base. Once inside, the player must avoid the guards and find the tank. 
+Once the tank is located the player must bring it back to their base. Army jeeps will be sent after the tank, the 
+player must destroy these before they can park.
+
+	i)	Steal army jeep
+	ii) sneak into army base
+	iii) steal tank
+	iv) Take out pursuing jeeps.
+	v) Park tank
+*/
+
+
+
+
+// general mission objects
+
+CAR_DATA z_h_2_tank
+
+CAR_DATA z_h_2_guard_tank_1
+CAR_DATA z_h_2_guard_tank_2
+CAR_DATA z_h_2_guard_tank_3
+
+CAR_DATA z_h_2_jeep_1
+CAR_DATA z_h_2_jeep_2
+CAR_DATA z_h_2_jeep_3
+CAR_DATA z_h_2_jeep_4
+CAR_DATA z_h_2_jeep_5
+CAR_DATA z_h_2_jeep_6
+
+
+CHAR_DATA z_h_2_guard_1
+CHAR_DATA z_h_2_guard_2
+CHAR_DATA z_h_2_guard_3
+CHAR_DATA z_h_2_guard_4
+CHAR_DATA z_h_2_guard_5
+CHAR_DATA z_h_2_guard_6
+
+CHAR_DATA z_h_2_guard_tank_1_driver
+CHAR_DATA z_h_2_guard_tank_2_driver
+CHAR_DATA z_h_2_guard_tank_3_driver
+
+
+COUNTER z_h_2_left_army_base = 0
+COUNTER z_h_2_player_in_tank = 0
+COUNTER z_h_2_park_tank = 0 
+COUNTER z_h_2_tank_parked = 0
+COUNTER z_h_2_guard_1_spotted_player = 0
+COUNTER z_h_2_guard_2_spotted_player = 0
+COUNTER z_h_2_guard_3_spotted_player = 0
+COUNTER z_h_2_guard_4_spotted_player = 0
+COUNTER z_h_2_guard_5_spotted_player = 0
+COUNTER z_h_2_guard_6_spotted_player = 0
+COUNTER z_h_2_player_in_tank_turn_on_army = 0
+COUNTER z_h_2_guard_tank_1_spotted_player = 0
+COUNTER z_h_2_guard_tank_2_spotted_player = 0
+COUNTER z_h_2_guard_tank_3_spotted_player = 0
+COUNTER z_h_2_alarm_raised_1 = 0
+
+OBJ_DATA z_h_2_powerup_1
+OBJ_DATA z_h_2_powerup_2
+OBJ_DATA z_h_2_powerup_3
+OBJ_DATA z_h_2_powerup_4
+
+LIGHT z_h_2_light_1
+LIGHT z_h_2_light_2
+LIGHT z_h_2_light_3
+SOUND z_h_2_alarm_1
+SOUND z_h_2_alarm_2
+SOUND z_h_2_alarm_3
+
+FORWARD clean_up_zaib_hard_phone_m2:
+FORWARD z_h_2_alarm_raised:
+
+
+z_h_2_alarm_raised:
+
+	ALTER_WANTED_LEVEL ( shaft , 6 )
+	#ifdef PC
+	z_h_2_light_1 = CREATE_LIGHT ( 157.5 , 246.5 , 3.0 ) 7.9 255 ( 255 , 0 , 0 ) 30 90 0
+	z_h_2_light_2 = CREATE_LIGHT ( 147.5 , 248.5 , 3.0 ) 7.9 255 ( 255 , 0 , 0 ) 30 90 0
+	z_h_2_light_3 = CREATE_LIGHT ( 146.5 , 241.5 , 3.0 ) 7.9 255 ( 255 , 0 , 0 ) 30 90 0
+
+	DELAY_HERE ( 90 )
+	z_h_2_alarm_1 = CREATE_SOUND ( 157.5 , 246.5 , 3.0 ) prison_alarm play_forever END
+	z_h_2_alarm_2 = CREATE_SOUND ( 147.5 , 248.5 , 3.0 ) prison_alarm play_forever END
+	z_h_2_alarm_3 = CREATE_SOUND ( 146.5 , 241.5 , 3.0 ) prison_alarm play_forever END
+	FORCE_CLEANUP ( z_h_2_alarm_1 )
+	FORCE_CLEANUP ( z_h_2_alarm_2 )
+	FORCE_CLEANUP ( z_h_2_alarm_3 )
+	#endif
+	SET z_h_2_player_in_tank_turn_on_army = 1
+RETURN	
+
+
+// start of mission
+
+
+zaib_hard_phone_m2:
+
+SET flag_failed_zaib_hard_phone_m2 = 0
+
+
+SET flag_on_mission = 1
+SET flag_on_zaib_mission = 1
+
+
+
+
+// create tank & guards
+
+z_h_2_tank = CREATE_CAR ( 158.0 , 246.0 , 2.0 ) 0 270 TANK END
+
+UPDATE_DOOR_TARGET  ( z_h_1_door_1 , z_h_2_tank ) 
+MAKE_DOOR_AUTOMATIC ( z_h_1_door_1 )
+
+DISPLAY_MESSAGE ( 3853 ) // you have PASSED the mission!"
+DISPLAY_BRIEF ( 4040 ) // Montana wants a tank, head over to the army base and steal one. Easy huh?
+DISPLAY_BRIEF ( 4041 ) // By the way, the base is well guarded and they won't take kindly to intruders. 
+
+POINT_ARROW_AT ( arrow , z_h_2_tank )
+
+z_h_2_powerup_1 = CREATE_OBJ ( 145.5 , 245.5 , 2.0 ) 0 COLLECT_30 END
+FORCE_CLEANUP ( z_h_2_powerup_1 )
+z_h_2_powerup_2 = CREATE_OBJ ( 121.0 , 245.0 , 2.0 ) 0 COLLECT_01 END
+FORCE_CLEANUP ( z_h_2_powerup_2 )
+z_h_2_powerup_3 = CREATE_OBJ ( 130.0 , 245.0 , 2.0 ) 0 COLLECT_02 END
+FORCE_CLEANUP ( z_h_2_powerup_3 )
+z_h_2_powerup_4 = CREATE_OBJ ( 136.0 , 249.5 , 2.0 ) 0 COLLECT_31 END
+FORCE_CLEANUP ( z_h_2_powerup_4 )
+
+#ifdef PC
+z_h_2_jeep_1 = CREATE_CAR ( 123.5 , 244.5 , 2.0 ) 	0 90 JEEP END
+z_h_2_jeep_2 = CREATE_CAR ( 123.5 , 245.5 , 2.0 ) 	0 90 JEEP END
+z_h_2_jeep_3 = CREATE_CAR ( 123.5 , 246.5 , 2.0 ) 	0 90 JEEP END
+z_h_2_jeep_4 = CREATE_CAR ( 123.5 , 247.5 , 2.0 ) 0 90 JEEP END
+z_h_2_jeep_5 = CREATE_CAR ( 135.5 , 248.5 , 2.0 ) 0 180 JEEP END
+z_h_2_jeep_6 = CREATE_CAR ( 136.5 , 248.5 , 2.0 ) 0 180 JEEP END
+#endif
+
+z_h_2_guard_tank_1 = CREATE_CAR ( 135.5 , 242.5 , 2.0 ) -1 270 tank END
+z_h_2_guard_tank_2 = CREATE_CAR ( 141.5 , 242.5 , 2.0 ) -1 0 tank END
+z_h_2_guard_tank_3 = CREATE_CAR ( 148.5 , 245.5 , 2.0 ) -1 270 tank END
+SET_CAR_NO_COLLIDE ( z_h_2_guard_tank_1 )
+SET_CAR_NO_COLLIDE ( z_h_2_guard_tank_2 )
+SET_CAR_NO_COLLIDE ( z_h_2_guard_tank_3 )
+CHANGE_CAR_LOCK ( z_h_2_guard_tank_1 , locked ) 
+CHANGE_CAR_LOCK ( z_h_2_guard_tank_2 , locked ) 
+CHANGE_CAR_LOCK ( z_h_2_guard_tank_3 , locked )
+
+
+z_h_2_guard_1 = CREATE_CHAR ( 139.5 , 247.0 , 2.0 ) 4 180 criminal END
+SET_CHAR_THREAT_REACTION ( z_h_2_guard_1 , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( z_h_2_guard_1 , line_of_sight_player_only )
+GIVE_WEAPON ( z_h_2_guard_1 , machine_gun )
+ADD_CHAR_TO_GANG ( z_h_2_guard_1 , islagang )
+SET_CHAR_OBJECTIVE ( z_h_2_guard_1 , wait_on_foot )
+
+z_h_2_guard_2 = CREATE_CHAR ( 140.5 , 247.0 , 2.0 ) 4 180 criminal END
+SET_CHAR_THREAT_REACTION ( z_h_2_guard_2 , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( z_h_2_guard_2 , line_of_sight_player_only )
+GIVE_WEAPON ( z_h_2_guard_2 , machine_gun )
+ADD_CHAR_TO_GANG ( z_h_2_guard_2 , islagang )
+SET_CHAR_OBJECTIVE ( z_h_2_guard_2 , wait_on_foot )
+
+z_h_2_guard_3 = CREATE_CHAR ( 144.5 , 239.5 , 2.0 ) 4 180 criminal END
+ADD_PATROL_POINT ( z_h_2_guard_3 , 147.5 , 239.5 , 2.0 )
+ADD_PATROL_POINT ( z_h_2_guard_3 , 146.5 , 244.5 , 2.0 )
+ADD_PATROL_POINT ( z_h_2_guard_3 , 144.5 , 244.5 , 2.0 )
+ADD_PATROL_POINT ( z_h_2_guard_3 , 144.5 , 239.5 , 2.0 )
+SET_CHAR_THREAT_REACTION ( z_h_2_guard_3 , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( z_h_2_guard_3 , line_of_sight_player_only )
+GIVE_WEAPON ( z_h_2_guard_3 , machine_gun )
+ADD_CHAR_TO_GANG ( z_h_2_guard_3 , islagang )
+
+z_h_2_guard_4 = CREATE_CHAR ( 146.5 , 249.5 , 2.0 ) 4 180 criminal END
+ADD_PATROL_POINT ( z_h_2_guard_4 , 143.5 , 249.5 , 2.0 )
+ADD_PATROL_POINT ( z_h_2_guard_4 , 143.5 , 247.5 , 2.0 )
+ADD_PATROL_POINT ( z_h_2_guard_4 , 146.5 , 246.5 , 2.0 )
+ADD_PATROL_POINT ( z_h_2_guard_4 , 146.5 , 249.5 , 2.0 )
+SET_CHAR_THREAT_REACTION ( z_h_2_guard_4 , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( z_h_2_guard_4 , line_of_sight_player_only )
+GIVE_WEAPON ( z_h_2_guard_4 , machine_gun )
+ADD_CHAR_TO_GANG ( z_h_2_guard_4 , islagang )
+
+z_h_2_guard_5 = CREATE_CHAR ( 155.5 , 242.5 , 2.0 ) 4 180 criminal END
+ADD_PATROL_POINT ( z_h_2_guard_5 , 152.5 , 242.5 , 2.0 )
+ADD_PATROL_POINT ( z_h_2_guard_5 , 152.5 , 245.5 , 2.0 )
+ADD_PATROL_POINT ( z_h_2_guard_5 , 155.5 , 245.5 , 2.0 )
+ADD_PATROL_POINT ( z_h_2_guard_5 , 155.5 , 242.5 , 2.0 )
+SET_CHAR_THREAT_REACTION ( z_h_2_guard_5 , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( z_h_2_guard_5 , line_of_sight_player_only )
+GIVE_WEAPON ( z_h_2_guard_5 , machine_gun )
+ADD_CHAR_TO_GANG ( z_h_2_guard_5 , islagang )
+
+z_h_2_guard_6 = CREATE_CHAR ( 152.5 , 246.5 , 2.0 ) 4 180 criminal END
+ADD_PATROL_POINT ( z_h_2_guard_6 , 155.5 , 246.5 , 2.0 )
+ADD_PATROL_POINT ( z_h_2_guard_6 , 156.5 , 250.5 , 2.0 )
+ADD_PATROL_POINT ( z_h_2_guard_6 , 153.5 , 250.5 , 2.0 )
+ADD_PATROL_POINT ( z_h_2_guard_6 , 152.5 , 246.5 , 2.0 )
+SET_CHAR_THREAT_REACTION ( z_h_2_guard_6 , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( z_h_2_guard_6 , line_of_sight_player_only )
+GIVE_WEAPON ( z_h_2_guard_6 , machine_gun )
+ADD_CHAR_TO_GANG ( z_h_2_guard_6 , islagang )
+
+
+
+
+
+// wait for player top park tank
+
+WHILE_EXEC ( z_h_2_tank_parked = 0 )
+
+
+
+	IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( z_h_2_guard_tank_1 ) )
+	AND ( z_h_2_guard_tank_1_spotted_player = 0 ) )
+		z_h_2_guard_tank_1_driver = CREATE_CHAR_INSIDE_CAR ( z_h_2_guard_tank_1 ) 4 road_block_tank_man END
+		ADD_CHAR_TO_GANG ( z_h_2_guard_tank_1_driver , islagang )
+		SET z_h_2_guard_tank_1_spotted_player = 1 
+	ENDIF
+
+	IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( z_h_2_guard_tank_2 ) )
+	AND ( z_h_2_guard_tank_2_spotted_player = 0 ) )
+		z_h_2_guard_tank_2_driver = CREATE_CHAR_INSIDE_CAR ( z_h_2_guard_tank_2 ) 4 road_block_tank_man END
+		ADD_CHAR_TO_GANG ( z_h_2_guard_tank_2_driver , islagang )
+		SET z_h_2_guard_tank_2_spotted_player = 1 
+	ENDIF
+
+	IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( z_h_2_guard_tank_3 ) )
+	AND ( z_h_2_guard_tank_3_spotted_player = 0 ) )
+		z_h_2_guard_tank_3_driver = CREATE_CHAR_INSIDE_CAR ( z_h_2_guard_tank_3 ) 4 road_block_tank_man END
+		ADD_CHAR_TO_GANG ( z_h_2_guard_tank_3_driver , islagang )
+		SET z_h_2_guard_tank_3_spotted_player = 1 
+	ENDIF
+	
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_h_2_guard_1 ) ) 
+	AND ( z_h_2_guard_1_spotted_player = 0 ) )
+		SET z_h_2_guard_1_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 4046 ) // "shit! we've got an intruder"	 
+	ENDIF
+
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_h_2_guard_2 ) ) 
+	AND ( z_h_2_guard_2_spotted_player = 0 ) )
+		SET z_h_2_guard_2_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 4047 ) // "shit! we've got an intruder"	 
+	ENDIF
+
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_h_2_guard_3 ) ) 
+	AND ( z_h_2_guard_3_spotted_player = 0 ) )
+		SET z_h_2_guard_3_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 4048 ) // "shit! we've got an intruder"	 
+	ENDIF
+
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_h_2_guard_4 ) ) 
+	AND ( z_h_2_guard_4_spotted_player = 0 ) )
+		SET z_h_2_guard_4_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 4049 ) // "shit! we've got an intruder"	 
+	ENDIF
+
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_h_2_guard_5 ) ) 
+	AND ( z_h_2_guard_5_spotted_player = 0 ) )
+		SET z_h_2_guard_5_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 4050 ) // "shit! we've got an intruder"	 
+	ENDIF
+
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_h_2_guard_6 ) ) 
+	AND ( z_h_2_guard_6_spotted_player = 0 ) )
+		SET z_h_2_guard_6_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 4051 ) // "shit! we've got an intruder"	 
+	ENDIF
+	
+	// wait for the player to enter the tank
+
+	IF  ( ( IS_CHARACTER_IN_CAR ( shaft , z_h_2_tank ) )
+	AND ( z_h_2_player_in_tank = 0 ) ) 
+		SET z_h_2_player_in_tank = 1
+		DISPLAY_BRIEF_NOW  ( 4042 )	// Quick, get your arse out of there and get back to Mobile R.V. prompto. 
+		POINT_ARROW_AT ( arrow , 13.0 , 200.0 , 2.0 )
+		IF ( z_h_2_alarm_raised_1 = 0 )
+			GOSUB z_h_2_alarm_raised:
+			SET z_h_2_alarm_raised_1 = 1
+		ENDIF
+	ENDIF
+
+
+	// if the player leaves the tank
+	
+	IF ( ( NOT ( IS_CHARACTER_IN_CAR ( shaft , z_h_2_tank ) ) ) 
+	AND ( z_h_2_player_in_tank = 1 ) ) 
+		SET z_h_2_player_in_tank = 0
+		DISPLAY_BRIEF_NOW  ( 4043 ) // Get back in that tank driftkicker or Montana will chew your nuts for breakfast!	
+		POINT_ARROW_AT ( arrow , z_h_2_tank )
+	ENDIF
+
+
+	// if the tank is destroyed
+
+	IF ( ( IS_CAR_WRECKED ( z_h_2_tank ) )
+	AND ( flag_failed_zaib_hard_phone_m2 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4044 ) // Montana is going to be pissed that you destroyed his tank!    
+		DISPLAY_MESSAGE ( 3730 ) // mission failed
+		SET flag_failed_zaib_hard_phone_m2 = 1
+		RETURN
+	ENDIF
+
+
+	// waits for player outside door, then parks tank
+	
+	IF ( ( IS_CAR_IN_BLOCK ( z_h_2_tank , 13.0 , 199.0 , 2.0 , 2.0 , 2.0 ) ) 
+	AND ( z_h_2_park_tank = 0 ) )
+		PARK ( z_h_2_tank , z_h_1_door_1 )
+		SET z_h_2_park_tank = 1
+		REMOVE_ARROW ( arrow )
+	ENDIF	
+
+
+	// waits for tank to finish parking
+
+
+	IF ( ( z_h_2_park_tank = 1 )
+	AND ( HAS_PARK_FINISHED ( ) ) )
+		SET z_h_2_player_in_tank = 2
+		SET z_h_2_park_tank = 1
+		SET z_h_2_tank_parked = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4045 ) // Well done, Montana will be erect!
+		SET flag_passed_zaib_hard_phone_m2 = 1
+		++ counter_all_missions_passed
+		DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+		ADD_SCORE ( shaft , 80000 )
+		ADD_MULTIPLIER ( shaft , 1 ) 
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , 1 )
+		CLEAR_WANTED_LEVEL ( shaft )
+		SET_PHONE_DEAD ( ph_zaib_hard_phone ) 
+		DISABLE_THREAD_TRIGGER ( thr_zaib_hard_phone_m1 )
+		IF ( flag_passed_zaib_hard_phone_m1 = 1 )
+			SET_PHONE_DEAD ( ph_zaib_hard_phone ) 
+			DISABLE_THREAD_TRIGGER ( thr_zaib_hard_phone_m1 )
+		ENDIF
+		RETURN
+	ENDIF
+
+
+
+	// if player leaves base in tank					   2
+
+	//IF  ( ( ( NOT ( IS_CHAR_IN_ZONE ( shaft , B20 ) ) )
+	//AND ( z_h_2_left_army_base = 0 ) )
+	//AND ( z_h_2_player_in_tank = 1 ) )
+
+	
+ENDWHILE
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+// deletes all objects when Redneck medium phone1 mission3 is finished...
+				
+clean_up_zaib_hard_phone_m2: 
+	
+    REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	MAKE_DOOR_MANUAL ( z_h_1_door_1 ) 
+	
+	#ifdef PC
+	IF ( z_h_2_player_in_tank_turn_on_army = 1 )
+		DELETE_ITEM ( z_h_2_light_1 )
+		DELETE_ITEM ( z_h_2_light_2 )
+		DELETE_ITEM ( z_h_2_light_3 )
+	ENDIF
+	#endif
+
+	IF ( flag_passed_zaib_hard_phone_m2 = 1 )
+		++ flag_zaib_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_zaib_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3675 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3674 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_zaib_hard_phone_m2 = 1 )
+		++ flag_zaib_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_zaib_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+	MISSION_HAS_FINISHED ( )
+	
+	SET flag_on_mission	= 0
+	SET flag_on_zaib_mission = 0
+	
+	RETURN
+
+
+MISSIONSTART
+
+	GOSUB zaib_hard_phone_m2:
+
+	GOSUB clean_up_zaib_hard_phone_m2:
+
+MISSIONEND

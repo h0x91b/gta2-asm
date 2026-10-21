@@ -1,0 +1,373 @@
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//***************************************FINAL MISSION**************************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+
+
+//characters for mission
+
+CHAR_DATA krishna_leader_fm
+
+CHAR_DATA russian_leader_fm
+
+CHAR_DATA zaibatsu_leader_fm
+
+
+//car data
+
+CAR_DATA zaib_car_fm
+
+CAR_DATA kris_car_fm
+
+CAR_DATA russ_car_fm
+
+
+//counters for mission
+
+COUNTER flag_all_bosses_dead = 0
+
+COUNTER flag_zaibatsu_leader_fm_dead = 0
+
+COUNTER flag_krishna_leader_fm_dead = 0
+
+COUNTER flag_russian_leader_fm_dead = 0
+
+COUNTER flag_zaibatsu_leader_onscreen = 0
+
+COUNTER flag_krishna_leader_onscreen = 0 
+
+COUNTER flag_russian_leader_onscreen = 0
+
+COUNTER flag_arrow_1_fm_on = 0
+
+COUNTER flag_arrow_2_fm_on = 0
+
+COUNTER flag_arrow_3_fm_on = 0
+
+COUNTER flag_zaibatsu_leader_fm_alive = 0
+COUNTER flag_krishna_leader_fm_alive = 0
+COUNTER flag_russian_leader_fm_alive = 0
+COUNTER flag_zaibatsu_leader_brief = 0
+COUNTER flag_krishna_leader_brief = 0
+COUNTER flag_russian_leader_brief = 0
+
+
+//forwarded labels
+
+FORWARD start_final_mission:
+
+FORWARD clean_up_final_mission:
+
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+//starts final mission
+
+start_final_mission:
+
+DELAY_HERE ( 600 )
+
+SET flag_on_mission = 1
+SET flag_on_zaib_mission = 1
+//zaib_car_fm = CREATE_GANG_CAR ( 229.5 , 86.5 , 3.0 ) 2 0 vtype END
+//zaibatsu_leader_fm = CREATE_CHAR_INSIDE_CAR ( zaib_car_fm ) 8 criminal END
+zaibatsu_leader_fm = CREATE_CHAR ( 17.5 , 159.5 , 2.0 ) 8 0 criminal_type1 END
+SET_CHAR_THREAT_REACTION ( zaibatsu_leader_fm , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( zaibatsu_leader_fm , line_of_sight_player_only )
+GIVE_WEAPON ( zaibatsu_leader_fm , rocket_launcher )
+SET_CHAR_OBJECTIVE ( zaibatsu_leader_fm , kill_char_any_means , shaft )
+SET flag_zaibatsu_leader_fm_alive = 1
+//SET_CHAR_TO_STAY_IN_CAR ( zaibatsu_leader_fm , ON ) 
+//SET_CHAR_TO_USE_CAR_WEAPON ( zaibatsu_leader_fm , ON ) 
+//ADD_CHAR_TO_GANG ( zaibatsu_leader_fm , zaibgang )
+SET_FAVOURITE_MODEL ( zaibatsu_leader_fm , vtype )
+		
+//kris_car_fm = CREATE_GANG_CAR ( 206.5 , 192.5 , 2.0 ) 2 0 krsnabus END
+//krishna_leader_fm = CREATE_CHAR_INSIDE_CAR ( kris_car_fm ) 1 criminal END
+krishna_leader_fm = CREATE_CHAR ( 206.5 , 192.5 , 2.0 ) 9 0 criminal_type1 END
+SET_CHAR_THREAT_REACTION ( krishna_leader_fm , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( krishna_leader_fm , line_of_sight_player_only )
+GIVE_WEAPON ( krishna_leader_fm , flame_thrower )
+SET_CHAR_OBJECTIVE ( krishna_leader_fm , kill_char_any_means , shaft )
+SET flag_krishna_leader_fm_alive = 1
+//SET_CHAR_TO_STAY_IN_CAR ( krishna_leader_fm , ON ) 
+//SET_CHAR_TO_USE_CAR_WEAPON ( krishna_leader_fm , ON ) 
+//ADD_CHAR_TO_GANG ( krishna_leader_fm , krisgang )
+SET_FAVOURITE_MODEL ( krishna_leader_fm , krsnabus )
+		
+//russ_car_fm = CREATE_GANG_CAR ( 16.5 , 203.5 , 2.0 ) 2 0 buick END
+//russian_leader_fm = CREATE_CHAR_INSIDE_CAR ( russ_car_fm ) 13 criminal END
+russian_leader_fm = CREATE_CHAR ( 144.5 , 77.0 , 2.0 ) 10 0 criminal_type1 END
+SET_CHAR_THREAT_REACTION (russian_leader_fm , react_as_normal )
+SET_CHAR_THREAT_SEARCH (russian_leader_fm , line_of_sight_player_only )
+GIVE_WEAPON (russian_leader_fm , machine_gun )
+SET_CHAR_OBJECTIVE (russian_leader_fm , kill_char_any_means , shaft )
+SET flag_russian_leader_fm_alive = 1
+//SET_CHAR_TO_STAY_IN_CAR ( russian_leader_fm , ON ) 
+//SET_CHAR_TO_USE_CAR_WEAPON ( russian_leader_fm , ON ) 
+//ADD_CHAR_TO_GANG ( russian_leader_fm , russgang )
+SET_FAVOURITE_MODEL ( russian_leader_fm , buick )
+
+//MAKE_ALL_CHARS_MUGGERS ( ON ) 
+		
+DISPLAY_MESSAGE ( 3861 )  //"FINAL MISSION!"
+DISPLAY_BRIEF ( 3680 )  //"Well you have managed to piss off all the gang bosses and they want you dead!"
+DISPLAY_BRIEF ( 3681 )  //"They have taken this personally and are out to kill you themselves, your only way out is to kill them first!"
+
+	
+WHILE_EXEC ( NOT ( flag_all_bosses_dead = 3 ) )
+	
+ 	
+	IF ( ( flag_zaibatsu_leader_fm_dead = 0 )
+	AND ( HAS_CHARACTER_DIED ( zaibatsu_leader_fm ) ) )
+		DISPLAY_BRIEF_NOW ( 3685 )  //"That takes care of the Zaibatsu Corporation!"
+		++ flag_all_bosses_dead
+		SET flag_zaibatsu_leader_fm_dead = 1
+		SET flag_zaibatsu_leader_fm_alive = 2
+		REMOVE_ARROW ( arrow )
+	ENDIF
+	
+	IF ( ( flag_krishna_leader_fm_dead = 0 )
+	AND ( HAS_CHARACTER_DIED ( krishna_leader_fm ) ) )
+		DISPLAY_BRIEF_NOW ( 3686 )  //"Thats god rid of those mad Loonie freaks!"
+		++ flag_all_bosses_dead
+		SET flag_krishna_leader_fm_dead = 1
+		SET flag_krishna_leader_fm_alive = 2
+		REMOVE_ARROW ( arrow_2 )
+	ENDIF
+	
+	IF ( ( flag_russian_leader_fm_dead = 0 )
+	AND ( HAS_CHARACTER_DIED (russian_leader_fm ) ) )
+		DISPLAY_BRIEF_NOW ( 3687 )  //"Ha the Yakuza Brotherhood is no more!"
+		++ flag_all_bosses_dead
+		SET flag_russian_leader_fm_dead = 1
+		SET flag_russian_leader_fm_alive = 2
+		REMOVE_ARROW ( arrow_3 )
+	ENDIF
+		
+
+/*
+	IF ( ( ( flag_got_zaibatsu_brief_fm = 0 )
+	AND ( flag_zaibatsu_leader_fm_dead = 0 ) )
+	AND ( IS_ITEM_ONSCREEN ( zaibatsu_leader_fm ) ) )
+		POINT_ARROW_AT ( arrow , zaibatsu_leader_fm )
+		DISPLAY_BRIEF ( 3688 )  //"Kill him!"
+		SET flag_got_zaibatsu_brief_fm = 1
+		SET flag_arrow_1_fm_on = 1
+	ENDIF
+	
+	IF ( ( ( flag_arrow_1_fm_on = 1 )
+	AND ( flag_zaibatsu_leader_fm_dead = 0 ) )
+	AND ( NOT ( IS_ITEM_ONSCREEN ( zaibatsu_leader_fm ) ) ) )
+		REMOVE_ARROW ( arrow )
+		SET flag_arrow_1_fm_on = 0
+		SET flag_got_zaibatsu_brief_fm = 0
+	ENDIF
+	
+
+
+	IF ( ( ( flag_got_krishna_brief_fm = 0 )
+	AND ( flag_krishna_leader_fm_dead = 0 ) )
+	AND ( IS_ITEM_ONSCREEN ( krishna_leader_fm ) ) )
+		POINT_ARROW_AT ( arrow_2 , krishna_leader_fm )
+		DISPLAY_BRIEF ( 3689 )  //"Get Him!"
+		SET flag_got_krishna_brief_fm = 1
+		SET flag_arrow_2_fm_on = 1
+	ENDIF
+	
+	IF ( ( ( flag_arrow_2_fm_on = 1 )
+	AND ( flag_krishna_leader_fm_dead = 0 ) )
+	AND ( NOT ( IS_ITEM_ONSCREEN ( krishna_leader_fm ) ) ) )
+		REMOVE_ARROW ( arrow_2 )
+		SET flag_arrow_2_fm_on = 0
+		SET flag_got_krishna_brief_fm = 0
+	ENDIF
+
+	
+
+	IF ( ( ( flag_got_russian_brief_fm = 0 )
+	AND ( flag_russian_leader_fm_dead = 0 ) )
+	AND ( IS_ITEM_ONSCREEN (russian_leader_fm ) ) )
+		POINT_ARROW_AT ( arrow_3 ,russian_leader_fm )
+		DISPLAY_BRIEF ( 3690 )  //"Waste Him!"
+		SET flag_got_russian_brief_fm = 1
+		SET flag_arrow_3_fm_on = 1
+	ENDIF
+		
+	IF ( ( ( flag_arrow_3_fm_on = 1 )
+	AND ( flag_russian_leader_fm_dead = 0 ) )
+	AND ( NOT ( IS_ITEM_ONSCREEN (russian_leader_fm ) ) ) )
+		REMOVE_ARROW ( arrow_3 )
+		SET flag_arrow_3_fm_on = 0
+		SET flag_got_russian_brief_fm = 0
+	ENDIF
+*/
+	
+	IF ( flag_zaibatsu_leader_fm_alive = 1 )
+		
+		IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( zaibatsu_leader_fm ) ) )
+		AND ( flag_zaibatsu_leader_onscreen = 1 ) )
+			SET flag_zaibatsu_leader_onscreen = 0
+			REMOVE_ARROW ( arrow )
+//			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( zaibatsu_leader_fm , 0.4 )
+//			ELSE
+//				SET_CHAR_MAX_DRIVESPEED ( zaibatsu_leader_fm , 0.0 )
+//			ENDIF
+		ENDIF
+	
+	
+		IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( zaibatsu_leader_fm ) )
+		AND ( flag_zaibatsu_leader_onscreen = 0 ) )
+			SET flag_zaibatsu_leader_onscreen = 1
+			POINT_ARROW_AT ( arrow , zaibatsu_leader_fm )
+			IF ( flag_zaibatsu_leader_brief = 0 )
+				DISPLAY_BRIEF_NOW ( 3688 )  //"Kill him!"
+				SET flag_zaibatsu_leader_brief = 1
+			ENDIF
+			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( zaibatsu_leader_fm , 0.4 )
+			ELSE
+				SET_CHAR_MAX_DRIVESPEED ( zaibatsu_leader_fm , 0.0 )
+			ENDIF
+		ENDIF
+
+	ENDIF
+
+	
+	IF ( flag_krishna_leader_fm_alive = 1 )
+		
+		IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( krishna_leader_fm ) ) )
+		AND ( flag_krishna_leader_onscreen = 1 ) )
+			SET flag_krishna_leader_onscreen = 0
+			REMOVE_ARROW ( arrow_2 )
+//			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( krishna_leader_fm , 0.4 )
+//			ELSE
+//				SET_CHAR_MAX_DRIVESPEED ( krishna_leader_fm , 0.0 )
+//			ENDIF
+		ENDIF
+	
+	
+		IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( krishna_leader_fm ) )
+		AND ( flag_krishna_leader_onscreen = 0 ) )
+			SET flag_krishna_leader_onscreen = 1
+			POINT_ARROW_AT ( arrow_2 , krishna_leader_fm )
+			IF ( flag_krishna_leader_brief = 0 )
+				DISPLAY_BRIEF_NOW ( 3689 )  //"Kill him!"
+				SET flag_krishna_leader_brief = 1
+			ENDIF
+			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( krishna_leader_fm , 0.4 )
+			ELSE
+				SET_CHAR_MAX_DRIVESPEED ( krishna_leader_fm , 0.0 )
+			ENDIF
+		ENDIF
+
+	ENDIF
+
+	
+	IF ( flag_russian_leader_fm_alive = 1 )
+		
+		IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( russian_leader_fm ) ) )
+		AND ( flag_russian_leader_onscreen = 1 ) )
+			SET flag_russian_leader_onscreen = 0
+			REMOVE_ARROW ( arrow_3 )
+//			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( russian_leader_fm , 0.4 )
+//			ELSE
+//				SET_CHAR_MAX_DRIVESPEED ( russian_leader_fm , 0.0 )
+//			ENDIF
+		ENDIF
+	
+	
+		IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( russian_leader_fm ) )
+		AND ( flag_russian_leader_onscreen = 0 ) )
+			SET flag_russian_leader_onscreen = 1
+			POINT_ARROW_AT ( arrow_3 , russian_leader_fm )
+			IF ( flag_russian_leader_brief = 0 )
+				DISPLAY_BRIEF_NOW ( 3690 )  //"Kill him!"
+				SET flag_russian_leader_brief = 1
+			ENDIF
+			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( russian_leader_fm , 0.4 )
+			ELSE
+				SET_CHAR_MAX_DRIVESPEED ( russian_leader_fm , 0.0 )
+			ENDIF
+		ENDIF
+
+	ENDIF
+	
+	
+ENDWHILE
+	
+		  	  		  		  
+//DISPLAY_MESSAGE ( 3751 )  //"FAILED FINAL MISSION!"
+
+
+IF ( flag_passed_final_mission = 0 )
+	CLEAR_ALL_BRIEFS ( )
+	DISPLAY_MESSAGE ( 3100 )  //"PASSED FINAL MISSION!"
+	DISPLAY_BRIEF ( 3682 )  //"Well done you have beaten them, move on to the Residentail area of the city!"
+	ADD_SCORE ( shaft , 5000000 )
+	ADD_MULTIPLIER ( shaft , 1 )
+	SET flag_passed_final_mission = 1
+ENDIF
+	
+RETURN
+				
+				
+				
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+//mission cleanup
+
+clean_up_final_mission:
+
+REMOVE_ARROW ( arrow )
+SET flag_on_mission = 0
+SET flag_on_zaib_mission = 0
+MAKE_ALL_CHARS_MUGGERS ( ON ) 
+MISSION_HAS_FINISHED ( )
+ 
+    
+CLEAR_WANTED_LEVEL ( shaft )
+	
+IF ( flag_passed_final_mission = 1 )
+	++ flag_all_missions_passed
+	//SET flag_passed_final_mission = 2
+ENDIF
+
+IF ( flag_failed_final_mission = 1 )
+	++ flag_all_missions_failed
+	//SET flag_failed_final_mission = 2
+ENDIF
+
+
+	
+RETURN				
+				
+				
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+MISSIONSTART
+
+GOSUB start_final_mission:
+
+GOSUB clean_up_final_mission:
+
+MISSIONEND
+ 
+
+ 		   	  
+	                                                                                                     
+			
+						

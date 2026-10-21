@@ -1,0 +1,344 @@
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ CRUSHING CARS ***************************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+
+
+//Cars for this mission
+
+CAR_DATA k_e_2_copcar
+CAR_DATA k_e_2_copcar_1
+
+//Objects for this mission
+
+OBJ_DATA k_e_2_powerup_1
+OBJ_DATA k_e_2_powerup_2
+
+SOUND k_e_2_yeeha
+SOUND k_e_2_shit
+
+//Counters for this mission
+
+COUNTER k_e_2_copcars_destroyed = 0
+COUNTER k_e_2_in_copcar	= 0
+COUNTER k_e_2_copcar_at_cranes = 0
+COUNTER k_e_2_copcar_on_crane
+
+FORWARD clean_up_kris_easy_phone2_m1:
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+		
+// starts Krishna easy phone2 mission1
+					
+
+kris_easy_phone2_m1:
+
+SET flag_failed_kris_easy_phone2_m1 = 0
+
+SET flag_on_mission = 1
+SET flag_on_kris_mission = 1
+k_e_2_powerup_1 = CREATE_OBJ ( 242.0 , 197.0 , 2.0 ) 0 COLLECT_01 15 END
+FORCE_CLEANUP ( k_e_2_powerup_1 )
+k_e_2_powerup_2 = CREATE_OBJ ( 248.0 , 205.0 , 2.0 ) 0 COLLECT_32 END
+FORCE_CLEANUP ( k_e_2_powerup_2 )
+DISPLAY_MESSAGE ( 3841 ) // you have FAILED the mission!"
+DISPLAY_BRIEF ( 3480 ) // "The cops have been giving a lot of shit, I want you to show them not to fuck with me! Steal a cop car!"
+
+#ifdef PC
+WHILE_EXEC ( k_e_2_copcars_destroyed < 3 )
+	
+	
+	IF ( ( ( IS_CHARACTER_IN_MODEL ( shaft , copcar ) )
+	AND ( NOT ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 176.5 , 249.5 , 3.0 , 7.0 , 7.0  ) ) ) )
+	AND ( k_e_2_in_copcar = 0 ) )
+//	AND ( k_e_2_copcar_at_cranes = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3482 ) // "Stop wasting time, now bring the copcar to the cranes to be crushed!"
+		POINT_ARROW_AT ( arrow , 176.5 , 249.5 , 3.0 )
+		SET k_e_2_in_copcar = 1
+	ENDIF
+
+
+	IF ( ( ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , copcar ) ) )
+	AND ( NOT ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 176.5 , 249.5 , 3.0 , 7.0 , 7.0  ) ) ) )
+	AND ( k_e_2_in_copcar = 1 ) )
+	AND ( k_e_2_copcar_on_crane = 0 ) )
+		DISPLAY_BRIEF ( 3483 ) // "Come on get moving! Steal a copcar!"
+		REMOVE_ARROW ( arrow )
+		SET k_e_2_in_copcar = 0
+	ENDIF
+
+
+	IF ( ( ( LOCATE_CHARACTER_BY_CAR ( shaft , 176.5 , 249.5 , 3.0 , 7.0 , 7.0  ) ) 
+	AND ( IS_CHARACTER_IN_MODEL ( shaft , copcar ) ) )
+	AND ( k_e_2_copcar_at_cranes = 0 ) )
+		SET k_e_2_copcar_at_cranes = 1
+//		SET k_e_2_in_copcar = 0
+//		REMOVE_ARROW ( arrow )
+		DISPLAY_BRIEF_NOW ( 3484 ) // "Get out of the copcar so that the crane can pick it up!" 
+	ENDIF
+
+	
+	IF ( ( ( NOT ( LOCATE_CHARACTER_BY_CAR ( shaft , 176.5 , 249.5 , 3.0 , 7.0 , 7.0  ) ) )
+	AND ( IS_CHARACTER_IN_MODEL ( shaft , copcar ) ) )
+	AND ( k_e_2_copcar_at_cranes = 1 ) )
+		SET k_e_2_copcar_at_cranes = 0
+//		SET k_e_2_in_copcar = 0
+//		POINT_ARROW_AT ( arrow , 176.5 , 249.5 , 2.0 )
+		DISPLAY_BRIEF_NOW ( 3489 ) // "Stop wasting time, now bring the copcar to the cranes to be crushed!"
+	ELSE
+
+		IF ( ( NOT ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 176.5 , 249.5 , 3.0 , 7.0 , 7.0  ) ) )
+		AND ( k_e_2_copcar_at_cranes = 1 ) )
+			SET k_e_2_copcar_at_cranes = 0
+//			SET k_e_2_in_copcar = 1
+//			DISPLAY_BRIEF_NOW ( 3490 ) // "Stop wasting time, now bring the copcar to the cranes to be crushed!"
+/*		ELSE
+			
+			IF ( ( NOT ( LOCATE_CHARACTER_BY_CAR ( shaft , 176.5 , 249.5 , 2.0 , 7.0 , 7.0  ) ) ) 
+			AND ( k_e_2_copcar_at_cranes = 1 ) )
+				SET k_e_2_copcar_at_cranes = 0
+				SET k_e_2_in_copcar = 1
+				DISPLAY_BRIEF_NOW ( 3491 ) // "Stop wasting time, now bring the copcar to the cranes to be crushed!"
+			ENDIF
+*/		ENDIF
+	ENDIF
+
+
+	IF ( GET_CAR_INFO_FROM_CRANE ( k_e_2_copcar_1 , crusher_kris_crane_1 ) )
+	
+		IF ( ( CHECK_CAR_MODEL ( k_e_2_copcar_1 , copcar ) )
+		AND ( k_e_2_copcar_on_crane = 0 ) )  
+			SET k_e_2_copcar_on_crane = 1
+		ENDIF
+
+	ENDIF
+	
+
+	IF ( GET_CAR_INFO_FROM_CRANE ( k_e_2_copcar , crusher_kris_crane_2 ) )
+			
+	  	WHILE ( NOT ( IS_CAR_IN_BLOCK ( k_e_2_copcar , 182.5 , 242.5 , 4.0 ) ) )
+			DO_NOWT
+			ENDEXEC
+		ENDWHILE
+
+		IF ( CHECK_CAR_MODEL ( k_e_2_copcar , copcar ) )  
+			++ k_e_2_copcars_destroyed
+			SET k_e_2_copcar_on_crane = 0
+			k_e_2_yeeha = CREATE_SOUND ( 182.5 , 242.5 , 6.0 ) yeeha_bomb play_instant END
+
+			IF ( k_e_2_copcars_destroyed = 1 )
+				DISPLAY_BRIEF ( 3485 ) // "Ok that's one copcar crushed, but I still want another two!"
+				ELSE
+				
+				IF ( k_e_2_copcars_destroyed = 2 )
+					DISPLAY_BRIEF ( 3486 ) // "Nice work, we now have two crushed copcars, I want one more to show to my people!"
+				ENDIF
+			ENDIF
+		ENDIF
+
+		IF ( NOT ( CHECK_CAR_MODEL ( k_e_2_copcar , copcar ) ) ) 
+			DISPLAY_BRIEF ( 3487 ) // "I said I wanted you to crush copcars, that wasn't a fucking copcar!"
+			k_e_2_shit = CREATE_SOUND ( 182.5 , 242.5 , 6.0 ) detected_mumble play_instant END
+		ENDIF
+
+	ENDIF
+
+	
+ENDWHILE
+#endif	
+
+
+
+
+
+#ifdef PSX
+WHILE_EXEC ( k_e_2_copcars_destroyed < 3 )
+	
+	
+ 	IF ( ( ( IS_CHARACTER_IN_MODEL ( shaft , copcar ) )
+	AND ( NOT ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 148.5 , 115.5 , 2.0 , 7.0 , 7.0  ) ) ) )
+	AND ( k_e_2_in_copcar = 0 ) )
+//	AND ( k_e_2_copcar_at_cranes = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3482 ) // "Stop wasting time, now bring the copcar to the cranes to be crushed!"
+		POINT_ARROW_AT ( arrow , 148.5 , 115.5 , 2.0 )
+		SET k_e_2_in_copcar = 1
+	ENDIF
+
+
+	IF ( ( ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , copcar ) ) )
+	AND ( NOT ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 148.5 , 115.5 , 2.0 , 7.0 , 7.0  ) ) ) )
+	AND ( k_e_2_in_copcar = 1 ) )
+	AND ( k_e_2_copcar_on_crane = 0 ) )
+		DISPLAY_BRIEF ( 3483 ) // "Come on get moving! Steal a copcar!"
+		REMOVE_ARROW ( arrow )
+		SET k_e_2_in_copcar = 0
+	ENDIF
+
+
+	IF ( ( ( LOCATE_CHARACTER_BY_CAR ( shaft , 148.5 , 115.5 , 2.0 , 7.0 , 7.0  ) ) 
+	AND ( IS_CHARACTER_IN_MODEL ( shaft , copcar ) ) )
+	AND ( k_e_2_copcar_at_cranes = 0 ) )
+		SET k_e_2_copcar_at_cranes = 1
+//		SET k_e_2_in_copcar = 0
+//		REMOVE_ARROW ( arrow )
+		DISPLAY_BRIEF_NOW ( 3484 ) // "Get out of the copcar so that the crane can pick it up!" 
+	ENDIF
+
+	
+	IF ( ( ( NOT ( LOCATE_CHARACTER_BY_CAR ( shaft , 148.5 , 115.5 , 2.0 , 7.0 , 7.0  ) ) )
+	AND ( IS_CHARACTER_IN_MODEL ( shaft , copcar ) ) )
+	AND ( k_e_2_copcar_at_cranes = 1 ) )
+		SET k_e_2_copcar_at_cranes = 0
+//		SET k_e_2_in_copcar = 0
+//		POINT_ARROW_AT ( arrow , 176.5 , 249.5 , 2.0 )
+		DISPLAY_BRIEF_NOW ( 3489 ) // "Stop wasting time, now bring the copcar to the cranes to be crushed!"
+	ELSE
+
+		IF ( ( NOT ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 148.5 , 115.5 , 2.0 , 7.0 , 7.0  ) ) )
+		AND ( k_e_2_copcar_at_cranes = 1 ) )
+			SET k_e_2_copcar_at_cranes = 0
+//			SET k_e_2_in_copcar = 1
+//			DISPLAY_BRIEF_NOW ( 3490 ) // "Stop wasting time, now bring the copcar to the cranes to be crushed!"
+/*		ELSE
+			
+			IF ( ( NOT ( LOCATE_CHARACTER_BY_CAR ( shaft , 148.5 , 115.5 , 2.0 , 7.0 , 7.0  ) ) ) 
+			AND ( k_e_2_copcar_at_cranes = 1 ) )
+				SET k_e_2_copcar_at_cranes = 0
+				SET k_e_2_in_copcar = 1
+				DISPLAY_BRIEF_NOW ( 3491 ) // "Stop wasting time, now bring the copcar to the cranes to be crushed!"
+			ENDIF
+*/		ENDIF
+	ENDIF
+
+	
+	IF ( GET_CAR_INFO_FROM_CRANE ( k_e_2_copcar_1 , crusher_neutral_crane_1 ) )
+	
+		IF ( ( CHECK_CAR_MODEL ( k_e_2_copcar_1 , copcar ) )
+		AND ( k_e_2_copcar_on_crane = 0 ) )  
+			SET k_e_2_copcar_on_crane = 1
+		ENDIF
+
+	ENDIF
+	
+
+	IF ( GET_CAR_INFO_FROM_CRANE ( k_e_2_copcar , crusher_neutral_crane_2 ) )
+			
+		WHILE ( NOT ( IS_CAR_IN_BLOCK ( k_e_2_copcar , 154.5 , 108.5 , 3.0 ) ) )
+			DO_NOWT
+			ENDEXEC
+		ENDWHILE
+
+		IF ( CHECK_CAR_MODEL ( k_e_2_copcar , copcar ) )  
+			++ k_e_2_copcars_destroyed
+			SET k_e_2_copcar_on_crane = 0
+			IF ( k_e_2_copcars_destroyed = 1 )
+				DISPLAY_BRIEF ( 3485 ) // "Ok that's one copcar crushed, but I still want another two!"
+				ELSE
+				
+				IF ( k_e_2_copcars_destroyed = 2 )
+					DISPLAY_BRIEF ( 3486 ) // "Nice work, we now have two crushed copcars, I want one more to show to my people!"
+				ENDIF
+			ENDIF
+		ENDIF
+
+		IF ( NOT ( CHECK_CAR_MODEL ( k_e_2_copcar , copcar ) ) ) 
+			DISPLAY_BRIEF ( 3487 ) // "I said I wanted you to crush copcars, that wasn't a fucking copcar!"
+		ENDIF
+
+	ENDIF
+
+	
+ENDWHILE
+#endif	
+	
+
+IF  ( ( k_e_2_copcars_destroyed = 3 )
+AND ( flag_passed_kris_easy_phone2_m1 = 0 )	)
+	CLEAR_ALL_BRIEFS ( )
+	DISPLAY_BRIEF ( 3488 ) // "Good work this will give my people courage, and it should make the cops think twice before getting into my business"
+	++ counter_all_missions_passed
+	SET flag_passed_kris_easy_phone2_m1 = 1
+	DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+	ADD_SCORE ( shaft , 40000 )
+	ADD_MULTIPLIER ( shaft , 1 )
+	CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , 1 ) 
+	CLEAR_WANTED_LEVEL ( shaft )
+	SET_PHONE_DEAD ( ph_kris_easy_phone2 ) 
+	DISABLE_THREAD_TRIGGER ( thr_kris_easy_phone2_m1 ) 
+	RETURN
+ENDIF					
+							
+
+	
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+clean_up_kris_easy_phone2_m1:
+	
+REMOVE_ARROW ( arrow )
+REMOVE_ARROW ( arrow_2 )
+REMOVE_ARROW ( arrow_3 )
+REMOVE_ARROW ( arrow_4 )
+		
+		
+IF ( flag_passed_kris_easy_phone2_m1 = 1 )
+	++ flag_kris_missions_passed
+	++ flag_all_missions_passed
+	IF ( flag_kris_missions_passed = 7 )
+		DISPLAY_BRIEF ( 3671 ) // "Good work that should stop them building into our community"
+		DISPLAY_MESSAGE ( 3670 ) // you have PASSED the mission!"
+	ENDIF
+ENDIF
+
+IF ( flag_failed_kris_easy_phone2_m1 = 1 )
+	++ flag_kris_missions_failed
+	++ flag_all_missions_failed
+	CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , -1 ) 
+	CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+ENDIF
+
+IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+	++ flag_kris_missions_failed
+	++ flag_all_missions_failed
+	CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , -1 ) 
+	CLEAR_WANTED_LEVEL ( shaft )
+ENDIF
+
+MISSION_HAS_FINISHED ( )
+
+SET flag_on_mission = 0
+SET flag_on_kris_mission = 0
+
+RETURN
+	
+	
+MISSIONSTART
+
+	GOSUB kris_easy_phone2_m1:
+
+	GOSUB clean_up_kris_easy_phone2_m1:
+
+MISSIONEND	
+
+
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+	                                                                                                     
+			
+						

@@ -2,7 +2,7 @@
 > `docs/reference/gta2/`), written for a browser reimplementation. Sentences about "our",
 > the importer, the sim, labs or runtime describe that project, not `gta2.exe`; paths under
 > `games/gta2/` are in that repo. Original-game evidence is the DMA format documents
-> (`formats/…`, see [../../reference.md](../../reference.md)) and CriminalRETeam/gta2_re
+> (`formats/…` = [../specs/](../specs/README.md)) and CriminalRETeam/gta2_re
 > rev `51d2ce3d`. **gta2_re address suffixes (`_43DA90` etc.) are NOT 11.44 addresses**:
 > most land mid-function in our binary (checked byte-wise, see [../loader-map.md](../loader-map.md)).
 > Treat them as names to search for, not VAs.

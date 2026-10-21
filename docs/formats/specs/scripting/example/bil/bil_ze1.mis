@@ -1,0 +1,815 @@
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXX KILL PEOPLE MAKE THEM LOOK LIKE ACCIDENTS XXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+// objects for Zaibatsu med phone1_2 mission3		
+	
+
+
+CHAR_DATA z_e_1_target_ped_1
+CHAR_DATA z_e_1_target_ped_2
+CHAR_DATA z_e_1_target_group_3
+CHAR_DATA z_e_1_kris_guard_1
+CHAR_DATA z_e_1_kris_guard_2
+CHAR_DATA z_e_1_remote_car_ped_1
+CHAR_DATA z_e_1_ambush_group_3_ped_1
+CHAR_DATA z_e_1_hot_dog_man_1
+
+
+CAR_DATA z_e_1_remote_car_1
+CAR_DATA z_e_1_target_group_3_car_1
+CAR_DATA z_e_1_hot_dog_van_1
+
+OBJ_DATA z_e_1_invisible_object_1
+OBJ_DATA z_e_1_suitcase_with_weapons_1
+OBJ_DATA z_e_1_powerup_1
+OBJ_DATA z_e_1_powerup_2
+OBJ_DATA z_e_1_powerup_3
+OBJ_DATA z_e_1_powerup_4
+
+
+COUNTER z_e_1_player_killed_1 = 0
+COUNTER z_e_1_target_ped_1_dead = 0
+COUNTER z_e_1_target_ped_1_located = 0
+COUNTER z_e_1_hot_dog_man_obj1_pass = 0
+COUNTER z_e_1_order_hot_dog_man_in_van = 0
+COUNTER z_e_1_in_wrong_car_at_ped_1 = 0
+COUNTER z_e_1_in_hot_dog_van_at_man_with_hotdogs = 0
+COUNTER z_e_1_on_foot_at_ped_1 = 0
+COUNTER z_e_1_in_hot_dog_van = 0
+COUNTER z_e_1_in_a_hot_dog_van = 0
+COUNTER z_e_1_picked_up_hot_dogs = 0
+COUNTER z_e_1_in_hot_dog_van_at_target_ped_1 = 0
+COUNTER z_e_1_order_target_ped_2_van = 0
+COUNTER z_e_1_target_ped_2_obj1_pass = 0
+COUNTER z_e_1_target_ped_2_dead = 0
+COUNTER z_e_1_kris_guard_1_spotted_player =	0
+COUNTER z_e_1_kris_guard_2_spotted_player =	0
+COUNTER z_e_1_player_killed_2 =	0
+COUNTER z_e_1_remote_car_ped_1_dead = 0
+COUNTER z_e_1_remote_car_1_dead = 0
+COUNTER z_e_1_target_group_3_dead = 0
+COUNTER z_e_1_target_group_3_obj_1 = 0
+COUNTER z_e_1_target_group_3_car_1_dead = 0
+COUNTER z_e_1_delete_remote_car_ped_1 = 0
+COUNTER z_e_1_target_group_3_car_1_at_krishnas = 0
+COUNTER z_e_1_target_group_3_car_1_on_screen_2 = 0
+COUNTER z_e_1_suitcase_with_weapons_1_created = 0
+COUNTER z_e_1_ambush_group_3_ped_1_dead = 0
+
+FORWARD	clean_up_zaib_easy_phone1_m1:
+
+SOUND z_e_1_yeeha 
+SOUND z_e_1_rocket_fail 
+SOUND z_e_1_rocket 
+SOUND z_e_1_poison 
+
+				
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+		
+// starts Zaibatsu med phone1_2 mission3
+					
+
+zaib_easy_phone1_m1:
+
+SET flag_failed_zaib_easy_phone1_m1 = 0
+
+//	DISABLE_THREAD_TRIGGER ( thr_zaib_med_phone1_m1 )
+	DISPLAY_MESSAGE ( 3851 ) // you have PASSED the mission!"
+	DISPLAY_BRIEF ( 4060 ) // "you have selected Zaibatsu med phone1 mission1"
+    SET flag_on_mission	= 1
+	SET flag_on_zaib_mission = 1
+	z_e_1_suitcase_with_weapons_1 = CREATE_OBJ ( 133.0 , 230.5 , 2.0 ) 0 briefcase END
+	SET z_e_1_suitcase_with_weapons_1_created = 1
+	POINT_ARROW_AT ( arrow , z_e_1_suitcase_with_weapons_1 )
+	z_e_1_kris_guard_1 = CREATE_CHAR ( 134.5 , 228.5 , 2.0 ) 9 90 criminal END
+	ADD_CHAR_TO_GANG ( z_e_1_kris_guard_1 , krisgang )
+	SET_CHAR_THREAT_SEARCH ( z_e_1_kris_guard_1 , line_of_sight_player_only )
+	SET_CHAR_THREAT_REACTION ( z_e_1_kris_guard_1 , react_as_normal )
+	GIVE_WEAPON ( z_e_1_kris_guard_1 , pistol )
+	ADD_PATROL_POINT ( z_e_1_kris_guard_1 , 134.5 , 229.5 , 2.0 )
+	ADD_PATROL_POINT ( z_e_1_kris_guard_1 , 132.5 , 229.5 , 2.0 )	
+	ADD_PATROL_POINT ( z_e_1_kris_guard_1 , 132.5 , 228.5 , 2.0 )
+	ADD_PATROL_POINT ( z_e_1_kris_guard_1 , 134.5 , 228.5 , 2.0 )	
+	z_e_1_kris_guard_2 = CREATE_CHAR ( 131.5 , 232.5 , 2.0 ) 9 90 criminal END
+	ADD_CHAR_TO_GANG ( z_e_1_kris_guard_2 , krisgang )
+	SET_CHAR_THREAT_SEARCH ( z_e_1_kris_guard_2 , line_of_sight_player_only )
+	SET_CHAR_THREAT_REACTION ( z_e_1_kris_guard_2 , react_as_normal )
+	GIVE_WEAPON ( z_e_1_kris_guard_2 , pistol )
+	ADD_PATROL_POINT ( z_e_1_kris_guard_2 , 131.5 , 231.5 , 2.0 )
+	ADD_PATROL_POINT ( z_e_1_kris_guard_2 , 133.5 , 231.5 , 2.0 )	
+	ADD_PATROL_POINT ( z_e_1_kris_guard_2 , 133.5 , 232.5 , 2.0 )
+	ADD_PATROL_POINT ( z_e_1_kris_guard_2 , 131.5 , 232.5 , 2.0 )
+	z_e_1_powerup_1 = CREATE_OBJ ( 133.0 , 223.0 , 2.0 ) 0 COLLECT_01 15 END
+	FORCE_CLEANUP ( z_e_1_powerup_1 )
+
+	
+WHILE_EXEC ( NOT ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 133.0 , 230.5 , 2.0 , 0.5 , 0.5  ) ) )
+
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_e_1_kris_guard_1 ) ) 
+   	AND ( z_e_1_kris_guard_1_spotted_player = 0 ) )
+		SET z_e_1_kris_guard_1_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 4061 ) // "Can't you read the security signs? You will pay with your life!"	 
+	ENDIF
+	
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_e_1_kris_guard_2 ) ) 
+   	AND ( z_e_1_kris_guard_2_spotted_player = 0 ) )
+		SET z_e_1_kris_guard_2_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 4062 ) // "Can't you read the security signs? You will pay with your life!"	 
+	ENDIF	
+	
+
+ENDWHILE
+
+REMOVE_ARROW ( arrow )
+DELETE_ITEM ( z_e_1_suitcase_with_weapons_1 )	
+SET z_e_1_suitcase_with_weapons_1_created = 0
+DISPLAY_BRIEF ( 4064 ) // "Good work you've got the package with the damaged weapons. Don't use them they should backfire!"	
+DELAY_HERE ( 120 )
+DISPLAY_BRIEF ( 4065 ) // "I want you to deliver the weapons to a Russian gun freak that I want dead. This way he dies and it looks like an accident!"		
+z_e_1_target_ped_1 = CREATE_CHAR ( 142.5 , 48.5 , 2.0 ) 10 270 stand_still_bloke END
+//z_e_1_invisible_object_1 = CREATE_OBJ ( 139.5 , 48.5 , 2.0 ) 0 powergen END
+z_e_1_invisible_object_1 = CREATE_OBJ ( 139.5 , 48.5 , 2.0 ) 0 invisible_target END
+ADD_CHAR_TO_GANG ( z_e_1_target_ped_1 , russgang )
+SET_CHAR_THREAT_SEARCH ( z_e_1_target_ped_1 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( z_e_1_target_ped_1 , no_reaction )
+GIVE_WEAPON ( z_e_1_target_ped_1 , pistol )
+SET_CHAR_OBJECTIVE  ( z_e_1_target_ped_1 , destroy_object , z_e_1_invisible_object_1 )
+POINT_ARROW_AT ( arrow , z_e_1_target_ped_1 )		
+z_e_1_powerup_2 = CREATE_OBJ ( 130.5 , 223.0 , 2.0 ) 0 COLLECT_30 END
+FORCE_CLEANUP ( z_e_1_powerup_2 )
+
+WHILE_EXEC ( z_e_1_target_ped_1_dead = 0 )
+
+	
+ 	IF ( ( LOCATE_ANOTHER_CHARACTER_ON_FOOT ( shaft , z_e_1_target_ped_1 , 0.8 , 0.8 ) )
+	AND ( z_e_1_target_ped_1_located = 0 ) )
+		SET z_e_1_target_ped_1_located = 1
+		DISPLAY_BRIEF ( 4066 ) // "You took your time I'm bored with this little pistol, I need a real weapon! Stand back!"
+		MAKE_CHAR_DO_NOTHING ( z_e_1_target_ped_1 ) 
+		SET_CHAR_OBJECTIVE  ( z_e_1_target_ped_1 , wait_on_foot )
+		REMOVE_ARROW ( arrow )
+	ENDIF
+
+
+	IF ( ( z_e_1_target_ped_1_located = 1 )
+	AND ( NOT ( DELAY ( 60 ) ) ) ) 
+		GIVE_WEAPON ( z_e_1_target_ped_1 , rocket_launcher )
+		SET_CHAR_OBJECTIVE  ( z_e_1_target_ped_1 , destroy_object , z_e_1_invisible_object_1 )
+	   	SET z_e_1_target_ped_1_located = 2
+		#ifdef PC
+		z_e_1_yeeha = CREATE_SOUND ( 142.5 , 48.5 , 6.0 ) yeeha_bomb play_instant END
+		FORCE_CLEANUP ( z_e_1_yeeha )
+		#endif
+	ENDIF
+
+	
+	IF ( ( HAS_CHARACTER_DIED ( z_e_1_target_ped_1 ) )
+	AND ( flag_failed_zaib_easy_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4067 ) // "What happened? Did you kill him? I wanted it to look like an accident!"
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( z_e_1_target_ped_1_located = 2 )
+	AND ( NOT ( DELAY ( 90 ) ) ) ) 
+		DISPLAY_BRIEF_NOW ( 4068 ) // "HA HA HA HA! This is fucking great, now I can kill all the Zaibatsu scum!"
+		SET z_e_1_target_ped_1_located = 3
+	ENDIF
+
+
+	IF ( ( HAS_CHARACTER_DIED ( z_e_1_target_ped_1 ) )
+	AND ( flag_failed_zaib_easy_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4067 ) // "What happened? Did you kill him? I wanted it to look like an accident!"
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( z_e_1_target_ped_1_located = 3 )
+	AND ( NOT ( DELAY ( 90 ) ) ) ) 
+		DISPLAY_BRIEF_NOW ( 4069 ) // "What the fuck, why is it not firing? Have you sold me damaged good?!"
+		MAKE_CHAR_DO_NOTHING ( z_e_1_target_ped_1 )
+		SET_CHAR_OBJECTIVE  ( z_e_1_target_ped_1 , wait_on_foot )
+		SET z_e_1_target_ped_1_located = 4
+		#ifdef PC
+		z_e_1_rocket_fail = CREATE_SOUND ( 142.5 , 48.5 , 6.0 ) rocket_launch_fail_click play_instant END
+		FORCE_CLEANUP ( z_e_1_rocket_fail )
+		#endif
+	ENDIF
+
+
+	IF ( ( HAS_CHARACTER_DIED ( z_e_1_target_ped_1 ) )
+	AND ( flag_failed_zaib_easy_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4067 ) // "What happened? Did you kill him? I wanted it to look like an accident!"
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( z_e_1_target_ped_1_located = 4 )
+	AND ( NOT ( DELAY ( 90 ) ) ) ) 
+		DISPLAY_BRIEF_NOW ( 4070 ) // "Aha it must have been stuck! I'm going to kill every one of the Zaibatsu!"
+		GIVE_WEAPON ( z_e_1_target_ped_1 , rocket_launcher )
+		SET_CHAR_OBJECTIVE  ( z_e_1_target_ped_1 , destroy_object , z_e_1_invisible_object_1 )
+	   	SET z_e_1_target_ped_1_located = 5
+		#ifdef PC
+		z_e_1_rocket = CREATE_SOUND ( 142.5 , 48.5 , 6.0 ) rocket_fail_laugh play_instant END
+		FORCE_CLEANUP ( z_e_1_rocket )
+		#endif
+	ENDIF
+	
+
+	IF ( ( HAS_CHARACTER_DIED ( z_e_1_target_ped_1 ) )
+	AND ( flag_failed_zaib_easy_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4067 ) // "What happened? Did you kill him? I wanted it to look like an accident!"
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+	
+
+	IF ( ( z_e_1_target_ped_1_located = 5 )
+	AND ( NOT ( DELAY ( 100 ) ) ) ) 
+		EXPLODE ( z_e_1_target_ped_1 )
+		SET z_e_1_target_ped_1_located = 6
+		SET z_e_1_target_ped_1_dead = 1
+	ENDIF
+
+
+ENDWHILE
+
+
+DELETE_ITEM ( z_e_1_kris_guard_1 )
+DELETE_ITEM ( z_e_1_kris_guard_2 )
+
+DELAY_HERE ( 60 )  
+z_e_1_hot_dog_man_1 = CREATE_CHAR ( 11.0 , 126.5 , 2.0 ) 8 0 criminal END
+ADD_CHAR_TO_GANG ( z_e_1_hot_dog_man_1 , zaibgang )
+SET_CHAR_THREAT_SEARCH ( z_e_1_hot_dog_man_1 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( z_e_1_hot_dog_man_1 , no_reaction )
+SET_CHAR_OBJECTIVE  ( z_e_1_hot_dog_man_1 , wait_on_foot )
+DISPLAY_BRIEF ( 4071 ) // "What a stupid fuck! Ok you're going to need a hot dog van for this part of the job. Go and find one!"
+#ifdef PSX
+SET_RECYCLE_MODEL_WANTED ( hotdog ) 
+#endif		
+
+WHILE_EXEC ( z_e_1_picked_up_hot_dogs = 0 )	
+
+	IF ( ( ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , z_e_1_hot_dog_man_1 , 2.0 , 2.0 ) ) 
+	AND ( IS_CHARACTER_IN_MODEL ( shaft , hotdog ) ) )
+	AND ( z_e_1_in_hot_dog_van_at_man_with_hotdogs = 0 ) )
+		SET z_e_1_in_hot_dog_van_at_man_with_hotdogs = 1
+		STORE_CAR_CHARACTER_IS_IN ( shaft , z_e_1_hot_dog_van_1 )
+		SET_CHAR_OBJECTIVE ( z_e_1_hot_dog_man_1 , enter_car_as_passenger , z_e_1_hot_dog_van_1 )
+		SET z_e_1_order_hot_dog_man_in_van = 1
+		DISPLAY_BRIEF_NOW ( 4072 ) // "So you're the guy! Keep the van still until I get in!"
+		
+		ELSE
+		
+		IF ( ( ( ( IS_CHARACTER_IN_ANY_CAR ( shaft ) ) 
+		AND ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , z_e_1_hot_dog_man_1 , 2.0 , 2.0 ) ) )
+		AND ( z_e_1_in_wrong_car_at_ped_1 = 0 ) )
+		AND ( z_e_1_in_hot_dog_van_at_man_with_hotdogs = 0 ) )
+			DISPLAY_BRIEF_NOW ( 4073 ) // "I'm not going deal till you get the right vehicle! You need a hot dog van!"
+			SET z_e_1_in_wrong_car_at_ped_1 = 1
+		ENDIF
+	ENDIF
+
+
+	IF ( ( ( z_e_1_order_hot_dog_man_in_van = 1 )
+	AND ( z_e_1_hot_dog_man_obj1_pass = 0 ) )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( z_e_1_hot_dog_man_1 ) ) )
+		REMOVE_ARROW ( arrow )
+		IF ( NOT ( DELAY ( 60 ) ) ) 
+			SET_CHAR_OBJECTIVE ( z_e_1_hot_dog_man_1 , leave_car , z_e_1_hot_dog_van_1 )
+			SET z_e_1_hot_dog_man_obj1_pass = 1
+		ENDIF
+	ENDIF
+		
+
+	IF ( ( z_e_1_hot_dog_man_obj1_pass = 1 )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( z_e_1_hot_dog_man_1 ) ) )
+//		SET_CHAR_OBJECTIVE ( z_e_1_hot_dog_man_1 , no_obj ) 
+		MAKE_CHAR_DO_NOTHING ( z_e_1_hot_dog_man_1 )
+		SET_CHAR_THREAT_REACTION ( z_e_1_hot_dog_man_1 , no_reaction )
+		SET z_e_1_hot_dog_man_obj1_pass = 2
+		SET z_e_1_picked_up_hot_dogs = 1
+	ENDIF
+
+	
+	IF ( ( ( NOT ( IS_CHARACTER_IN_ANY_CAR ( shaft ) ) )
+	AND ( LOCATE_ANOTHER_CHARACTER_ON_FOOT ( shaft , z_e_1_hot_dog_man_1 , 2.0 , 2.0 ) ) )
+	AND ( z_e_1_on_foot_at_ped_1 = 0 ) )
+		DISPLAY_BRIEF_NOW ( 4074 ) // "Why are you on foot? Get yourself a hot dog van and get back here!"
+		SET z_e_1_on_foot_at_ped_1 = 1
+	ENDIF
+
+   	
+	IF ( ( z_e_1_in_wrong_car_at_ped_1 = 1 )
+	AND ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( z_e_1_hot_dog_man_1 ) ) ) )
+		SET z_e_1_in_wrong_car_at_ped_1 = 0
+	ENDIF
+
+
+	IF ( (  z_e_1_on_foot_at_ped_1 = 1 )
+	AND ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( z_e_1_hot_dog_man_1 ) ) ) )
+		SET z_e_1_on_foot_at_ped_1 = 0
+	ENDIF
+
+					   
+	IF ( ( IS_CHARACTER_IN_MODEL ( shaft , hotdog ) )
+	AND ( z_e_1_in_a_hot_dog_van = 0 ) )
+		DISPLAY_BRIEF_NOW ( 4075 ) // "Good work, now take the van across to my man, he has some food for you to pick up!"
+		POINT_ARROW_AT ( arrow , z_e_1_hot_dog_man_1 )
+		SET z_e_1_in_a_hot_dog_van = 1
+	ENDIF
+
+
+	IF ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , hotdog ) ) )
+	AND ( z_e_1_in_a_hot_dog_van = 1 ) )
+		DISPLAY_BRIEF_NOW ( 4076 ) // "What are you doing? It took you long enough to find a hot dog van! Steal a hot dog van now! "
+		REMOVE_ARROW ( arrow )
+		SET z_e_1_in_a_hot_dog_van = 0
+	ENDIF
+
+
+	IF ( ( HAS_CHARACTER_DIED ( z_e_1_hot_dog_man_1 ) )
+	AND ( flag_failed_zaib_easy_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4077 ) // "What the fuck! What happened to my man? You can't do the job without him!"
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+ENDWHILE
+
+
+DELAY_HERE ( 120 )
+DISPLAY_BRIEF ( 4079 ) // "Ok you've got the poisoned hot dogs! The guy you are after should be waiting for the hot dog van, go and give him hi sfinal meal!"
+z_e_1_target_ped_2 = CREATE_CHAR ( 223.5 , 177.5 , 2.0 ) 9 270 drone END
+SET_CHAR_GRAPHIC_TYPE ( z_e_1_target_ped_2 , dummy_graphic , 23 ) // make this remap with shorts and t-shirt
+ADD_CHAR_TO_GANG ( z_e_1_target_ped_2 , krisgang )
+SET_CHAR_OBJECTIVE ( z_e_1_target_ped_2 , wait_on_foot ) 
+SET_CHAR_THREAT_REACTION ( z_e_1_target_ped_2 , no_reaction )
+POINT_ARROW_AT ( arrow , z_e_1_target_ped_2 )
+#ifdef PSX
+SET_RECYCLE_MODEL_WANTED ( none ) 
+#endif
+
+WHILE_EXEC ( z_e_1_target_ped_2_dead = 0 )
+
+
+	IF ( ( HAS_CHARACTER_DIED ( z_e_1_target_ped_2 ) )
+	AND ( flag_failed_zaib_easy_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4080 ) // "Who killed the guy? I wanted him poisoned! This is not the way I wanted it to happen!"
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( ( z_e_1_target_ped_2_obj1_pass < 1 )
+	AND ( IS_CAR_WRECKED ( z_e_1_hot_dog_van_1 ) ) )
+	AND ( flag_failed_zaib_easy_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4082 ) // "You wrecked the hot dog van, you fucked up!"
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+	
+	
+	IF ( ( ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , z_e_1_target_ped_2 , 3.0 , 3.0 ) ) 
+	AND ( IS_CHARACTER_IN_CAR ( shaft , z_e_1_hot_dog_van_1 ) )	)
+	AND ( z_e_1_in_hot_dog_van_at_target_ped_1 = 0 ) )
+		SET z_e_1_in_hot_dog_van_at_target_ped_1 = 1
+		SET_CHAR_OBJECTIVE ( z_e_1_target_ped_2 , enter_car_as_passenger , z_e_1_hot_dog_van_1 )
+		SET z_e_1_order_target_ped_2_van = 1
+		DISPLAY_BRIEF_NOW ( 4087 ) // "You're late! Give me my hot dogs!"
+	ENDIF
+	
+
+	IF ( ( ( z_e_1_order_target_ped_2_van = 1 )
+	AND ( z_e_1_target_ped_2_obj1_pass = 0 ) )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( z_e_1_target_ped_2 ) ) )
+		REMOVE_ARROW ( arrow )
+		IF ( NOT ( DELAY ( 60 ) ) ) 
+			SET_CHAR_OBJECTIVE ( z_e_1_target_ped_2 , leave_car , z_e_1_hot_dog_van_1 )
+			SET z_e_1_target_ped_2_obj1_pass = 1
+		ENDIF
+	ENDIF
+		
+
+	IF ( ( z_e_1_target_ped_2_obj1_pass = 1 )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( z_e_1_target_ped_2 ) ) )
+//		SET_CHAR_OBJECTIVE  ( z_e_1_target_ped_2 , goto_area_on_foot , 225.5 , 177.5 , 2.0 )
+		MAKE_CHAR_DO_NOTHING ( z_e_1_target_ped_2 )
+		SET z_e_1_target_ped_2_obj1_pass = 2
+		POINT_ARROW_AT ( arrow , z_e_1_target_ped_2 )
+		DISPLAY_BRIEF_NOW ( 4083 ) // "Make sure he dies with the poison!"
+	ENDIF
+
+
+	
+
+
+	IF ( ( z_e_1_target_ped_2_obj1_pass = 2 )
+	AND ( NOT ( LOCATE_ANOTHER_CHARACTER_ANY_MEANS ( shaft , z_e_1_target_ped_2 , 4.0 , 4.0 ) ) ) )
+//	AND ( IS_CHAR_OBJECTIVE_PASSED ( z_e_1_target_ped_2 ) ) )
+		SET_CHAR_GRAPHIC_TYPE ( z_e_1_target_ped_2 , dummy_graphic , 24 )  // find out the green skin remap value 
+		DISPLAY_BRIEF_NOW ( 4084 ) // "OH FUCK! YOU'VE POISONED ME YOU FILTHY GREASY BASTARD!"
+		// play audio here
+		SET_CHAR_OBJECTIVE  ( z_e_1_target_ped_2 , kill_char_on_foot , shaft )	 
+		SET z_e_1_target_ped_2_obj1_pass = 3
+		#ifdef PC
+		z_e_1_poison = CREATE_SOUND ( 225.5 , 177.5 , 6.0 ) poisoned play_instant END
+		FORCE_CLEANUP ( z_e_1_poison )
+		#endif
+	ENDIF
+
+
+	IF ( ( z_e_1_target_ped_2_obj1_pass = 3 )
+	AND ( NOT ( DELAY ( 100 ) ) ) ) 
+		KILL_CHAR ( z_e_1_target_ped_2 )
+		SET z_e_1_target_ped_2_dead = 1
+		SET z_e_1_target_ped_2_obj1_pass = 4
+		REMOVE_ARROW ( arrow )
+	ENDIF
+	
+
+
+	IF ( ( ( z_e_1_target_ped_2_obj1_pass < 1 )
+	AND ( IS_CHARACTER_IN_CAR ( shaft , z_e_1_hot_dog_van_1 ) )	)
+   	AND ( z_e_1_in_hot_dog_van = 1 ) )
+		SET z_e_1_in_hot_dog_van = 0
+		DISPLAY_BRIEF_NOW ( 4085 ) // "Stop fucking about and deliver the hot dogs to the fat baldhead!"
+   		POINT_ARROW_AT ( arrow , z_e_1_target_ped_2 )
+   	ENDIF
+
+	
+	IF ( ( ( z_e_1_target_ped_2_obj1_pass < 1 )
+	AND ( NOT ( IS_CHARACTER_IN_CAR ( shaft , z_e_1_hot_dog_van_1 ) ) )	)
+	AND ( z_e_1_in_hot_dog_van = 0 ) )
+		SET z_e_1_in_hot_dog_van = 1
+		DISPLAY_BRIEF_NOW ( 4086 ) // "Get back in the van, you need the poisoned hot dogs!"
+		POINT_ARROW_AT ( arrow , z_e_1_hot_dog_van_1 )
+	ENDIF
+
+
+ENDWHILE
+
+
+DELETE_ITEM ( z_e_1_hot_dog_man_1 )
+
+DELAY_HERE ( 120 )
+DISPLAY_BRIEF ( 4088 ) // "Nice work, Ok I want you to set up a few Russians. Go and meet my man, he will be on the roof!"
+z_e_1_remote_car_ped_1 = CREATE_CHAR ( 64.0 , 194.0 , 5.0 ) 8 0 criminal END
+//SET_CHAR_GRAPHIC_TYPE ( z_e_1_remote_car_ped_1 , dummy_graphic , 1 ) // make this remap with shorts and t-shirt
+ADD_CHAR_TO_GANG ( z_e_1_remote_car_ped_1 , zaibgang )
+SET_CHAR_OBJECTIVE ( z_e_1_remote_car_ped_1 , wait_on_foot ) 
+SET_CHAR_THREAT_REACTION ( z_e_1_remote_car_ped_1 , no_reaction )
+POINT_ARROW_AT ( arrow , z_e_1_remote_car_ped_1 )
+z_e_1_remote_car_1 = CREATE_CAR ( 65.5 , 194.0 , 2.0 ) 1 90 limo END
+SET_CAR_NO_COLLIDE ( z_e_1_remote_car_1 )
+CHANGE_CAR_LOCK ( z_e_1_remote_car_1 , locked ) 
+
+
+
+WHILE_EXEC ( NOT ( LOCATE_ANOTHER_CHARACTER_ON_FOOT ( shaft , z_e_1_remote_car_ped_1 , 1.0 , 1.0 ) ) )
+
+	
+	IF ( ( HAS_CHARACTER_DIED ( z_e_1_remote_car_ped_1 ) ) 
+   	AND ( z_e_1_remote_car_ped_1_dead = 0 ) )
+		SET z_e_1_remote_car_ped_1_dead = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4090 ) // "Did I tell you to kill him? Is that what I said? No it fucking wasn't!"
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN	 
+	ENDIF
+
+
+	IF ( ( IS_CAR_WRECKED ( z_e_1_remote_car_1 ) )  
+   	AND ( z_e_1_remote_car_1_dead = 0 ) )
+		SET z_e_1_remote_car_1_dead = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4091 ) // "What the fuck happened to the limo? You can't do the job without it!!"
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN	 
+	ENDIF
+
+	
+ENDWHILE
+
+
+DISPLAY_BRIEF ( 4092 ) // "I've rigged the Russian bosses limo to be remote controlled! Take it for a spin up where the Russian are!"
+DISPLAY_BRIEF ( 4093 ) // "The limo was stolen a few hours ago, so they'll be looking for it! When they see you they'll come after you!
+z_e_1_target_group_3 = CREATE_CHAR ( 228.5 , 19.5 , 2.0 ) 10 0 criminal END
+//SET_CHAR_GRAPHIC_TYPE ( z_e_1_target_group_3 , dummy_graphic , 1 ) // make this remap with shorts and t-shirt
+ADD_CHAR_TO_GANG ( z_e_1_target_group_3 , russgang )
+SET_CHAR_OBJECTIVE ( z_e_1_target_group_3 , wait_on_foot ) 
+SET_CHAR_THREAT_REACTION ( z_e_1_target_group_3 , no_reaction )
+ADD_GROUP_TO_CHARACTER ( z_e_1_target_group_3 , 3 )
+GIVE_WEAPON ( z_e_1_target_group_3 , pistol )
+POINT_ARROW_AT ( arrow , z_e_1_target_group_3 )
+z_e_1_target_group_3_car_1 = CREATE_GANG_CAR ( 227.5 , 19.5 , 2.0 ) 28 0 buick END
+TAKE_REMOTE_CONTROL_OF_CAR ( shaft , z_e_1_remote_car_1 ) 
+CLEAR_WANTED_LEVEL ( shaft )
+
+WHILE_EXEC ( NOT ( IS_CAR_IN_BLOCK ( z_e_1_remote_car_1 , 228.0 , 19.5 , 2.0 , 4.0 , 4.0 ) ) )
+
+	
+	IF ( ( HAS_CHARACTER_DIED ( z_e_1_target_group_3 ) ) 
+   	AND ( z_e_1_target_group_3_dead = 0 ) )
+		EXPLODE ( z_e_1_remote_car_1 ) 
+		SET z_e_1_target_group_3_dead = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4094 ) // "I didn't say kill them! I wanted them to follow you! Dickhead! "
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN	 
+	ENDIF
+
+	
+ 	IF ( ( IS_CAR_WRECKED ( z_e_1_remote_car_1 ) )  
+   	AND ( z_e_1_remote_car_1_dead = 0 ) )
+		SET z_e_1_remote_car_1_dead = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4096 ) // "Shit! That limo was the only way you could get the Russians to follow you!"
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN	 
+	ENDIF
+
+	
+ENDWHILE
+
+
+SET_CHAR_OBJECTIVE ( z_e_1_target_group_3 , enter_car_as_driver , z_e_1_target_group_3_car_1 )
+DELETE_ITEM ( z_e_1_remote_car_ped_1 )
+
+WHILE_EXEC ( NOT ( z_e_1_target_group_3_obj_1 = 2 )	)
+
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( z_e_1_target_group_3 ) ) 
+	AND ( z_e_1_target_group_3_obj_1 = 0 ) )
+		SET z_e_1_target_group_3_obj_1 = 1
+		SET_CHAR_OBJECTIVE ( z_e_1_target_group_3 , wait_in_car )
+	ENDIF
+	
+		
+	IF ( ( IS_GROUP_IN_CAR ( z_e_1_target_group_3 ) ) 
+	AND ( z_e_1_target_group_3_obj_1 = 1 ) )
+		SET z_e_1_target_group_3_obj_1 = 2	
+	ENDIF
+
+
+	IF ( ( IS_CAR_WRECKED ( z_e_1_remote_car_1 ) )  
+   	AND ( z_e_1_remote_car_1_dead = 0 ) )
+		SET z_e_1_remote_car_1_dead = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4096 ) // "Shit! That limo was the only way you could get the Russians to follow you!"
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN	 
+	ENDIF
+
+	
+	IF ( ( HAS_CHARACTER_DIED ( z_e_1_target_group_3 ) ) 
+   	AND ( z_e_1_target_group_3_dead = 0 ) )
+		EXPLODE ( z_e_1_remote_car_1 ) 
+		SET z_e_1_target_group_3_dead = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4094 ) // "I didn't say kill them! I wanted them to follow you! Dickhead! "
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN	 
+	ENDIF
+
+
+ENDWHILE
+
+
+SET_CHAR_OBJECTIVE ( z_e_1_target_group_3 , follow_car_in_car , z_e_1_remote_car_1 )
+DISPLAY_BRIEF ( 4097 ) // "They took the bait, now lead them into the Krishna Gang Zone! We're gonna start a little fight!"
+z_e_1_ambush_group_3_ped_1 = CREATE_CHAR ( 184.5 , 173.5 , 2.0 ) 9 90 criminal END
+ADD_CHAR_TO_GANG ( z_e_1_ambush_group_3_ped_1 , krisgang )
+SET_CHAR_OBJECTIVE ( z_e_1_ambush_group_3_ped_1 , wait_on_foot ) 
+SET_CHAR_THREAT_REACTION ( z_e_1_ambush_group_3_ped_1 , no_reaction )
+GIVE_WEAPON ( z_e_1_ambush_group_3_ped_1 , machine_gun )
+#ifdef PC
+ADD_GROUP_TO_CHARACTER ( z_e_1_ambush_group_3_ped_1 , 6 )
+#endif
+#ifdef PSX
+ADD_GROUP_TO_CHARACTER ( z_e_1_ambush_group_3_ped_1 , 4 )
+#endif
+POINT_ARROW_AT ( arrow , z_e_1_ambush_group_3_ped_1 )
+
+
+WHILE_EXEC ( z_e_1_target_group_3_car_1_at_krishnas = 0 )
+
+
+	IF ( ( HAS_CHARACTER_DIED ( z_e_1_ambush_group_3_ped_1 ) ) 
+   	AND ( z_e_1_ambush_group_3_ped_1_dead = 0 ) )
+		EXPLODE ( z_e_1_remote_car_1 ) 
+		SET z_e_1_ambush_group_3_ped_1_dead = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4094 ) // "I didn't say kill them! I wanted them to follow you! Dickhead! "
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN	 
+	ENDIF
+	
+	
+	IF ( ( IS_CAR_IN_BLOCK ( z_e_1_remote_car_1 , 184.5 , 173.5 , 2.0 , 4.0 , 4.0 ) )
+	AND ( IS_CAR_IN_BLOCK ( z_e_1_target_group_3_car_1 , 184.5 , 173.5 , 2.0 , 4.0 , 4.0 ) ) )
+		SET z_e_1_target_group_3_car_1_at_krishnas = 1
+	ENDIF
+	
+	
+	IF ( ( IS_CAR_WRECKED ( z_e_1_remote_car_1 ) )  
+   	AND ( z_e_1_remote_car_1_dead = 0 ) )
+		SET z_e_1_remote_car_1_dead = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4096 ) // "Shit! That limo was the only way you could get the Russians to follow you!"
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN	 
+	ENDIF
+
+
+	IF ( ( IS_CAR_WRECKED ( z_e_1_target_group_3_car_1 ) )  
+   	AND ( z_e_1_target_group_3_car_1_dead = 0 ) )
+		EXPLODE ( z_e_1_remote_car_1 ) 
+		SET z_e_1_target_group_3_car_1_dead = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4098 ) // "What happened to the Russians? I wanted you to set them up!"
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN	 
+	ENDIF
+
+
+	IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( z_e_1_target_group_3_car_1 ) ) )
+	AND ( z_e_1_target_group_3_car_1_on_screen_2 = 0 ) )
+		POINT_ARROW_AT ( arrow , z_e_1_target_group_3_car_1 )
+		SET z_e_1_target_group_3_car_1_on_screen_2 = 1
+		DISPLAY_BRIEF_NOW ( 4101 ) // "Don't leave the russians behind, you need to lead them to the krishnas, go back and find the russians!"
+	ENDIF
+
+
+	IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( z_e_1_target_group_3_car_1 ) )
+	AND ( z_e_1_target_group_3_car_1_on_screen_2 = 1 ) )
+		POINT_ARROW_AT ( arrow , z_e_1_ambush_group_3_ped_1 )
+		SET z_e_1_target_group_3_car_1_on_screen_2 = 0
+		DISPLAY_BRIEF_NOW ( 4102 ) // "don't leave them behind again, now find the krishnas!!"
+	ENDIF
+
+
+ENDWHILE
+
+
+SET_CHAR_OBJECTIVE ( z_e_1_ambush_group_3_ped_1 , kill_char_on_foot , z_e_1_target_group_3 )
+DISPLAY_BRIEF ( 4099 ) // "Keep the limo still, this should be a good show!"
+
+
+WHILE_EXEC ( z_e_1_target_group_3_dead = 0 )
+
+
+	IF ( HAS_CHARACTER_DIED ( z_e_1_target_group_3 ) ) 
+   		SET z_e_1_target_group_3_dead = 1
+//		SET_CHAR_OBJECTIVE ( z_e_1_ambush_group_3_ped_1 , no_obj )
+		MAKE_CHAR_DO_NOTHING ( z_e_1_ambush_group_3_ped_1 )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4100 ) // "Good work, I got the Russians are dead and the Krishnas take the blame. You can detonate the limo now we don't need it!"
+	ENDIF
+
+
+	IF ( ( HAS_CHARACTER_DIED ( z_e_1_ambush_group_3_ped_1 ) ) 
+   	AND ( z_e_1_ambush_group_3_ped_1_dead = 0 ) )
+		EXPLODE ( z_e_1_remote_car_1 ) 
+		SET z_e_1_ambush_group_3_ped_1_dead = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 4094 ) // "I didn't say kill them! I wanted them to follow you! Dickhead! "
+		SET flag_failed_zaib_easy_phone1_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN	 
+	ENDIF
+
+  
+ENDWHILE
+
+
+DELAY_HERE ( 120 )
+EXPLODE ( z_e_1_remote_car_1 ) 
+
+
+
+IF ( flag_passed_zaib_easy_phone1_m1 = 0 )
+	SET flag_passed_zaib_easy_phone1_m1 = 1
+//	DISPLAY_BRIEF ( 3950 ) // "Well done, those Russian fuckers will think again before trying to expand their territory!"
+	++ counter_all_missions_passed
+	DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+	ADD_SCORE ( shaft , 40000 )
+	ADD_MULTIPLIER ( shaft , 1 ) 
+	CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , 1 )
+	CLEAR_WANTED_LEVEL ( shaft )
+	SET_PHONE_DEAD ( ph_zaib_easy_phone1 ) 
+	DISABLE_THREAD_TRIGGER ( thr_zaib_easy_phone1_m1 )
+	RETURN
+ENDIF
+
+
+
+
+
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+// deletes all objects when Zaibatsu med phone2 mission1 is finished...
+				
+clean_up_zaib_easy_phone1_m1: 
+	
+	REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	
+	IF ( z_e_1_suitcase_with_weapons_1_created = 1 )
+		DELETE_ITEM ( z_e_1_suitcase_with_weapons_1 )
+	ENDIF
+	
+	IF ( flag_passed_zaib_easy_phone1_m1 = 1 )
+		++ flag_zaib_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_zaib_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3675 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3674 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_zaib_easy_phone1_m1 = 1 )
+		++ flag_zaib_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_zaib_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+	MISSION_HAS_FINISHED ( )
+	
+	SET flag_on_mission	= 0
+	SET flag_on_zaib_mission = 0
+	
+	RETURN
+
+
+MISSIONSTART
+
+	GOSUB zaib_easy_phone1_m1:
+
+	GOSUB clean_up_zaib_easy_phone1_m1:
+
+MISSIONEND
+
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		

@@ -1,0 +1,724 @@
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX mission 5 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+/*
+
+HUNTED AND THE HUNTER
+
+The player is told to watch out as someone has issued a hit on them! Mission peds will 
+be created to track down the player by any means. The player must dispose of each threat as it 
+appears. Once all the hitmen have been killed, the player is told to find and kill the person 
+responsible. They must use a carbomb as the persons limo is rocketproof.
+
+i)	Player is told to watch out for enemy peds.
+ii) peds are created and immediately hunt down the player.
+iii) Destroy the peds.
+iv) Find and kill the person responsible for organising the hit.
+
+*/
+
+	
+
+
+// general mission objects
+
+
+CHAR_DATA r_m_2_hitman_1
+CHAR_DATA r_m_2_hitman_2
+
+CHAR_DATA r_m_2_bodyguard_1
+CHAR_DATA r_m_2_bodyguard_2
+CHAR_DATA r_m_2_bodyguard_3
+CHAR_DATA r_m_2_bodyguard_4
+
+CHAR_DATA r_m_2_targetped
+
+CAR_DATA r_m_2_targetcar
+
+COUNTER r_m_2_killed_hitmen = 0
+COUNTER r_m_2_hitman_1_alive = 0
+COUNTER r_m_2_hitman_2_alive = 0
+COUNTER r_m_2_hitman_1_onscreen = 0
+COUNTER r_m_2_hitman_2_onscreen = 0
+
+COUNTER r_m_2_brief_1_displayed = 0
+COUNTER r_m_2_brief_2_displayed = 0
+COUNTER r_m_2_brief_3_displayed = 0
+COUNTER r_m_2_brief_4_displayed = 0
+COUNTER r_m_2_brief_5_displayed = 0
+COUNTER r_m_2_brief_6_displayed = 0
+COUNTER r_m_2_brief_7_displayed = 0
+COUNTER r_m_2_hitman_1_weapon_1 = 0
+COUNTER r_m_2_hitman_1_weapon_2 = 0
+COUNTER r_m_2_hitman_1_weapon_3 = 0
+COUNTER r_m_2_hitman_1_weapon_4 = 0
+COUNTER r_m_2_hitman_1_weapon_5 = 0
+COUNTER r_m_2_hitman_1_weapon_6 = 0
+COUNTER r_m_2_hitman_1_weapon_7 = 0
+COUNTER r_m_2_hitman_1_weapon_8 = 0
+COUNTER r_m_2_targetped_dead = 0
+COUNTER r_m_2_hitmen_created = 0
+COUNTER r_m_2_steel_brief = 0
+COUNTER r_m_2_steel_brief_1 = 0
+COUNTER r_m_2_steel_brief_2 = 0
+COUNTER r_m_2_steel_brief_3 = 0
+COUNTER r_m_2_steel_brief_4 = 0
+COUNTER r_m_2_steel_brief_5 = 0
+COUNTER r_m_2_steel_brief_6 = 0
+COUNTER r_m_2_steel_brief_7 = 0
+COUNTER r_m_2_steel_brief_8 = 0
+COUNTER r_m_2_laugh_brief = 0
+
+OBJ_DATA r_m_2_powerup_1
+OBJ_DATA r_m_2_powerup_2
+
+SOUND r_m_2_laugh 
+
+FORWARD clean_up_russ_med_phone2_m1:
+
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+		
+// starts Russian medium phone2 mission1
+
+
+russ_med_phone2_m1:
+
+SET flag_failed_russ_med_phone2_m1 = 0
+
+
+DISPLAY_MESSAGE ( 3857 ) // mission name
+SET flag_on_mission = 1
+SET flag_on_russ_mission = 1
+
+
+// display initial briefs & create first two hitmen
+
+
+DISPLAY_BRIEF ( 3600 ) // someones pissed off and is sending a hitman after you
+
+#ifdef PC
+r_m_2_hitman_1 = CREATE_CHAR ( 214.5 , 111.5 , 2.0 ) 9 90 criminal END
+#endif
+#ifdef PSX
+r_m_2_hitman_1 = CREATE_CHAR ( 226.5 , 107.5 , 2.0 ) 9 90 criminal END
+#endif
+SET_CHAR_OBJECTIVE  ( r_m_2_hitman_1 , kill_char_any_means , shaft ) 
+SET_CHAR_THREAT_REACTION ( r_m_2_hitman_1 , no_reaction )
+SET_CHAR_THREAT_SEARCH ( r_m_2_hitman_1 , line_of_sight_player_only )
+GIVE_WEAPON ( r_m_2_hitman_1 , pistol )
+ADD_CHAR_TO_GANG ( r_m_2_hitman_1 , krisgang )
+SET_FAVOURITE_MODEL ( r_m_2_hitman_1 , krsnabus )
+SET r_m_2_hitman_1_alive = 1
+
+#ifdef PC
+r_m_2_hitman_2 = CREATE_CHAR ( 213.5 , 129.5 , 2.0 ) 9 90 criminal END
+#endif
+#ifdef PSX
+r_m_2_hitman_2 = CREATE_CHAR ( 226.5 , 118.5 , 2.0 ) 9 90 criminal END
+#endif
+SET_CHAR_OBJECTIVE  ( r_m_2_hitman_2 , kill_char_any_means , shaft ) 
+SET_CHAR_THREAT_REACTION ( r_m_2_hitman_2 , no_reaction )
+SET_CHAR_THREAT_SEARCH ( r_m_2_hitman_2 , line_of_sight_player_only )
+GIVE_WEAPON ( r_m_2_hitman_2 , shotgun )
+ADD_CHAR_TO_GANG ( r_m_2_hitman_2 , krisgang )
+SET_FAVOURITE_MODEL ( r_m_2_hitman_2 , krsnabus )
+SET r_m_2_hitman_2_alive = 1
+
+r_m_2_powerup_1 = CREATE_OBJ ( 197.5 , 15.5 , 2.0 ) 0 collect_08 20 END
+r_m_2_powerup_2 = CREATE_OBJ ( 198.5 , 15.5 , 2.0 ) 0 collect_01 15 END
+
+FORCE_CLEANUP ( r_m_2_powerup_1 )
+FORCE_CLEANUP ( r_m_2_powerup_2 )
+
+
+// generate hitmen to a maximum of 8
+
+
+WHILE_EXEC ( r_m_2_killed_hitmen < 8 )
+
+	
+
+	// generate hitmen
+	
+
+	IF  ( ( r_m_2_hitman_1_alive = 1 ) 
+	AND ( HAS_CHARACTER_DIED ( r_m_2_hitman_1 ) ) )
+		REMOVE_ARROW ( arrow_3 )
+		++ r_m_2_killed_hitmen
+		SET r_m_2_hitman_1_alive = 0
+	ENDIF
+
+   	
+   	IF  ( ( ( r_m_2_hitman_1_alive = 0 )
+	AND ( r_m_2_killed_hitmen < 8 ) )
+	AND ( r_m_2_hitmen_created < 6 ) )
+		#ifdef PC
+		r_m_2_hitman_1 = CREATE_CHAR ( 214.5 , 111.5 , 2.0 ) 9 90 criminal END
+		#endif
+		#ifdef PSX
+		r_m_2_hitman_1 = CREATE_CHAR ( 226.5 , 107.5 , 2.0 ) 9 90 criminal END
+		#endif
+		SET_CHAR_OBJECTIVE  ( r_m_2_hitman_1 , kill_char_any_means , shaft ) 
+		SET_CHAR_THREAT_REACTION ( r_m_2_hitman_1 , no_reaction )
+		SET_CHAR_THREAT_SEARCH ( r_m_2_hitman_1 , line_of_sight_player_only )
+		ADD_CHAR_TO_GANG ( r_m_2_hitman_1 , krisgang )
+		SET_FAVOURITE_MODEL ( r_m_2_hitman_1 , krsnabus )
+		++ r_m_2_hitmen_created
+		IF ( ( r_m_2_killed_hitmen = 1 )
+		AND ( r_m_2_hitman_1_weapon_1 = 0 ) )
+			GIVE_WEAPON ( r_m_2_hitman_1 , shotgun )
+			SET r_m_2_hitman_1_weapon_1 = 1
+			SET r_m_2_hitman_1_alive = 1
+		ENDIF
+		IF ( ( r_m_2_killed_hitmen = 2 )
+		AND ( r_m_2_hitman_1_weapon_2 = 0 ) )
+			GIVE_WEAPON ( r_m_2_hitman_1 , pistol )
+			SET r_m_2_hitman_1_weapon_2 = 1
+			SET r_m_2_hitman_1_alive = 1
+		ENDIF
+		IF ( ( r_m_2_killed_hitmen = 3 )
+		AND ( r_m_2_hitman_1_weapon_3 = 0 ) )
+			GIVE_WEAPON ( r_m_2_hitman_1 , grenade )
+			SET r_m_2_hitman_1_weapon_3 = 1
+			SET r_m_2_hitman_1_alive = 1
+		ENDIF
+		IF ( ( r_m_2_killed_hitmen = 4 )
+		AND ( r_m_2_hitman_1_weapon_4 = 0 ) )
+			GIVE_WEAPON ( r_m_2_hitman_1 , pistol )
+			SET r_m_2_hitman_1_weapon_4 = 1
+			SET r_m_2_hitman_1_alive = 1
+		ENDIF
+		IF ( ( r_m_2_killed_hitmen = 5 )
+		AND ( r_m_2_hitman_1_weapon_5 = 0 ) )
+			GIVE_WEAPON ( r_m_2_hitman_1 , molotov )
+			SET r_m_2_hitman_1_weapon_5 = 1
+			SET r_m_2_hitman_1_alive = 1
+		ENDIF
+		IF ( ( r_m_2_killed_hitmen = 6 )
+		AND ( r_m_2_hitman_1_weapon_6 = 0 ) )
+			GIVE_WEAPON ( r_m_2_hitman_1 , pistol )
+			SET r_m_2_hitman_1_weapon_6 = 1
+			SET r_m_2_hitman_1_alive = 1
+		ENDIF
+		IF ( ( r_m_2_killed_hitmen = 7 )
+		AND ( r_m_2_hitman_1_weapon_7 = 0 ) )
+			GIVE_WEAPON ( r_m_2_hitman_1 , silenced_machine_gun )
+			SET r_m_2_hitman_1_weapon_7 = 1
+			SET r_m_2_hitman_1_alive = 1
+		ENDIF
+	ENDIF
+
+
+    IF  ( ( r_m_2_hitman_2_alive = 1 ) 
+	AND ( HAS_CHARACTER_DIED ( r_m_2_hitman_2 ) ) )
+		REMOVE_ARROW ( arrow_2 )
+		++ r_m_2_killed_hitmen
+		SET r_m_2_hitman_2_alive = 0
+	ENDIF
+	
+		
+	IF  ( ( ( r_m_2_hitman_2_alive = 0 )
+	AND ( r_m_2_killed_hitmen < 8 ) )
+	AND ( r_m_2_hitmen_created < 6 ) )
+		#ifdef PC
+		r_m_2_hitman_2 = CREATE_CHAR ( 213.5 , 129.5 , 2.0 ) 9 90 criminal END
+		#endif
+		#ifdef PSX
+		r_m_2_hitman_2 = CREATE_CHAR ( 226.5 , 118.5 , 2.0 ) 9 90 criminal END
+		#endif
+		SET_CHAR_OBJECTIVE  ( r_m_2_hitman_2 , kill_char_any_means , shaft ) 
+		SET_CHAR_THREAT_REACTION ( r_m_2_hitman_2 , no_reaction )
+		SET_CHAR_THREAT_SEARCH ( r_m_2_hitman_2 , line_of_sight_player_only )
+		ADD_CHAR_TO_GANG ( r_m_2_hitman_2 , krisgang )
+		SET_FAVOURITE_MODEL ( r_m_2_hitman_2 , krsnabus )
+		++ r_m_2_hitmen_created
+		IF ( ( r_m_2_killed_hitmen = 1 )
+		AND ( r_m_2_hitman_1_weapon_1 = 0 ) )
+			GIVE_WEAPON ( r_m_2_hitman_2 , shotgun )
+			SET r_m_2_hitman_1_weapon_1 = 1
+			SET r_m_2_hitman_2_alive = 1
+		ENDIF
+		IF ( ( r_m_2_killed_hitmen = 2 )
+		AND ( r_m_2_hitman_1_weapon_2 = 0 ) )
+			GIVE_WEAPON ( r_m_2_hitman_2 , pistol )
+			SET r_m_2_hitman_1_weapon_2 = 1
+			SET r_m_2_hitman_2_alive = 1
+		ENDIF
+		IF ( ( r_m_2_killed_hitmen = 3 )
+		AND ( r_m_2_hitman_1_weapon_3 = 0 ) )
+			GIVE_WEAPON ( r_m_2_hitman_2 , grenade )
+			SET r_m_2_hitman_1_weapon_3 = 1
+			SET r_m_2_hitman_2_alive = 1
+		ENDIF
+		IF ( ( r_m_2_killed_hitmen = 4 )
+		AND ( r_m_2_hitman_1_weapon_4 = 0 ) )
+			GIVE_WEAPON ( r_m_2_hitman_2 , pistol )
+			SET r_m_2_hitman_1_weapon_4 = 1
+			SET r_m_2_hitman_2_alive = 1
+		ENDIF
+		IF ( ( r_m_2_killed_hitmen = 5 )
+		AND ( r_m_2_hitman_1_weapon_5 = 0 ) )
+			GIVE_WEAPON ( r_m_2_hitman_2 , molotov )
+			SET r_m_2_hitman_1_weapon_5 = 1
+			SET r_m_2_hitman_2_alive = 1
+		ENDIF
+		IF ( ( r_m_2_killed_hitmen = 6 )
+		AND ( r_m_2_hitman_1_weapon_6 = 0 ) )
+			GIVE_WEAPON ( r_m_2_hitman_2 , pistol )
+			SET r_m_2_hitman_1_weapon_6 = 1
+			SET r_m_2_hitman_2_alive = 1
+		ENDIF
+		IF ( ( r_m_2_killed_hitmen = 7 )
+		AND ( r_m_2_hitman_1_weapon_7 = 0 ) )
+			GIVE_WEAPON ( r_m_2_hitman_2 , silenced_machine_gun )
+			SET r_m_2_hitman_1_weapon_7 = 1
+			SET r_m_2_hitman_2_alive = 1
+		ENDIF
+	ENDIF		
+
+	
+
+	IF ( r_m_2_hitman_1_alive = 1 )
+		
+		IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( r_m_2_hitman_1 ) ) )
+		AND ( r_m_2_hitman_1_onscreen = 1 ) )
+			SET r_m_2_hitman_1_onscreen = 0
+			REMOVE_ARROW ( arrow_3 )
+//			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( r_m_2_hitman_1 , 0.4 )
+//			ELSE
+//				SET_CHAR_MAX_DRIVESPEED ( r_m_2_hitman_1 , 0.0 )
+//			ENDIF
+		ENDIF
+	
+	
+		IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( r_m_2_hitman_1 ) )
+		AND ( r_m_2_hitman_1_onscreen = 0 ) )
+			SET r_m_2_hitman_1_onscreen = 1
+			POINT_ARROW_AT ( arrow_3 , r_m_2_hitman_1 )
+			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( r_m_2_hitman_1 , 0.4 )
+			ELSE
+				SET_CHAR_MAX_DRIVESPEED ( r_m_2_hitman_1 , 0.0 )
+			ENDIF
+		ENDIF
+
+	ENDIF
+
+
+	IF ( r_m_2_hitman_2_alive = 1 )
+		
+		IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( r_m_2_hitman_2 ) ) )
+		AND ( r_m_2_hitman_2_onscreen = 1 ) )
+			SET r_m_2_hitman_2_onscreen = 0
+			REMOVE_ARROW ( arrow_2 )
+//			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( r_m_2_hitman_2 , 0.4 )
+//			ELSE
+//				SET_CHAR_MAX_DRIVESPEED ( r_m_2_hitman_2 , 0.0 )
+//			ENDIF
+		ENDIF
+	
+	
+		IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( r_m_2_hitman_2 ) )
+		AND ( r_m_2_hitman_2_onscreen = 0 ) )
+			SET r_m_2_hitman_2_onscreen = 1
+			POINT_ARROW_AT ( arrow_2 , r_m_2_hitman_2 )
+			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( r_m_2_hitman_2 , 0.4 )
+			ELSE
+				SET_CHAR_MAX_DRIVESPEED ( r_m_2_hitman_2 , 0.0 )
+			ENDIF
+		ENDIF
+
+	ENDIF
+
+
+// display brief every time player kills a hitman
+
+	IF  ( ( r_m_2_killed_hitmen = 1 )
+	AND ( r_m_2_brief_1_displayed = 0 ) )
+
+		DISPLAY_BRIEF ( 3601 ) // one down, seven to go
+		SET r_m_2_brief_1_displayed = 1
+
+	ENDIF
+
+	IF  ( ( r_m_2_killed_hitmen = 2 )
+	AND ( r_m_2_brief_2_displayed = 0 ) )
+
+		DISPLAY_BRIEF ( 3602 ) // one down, six to go
+		SET r_m_2_brief_2_displayed = 1
+
+	ENDIF
+
+	IF  ( ( r_m_2_killed_hitmen = 3 )
+	AND ( r_m_2_brief_3_displayed = 0 ) )
+
+		DISPLAY_BRIEF ( 3603 ) // one down, five to go
+		SET r_m_2_brief_3_displayed = 1
+
+	ENDIF
+
+	IF  ( ( r_m_2_killed_hitmen = 4 )
+	AND ( r_m_2_brief_4_displayed = 0 ) )
+
+		DISPLAY_BRIEF ( 3604 ) // one down, four to go
+		SET r_m_2_brief_4_displayed = 1
+
+	ENDIF
+
+	IF  ( ( r_m_2_killed_hitmen = 5 )
+	AND ( r_m_2_brief_5_displayed = 0 ) )
+
+		DISPLAY_BRIEF ( 3605 ) // one down, three to go
+		SET r_m_2_brief_5_displayed = 1
+
+	ENDIF
+
+	IF  ( ( r_m_2_killed_hitmen = 6 )
+	AND ( r_m_2_brief_6_displayed = 0 ) )
+
+		DISPLAY_BRIEF ( 3606 ) // one down, two to go
+		SET r_m_2_brief_6_displayed = 1
+
+	ENDIF
+
+	IF  ( ( r_m_2_killed_hitmen = 7 )
+	AND ( r_m_2_brief_7_displayed = 0 ) )
+
+		DISPLAY_BRIEF ( 3607 ) // one down, one to go
+		SET r_m_2_brief_7_displayed = 1
+
+	ENDIF
+
+	
+ENDWHILE
+
+DISPLAY_BRIEF ( 3609 ) // excellent, you've killed them all
+
+
+WHILE_EXEC ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 210.5 , 142.0 , 2.0 , 11.0 , 12.0 ) )
+
+	DO_NOWT
+
+ENDWHILE
+
+
+ADD_SCORE ( shaft , 5000 )
+
+DISPLAY_BRIEF ( 3610 ) // Alright, we've heard that sumcunt was responsible...Go and waste him, but watch out for his bodyguards.
+
+// kill the person responsible
+
+r_m_2_targetcar = CREATE_GANG_CAR ( 210.5 , 142.0 , 2.0 ) 0 180 krsnabus END
+
+SET_CAR_BULLETPROOF ( r_m_2_targetcar , ON )
+SET_CAR_FLAMEPROOF ( r_m_2_targetcar , ON )
+SET_CAR_ROCKETPROOF ( r_m_2_targetcar , ON )
+
+r_m_2_bodyguard_1 = CREATE_CHAR ( 211.5 , 141.0 , 2.0 ) 9 145 criminal END
+SET_CHAR_THREAT_SEARCH ( r_m_2_bodyguard_1  , line_of_sight_player_only )
+SET_CHAR_THREAT_REACTION ( r_m_2_bodyguard_1 , react_as_normal )
+GIVE_WEAPON ( r_m_2_bodyguard_1 , molotov )
+ADD_CHAR_TO_GANG ( r_m_2_bodyguard_1 , krisgang )
+SET_CHAR_OBJECTIVE ( r_m_2_bodyguard_1 , wait_on_foot ) 
+
+r_m_2_bodyguard_2 = CREATE_CHAR ( 209.5 , 140.5 , 2.0 ) 9 90 criminal END
+SET_CHAR_THREAT_SEARCH ( r_m_2_bodyguard_2  , line_of_sight_player_only )
+SET_CHAR_THREAT_REACTION ( r_m_2_bodyguard_2 , react_as_normal )
+GIVE_WEAPON ( r_m_2_bodyguard_2 , molotov )
+ADD_CHAR_TO_GANG ( r_m_2_bodyguard_2 , krisgang )
+SET_CHAR_OBJECTIVE ( r_m_2_bodyguard_2 , wait_on_foot ) 
+
+r_m_2_bodyguard_3 = CREATE_CHAR ( 209.5 , 142.5 , 2.0 ) 9 315 criminal END
+SET_CHAR_THREAT_SEARCH ( r_m_2_bodyguard_3  , line_of_sight_player_only )
+SET_CHAR_THREAT_REACTION ( r_m_2_bodyguard_3 , react_as_normal )
+GIVE_WEAPON ( r_m_2_bodyguard_3 , molotov )
+ADD_CHAR_TO_GANG ( r_m_2_bodyguard_3 , krisgang )
+SET_CHAR_OBJECTIVE ( r_m_2_bodyguard_3 , wait_on_foot ) 
+
+r_m_2_bodyguard_4 = CREATE_CHAR ( 211.5 , 143.5 , 2.0 ) 9 290 criminal END
+SET_CHAR_THREAT_SEARCH ( r_m_2_bodyguard_4  , line_of_sight_player_only )
+SET_CHAR_THREAT_REACTION ( r_m_2_bodyguard_4 , react_as_normal )
+GIVE_WEAPON ( r_m_2_bodyguard_4 , molotov )
+ADD_CHAR_TO_GANG ( r_m_2_bodyguard_4 , krisgang )
+SET_CHAR_OBJECTIVE ( r_m_2_bodyguard_4 , wait_on_foot ) 
+
+
+r_m_2_targetped = CREATE_CHAR ( 211.5 , 142.0 , 2.0 ) 9 90 dummy END
+SET_CHAR_OBJECTIVE ( r_m_2_targetped , ENTER_CAR_AS_PASSENGER , r_m_2_targetcar )
+
+POINT_ARROW_AT ( arrow , r_m_2_targetcar )
+
+
+WHILE_EXEC ( r_m_2_targetped_dead = 0 )
+
+// wait for targetped to get in targetcar
+
+	IF ( IS_CHAR_OBJECTIVE_PASSED ( r_m_2_targetped ) )
+		
+		CHANGE_CAR_LOCK  ( r_m_2_targetcar , LOCKED )  
+
+	ENDIF
+
+
+// check to see if player has destroyed limo
+
+	IF  ( IS_CAR_WRECKED ( r_m_2_targetcar ) )
+	
+		IF ( r_m_2_laugh_brief = 1 )
+			DELETE_ITEM ( r_m_2_laugh )
+		ENDIF
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF   ( 3611 )	// Well done! they won't be messing again in a hurry!
+		SET r_m_2_targetped_dead = 1
+		SET flag_passed_russ_med_phone2_m1 = 1
+		++ counter_all_missions_passed
+		DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+		ADD_SCORE ( shaft , 60000 )
+		ADD_MULTIPLIER ( shaft , 1 ) 
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , 1 )
+		CLEAR_WANTED_LEVEL ( shaft )
+		IF ( flag_passed_russ_med_phone1_2_m3 = 1 )
+			SET_PHONE_DEAD ( ph_russ_med_phone2 ) 
+			DISABLE_THREAD_TRIGGER ( thr_russ_med_phone2_m1 )
+		ENDIF
+		RETURN
+	
+	ENDIF
+
+	
+	// check for player shooting at car
+/*
+   	IF  ( ( CHECK_ANY_WEAPON_TYPE_HIT_CAR ( r_m_2_targetcar ) )
+	AND ( r_m_2_steel_brief = 0 ) )
+
+		IF  ( ( ( ( ( ( ( ( ( ( CHECK_WEAPON_TYPE_HIT_CAR  ( r_m_2_targetcar , BY_EXPLOSION ) )
+		OR  ( CHECK_WEAPON_TYPE_HIT_CAR  ( r_m_2_targetcar  , BY_GUN ) ) ) 
+		OR  ( CHECK_WEAPON_TYPE_HIT_CAR  ( r_m_2_targetcar  , BY_FLAMETHROWER ) ) ) 	
+		OR  ( CHECK_WEAPON_TYPE_HIT_CAR  ( r_m_2_targetcar  , BY_GRENADE ) ) )	
+		OR  ( CHECK_WEAPON_TYPE_HIT_CAR  ( r_m_2_targetcar  , BY_MOLOTOV ) ) )
+		OR  ( CHECK_WEAPON_TYPE_HIT_CAR  ( r_m_2_targetcar  , BY_ROCKET_LAUNCHER ) ) )	
+		OR  ( CHECK_WEAPON_TYPE_HIT_CAR  ( r_m_2_targetcar  , BY_ELECTRO_WEAPON )	) )
+		OR  ( CHECK_WEAPON_TYPE_HIT_CAR  ( r_m_2_targetcar  , BY_ROCKET_LAUNCHER ) ) )	
+		OR  ( CHECK_WEAPON_TYPE_HIT_CAR  ( r_m_2_targetcar  , BY_ELECTRO_WEAPON )	) )
+		OR  ( CHECK_WEAPON_TYPE_HIT_CAR  ( r_m_2_targetcar  , BY_SHOTGUN ) ) )
+			DISPLAY_BRIEF ( 3612 )
+			SET r_m_2_steel_brief = 1
+		ENDIF
+	ENDIF
+*/
+
+	IF ( ( CHECK_WEAPON_TYPE_HIT_CAR ( r_m_2_targetcar , BY_EXPLOSION ) )
+	AND ( r_m_2_steel_brief_1 = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3612 ) // You will need to create a bigger explosion to take out my bus!
+		++ r_m_2_steel_brief
+		SET r_m_2_steel_brief_1 = 1
+		#ifdef PC
+		IF ( r_m_2_laugh_brief = 0 )	
+			r_m_2_laugh = CREATE_SOUND ( 210.5 , 142.0 , 6.0 ) smug_laugh play_forever END
+			FORCE_CLEANUP ( r_m_2_laugh )
+			SET r_m_2_laugh_brief = 1
+		ENDIF 
+		#endif
+	ENDIF
+
+	IF ( ( CHECK_WEAPON_TYPE_HIT_CAR ( r_m_2_targetcar , BY_GUN ) )
+	AND ( r_m_2_steel_brief_2 = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3612 )
+		++ r_m_2_steel_brief
+		SET r_m_2_steel_brief_2 = 1
+		#ifdef PC
+		IF ( r_m_2_laugh_brief = 0 )	
+			r_m_2_laugh = CREATE_SOUND ( 210.5 , 142.0 , 6.0 ) smug_laugh play_forever END
+			FORCE_CLEANUP ( r_m_2_laugh )
+			SET r_m_2_laugh_brief = 1
+		ENDIF 
+		#endif
+	ENDIF
+
+	IF ( ( CHECK_WEAPON_TYPE_HIT_CAR ( r_m_2_targetcar , BY_FLAMETHROWER ) )
+	AND ( r_m_2_steel_brief_3 = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3612 ) // You won't even blister the paintwork with that!
+		++ r_m_2_steel_brief
+		SET r_m_2_steel_brief_3 = 1
+		#ifdef PC
+		IF ( r_m_2_laugh_brief = 0 )	
+			r_m_2_laugh = CREATE_SOUND ( 210.5 , 142.0 , 6.0 ) smug_laugh play_forever END
+			FORCE_CLEANUP ( r_m_2_laugh )
+			SET r_m_2_laugh_brief = 1
+		ENDIF 
+		#endif
+	ENDIF
+
+	IF ( ( CHECK_WEAPON_TYPE_HIT_CAR ( r_m_2_targetcar , BY_GRENADE ) )
+	AND ( r_m_2_steel_brief_4 = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3612 ) // Grenades ha, they are for cowards who fear the molotov!
+		++ r_m_2_steel_brief
+		SET r_m_2_steel_brief_4 = 1
+		#ifdef PC
+		IF ( r_m_2_laugh_brief = 0 )	
+			r_m_2_laugh = CREATE_SOUND ( 210.5 , 142.0 , 6.0 ) smug_laugh play_forever END
+			FORCE_CLEANUP ( r_m_2_laugh )
+			SET r_m_2_laugh_brief = 1
+		ENDIF 
+		#endif
+	ENDIF
+
+	IF ( ( CHECK_WEAPON_TYPE_HIT_CAR ( r_m_2_targetcar , BY_MOLOTOV ) )
+	AND ( r_m_2_steel_brief_5 = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3612 ) // I drink molotov cocktails for breakfast!
+		++ r_m_2_steel_brief
+		SET r_m_2_steel_brief_5 = 1
+		#ifdef PC
+		IF ( r_m_2_laugh_brief = 0 )	
+			r_m_2_laugh = CREATE_SOUND ( 210.5 , 142.0 , 6.0 ) smug_laugh play_forever END
+			FORCE_CLEANUP ( r_m_2_laugh )
+			SET r_m_2_laugh_brief = 1
+		ENDIF 
+		#endif
+	ENDIF
+
+	IF ( ( CHECK_WEAPON_TYPE_HIT_CAR ( r_m_2_targetcar , BY_ROCKET_LAUNCHER ) )
+	AND ( r_m_2_steel_brief_6 = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3612 ) // Do you think I would forget about rockets? You need more firepower!
+		++ r_m_2_steel_brief
+		SET r_m_2_steel_brief_6 = 1
+		#ifdef PC
+		IF ( r_m_2_laugh_brief = 0 )	
+			r_m_2_laugh = CREATE_SOUND ( 210.5 , 142.0 , 6.0 ) smug_laugh play_forever END
+			FORCE_CLEANUP ( r_m_2_laugh )
+			SET r_m_2_laugh_brief = 1
+		ENDIF 
+		#endif
+	ENDIF
+
+	IF ( ( CHECK_WEAPON_TYPE_HIT_CAR ( r_m_2_targetcar , BY_ELECTRO_WEAPON ) )
+	AND ( r_m_2_steel_brief_7 = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3612 ) // This bus is well insulated, your electro weapon will do nothing
+		++ r_m_2_steel_brief
+		SET r_m_2_steel_brief_7 = 1
+		#ifdef PC
+		IF ( r_m_2_laugh_brief = 0 )	
+			r_m_2_laugh = CREATE_SOUND ( 210.5 , 142.0 , 6.0 ) smug_laugh play_forever END
+			FORCE_CLEANUP ( r_m_2_laugh )
+			SET r_m_2_laugh_brief = 1
+		ENDIF 
+		#endif
+	ENDIF
+
+	IF ( ( CHECK_WEAPON_TYPE_HIT_CAR ( r_m_2_targetcar , BY_SHOTGUN ) )
+	AND ( r_m_2_steel_brief_8 = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3612 ) // A simple shotgun won't even scratch my paintwork
+		++ r_m_2_steel_brief
+		SET r_m_2_steel_brief_8 = 1
+		#ifdef PC
+		IF ( r_m_2_laugh_brief = 0 )	
+			r_m_2_laugh = CREATE_SOUND ( 210.5 , 142.0 , 6.0 ) smug_laugh play_forever END
+			FORCE_CLEANUP ( r_m_2_laugh )
+			SET r_m_2_laugh_brief = 1
+		ENDIF 
+		#endif
+	ENDIF
+/*   
+
+	IF ( r_m_2_steel_brief = 8 )
+		DISPLAY_BRIEF ( 3611 )	// You would need a car bomb to do my bus any harm
+		++ r_m_2_steel_brief
+	ENDIF
+*/
+
+ENDWHILE
+
+
+
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+// deletes all objects when mission1 is finished...
+				
+clean_up_russ_med_phone2_m1: 
+	
+    REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	
+	IF ( flag_passed_russ_med_phone2_m1 = 1 )
+		++ flag_russ_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_russ_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3673 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3672 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_russ_med_phone2_m1 = 1 )
+		++ flag_russ_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_russ_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+	MISSION_HAS_FINISHED ( )
+	
+	SET flag_on_mission	= 0
+	SET flag_on_russ_mission = 0
+	
+	RETURN
+
+
+MISSIONSTART
+
+	GOSUB russ_med_phone2_m1:
+
+	GOSUB clean_up_russ_med_phone2_m1:
+
+MISSIONEND
+	
+
+
+	   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

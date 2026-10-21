@@ -149,7 +149,7 @@ a loader function in `gta2.exe` is parsing: `bun tools/formats/cli.ts help`, e.g
 `sty data/wil.sty --summary`, `gmp data/wil.gmp --block 40,135,3`. Tests: `bun test
 tools/formats`. They write only to an explicit `--out` (inside the repo only if git-ignored,
 e.g. `/formats-out/`). Format traps: `docs/formats/lessons.md`; format → reader function →
-struct: `docs/formats/loader-map.md`; DMA's own specs are third-party, not committed
+struct: `docs/formats/loader-map.md`; DMA's specs + example missions: `docs/formats/specs/`; what is left out
 (`docs/reference.md`).
 
 ## Reference material

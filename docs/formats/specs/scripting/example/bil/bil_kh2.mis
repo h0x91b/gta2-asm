@@ -1,0 +1,1479 @@
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX DESTROY THE POWER STATION XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+// objects for Krishna hard phone mission2		
+
+
+
+CHAR_DATA k_h_2_guard_1
+CHAR_DATA k_h_2_guard_2
+CHAR_DATA k_h_2_guard_3
+CHAR_DATA k_h_2_guard_4
+CHAR_DATA k_h_2_guard_5
+CHAR_DATA k_h_2_guard_6
+CHAR_DATA k_h_2_guard_7
+CHAR_DATA k_h_2_guard_8
+CHAR_DATA k_h_2_guard_9
+CHAR_DATA k_h_2_guard_10
+CHAR_DATA k_h_2_guard_11
+CHAR_DATA k_h_2_guard_12
+CHAR_DATA k_h_2_kris_group_1
+OBJ_DATA k_h_2_powerup_1
+OBJ_DATA k_h_2_powerup_2
+OBJ_DATA k_h_2_powerup_3
+OBJ_DATA k_h_2_powerup_4
+OBJ_DATA k_h_2_powerup_5
+COUNTER k_h_2_building_destroyed = 0
+COUNTER k_h_2_guard_1_spotted_player = 0
+COUNTER k_h_2_guard_2_spotted_player = 0
+COUNTER k_h_2_guard_3_spotted_player = 0
+COUNTER k_h_2_guard_4_spotted_player = 0
+COUNTER k_h_2_guard_5_spotted_player = 0
+COUNTER k_h_2_guard_6_spotted_player = 0
+COUNTER k_h_2_guard_7_spotted_player = 0
+COUNTER k_h_2_guard_8_spotted_player = 0
+COUNTER k_h_2_guard_9_spotted_player = 0
+COUNTER k_h_2_guard_10_spotted_player = 0
+COUNTER k_h_2_guard_11_spotted_player = 0
+COUNTER k_h_2_guard_12_spotted_player = 0
+COUNTER k_h_2_guard_1_dead = 0
+COUNTER k_h_2_guard_4_dead = 0
+COUNTER k_h_2_guard_7_dead = 0
+COUNTER k_h_2_guard_10_dead = 0
+COUNTER k_h_2_planted_explosives_1 = 0
+COUNTER k_h_2_planted_explosives_2 = 0
+COUNTER k_h_2_planted_explosives_3 = 0
+COUNTER k_h_2_planted_explosives_4 = 0
+COUNTER k_h_2_kris_group_1_located = 0
+COUNTER k_h_2_kris_group_1_dead = 0
+OBJ_DATA k_h_2_suitcase_1
+OBJ_DATA k_h_2_suitcase_2
+OBJ_DATA k_h_2_suitcase_3
+OBJ_DATA k_h_2_suitcase_4
+COUNTER k_h_2_guard_1_onscreen
+COUNTER k_h_2_guard_4_onscreen
+COUNTER k_h_2_guard_7_onscreen
+COUNTER k_h_2_guard_10_onscreen
+COUNTER k_h_2_guard_onscreen = 0
+COUNTER k_h_2_explosives_1_onscreen = 0
+COUNTER k_h_2_explosives_2_onscreen = 0
+COUNTER k_h_2_explosives_3_onscreen = 0
+COUNTER k_h_2_explosives_4_onscreen = 0
+COUNTER k_h_2_planted_all_explosives = 0
+COUNTER k_h_2_killed_all_guards = 0
+COUNTER k_h_2_player_in_zone = 0
+COUNTER k_h_2_suitcase_1_created = 0
+COUNTER k_h_2_suitcase_2_created = 0
+COUNTER k_h_2_suitcase_3_created = 0
+COUNTER k_h_2_suitcase_4_created = 0
+COUNTER k_h_2_kris_group_1_created = 0
+FORWARD	clean_up_kris_hard_phone_m2:
+	
+SOUND k_h_2_tick
+SOUND k_h_2_tick_2
+SOUND k_h_2_tick_3
+SOUND k_h_2_tick_4
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+		
+// starts Krishna hard phone mission1
+					
+
+kris_hard_phone_m2:
+//
+SET flag_failed_kris_hard_phone_m2 = 0
+
+//DISABLE_THREAD_TRIGGER ( thr_kris_hard_phone_m2 ) 
+DISPLAY_MESSAGE ( 3846 ) // you have PASSED the mission!"
+DISPLAY_BRIEF ( 3351 ) // "you have selected Krishna hard phone1 mission1"
+SET flag_on_mission = 1
+SET flag_on_kris_mission = 1
+
+k_h_2_kris_group_1 = CREATE_CHAR ( 214.5 , 119.5 , 2.0 ) 9 80 criminal END
+SET_CHAR_OBJECTIVE  ( k_h_2_kris_group_1 , wait_on_foot ) 
+SET_CHAR_THREAT_REACTION ( k_h_2_kris_group_1 , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( k_h_2_kris_group_1 , line_of_sight )
+GIVE_WEAPON ( k_h_2_kris_group_1 , pistol )
+ADD_CHAR_TO_GANG ( k_h_2_kris_group_1 , krisgang )
+#ifdef PC
+ADD_GROUP_TO_CHARACTER ( k_h_2_kris_group_1 , 3 )
+#endif
+#ifdef PSX
+ADD_GROUP_TO_CHARACTER ( k_h_2_kris_group_1 , 1 )
+#endif
+SET k_h_2_kris_group_1_created = 1
+POINT_ARROW_AT ( arrow , k_h_2_kris_group_1 )		
+
+//SET flag_played_kris_hard_phone_m2 = 1
+
+#ifdef PC
+k_h_2_guard_3 = CREATE_CHAR ( 230.5 , 73.5 , 3.0 ) 10 90 criminal END
+k_h_2_guard_6 = CREATE_CHAR ( 236.5 , 57.5 , 2.0 ) 10 90 criminal END
+k_h_2_guard_9 = CREATE_CHAR ( 231.5 , 68.0 , 2.0 ) 10 90 criminal END
+k_h_2_guard_12 = CREATE_CHAR ( 242.5 , 72.5 , 2.0 ) 10 90 criminal END
+ADD_PATROL_POINT ( k_h_2_guard_3 , 230.5 , 69.5 , 3.0 )
+ADD_PATROL_POINT ( k_h_2_guard_3 , 230.5 , 73.5 , 3.0 )
+ADD_PATROL_POINT ( k_h_2_guard_6 , 239.5 , 57.5 , 2.0 )
+ADD_PATROL_POINT ( k_h_2_guard_6 , 236.5 , 57.5 , 2.0 )
+ADD_PATROL_POINT ( k_h_2_guard_9 , 231.5 , 71.5 , 2.0 )
+ADD_PATROL_POINT ( k_h_2_guard_9 , 231.5 , 68.5 , 2.0 )
+ADD_PATROL_POINT ( k_h_2_guard_12 , 239.5 , 72.5 , 2.0 )
+ADD_PATROL_POINT ( k_h_2_guard_12 , 242.5 , 72.5 , 2.0 )
+SET_CHAR_THREAT_REACTION ( k_h_2_guard_3 , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_h_2_guard_6 , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_h_2_guard_9 , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_h_2_guard_12 , no_reaction )
+SET_CHAR_THREAT_SEARCH ( k_h_2_guard_3 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_h_2_guard_6 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_h_2_guard_9 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_h_2_guard_12 , line_of_sight_player_only )
+GIVE_WEAPON ( k_h_2_guard_3 , shotgun )
+GIVE_WEAPON ( k_h_2_guard_6 , pistol )
+GIVE_WEAPON ( k_h_2_guard_9 , shotgun )
+GIVE_WEAPON ( k_h_2_guard_12 , pistol )
+ADD_CHAR_TO_GANG ( k_h_2_guard_3 , russgang )
+ADD_CHAR_TO_GANG ( k_h_2_guard_6 , russgang )
+ADD_CHAR_TO_GANG ( k_h_2_guard_9 , russgang )
+ADD_CHAR_TO_GANG ( k_h_2_guard_12 , russgang )
+#endif
+
+k_h_2_guard_1 = CREATE_CHAR ( 232.5 , 61.5 , 3.0 ) 10 270 criminal END
+k_h_2_guard_2 = CREATE_CHAR ( 230.5 , 63.5 , 3.0 ) 10 90 criminal END
+k_h_2_guard_4 = CREATE_CHAR ( 239.5 , 61.5 , 2.0 ) 10 90 criminal END
+k_h_2_guard_5 = CREATE_CHAR ( 234.5 , 58.5 , 2.0 ) 10 90 criminal END
+k_h_2_guard_7 = CREATE_CHAR ( 232.5 , 64.5 , 2.0 ) 10 270 criminal END
+k_h_2_guard_8 = CREATE_CHAR ( 232.5 , 68.5 , 2.0 ) 10 90 criminal END
+k_h_2_guard_10 = CREATE_CHAR ( 239.5 , 64.5 , 2.0 ) 10 90 criminal END
+k_h_2_guard_11 = CREATE_CHAR ( 241.5 , 65.5 , 2.0 ) 10 90 criminal END
+k_h_2_powerup_1 = CREATE_OBJ ( 237.5 , 54.5 , 2.0 ) 0 COLLECT_01 15 END
+k_h_2_powerup_2 = CREATE_OBJ ( 228.5 , 58.5 , 4.0 ) 0 COLLECT_04 15 END
+k_h_2_powerup_3 = CREATE_OBJ ( 230.5 , 53.5 , 2.0 ) 0 COLLECT_35 END
+k_h_2_powerup_4 = CREATE_OBJ ( 244.5 , 74.5 , 2.0 ) 0 COLLECT_36 END
+FORCE_CLEANUP ( k_h_2_powerup_1 )
+FORCE_CLEANUP ( k_h_2_powerup_2 )
+FORCE_CLEANUP ( k_h_2_powerup_3 )
+FORCE_CLEANUP ( k_h_2_powerup_4 )
+ADD_PATROL_POINT ( k_h_2_guard_2 , 230.5 , 67.5 , 3.0 )
+ADD_PATROL_POINT ( k_h_2_guard_2 , 230.5 , 63.5 , 3.0 )
+ADD_PATROL_POINT ( k_h_2_guard_5 , 236.5 , 59.5 , 2.0 )
+ADD_PATROL_POINT ( k_h_2_guard_5 , 234.5 , 58.5 , 2.0 )
+ADD_PATROL_POINT ( k_h_2_guard_8 , 232.5 , 65.5 , 2.0 )
+ADD_PATROL_POINT ( k_h_2_guard_8 , 232.5 , 68.5 , 2.0 )
+ADD_PATROL_POINT ( k_h_2_guard_11 , 241.5 , 68.5 , 2.0 )
+ADD_PATROL_POINT ( k_h_2_guard_11 , 241.5 , 65.5 , 2.0 )
+SET_CHAR_THREAT_REACTION ( k_h_2_guard_1 , react_as_normal )
+SET_CHAR_THREAT_REACTION ( k_h_2_guard_2 , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_h_2_guard_4 , react_as_normal )
+SET_CHAR_THREAT_REACTION ( k_h_2_guard_5 , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_h_2_guard_7 , react_as_normal )
+SET_CHAR_THREAT_REACTION ( k_h_2_guard_8 , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_h_2_guard_10 , react_as_normal )
+SET_CHAR_THREAT_REACTION ( k_h_2_guard_11 , no_reaction )
+SET_CHAR_THREAT_SEARCH ( k_h_2_guard_1 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_h_2_guard_2 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_h_2_guard_4 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_h_2_guard_5 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_h_2_guard_7 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_h_2_guard_8 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_h_2_guard_10 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_h_2_guard_11 , line_of_sight_player_only )
+GIVE_WEAPON ( k_h_2_guard_1 , machine_gun )
+GIVE_WEAPON ( k_h_2_guard_2 , pistol )
+GIVE_WEAPON ( k_h_2_guard_4 , machine_gun )
+GIVE_WEAPON ( k_h_2_guard_5 , shotgun )
+GIVE_WEAPON ( k_h_2_guard_7 , machine_gun )
+GIVE_WEAPON ( k_h_2_guard_8 , pistol )
+GIVE_WEAPON ( k_h_2_guard_10 , machine_gun )
+GIVE_WEAPON ( k_h_2_guard_11 , shotgun )
+ADD_CHAR_TO_GANG ( k_h_2_guard_1 , russgang )
+ADD_CHAR_TO_GANG ( k_h_2_guard_2 , russgang )
+ADD_CHAR_TO_GANG ( k_h_2_guard_4 , russgang ) 
+ADD_CHAR_TO_GANG ( k_h_2_guard_5 , russgang )
+ADD_CHAR_TO_GANG ( k_h_2_guard_7 , russgang )
+ADD_CHAR_TO_GANG ( k_h_2_guard_8 , russgang ) 
+ADD_CHAR_TO_GANG ( k_h_2_guard_10 , russgang )
+ADD_CHAR_TO_GANG ( k_h_2_guard_11 , russgang )
+SET_CHAR_OBJECTIVE  ( k_h_2_guard_1 , guard_spot , 232.5 , 61.5 , 3.0 )
+SET_CHAR_OBJECTIVE  ( k_h_2_guard_4 , guard_spot , 239.5 , 61.5 , 2.0 )
+SET_CHAR_OBJECTIVE  ( k_h_2_guard_7 , guard_spot , 232.5 , 64.5 , 2.0 )
+SET_CHAR_OBJECTIVE  ( k_h_2_guard_10 , guard_spot , 239.5 , 64.5 , 2.0 ) 
+
+	
+
+WHILE_EXEC ( k_h_2_kris_group_1_located = 0 )
+
+
+	IF ( LOCATE_ANOTHER_CHARACTER_ANY_MEANS ( shaft , k_h_2_kris_group_1 , 2.0 , 2.0  ) )
+		SET k_h_2_kris_group_1_located = 1
+		REMOVE_ARROW ( arrow )
+		MAKE_NEW_LEADER_OF_GROUP ( k_h_2_kris_group_1 , shaft )
+	ENDIF 
+
+	IF ( ( HAS_CHARACTER_DIED ( k_h_2_kris_group_1 ) )
+	AND ( k_h_2_kris_group_1_dead = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3352 ) // "My men are all dead, you will have to finish the job alone!"
+		SET k_h_2_kris_group_1_dead = 1
+		SET k_h_2_kris_group_1_located = 1
+		REMOVE_ARROW ( arrow )
+	ENDIF
+
+
+ENDWHILE
+
+
+
+POINT_ARROW_AT ( arrow , 236.5 , 63.5 , 2.0 )
+DISPLAY_BRIEF ( 3320 ) // "you have selected Krishna hard phone1 mission1"
+
+
+//
+//
+WHILE_EXEC  ( NOT ( k_h_2_planted_all_explosives = 4 ) ) 
+//AND ( IS_CHAR_IN_ZONE ( shaft , B16 ) ) )
+
+	 
+	IF ( ( IS_CHAR_IN_ZONE ( shaft , B16 ) )  
+	AND ( k_h_2_player_in_zone = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3321 ) // "Who the fuck are you! Die motherfucker!"
+		REMOVE_ARROW ( arrow )
+		SET k_h_2_player_in_zone = 1
+	ENDIF
+	
+	IF ( ( NOT ( IS_CHAR_IN_ZONE ( shaft , B16 ) ) )  
+	AND ( k_h_2_player_in_zone = 1 ) )
+		DISPLAY_BRIEF_NOW ( 3322 ) // "Who the fuck are you! Die motherfucker!"
+		POINT_ARROW_AT ( arrow , 236.5 , 63.5 , 2.0 )
+		SET k_h_2_player_in_zone = 0
+	ENDIF 
+	
+	#ifdef PC
+	// if player is seen by guard3
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_h_2_guard_3 ) ) 
+	AND	( IS_CHAR_IN_ZONE ( shaft , B16 ) ) )
+	AND ( k_h_2_guard_3_spotted_player = 0 ) )
+		SET k_h_2_guard_3_spotted_player = 1
+		SET_CHAR_OBJECTIVE  ( k_h_2_guard_3 , kill_char_on_foot , shaft )
+		DISPLAY_BRIEF_NOW ( 3325 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+
+	// if player is seen by guard6
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_h_2_guard_6 ) ) 
+	AND	( IS_CHAR_IN_ZONE ( shaft , B16 ) ) )
+	AND ( k_h_2_guard_6_spotted_player = 0 ) )
+		SET k_h_2_guard_6_spotted_player = 1
+		SET_CHAR_OBJECTIVE  ( k_h_2_guard_6 , kill_char_on_foot , shaft )
+		DISPLAY_BRIEF_NOW ( 3328 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+	
+	// if player is seen by guard9
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_h_2_guard_9 ) ) 
+	AND	( IS_CHAR_IN_ZONE ( shaft , B16 ) ) )
+	AND ( k_h_2_guard_9_spotted_player = 0 ) )
+		SET k_h_2_guard_9_spotted_player = 1
+		SET_CHAR_OBJECTIVE  ( k_h_2_guard_9 , kill_char_on_foot , shaft )
+		DISPLAY_BRIEF_NOW ( 3331 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+	
+	// if player is seen by guard12
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_h_2_guard_12 ) ) 
+	AND	( IS_CHAR_IN_ZONE ( shaft , B16 ) ) )
+	AND ( k_h_2_guard_12_spotted_player = 0 ) )
+		SET k_h_2_guard_12_spotted_player = 1
+		SET_CHAR_OBJECTIVE  ( k_h_2_guard_12 , kill_char_on_foot , shaft )
+		DISPLAY_BRIEF_NOW ( 3334 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+	#endif
+
+	
+	// if player is seen by guard1
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_h_2_guard_1 ) ) 
+	AND	( IS_CHAR_IN_ZONE ( shaft , B16 ) ) )
+	AND ( k_h_2_guard_1_spotted_player = 0 ) )
+		SET k_h_2_guard_1_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3323 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+
+	// if player is seen by guard2
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_h_2_guard_2 ) ) 
+	AND	( IS_CHAR_IN_ZONE ( shaft , B16 ) ) )
+	AND ( k_h_2_guard_2_spotted_player = 0 ) )
+		SET k_h_2_guard_2_spotted_player = 1
+		SET_CHAR_OBJECTIVE  ( k_h_2_guard_2 , kill_char_on_foot , shaft )
+		DISPLAY_BRIEF_NOW ( 3324 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+
+	// if player is seen by guard4
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_h_2_guard_4 ) ) 
+	AND	( IS_CHAR_IN_ZONE ( shaft , B16 ) ) )
+	AND ( k_h_2_guard_4_spotted_player = 0 ) )
+		SET k_h_2_guard_4_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3326 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+	
+	// if player is seen by guard5
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_h_2_guard_5 ) ) 
+	AND	( IS_CHAR_IN_ZONE ( shaft , B16 ) ) )
+	AND ( k_h_2_guard_5_spotted_player = 0 ) )
+		SET k_h_2_guard_5_spotted_player = 1
+		SET_CHAR_OBJECTIVE  ( k_h_2_guard_5 , kill_char_on_foot , shaft )
+		DISPLAY_BRIEF_NOW ( 3327 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+		
+	// if player is seen by guard7
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_h_2_guard_7 ) ) 
+	AND	( IS_CHAR_IN_ZONE ( shaft , B16 ) ) )
+	AND ( k_h_2_guard_7_spotted_player = 0 ) )
+		SET k_h_2_guard_7_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3329 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+	
+	// if player is seen by guard8
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_h_2_guard_8 ) ) 
+	AND	( IS_CHAR_IN_ZONE ( shaft , B16 ) ) )
+	AND ( k_h_2_guard_8_spotted_player = 0 ) )
+		SET k_h_2_guard_8_spotted_player = 1
+		SET_CHAR_OBJECTIVE  ( k_h_2_guard_8 , kill_char_on_foot , shaft )
+		DISPLAY_BRIEF_NOW ( 3330 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+	
+	// if player is seen by guard10
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_h_2_guard_10 ) ) 
+	AND	( IS_CHAR_IN_ZONE ( shaft , B16 ) ) )
+	AND ( k_h_2_guard_10_spotted_player = 0 ) )
+		SET k_h_2_guard_10_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3332 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF   
+
+	// if player is seen by guard11
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_h_2_guard_11 ) ) 
+	AND	( IS_CHAR_IN_ZONE ( shaft , B16 ) ) )
+	AND ( k_h_2_guard_11_spotted_player = 0 ) )
+		SET k_h_2_guard_11_spotted_player = 1
+		SET_CHAR_OBJECTIVE  ( k_h_2_guard_11 , kill_char_on_foot , shaft )
+		DISPLAY_BRIEF_NOW ( 3333 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+
+	
+
+
+	// checks for guard1 to be killed
+	
+	IF ( ( HAS_CHARACTER_DIED ( k_h_2_guard_1 ) )
+	AND ( k_h_2_guard_1_dead = 0 ) )
+		
+		IF ( k_h_2_killed_all_guards = 0 )
+			DISPLAY_BRIEF_NOW ( 3335 ) // "Ok they're in there. Try taking out the generators to open the doors."
+			SET k_h_2_guard_1_dead = 1
+			++ k_h_2_killed_all_guards
+		ELSE
+			IF ( k_h_2_killed_all_guards = 1 )
+				DISPLAY_BRIEF_NOW ( 3336 ) // "Ok they're in there. Try taking out the generators to open the doors."
+				SET k_h_2_guard_1_dead = 1
+				++ k_h_2_killed_all_guards
+			ELSE
+				IF ( k_h_2_killed_all_guards = 2 )
+					DISPLAY_BRIEF_NOW ( 3337 ) // "Ok they're in there. Try taking out the generators to open the doors."
+					SET k_h_2_guard_1_dead = 1
+					++ k_h_2_killed_all_guards
+				ELSE
+					IF ( k_h_2_killed_all_guards = 3 )
+						DISPLAY_BRIEF_NOW ( 3338 ) // "Ok they're in there. Try taking out the generators to open the doors."
+						SET k_h_2_guard_1_dead = 1
+						++ k_h_2_killed_all_guards
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+//
+//
+	// points at guard1 if onscreen
+
+	IF ( ( ( IS_ITEM_ONSCREEN ( k_h_2_guard_1 ) )  
+   	AND ( k_h_2_guard_1_dead = 0 ) )
+	AND ( k_h_2_guard_1_onscreen = 0 ) )
+		SET k_h_2_guard_1_onscreen = 1
+		POINT_ARROW_AT ( arrow , k_h_2_guard_1 )
+		SET k_h_2_guard_onscreen = 1
+	ENDIF
+
+   	
+	IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( k_h_2_guard_1 ) ) )
+	AND ( k_h_2_guard_1_onscreen = 1 ) )
+		SET k_h_2_guard_1_onscreen = 0
+		REMOVE_ARROW ( arrow )
+	ENDIF
+
+
+	// points at explosives destination if guard1 is dead
+
+	IF ( ( ( ( IS_POINT_ONSCREEN ( 232.5 , 61.5 , 3.0 ) )  
+   	AND ( k_h_2_guard_1_dead = 1 ) )
+	AND ( k_h_2_explosives_1_onscreen = 0 ) )
+	AND ( k_h_2_planted_explosives_1 = 0 ) )
+		SET k_h_2_explosives_1_onscreen = 1
+		DISPLAY_BRIEF_NOW ( 3346 ) // "plant the axplosives"
+		POINT_ARROW_AT ( arrow , 232.5 , 61.5 , 3.0 )
+		SET k_h_2_guard_onscreen = 1
+	ENDIF
+
+   	
+	IF ( ( NOT ( IS_POINT_ONSCREEN ( 232.5 , 61.5 , 3.0 ) ) )
+	AND ( k_h_2_explosives_1_onscreen = 1 ) )
+		SET k_h_2_explosives_1_onscreen = 0
+		REMOVE_ARROW ( arrow )
+	ENDIF
+
+
+	// waits for player to plant explosives1
+
+	IF ( ( ( LOCATE_CHARACTER_ON_FOOT ( shaft , 232.5 , 61.5 , 3.0 , 0.5 , 0.5  ) )
+	AND ( k_h_2_guard_1_dead = 1 ) )
+	AND ( k_h_2_planted_explosives_1 = 0 ) )
+		SET k_h_2_planted_explosives_1 = 1
+		k_h_2_suitcase_1 = CREATE_OBJ ( 232.5 , 61.5 , 3.0 ) 0 bomb END
+		REMOVE_ARROW ( arrow )
+		++ k_h_2_planted_all_explosives
+		SET k_h_2_suitcase_1_created = 1
+		#ifdef PC
+		k_h_2_tick = CREATE_SOUND ( 232.5 , 61.5 , 6.0 ) bomb_tick play_forever END
+		FORCE_CLEANUP ( k_h_2_tick )
+		#endif
+
+			
+		IF ( k_h_2_planted_all_explosives = 1 )
+			DISPLAY_BRIEF_NOW ( 3339 ) // "Ok they're in there. Try taking out the generators to open the doors."
+		ELSE
+			IF ( k_h_2_planted_all_explosives = 2 )
+				DISPLAY_BRIEF_NOW ( 3340 ) // "Ok they're in there. Try taking out the generators to open the doors."
+			ELSE
+				IF ( k_h_2_planted_all_explosives = 3 )
+					DISPLAY_BRIEF_NOW ( 3341 ) // "Ok they're in there. Try taking out the generators to open the doors."
+				ELSE
+					IF ( k_h_2_planted_all_explosives = 4 )
+						DISPLAY_BRIEF_NOW ( 3342 ) // "Ok they're in there. Try taking out the generators to open the doors."
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+
+
+
+	// checks for guard2 to be killed
+	
+	IF ( ( HAS_CHARACTER_DIED ( k_h_2_guard_4 ) )
+	AND ( k_h_2_guard_4_dead = 0 ) )
+		
+		IF ( k_h_2_killed_all_guards = 0 )
+			DISPLAY_BRIEF_NOW ( 3335 ) // "Ok they're in there. Try taking out the generators to open the doors."
+			SET k_h_2_guard_4_dead = 1
+			++ k_h_2_killed_all_guards
+		ELSE
+			IF ( k_h_2_killed_all_guards = 1 )
+				DISPLAY_BRIEF_NOW ( 3336 ) // "Ok they're in there. Try taking out the generators to open the doors."
+				SET k_h_2_guard_4_dead = 1
+				++ k_h_2_killed_all_guards
+			ELSE
+				IF ( k_h_2_killed_all_guards = 2 )
+					DISPLAY_BRIEF_NOW ( 3337 ) // "Ok they're in there. Try taking out the generators to open the doors."
+					SET k_h_2_guard_4_dead = 1
+					++ k_h_2_killed_all_guards
+				ELSE
+					IF ( k_h_2_killed_all_guards = 3 )
+						DISPLAY_BRIEF_NOW ( 3338 ) // "Ok they're in there. Try taking out the generators to open the doors."
+						SET k_h_2_guard_4_dead = 1
+						++ k_h_2_killed_all_guards
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+   
+
+	// points at guard2 if onscreen
+
+	IF ( ( ( IS_ITEM_ONSCREEN ( k_h_2_guard_4 ) )  
+   	AND ( k_h_2_guard_4_dead = 0 ) )
+	AND ( k_h_2_guard_4_onscreen = 0 ) )
+		SET k_h_2_guard_4_onscreen = 1
+		POINT_ARROW_AT ( arrow_2 , k_h_2_guard_4 )
+		SET k_h_2_guard_onscreen = 1
+	ENDIF
+
+   	
+	IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( k_h_2_guard_4 ) ) )
+	AND ( k_h_2_guard_4_onscreen = 1 ) )
+		SET k_h_2_guard_4_onscreen = 0
+		REMOVE_ARROW ( arrow_2 )
+	ENDIF
+
+
+	// points at explosives destination if guard4 is dead
+
+	IF ( ( ( ( IS_POINT_ONSCREEN ( 239.5 , 61.5 , 2.0 ) )  
+   	AND ( k_h_2_guard_4_dead = 1 ) )
+	AND ( k_h_2_explosives_2_onscreen = 0 ) )
+	AND ( k_h_2_planted_explosives_2 = 0 ) )
+		SET k_h_2_explosives_2_onscreen = 1
+		DISPLAY_BRIEF_NOW ( 3347 ) // "plant the axplosives"
+		POINT_ARROW_AT ( arrow_2 , 239.5 , 61.5 , 2.0 )
+		SET k_h_2_guard_onscreen = 1
+	ENDIF
+
+   	
+	IF ( ( NOT ( IS_POINT_ONSCREEN ( 239.5 , 61.5 , 2.0 ) ) )
+	AND ( k_h_2_explosives_2_onscreen = 1 ) )
+		SET k_h_2_explosives_2_onscreen = 0
+		REMOVE_ARROW ( arrow_2 )
+	ENDIF
+
+
+	// waits for player to plant explosives2
+
+	IF ( ( ( LOCATE_CHARACTER_ON_FOOT ( shaft , 239.5 , 61.5 , 2.0 , 0.5 , 0.5  ) )
+	AND ( k_h_2_guard_4_dead = 1 ) )
+	AND ( k_h_2_planted_explosives_2 = 0 ) )
+		SET k_h_2_planted_explosives_2 = 1
+		k_h_2_suitcase_2 = CREATE_OBJ ( 239.5 , 61.5 , 2.0 ) 0 bomb END
+		REMOVE_ARROW ( arrow_2 )
+		++ k_h_2_planted_all_explosives
+		SET k_h_2_suitcase_2_created = 1
+		#ifdef PC
+		k_h_2_tick_2 = CREATE_SOUND ( 239.5 , 61.5 , 6.0 ) bomb_tick play_forever END
+		FORCE_CLEANUP ( k_h_2_tick_2 )
+		#endif
+		
+		IF ( k_h_2_planted_all_explosives = 1 )
+			DISPLAY_BRIEF_NOW ( 3339 ) // "Ok they're in there. Try taking out the generators to open the doors."
+		ELSE
+			IF ( k_h_2_planted_all_explosives = 2 )
+				DISPLAY_BRIEF_NOW ( 3340 ) // "Ok they're in there. Try taking out the generators to open the doors."
+			ELSE
+				IF ( k_h_2_planted_all_explosives = 3 )
+					DISPLAY_BRIEF_NOW ( 3341 ) // "Ok they're in there. Try taking out the generators to open the doors."
+				ELSE
+					IF ( k_h_2_planted_all_explosives = 4 )
+						DISPLAY_BRIEF_NOW ( 3342 ) // "Ok they're in there. Try taking out the generators to open the doors."
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+
+
+
+	// checks for guard3 to be killed
+	
+	IF ( ( HAS_CHARACTER_DIED ( k_h_2_guard_7 ) )
+	AND ( k_h_2_guard_7_dead = 0 ) )
+		
+		IF ( k_h_2_killed_all_guards = 0 )
+			DISPLAY_BRIEF_NOW ( 3335 ) // "Ok they're in there. Try taking out the generators to open the doors."
+			SET k_h_2_guard_7_dead = 1
+			++ k_h_2_killed_all_guards
+		ELSE
+			IF ( k_h_2_killed_all_guards = 1 )
+				DISPLAY_BRIEF_NOW ( 3336 ) // "Ok they're in there. Try taking out the generators to open the doors."
+				SET k_h_2_guard_7_dead = 1
+				++ k_h_2_killed_all_guards
+			ELSE
+				IF ( k_h_2_killed_all_guards = 2 )
+					DISPLAY_BRIEF_NOW ( 3337 ) // "Ok they're in there. Try taking out the generators to open the doors."
+					SET k_h_2_guard_7_dead = 1
+					++ k_h_2_killed_all_guards
+				ELSE
+					IF ( k_h_2_killed_all_guards = 3 )
+						DISPLAY_BRIEF_NOW ( 3338 ) // "Ok they're in there. Try taking out the generators to open the doors."
+						SET k_h_2_guard_7_dead = 1
+						++ k_h_2_killed_all_guards
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+//
+//
+	// points at guard3 if onscreen
+
+	IF ( ( ( IS_ITEM_ONSCREEN ( k_h_2_guard_7 ) )  
+   	AND ( k_h_2_guard_7_dead = 0 ) )
+	AND ( k_h_2_guard_7_onscreen = 0 ) )
+		SET k_h_2_guard_7_onscreen = 1
+		POINT_ARROW_AT ( arrow_3 , k_h_2_guard_7 )
+		SET k_h_2_guard_onscreen = 1
+	ENDIF
+
+   	
+	IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( k_h_2_guard_7 ) ) )
+	AND ( k_h_2_guard_7_onscreen = 1 ) )
+		SET k_h_2_guard_7_onscreen = 0
+		REMOVE_ARROW ( arrow_3 )
+	ENDIF
+
+
+	// points at explosives destination if guard7 is dead
+
+	IF ( ( ( ( IS_POINT_ONSCREEN ( 232.5 , 64.5 , 2.0 ) )  
+	AND ( k_h_2_guard_7_dead = 1 ) )
+	AND ( k_h_2_explosives_3_onscreen = 0 ) )
+	AND ( k_h_2_planted_explosives_3 = 0 ) )
+		SET k_h_2_explosives_3_onscreen = 1
+		DISPLAY_BRIEF_NOW ( 3348 ) // "plant the axplosives"
+		POINT_ARROW_AT ( arrow_3 , 232.5 , 64.5 , 2.0 )
+		SET k_h_2_guard_onscreen = 1
+	ENDIF
+
+
+	IF ( ( NOT ( IS_POINT_ONSCREEN ( 232.5 , 64.5 , 2.0 ) ) )
+	AND ( k_h_2_explosives_3_onscreen = 1 ) )
+		SET k_h_2_explosives_3_onscreen = 0
+		REMOVE_ARROW ( arrow_3 )
+	ENDIF
+
+
+	// waits for player to plant explosives3
+
+	IF ( ( ( LOCATE_CHARACTER_ON_FOOT ( shaft , 232.5 , 64.5 , 2.0 , 0.5 , 0.5  ) )
+	AND ( k_h_2_guard_7_dead = 1 ) )
+	AND ( k_h_2_planted_explosives_3 = 0 ) )
+		SET k_h_2_planted_explosives_3 = 1
+		k_h_2_suitcase_3 = CREATE_OBJ ( 232.5 , 64.5 , 2.0 ) 0 bomb END
+		REMOVE_ARROW ( arrow_3 )
+		++ k_h_2_planted_all_explosives
+		SET k_h_2_suitcase_3_created = 1
+		#ifdef PC
+		k_h_2_tick_3 = CREATE_SOUND ( 232.5 , 64.5 , 6.0 ) bomb_tick play_forever END
+		FORCE_CLEANUP ( k_h_2_tick_3 )
+		#endif
+		
+		IF ( k_h_2_planted_all_explosives = 1 )
+			DISPLAY_BRIEF_NOW ( 3339 ) // "Ok they're in there. Try taking out the generators to open the doors."
+		ELSE
+			IF ( k_h_2_planted_all_explosives = 2 )
+				DISPLAY_BRIEF_NOW ( 3340 ) // "Ok they're in there. Try taking out the generators to open the doors."
+			ELSE
+				IF ( k_h_2_planted_all_explosives = 3 )
+					DISPLAY_BRIEF_NOW ( 3341 ) // "Ok they're in there. Try taking out the generators to open the doors."
+				ELSE
+					IF ( k_h_2_planted_all_explosives = 4 )
+						DISPLAY_BRIEF_NOW ( 3342 ) // "Ok they're in there. Try taking out the generators to open the doors."
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+
+
+
+	// checks for guard4 to be killed
+	
+	IF ( ( HAS_CHARACTER_DIED ( k_h_2_guard_10 ) )
+	AND ( k_h_2_guard_10_dead = 0 ) )
+		
+		IF ( k_h_2_killed_all_guards = 0 )
+			DISPLAY_BRIEF_NOW ( 3335 ) // "Ok they're in there. Try taking out the generators to open the doors."
+			SET k_h_2_guard_10_dead = 1
+			++ k_h_2_killed_all_guards
+		ELSE
+			IF ( k_h_2_killed_all_guards = 1 )
+				DISPLAY_BRIEF_NOW ( 3336 ) // "Ok they're in there. Try taking out the generators to open the doors."
+				SET k_h_2_guard_10_dead = 1
+				++ k_h_2_killed_all_guards
+			ELSE
+				IF ( k_h_2_killed_all_guards = 2 )
+					DISPLAY_BRIEF_NOW ( 3337 ) // "Ok they're in there. Try taking out the generators to open the doors."
+					SET k_h_2_guard_10_dead = 1
+					++ k_h_2_killed_all_guards
+				ELSE
+					IF ( k_h_2_killed_all_guards = 3 )
+						DISPLAY_BRIEF_NOW ( 3338 ) // "Ok they're in there. Try taking out the generators to open the doors."
+						SET k_h_2_guard_10_dead = 1
+						++ k_h_2_killed_all_guards
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+
+
+	// points at guard10 if onscreen
+
+	IF ( ( ( IS_ITEM_ONSCREEN ( k_h_2_guard_10 ) )  
+   	AND ( k_h_2_guard_10_dead = 0 ) )
+	AND ( k_h_2_guard_10_onscreen = 0 ) )
+		SET k_h_2_guard_10_onscreen = 1
+		POINT_ARROW_AT ( arrow_4 , k_h_2_guard_10 )
+		SET k_h_2_guard_onscreen = 1
+	ENDIF
+
+   	
+	IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( k_h_2_guard_10 ) ) ) 
+	AND ( k_h_2_guard_10_onscreen = 1 ) )
+		SET k_h_2_guard_10_onscreen = 0
+		REMOVE_ARROW ( arrow_4 )
+	ENDIF
+
+
+	// points at explosives destination if guard10 is dead
+
+	IF ( ( ( ( IS_POINT_ONSCREEN ( 239.5 , 64.5 , 2.0 ) )  
+   	AND ( k_h_2_guard_10_dead = 1 ) )
+	AND ( k_h_2_explosives_4_onscreen = 0 ) )
+	AND ( k_h_2_planted_explosives_4 = 0 ) )
+		SET k_h_2_explosives_4_onscreen = 1
+		DISPLAY_BRIEF_NOW ( 3349 ) // "plant the axplosives"
+		POINT_ARROW_AT ( arrow_4 , 239.5 , 64.5 , 2.0 )
+		SET k_h_2_guard_onscreen = 1
+	ENDIF
+
+   	
+	IF ( ( NOT ( IS_POINT_ONSCREEN ( 239.5 , 64.5 , 2.0 ) ) )
+	AND ( k_h_2_explosives_4_onscreen = 1 ) )
+		SET k_h_2_explosives_4_onscreen = 0
+		REMOVE_ARROW ( arrow_4 )
+	ENDIF
+
+
+	// waits for player to plant explosives4
+
+	IF ( ( ( LOCATE_CHARACTER_ON_FOOT ( shaft , 239.5 , 64.5 , 2.0 , 0.5 , 0.5  ) )
+	AND ( k_h_2_guard_10_dead = 1 ) )
+	AND ( k_h_2_planted_explosives_4 = 0 ) )
+		SET k_h_2_planted_explosives_4 = 1
+		k_h_2_suitcase_4 = CREATE_OBJ ( 239.5 , 64.5 , 2.0 ) 0 bomb END
+		REMOVE_ARROW ( arrow_4 )
+		++ k_h_2_planted_all_explosives
+		SET k_h_2_suitcase_4_created = 1
+		#ifdef PC
+		k_h_2_tick_4 = CREATE_SOUND ( 239.5 , 64.5 , 6.0 ) bomb_tick play_forever END
+		FORCE_CLEANUP ( k_h_2_tick_4 )
+		#endif
+		
+		IF ( k_h_2_planted_all_explosives = 1 )
+			DISPLAY_BRIEF_NOW ( 3339 ) // "Ok they're in there. Try taking out the generators to open the doors."
+		ELSE
+			IF ( k_h_2_planted_all_explosives = 2 )
+				DISPLAY_BRIEF_NOW ( 3340 ) // "Ok they're in there. Try taking out the generators to open the doors."
+			ELSE
+				IF ( k_h_2_planted_all_explosives = 3 )
+					DISPLAY_BRIEF_NOW ( 3341 ) // "Ok they're in there. Try taking out the generators to open the doors."
+				ELSE
+					IF ( k_h_2_planted_all_explosives = 4 )
+						DISPLAY_BRIEF_NOW ( 3342 ) // "Ok they're in there. Try taking out the generators to open the doors."
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+
+
+//	IF ( ( HAS_CHARACTER_DIED ( k_h_2_kris_group_1 ) )
+	IF ( ( NOT ( CHECK_NUMBER_ALIVE_IN_GROUP ( shaft , 1 ) ) )
+	AND ( k_h_2_kris_group_1_dead = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3352 ) // "My men are all dead, you will have to finish the job alone!"
+		SET k_h_2_kris_group_1_dead = 1
+//		REMOVE_ARROW ( arrow )
+	ENDIF
+
+
+ENDWHILE
+
+
+
+POINT_ARROW_AT ( arrow , 230.5 , 62.5 , 6.0 )
+CLEAR_ALL_BRIEFS ( )
+DISPLAY_BRIEF_NOW ( 3343 ) // "Ok they're in there. Try taking out the generators to open the doors."
+SET k_h_2_building_destroyed = 1
+//k_h_2_powerup_5 = CREATE_OBJ ( 230.5 , 62.5 , 6.0 ) 0 COLLECT_34 END
+//FORCE_CLEANUP ( k_h_2_powerup_5 )
+
+//
+//
+WHILE_EXEC ( k_h_2_building_destroyed = 1 )
+
+	
+	// if all explosives have been planted
+
+	IF ( LOCATE_CHARACTER_ON_FOOT ( shaft , 230.5 , 62.5 , 6.0 , 1.0 , 1.0  ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF_NOW ( 3344 ) // "Ok they're in there. Try taking out the generators to open the doors."
+		REMOVE_ARROW ( arrow )
+		SET k_h_2_building_destroyed = 2
+		
+	ENDIF
+
+ENDWHILE
+
+SET_DEATHARREST_STATE ( shaft , OFF ) 
+
+//SET_CHAR_INVINCIBLE ( shaft , ON )
+
+DELETE_ITEM ( k_h_2_suitcase_1 )
+SET k_h_2_suitcase_1_created = 0
+DELETE_ITEM ( k_h_2_suitcase_2 )
+SET k_h_2_suitcase_2_created = 0
+DELETE_ITEM ( k_h_2_suitcase_3 )
+SET k_h_2_suitcase_3_created = 0
+DELETE_ITEM ( k_h_2_suitcase_4 )
+SET k_h_2_suitcase_4_created = 0
+
+#ifdef PC
+DELETE_ITEM ( k_h_2_tick )
+DELETE_ITEM ( k_h_2_tick_2 )
+DELETE_ITEM ( k_h_2_tick_3 )
+DELETE_ITEM ( k_h_2_tick_4 )
+#endif
+/*
+EXPLODE_LARGE ( 234.2 , 61.5 , 6.0 ) 
+EXPLODE_NO_RING ( 234.4 , 64.8 , 6.0 )
+
+DELAY_HERE ( 5 ) 
+
+EXPLODE_NO_RING ( 235.2 , 62.7 , 6.0 ) 
+
+DELAY_HERE ( 5 ) 
+
+EXPLODE_NO_RING ( 235.2 , 61.6 , 6.0 ) 
+EXPLODE_NO_RING ( 234.5 , 63.7 , 6.0 )
+
+DELAY_HERE ( 5 )  
+
+EXPLODE_LARGE ( 233.4 , 61.3 , 6.0 ) 
+EXPLODE_LARGE ( 234.1 , 62.2 , 6.0 ) 
+*/
+
+EXPLODE_LARGE ( 234.2 , 61.5 , 5.0 ) 
+EXPLODE_NO_RING ( 234.4 , 64.8 , 5.0 )
+
+DELAY_HERE ( 5 ) 
+
+EXPLODE_NO_RING ( 235.2 , 62.7 , 5.0 ) 
+
+DELAY_HERE ( 5 ) 
+
+EXPLODE_NO_RING ( 235.2 , 61.6 , 5.0 ) 
+EXPLODE_NO_RING ( 234.5 , 63.7 , 5.0 )
+
+DELAY_HERE ( 5 )  
+
+EXPLODE_LARGE ( 233.4 , 61.3 , 5.0 ) 
+EXPLODE_LARGE ( 234.1 , 62.2 , 5.0 ) 
+
+DELAY_HERE ( 5 ) 
+	
+EXPLODE_LARGE ( 233.2 , 62.5 , 5.0 ) 
+EXPLODE_NO_RING ( 235.4 , 64.8 , 5.0 )
+
+DELAY_HERE ( 5 ) 
+
+EXPLODE_NO_RING ( 234.2 , 63.7 , 5.0 ) 
+
+DELAY_HERE ( 5 ) 
+
+EXPLODE_LARGE ( 233.2 , 64.6 , 5.0 ) 
+EXPLODE_NO_RING ( 235.5 , 62.7 , 5.0 )
+
+LOWER_LEVEL ( 233 , 60 ) ( 238 , 65 )
+
+#ifdef PC
+EXEC
+CHANGE_BLOCK TYPE ( 233 , 60 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 235 , 60 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 236 , 60 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 238 , 60 , 1 ) field 0
+
+CHANGE_BLOCK TYPE ( 233 , 62 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 235 , 62 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 236 , 62 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 238 , 62 , 1 ) field 0
+
+CHANGE_BLOCK TYPE ( 233 , 63 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 235 , 63 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 236 , 63 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 238 , 63 , 1 ) field 0
+
+CHANGE_BLOCK TYPE ( 233 , 65 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 235 , 65 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 236 , 65 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 238 , 65 , 1 ) field 0
+
+CHANGE_BLOCK LID ( 233 , 60 , 1 ) not_flat not_flip 0 90 361
+CHANGE_BLOCK LID ( 235 , 60 , 1 ) not_flat not_flip 0 180 361
+CHANGE_BLOCK LID ( 236 , 60 , 1 ) not_flat not_flip 0 90 361
+CHANGE_BLOCK LID ( 238 , 60 , 1 ) not_flat not_flip 0 180 361
+
+CHANGE_BLOCK LID ( 233 , 62 , 1 ) not_flat not_flip 0 0 361
+CHANGE_BLOCK LID ( 235 , 62 , 1 ) not_flat not_flip 3 270 361
+CHANGE_BLOCK LID ( 236 , 62 , 1 ) not_flat not_flip 3 0 361
+CHANGE_BLOCK LID ( 238 , 62 , 1 ) not_flat not_flip 3 270 361
+
+CHANGE_BLOCK LID ( 233 , 63 , 1 ) not_flat not_flip 0 90 361
+CHANGE_BLOCK LID ( 235 , 63 , 1 ) not_flat not_flip 3 180 361
+CHANGE_BLOCK LID ( 236 , 63 , 1 ) not_flat not_flip 3 90 361
+CHANGE_BLOCK LID ( 238 , 63 , 1 ) not_flat not_flip 3 180 361
+
+CHANGE_BLOCK LID ( 233 , 65 , 1 ) not_flat not_flip 3 0 361
+CHANGE_BLOCK LID ( 235 , 65 , 1 ) not_flat not_flip 3 270 361
+CHANGE_BLOCK LID ( 236 , 65 , 1 ) not_flat not_flip 3 0 361
+CHANGE_BLOCK LID ( 238 , 65 , 1 ) not_flat flip 3 270 361
+//ENDEXEC
+
+
+LOWER_LEVEL ( 233 , 60 ) ( 238 , 65 )
+
+//EXEC
+CHANGE_BLOCK TYPE ( 233 , 60 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 235 , 60 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 236 , 60 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 238 , 60 , 1 ) field 0
+
+CHANGE_BLOCK TYPE ( 233 , 62 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 235 , 62 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 236 , 62 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 238 , 62 , 1 ) field 0
+
+CHANGE_BLOCK TYPE ( 233 , 63 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 235 , 63 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 236 , 63 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 238 , 63 , 1 ) field 0
+
+CHANGE_BLOCK TYPE ( 233 , 65 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 235 , 65 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 236 , 65 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 238 , 65 , 1 ) field 0
+
+ADD_NEW_BLOCK ( 234 , 61 , 2 ) 
+ADD_NEW_BLOCK ( 237 , 61 , 2 ) 
+ADD_NEW_BLOCK ( 234 , 64 , 2 ) 
+ADD_NEW_BLOCK ( 237 , 64 , 2 ) 
+
+CHANGE_BLOCK TYPE ( 234 , 61 , 2 ) field 0
+CHANGE_BLOCK TYPE ( 237 , 61 , 2 ) field 0
+CHANGE_BLOCK TYPE ( 234 , 64 , 2 ) field 0
+CHANGE_BLOCK TYPE ( 237 , 64 , 2 ) field 0
+
+CHANGE_BLOCK LID ( 233 , 60 , 1 ) not_flat not_flip 0 90 361
+CHANGE_BLOCK LID ( 235 , 60 , 1 ) not_flat not_flip 0 180 361
+CHANGE_BLOCK LID ( 236 , 60 , 1 ) not_flat not_flip 0 90 361
+CHANGE_BLOCK LID ( 238 , 60 , 1 ) not_flat not_flip 0 180 361
+
+CHANGE_BLOCK LID ( 233 , 62 , 1 ) not_flat not_flip 0 0 361
+CHANGE_BLOCK LID ( 235 , 62 , 1 ) not_flat not_flip 3 270 361
+CHANGE_BLOCK LID ( 236 , 62 , 1 ) not_flat not_flip 3 0 361
+CHANGE_BLOCK LID ( 238 , 62 , 1 ) not_flat not_flip 3 270 361
+
+CHANGE_BLOCK LID ( 233 , 63 , 1 ) not_flat not_flip 0 90 361
+CHANGE_BLOCK LID ( 235 , 63 , 1 ) not_flat not_flip 3 180 361
+CHANGE_BLOCK LID ( 236 , 63 , 1 ) not_flat not_flip 3 90 361
+CHANGE_BLOCK LID ( 238 , 63 , 1 ) not_flat not_flip 3 180 361
+
+CHANGE_BLOCK LID ( 233 , 65 , 1 ) not_flat not_flip 3 90 361
+CHANGE_BLOCK LID ( 235 , 65 , 1 ) not_flat not_flip 3 270 361
+CHANGE_BLOCK LID ( 236 , 65 , 1 ) not_flat not_flip 3 0 361
+CHANGE_BLOCK LID ( 238 , 65 , 1 ) not_flat flip 3 90 361
+
+CHANGE_BLOCK LID ( 233 , 65 , 1 ) not_flat not_flip 3 0 361
+CHANGE_BLOCK LID ( 235 , 65 , 1 ) not_flat not_flip 3 270 361
+CHANGE_BLOCK LID ( 236 , 65 , 1 ) not_flat not_flip 3 0 361
+CHANGE_BLOCK LID ( 238 , 65 , 1 ) not_flat flip 3 270 361
+
+
+CHANGE_BLOCK LID ( 234 , 61 , 2 ) not_flat not_flip 3 0 468
+CHANGE_BLOCK LID ( 237 , 61 , 2 ) not_flat not_flip 3 0 468
+CHANGE_BLOCK LID ( 234 , 64 , 2 ) not_flat not_flip 3 0 468
+CHANGE_BLOCK LID ( 237 , 64 , 2 ) not_flat not_flip 3 0 468
+
+
+CHANGE_BLOCK LID ( 234 , 60 , 3 ) not_flat not_flip 0 180 638
+CHANGE_BLOCK LID ( 237 , 60 , 3 ) not_flat not_flip 0 180 638
+
+CHANGE_BLOCK LID ( 233 , 61 , 3 ) not_flat not_flip 0 90 638
+CHANGE_BLOCK LID ( 235 , 61 , 3 ) not_flat not_flip 0 270 638
+CHANGE_BLOCK LID ( 236 , 61 , 3 ) not_flat not_flip 0 90 638
+CHANGE_BLOCK LID ( 238 , 61 , 3 ) not_flat not_flip 0 270 638
+
+CHANGE_BLOCK LID ( 234 , 62 , 3 ) not_flat not_flip 0 0 638
+CHANGE_BLOCK LID ( 237 , 62 , 3 ) not_flat not_flip 0 0 638
+
+CHANGE_BLOCK LID ( 234 , 63 , 3 ) not_flat not_flip 0 180 638
+CHANGE_BLOCK LID ( 237 , 63 , 3 ) not_flat not_flip 0 180 638
+
+CHANGE_BLOCK LID ( 233 , 64 , 3 ) not_flat not_flip 0 90 638
+CHANGE_BLOCK LID ( 235 , 64 , 3 ) not_flat not_flip 0 270 638
+CHANGE_BLOCK LID ( 236 , 64 , 3 ) not_flat not_flip 0 90 638
+CHANGE_BLOCK LID ( 238 , 64 , 3 ) not_flat not_flip 0 270 638
+
+CHANGE_BLOCK LID ( 234 , 65 , 3 ) not_flat not_flip 0 0 638
+CHANGE_BLOCK LID ( 237 , 65 , 3 ) not_flat not_flip 0 0 638
+
+
+CHANGE_BLOCK SIDE ( 233 , 60 , 3 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 234 , 60 , 3 ) BOTTOM WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 235 , 60 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 236 , 60 , 3 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 237 , 60 , 3 ) BOTTOM WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 238 , 60 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 638
+
+CHANGE_BLOCK SIDE ( 233 , 61 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 235 , 61 , 3 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 236 , 61 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 238 , 61 , 3 ) LEFT WALL BULLET not_flat not_flip 0 638
+
+CHANGE_BLOCK SIDE ( 233 , 62 , 3 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 234 , 62 , 3 ) TOP WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 235 , 62 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 236 , 62 , 3 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 237 , 62 , 3 ) TOP WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 238 , 62 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 638
+
+
+CHANGE_BLOCK SIDE ( 233 , 63 , 3 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 234 , 63 , 3 ) BOTTOM WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 235 , 63 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 236 , 63 , 3 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 237 , 63 , 3 ) BOTTOM WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 238 , 63 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 638
+
+CHANGE_BLOCK SIDE ( 233 , 64 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 235 , 64 , 3 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 236 , 64 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 238 , 64 , 3 ) LEFT WALL BULLET not_flat not_flip 0 638
+
+CHANGE_BLOCK SIDE ( 233 , 65 , 3 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 234 , 65 , 3 ) TOP WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 235 , 65 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 236 , 65 , 3 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 237 , 65 , 3 ) TOP WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 238 , 65 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 638
+
+
+CHANGE_BLOCK SIDE ( 233 , 60 , 2 ) LEFT WALL BULLET not_flat not_flip 0 638
+
+ADD_NEW_BLOCK ( 234 , 60 , 2 ) 
+CHANGE_BLOCK SIDE ( 234 , 60 , 2 ) TOP WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 235 , 60 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 236 , 60 , 2 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 237 , 60 , 2 ) TOP WALL BULLET not_flat not_flip 0 1
+CHANGE_BLOCK SIDE ( 238 , 60 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 638
+
+CHANGE_BLOCK SIDE ( 233 , 61 , 2 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 238 , 61 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 638
+
+CHANGE_BLOCK SIDE ( 233 , 62 , 2 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 235 , 62 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 236 , 62 , 2 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 238 , 62 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 638
+
+CHANGE_BLOCK SIDE ( 233 , 63 , 2 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 235 , 63 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 236 , 63 , 2 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 238 , 63 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 638
+
+CHANGE_BLOCK SIDE ( 233 , 64 , 2 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 238 , 64 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 638
+
+CHANGE_BLOCK SIDE ( 233 , 65 , 2 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 235 , 65 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 236 , 65 , 2 ) LEFT WALL BULLET not_flat not_flip 0 638
+CHANGE_BLOCK SIDE ( 238 , 65 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 638
+
+ENDEXEC
+#endif
+
+
+#ifdef PSX
+EXEC
+CHANGE_BLOCK TYPE ( 233 , 60 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 235 , 60 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 236 , 60 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 238 , 60 , 1 ) field 0
+
+CHANGE_BLOCK TYPE ( 233 , 62 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 235 , 62 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 236 , 62 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 238 , 62 , 1 ) field 0
+
+CHANGE_BLOCK TYPE ( 233 , 63 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 235 , 63 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 236 , 63 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 238 , 63 , 1 ) field 0
+
+CHANGE_BLOCK TYPE ( 233 , 65 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 235 , 65 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 236 , 65 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 238 , 65 , 1 ) field 0
+
+CHANGE_BLOCK LID ( 233 , 60 , 1 ) not_flat not_flip 0 90 146
+CHANGE_BLOCK LID ( 235 , 60 , 1 ) not_flat not_flip 0 180 146
+CHANGE_BLOCK LID ( 236 , 60 , 1 ) not_flat not_flip 0 90 146
+CHANGE_BLOCK LID ( 238 , 60 , 1 ) not_flat not_flip 0 180 146
+
+CHANGE_BLOCK LID ( 233 , 62 , 1 ) not_flat not_flip 0 0 146
+CHANGE_BLOCK LID ( 235 , 62 , 1 ) not_flat not_flip 3 270 146
+CHANGE_BLOCK LID ( 236 , 62 , 1 ) not_flat not_flip 3 0 146
+CHANGE_BLOCK LID ( 238 , 62 , 1 ) not_flat not_flip 3 270 146
+
+CHANGE_BLOCK LID ( 233 , 63 , 1 ) not_flat not_flip 0 90 146
+CHANGE_BLOCK LID ( 235 , 63 , 1 ) not_flat not_flip 3 180 146
+CHANGE_BLOCK LID ( 236 , 63 , 1 ) not_flat not_flip 3 90 146
+CHANGE_BLOCK LID ( 238 , 63 , 1 ) not_flat not_flip 3 180 146
+
+CHANGE_BLOCK LID ( 233 , 65 , 1 ) not_flat not_flip 3 0 146
+CHANGE_BLOCK LID ( 235 , 65 , 1 ) not_flat not_flip 3 270 146
+CHANGE_BLOCK LID ( 236 , 65 , 1 ) not_flat not_flip 3 0 146
+CHANGE_BLOCK LID ( 238 , 65 , 1 ) not_flat flip 3 270 146
+//ENDEXEC
+
+
+LOWER_LEVEL ( 233 , 60 ) ( 238 , 65 )
+
+//EXEC
+CHANGE_BLOCK TYPE ( 233 , 60 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 235 , 60 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 236 , 60 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 238 , 60 , 1 ) field 0
+
+CHANGE_BLOCK TYPE ( 233 , 62 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 235 , 62 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 236 , 62 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 238 , 62 , 1 ) field 0
+
+CHANGE_BLOCK TYPE ( 233 , 63 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 235 , 63 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 236 , 63 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 238 , 63 , 1 ) field 0
+
+CHANGE_BLOCK TYPE ( 233 , 65 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 235 , 65 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 236 , 65 , 1 ) field 0
+CHANGE_BLOCK TYPE ( 238 , 65 , 1 ) field 0
+
+ADD_NEW_BLOCK ( 234 , 61 , 2 ) 
+ADD_NEW_BLOCK ( 237 , 61 , 2 ) 
+ADD_NEW_BLOCK ( 234 , 64 , 2 ) 
+ADD_NEW_BLOCK ( 237 , 64 , 2 ) 
+
+CHANGE_BLOCK TYPE ( 234 , 61 , 2 ) field 0
+CHANGE_BLOCK TYPE ( 237 , 61 , 2 ) field 0
+CHANGE_BLOCK TYPE ( 234 , 64 , 2 ) field 0
+CHANGE_BLOCK TYPE ( 237 , 64 , 2 ) field 0
+
+CHANGE_BLOCK LID ( 233 , 60 , 1 ) not_flat not_flip 0 90 146
+CHANGE_BLOCK LID ( 235 , 60 , 1 ) not_flat not_flip 0 180 146
+CHANGE_BLOCK LID ( 236 , 60 , 1 ) not_flat not_flip 0 90 146
+CHANGE_BLOCK LID ( 238 , 60 , 1 ) not_flat not_flip 0 180 146
+
+CHANGE_BLOCK LID ( 233 , 62 , 1 ) not_flat not_flip 0 0 146
+CHANGE_BLOCK LID ( 235 , 62 , 1 ) not_flat not_flip 3 270 146
+CHANGE_BLOCK LID ( 236 , 62 , 1 ) not_flat not_flip 3 0 146
+CHANGE_BLOCK LID ( 238 , 62 , 1 ) not_flat not_flip 3 270 146
+
+CHANGE_BLOCK LID ( 233 , 63 , 1 ) not_flat not_flip 0 90 146
+CHANGE_BLOCK LID ( 235 , 63 , 1 ) not_flat not_flip 3 180 146
+CHANGE_BLOCK LID ( 236 , 63 , 1 ) not_flat not_flip 3 90 146
+CHANGE_BLOCK LID ( 238 , 63 , 1 ) not_flat not_flip 3 180 146
+
+CHANGE_BLOCK LID ( 233 , 65 , 1 ) not_flat not_flip 3 90 146
+CHANGE_BLOCK LID ( 235 , 65 , 1 ) not_flat not_flip 3 270 146
+CHANGE_BLOCK LID ( 236 , 65 , 1 ) not_flat not_flip 3 0 146
+CHANGE_BLOCK LID ( 238 , 65 , 1 ) not_flat flip 3 90 146
+
+CHANGE_BLOCK LID ( 233 , 65 , 1 ) not_flat not_flip 3 0 146
+CHANGE_BLOCK LID ( 235 , 65 , 1 ) not_flat not_flip 3 270 146
+CHANGE_BLOCK LID ( 236 , 65 , 1 ) not_flat not_flip 3 0 146
+CHANGE_BLOCK LID ( 238 , 65 , 1 ) not_flat flip 3 270 146
+
+
+CHANGE_BLOCK LID ( 234 , 61 , 2 ) not_flat not_flip 3 0 182
+CHANGE_BLOCK LID ( 237 , 61 , 2 ) not_flat not_flip 3 0 182
+CHANGE_BLOCK LID ( 234 , 64 , 2 ) not_flat not_flip 3 0 182
+CHANGE_BLOCK LID ( 237 , 64 , 2 ) not_flat not_flip 3 0 182
+
+
+CHANGE_BLOCK LID ( 234 , 60 , 3 ) not_flat not_flip 0 180 232
+CHANGE_BLOCK LID ( 237 , 60 , 3 ) not_flat not_flip 0 180 232
+
+CHANGE_BLOCK LID ( 233 , 61 , 3 ) not_flat not_flip 0 90 232
+CHANGE_BLOCK LID ( 235 , 61 , 3 ) not_flat not_flip 0 270 232
+CHANGE_BLOCK LID ( 236 , 61 , 3 ) not_flat not_flip 0 90 232
+CHANGE_BLOCK LID ( 238 , 61 , 3 ) not_flat not_flip 0 270 232
+
+CHANGE_BLOCK LID ( 234 , 62 , 3 ) not_flat not_flip 0 0 232
+CHANGE_BLOCK LID ( 237 , 62 , 3 ) not_flat not_flip 0 0 232
+
+CHANGE_BLOCK LID ( 234 , 63 , 3 ) not_flat not_flip 0 180 232
+CHANGE_BLOCK LID ( 237 , 63 , 3 ) not_flat not_flip 0 180 232
+
+CHANGE_BLOCK LID ( 233 , 64 , 3 ) not_flat not_flip 0 90 232
+CHANGE_BLOCK LID ( 235 , 64 , 3 ) not_flat not_flip 0 270 232
+CHANGE_BLOCK LID ( 236 , 64 , 3 ) not_flat not_flip 0 90 232
+CHANGE_BLOCK LID ( 238 , 64 , 3 ) not_flat not_flip 0 270 232
+
+CHANGE_BLOCK LID ( 234 , 65 , 3 ) not_flat not_flip 0 0 232
+CHANGE_BLOCK LID ( 237 , 65 , 3 ) not_flat not_flip 0 0 232
+
+
+CHANGE_BLOCK SIDE ( 233 , 60 , 3 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 234 , 60 , 3 ) BOTTOM WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 235 , 60 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 236 , 60 , 3 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 237 , 60 , 3 ) BOTTOM WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 238 , 60 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 232
+
+CHANGE_BLOCK SIDE ( 233 , 61 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 235 , 61 , 3 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 236 , 61 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 238 , 61 , 3 ) LEFT WALL BULLET not_flat not_flip 0 232
+
+CHANGE_BLOCK SIDE ( 233 , 62 , 3 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 234 , 62 , 3 ) TOP WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 235 , 62 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 236 , 62 , 3 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 237 , 62 , 3 ) TOP WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 238 , 62 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 232
+
+
+CHANGE_BLOCK SIDE ( 233 , 63 , 3 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 234 , 63 , 3 ) BOTTOM WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 235 , 63 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 236 , 63 , 3 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 237 , 63 , 3 ) BOTTOM WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 238 , 63 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 232
+
+CHANGE_BLOCK SIDE ( 233 , 64 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 235 , 64 , 3 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 236 , 64 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 238 , 64 , 3 ) LEFT WALL BULLET not_flat not_flip 0 232
+
+CHANGE_BLOCK SIDE ( 233 , 65 , 3 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 234 , 65 , 3 ) TOP WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 235 , 65 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 236 , 65 , 3 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 237 , 65 , 3 ) TOP WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 238 , 65 , 3 ) RIGHT WALL BULLET not_flat not_flip 0 232
+
+
+CHANGE_BLOCK SIDE ( 233 , 60 , 2 ) LEFT WALL BULLET not_flat not_flip 0 232
+
+ADD_NEW_BLOCK ( 234 , 60 , 2 ) 
+CHANGE_BLOCK SIDE ( 234 , 60 , 2 ) TOP WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 235 , 60 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 236 , 60 , 2 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 237 , 60 , 2 ) TOP WALL BULLET not_flat not_flip 0 1
+CHANGE_BLOCK SIDE ( 238 , 60 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 232
+
+CHANGE_BLOCK SIDE ( 233 , 61 , 2 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 238 , 61 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 232
+
+CHANGE_BLOCK SIDE ( 233 , 62 , 2 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 235 , 62 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 236 , 62 , 2 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 238 , 62 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 232
+
+CHANGE_BLOCK SIDE ( 233 , 63 , 2 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 235 , 63 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 236 , 63 , 2 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 238 , 63 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 232
+
+CHANGE_BLOCK SIDE ( 233 , 64 , 2 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 238 , 64 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 232
+
+CHANGE_BLOCK SIDE ( 233 , 65 , 2 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 235 , 65 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 236 , 65 , 2 ) LEFT WALL BULLET not_flat not_flip 0 232
+CHANGE_BLOCK SIDE ( 238 , 65 , 2 ) RIGHT WALL BULLET not_flat not_flip 0 232
+
+ENDEXEC
+#endif
+
+
+DELAY_HERE ( 5 )  
+
+EXPLODE_NO_RING ( 235.4 , 61.3 , 5.0 ) 
+EXPLODE_NO_RING ( 234.1 , 62.2 , 5.0 ) 
+
+DELAY_HERE ( 5 )
+
+EXPLODE_LARGE ( 234.2 , 61.5 , 4.0 ) 
+EXPLODE_NO_RING ( 234.4 , 64.8 , 4.0 )
+
+DELAY_HERE ( 5 ) 
+
+EXPLODE_NO_RING ( 235.2 , 62.7 , 4.0 ) 
+
+DELAY_HERE ( 5 ) 
+
+EXPLODE_NO_RING ( 235.2 , 61.6 , 4.0 ) 
+EXPLODE_NO_RING ( 234.5 , 63.7 , 4.0 )
+
+DELAY_HERE ( 5 )  
+
+//LOWER_LEVEL ( 233 , 60 ) ( 238 , 65 )
+
+EXPLODE_LARGE ( 233.4 , 61.3 , 4.0 ) 
+EXPLODE_NO_RING ( 234.1 , 62.2 , 4.0 ) 
+
+DELAY_HERE ( 5 )
+
+EXPLODE_LARGE ( 233.2 , 62.5 , 3.0 ) 
+EXPLODE_NO_RING ( 235.4 , 64.8 , 3.0 )
+
+DELAY_HERE ( 5 ) 
+
+EXPLODE_NO_RING ( 234.2 , 63.7 , 3.0 ) 
+
+DELAY_HERE ( 5 ) 
+
+EXPLODE_LARGE ( 233.2 , 64.6 , 3.0 ) 
+EXPLODE_NO_RING ( 235.5 , 62.7 , 3.0 )
+
+DELAY_HERE ( 5 )  
+
+//LOWER_LEVEL ( 233 , 60 ) ( 238 , 65 )
+
+EXPLODE_NO_RING ( 235.4 , 61.3 , 3.0 ) 
+//EXPLODE_NO_RING ( 235.1 , 62.2 , 3.0 ) 
+
+DELAY_HERE ( 5 )
+
+//EXPLODE_NO_RING ( 235.2 , 61.5 , 2.0 ) 
+EXPLODE_NO_RING ( 235.4 , 64.8 , 2.0 )
+
+//DELAY_HERE ( 5 ) 
+
+//EXPLODE_NO_RING ( 235.2 , 62.7 , 2.0 ) 
+
+//DELAY_HERE ( 5 ) 
+
+//EXPLODE_NO_RING ( 235.2 , 61.6 , 2.0 ) 
+//EXPLODE_NO_RING ( 234.5 , 63.7 , 2.0 )
+
+//DELAY_HERE ( 5 )  
+
+//EXPLODE_NO_RING ( 233.4 , 61.3 , 2.0 ) 
+//EXPLODE_NO_RING ( 234.1 , 62.2 , 2.0 ) 
+
+SET_DEATHARREST_STATE ( shaft , ON ) 
+
+		
+SET k_h_2_building_destroyed = 3
+//SET_CHAR_INVINCIBLE ( shaft , OFF ) 
+
+DISPLAY_BRIEF ( 3345 ) // "Ok they're in there. Try taking out the generators to open the doors."
+SET flag_passed_kris_hard_phone_m2 = 1
+++ counter_all_missions_passed
+DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+ADD_SCORE ( shaft , 80000 )
+ADD_MULTIPLIER ( shaft , 1 ) 
+CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , 1 )
+CLEAR_WANTED_LEVEL ( shaft )
+IF ( flag_passed_kris_hard_phone_m1 = 1 )
+	SET_PHONE_DEAD ( ph_kris_hard_phone ) 
+	DISABLE_THREAD_TRIGGER ( thr_kris_hard_phone_m1 )
+ENDIF
+RETURN
+
+
+
+// deletes all objects when Krishna hard phone mission1 is finished...
+				
+clean_up_kris_hard_phone_m2: 
+	
+	REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	SET_DEATHARREST_STATE ( shaft , ON )
+
+	IF ( k_h_2_kris_group_1_created = 1 )
+		IF ( NOT ( HAS_CHARACTER_DIED ( k_h_2_kris_group_1 ) ) )
+			DESTROY_GROUP ( shaft )
+			MAKE_CHAR_DO_NOTHING ( k_h_2_kris_group_1 )
+		ENDIF
+	ENDIF
+			
+	IF ( k_h_2_suitcase_1_created = 1 )
+		DELETE_ITEM ( k_h_2_suitcase_1 )
+	ENDIF
+
+	IF ( k_h_2_suitcase_2_created = 1 )
+		DELETE_ITEM ( k_h_2_suitcase_2 )
+	ENDIF
+
+	IF ( k_h_2_suitcase_3_created = 1 )
+		DELETE_ITEM ( k_h_2_suitcase_3 )
+	ENDIF
+
+	IF ( k_h_2_suitcase_4_created = 1 )
+		DELETE_ITEM ( k_h_2_suitcase_4 )
+	ENDIF
+		
+	IF ( flag_passed_kris_hard_phone_m2 = 1 )
+		++ flag_kris_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_kris_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3671 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3670 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_kris_hard_phone_m2 = 1 )
+		++ flag_kris_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_kris_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+	MISSION_HAS_FINISHED ( )
+	
+	SET flag_on_mission	= 0
+	SET flag_on_kris_mission = 0
+	
+	RETURN
+
+
+
+MISSIONSTART
+
+	GOSUB kris_hard_phone_m2:
+
+	GOSUB clean_up_kris_hard_phone_m2:
+
+MISSIONEND
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		

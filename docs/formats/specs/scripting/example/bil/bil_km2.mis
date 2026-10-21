@@ -1,0 +1,1171 @@
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX KILL ALL THE HITMEN XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+// objects for Krishna med phone2 mission1		
+	
+COUNTER	k_m_2_out_russgang_zone = 0
+COUNTER	k_m_2_russ_hitman_1_alive = 0
+COUNTER	k_m_2_russ_hitman_2_alive = 0
+COUNTER	k_m_2_russ_hitman_3_alive = 0
+COUNTER	k_m_2_russ_hitmen_dead = 0
+COUNTER	k_m_2_russ_hitman_1_dead = 0
+COUNTER	k_m_2_russ_hitman_2_dead = 0
+COUNTER	k_m_2_russ_hitman_3_dead = 0
+CHAR_DATA k_m_2_russ_hitman_1
+CHAR_DATA k_m_2_russ_hitman_2
+CHAR_DATA k_m_2_russ_hitman_3
+CHAR_DATA k_m_2_kris_group_1
+COUNTER	k_m_2_out_zaibgang_zone = 0
+COUNTER	k_m_2_zaib_hitman_1_alive = 0
+COUNTER	k_m_2_zaib_hitman_2_alive = 0
+COUNTER	k_m_2_zaib_hitman_3_alive = 0
+COUNTER	k_m_2_zaib_hitmen_dead = 0
+COUNTER	k_m_2_zaib_hitman_1_dead = 0
+COUNTER	k_m_2_zaib_hitman_2_dead = 0
+COUNTER	k_m_2_zaib_hitman_3_dead = 0
+COUNTER k_m_2_russ_hitman_1_onscreen = 0
+COUNTER k_m_2_russ_hitman_2_onscreen = 0
+COUNTER k_m_2_russ_hitman_3_onscreen = 0
+COUNTER k_m_2_zaib_hitman_1_onscreen = 0
+COUNTER k_m_2_zaib_hitman_2_onscreen = 0
+COUNTER k_m_2_zaib_hitman_3_onscreen = 0
+COUNTER k_m_2_zaib_hitman_1_living = 0
+COUNTER k_m_2_zaib_hitman_2_living = 0
+COUNTER k_m_2_zaib_hitman_3_living = 0
+COUNTER k_m_2_russ_hitman_1_living = 0
+COUNTER k_m_2_russ_hitman_2_living = 0
+COUNTER k_m_2_russ_hitman_3_living = 0
+COUNTER k_m_2_russ_hitman_1_brief = 0
+COUNTER k_m_2_russ_hitman_2_brief = 0
+COUNTER k_m_2_russ_hitman_3_brief = 0
+COUNTER k_m_2_zaib_hitman_1_brief = 0
+COUNTER k_m_2_zaib_hitman_2_brief = 0
+COUNTER k_m_2_zaib_hitman_3_brief = 0
+COUNTER k_m_2_kris_group_1_located = 0
+COUNTER k_m_2_kris_group_1_dead = 0
+COUNTER k_m_2_player_dead = 0
+COUNTER k_m_2_russ_hitmen_dead_brief = 0
+COUNTER k_m_2_kris_group_1_created = 0
+CHAR_DATA k_m_2_zaib_hitman_1
+CHAR_DATA k_m_2_zaib_hitman_2
+CHAR_DATA k_m_2_zaib_hitman_3
+FORWARD clean_up_kris_med_phone2_m1:
+OBJ_DATA k_m_2_powerup_1
+
+
+				
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+		
+// starts Krishna med phone2 mission1
+					
+	
+kris_med_phone2_m1:
+	
+	SET flag_failed_kris_med_phone2_m1 = 0
+
+
+//	DISABLE_THREAD_TRIGGER ( thr_kris_med_phone2_m1 )
+	DISPLAY_MESSAGE ( 3843 ) // you have PASSED the mission!"
+	SET flag_on_mission = 1
+	SET flag_on_kris_mission = 1
+	k_m_2_powerup_1 = CREATE_OBJ ( 227.5 , 133.5 , 3.0 ) 0 COLLECT_01 15 END
+	FORCE_CLEANUP ( k_m_2_powerup_1 )
+
+	DISPLAY_BRIEF ( 3148 ) // "Those Russian bastards have put a contract on my head. I need you to go into their area and make some noise."
+	k_m_2_kris_group_1 = CREATE_CHAR ( 224.0 , 186.5 , 2.0 ) 9 280 criminal END
+	SET_CHAR_OBJECTIVE  ( k_m_2_kris_group_1 , wait_on_foot ) 
+	SET_CHAR_THREAT_REACTION ( k_m_2_kris_group_1 , react_as_normal )
+	SET_CHAR_THREAT_SEARCH ( k_m_2_kris_group_1 , line_of_sight )
+	GIVE_WEAPON ( k_m_2_kris_group_1 , pistol )
+	ADD_CHAR_TO_GANG ( k_m_2_kris_group_1 , krisgang )
+	#ifdef PC
+	ADD_GROUP_TO_CHARACTER ( k_m_2_kris_group_1 , 6 )
+	#endif
+	#ifdef PSX
+	ADD_GROUP_TO_CHARACTER ( k_m_2_kris_group_1 , 3 )
+	#endif
+	SET k_m_2_kris_group_1_created = 1
+	POINT_ARROW_AT ( arrow , k_m_2_kris_group_1 )		
+	
+
+WHILE_EXEC ( k_m_2_kris_group_1_located = 0 )
+
+
+	IF ( LOCATE_ANOTHER_CHARACTER_ANY_MEANS ( shaft , k_m_2_kris_group_1 , 2.0 , 2.0  ) )
+		SET k_m_2_kris_group_1_located = 1
+		REMOVE_ARROW ( arrow )
+		MAKE_NEW_LEADER_OF_GROUP ( k_m_2_kris_group_1 , shaft )
+	ENDIF 
+
+	IF ( ( HAS_CHARACTER_DIED ( k_m_2_kris_group_1 ) )
+	AND ( k_m_2_kris_group_1_dead = 0 ) )
+		DISPLAY_BRIEF ( 3149 ) // "My men are all dead, you will have to finish the job alone!"
+		SET k_m_2_kris_group_1_dead = 1
+		SET k_m_2_kris_group_1_located = 1
+		REMOVE_ARROW ( arrow )
+	ENDIF
+
+
+ENDWHILE
+
+
+DISPLAY_BRIEF ( 3120 ) // "Those Russian bastards have put a contract on my head. I need you to go into their area and make some noise."
+POINT_ARROW_AT ( arrow , 202.5 , 34.5 , 2.0 )
+	
+#ifdef PC
+WHILE_EXEC ( k_m_2_russ_hitmen_dead = 0 ) 
+
+			
+//	IF ( ( HAS_CHARACTER_DIED ( k_m_2_kris_group_1 ) )
+	IF ( ( NOT ( CHECK_NUMBER_ALIVE_IN_GROUP ( shaft , 1 ) ) )
+	AND ( k_m_2_kris_group_1_dead = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3149 ) // "My men are all dead, you will have to finish the job alone!"
+		SET k_m_2_kris_group_1_dead = 1
+	ENDIF
+
+	
+	IF ( ( ( CHECK_RESPECT_EQUAL ( shaft , russgang , -5 ) )
+	AND ( k_m_2_russ_hitman_3_alive = 0 ) )
+	AND ( IS_CHAR_IN_GANGZONE ( shaft , russgang ) ) )
+		SET k_m_2_russ_hitman_3_alive = 1
+		SET k_m_2_russ_hitman_3_living = 1
+		DISPLAY_BRIEF_NOW ( 3128 ) // "(Russian hard phones boss) has sent his best team of hitmen after you! Kill them!"
+		k_m_2_russ_hitman_3 = CREATE_CHAR ( 145.0 , 77.0 , 2.0 ) 10 90 criminal END
+		SET_CHAR_OBJECTIVE  ( k_m_2_russ_hitman_3 , kill_char_any_means , shaft ) 
+		SET_CHAR_THREAT_REACTION ( k_m_2_russ_hitman_3 , no_reaction )
+		SET_CHAR_THREAT_SEARCH ( k_m_2_russ_hitman_3 , line_of_sight_player_only )
+		GIVE_WEAPON ( k_m_2_russ_hitman_3 , shotgun )
+		ADD_CHAR_TO_GANG ( k_m_2_russ_hitman_3 , russgang )
+		ADD_GROUP_TO_CHARACTER ( k_m_2_russ_hitman_3 , 2 )
+		REMOVE_ARROW ( arrow )
+//		POINT_ARROW_AT ( arrow_4 , k_m_2_russ_hitman_3 )
+		SET_FAVOURITE_MODEL ( k_m_2_russ_hitman_3 , buick )
+	ENDIF
+
+
+	
+	IF ( ( ( NOT ( CHECK_RESPECT_GREATER ( shaft , russgang , -3 ) ) )
+	AND ( k_m_2_russ_hitman_2_alive = 0 ) )
+	AND ( IS_CHAR_IN_GANGZONE ( shaft , russgang ) ) )
+		SET k_m_2_russ_hitman_2_alive = 1
+		SET k_m_2_russ_hitman_2_living = 1
+		DISPLAY_BRIEF_NOW ( 3127 ) // "(Russian medium phones boss) has sent his best team of hitmen after you! Kill them!"
+		k_m_2_russ_hitman_2 = CREATE_CHAR ( 123.5 , 77.5 , 2.0 ) 10 90 criminal END
+		SET_CHAR_OBJECTIVE  ( k_m_2_russ_hitman_2 , kill_char_any_means , shaft ) 
+		SET_CHAR_THREAT_REACTION ( k_m_2_russ_hitman_2 , no_reaction )
+		SET_CHAR_THREAT_SEARCH ( k_m_2_russ_hitman_2 , line_of_sight_player_only )
+		GIVE_WEAPON ( k_m_2_russ_hitman_2 , molotov )
+		ADD_CHAR_TO_GANG ( k_m_2_russ_hitman_2 , russgang )
+		ADD_GROUP_TO_CHARACTER ( k_m_2_russ_hitman_2 , 1 )
+		REMOVE_ARROW ( arrow )
+//		POINT_ARROW_AT ( arrow_3 , k_m_2_russ_hitman_2 )
+		SET_FAVOURITE_MODEL ( k_m_2_russ_hitman_2 , buick )
+	ENDIF
+
+
+
+	IF ( ( ( NOT ( CHECK_RESPECT_GREATER ( shaft , russgang , -1 ) ) )
+	AND ( k_m_2_russ_hitman_1_alive = 0 ) )
+	AND ( IS_CHAR_IN_GANGZONE ( shaft , russgang ) ) )
+		SET k_m_2_russ_hitman_1_alive = 1
+		SET k_m_2_russ_hitman_1_living = 1
+		DISPLAY_BRIEF_NOW ( 3126 ) // "(Russian med phones boss) has sent his best team of hitmen after you! Kill them!"
+		k_m_2_russ_hitman_1 = CREATE_CHAR ( 218.5 , 51.5 , 3.0 ) 10 90 criminal END
+		SET_CHAR_OBJECTIVE  ( k_m_2_russ_hitman_1 , kill_char_any_means , shaft ) 
+		SET_CHAR_THREAT_REACTION ( k_m_2_russ_hitman_1 , no_reaction )
+		SET_CHAR_THREAT_SEARCH ( k_m_2_russ_hitman_1 , line_of_sight_player_only )
+		GIVE_WEAPON ( k_m_2_russ_hitman_1 , pistol )
+		ADD_CHAR_TO_GANG ( k_m_2_russ_hitman_1 , russgang )
+//		ADD_GROUP_TO_CHARACTER ( k_m_2_russ_hitman_1 , 4 )
+		REMOVE_ARROW ( arrow )
+//		POINT_ARROW_AT ( arrow_2 , k_m_2_russ_hitman_1 )
+		SET_FAVOURITE_MODEL ( k_m_2_russ_hitman_1 , buick )
+	ENDIF
+
+
+	
+	IF ( ( IS_CHAR_IN_GANGZONE ( shaft , russgang ) )  
+	AND ( k_m_2_out_russgang_zone = 0 ) )
+		IF ( ( ( k_m_2_russ_hitman_1_living = 0 ) 
+		AND ( k_m_2_russ_hitman_2_living = 0 ) )
+		AND ( k_m_2_russ_hitman_3_living = 0 ) )
+			DISPLAY_BRIEF_NOW ( 3122 ) // "Ok you're in their area start killing the Russian dogs!"	
+			SET k_m_2_out_russgang_zone = 1
+			REMOVE_ARROW ( arrow )
+		ENDIF
+	ENDIF
+
+
+	IF ( ( NOT ( IS_CHAR_IN_GANGZONE ( shaft , russgang ) ) ) 
+	AND ( k_m_2_out_russgang_zone = 1 ) )
+		IF ( ( ( k_m_2_russ_hitman_1_living = 0 ) 
+		AND ( k_m_2_russ_hitman_2_living = 0 ) )
+		AND ( k_m_2_russ_hitman_3_living = 0 ) )
+	 		DISPLAY_BRIEF_NOW ( 3123 ) // "Get back to the Russian area and start killing those bastards"	
+			POINT_ARROW_AT ( arrow , 202.5 , 34.5 , 2.0 )
+			SET k_m_2_out_russgang_zone = 0
+		ENDIF
+	ENDIF
+
+
+	
+	IF ( k_m_2_russ_hitman_1_alive = 1 )
+		
+		IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( k_m_2_russ_hitman_1 ) ) )
+		AND ( k_m_2_russ_hitman_1_onscreen = 1 ) )
+			SET k_m_2_russ_hitman_1_onscreen = 0
+			REMOVE_ARROW ( arrow_2 )
+//			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_1 , 0.4 )
+//			ELSE
+//				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_1 , 0.0 )
+//			ENDIF
+		ENDIF
+	
+	
+		IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( k_m_2_russ_hitman_1 ) )
+		AND ( k_m_2_russ_hitman_1_onscreen = 0 ) )
+			SET k_m_2_russ_hitman_1_onscreen = 1
+			POINT_ARROW_AT ( arrow_2 , k_m_2_russ_hitman_1 )
+			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_1 , 0.4 )
+			ELSE
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_1 , 0.0 )
+			ENDIF
+		ENDIF
+
+	ENDIF
+
+
+	IF ( k_m_2_russ_hitman_2_alive = 1 )
+		
+		IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( k_m_2_russ_hitman_2 ) ) )
+		AND ( k_m_2_russ_hitman_2_onscreen = 1 ) )
+			SET k_m_2_russ_hitman_2_onscreen = 0
+			REMOVE_ARROW ( arrow_3 )
+//			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_2 , 0.4 )
+//			ELSE
+//				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_2 , 0.0 )
+//			ENDIF
+		ENDIF
+	
+	
+		IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( k_m_2_russ_hitman_2 ) )
+		AND ( k_m_2_russ_hitman_2_onscreen = 0 ) )
+			SET k_m_2_russ_hitman_2_onscreen = 1
+			POINT_ARROW_AT ( arrow_3 , k_m_2_russ_hitman_2 )
+			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_2 , 0.4 )
+			ELSE
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_2 , 0.0 )
+			ENDIF
+		ENDIF
+
+	ENDIF
+
+
+	IF ( k_m_2_russ_hitman_3_alive = 1 )
+		
+		IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( k_m_2_russ_hitman_3 ) ) )
+		AND ( k_m_2_russ_hitman_3_onscreen = 1 ) )
+			SET k_m_2_russ_hitman_3_onscreen = 0
+			REMOVE_ARROW ( arrow_4 )
+//			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_3 , 0.4 )
+//			ELSE
+//				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_3 , 0.0 )
+//			ENDIF
+		ENDIF
+	
+	
+		IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( k_m_2_russ_hitman_3 ) )
+		AND ( k_m_2_russ_hitman_3_onscreen = 0 ) )
+			SET k_m_2_russ_hitman_3_onscreen = 1
+			POINT_ARROW_AT ( arrow_4 , k_m_2_russ_hitman_3 )
+			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_3 , 0.4 )
+			ELSE
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_3 , 0.0 )
+			ENDIF
+		ENDIF
+
+	ENDIF
+
+
+ 
+/*	
+	IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )
+	
+		IF ( k_m_2_russ_hitman_1_alive = 1 )
+			SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_1 , 0.4 )
+		ENDIF
+
+		ELSE 
+
+		IF ( k_m_2_russ_hitman_1_alive = 1 )
+			SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_1 , 0.0 )
+		ENDIF
+
+	ENDIF
+
+	IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )
+	
+		IF ( k_m_2_russ_hitman_2_alive = 1 )
+			SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_2 , 0.4 )
+		ENDIF
+
+		ELSE 
+
+		IF ( k_m_2_russ_hitman_2_alive = 1 )
+			SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_2 , 0.0 )
+		ENDIF
+
+	ENDIF
+
+	IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )
+	
+		IF ( k_m_2_russ_hitman_3_alive = 1 )
+			SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_3 , 0.4 )
+		ENDIF
+
+		ELSE 
+
+		IF ( k_m_2_russ_hitman_3_alive = 1 )
+			SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_3 , 0.0 )
+		ENDIF
+
+	ENDIF
+
+ 
+	// checks for russian hitman_1 onscreen then points at him, if off screen deletes arrow 
+	
+	IF ( k_m_2_russ_hitman_1_alive = 1 )
+		IF ( ( IS_ITEM_ONSCREEN ( k_m_2_russ_hitman_1 ) )
+		AND ( k_m_2_russ_hitman_1_onscreen = 0 ) )
+			POINT_ARROW_AT ( arrow_2 , k_m_2_russ_hitman_1 )
+		  	SET k_m_2_russ_hitman_1_onscreen = 1
+//			IF ( k_m_2_russ_hitman_1_brief = 0 )
+//				DISPLAY_BRIEF_NOW ( 3142 ) // "I'M GONNA FUCKIN KILL YOU"
+//				SET k_m_2_russ_hitman_1_brief = 1 
+//			ENDIF
+		ENDIF
+	ENDIF
+
+	IF ( k_m_2_russ_hitman_1_alive = 1 )
+		IF ( ( NOT ( IS_ITEM_ONSCREEN ( k_m_2_russ_hitman_1 ) ) )
+		AND ( k_m_2_russ_hitman_1_onscreen = 1 ) )
+			SET k_m_2_russ_hitman_1_onscreen = 0
+			REMOVE_ARROW ( arrow_2 )
+		ENDIF
+	ENDIF
+
+
+	// checks for russian hitman_2 onscreen then points at him, if off screen deletes arrow 
+	
+	IF ( k_m_2_russ_hitman_2_alive = 1 )
+		IF ( ( IS_ITEM_ONSCREEN ( k_m_2_russ_hitman_2 ) )
+		AND ( k_m_2_russ_hitman_2_onscreen = 0 ) )
+			POINT_ARROW_AT ( arrow_3 , k_m_2_russ_hitman_2 )
+		   	SET k_m_2_russ_hitman_2_onscreen = 1
+//			IF ( k_m_2_russ_hitman_2_brief = 0 )
+//				DISPLAY_BRIEF_NOW ( 3143 ) // "I'M GONNA FUCKIN KILL YOU"
+//				SET k_m_2_russ_hitman_2_brief = 1 
+///			ENDIF
+		ENDIF
+	ENDIF
+
+	IF ( k_m_2_russ_hitman_2_alive = 1 )
+		IF ( ( NOT ( IS_ITEM_ONSCREEN ( k_m_2_russ_hitman_2 ) ) )
+		AND ( k_m_2_russ_hitman_2_onscreen = 1 ) )
+			SET k_m_2_russ_hitman_2_onscreen = 0
+			REMOVE_ARROW ( arrow_3 )
+		ENDIF
+	ENDIF
+
+
+	// checks for russian hitman_3 onscreen then points at him, if off screen deletes arrow 
+	
+	IF ( k_m_2_russ_hitman_3_alive = 1 )
+		IF ( ( IS_ITEM_ONSCREEN ( k_m_2_russ_hitman_3 ) )
+		AND ( k_m_2_russ_hitman_3_onscreen = 0 ) )
+			POINT_ARROW_AT ( arrow_4 , k_m_2_russ_hitman_3 )
+			SET k_m_2_russ_hitman_3_onscreen = 1
+//			IF ( k_m_2_russ_hitman_3_brief = 0 )
+//				DISPLAY_BRIEF_NOW ( 3144 ) // "I'M GONNA FUCKIN KILL YOU"
+//				SET k_m_2_russ_hitman_3_brief = 1 
+//			ENDIF
+		ENDIF
+	ENDIF
+
+	IF ( k_m_2_russ_hitman_3_alive = 1 )
+		IF ( ( NOT ( IS_ITEM_ONSCREEN ( k_m_2_russ_hitman_3 ) ) )
+		AND ( k_m_2_russ_hitman_3_onscreen = 1 ) )
+			SET k_m_2_russ_hitman_3_onscreen = 0
+			REMOVE_ARROW ( arrow_4 )
+		ENDIF
+	ENDIF
+	
+*/	
+	
+	
+	IF ( k_m_2_russ_hitman_1_alive = 1 )
+		IF ( HAS_CHARACTER_DIED ( k_m_2_russ_hitman_1 ) )
+			++ k_m_2_russ_hitmen_dead_brief
+			SET k_m_2_russ_hitman_1_alive = 2
+			SET k_m_2_russ_hitman_1_dead = 1
+			SET k_m_2_russ_hitman_1_living = 0
+			REMOVE_ARROW ( arrow_2 )
+			
+			IF ( k_m_2_russ_hitmen_dead_brief = 1 )
+				DISPLAY_BRIEF_NOW ( 3129 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+			ELSE
+				IF ( k_m_2_russ_hitmen_dead_brief = 2 )
+					DISPLAY_BRIEF_NOW ( 3130 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+				ELSE
+					IF ( k_m_2_russ_hitmen_dead_brief = 2 )
+						DISPLAY_BRIEF_NOW ( 3131 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+					ENDIF
+				ENDIF
+			ENDIF
+ 		ENDIF
+	ENDIF
+
+
+	IF ( k_m_2_russ_hitman_2_alive = 1 )
+		IF ( HAS_CHARACTER_DIED ( k_m_2_russ_hitman_2 ) )
+			++ k_m_2_russ_hitmen_dead_brief
+			SET k_m_2_russ_hitman_2_alive = 2
+			SET k_m_2_russ_hitman_2_dead = 1
+			SET k_m_2_russ_hitman_2_living = 0
+			REMOVE_ARROW ( arrow_3 )
+
+			IF ( k_m_2_russ_hitmen_dead_brief = 1 )
+				DISPLAY_BRIEF_NOW ( 3129 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+			ELSE
+				IF ( k_m_2_russ_hitmen_dead_brief = 2 )
+					DISPLAY_BRIEF_NOW ( 3130 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+				ELSE
+					IF ( k_m_2_russ_hitmen_dead_brief = 2 )
+						DISPLAY_BRIEF_NOW ( 3131 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+
+
+	IF ( k_m_2_russ_hitman_3_alive = 1 ) 
+		IF ( HAS_CHARACTER_DIED ( k_m_2_russ_hitman_3 ) )
+			++ k_m_2_russ_hitmen_dead_brief
+			SET k_m_2_russ_hitman_3_alive = 2
+			SET k_m_2_russ_hitman_3_dead = 1
+			SET k_m_2_russ_hitman_3_living = 0
+			REMOVE_ARROW ( arrow_4 )
+
+			IF ( k_m_2_russ_hitmen_dead_brief = 1 )
+				DISPLAY_BRIEF_NOW ( 3129 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+			ELSE
+				IF ( k_m_2_russ_hitmen_dead_brief = 2 )
+					DISPLAY_BRIEF_NOW ( 3130 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+				ELSE
+					IF ( k_m_2_russ_hitmen_dead_brief = 2 )
+						DISPLAY_BRIEF_NOW ( 3131 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+
+
+	IF ( ( ( k_m_2_russ_hitman_1_dead = 1 )
+	AND ( k_m_2_russ_hitman_2_dead = 1 ) )
+	AND ( k_m_2_russ_hitman_3_dead = 1 ) )
+		SET k_m_2_russ_hitmen_dead = 1
+		SET k_m_2_russ_hitman_1_dead = 2 
+	ENDIF
+	
+ENDWHILE
+#endif
+
+
+
+
+#ifdef PSX
+WHILE_EXEC ( k_m_2_russ_hitmen_dead = 0 ) 
+
+			
+//	IF ( ( HAS_CHARACTER_DIED ( k_m_2_kris_group_1 ) )
+	IF ( ( NOT ( CHECK_NUMBER_ALIVE_IN_GROUP ( shaft , 1 ) ) )
+	AND ( k_m_2_kris_group_1_dead = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3149 ) // "My men are all dead, you will have to finish the job alone!"
+		SET k_m_2_kris_group_1_dead = 1
+	ENDIF
+
+	
+	IF ( ( ( ( ( IS_CHAR_IN_GANGZONE ( shaft , russgang ) )  
+	AND ( k_m_2_out_russgang_zone = 0 ) )
+	AND ( k_m_2_russ_hitman_1_living = 0 ) )
+	AND ( k_m_2_russ_hitman_2_living = 0 ) )
+	AND ( k_m_2_russ_hitman_3_living = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3122 ) // "Ok you're in their area start killing the Russian dogs!"	
+		SET k_m_2_out_russgang_zone = 1
+		REMOVE_ARROW ( arrow )
+	ENDIF
+
+
+	IF ( ( ( ( ( NOT ( IS_CHAR_IN_GANGZONE ( shaft , russgang ) ) ) 
+	AND ( k_m_2_out_russgang_zone = 1 ) )
+	AND ( k_m_2_russ_hitman_1_living = 0 ) )
+	AND ( k_m_2_russ_hitman_2_living = 0 ) )
+	AND ( k_m_2_russ_hitman_3_living = 0 ) )
+	 	DISPLAY_BRIEF_NOW ( 3123 ) // "Get back to the Russian area and start killing those bastards"	
+		POINT_ARROW_AT ( arrow , 202.5 , 34.5 , 2.0 )
+		SET k_m_2_out_russgang_zone = 0
+	ENDIF
+
+	
+	IF ( ( ( NOT ( CHECK_RESPECT_GREATER ( shaft , russgang , -1 ) ) )
+	AND ( k_m_2_russ_hitman_1_alive = 0 ) )
+	AND ( IS_CHAR_IN_GANGZONE ( shaft , russgang ) ) )
+		SET k_m_2_russ_hitman_1_alive = 1
+		SET k_m_2_russ_hitman_1_living = 1
+		DISPLAY_BRIEF_NOW ( 3126 ) // "(Russian med phones boss) has sent his best team of hitmen after you! Kill them!"
+		k_m_2_russ_hitman_1 = CREATE_CHAR ( 143.0 , 77.0 , 2.0 ) 10 90 criminal END
+		SET_CHAR_OBJECTIVE  ( k_m_2_russ_hitman_1 , kill_char_any_means , shaft ) 
+		SET_CHAR_THREAT_REACTION ( k_m_2_russ_hitman_1 , no_reaction )
+		SET_CHAR_THREAT_SEARCH ( k_m_2_russ_hitman_1 , line_of_sight_player_only )
+		GIVE_WEAPON ( k_m_2_russ_hitman_1 , pistol )
+		ADD_CHAR_TO_GANG ( k_m_2_russ_hitman_1 , russgang )
+//		ADD_GROUP_TO_CHARACTER ( k_m_2_russ_hitman_1 , 4 )
+		REMOVE_ARROW ( arrow )
+//		POINT_ARROW_AT ( arrow_2 , k_m_2_russ_hitman_1 )
+		SET_FAVOURITE_MODEL ( k_m_2_russ_hitman_1 , buick )
+	ENDIF
+
+	
+	IF ( ( ( NOT ( CHECK_RESPECT_GREATER ( shaft , russgang , -2 ) ) )
+	AND ( k_m_2_russ_hitman_2_alive = 0 ) )
+	AND ( IS_CHAR_IN_GANGZONE ( shaft , russgang ) ) )
+		SET k_m_2_russ_hitman_2_alive = 1
+		SET k_m_2_russ_hitman_2_living = 1
+		DISPLAY_BRIEF_NOW ( 3127 ) // "(Russian medium phones boss) has sent his best team of hitmen after you! Kill them!"
+		k_m_2_russ_hitman_2 = CREATE_CHAR ( 144.0 , 77.0 , 2.0 ) 10 90 criminal END
+		SET_CHAR_OBJECTIVE  ( k_m_2_russ_hitman_2 , kill_char_any_means , shaft ) 
+		SET_CHAR_THREAT_REACTION ( k_m_2_russ_hitman_2 , no_reaction )
+		SET_CHAR_THREAT_SEARCH ( k_m_2_russ_hitman_2 , line_of_sight_player_only )
+		GIVE_WEAPON ( k_m_2_russ_hitman_2 , molotov )
+		ADD_CHAR_TO_GANG ( k_m_2_russ_hitman_2 , russgang )
+		ADD_GROUP_TO_CHARACTER ( k_m_2_russ_hitman_2 , 1 )
+		REMOVE_ARROW ( arrow )
+//		POINT_ARROW_AT ( arrow_3 , k_m_2_russ_hitman_2 )
+		SET_FAVOURITE_MODEL ( k_m_2_russ_hitman_2 , buick )
+	ENDIF
+
+
+	IF ( ( ( NOT ( CHECK_RESPECT_GREATER ( shaft , russgang , -3 ) ) )
+	AND ( k_m_2_russ_hitman_3_alive = 0 ) )
+	AND ( IS_CHAR_IN_GANGZONE ( shaft , russgang ) ) )
+		SET k_m_2_russ_hitman_3_alive = 1
+		SET k_m_2_russ_hitman_3_living = 1
+		DISPLAY_BRIEF_NOW ( 3128 ) // "(Russian hard phones boss) has sent his best team of hitmen after you! Kill them!"
+		k_m_2_russ_hitman_3 = CREATE_CHAR ( 145.0 , 77.0 , 2.0 ) 10 90 criminal END
+		SET_CHAR_OBJECTIVE  ( k_m_2_russ_hitman_3 , kill_char_any_means , shaft ) 
+		SET_CHAR_THREAT_REACTION ( k_m_2_russ_hitman_3 , no_reaction )
+		SET_CHAR_THREAT_SEARCH ( k_m_2_russ_hitman_3 , line_of_sight_player_only )
+		GIVE_WEAPON ( k_m_2_russ_hitman_3 , shotgun )
+		ADD_CHAR_TO_GANG ( k_m_2_russ_hitman_3 , russgang )
+		ADD_GROUP_TO_CHARACTER ( k_m_2_russ_hitman_3 , 2 )
+		REMOVE_ARROW ( arrow )
+//		POINT_ARROW_AT ( arrow_4 , k_m_2_russ_hitman_3 )
+		SET_FAVOURITE_MODEL ( k_m_2_russ_hitman_3 , buick )
+	ENDIF
+
+
+	
+	IF ( k_m_2_russ_hitman_1_alive = 1 )
+		
+		IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( k_m_2_russ_hitman_1 ) ) )
+		AND ( k_m_2_russ_hitman_1_onscreen = 1 ) )
+			SET k_m_2_russ_hitman_1_onscreen = 0
+			REMOVE_ARROW ( arrow_2 )
+//			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_1 , 0.4 )
+//			ELSE
+//				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_1 , 0.0 )
+//			ENDIF
+		ENDIF
+	
+	
+		IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( k_m_2_russ_hitman_1 ) )
+		AND ( k_m_2_russ_hitman_1_onscreen = 0 ) )
+			SET k_m_2_russ_hitman_1_onscreen = 1
+			POINT_ARROW_AT ( arrow_2 , k_m_2_russ_hitman_1 )
+			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_1 , 0.4 )
+			ELSE
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_1 , 0.0 )
+			ENDIF
+		ENDIF
+
+	ENDIF
+
+
+	IF ( k_m_2_russ_hitman_2_alive = 1 )
+		
+		IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( k_m_2_russ_hitman_2 ) ) )
+		AND ( k_m_2_russ_hitman_2_onscreen = 1 ) )
+			SET k_m_2_russ_hitman_2_onscreen = 0
+			REMOVE_ARROW ( arrow_3 )
+//			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_2 , 0.4 )
+//			ELSE
+//				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_2 , 0.0 )
+//			ENDIF
+		ENDIF
+	
+	
+		IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( k_m_2_russ_hitman_2 ) )
+		AND ( k_m_2_russ_hitman_2_onscreen = 0 ) )
+			SET k_m_2_russ_hitman_2_onscreen = 1
+			POINT_ARROW_AT ( arrow_3 , k_m_2_russ_hitman_2 )
+			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_2 , 0.4 )
+			ELSE
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_2 , 0.0 )
+			ENDIF
+		ENDIF
+
+	ENDIF
+
+
+	IF ( k_m_2_russ_hitman_3_alive = 1 )
+		
+		IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( k_m_2_russ_hitman_3 ) ) )
+		AND ( k_m_2_russ_hitman_3_onscreen = 1 ) )
+			SET k_m_2_russ_hitman_3_onscreen = 0
+			REMOVE_ARROW ( arrow_4 )
+//			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_3 , 0.4 )
+//			ELSE
+//				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_3 , 0.0 )
+//			ENDIF
+		ENDIF
+	
+	
+		IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( k_m_2_russ_hitman_3 ) )
+		AND ( k_m_2_russ_hitman_3_onscreen = 0 ) )
+			SET k_m_2_russ_hitman_3_onscreen = 1
+			POINT_ARROW_AT ( arrow_4 , k_m_2_russ_hitman_3 )
+			IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )	
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_3 , 0.4 )
+			ELSE
+				SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_3 , 0.0 )
+			ENDIF
+		ENDIF
+
+	ENDIF
+
+
+ 
+/*	
+	IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )
+	
+		IF ( k_m_2_russ_hitman_1_alive = 1 )
+			SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_1 , 0.4 )
+		ENDIF
+
+		ELSE 
+
+		IF ( k_m_2_russ_hitman_1_alive = 1 )
+			SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_1 , 0.0 )
+		ENDIF
+
+	ENDIF
+
+	IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )
+	
+		IF ( k_m_2_russ_hitman_2_alive = 1 )
+			SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_2 , 0.4 )
+		ENDIF
+
+		ELSE 
+
+		IF ( k_m_2_russ_hitman_2_alive = 1 )
+			SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_2 , 0.0 )
+		ENDIF
+
+	ENDIF
+
+	IF ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )
+	
+		IF ( k_m_2_russ_hitman_3_alive = 1 )
+			SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_3 , 0.4 )
+		ENDIF
+
+		ELSE 
+
+		IF ( k_m_2_russ_hitman_3_alive = 1 )
+			SET_CHAR_MAX_DRIVESPEED ( k_m_2_russ_hitman_3 , 0.0 )
+		ENDIF
+
+	ENDIF
+
+ 
+	// checks for russian hitman_1 onscreen then points at him, if off screen deletes arrow 
+	
+	IF ( k_m_2_russ_hitman_1_alive = 1 )
+		IF ( ( IS_ITEM_ONSCREEN ( k_m_2_russ_hitman_1 ) )
+		AND ( k_m_2_russ_hitman_1_onscreen = 0 ) )
+			POINT_ARROW_AT ( arrow_2 , k_m_2_russ_hitman_1 )
+		  	SET k_m_2_russ_hitman_1_onscreen = 1
+//			IF ( k_m_2_russ_hitman_1_brief = 0 )
+//				DISPLAY_BRIEF_NOW ( 3142 ) // "I'M GONNA FUCKIN KILL YOU"
+//				SET k_m_2_russ_hitman_1_brief = 1 
+//			ENDIF
+		ENDIF
+	ENDIF
+
+	IF ( k_m_2_russ_hitman_1_alive = 1 )
+		IF ( ( NOT ( IS_ITEM_ONSCREEN ( k_m_2_russ_hitman_1 ) ) )
+		AND ( k_m_2_russ_hitman_1_onscreen = 1 ) )
+			SET k_m_2_russ_hitman_1_onscreen = 0
+			REMOVE_ARROW ( arrow_2 )
+		ENDIF
+	ENDIF
+
+
+	// checks for russian hitman_2 onscreen then points at him, if off screen deletes arrow 
+	
+	IF ( k_m_2_russ_hitman_2_alive = 1 )
+		IF ( ( IS_ITEM_ONSCREEN ( k_m_2_russ_hitman_2 ) )
+		AND ( k_m_2_russ_hitman_2_onscreen = 0 ) )
+			POINT_ARROW_AT ( arrow_3 , k_m_2_russ_hitman_2 )
+		   	SET k_m_2_russ_hitman_2_onscreen = 1
+//			IF ( k_m_2_russ_hitman_2_brief = 0 )
+//				DISPLAY_BRIEF_NOW ( 3143 ) // "I'M GONNA FUCKIN KILL YOU"
+//				SET k_m_2_russ_hitman_2_brief = 1 
+///			ENDIF
+		ENDIF
+	ENDIF
+
+	IF ( k_m_2_russ_hitman_2_alive = 1 )
+		IF ( ( NOT ( IS_ITEM_ONSCREEN ( k_m_2_russ_hitman_2 ) ) )
+		AND ( k_m_2_russ_hitman_2_onscreen = 1 ) )
+			SET k_m_2_russ_hitman_2_onscreen = 0
+			REMOVE_ARROW ( arrow_3 )
+		ENDIF
+	ENDIF
+
+
+	// checks for russian hitman_3 onscreen then points at him, if off screen deletes arrow 
+	
+	IF ( k_m_2_russ_hitman_3_alive = 1 )
+		IF ( ( IS_ITEM_ONSCREEN ( k_m_2_russ_hitman_3 ) )
+		AND ( k_m_2_russ_hitman_3_onscreen = 0 ) )
+			POINT_ARROW_AT ( arrow_4 , k_m_2_russ_hitman_3 )
+			SET k_m_2_russ_hitman_3_onscreen = 1
+//			IF ( k_m_2_russ_hitman_3_brief = 0 )
+//				DISPLAY_BRIEF_NOW ( 3144 ) // "I'M GONNA FUCKIN KILL YOU"
+//				SET k_m_2_russ_hitman_3_brief = 1 
+//			ENDIF
+		ENDIF
+	ENDIF
+
+	IF ( k_m_2_russ_hitman_3_alive = 1 )
+		IF ( ( NOT ( IS_ITEM_ONSCREEN ( k_m_2_russ_hitman_3 ) ) )
+		AND ( k_m_2_russ_hitman_3_onscreen = 1 ) )
+			SET k_m_2_russ_hitman_3_onscreen = 0
+			REMOVE_ARROW ( arrow_4 )
+		ENDIF
+	ENDIF
+	
+*/	
+	
+	
+	IF ( k_m_2_russ_hitman_1_alive = 1 )
+		IF ( HAS_CHARACTER_DIED ( k_m_2_russ_hitman_1 ) )
+			++ k_m_2_russ_hitmen_dead_brief
+			SET k_m_2_russ_hitman_1_alive = 2
+			SET k_m_2_russ_hitman_1_dead = 1
+			SET k_m_2_russ_hitman_1_living = 0
+			REMOVE_ARROW ( arrow_2 )
+			
+			IF ( k_m_2_russ_hitmen_dead_brief = 1 )
+				DISPLAY_BRIEF_NOW ( 3129 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+			ELSE
+				IF ( k_m_2_russ_hitmen_dead_brief = 2 )
+					DISPLAY_BRIEF_NOW ( 3130 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+				ELSE
+					IF ( k_m_2_russ_hitmen_dead_brief = 2 )
+						DISPLAY_BRIEF_NOW ( 3131 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+					ENDIF
+				ENDIF
+			ENDIF
+ 		ENDIF
+	ENDIF
+
+
+	IF ( k_m_2_russ_hitman_2_alive = 1 )
+		IF ( HAS_CHARACTER_DIED ( k_m_2_russ_hitman_2 ) )
+			++ k_m_2_russ_hitmen_dead_brief
+			SET k_m_2_russ_hitman_2_alive = 2
+			SET k_m_2_russ_hitman_2_dead = 1
+			SET k_m_2_russ_hitman_2_living = 0
+			REMOVE_ARROW ( arrow_3 )
+
+			IF ( k_m_2_russ_hitmen_dead_brief = 1 )
+				DISPLAY_BRIEF_NOW ( 3129 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+			ELSE
+				IF ( k_m_2_russ_hitmen_dead_brief = 2 )
+					DISPLAY_BRIEF_NOW ( 3130 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+				ELSE
+					IF ( k_m_2_russ_hitmen_dead_brief = 2 )
+						DISPLAY_BRIEF_NOW ( 3131 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+
+
+	IF ( k_m_2_russ_hitman_3_alive = 1 ) 
+		IF ( HAS_CHARACTER_DIED ( k_m_2_russ_hitman_3 ) )
+			++ k_m_2_russ_hitmen_dead_brief
+			SET k_m_2_russ_hitman_3_alive = 2
+			SET k_m_2_russ_hitman_3_dead = 1
+			SET k_m_2_russ_hitman_3_living = 0
+			REMOVE_ARROW ( arrow_4 )
+
+			IF ( k_m_2_russ_hitmen_dead_brief = 1 )
+				DISPLAY_BRIEF_NOW ( 3129 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+			ELSE
+				IF ( k_m_2_russ_hitmen_dead_brief = 2 )
+					DISPLAY_BRIEF_NOW ( 3130 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+				ELSE
+					IF ( k_m_2_russ_hitmen_dead_brief = 2 )
+						DISPLAY_BRIEF_NOW ( 3131 ) // "Good work you just took out (Russian med phones boss) best team of hitmen!"
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+
+
+	IF ( ( ( k_m_2_russ_hitman_1_dead = 1 )
+	AND ( k_m_2_russ_hitman_2_dead = 1 ) )
+	AND ( k_m_2_russ_hitman_3_dead = 1 ) )
+		SET k_m_2_russ_hitmen_dead = 1
+		SET k_m_2_russ_hitman_1_dead = 2 
+	ENDIF
+	
+ENDWHILE
+#endif
+
+
+/*
+DISPLAY_BRIEF ( 3133 ) // "I don't want to take the chance of the Zaibatsu doing the same go to their area and do the same to them."
+
+POINT_ARROW_AT ( arrow ,  59.0 , 173.0 , 2.0 )
+		
+WHILE_EXEC ( k_m_2_zaib_hitmen_dead = 0 ) 
+
+			
+	IF ( ( HAS_CHARACTER_DIED ( k_m_2_kris_group_1 ) )
+	AND ( k_m_2_kris_group_1_dead = 0 ) )
+		DISPLAY_BRIEF ( 3149 ) // "My men are all dead, you will have to finish the job alone!"
+		SET k_m_2_kris_group_1_dead = 1
+		REMOVE_ARROW ( arrow )
+	ENDIF
+	
+	
+	IF ( ( ( ( ( IS_CHAR_IN_ZONE ( shaft , Zaibatsu_Gang_Zone ) )  
+	AND ( k_m_2_out_zaibgang_zone = 0 ) )
+	AND ( k_m_2_zaib_hitman_1_living = 0 ) )
+	AND ( k_m_2_zaib_hitman_2_living = 0 ) )
+	AND ( k_m_2_zaib_hitman_3_living = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3124 ) // "Ok you're in their area start killing the Zaibatsu dogs!"	
+		SET k_m_2_out_zaibgang_zone = 1
+		REMOVE_ARROW ( arrow )
+	ENDIF
+
+
+	IF ( ( ( ( ( NOT ( IS_CHAR_IN_ZONE ( shaft , Zaibatsu_Gang_Zone ) ) ) 
+	AND ( k_m_2_out_zaibgang_zone = 1 ) )
+	AND ( k_m_2_zaib_hitman_1_living = 0 ) )
+	AND ( k_m_2_zaib_hitman_2_living = 0 ) )
+	AND ( k_m_2_zaib_hitman_3_living = 0 ) )
+	 	DISPLAY_BRIEF_NOW ( 3125 ) // "Get back to the Zaibatsu area and start killing those bastards!"	
+		POINT_ARROW_AT ( arrow , 167.0 , 31.0 , 2.0 )
+		SET k_m_2_out_zaibgang_zone = 0
+	ENDIF
+
+	
+	IF ( ( CHECK_RESPECT_EQUAL ( shaft , zaibgang , -1 ) )
+	AND ( k_m_2_zaib_hitman_1_alive = 0 ) )
+		SET k_m_2_zaib_hitman_1_alive = 1
+		SET k_m_2_zaib_hitman_1_living = 1
+		DISPLAY_BRIEF_NOW ( 3134 ) // "(Zaibatsu med phones boss) has sent his best team of hitmen after you! Kill them!"
+		k_m_2_zaib_hitman_1 = CREATE_CHAR ( 17.5 , 159.5 , 2.0 ) 8 90 criminal END
+		SET_CHAR_OBJECTIVE  ( k_m_2_zaib_hitman_1 , kill_char_any_means , shaft ) 
+		SET_CHAR_THREAT_REACTION ( k_m_2_zaib_hitman_1 , no_reaction )
+		SET_CHAR_THREAT_SEARCH ( k_m_2_zaib_hitman_1 , line_of_sight_player_only )
+		GIVE_WEAPON ( k_m_2_zaib_hitman_1 , flame_thrower )
+		ADD_CHAR_TO_GANG ( k_m_2_zaib_hitman_1 , zaibgang )
+//		ADD_GROUP_TO_CHARACTER ( k_m_2_zaib_hitman_1 , 4 )
+		REMOVE_ARROW ( arrow )
+//		POINT_ARROW_AT ( arrow_2 , k_m_2_zaib_hitman_1 )
+	ENDIF
+
+
+	IF ( ( CHECK_RESPECT_EQUAL ( shaft , zaibgang , -3 ) )
+	AND ( k_m_2_zaib_hitman_2_alive = 0 ) )
+		SET k_m_2_zaib_hitman_2_alive = 1
+		SET k_m_2_zaib_hitman_2_living = 1
+		DISPLAY_BRIEF_NOW ( 3135 ) // "(Zaibatsu medium phones boss) has sent his best team of hitmen after you! Kill them!"
+		k_m_2_zaib_hitman_2 = CREATE_CHAR ( 17.5 , 159.5 , 2.0 ) 8 90 criminal END
+		SET_CHAR_OBJECTIVE  ( k_m_2_zaib_hitman_2 , kill_char_any_means , shaft ) 
+		SET_CHAR_THREAT_REACTION ( k_m_2_zaib_hitman_2 , no_reaction )
+		SET_CHAR_THREAT_SEARCH ( k_m_2_zaib_hitman_2 , line_of_sight_player_only )
+		GIVE_WEAPON ( k_m_2_zaib_hitman_2 , electro_gun )
+		ADD_CHAR_TO_GANG ( k_m_2_zaib_hitman_2 , zaibgang )
+		ADD_GROUP_TO_CHARACTER ( k_m_2_zaib_hitman_2 , 1 )
+		REMOVE_ARROW ( arrow )
+//		POINT_ARROW_AT ( arrow_3 , k_m_2_zaib_hitman_2 )
+	ENDIF
+
+
+	IF ( ( CHECK_RESPECT_EQUAL ( shaft , zaibgang , -5 ) )
+	AND ( k_m_2_zaib_hitman_3_alive = 0 ) )
+		SET k_m_2_zaib_hitman_3_alive = 1
+		SET k_m_2_zaib_hitman_3_living = 1
+		DISPLAY_BRIEF_NOW ( 3136 ) // "(Zaibatsu hard phones boss) has sent his best team of hitmen after you! Kill them!"
+		k_m_2_zaib_hitman_3 = CREATE_CHAR ( 17.5 , 159.5 , 2.0 ) 8 90 criminal END
+		SET_CHAR_OBJECTIVE  ( k_m_2_zaib_hitman_3 , kill_char_any_means , shaft ) 
+		SET_CHAR_THREAT_REACTION ( k_m_2_zaib_hitman_3 , no_reaction )
+		SET_CHAR_THREAT_SEARCH ( k_m_2_zaib_hitman_3 , line_of_sight_player_only )
+		GIVE_WEAPON ( k_m_2_zaib_hitman_3 , machine_gun )
+		ADD_CHAR_TO_GANG ( k_m_2_zaib_hitman_3 , zaibgang )
+		ADD_GROUP_TO_CHARACTER ( k_m_2_zaib_hitman_3 , 2 )
+		REMOVE_ARROW ( arrow )
+//		POINT_ARROW_AT ( arrow_4 , k_m_2_zaib_hitman_3 )
+	ENDIF
+
+
+	// checks for zaibatsu hitman_1 onscreen then points at him, if off screen deletes arrow 
+	
+	IF ( k_m_2_zaib_hitman_1_alive = 1 )
+		IF ( ( IS_ITEM_ONSCREEN ( k_m_2_zaib_hitman_1 ) )
+		AND ( k_m_2_zaib_hitman_1_onscreen = 0 ) )
+			POINT_ARROW_AT ( arrow_2 , k_m_2_zaib_hitman_1 )
+			SET k_m_2_zaib_hitman_1_onscreen = 1
+			IF ( k_m_2_zaib_hitman_1_brief = 0 )
+				DISPLAY_BRIEF_NOW ( 3145 ) // "I'M GONNA FUCKIN KILL YOU"
+				SET k_m_2_zaib_hitman_1_brief = 1 
+			ENDIF
+		ENDIF
+	ENDIF
+
+	IF ( k_m_2_zaib_hitman_1_alive = 1 )
+		IF ( ( NOT ( IS_ITEM_ONSCREEN ( k_m_2_zaib_hitman_1 ) ) )
+		AND ( k_m_2_zaib_hitman_1_onscreen = 1 ) )
+			SET k_m_2_zaib_hitman_1_onscreen = 0
+			REMOVE_ARROW ( arrow_2 )
+		ENDIF
+	ENDIF
+
+
+	// checks for zaibatsu hitman_2 onscreen then points at him, if off screen deletes arrow 
+	
+	IF ( k_m_2_zaib_hitman_2_alive = 1 )
+		IF ( ( IS_ITEM_ONSCREEN ( k_m_2_zaib_hitman_2 ) )
+		AND ( k_m_2_zaib_hitman_2_onscreen = 0 ) )
+			POINT_ARROW_AT ( arrow_3 , k_m_2_zaib_hitman_2 )
+			SET k_m_2_zaib_hitman_2_onscreen = 1
+			IF ( k_m_2_zaib_hitman_2_brief = 0 )
+				DISPLAY_BRIEF_NOW ( 3146 ) // "I'M GONNA FUCKIN KILL YOU"
+				SET k_m_2_zaib_hitman_2_brief = 1 
+			ENDIF
+		ENDIF
+	ENDIF
+
+	IF ( k_m_2_zaib_hitman_2_alive = 1 )
+		IF ( ( NOT ( IS_ITEM_ONSCREEN ( k_m_2_zaib_hitman_2 ) ) )
+		AND ( k_m_2_zaib_hitman_2_onscreen = 1 ) )
+			SET k_m_2_zaib_hitman_2_onscreen = 0
+			REMOVE_ARROW ( arrow_3 )
+		ENDIF
+	ENDIF
+
+
+	// checks for zaibatsu hitman_3 onscreen then points at him, if off screen deletes arrow 
+	
+	IF ( k_m_2_zaib_hitman_3_alive = 1 )
+		IF ( ( IS_ITEM_ONSCREEN ( k_m_2_zaib_hitman_3 ) )
+		AND ( k_m_2_zaib_hitman_3_onscreen = 0 ) )
+			POINT_ARROW_AT ( arrow_4 , k_m_2_zaib_hitman_3 )
+		   	SET k_m_2_zaib_hitman_3_onscreen = 1
+			IF ( k_m_2_zaib_hitman_3_brief = 0 )
+				DISPLAY_BRIEF_NOW ( 3147 ) // "I'M GONNA FUCKIN KILL YOU"
+				SET k_m_2_zaib_hitman_3_brief = 1 
+			ENDIF
+		ENDIF
+	ENDIF
+
+	IF ( k_m_2_zaib_hitman_3_alive = 1 )
+		IF ( ( NOT ( IS_ITEM_ONSCREEN ( k_m_2_zaib_hitman_3 ) ) )
+		AND ( k_m_2_zaib_hitman_3_onscreen = 1 ) )
+			SET k_m_2_zaib_hitman_3_onscreen = 0
+			REMOVE_ARROW ( arrow_4 )
+		ENDIF
+	ENDIF
+	
+	
+	
+	
+	IF ( k_m_2_zaib_hitman_1_alive = 1 )
+		IF ( HAS_CHARACTER_DIED ( k_m_2_zaib_hitman_1 ) )
+			DISPLAY_BRIEF_NOW ( 3137 ) // "Good work you just took out (Zaibatsu med phones boss) best team of hitmen!"
+			SET k_m_2_zaib_hitman_1_alive = 2
+			SET k_m_2_zaib_hitman_1_dead = 1
+			SET k_m_2_zaib_hitman_1_living = 0
+			REMOVE_ARROW ( arrow_2 )
+		ENDIF
+	ENDIF
+
+
+	IF ( k_m_2_zaib_hitman_2_alive = 1 )
+		IF ( HAS_CHARACTER_DIED ( k_m_2_zaib_hitman_2 ) )
+			DISPLAY_BRIEF_NOW ( 3138 ) // "Good work you just took out (Zaibatsu medium phones boss) best team of hitmen!"
+			SET k_m_2_zaib_hitman_2_alive = 2
+			SET k_m_2_zaib_hitman_2_dead = 1
+			SET k_m_2_zaib_hitman_2_living = 0
+			REMOVE_ARROW ( arrow_3 )
+		ENDIF
+	ENDIF
+
+
+	IF ( k_m_2_zaib_hitman_3_alive = 1 ) 
+		IF ( HAS_CHARACTER_DIED ( k_m_2_zaib_hitman_3 ) )
+			DISPLAY_BRIEF_NOW ( 3139 ) // "Good work you just took out (Zaibatsu hard phones boss) best team of hitmen!"
+			SET k_m_2_zaib_hitman_3_alive = 2
+			SET k_m_2_zaib_hitman_3_dead = 1
+			SET k_m_2_zaib_hitman_3_living = 0
+			REMOVE_ARROW ( arrow_4 )
+		ENDIF
+	ENDIF
+
+
+	IF ( ( ( k_m_2_zaib_hitman_1_dead = 1 )
+	AND ( k_m_2_zaib_hitman_2_dead = 1 ) )
+	AND ( k_m_2_zaib_hitman_3_dead = 1 ) )
+		SET k_m_2_zaib_hitmen_dead = 1
+		SET k_m_2_zaib_hitman_1_dead = 2 
+	ENDIF
+	
+*/
+
+/*	
+   	IF ( ( HAS_CHARACTER_DIED ( shaft ) )
+	AND ( flag_failed_kris_med_phone2_m1 = 0 ) )
+		DISPLAY_BRIEF ( 3140 ) // "You useless fuck, you can't handle a couple of pussy Zaibatsu hitmen, I'll get somebody else to finish the job! Mission Failed!"
+		SET flag_failed_kris_med_phone2_m1	= 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN 
+	ENDIF
+			 
+			 		
+ENDWHILE
+*/		
+	
+IF ( ( k_m_2_russ_hitmen_dead = 1 )
+AND ( flag_passed_kris_med_phone2_m1 = 0 ) )
+	CLEAR_ALL_BRIEFS ( )
+	DISPLAY_BRIEF ( 3141 ) // "Well done you have killed all of their best hitmen, I should be safe for the time being"
+	SET flag_passed_kris_med_phone2_m1	= 1
+	++ counter_all_missions_passed
+	DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+	ADD_SCORE ( shaft , 60000 )
+	ADD_MULTIPLIER ( shaft , 1 ) 
+	CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , 1 )
+	CLEAR_WANTED_LEVEL ( shaft )
+	IF ( flag_passed_kris_med_phone1_2_m3 = 1 )
+		SET_PHONE_DEAD ( ph_kris_med_phone2 ) 
+		DISABLE_THREAD_TRIGGER ( thr_kris_med_phone2_m1 )
+	ENDIF
+	RETURN 
+ENDIF
+	 
+
+
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+// deletes all objects when Krishna med phone2 mission1 is finished...
+				
+clean_up_kris_med_phone2_m1: 
+	
+	REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	
+ 	IF ( k_m_2_kris_group_1_created = 1 )
+		IF ( NOT ( HAS_CHARACTER_DIED ( k_m_2_kris_group_1 ) ) )
+			DESTROY_GROUP ( shaft )
+			MAKE_CHAR_DO_NOTHING ( k_m_2_kris_group_1 )
+		ENDIF
+	ENDIF
+	
+	IF ( flag_passed_kris_med_phone2_m1 = 1 )
+		++ flag_kris_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_kris_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3671 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3670 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_kris_med_phone2_m1 = 1 )
+		++ flag_kris_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_kris_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+	MISSION_HAS_FINISHED ( )
+	
+	SET flag_on_mission	= 0
+	SET flag_on_kris_mission = 0
+	
+	RETURN
+ 
+
+
+MISSIONSTART
+
+	GOSUB kris_med_phone2_m1:
+
+	GOSUB clean_up_kris_med_phone2_m1:
+
+MISSIONEND 

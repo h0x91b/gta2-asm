@@ -1,0 +1,775 @@
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX PEDS N CARS TO OPEN DOORS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+// objects for Zaibatsu med phone2 mission1		
+	
+
+
+CAR_DATA z_m_2_truck_1
+OBJ_DATA z_m_2_generator_1 
+OBJ_DATA z_m_2_generator_2 
+CHAR_DATA z_m_2_locksmith_1
+CHAR_DATA z_m_2_guard_1
+CHAR_DATA z_m_2_guard_2
+CHAR_DATA z_m_2_guard_3
+CHAR_DATA z_m_2_guard_4
+CHAR_DATA z_m_2_guard_5
+CHAR_DATA z_m_2_chase_guard_1
+CHAR_DATA z_m_2_chase_guard_2
+
+COUNTER z_m_2_player_killed_1 = 0
+COUNTER z_m_2_player_killed_2 = 0
+COUNTER z_m_2_player_killed_3 = 0
+COUNTER z_m_2_player_killed_4 = 0
+COUNTER z_m_2_player_killed_5 = 0
+COUNTER z_m_2_player_killed_6 = 0
+COUNTER z_m_2_player_killed_7 = 0
+COUNTER z_m_2_locksmith_1_dead = 0
+COUNTER z_m_2_locksmith_1_obj1_passed = 0
+COUNTER z_m_2_locksmith_1_obj2_passed = 0
+COUNTER z_m_2_in_gang_car = 0
+COUNTER z_m_2_in_wrong_car_at_door_2 = 0
+COUNTER z_m_2_door_2_open = 0
+COUNTER z_m_2_generators_destroyed = 0
+COUNTER z_m_2_player_been_in_truck_1 = 0
+COUNTER z_m_2_guard_1_spotted_player = 0
+COUNTER z_m_2_guard_2_spotted_player = 0
+COUNTER z_m_2_guard_3_spotted_player = 0
+COUNTER z_m_2_guard_4_spotted_player = 0
+COUNTER z_m_2_guard_5_spotted_player = 0
+COUNTER z_m_2_chase_guard_1_spotted_player = 0
+COUNTER z_m_2_chase_guard_2_spotted_player = 0
+COUNTER z_m_2_generator_destroyed = 0
+COUNTER z_m_2_in_truck_1_parking = 0
+COUNTER z_m_2_truck_1_parked = 0
+COUNTER z_m_2_in_truck_1 = 0
+COUNTER z_m_2_locksmith_1_on_screen_2 = 0
+COUNTER z_m_2_locksmith_1_at_door = 0
+COUNTER z_m_2_generator_destroyed_brief_1 = 0
+COUNTER z_m_2_generator_destroyed_brief_2 = 0
+SOUND z_m_2_generator_1_sound
+SOUND z_m_2_generator_2_sound
+OBJ_DATA z_m_2_powerup_1
+OBJ_DATA z_m_2_powerup_2
+OBJ_DATA z_m_2_powerup_3
+OBJ_DATA z_m_2_powerup_4
+FORWARD	clean_up_zaib_med_phone2_m1:
+
+SOUND z_m_2_mumble 
+SOUND z_m_2_yeeha 
+SOUND z_m_2_tick 
+SOUND z_m_2_tick_boom 
+ 
+
+				
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+		
+// starts Zaibatsu med phone2 mission1
+					
+
+zaib_med_phone2_m1:
+
+SET flag_failed_zaib_med_phone2_m1 = 0
+
+//	DISABLE_THREAD_TRIGGER ( thr_zaib_med_phone2_m1 )
+	CLOSE_DOOR ( z_m_2_door_1_1 )
+	CLOSE_DOOR ( z_m_2_door_2_1 )
+	CLOSE_DOOR ( z_m_2_door_3_1 )
+	CLOSE_DOOR ( z_m_2_door_3_2 )
+		  
+	#ifdef PC
+	CLOSE_DOOR ( z_m_2_door_1_2 )
+	CLOSE_DOOR ( z_m_2_door_2_2 )
+	#endif
+	
+	
+	DISPLAY_MESSAGE ( 3850 ) // you have PASSED the mission!"
+	DISPLAY_BRIEF ( 3920 ) // "you have selected Zaibatsu med phone2 mission1"
+    z_m_2_powerup_1 = CREATE_OBJ ( 29.5 , 44.5 , 6.0 ) 0 COLLECT_04 END
+	z_m_2_powerup_2 = CREATE_OBJ ( 29.5 , 51.5 , 2.0 ) 0 COLLECT_31 END
+	z_m_2_powerup_3 = CREATE_OBJ ( 39.0 , 40.5 , 2.0 ) 0 COLLECT_30 END
+	z_m_2_powerup_4 = CREATE_OBJ ( 38.0 , 56.0 , 2.0 ) 0 COLLECT_01 END
+	FORCE_CLEANUP ( z_m_2_powerup_1 )
+	FORCE_CLEANUP ( z_m_2_powerup_2 )
+	FORCE_CLEANUP ( z_m_2_powerup_3 )
+	FORCE_CLEANUP ( z_m_2_powerup_4 )
+
+	z_m_2_truck_1 = CREATE_CAR ( 30.5 , 37.0 , 3.0 ) 1 270 boxtruck END
+	UPDATE_DOOR_TARGET ( z_m_2_door_4 , z_m_2_truck_1 )
+	MAKE_DOOR_AUTOMATIC ( z_m_2_door_4 )
+	z_m_2_generator_1 = CREATE_OBJ ( 27.5 , 35.5 , 6.0 ) 0 powergen END
+	z_m_2_generator_2 = CREATE_OBJ ( 27.5 , 38.5 , 6.0 ) 0 powergen END
+	#ifdef PC
+	z_m_2_generator_1_sound = CREATE_SOUND ( 27.5 , 35.5 , 6.0 ) generator_rumble play_forever END
+	z_m_2_generator_2_sound = CREATE_SOUND ( 27.5 , 38.5 , 6.0 ) generator_rumble play_forever END
+	FORCE_CLEANUP ( z_m_2_generator_1_sound )
+	FORCE_CLEANUP ( z_m_2_generator_2_sound )
+	#endif
+	SET flag_on_mission	= 1
+	SET flag_on_zaib_mission = 1
+	POINT_ARROW_AT ( arrow , 27.0 , 37.0 , 3.0 )
+	z_m_2_guard_1 = CREATE_CHAR ( 33.5 , 49.5 , 2.0 ) 10 90 criminal END
+	ADD_CHAR_TO_GANG ( z_m_2_guard_1 , russgang )
+//	SET_CHAR_OBJECTIVE ( z_m_2_guard_1 , guard_area ) 
+	SET_CHAR_THREAT_SEARCH ( z_m_2_guard_1 , line_of_sight_player_only )
+	SET_CHAR_THREAT_REACTION ( z_m_2_guard_1 , react_as_normal )
+	GIVE_WEAPON ( z_m_2_guard_1 , pistol )
+	ADD_PATROL_POINT ( z_m_2_guard_1 , 37.5 , 49.5 , 2.0 )
+	ADD_PATROL_POINT ( z_m_2_guard_1 , 33.5 , 49.5 , 2.0 )
+	z_m_2_guard_2 = CREATE_CHAR ( 33.5 , 35.5 , 3.0 ) 10 90 criminal END
+	ADD_CHAR_TO_GANG ( z_m_2_guard_2 , russgang )
+//	SET_CHAR_OBJECTIVE ( z_m_2_guard_2 , guard_area ) 
+	SET_CHAR_THREAT_SEARCH ( z_m_2_guard_2 , line_of_sight_player_only )
+	SET_CHAR_THREAT_REACTION ( z_m_2_guard_2 , react_as_normal )
+	GIVE_WEAPON ( z_m_2_guard_2 , pistol )
+	ADD_PATROL_POINT ( z_m_2_guard_2 , 33.5 , 38.5 , 3.0 )
+	ADD_PATROL_POINT ( z_m_2_guard_2 , 33.5 , 35.5 , 3.0 )
+	z_m_2_guard_3 = CREATE_CHAR ( 41.5 , 47.5 , 2.0 ) 10 90 criminal END
+	ADD_CHAR_TO_GANG ( z_m_2_guard_3 , russgang )
+//	SET_CHAR_OBJECTIVE ( z_m_2_guard_3 , guard_area ) 
+	SET_CHAR_THREAT_SEARCH ( z_m_2_guard_3 , line_of_sight_player_only )
+	SET_CHAR_THREAT_REACTION ( z_m_2_guard_3 , react_as_normal )
+	GIVE_WEAPON ( z_m_2_guard_3 , shotgun )
+	ADD_PATROL_POINT ( z_m_2_guard_3 , 37.5 , 44.5 , 2.0 )
+	ADD_PATROL_POINT ( z_m_2_guard_3 , 41.5 , 47.5 , 2.0 )
+	z_m_2_guard_4 = CREATE_CHAR ( 26.5 , 53.5 , 4.0 ) 10 90 criminal END
+	ADD_CHAR_TO_GANG ( z_m_2_guard_4 , russgang )
+	SET_CHAR_OBJECTIVE ( z_m_2_guard_4 , guard_spot ) 
+	SET_CHAR_THREAT_SEARCH ( z_m_2_guard_4 , area_player_only )
+	SET_CHAR_THREAT_REACTION ( z_m_2_guard_4 , react_as_normal )
+	GIVE_WEAPON ( z_m_2_guard_4 , molotov )
+//	ADD_PATROL_POINT ( z_m_2_guard_4 , 26.5 , 55.5 , 4.0 )
+//	ADD_PATROL_POINT ( z_m_2_guard_4 , 26.5 , 51.5 , 4.0 )
+	z_m_2_guard_5 = CREATE_CHAR ( 29.5 , 41.5 , 5.0 ) 10 90 criminal END
+	ADD_CHAR_TO_GANG ( z_m_2_guard_5 , russgang )
+	SET_CHAR_OBJECTIVE ( z_m_2_guard_5 , guard_spot ) 
+	SET_CHAR_THREAT_SEARCH ( z_m_2_guard_5 , area_player_only )
+	SET_CHAR_THREAT_REACTION ( z_m_2_guard_5 , react_as_normal )
+	GIVE_WEAPON ( z_m_2_guard_5 , molotov )
+	ADD_PATROL_POINT ( z_m_2_guard_5 , 29.5 , 44.5 , 6.0 )
+	ADD_PATROL_POINT ( z_m_2_guard_5 , 29.5 , 41.5 , 5.0 )
+	
+
+
+WHILE_EXEC ( NOT ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 27.0 , 37.0 , 3.0 , 2.0 , 2.0  ) ) )
+
+	// if truck is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( z_m_2_truck_1 ) )
+	AND ( flag_failed_zaib_med_phone2_m1 = 0 ) )
+		SET flag_failed_zaib_med_phone2_m1 = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3947 ) // "Shit, what the fuck happened to the truck? We needed it to put a stop to them working outside of their area! Mission Failed!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+	
+
+ENDWHILE
+
+
+POINT_ARROW_AT ( arrow , 34.0 , 58.0 , 2.0 )
+DISPLAY_BRIEF ( 3922 ) // "shit the door is locked, try the back way!"
+
+
+WHILE_EXEC ( NOT ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 34.0 , 58.0 , 2.0 , 2.0 , 2.0  ) ) )
+
+	// if truck is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( z_m_2_truck_1 ) )
+	AND ( flag_failed_zaib_med_phone2_m1 = 0 ) )
+		SET flag_failed_zaib_med_phone2_m1 = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3947 ) // "Shit, what the fuck happened to the truck? We needed it to put a stop to them working outside of their area! Mission Failed!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+	
+
+ENDWHILE
+
+
+DISPLAY_BRIEF ( 3923 ) // "shit this door is locked too, i'm gonna get one of my guy's to meet you!"
+z_m_2_locksmith_1 = CREATE_CHAR ( 64.0 , 149.0 , 2.0 ) 8 75 criminal END
+POINT_ARROW_AT ( arrow , z_m_2_locksmith_1 )
+ADD_CHAR_TO_GANG ( z_m_2_locksmith_1 , zaibgang )
+ADD_GROUP_TO_CHARACTER ( z_m_2_locksmith_1 , 0 )
+SET_CHAR_OBJECTIVE ( z_m_2_locksmith_1 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( z_m_2_locksmith_1 , line_of_sight_player_only )
+SET_CHAR_THREAT_REACTION ( z_m_2_locksmith_1 , no_reaction )
+
+
+WHILE_EXEC ( NOT ( LOCATE_ANOTHER_CHARACTER_ANY_MEANS ( shaft , z_m_2_locksmith_1 , 1.0 , 1.0  ) ) )
+
+	
+	// if truck is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( z_m_2_truck_1 ) )
+	AND ( flag_failed_zaib_med_phone2_m1 = 0 ) )
+		SET flag_failed_zaib_med_phone2_m1 = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3947 ) // "Shit, what the fuck happened to the truck? We needed it to put a stop to them working outside of their area! Mission Failed!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+	
+	
+	IF ( ( HAS_CHARACTER_DIED ( z_m_2_locksmith_1 ) )
+	AND ( flag_failed_zaib_med_phone2_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3924 ) // "how are you supposed to get the doors open now? MISSION FAILED!"
+		SET flag_failed_zaib_med_phone2_m1	= 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+	
+ENDWHILE
+
+
+DISPLAY_BRIEF ( 3925 ) // "this had better be good i just spent 100 dollars and didn't get to finish the job!"
+MAKE_NEW_LEADER_OF_GROUP ( z_m_2_locksmith_1 , shaft )
+POINT_ARROW_AT ( arrow , 34.0 , 58.0 , 2.0 )
+
+
+WHILE_EXEC ( z_m_2_locksmith_1_at_door = 0 )
+
+
+	// if truck is destroyed the mission is failed
+	
+	
+	IF ( ( LOCATE_CHARACTER_ON_FOOT ( shaft , 34.0 , 58.0 , 2.0 , 4.0 , 2.0  ) )
+	AND ( NOT ( IS_CHARACTER_IN_ANY_CAR ( z_m_2_locksmith_1	) ) ) )
+		SET z_m_2_locksmith_1_at_door = 1
+	ENDIF
+
+	
+	IF ( ( IS_CAR_WRECKED ( z_m_2_truck_1 ) )
+	AND ( flag_failed_zaib_med_phone2_m1 = 0 ) )
+		SET flag_failed_zaib_med_phone2_m1 = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3947 ) // "Shit, what the fuck happened to the truck? We needed it to put a stop to them working outside of their area! Mission Failed!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+	
+ 	
+	IF ( ( HAS_CHARACTER_DIED ( z_m_2_locksmith_1 ) )
+	AND ( flag_failed_zaib_med_phone2_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3924 ) // "how are you supposed to get the doors open now? MISSION FAILED!"
+		SET flag_failed_zaib_med_phone2_m1	= 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+	
+	
+	IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( z_m_2_locksmith_1 ) ) )
+	AND ( z_m_2_locksmith_1_on_screen_2 = 0 ) )
+		POINT_ARROW_AT ( arrow , z_m_2_locksmith_1 )
+		SET z_m_2_locksmith_1_on_screen_2 = 1
+		DISPLAY_BRIEF_NOW ( 3952 ) // "Where the fuck is the guy? Have you taken off without him? Go and find him now!"
+	ENDIF
+
+
+	IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( z_m_2_locksmith_1 ) )
+	AND ( z_m_2_locksmith_1_on_screen_2 = 1 ) )
+		POINT_ARROW_AT ( arrow , 34.0 , 58.0 , 2.0 )
+		SET z_m_2_locksmith_1_on_screen_2 = 0
+		DISPLAY_BRIEF_NOW ( 3953 ) // "Why did you leave me behind? I'm helping YOU! Take me to the locked door!"
+	ENDIF	
+	
+ENDWHILE
+
+
+REMOVE_CHAR_FROM_GROUP ( shaft , z_m_2_locksmith_1 )			
+SET_CHAR_OBJECTIVE ( z_m_2_locksmith_1 , goto_area_on_foot , 33.8 , 58.0 , 2.0 ) 
+SET_CHAR_THREAT_REACTION ( z_m_2_locksmith_1 , no_reaction )
+REMOVE_ARROW ( arrow )
+DISPLAY_BRIEF_NOW ( 3926 ) // "stand back some of these doors are booby trapped!"
+POINT_ARROW_AT ( arrow , z_m_2_locksmith_1 )	
+					
+
+WHILE_EXEC ( z_m_2_locksmith_1_dead = 0 )
+
+		
+	// if truck is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( z_m_2_truck_1 ) )
+	AND ( flag_failed_zaib_med_phone2_m1 = 0 ) )
+		SET flag_failed_zaib_med_phone2_m1 = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3947 ) // "Shit, what the fuck happened to the truck? We needed it to put a stop to them working outside of their area! Mission Failed!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+	
+	
+  	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( z_m_2_locksmith_1 ) ) 
+	AND ( z_m_2_locksmith_1_obj1_passed = 0 ) )
+		SET z_m_2_locksmith_1_obj1_passed = 1
+		SET_CHAR_OBJECTIVE ( z_m_2_locksmith_1 , wait_on_foot ) 
+		#ifdef PC
+		z_m_2_tick = CREATE_SOUND ( 33.8 , 58.0 , 6.0 ) bomb_tick play_forever END
+		FORCE_CLEANUP ( z_m_2_tick )
+		#endif
+	ENDIF
+
+	IF ( ( z_m_2_locksmith_1_obj1_passed = 1 ) 
+	AND ( NOT ( DELAY ( 60 ) ) ) ) 
+		OPEN_DOOR ( z_m_2_door_1_1 )
+		#ifdef PC
+		DELETE_ITEM ( z_m_2_tick )
+		OPEN_DOOR ( z_m_2_door_1_2 )
+		#endif
+		DISPLAY_BRIEF_NOW ( 3927 ) // "no problem, this is fucking easy, i can bypass any security system!"
+		SET z_m_2_locksmith_1_obj1_passed = 2
+		#ifdef PC
+		z_m_2_yeeha = CREATE_SOUND ( 33.8 , 58.0 , 6.0 ) yeeha_bomb play_instant END
+		FORCE_CLEANUP ( z_m_2_yeeha )
+		#endif
+	ENDIF
+
+	IF ( ( z_m_2_locksmith_1_obj1_passed = 2 ) 
+	AND ( NOT ( DELAY ( 60 ) ) ) ) 
+		SET_CHAR_OBJECTIVE ( z_m_2_locksmith_1 , goto_area_on_foot , 37.0 , 53.2 , 2.0 )
+//	   	POINT_ARROW_AT ( arrow , 37.0 , 53.0 , 2.0 )	
+		SET z_m_2_locksmith_1_obj1_passed = 3
+	ENDIF
+
+	IF ( ( ( IS_CHAR_OBJECTIVE_PASSED ( z_m_2_locksmith_1 ) ) 
+	AND ( z_m_2_locksmith_1_obj1_passed = 3 ) )
+	AND ( z_m_2_locksmith_1_obj2_passed = 0 ) )
+		SET z_m_2_locksmith_1_obj2_passed = 1
+		SET_CHAR_OBJECTIVE ( z_m_2_locksmith_1 , wait_on_foot )
+		#ifdef PC
+		z_m_2_tick = CREATE_SOUND ( 37.0 , 53.2 , 6.0 ) bomb_tick play_forever END
+		FORCE_CLEANUP ( z_m_2_tick )
+		#endif
+	ENDIF
+
+	IF ( ( z_m_2_locksmith_1_obj2_passed = 1 ) 
+	AND ( NOT ( DELAY ( 60 ) ) ) ) 
+		DISPLAY_BRIEF_NOW ( 3930 ) // "This one's a bit tricky, wait i think I've got it!"		
+		SET z_m_2_locksmith_1_obj2_passed = 2
+		#ifdef PC
+		z_m_2_mumble = CREATE_SOUND ( 37.0 , 53.2 , 6.0 ) detected_mumble play_instant END
+		FORCE_CLEANUP ( z_m_2_mumble )
+		#endif
+	ENDIF
+
+	IF ( ( z_m_2_locksmith_1_obj2_passed = 2 ) 
+	AND ( NOT ( DELAY ( 60 ) ) ) ) 
+		DISPLAY_BRIEF_NOW ( 3928 ) // "OH FUCK!"		
+		SET z_m_2_locksmith_1_obj2_passed = 3
+		#ifdef PC
+		z_m_2_tick_boom = CREATE_SOUND ( 37.0 , 53.2 , 6.0 ) bomb_tick_shit play_instant END
+		FORCE_CLEANUP ( z_m_2_tick_boom )
+		#endif
+	ENDIF
+
+	IF ( ( z_m_2_locksmith_1_obj2_passed = 3 ) 
+	AND ( NOT ( DELAY ( 40 ) ) ) ) 
+		SET z_m_2_locksmith_1_dead = 1
+		EXPLODE ( z_m_2_locksmith_1 )	
+		REMOVE_ARROW (arrow )
+		SET z_m_2_locksmith_1_obj2_passed = 4
+		#ifdef PC
+		DELETE_ITEM ( z_m_2_tick )
+	    #endif
+	ENDIF
+		
+ 
+	IF ( ( ( HAS_CHARACTER_DIED ( z_m_2_locksmith_1 ) )
+	AND ( flag_failed_zaib_med_phone2_m1 = 0 ) )
+	AND ( z_m_2_locksmith_1_dead = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3924 ) // "how are you supposed to get the doors open now? MISSION FAILED!"
+		SET flag_failed_zaib_med_phone2_m1	= 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+ENDWHILE
+
+
+DISPLAY_BRIEF_NOW ( 3929 ) // "That's gotta hurt, he served his purpose. Now get on with the job!"
+
+#ifdef PSX
+SET_RECYCLE_MODEL_WANTED ( buick ) 
+#endif
+
+WHILE_EXEC ( z_m_2_door_2_open = 0 )
+
+
+	// if truck is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( z_m_2_truck_1 ) )
+	AND ( flag_failed_zaib_med_phone2_m1 = 0 ) )
+		SET flag_failed_zaib_med_phone2_m1 = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3947 ) // "Shit, what the fuck happened to the truck? We needed it to put a stop to them working outside of their area! Mission Failed!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+	
+	
+	IF ( ( LOCATE_CHARACTER_BY_CAR ( shaft , 37.0 , 53.0 , 2.0 , 4.0 , 2.0  ) ) 
+	AND ( IS_CHARACTER_IN_MODEL ( shaft , buick ) )	)
+		SET z_m_2_door_2_open = 1 
+	ELSE
+
+		IF ( ( ( IS_CHARACTER_IN_ANY_CAR ( shaft ) ) 
+		AND ( LOCATE_CHARACTER_BY_CAR ( shaft , 37.0 , 53.0 , 2.0 , 4.0 , 2.0  ) ) )
+		AND ( z_m_2_in_wrong_car_at_door_2 = 0 ) )
+			DISPLAY_BRIEF_NOW ( 3933 ) // "You need a gang car dickhead, they won't let you in unless they think you're one of them!"
+			SET z_m_2_in_wrong_car_at_door_2 = 1
+		ENDIF
+
+	ENDIF
+
+
+	IF ( ( NOT ( IS_CHARACTER_IN_ANY_CAR ( shaft ) ) )
+	AND ( z_m_2_in_wrong_car_at_door_2 = 1 ) )
+		SET z_m_2_in_wrong_car_at_door_2 = 0
+	ENDIF
+
+
+	IF ( ( IS_CHARACTER_IN_MODEL ( shaft , buick ) )
+	AND ( z_m_2_in_gang_car = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3931 ) // "Good work, get moving back up to the door and see if they fall for it!"
+		POINT_ARROW_AT ( arrow , 37.0 , 53.0 , 2.0 )
+		SET z_m_2_in_gang_car = 1
+	ENDIF
+
+
+	IF ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , buick ) ) )
+	AND ( z_m_2_in_gang_car = 1 ) )
+		DISPLAY_BRIEF_NOW ( 3932 ) // "Shit, what are you doing get your ass back into a Russian gang car!"
+		REMOVE_ARROW ( arrow )
+		SET z_m_2_in_gang_car = 0
+	ENDIF
+			
+			
+ENDWHILE
+
+
+OPEN_DOOR ( z_m_2_door_2_1 )
+#ifdef PC
+OPEN_DOOR ( z_m_2_door_2_2 )
+#endif
+DISPLAY_BRIEF ( 3934 ) // "Ha Ha, I knew those stupid Russian's would let you in. Now steal the truck and get the hell out of there!"
+POINT_ARROW_AT ( arrow , z_m_2_truck_1 )
+#ifdef PSX
+SET_RECYCLE_MODEL_WANTED ( none ) 
+#endif
+
+WHILE_EXEC ( z_m_2_generators_destroyed = 0 )
+
+
+	// if player is seen by guard1
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_m_2_guard_1 ) ) 
+   	AND ( z_m_2_guard_1_spotted_player = 0 ) )
+		SET z_m_2_guard_1_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3935 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+
+	// if player is seen by guard2
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_m_2_guard_2 ) ) 
+   	AND ( z_m_2_guard_2_spotted_player = 0 ) )
+		SET z_m_2_guard_2_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3936 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+
+	// if player is seen by guard3
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_m_2_guard_3 ) ) 
+   	AND ( z_m_2_guard_3_spotted_player = 0 ) )
+		SET z_m_2_guard_3_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3937 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+
+	// if player is seen by guard4
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_m_2_guard_4 ) ) 
+   	AND ( z_m_2_guard_4_spotted_player = 0 ) )
+		SET z_m_2_guard_4_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3938 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+
+	// if player is seen by guard5
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_m_2_guard_5 ) ) 
+   	AND ( z_m_2_guard_5_spotted_player = 0 ) )
+		SET z_m_2_guard_5_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3939 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+
+
+	IF ( ( ( IS_CHARACTER_IN_CAR ( shaft , z_m_2_truck_1 ) )
+	AND ( z_m_2_player_been_in_truck_1 = 0 ) )
+	AND ( z_m_2_generator_destroyed < 2 ) )
+		SET z_m_2_player_been_in_truck_1 = 1
+		DISPLAY_BRIEF_NOW ( 3940 ) // "What took you so long, get the truck back to the hideout!"
+		POINT_ARROW_AT ( arrow , 28.0 , 37.0 , 3.0 )
+	ENDIF
+
+	
+	IF ( ( ( ( LOCATE_CHARACTER_BY_CAR ( shaft , 28.0 , 37.0 , 3.0 , 2.0 , 2.0  ) ) 
+	AND ( IS_CHARACTER_IN_CAR ( shaft , z_m_2_truck_1 ) ) )
+	AND ( z_m_2_player_been_in_truck_1 = 1 ) )
+	AND ( z_m_2_generator_destroyed < 2 ) )
+		SET z_m_2_player_been_in_truck_1 = 2
+		DISPLAY_BRIEF_NOW ( 3941 ) // "Every fucking door in this shithole is locked! Try taking out the generators above the door!" 
+	ENDIF
+
+
+	IF ( ( CHECK_OBJ_MODEL ( z_m_2_generator_2 , powergen_dead ) )
+	AND ( z_m_2_generator_destroyed = 0 ) )
+		++ z_m_2_generator_destroyed 
+		DISPLAY_BRIEF_NOW ( 3944 ) // "That's one of them destroyed, now take out the other one!"
+	ENDIF
+
+	IF ( ( CHECK_OBJ_MODEL ( z_m_2_generator_1 , powergen_dead ) )
+	AND ( z_m_2_generator_destroyed = 0 ) )
+		++ z_m_2_generator_destroyed 
+		DISPLAY_BRIEF_NOW ( 3944 ) // "That's one of them destroyed, now take out the other one!"
+	ENDIF
+	
+	IF ( ( CHECK_OBJ_MODEL ( z_m_2_generator_2 , powergen_dead ) )
+	AND ( z_m_2_generator_destroyed_brief_2 = 0 ) )
+		SET z_m_2_generator_destroyed_brief_2 = 1
+		#ifdef PC
+		DELETE_ITEM ( z_m_2_generator_2_sound )
+		#endif
+	ENDIF
+
+	IF ( ( CHECK_OBJ_MODEL ( z_m_2_generator_1 , powergen_dead ) )
+	AND ( z_m_2_generator_destroyed_brief_1 = 0 ) )
+		SET z_m_2_generator_destroyed_brief_1 = 1 
+		#ifdef PC
+		DELETE_ITEM ( z_m_2_generator_1_sound )
+		#endif
+	ENDIF
+
+
+	IF ( ( ( z_m_2_generator_destroyed = 1 )
+	AND ( CHECK_OBJ_MODEL ( z_m_2_generator_1 , powergen_dead ) ) )
+	AND ( CHECK_OBJ_MODEL ( z_m_2_generator_2 , powergen_dead ) ) )
+		SET z_m_2_generator_destroyed = 2
+		DISPLAY_BRIEF ( 3942 ) // "Great work, the doors should be open get the truck back here, and watch your back!"
+		OPEN_DOOR ( z_m_2_door_3_1 )
+		OPEN_DOOR ( z_m_2_door_3_2 )
+		POINT_ARROW_AT ( arrow , z_m_2_truck_1 )
+	ENDIF
+
+
+	IF ( ( IS_CHARACTER_IN_CAR ( shaft , z_m_2_truck_1 ) )
+	AND ( z_m_2_generator_destroyed = 2 ) )
+		SET z_m_2_generators_destroyed = 1
+	ENDIF
+
+	// if truck is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( z_m_2_truck_1 ) )
+	AND ( flag_failed_zaib_med_phone2_m1 = 0 ) )
+		SET flag_failed_zaib_med_phone2_m1 = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3947 ) // "Shit, what the fuck happened to the truck? We needed it to put a stop to them working outside of their area! Mission Failed!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+ENDWHILE
+
+
+z_m_2_chase_guard_1 = CREATE_CHAR ( 23.5 , 75.5 , 2.0 ) 10 90 criminal END
+ADD_CHAR_TO_GANG ( z_m_2_chase_guard_1 , russgang )
+SET_CHAR_OBJECTIVE ( z_m_2_chase_guard_1 , kill_char_any_means , shaft ) 
+SET_CHAR_THREAT_SEARCH ( z_m_2_chase_guard_1 , line_of_sight_player_only )
+SET_CHAR_THREAT_REACTION ( z_m_2_chase_guard_1 , no_reaction )
+GIVE_WEAPON ( z_m_2_chase_guard_1 , machine_gun )
+z_m_2_chase_guard_2 = CREATE_CHAR ( 23.5 , 76.5 , 2.0 ) 10 90 criminal END
+ADD_CHAR_TO_GANG ( z_m_2_chase_guard_2 , russgang )
+SET_CHAR_OBJECTIVE ( z_m_2_chase_guard_2 , kill_char_any_means , shaft ) 
+SET_CHAR_THREAT_SEARCH ( z_m_2_chase_guard_2 , line_of_sight_player_only )
+SET_CHAR_THREAT_REACTION ( z_m_2_chase_guard_2 , no_reaction )
+GIVE_WEAPON ( z_m_2_chase_guard_2 , machine_gun )
+
+	
+WHILE_EXEC ( z_m_2_truck_1_parked = 0 )
+
+
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_m_2_chase_guard_1 ) ) 
+   	AND ( z_m_2_chase_guard_1_spotted_player = 0 ) )
+		SET z_m_2_chase_guard_1_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3945 ) // "Nobody steals from us, you're gonna die slow!"	 
+	ENDIF
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_m_2_chase_guard_2 ) ) 
+   	AND ( z_m_2_chase_guard_2_spotted_player = 0 ) )
+		SET z_m_2_chase_guard_2_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3946 ) // "I'm going to enjoy keeling you motherbeetch!"	 
+	ENDIF	
+
+   
+	// if truck is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( z_m_2_truck_1 ) )
+	AND ( flag_failed_zaib_med_phone2_m1 = 0 ) )
+		SET flag_failed_zaib_med_phone2_m1 = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3947 ) // "Shit, what the fuck happened to the truck? We needed it to put a stop to them working outside of their area! Mission Failed!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+		
+ 	// if player gets in truck points at target
+
+   	IF ( ( IS_CHARACTER_IN_CAR ( shaft , z_m_2_truck_1 ) )
+   	AND ( z_m_2_in_truck_1 = 0 ) )
+		SET z_m_2_in_truck_1 = 1
+		DISPLAY_BRIEF_NOW ( 3943 ) // "Stop fucking around, get the truck back to the hideout!"
+		POINT_ARROW_AT ( arrow , 56.0 , 174.0 , 1.0 )
+   	ENDIF
+
+	
+	// if player gets out of truck points back at truck and says to get back in
+		
+   	IF ( ( NOT ( IS_CHARACTER_IN_CAR ( shaft , z_m_2_truck_1 ) ) )
+	AND ( z_m_2_in_truck_1 = 1 ) )
+		SET z_m_2_in_truck_1 = 0
+		DISPLAY_BRIEF_NOW ( 3949 ) // "what the fuck are you doing! get your arse back in the truck"
+		POINT_ARROW_AT ( arrow , z_m_2_truck_1 )
+	ENDIF
+
+
+	// waits for player outside door, then parks the truck
+	
+//	IF ( ( ( LOCATE_CHARACTER_BY_CAR ( shaft , 56.0 , 175.0 , 2.0 , 2.0 , 2.0 ) ) 
+//	AND ( IS_CHARACTER_IN_CAR ( shaft , z_m_2_truck_1 ) ) )
+	IF ( ( IS_CAR_IN_BLOCK ( z_m_2_truck_1 , 56.0 , 175.0 , 2.0 , 2.0 , 2.0 ) )
+	AND ( z_m_2_in_truck_1_parking = 0 ) )
+		PARK ( z_m_2_truck_1 , z_m_2_door_4 )
+		SET z_m_2_in_truck_1_parking = 1
+	ENDIF	
+
+
+	// waits for truck to finish parking, then passes mission
+	
+	IF ( ( z_m_2_in_truck_1_parking = 1	)
+	AND ( HAS_PARK_FINISHED ( ) ) )
+		SET flag_passed_zaib_med_phone2_m1 = 1
+		SET z_m_2_truck_1_parked = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3950 ) // "Well done, those Russian fuckers will think again before trying to expand their territory!"
+		++ counter_all_missions_passed
+		DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+		ADD_SCORE ( shaft , 60000 )
+		ADD_MULTIPLIER ( shaft , 1 )
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , 1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+		IF ( flag_passed_zaib_med_phone1_2_m3 = 1 )
+			SET_PHONE_DEAD ( ph_zaib_med_phone2 ) 
+			DISABLE_THREAD_TRIGGER ( thr_zaib_med_phone2_m1 )
+		ENDIF
+		RETURN
+	ENDIF
+
+ENDWHILE
+	
+
+
+
+
+	
+
+
+			  
+
+	 
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+// deletes all objects when Zaibatsu med phone2 mission1 is finished...
+				
+clean_up_zaib_med_phone2_m1: 
+	
+	REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	OPEN_DOOR ( z_m_2_door_1_1 )
+	OPEN_DOOR ( z_m_2_door_2_1 )
+	OPEN_DOOR ( z_m_2_door_3_1 )
+	OPEN_DOOR ( z_m_2_door_3_2 )
+	
+	#ifdef PC
+	OPEN_DOOR ( z_m_2_door_1_2 )
+	OPEN_DOOR ( z_m_2_door_2_2 )
+	#endif
+	MAKE_DOOR_MANUAL ( z_m_2_door_4 ) 
+	
+	
+	IF ( flag_passed_zaib_med_phone2_m1 = 1 )
+		++ flag_zaib_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_zaib_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3675 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3674 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_zaib_med_phone2_m1 = 1 )
+		++ flag_zaib_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_zaib_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+	MISSION_HAS_FINISHED ( )
+	
+	SET flag_on_mission	= 0
+	SET flag_on_zaib_mission = 0
+	
+	RETURN
+
+
+MISSIONSTART
+
+	GOSUB zaib_med_phone2_m1:
+
+	GOSUB clean_up_zaib_med_phone2_m1:
+
+MISSIONEND
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		

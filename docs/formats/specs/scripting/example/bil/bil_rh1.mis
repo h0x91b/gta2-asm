@@ -1,0 +1,446 @@
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXX BRAVERY TEST IN THE VEDIC TEMPLE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+// objects for Russian hard phone mission1		
+	
+CHAR_DATA r_h_1_group_1_leader
+CAR_DATA r_h_1_group_1_car
+COUNTER r_h_1_group_in_zone = 0
+COUNTER r_h_1_group_in_car = 0
+COUNTER r_h_1_order_group_in_car = 0
+COUNTER r_h_1_group_1_leader_onscreen_foot = 0
+COUNTER r_h_1_group_1_leader_onscreen_car = 0
+COUNTER r_h_1_stop_car = 0
+COUNTER r_h_1_group_1_leader_obj1_pass = 0
+COUNTER r_h_1_group_1_leader_obj2_pass = 0
+COUNTER r_h_1_respect_minus_one = 0
+COUNTER r_h_1_respect_minus_two = 0
+COUNTER r_h_1_respect_minus_three = 0
+COUNTER r_h_1_respect_minus_four = 0
+COUNTER r_h_1_respect_minus_five = 0
+COUNTER r_h_1_group_1_leader_created = 0
+COUNTER r_h_1_timer = 3598
+TIMER_DATA r_h_1_timer_data
+OBJ_DATA r_h_1_powerup_1
+OBJ_DATA r_h_1_powerup_2
+OBJ_DATA r_h_1_powerup_3
+OBJ_DATA r_h_1_powerup_4
+OBJ_DATA r_h_1_powerup_5
+OBJ_DATA r_h_1_powerup_6
+OBJ_DATA r_h_1_powerup_7
+OBJ_DATA r_h_1_powerup_8
+OBJ_DATA r_h_1_powerup_9
+FORWARD clean_up_russ_hard_phone_m1:
+
+ 				
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+		
+// starts Russian hard phone mission1
+					
+
+russ_hard_phone_m1:
+
+SET flag_failed_russ_hard_phone_m1 = 0
+
+
+//	DISABLE_THREAD_TRIGGER ( thr_russ_hard_phone_m1 ) 
+	DISPLAY_MESSAGE ( 3859 ) // you have PASSED the mission!"
+	DISPLAY_BRIEF ( 3453 ) // "go pick up a couple of my men"
+	SET flag_on_mission	= 1
+	SET flag_on_russ_mission = 1
+	#ifdef PC
+	r_h_1_powerup_1 = CREATE_OBJ ( 65.5 , 43.5 , 2.0 ) 0 collect_01	15 END
+	#endif
+	#ifdef PSX
+	r_h_1_powerup_1 = CREATE_OBJ ( 220.0 , 23.0 , 2.0 ) 0 collect_01 15 END
+	#endif
+	r_h_1_powerup_2 = CREATE_OBJ ( 204.0 , 220.0 , 3.0 ) 0 collect_01 15 END
+	r_h_1_powerup_3 = CREATE_OBJ ( 220.0 , 204.0 , 3.0 ) 0 collect_06 15 END
+	r_h_1_powerup_4 = CREATE_OBJ ( 236.0 , 220.0 , 3.0 ) 0 collect_08 20 END
+	r_h_1_powerup_5 = CREATE_OBJ ( 220.0 , 236.0 , 3.0 ) 0 collect_04 15 END
+	r_h_1_powerup_6 = CREATE_OBJ ( 216.5 , 216.5 , 4.0 ) 0 collect_33 END
+	r_h_1_powerup_7 = CREATE_OBJ ( 223.5 , 216.5 , 4.0 ) 0 collect_35 END
+	r_h_1_powerup_8 = CREATE_OBJ ( 216.5 , 223.5 , 4.0 ) 0 collect_36 END
+	r_h_1_powerup_9 = CREATE_OBJ ( 223.5 , 223.5 , 4.0 ) 0 collect_37 END
+
+	FORCE_CLEANUP ( r_h_1_powerup_1 )
+	FORCE_CLEANUP ( r_h_1_powerup_2 )
+	FORCE_CLEANUP ( r_h_1_powerup_3 )
+	FORCE_CLEANUP ( r_h_1_powerup_4 )
+	FORCE_CLEANUP ( r_h_1_powerup_5 )
+	FORCE_CLEANUP ( r_h_1_powerup_6 )
+	FORCE_CLEANUP ( r_h_1_powerup_7 )
+	FORCE_CLEANUP ( r_h_1_powerup_8 )
+	FORCE_CLEANUP ( r_h_1_powerup_9 )
+
+
+	#ifdef PC
+	r_h_1_group_1_leader = CREATE_CHAR ( 65.5 , 45.5 , 2.0 ) 10 180 criminal END
+	#endif
+
+	#ifdef PSX
+	r_h_1_group_1_leader = CREATE_CHAR ( 220.0 , 22.0 , 2.0 ) 10 0 criminal END
+	#endif
+	
+	#ifdef PSX
+	SET_RECYCLE_MODEL_WANTED ( van ) 
+	#endif
+	ADD_CHAR_TO_GANG ( r_h_1_group_1_leader , russgang )
+	GIVE_WEAPON ( r_h_1_group_1_leader , pistol )
+	ADD_GROUP_TO_CHARACTER ( r_h_1_group_1_leader , 3 )
+	SET_CHAR_OBJECTIVE ( r_h_1_group_1_leader , wait_on_foot ) 
+	SET_CHAR_THREAT_REACTION ( r_h_1_group_1_leader , no_reaction )
+	SET r_h_1_group_1_leader_created = 1
+	POINT_ARROW_AT ( arrow , r_h_1_group_1_leader )
+
+		
+WHILE_EXEC ( r_h_1_respect_minus_five = 0 )
+   	WHILE ( r_h_1_group_in_car = 0 )		
+
+		// if group leader dies the mission is failed
+
+		IF ( ( HAS_CHARACTER_DIED ( r_h_1_group_1_leader ) )
+		AND ( flag_failed_russ_hard_phone_m1 = 0 ) )
+			CLEAR_ALL_BRIEFS ( )
+			DISPLAY_BRIEF ( 3447 ) // "Vodka boy is dead you have failed me"
+			SET flag_failed_russ_hard_phone_m1	= 1
+			DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+			RETURN
+		ENDIF
+
+		
+		// checks for in car and onscreen, stores current car info
+			
+		IF ( ( ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , r_h_1_group_1_leader , 3.0 , 3.0 ) )  
+		AND ( IS_CHAR_CAR_CAPACITY ( shaft , 4 ) ) )
+		AND ( r_h_1_order_group_in_car = 0 ) )
+			STORE_CAR_CHARACTER_IS_IN ( shaft , r_h_1_group_1_car )
+//			ORDER_CHAR_TO_BACKDOOR ( r_h_1_group_1_leader , r_h_1_group_1_car )
+			SET_CHAR_OBJECTIVE ( r_h_1_group_1_leader , ENTER_CAR_AS_PASSENGER , r_h_1_group_1_car )
+			SET r_h_1_order_group_in_car = 1
+		ELSE
+			
+			// tells player to steal a car with bigger capacity
+
+			IF ( ( ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , r_h_1_group_1_leader , 3.0 , 3.0 ) ) 
+		   	AND ( r_h_1_group_1_leader_onscreen_car = 0 ) )
+			AND ( r_h_1_order_group_in_car = 0 ) ) 
+				DISPLAY_BRIEF_NOW ( 3441 ) // "go get a bigger car and pick us up"
+				SET r_h_1_group_1_leader_onscreen_car = 1
+			ENDIF
+		ENDIF
+		
+
+		// waits for group in car, points toward target
+		
+		IF ( ( IS_GROUP_IN_CAR ( r_h_1_group_1_leader ) )	
+		AND ( r_h_1_group_in_car = 0 ) )
+			DISPLAY_BRIEF_NOW ( 3440 ) // "ok drive to the Vedic Temple in the Krishna gang zone"	
+			REMOVE_ARROW ( arrow )
+			POINT_ARROW_AT ( arrow , 219.5 , 219.5 , 4.0 )
+			SET r_h_1_group_in_car = 1				
+		ENDIF
+		
+
+		IF ( ( NOT ( IS_ITEM_ONSCREEN ( r_h_1_group_1_leader ) ) )
+		AND ( r_h_1_group_1_leader_onscreen_car = 1 ) )
+			SET r_h_1_group_1_leader_onscreen_car = 0
+		ENDIF
+
+		
+		// tells player to steal a car and pick them up
+
+		IF ( ( ( LOCATE_ANOTHER_CHARACTER_ON_FOOT ( shaft , r_h_1_group_1_leader , 2.0 , 2.0 ) ) 
+		AND ( r_h_1_group_1_leader_onscreen_foot = 0 ) )
+		AND ( r_h_1_order_group_in_car = 0 ) )
+			DISPLAY_BRIEF_NOW ( 3442 ) // "go get a car and pick us up"
+			SET r_h_1_group_1_leader_onscreen_foot = 1
+		ENDIF
+
+
+		IF ( ( NOT ( LOCATE_ANOTHER_CHARACTER_ON_FOOT ( shaft , r_h_1_group_1_leader , 2.0 , 2.0 ) ) )
+		AND ( r_h_1_group_1_leader_onscreen_foot = 1 ) )
+			SET r_h_1_group_1_leader_onscreen_foot = 0
+		ENDIF
+
+   		 
+		ENDEXEC 
+	ENDWHILE
+
+
+// 	WHILE ( r_h_1_group_in_car < 3 )
+	WHILE ( r_h_1_group_in_car = 1 )
+		
+		// if group leader dies the mission is failed
+
+		IF ( ( HAS_CHARACTER_DIED ( r_h_1_group_1_leader ) )
+		AND ( flag_failed_russ_hard_phone_m1 = 0 ) )
+			CLEAR_ALL_BRIEFS ( )
+			DISPLAY_BRIEF ( 3447 ) // "Vodka boy is dead you have failed me"
+			SET flag_failed_russ_hard_phone_m1	= 1
+			DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+			RETURN
+		ENDIF
+
+		
+		// if player exits car tells group to do same
+		
+		IF ( ( ( NOT ( IS_CHAR_IN_ZONE ( shaft , m05 ) ) ) 
+		AND ( NOT ( IS_CHARACTER_IN_CAR ( shaft , r_h_1_group_1_car ) ) ) )
+		AND ( r_h_1_order_group_in_car = 1 ) )
+			SET_CHAR_OBJECTIVE ( r_h_1_group_1_leader , leave_car , r_h_1_group_1_car )
+			SET r_h_1_group_1_leader_obj1_pass = 1
+			SET r_h_1_order_group_in_car = 0
+		ENDIF
+		
+
+		IF ( ( r_h_1_group_1_leader_obj1_pass = 1 )
+		AND ( IS_CHAR_OBJECTIVE_PASSED ( r_h_1_group_1_leader ) ) )
+			DISPLAY_BRIEF_NOW ( 3443 ) // "where the hell are you going"
+			SET_CHAR_OBJECTIVE ( r_h_1_group_1_leader , wait_on_foot ) 
+			SET_CHAR_THREAT_REACTION ( r_h_1_group_1_leader , no_reaction )
+			REMOVE_ARROW ( arrow )
+			POINT_ARROW_AT ( arrow , r_h_1_group_1_leader )
+			SET r_h_1_group_1_leader_obj1_pass = 0
+			SET r_h_1_group_in_car = 0
+		ENDIF
+
+		
+		// if player enters the temple, starts the test
+		
+		IF ( ( ( IS_CHAR_IN_ZONE ( shaft , m05 ) )  
+		AND ( IS_CHARACTER_IN_CAR ( shaft , r_h_1_group_1_car ) ) )
+		AND ( r_h_1_stop_car = 0 ) )
+			DISPLAY_BRIEF_NOW ( 3444 ) // "don't leave the Vedic Temple and stop the car"	
+			SET r_h_1_stop_car	= 1
+			REMOVE_ARROW ( arrow )
+		ENDIF
+
+
+		// if player enters the temple, starts the test
+		
+		IF ( ( ( NOT ( IS_CHAR_IN_ZONE ( shaft , m05 ) ) ) 
+		AND ( IS_CHARACTER_IN_CAR ( shaft , r_h_1_group_1_car ) ) )
+		AND ( r_h_1_stop_car = 1 ) )
+			DISPLAY_BRIEF_NOW ( 3446 ) // "get back to the Vedic Temple"	
+			SET r_h_1_stop_car	= 0
+			POINT_ARROW_AT ( arrow , 219.5 , 219.5 , 4.0 )
+		ENDIF
+
+				
+		IF ( ( ( ( IS_CHAR_IN_ZONE ( shaft , m05 ) )
+		AND ( NOT ( IS_CHARACTER_IN_ANY_CAR ( shaft ) ) ) )
+		AND ( r_h_1_group_in_zone = 0 )	)
+		AND ( r_h_1_stop_car = 1 ) )
+			SET r_h_1_group_in_zone = 1
+			SET r_h_1_group_in_car = 2
+			DISPLAY_BRIEF_NOW ( 3445 ) // "stay on foot and kill the krishnas"
+			SET_CHAR_THREAT_REACTION ( r_h_1_group_1_leader , react_as_normal )
+		   	SET_CHAR_OBJECTIVE ( r_h_1_group_1_leader , leave_car , r_h_1_group_1_car )
+			REMOVE_ARROW ( arrow )
+		ENDIF
+			
+		
+		ENDEXEC
+	ENDWHILE
+
+	
+	WHILE ( r_h_1_group_in_zone = 1 )
+
+		IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_h_1_group_1_leader ) ) 
+		AND ( r_h_1_group_1_leader_obj2_pass = 0 ) )
+		   	MAKE_NEW_LEADER_OF_GROUP ( r_h_1_group_1_leader , shaft )
+			SET r_h_1_group_1_leader_obj2_pass = 1
+		ENDIF
+
+
+		
+		IF ( ( NOT ( IS_CHAR_IN_ZONE ( shaft , m05 ) ) )
+		AND ( flag_failed_russ_hard_phone_m1 = 0 ) )
+			CLEAR_ALL_BRIEFS ( )
+			DISPLAY_BRIEF ( 3448 ) // "you were told not to leave the temple, you have failed me!"
+			SET flag_failed_russ_hard_phone_m1	= 1
+			DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+			RETURN
+		ENDIF
+
+	
+		IF ( ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )
+		AND ( flag_failed_russ_hard_phone_m1 = 0 ) )
+			CLEAR_ALL_BRIEFS ( )
+			DISPLAY_BRIEF ( 3452 ) // "you were told to stay on foot, you have failed me!"
+			SET flag_failed_russ_hard_phone_m1	= 1
+			DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+			RETURN
+		ENDIF
+
+
+		IF ( ( CHECK_RESPECT_EQUAL ( shaft , krisgang , -1 ) )
+		AND ( r_h_1_respect_minus_one = 0 ) )
+			SET r_h_1_respect_minus_one = 1
+			DISPLAY_BRIEF_NOW ( 3454 ) // "ok now see if you can stay alive inside the temple for 2 minutes"
+		ENDIF
+
+		
+		IF ( ( CHECK_RESPECT_EQUAL ( shaft , krisgang , -2 ) )
+		AND ( r_h_1_respect_minus_two = 0 ) )
+			SET r_h_1_respect_minus_two = 1
+			DISPLAY_BRIEF_NOW ( 3455 ) // "ok now see if you can stay alive inside the temple for 2 minutes"
+		ENDIF
+
+
+		#ifdef PC
+		IF ( ( CHECK_RESPECT_EQUAL ( shaft , krisgang , -3 ) )
+		AND ( r_h_1_respect_minus_three = 0 ) )
+			SET r_h_1_respect_minus_three = 1
+			DISPLAY_BRIEF_NOW ( 3456 ) // "ok now see if you can stay alive inside the temple for 2 minutes"
+		ENDIF
+
+
+		IF ( ( CHECK_RESPECT_EQUAL ( shaft , krisgang , -4 ) )
+		AND ( r_h_1_respect_minus_four = 0 ) )
+			SET r_h_1_respect_minus_four = 1
+			DISPLAY_BRIEF_NOW ( 3457 ) // "ok now see if you can stay alive inside the temple for 2 minutes"
+		ENDIF
+
+		IF ( ( CHECK_RESPECT_EQUAL ( shaft , krisgang , -5 ) )
+		#endif
+		#ifdef PSX
+		IF ( ( NOT ( CHECK_RESPECT_GREATER ( shaft , krisgang , -3 ) ) )
+		#endif
+//		IF ( ( CHECK_RESPECT_LOWER ( shaft , krisgang , 0 ) )
+		AND ( r_h_1_respect_minus_five = 0 ) )
+			SET r_h_1_respect_minus_five = 1
+			SET r_h_1_group_in_zone = 0
+			DISPLAY_BRIEF_NOW ( 3449 ) // "ok now see if you can stay alive inside the temple for 2 minutes"
+			DISPLAY_TIMER ( r_h_1_timer_data , 120 )
+		ENDIF
+		ENDEXEC
+	ENDWHILE
+ENDWHILE
+
+WHILE_EXEC ( r_h_1_respect_minus_five = 1 )
+		-- r_h_1_timer
+		
+
+
+		IF ( ( NOT ( IS_CHAR_IN_ZONE ( shaft , m05 ) ) )
+		AND ( flag_failed_russ_hard_phone_m1 = 0 ) )
+			CLEAR_ALL_BRIEFS ( )
+			DISPLAY_BRIEF ( 3448 ) // "you were told not to leave the temple, you have failed me!"
+			SET flag_failed_russ_hard_phone_m1	= 1
+			CLEAR_TIMER ( r_h_1_timer_data )
+			DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+			RETURN
+		ENDIF
+
+
+		IF ( ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )
+		AND ( flag_failed_russ_hard_phone_m1 = 0 ) )
+			CLEAR_ALL_BRIEFS ( )
+			CLEAR_TIMER ( r_h_1_timer_data )
+			DISPLAY_BRIEF ( 3452 ) // "you were told to stay on foot, you have failed me!"
+			SET flag_failed_russ_hard_phone_m1	= 1
+			DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+			RETURN
+		ENDIF
+
+			
+		IF ( ( ( r_h_1_timer = 0 )
+		AND ( flag_failed_russ_hard_phone_m1 = 0 ) )
+		AND ( flag_passed_russ_hard_phone_m1 = 0 ) ) 
+			CLEAR_ALL_BRIEFS ( )
+			DISPLAY_BRIEF ( 3451 ) // "you have stayed alive and passed my test. Well done"
+//			SET_CHAR_OBJECTIVE ( r_h_1_group_1_leader , no_obj )
+			MAKE_CHAR_DO_NOTHING ( r_h_1_group_1_leader )
+			SET flag_passed_russ_hard_phone_m1	= 1
+			++ counter_all_missions_passed
+			DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+			ADD_SCORE ( shaft , 80000 )
+			ADD_MULTIPLIER ( shaft , 1 )
+			CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , 1 ) 
+			CLEAR_WANTED_LEVEL ( shaft )
+			RETURN
+		ENDIF
+ENDWHILE
+
+			  
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+// deletes all objects when Russian hard phone mission1 is finished...
+				
+clean_up_russ_hard_phone_m1: 
+	
+	SET r_h_1_respect_minus_five = 2
+	REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	CLEAR_TIMER ( r_h_1_timer_data )
+			
+	IF ( r_h_1_group_1_leader_created = 1 )
+		IF ( NOT ( HAS_CHARACTER_DIED ( r_h_1_group_1_leader ) ) )
+			DESTROY_GROUP ( shaft )
+			MAKE_CHAR_DO_NOTHING ( r_h_1_group_1_leader )
+		ENDIF
+	ENDIF
+	
+	IF ( flag_passed_russ_hard_phone_m1 = 1 )
+		++ flag_russ_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_russ_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3673 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3672 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_russ_hard_phone_m1 = 1 )
+		++ flag_russ_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_russ_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+	MISSION_HAS_FINISHED ( )
+	
+	SET flag_on_mission	= 0
+	SET flag_on_russ_mission = 0
+	
+	RETURN
+
+
+MISSIONSTART
+
+	GOSUB russ_hard_phone_m1:
+
+	GOSUB clean_up_russ_hard_phone_m1:
+
+MISSIONEND
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		

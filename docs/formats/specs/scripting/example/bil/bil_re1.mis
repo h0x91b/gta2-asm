@@ -1,0 +1,1272 @@
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX MINCER MISSION XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+
+// objects for Russian easy phone1 mission1		
+	
+
+COUNTER r_e_1_in_a_bus = 0	
+COUNTER r_e_1_peds_minced = 0	
+COUNTER r_e_1_bus_1_parking = 0
+COUNTER r_e_1_bus_delivered = 0
+COUNTER r_e_1_bus_full = 0
+COUNTER r_e_1_player_dead_1 = 0
+COUNTER r_e_1_player_dead_2	= 0
+COUNTER r_e_1_group_1_obj1_passed = 0
+COUNTER r_e_1_group_2_obj1_passed = 0
+COUNTER r_e_1_group_3_obj1_passed = 0
+COUNTER r_e_1_group_4_obj1_passed = 0
+COUNTER r_e_1_runner_1_obj1_passed = 0
+COUNTER r_e_1_runner_2_obj1_passed = 0
+COUNTER r_e_1_in_hotdog_van_1 = 0
+COUNTER r_e_1_in_hotdog_van_1_parking = 0
+COUNTER r_e_1_hotdog_van_1_parked = 0
+COUNTER r_e_1_runner_1_dead = 0
+COUNTER r_e_1_runner_2_dead = 0
+COUNTER r_e_1_russian_1_obj1_passed = 0
+COUNTER r_e_1_russian_2_obj1_passed = 0
+COUNTER r_e_1_russian_3_obj1_passed = 0
+COUNTER r_e_1_russian_4_obj1_passed = 0
+COUNTER r_e_1_russian_5_obj1_passed = 0
+COUNTER r_e_1_russian_6_obj1_passed = 0
+COUNTER r_e_1_russian_7_obj1_passed = 0
+COUNTER r_e_1_russian_8_obj1_passed = 0
+COUNTER r_e_1_russian_9_obj1_passed = 0
+COUNTER r_e_1_in_a_full_bus = 0
+COUNTER r_e_1_bus_full_yet = 0
+COUNTER r_e_1_in_a_bus_2 = 0
+COUNTER r_e_1_in_a_full_bus_2 = 0
+COUNTER r_e_1_bus = 0
+
+COUNTER r_e_1_in_truck_1 = 0
+COUNTER r_e_1_press_horn = 0
+COUNTER r_e_1_pickup_group_1_in_truck = 0
+COUNTER r_e_1_pickup_group_2_in_truck = 0
+COUNTER r_e_1_pickup_group_3_in_truck = 0
+COUNTER r_e_1_pickup_group_4_in_truck = 0
+COUNTER r_e_1_send_pickup_group_1_in_truck = 0
+COUNTER r_e_1_send_pickup_group_2_in_truck = 0
+COUNTER r_e_1_send_pickup_group_3_in_truck = 0
+COUNTER r_e_1_send_pickup_group_4_in_truck = 0
+COUNTER r_e_1_pickup_group_1_leader_dead = 0
+COUNTER r_e_1_pickup_group_2_leader_dead = 0
+COUNTER r_e_1_pickup_group_3_leader_dead = 0
+COUNTER r_e_1_pickup_group_4_leader_dead = 0
+COUNTER r_e_1_all_groups_in_truck = 0
+
+CAR_DATA r_e_1_bus_1
+CAR_DATA r_e_1_hotdog_van_1
+
+CAR_DATA r_e_1_truck_1 
+
+CHAR_DATA r_e_1_group_1
+CHAR_DATA r_e_1_group_2
+CHAR_DATA r_e_1_group_3
+CHAR_DATA r_e_1_group_4
+CHAR_DATA r_e_1_runner_1
+CHAR_DATA r_e_1_runner_2
+CHAR_DATA r_e_1_russian_1
+CHAR_DATA r_e_1_russian_2
+CHAR_DATA r_e_1_russian_3
+CHAR_DATA r_e_1_russian_4
+CHAR_DATA r_e_1_russian_5
+CHAR_DATA r_e_1_russian_6
+CHAR_DATA r_e_1_russian_7
+CHAR_DATA r_e_1_russian_8
+CHAR_DATA r_e_1_russian_9
+
+CHAR_DATA r_e_1_pickup_group_1_leader 
+CHAR_DATA r_e_1_pickup_group_2_leader 
+CHAR_DATA r_e_1_pickup_group_3_leader 
+CHAR_DATA r_e_1_pickup_group_4_leader 
+
+SOUND r_e_1_scream 
+SOUND r_e_1_crying 
+
+FORWARD clean_up_russ_easy_phone1_m1:
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+		
+// starts Russian easy phone1 mission1
+					
+russ_easy_phone1_m1:
+
+SET flag_failed_russ_easy_phone1_m1 = 0
+
+SET flag_on_mission	= 1
+SET flag_on_russ_mission = 1
+
+//DISABLE_THREAD_TRIGGER ( thr_russ_easy_phone1_m1 ) 
+DISPLAY_MESSAGE ( 3854 ) // you have PASSED the mission!"
+
+#ifdef PC
+DISPLAY_BRIEF ( 3400 ) // "We're a little short of meat at R.S. and L. BOWS. Steal a bus. We'll call when you have one!"
+STOP_CHARS_GETTING_OFF_BUS ( shaft , ON )
+
+r_e_1_russian_1 = CREATE_CHAR ( 183.5 , 22.5 , 2.0 ) 10 0 criminal END
+ADD_CHAR_TO_GANG ( r_e_1_russian_1 , russgang )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_1 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_russian_1 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_russian_1 , no_reaction )
+GIVE_WEAPON ( r_e_1_russian_1 , machine_gun )
+r_e_1_russian_2 = CREATE_CHAR ( 182.5 , 22.5 , 2.0 ) 10 45 criminal END
+ADD_CHAR_TO_GANG ( r_e_1_russian_2 , russgang )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_2 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_russian_2 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_russian_2 , no_reaction )
+GIVE_WEAPON ( r_e_1_russian_2 , machine_gun )
+r_e_1_russian_3 = CREATE_CHAR ( 182.5 , 23.5 , 2.0 ) 10 90 criminal END
+ADD_CHAR_TO_GANG ( r_e_1_russian_3 , russgang )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_3 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_russian_3 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_russian_3 , no_reaction )
+GIVE_WEAPON ( r_e_1_russian_3 , machine_gun )
+r_e_1_russian_4 = CREATE_CHAR ( 182.5 , 24.5 , 2.0 ) 10 90 criminal END
+ADD_CHAR_TO_GANG ( r_e_1_russian_4 , russgang )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_4 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_russian_4 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_russian_4 , no_reaction )
+GIVE_WEAPON ( r_e_1_russian_4 , machine_gun )
+r_e_1_russian_5 = CREATE_CHAR ( 182.5 , 25.5 , 2.0 ) 10 90 criminal END
+ADD_CHAR_TO_GANG ( r_e_1_russian_5 , russgang )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_5 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_russian_5 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_russian_5 , no_reaction )
+GIVE_WEAPON ( r_e_1_russian_5 , machine_gun )
+r_e_1_russian_6 = CREATE_CHAR ( 182.5 , 26.5 , 2.0 ) 10 135 criminal END
+ADD_CHAR_TO_GANG ( r_e_1_russian_6 , russgang )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_6 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_russian_6 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_russian_6 , no_reaction )
+GIVE_WEAPON ( r_e_1_russian_6 , machine_gun )
+r_e_1_russian_7 = CREATE_CHAR ( 183.5 , 26.5 , 2.0 ) 10 180 criminal END
+ADD_CHAR_TO_GANG ( r_e_1_russian_7 , russgang )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_7 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_russian_7 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_russian_7 , no_reaction )
+GIVE_WEAPON ( r_e_1_russian_7 , machine_gun )
+r_e_1_russian_8 = CREATE_CHAR ( 184.5 , 26.5 , 2.0 ) 10 180 criminal END
+ADD_CHAR_TO_GANG ( r_e_1_russian_8 , russgang )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_8 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_russian_8 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_russian_8 , no_reaction )
+GIVE_WEAPON ( r_e_1_russian_8 , machine_gun )
+r_e_1_russian_9 = CREATE_CHAR ( 185.5 , 26.5 , 2.0 ) 10 180 criminal END
+ADD_CHAR_TO_GANG ( r_e_1_russian_9 , russgang )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_9 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_russian_9 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_russian_9 , no_reaction )
+GIVE_WEAPON ( r_e_1_russian_9 , machine_gun )
+
+
+WHILE_EXEC ( r_e_1_bus_delivered = 0 )
+
+	IF ( ( ( IS_CHARACTER_IN_MODEL ( shaft , bus ) )
+	AND ( r_e_1_in_a_bus = 0 ) )
+	AND ( r_e_1_bus_full = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3401 ) // "What took you so long? We don't care where the meat comes from, find yourself a bus stop and pick up people. We'll call when you have a full bus!"
+		SET r_e_1_in_a_bus = 1
+		STORE_CAR_CHARACTER_IS_IN ( shaft , r_e_1_bus_1 )
+	ENDIF
+
+/*
+	IF ( ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , bus ) ) )
+	AND ( r_e_1_in_a_bus = 1 ) )
+	AND ( r_e_1_bus_full = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3402 ) // "What are you doing, you take forever to steal a bus and then you leave it behind. Get your arse in a bus!"
+		SET r_e_1_in_a_bus = 0
+		SET r_e_1_bus_full = 0
+		REMOVE_ARROW ( arrow )
+	ENDIF
+*/
+
+	IF ( ( r_e_1_in_a_bus = 1 )
+	AND ( r_e_1_bus_full_yet < 2 ) )
+		IF ( ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_bus_1 ) )
+		AND ( r_e_1_in_a_bus_2 = 1 ) )
+			DISPLAY_BRIEF_NOW ( 3424 ) // "Stop pissing about and get the bus to R.S. and L. Bows!"
+			SET r_e_1_in_a_bus_2 = 0
+			REMOVE_ARROW ( arrow )
+		ENDIF
+	ENDIF
+
+
+	IF ( ( r_e_1_in_a_bus = 1 )
+	AND ( r_e_1_bus_full_yet < 2 ) )
+		IF ( ( NOT ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_bus_1 ) ) )
+		AND ( r_e_1_in_a_bus_2 = 0 ) )
+			DISPLAY_BRIEF_NOW ( 3402 ) // "What are you doing, you take forever to steal a bus and then you leave it behind. Get your arse in a bus!"
+			SET r_e_1_in_a_bus_2 = 1
+			POINT_ARROW_AT ( arrow , r_e_1_bus_1 )
+		ENDIF
+	ENDIF
+
+
+	IF ( ( r_e_1_in_a_bus = 1 )
+	AND ( r_e_1_bus_full_yet = 2 ) )
+		IF ( ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_bus_1 ) )
+		AND ( r_e_1_in_a_full_bus_2 = 1 ) )
+			DISPLAY_BRIEF_NOW ( 3421 ) // "Stop pissing about and get the bus to a bus stop and fill it with people!"
+			SET r_e_1_in_a_full_bus_2 = 0
+			POINT_ARROW_AT ( arrow , 184.0 , 31.0 , 2.0 )
+		ENDIF
+	ENDIF
+
+
+	IF ( ( r_e_1_in_a_bus = 1 )
+	AND ( r_e_1_bus_full_yet = 2 ) )
+		IF ( ( NOT ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_bus_1 ) ) )
+		AND ( r_e_1_in_a_full_bus_2 = 0 ) )
+			DISPLAY_BRIEF_NOW ( 3422 ) // "What are you doing, it took you long enough to fill that bus then you leave it behind. Get your arse in the bus!"
+			SET r_e_1_in_a_full_bus_2 = 1
+			POINT_ARROW_AT ( arrow , r_e_1_bus_1 )
+		ENDIF
+	ENDIF
+
+
+	IF ( r_e_1_in_a_bus = 1 )
+		IF ( IS_CAR_WRECKED ( r_e_1_bus_1 ) )
+			DISPLAY_BRIEF_NOW ( 3423 ) // "You arsehole! Now you have to do it all over again! Now go and steal a bus!"
+			SET r_e_1_bus_full = 0
+			SET r_e_1_bus_full_yet = 0
+			SET r_e_1_in_a_bus = 0
+			SET r_e_1_in_a_bus_2 = 0
+			SET r_e_1_in_a_full_bus_2 = 0
+			REMOVE_ARROW ( arrow )
+		ENDIF
+	ENDIF
+
+
+	IF ( ( ( ( r_e_1_in_a_bus = 1 )
+	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_bus_1 ) ) )
+	AND ( r_e_1_bus_full = 0 ) )
+	AND ( IS_BUS_FULL ( shaft ) ) )
+		++ r_e_1_bus_full_yet
+		STORE_CAR_CHARACTER_IS_IN ( shaft , r_e_1_bus_1 )
+		KILL_ALL_PASSENGERS ( r_e_1_bus_1 )
+
+		IF ( r_e_1_bus_full_yet = 2 )
+//		IF ( r_e_1_bus_full_yet < 3 )
+//			KILL_ALL_PASSENGERS ( r_e_1_bus_1 )
+
+//		ELSE
+			DISPLAY_BRIEF_NOW ( 3403 ) // "Good work, the bus is full. Now bring it up to R.S. and L. BOWS my men will be waiting!"
+			UPDATE_DOOR_TARGET ( r_e_1_door_1 , r_e_1_bus_1 )
+			MAKE_DOOR_AUTOMATIC ( r_e_1_door_1 )
+			POINT_ARROW_AT ( arrow , 184.0 , 31.0 , 2.0 )
+			SET r_e_1_bus_full = 1
+		ENDIF
+	ENDIF
+
+
+	IF ( ( ( r_e_1_bus_full_yet = 2 ) 
+	AND ( r_e_1_bus_1_parking = 0 ) )
+	AND ( IS_CAR_IN_BLOCK ( r_e_1_bus_1 , 184.0 , 30.0 , 2.0 , 2.0 , 2.0 ) ) )
+//	AND ( LOCATE_CHARACTER_BY_CAR ( shaft , 184.0 , 31.0 , 2.0 , 2.0 , 4.0 ) ) )
+//		IF ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_bus_1 ) ) 
+			PARK ( r_e_1_bus_1 , r_e_1_door_1 )
+			SET r_e_1_bus_1_parking = 1
+//		ENDIF
+	ENDIF	
+
+
+	IF ( ( r_e_1_bus_1_parking = 1 )
+	AND ( HAS_PARK_FINISHED ( ) ) )
+		KILL_ALL_PASSENGERS ( r_e_1_bus_1 )
+		SET r_e_1_bus_delivered = 1
+	ENDIF
+	
+
+ENDWHILE
+
+#endif
+
+
+
+
+#ifdef PSX
+
+DISPLAY_BRIEF ( 3425 ) // "We're a little short of meat at R.S. and L. BOWS. Steal a bus. We'll call when you have one!"
+
+r_e_1_russian_2 = CREATE_CHAR ( 182.5 , 23.5 , 2.0 ) 10 90 criminal END
+ADD_CHAR_TO_GANG ( r_e_1_russian_2 , russgang )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_2 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_russian_2 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_russian_2 , no_reaction )
+GIVE_WEAPON ( r_e_1_russian_2 , machine_gun )
+r_e_1_russian_3 = CREATE_CHAR ( 182.5 , 24.5 , 2.0 ) 10 90 criminal END
+ADD_CHAR_TO_GANG ( r_e_1_russian_3 , russgang )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_3 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_russian_3 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_russian_3 , no_reaction )
+GIVE_WEAPON ( r_e_1_russian_3 , machine_gun )
+r_e_1_truck_1 = CREATE_GANG_CAR ( 216.5 , 22.5 , 2.0 ) -1 90 krsnabus END
+POINT_ARROW_AT ( arrow , r_e_1_truck_1 ) 
+
+
+WHILE_EXEC ( r_e_1_bus_delivered = 0 )
+
+
+	// if car is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( r_e_1_truck_1 ) )
+	AND ( flag_failed_russ_easy_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3426 ) // "You arsehole! You wrecked the Krishna Bus!"
+		SET flag_failed_russ_easy_phone1_m1	= 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN 
+	ENDIF
+	
+
+	// if player gets in car points at target
+
+   	IF ( ( ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_truck_1 ) )
+   	AND ( r_e_1_in_truck_1 = 0 ) )
+	AND ( r_e_1_all_groups_in_truck = 0 ) )
+//   		DELAY ( 90 )
+		SET r_e_1_in_truck_1 = 1
+		DISPLAY_BRIEF_NOW ( 3427 ) // "Take the bus across to Maharishi and pick up some Krishnas!"
+   		POINT_ARROW_AT ( arrow , 188.5 , 168.0 , 2.0 )
+   	ENDIF
+
+	
+	// if player gets out of car points back at car and says to get back in
+		
+   	IF ( ( ( NOT ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_truck_1 ) ) )
+	AND ( r_e_1_in_truck_1 = 1 ) )
+	AND ( r_e_1_all_groups_in_truck = 0 ) )
+//		DELAY ( 90 )
+		SET r_e_1_in_truck_1 = 0
+		DISPLAY_BRIEF_NOW ( 3402 ) // "What the fuck are you doing! Get your arse back in the Krishna Bus"
+		POINT_ARROW_AT ( arrow , r_e_1_truck_1 )
+	ENDIF
+
+
+	// if car is at destination it says to press horn and wait
+
+//	IF ( ( ( IS_CAR_IN_BLOCK ( r_e_1_truck_1 , 8.5 , 83.5 , 2.0 ) ) 
+	IF ( ( ( IS_CAR_IN_BLOCK ( r_e_1_truck_1 , 188.5 , 168.0 , 2.0 , 2.0 , 2.0 ) )
+	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_truck_1 ) ) )
+	AND ( r_e_1_press_horn = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3428 ) // "Press the horn and wait here"
+		SET r_e_1_press_horn = 1
+		REMOVE_ARROW ( arrow )
+	ENDIF
+
+	
+	IF ( ( ( NOT ( IS_CAR_IN_BLOCK ( r_e_1_truck_1 , 188.5 , 168.0 , 2.0 , 2.0 , 2.0 ) ) )
+	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_truck_1 ) ) )
+	AND ( r_e_1_press_horn = 1 ) )
+		DISPLAY_BRIEF_NOW ( 3429 ) // "Didn't I tell you to wait there? Get the bus back and pick up the fresh meat!"
+		SET r_e_1_press_horn = 0
+		POINT_ARROW_AT ( arrow , 188.5 , 168.0 , 2.0 )
+	ENDIF
+
+
+	IF ( ( ( ( NOT ( IS_CAR_IN_BLOCK ( r_e_1_truck_1 , 188.5 , 168.0 , 2.0 , 2.0 , 2.0 ) ) )
+	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_truck_1 ) ) )
+	AND ( r_e_1_pickup_group_4_in_truck = 0 ) )
+	AND ( r_e_1_press_horn = 2 ) )
+		DISPLAY_BRIEF_NOW ( 3429 ) // "Didn't I tell you to wait there? Get the bus back and pick up the fresh meat!"
+		SET r_e_1_press_horn = 3
+		POINT_ARROW_AT ( arrow , 188.5 , 168.0 , 2.0 )
+	ENDIF
+
+	IF ( ( ( IS_CAR_IN_BLOCK ( r_e_1_truck_1 , 188.5 , 168.0 , 2.0 , 2.0 , 2.0 ) )
+	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_truck_1 ) ) )
+	AND ( r_e_1_press_horn = 3 ) )
+	   	SET r_e_1_press_horn = 2
+		REMOVE_ARROW ( arrow )
+	ENDIF
+
+
+	// if player presses horn group1 is created and sent to back of car
+
+	IF ( ( ( ( ( IS_CAR_IN_BLOCK ( r_e_1_truck_1 , 188.5 , 168.0 , 2.0 , 2.0 , 2.0 ) ) 
+	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_truck_1 ) ) )
+	AND ( IS_CHAR_PRESSING_HORN ( shaft ) ) )
+	AND ( r_e_1_press_horn = 1 ) )
+	AND ( r_e_1_send_pickup_group_1_in_truck = 0 ) )
+		REMOVE_ARROW ( arrow )
+		SET r_e_1_send_pickup_group_1_in_truck = 1
+		SET r_e_1_press_horn = 2
+		DISPLAY_BRIEF_NOW ( 3430 ) // "Sit and wait for the braindead Krishnas to get on the bus"
+		r_e_1_pickup_group_1_leader = CREATE_CHAR ( 186.0 , 168.0 , 2.0 ) 9 90 criminal END
+		SET_CHAR_THREAT_REACTION ( r_e_1_pickup_group_1_leader , no_reaction )
+		ADD_CHAR_TO_GANG ( r_e_1_pickup_group_1_leader , krisgang )
+		ADD_GROUP_TO_CHARACTER ( r_e_1_pickup_group_1_leader , 4 )
+//		SET_CHAR_OBJECTIVE ( r_e_1_pickup_group_1_leader , ENTER_CAR_AS_PASSENGER , r_e_1_truck_1 )
+		ORDER_CHAR_TO_BACKDOOR ( r_e_1_pickup_group_1_leader , r_e_1_truck_1 )
+	ENDIF
+
+
+	IF ( ( ( ( ( r_e_1_send_pickup_group_1_in_truck = 1 )
+	AND ( NOT ( CHECK_NUMBER_ALIVE_IN_GROUP ( r_e_1_pickup_group_1_leader , 4 ) ) ) )
+	AND ( r_e_1_pickup_group_1_leader_dead = 0 ) )
+	AND ( r_e_1_send_pickup_group_1_in_truck = 1 ) )
+	AND ( flag_failed_kris_med_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		SET r_e_1_pickup_group_1_leader_dead = 1
+		SET flag_failed_kris_med_phone1_m1 = 1
+		DISPLAY_BRIEF ( 3431 ) // "You were told to pick them up not kill them, come back when you think you can handle the job!"
+		DISPLAY_MESSAGE ( 3732 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( ( ( r_e_1_pickup_group_1_in_truck = 0 ) 
+	AND ( r_e_1_send_pickup_group_1_in_truck = 1 ) )
+	AND ( IS_GROUP_IN_CAR ( r_e_1_pickup_group_1_leader ) ) )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_pickup_group_1_leader ) ) )
+		SET r_e_1_send_pickup_group_1_in_truck = 2
+		SET r_e_1_pickup_group_1_in_truck = 1
+		SET r_e_1_send_pickup_group_2_in_truck = 1				
+		KILL_ALL_PASSENGERS ( r_e_1_truck_1 ) 
+		r_e_1_pickup_group_2_leader = CREATE_CHAR ( 191.0 , 168.0 , 2.0 ) 9 90 criminal END
+		SET_CHAR_THREAT_REACTION ( r_e_1_pickup_group_2_leader , no_reaction )
+		ADD_CHAR_TO_GANG ( r_e_1_pickup_group_2_leader , krisgang )
+		ADD_GROUP_TO_CHARACTER ( r_e_1_pickup_group_2_leader , 4 )
+//		SET_CHAR_OBJECTIVE ( r_e_1_pickup_group_2_leader , ENTER_CAR_AS_PASSENGER , r_e_1_truck_1 )
+		ORDER_CHAR_TO_BACKDOOR ( r_e_1_pickup_group_2_leader , r_e_1_truck_1 )
+	ENDIF
+
+
+	IF ( ( ( ( ( r_e_1_send_pickup_group_2_in_truck = 1 )
+	AND ( NOT ( CHECK_NUMBER_ALIVE_IN_GROUP ( r_e_1_pickup_group_2_leader , 4 ) ) ) )
+	AND ( r_e_1_pickup_group_2_leader_dead = 0 ) )
+	AND ( r_e_1_send_pickup_group_2_in_truck = 1 ) )
+	AND ( flag_failed_kris_med_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		SET r_e_1_pickup_group_2_leader_dead = 1
+		SET flag_failed_kris_med_phone1_m1 = 1
+		DISPLAY_BRIEF ( 3431 ) // "You were told to pick them up not kill them, come back when you think you can handle the job!"
+		DISPLAY_MESSAGE ( 3732 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( ( ( r_e_1_pickup_group_2_in_truck = 0 ) 
+	AND ( r_e_1_send_pickup_group_2_in_truck = 1 ) )
+	AND ( IS_GROUP_IN_CAR ( r_e_1_pickup_group_2_leader ) ) )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_pickup_group_2_leader ) ) )
+		SET r_e_1_send_pickup_group_2_in_truck = 2
+		DISPLAY_BRIEF_NOW ( 3432 ) // "Ok there is still some room on the bus for more of the baldheads, be patient!"	
+		SET r_e_1_pickup_group_2_in_truck = 1
+		SET r_e_1_send_pickup_group_3_in_truck = 1				
+		KILL_ALL_PASSENGERS ( r_e_1_truck_1 )
+		r_e_1_pickup_group_3_leader = CREATE_CHAR ( 186.0 , 168.0 , 2.0 ) 9 90 criminal END
+		SET_CHAR_THREAT_REACTION ( r_e_1_pickup_group_3_leader , no_reaction )
+		ADD_CHAR_TO_GANG ( r_e_1_pickup_group_3_leader , krisgang )
+		ADD_GROUP_TO_CHARACTER ( r_e_1_pickup_group_3_leader , 4 )
+//		SET_CHAR_OBJECTIVE ( r_e_1_pickup_group_3_leader , ENTER_CAR_AS_PASSENGER , r_e_1_truck_1 )
+		ORDER_CHAR_TO_BACKDOOR ( r_e_1_pickup_group_3_leader , r_e_1_truck_1 )
+	ENDIF
+
+
+	IF ( ( ( ( ( r_e_1_send_pickup_group_3_in_truck = 1 )
+	AND ( NOT ( CHECK_NUMBER_ALIVE_IN_GROUP ( r_e_1_pickup_group_3_leader , 4 ) ) ) )
+	AND ( r_e_1_pickup_group_3_leader_dead = 0 ) )
+	AND ( r_e_1_send_pickup_group_3_in_truck = 1 ) )
+	AND ( flag_failed_kris_med_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		SET r_e_1_pickup_group_3_leader_dead = 1
+		SET flag_failed_kris_med_phone1_m1 = 1
+		DISPLAY_BRIEF ( 3431 ) // "You were told to pick them up not kill them, come back when you think you can handle the job!"
+		DISPLAY_MESSAGE ( 3732 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( ( ( r_e_1_pickup_group_3_in_truck = 0 ) 
+	AND ( r_e_1_send_pickup_group_3_in_truck = 1 ) )
+	AND ( IS_GROUP_IN_CAR ( r_e_1_pickup_group_3_leader ) ) )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_pickup_group_3_leader ) ) )
+		SET r_e_1_send_pickup_group_3_in_truck = 2
+		SET r_e_1_pickup_group_3_in_truck = 1
+		SET r_e_1_send_pickup_group_4_in_truck = 1				
+		KILL_ALL_PASSENGERS ( r_e_1_truck_1 )
+		r_e_1_pickup_group_4_leader = CREATE_CHAR ( 191.0 , 168.0 , 2.0 ) 9 90 criminal END
+		SET_CHAR_THREAT_REACTION ( r_e_1_pickup_group_4_leader , no_reaction )
+		ADD_CHAR_TO_GANG ( r_e_1_pickup_group_4_leader , krisgang )
+		ADD_GROUP_TO_CHARACTER ( r_e_1_pickup_group_4_leader , 4 )
+//		SET_CHAR_OBJECTIVE ( r_e_1_pickup_group_4_leader , ENTER_CAR_AS_PASSENGER , r_e_1_truck_1 )
+		ORDER_CHAR_TO_BACKDOOR ( r_e_1_pickup_group_4_leader , r_e_1_truck_1 )
+	ENDIF
+
+
+	IF ( ( ( ( ( r_e_1_send_pickup_group_4_in_truck = 1 )
+	AND ( NOT ( CHECK_NUMBER_ALIVE_IN_GROUP ( r_e_1_pickup_group_4_leader , 4 ) ) ) )
+	AND ( r_e_1_pickup_group_4_leader_dead = 0 ) )
+	AND ( r_e_1_send_pickup_group_4_in_truck = 1 ) )
+	AND ( flag_failed_kris_med_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		SET r_e_1_pickup_group_4_leader_dead = 1
+		SET flag_failed_kris_med_phone1_m1 = 1
+		DISPLAY_BRIEF ( 3431 ) // "You were told to pick them up not kill them, come back when you think you can handle the job!"
+		DISPLAY_MESSAGE ( 3732 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( ( ( r_e_1_pickup_group_4_in_truck = 0 ) 
+	AND ( r_e_1_send_pickup_group_4_in_truck = 1 ) )
+	AND ( IS_GROUP_IN_CAR ( r_e_1_pickup_group_4_leader ) ) )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_pickup_group_4_leader ) ) )
+		SET r_e_1_send_pickup_group_4_in_truck = 2
+		DISPLAY_BRIEF_NOW ( 3403 ) // "Ok that's the bus full, now bring them up to R.S and L.BOWS."	
+		SET r_e_1_pickup_group_4_in_truck = 1				
+		SET r_e_1_all_groups_in_truck = 1
+		SET r_e_1_in_truck_1 = 1
+		POINT_ARROW_AT ( arrow , 184.0 , 31.0 , 2.0 )
+		UPDATE_DOOR_TARGET ( r_e_1_door_1 , r_e_1_truck_1 )
+		MAKE_DOOR_AUTOMATIC ( r_e_1_door_1 )
+	ENDIF
+
+
+	// if player gets in car points at target
+
+   	IF ( ( ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_truck_1 ) )
+   	AND ( r_e_1_in_truck_1 = 0 ) )
+	AND ( r_e_1_all_groups_in_truck = 1 ) )
+//   		DELAY ( 90 )
+		SET r_e_1_in_truck_1 = 1
+		DISPLAY_BRIEF_NOW ( 3421 ) // "Take the bus across to Maharishi and pick up some Krishnas!"
+   		POINT_ARROW_AT ( arrow , 184.0 , 31.0 , 2.0 )
+   	ENDIF
+
+	
+	// if player gets out of car points back at car and says to get back in
+		
+   	IF ( ( ( NOT ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_truck_1 ) ) )
+	AND ( r_e_1_in_truck_1 = 1 ) )
+	AND ( r_e_1_all_groups_in_truck = 1 ) )
+//		DELAY ( 90 )
+		SET r_e_1_in_truck_1 = 0
+		DISPLAY_BRIEF_NOW ( 3422 ) // "What the fuck are you doing! Get your arse back in the Krishna Bus"
+		POINT_ARROW_AT ( arrow , r_e_1_truck_1 )
+	ENDIF
+
+
+	IF ( ( ( r_e_1_all_groups_in_truck = 1 ) 
+	AND ( r_e_1_bus_1_parking = 0 ) )
+	AND ( IS_CAR_IN_BLOCK ( r_e_1_truck_1 , 184.0 , 30.0 , 2.0 , 2.0 , 2.0 ) ) )
+		PARK ( r_e_1_truck_1 , r_e_1_door_1 )
+		SET r_e_1_bus_1_parking = 1
+	ENDIF	
+
+
+	IF ( ( r_e_1_bus_1_parking = 1 )
+	AND ( HAS_PARK_FINISHED ( ) ) )
+		KILL_ALL_PASSENGERS ( r_e_1_truck_1 )
+		SET r_e_1_bus_delivered = 1
+	ENDIF
+ENDWHILE
+
+#endif
+
+
+DELAY_HERE ( 30 )
+POINT_ARROW_AT ( arrow , 185.5 , 24.5 , 4.0 )
+DISPLAY_BRIEF_NOW ( 3404 ) // "Well done. Go and stand on top of the cage!"
+
+
+WHILE_EXEC ( NOT ( LOCATE_CHARACTER_ON_FOOT ( shaft , 185.5 , 24.5 , 4.0 , 1.0 , 1.0  ) ) )
+	
+
+	DO_NOWT
+
+
+ENDWHILE
+
+
+REMOVE_ARROW ( arrow )
+DISPLAY_BRIEF ( 3407 ) // "OK, STAY on top of the cage, I want you to see how hot dogs are really made!"
+
+
+r_e_1_group_1 = CREATE_CHAR ( 186.5 , 28.0 , 2.0 ) 9 180 drone END
+#ifdef PC
+SET_CHAR_GRAPHIC_TYPE ( r_e_1_group_1 , dummy_graphic , 26 ) // make this remap a naked dummy ped
+#endif
+SET_CHAR_OBJECTIVE ( r_e_1_group_1 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_group_1 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_group_1 , no_reaction )
+#ifdef PC
+ADD_GROUP_TO_CHARACTER ( r_e_1_group_1 , 4 )
+#endif
+#ifdef PSX
+ADD_GROUP_TO_CHARACTER ( r_e_1_group_1 , 1 )
+#endif
+r_e_1_group_2 = CREATE_CHAR ( 187.5 , 28.0 , 2.0 ) 9 180 drone END
+#ifdef PC
+SET_CHAR_GRAPHIC_TYPE ( r_e_1_group_2 , dummy_graphic , 26 ) // make this remap a naked dummy ped
+#endif
+SET_CHAR_OBJECTIVE ( r_e_1_group_2 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_group_2 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_group_2 , no_reaction )
+#ifdef PC
+ADD_GROUP_TO_CHARACTER ( r_e_1_group_2 , 3 )
+#endif
+r_e_1_group_3 = CREATE_CHAR ( 186.5 , 29.5 , 2.0 ) 9 180 drone END
+#ifdef PC
+SET_CHAR_GRAPHIC_TYPE ( r_e_1_group_3 , dummy_graphic , 26 ) // make this remap a naked dummy ped
+#endif
+SET_CHAR_OBJECTIVE ( r_e_1_group_3 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_group_3 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_group_3 , no_reaction )
+#ifdef PC
+ADD_GROUP_TO_CHARACTER ( r_e_1_group_3 , 4 )
+#endif
+#ifdef PSX
+ADD_GROUP_TO_CHARACTER ( r_e_1_group_3 , 1 )
+#endif
+r_e_1_group_4 = CREATE_CHAR ( 187.5 , 29.5 , 2.0 ) 9 180 drone END
+#ifdef PC
+SET_CHAR_GRAPHIC_TYPE ( r_e_1_group_4 , dummy_graphic , 26 ) // make this remap a naked dummy ped
+#endif
+SET_CHAR_OBJECTIVE ( r_e_1_group_4 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_group_4 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_group_4 , no_reaction )
+#ifdef PC
+ADD_GROUP_TO_CHARACTER ( r_e_1_group_4 , 3 )
+#endif
+r_e_1_runner_1 = CREATE_CHAR ( 186.5 , 29.0 , 2.0 ) 9 180 drone END
+#ifdef PC
+SET_CHAR_GRAPHIC_TYPE ( r_e_1_runner_1 , dummy_graphic , 26 ) // make this remap a naked dummy ped
+#endif
+SET_CHAR_OBJECTIVE ( r_e_1_runner_1 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_runner_1 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_runner_1 , no_reaction )
+#ifdef PC
+ADD_GROUP_TO_CHARACTER ( r_e_1_runner_1 , 3 )
+#endif
+r_e_1_runner_2 = CREATE_CHAR ( 187.5 , 29.0 , 2.0 ) 9 180 drone END
+#ifdef PC
+SET_CHAR_GRAPHIC_TYPE ( r_e_1_runner_2 , dummy_graphic , 26 ) // make this remap a naked dummy ped
+#endif
+SET_CHAR_OBJECTIVE ( r_e_1_runner_2 , wait_on_foot ) 
+SET_CHAR_THREAT_SEARCH ( r_e_1_runner_2 , line_of_sight )
+SET_CHAR_THREAT_REACTION ( r_e_1_runner_2 , no_reaction )
+#ifdef PC
+ADD_GROUP_TO_CHARACTER ( r_e_1_runner_2 , 3 )
+#endif
+
+	
+WHILE_EXEC ( ( LOCATE_CHARACTER_ON_FOOT ( shaft , 185.5 , 24.5 , 4.0 , 7.0 , 5.0  ) )
+AND ( r_e_1_peds_minced = 0 ) )
+	
+
+
+	// GROUP1
+	
+	IF ( r_e_1_group_1_obj1_passed = 0 ) 
+		SET_CHAR_OBJECTIVE ( r_e_1_group_1 , goto_area_on_foot , 186.5 , 25.5 , 2.0 )
+	   	SET r_e_1_group_1_obj1_passed = 1
+		#ifdef PC
+		r_e_1_crying = CREATE_SOUND ( 185.5 , 24.5 , 6.0 ) crying play_instant END
+		#endif
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_group_1 ) )
+	AND ( r_e_1_group_1_obj1_passed = 1 ) )
+		SET r_e_1_group_1_obj1_passed = 2
+		SET_CHAR_OBJECTIVE ( r_e_1_group_1 , goto_area_on_foot , 183.5 , 25.5 , 2.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_group_1 ) )
+	AND ( r_e_1_group_1_obj1_passed = 2 ) )
+		SET r_e_1_group_1_obj1_passed = 3
+		SET_CHAR_OBJECTIVE ( r_e_1_group_1 , goto_area_on_foot , 183.5 , 24.0 , 2.0 )
+	ENDIF
+	
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_group_1 ) )
+	AND ( r_e_1_group_1_obj1_passed = 3 ) )
+		SET r_e_1_group_1_obj1_passed = 4
+		SET_CHAR_OBJECTIVE ( r_e_1_group_1 , goto_area_on_foot , 186.5 , 24.0 , 3.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_group_1 ) )
+	AND ( r_e_1_group_1_obj1_passed = 4 ) )
+		SET r_e_1_group_1_obj1_passed = 5
+		SET_CHAR_OBJECTIVE ( r_e_1_group_1 , wait_on_foot )
+		#ifdef PC
+		r_e_1_crying = CREATE_SOUND ( 185.5 , 24.5 , 6.0 ) crying play_instant END
+		#endif
+	ENDIF
+
+
+
+	// GROUP2
+	
+	IF ( ( r_e_1_group_2_obj1_passed = 0 )
+	AND ( r_e_1_group_1_obj1_passed = 2 ) ) 
+		SET_CHAR_OBJECTIVE ( r_e_1_group_2 , goto_area_on_foot , 186.5 , 25.5 , 2.0 )
+	   	SET r_e_1_group_2_obj1_passed = 1
+  	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_group_2 ) )
+	AND ( r_e_1_group_2_obj1_passed = 1 ) )
+		SET r_e_1_group_2_obj1_passed = 2
+		SET_CHAR_OBJECTIVE ( r_e_1_group_2 , goto_area_on_foot , 183.5 , 25.5 , 2.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_group_2 ) )
+	AND ( r_e_1_group_2_obj1_passed = 2 ) )
+		SET r_e_1_group_2_obj1_passed = 3
+		SET_CHAR_OBJECTIVE ( r_e_1_group_2 , goto_area_on_foot , 183.5 , 24.0 , 2.0 )
+		#ifdef PC
+		r_e_1_crying = CREATE_SOUND ( 185.5 , 24.5 , 6.0 ) crying play_instant END
+		#endif
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_group_2 ) )
+	AND ( r_e_1_group_2_obj1_passed = 3 ) )
+		SET r_e_1_group_2_obj1_passed = 4
+		SET_CHAR_OBJECTIVE ( r_e_1_group_2 , goto_area_on_foot , 186.5 , 24.0 , 3.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_group_2 ) )
+	AND ( r_e_1_group_2_obj1_passed = 4 ) )
+		SET r_e_1_group_2_obj1_passed = 5
+		SET_CHAR_OBJECTIVE ( r_e_1_group_2 , wait_on_foot )
+		#ifdef PC
+		r_e_1_crying = CREATE_SOUND ( 185.5 , 24.5 , 6.0 ) crying play_instant END
+		#endif
+	ENDIF
+
+
+
+	// RUNNER1
+	
+	IF ( ( r_e_1_runner_1_obj1_passed = 0 )
+	AND ( r_e_1_group_2_obj1_passed = 1 ) ) 
+		SET_CHAR_OBJECTIVE ( r_e_1_runner_1 , goto_area_on_foot , 186.5 , 28.0 , 2.0 )
+	   	SET r_e_1_runner_1_obj1_passed = 1
+		#ifdef PC
+		r_e_1_crying = CREATE_SOUND ( 185.5 , 24.5 , 6.0 ) crying play_instant END
+		#endif
+	ENDIF
+	
+	IF ( ( r_e_1_runner_1_obj1_passed = 1 )
+	AND ( r_e_1_group_2_obj1_passed = 2 ) ) 
+		SET_CHAR_OBJECTIVE ( r_e_1_runner_1 , goto_area_on_foot , 186.5 , 25.5 , 2.0 )
+	   	SET r_e_1_runner_1_obj1_passed = 2
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_runner_1 ) )
+	AND ( r_e_1_runner_1_obj1_passed = 2 ) )
+		SET r_e_1_runner_1_obj1_passed = 3
+		SET_CHAR_OBJECTIVE ( r_e_1_runner_1 , goto_area_on_foot , 183.5 , 25.5 , 2.0 )
+		#ifdef PC
+		r_e_1_crying = CREATE_SOUND ( 185.5 , 24.5 , 6.0 ) crying play_instant END
+		#endif
+	ENDIF
+  
+  	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_runner_1 ) )
+	AND ( r_e_1_runner_1_obj1_passed = 3 ) )
+		SET r_e_1_runner_1_obj1_passed = 4
+		SET_CHAR_OBJECTIVE ( r_e_1_runner_1 , goto_area_on_foot , 183.5 , 24.0 , 2.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_runner_1 ) )
+	AND ( r_e_1_runner_1_obj1_passed = 4 ) )
+		#ifdef PC
+		DISPLAY_BRIEF_NOW ( 3408 ) // "Don't take us, We won't taste good! We're all bones look at us!"
+		#endif
+		#ifdef PSX
+		DISPLAY_BRIEF_NOW ( 3433 ) // "Don't take us, We won't taste good! We're all bones look at us!"
+		#endif
+		SET r_e_1_runner_1_obj1_passed = 5
+		SET_CHAR_OBJECTIVE ( r_e_1_runner_1 , goto_area_on_foot , 186.5 , 24.0 , 3.0 )
+		#ifdef PC
+		r_e_1_crying = CREATE_SOUND ( 185.5 , 24.5 , 6.0 ) crying play_instant END
+		#endif
+	ENDIF
+ 
+ 	// RUNNER1 ESCAPING
+	
+	IF  ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_runner_1 ) )
+	AND ( r_e_1_runner_1_obj1_passed = 5 ) )
+//	AND ( r_e_1_group_3_obj1_passed = 2 ) )
+//	AND ( NOT ( DELAY_HERE ( 60 ) ) ) )
+		#ifdef PC
+		DISPLAY_BRIEF_NOW ( 3409 ) // "Don't take us, We won't taste good! We're all bones look at us!"
+		#endif
+		#ifdef PSX
+		DISPLAY_BRIEF_NOW ( 3434 ) // "Don't take us, We won't taste good! We're all bones look at us!"
+		#endif
+		SET r_e_1_runner_1_obj1_passed = 6
+		SET_CHAR_OBJECTIVE ( r_e_1_runner_1 , goto_area_on_foot , 183.5 , 24.5 , 2.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_runner_1 ) )
+	AND ( r_e_1_runner_1_obj1_passed = 6 ) )
+		SET r_e_1_runner_1_obj1_passed = 7
+		SET_CHAR_OBJECTIVE ( r_e_1_runner_1 , goto_area_on_foot , 186.5 , 26.5 , 2.0 )
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_3 , kill_char_on_foot , r_e_1_runner_1 )
+		#ifdef PC
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_1 , kill_char_on_foot , r_e_1_runner_1 )
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_5 , kill_char_on_foot , r_e_1_runner_1 )
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_7 , kill_char_on_foot , r_e_1_runner_1 )
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_9 , kill_char_on_foot , r_e_1_runner_1 )
+		#endif
+		DISPLAY_BRIEF_NOW ( 3410 ) // "Kill them, we can pick the bullets out of the hot dogs later!" 
+		#ifdef PC
+		r_e_1_scream = CREATE_SOUND ( 185.5 , 24.5 , 6.0 ) scream play_instant END
+		#endif
+	ENDIF
+
+
+
+	// GROUP3
+	
+	IF ( ( r_e_1_runner_1_obj1_passed = 1 )
+	AND ( r_e_1_group_3_obj1_passed = 0 ) )
+		SET_CHAR_OBJECTIVE ( r_e_1_group_3 , goto_area_on_foot , 187.5 , 28.0 , 2.0 )
+	   	SET r_e_1_group_3_obj1_passed = 1
+	ENDIF
+	
+	IF ( ( r_e_1_runner_1_obj1_passed = 3 )
+	AND ( r_e_1_group_3_obj1_passed = 1 ) )
+		SET_CHAR_OBJECTIVE ( r_e_1_group_3 , goto_area_on_foot , 186.5 , 25.5 , 2.0 )
+	   	SET r_e_1_group_3_obj1_passed = 2
+		#ifdef PC
+		r_e_1_crying = CREATE_SOUND ( 185.5 , 24.5 , 6.0 ) crying play_instant END
+		#endif
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_group_3 ) )
+	AND ( r_e_1_group_3_obj1_passed = 2 ) )
+		SET r_e_1_group_3_obj1_passed = 3
+		SET_CHAR_OBJECTIVE ( r_e_1_group_3 , goto_area_on_foot , 183.5 , 25.5 , 2.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_group_3 ) )
+	AND ( r_e_1_group_3_obj1_passed = 3 ) )
+		SET r_e_1_group_3_obj1_passed = 4
+		SET_CHAR_OBJECTIVE ( r_e_1_group_3 , goto_area_on_foot , 183.5 , 24.0 , 2.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_group_3 ) )
+	AND ( r_e_1_group_3_obj1_passed = 4 ) )
+		SET r_e_1_group_3_obj1_passed = 5
+		SET_CHAR_OBJECTIVE ( r_e_1_group_3 , goto_area_on_foot , 186.5 , 24.0 , 3.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_group_3 ) )
+	AND ( r_e_1_group_3_obj1_passed = 5 ) )
+		SET r_e_1_group_3_obj1_passed = 6
+		SET_CHAR_OBJECTIVE ( r_e_1_group_3 , wait_on_foot )
+		#ifdef PC
+		r_e_1_crying = CREATE_SOUND ( 185.5 , 24.5 , 6.0 ) crying play_instant END
+		#endif
+	ENDIF
+
+
+
+	// RUNNER2
+	
+	IF ( ( r_e_1_group_3_obj1_passed = 1 )
+	AND ( r_e_1_runner_2_obj1_passed = 0 ) ) 
+		SET_CHAR_OBJECTIVE ( r_e_1_runner_2 , goto_area_on_foot , 186.5 , 28.0 , 2.0 )
+	   	SET r_e_1_runner_2_obj1_passed = 1
+		#ifdef PC
+		r_e_1_crying = CREATE_SOUND ( 185.5 , 24.5 , 6.0 ) crying play_instant END
+		#endif
+	ENDIF
+	
+	IF ( ( r_e_1_group_3_obj1_passed = 3 )
+	AND ( r_e_1_runner_2_obj1_passed = 1 ) ) 
+		SET_CHAR_OBJECTIVE ( r_e_1_runner_2 , goto_area_on_foot , 186.5 , 25.5 , 2.0 )
+	   	SET r_e_1_runner_2_obj1_passed = 2
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_runner_2 ) )
+	AND ( r_e_1_runner_2_obj1_passed = 2 ) )
+		SET r_e_1_runner_2_obj1_passed = 3
+		SET_CHAR_OBJECTIVE ( r_e_1_runner_2 , goto_area_on_foot , 183.5 , 25.5 , 2.0 )
+	ENDIF
+  
+  	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_runner_2 ) )
+	AND ( r_e_1_runner_2_obj1_passed = 3 ) )
+		SET r_e_1_runner_2_obj1_passed = 4
+		SET_CHAR_OBJECTIVE ( r_e_1_runner_2 , goto_area_on_foot , 183.5 , 24.0 , 2.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_runner_2 ) )
+	AND ( r_e_1_runner_2_obj1_passed = 4 ) )
+		SET r_e_1_runner_2_obj1_passed = 5
+		#ifdef PC
+		DISPLAY_BRIEF_NOW ( 3411 ) // "Don't take us, We won't taste good! We're all bones look at us!"
+		#endif
+		#ifdef PSX
+		DISPLAY_BRIEF_NOW ( 3435 ) // "Don't take us, We won't taste good! We're all bones look at us!"
+		#endif
+		SET_CHAR_OBJECTIVE ( r_e_1_runner_2 , goto_area_on_foot , 186.5 , 24.0 , 3.0 )
+		#ifdef PC
+		r_e_1_crying = CREATE_SOUND ( 185.5 , 24.5 , 6.0 ) crying play_instant END
+		#endif
+ 	ENDIF
+
+	// RUNNER2 ESCAPING
+	
+	IF  ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_runner_2 ) )
+	AND ( r_e_1_runner_2_obj1_passed = 5 ) )
+//	AND ( r_e_1_group_4_obj1_passed = 2 ) )
+//	AND ( NOT ( DELAY_HERE ( 60 ) ) ) )
+		SET r_e_1_runner_2_obj1_passed = 6
+		#ifdef PC
+		DISPLAY_BRIEF_NOW ( 3412 ) // "Don't take us, We won't taste good! We're all bones look at us!"
+		#endif
+		#ifdef PSX
+		DISPLAY_BRIEF_NOW ( 3436 ) // "Don't take us, We won't taste good! We're all bones look at us!"
+		#endif
+		SET_CHAR_OBJECTIVE ( r_e_1_runner_2 , goto_area_on_foot , 183.5 , 24.5 , 2.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_runner_2 ) )
+	AND ( r_e_1_runner_2_obj1_passed = 6 ) )
+		SET r_e_1_runner_2_obj1_passed = 7
+		SET_CHAR_OBJECTIVE ( r_e_1_runner_2 , goto_area_on_foot , 186.5 , 26.5 , 2.0 )
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_2 , kill_char_on_foot , r_e_1_runner_2 )
+		#ifdef PC
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_4 , kill_char_on_foot , r_e_1_runner_2 )
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_6 , kill_char_on_foot , r_e_1_runner_2 )
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_8 , kill_char_on_foot , r_e_1_runner_2 )
+		#endif
+		DISPLAY_BRIEF_NOW ( 3413 ) // "Oh fuck, kill them! what a waste of bullets!"
+		#ifdef PC
+		r_e_1_scream = CREATE_SOUND ( 185.5 , 24.5 , 6.0 ) scream play_instant END
+		#endif
+		#ifdef PC
+		r_e_1_crying = CREATE_SOUND ( 185.5 , 24.5 , 6.0 ) crying play_instant END
+		#endif
+	ENDIF
+
+
+
+	// GROUP4
+	
+	IF ( ( r_e_1_runner_2_obj1_passed = 1 )
+	AND ( r_e_1_group_4_obj1_passed = 0 ) ) 
+		SET_CHAR_OBJECTIVE ( r_e_1_group_4 , goto_area_on_foot , 187.5 , 28.0 , 2.0 )
+	   	SET r_e_1_group_4_obj1_passed = 1
+		#ifdef PC
+		r_e_1_crying = CREATE_SOUND ( 185.5 , 24.5 , 6.0 ) crying play_instant END
+		#endif
+	ENDIF
+	
+	IF ( ( r_e_1_runner_2_obj1_passed = 3 )
+	AND ( r_e_1_group_4_obj1_passed = 1 ) ) 
+		SET_CHAR_OBJECTIVE ( r_e_1_group_4 , goto_area_on_foot , 186.5 , 25.5 , 2.0 )
+	   	SET r_e_1_group_4_obj1_passed = 2
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_group_4 ) )
+	AND ( r_e_1_group_4_obj1_passed = 2 ) )
+		SET r_e_1_group_4_obj1_passed = 3
+		SET_CHAR_OBJECTIVE ( r_e_1_group_4 , goto_area_on_foot , 183.5 , 25.5 , 2.0 )
+	ENDIF
+
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_group_4 ) )
+	AND ( r_e_1_group_4_obj1_passed = 3 ) )
+		SET r_e_1_group_4_obj1_passed = 4
+		SET_CHAR_OBJECTIVE ( r_e_1_group_4 , goto_area_on_foot , 183.5 , 24.0 , 2.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_group_4 ) )
+	AND ( r_e_1_group_4_obj1_passed = 4 ) )
+		SET r_e_1_group_4_obj1_passed = 5
+		SET_CHAR_OBJECTIVE ( r_e_1_group_4 , goto_area_on_foot , 186.5 , 24.0 , 3.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_group_4 ) )
+	AND ( r_e_1_group_4_obj1_passed = 5 ) )
+		SET r_e_1_group_4_obj1_passed = 6
+		SET_CHAR_OBJECTIVE ( r_e_1_group_4 , wait_on_foot )
+		#ifdef PC
+		r_e_1_crying = CREATE_SOUND ( 185.5 , 24.5 , 6.0 ) crying play_instant END
+		#endif
+	ENDIF
+		
+	
+	IF ( ( HAS_CHARACTER_DIED ( r_e_1_runner_1 ) )
+	AND ( r_e_1_runner_1_dead = 0 ) )
+		#ifdef PSX
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_3 , goto_area_on_foot , 182.5 , 24.5 , 2.0 )
+		#endif
+		#ifdef PC
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_1 , goto_area_on_foot , 183.5 , 22.5 , 2.0 )
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_3 , goto_area_on_foot , 182.5 , 23.5 , 2.0 )
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_5 , goto_area_on_foot , 182.5 , 25.5 , 2.0 )
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_7 , goto_area_on_foot , 184.5 , 25.5 , 2.0 )
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_9 , goto_area_on_foot , 186.5 , 25.5 , 2.0 )
+		#endif
+		SET r_e_1_runner_1_dead = 1	
+	ENDIF
+
+	IF ( ( HAS_CHARACTER_DIED ( r_e_1_runner_1 ) )
+	AND ( r_e_1_runner_2_dead = 0 ) )
+		#ifdef PSX
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_2 , goto_area_on_foot , 182.5 , 23.5 , 2.0 )
+		#endif
+		#ifdef PC
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_2 , goto_area_on_foot , 182.5 , 22.5 , 2.0 )
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_4 , goto_area_on_foot , 182.5 , 24.5 , 2.0 )
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_6 , goto_area_on_foot , 183.5 , 25.5 , 2.0 )
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_8 , goto_area_on_foot , 185.5 , 25.5 , 2.0 )
+		#endif
+		SET r_e_1_runner_2_dead = 1
+	ENDIF
+
+	IF ( ( ( ( ( ( HAS_CHARACTER_DIED ( r_e_1_group_1 ) )
+	AND ( HAS_CHARACTER_DIED ( r_e_1_group_2 ) ) )
+	AND ( HAS_CHARACTER_DIED ( r_e_1_group_3 ) ) )
+	AND ( HAS_CHARACTER_DIED ( r_e_1_group_4 ) ) )
+	AND ( HAS_CHARACTER_DIED ( r_e_1_runner_1 ) ) )
+	AND ( HAS_CHARACTER_DIED ( r_e_1_runner_2 ) ) )
+		SET r_e_1_peds_minced = 1
+	ENDIF
+
+
+	IF ( ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_russian_3 ) )
+	AND ( r_e_1_runner_1_dead = 1 ) )
+	AND ( r_e_1_russian_3_obj1_passed = 0 ) )
+		SET r_e_1_russian_3_obj1_passed = 1
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_3 , wait_on_foot )
+	ENDIF
+
+	IF ( ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_russian_2 ) )
+	AND ( r_e_1_runner_2_dead = 1 ) )
+	AND ( r_e_1_russian_2_obj1_passed = 0 ) )
+		SET r_e_1_russian_2_obj1_passed = 1
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_2 , wait_on_foot )
+	ENDIF
+
+	
+	
+	#ifdef PC
+	IF ( ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_russian_1 ) )
+	AND ( r_e_1_runner_1_dead = 1 ) )
+	AND ( r_e_1_russian_1_obj1_passed = 0 ) )
+		SET r_e_1_russian_1_obj1_passed = 1
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_1 , wait_on_foot )
+	ENDIF
+
+	IF ( ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_russian_4 ) )
+	AND ( r_e_1_runner_2_dead = 1 ) )
+	AND ( r_e_1_russian_4_obj1_passed = 0 ) )
+		SET r_e_1_russian_4_obj1_passed = 1
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_4 , wait_on_foot )
+	ENDIF
+	
+	IF ( ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_russian_5 ) )
+	AND ( r_e_1_runner_1_dead = 1 ) )
+	AND ( r_e_1_russian_5_obj1_passed = 0 ) )
+		SET r_e_1_russian_5_obj1_passed = 1
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_5 , wait_on_foot )
+	ENDIF
+
+	IF ( ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_russian_7 ) )
+	AND ( r_e_1_runner_1_dead = 1 ) )
+	AND ( r_e_1_russian_7_obj1_passed = 0 ) )
+		SET r_e_1_russian_7_obj1_passed = 1
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_7 , wait_on_foot )
+	ENDIF
+
+	IF ( ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_russian_9 ) )
+	AND ( r_e_1_runner_1_dead = 1 ) )
+	AND ( r_e_1_russian_9_obj1_passed = 0 ) )
+		SET r_e_1_russian_9_obj1_passed = 1
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_9 , wait_on_foot )
+	ENDIF
+
+	IF ( ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_russian_6 ) )
+	AND ( r_e_1_runner_2_dead = 1 ) )
+	AND ( r_e_1_russian_6_obj1_passed = 0 ) )
+		SET r_e_1_russian_6_obj1_passed = 1
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_6 , wait_on_foot )
+	ENDIF
+
+	IF ( ( ( IS_CHAR_OBJECTIVE_PASSED ( r_e_1_russian_8 ) )
+	AND ( r_e_1_runner_2_dead = 1 ) )
+	AND ( r_e_1_russian_8_obj1_passed = 0 ) )
+		SET r_e_1_russian_8_obj1_passed = 1
+		SET_CHAR_OBJECTIVE ( r_e_1_russian_8 , wait_on_foot )
+	ENDIF
+	#endif
+
+
+ENDWHILE
+
+
+IF ( ( r_e_1_peds_minced = 0 )
+AND ( flag_failed_russ_easy_phone1_m1 = 0 ) )
+	CLEAR_ALL_BRIEFS ( )
+	DISPLAY_BRIEF ( 3414 ) // "you were told to stay alive, you have failed me!"
+	SET flag_failed_russ_easy_phone1_m1	= 1
+	DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+	RETURN 
+ENDIF
+
+
+r_e_1_hotdog_van_1 = CREATE_CAR ( 194.0 , 24.0 , 2.0 )	-1 0 hotdog END
+DISPLAY_BRIEF ( 3415 ) // "Get your arse into the hot dog van. It's loaded with fresh hot dogs. Mmmm hot dogs!"
+UPDATE_DOOR_TARGET ( r_e_1_door_2 , r_e_1_hotdog_van_1 )
+MAKE_DOOR_AUTOMATIC ( r_e_1_door_2 )
+POINT_ARROW_AT ( arrow , r_e_1_hotdog_van_1 )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_2 , goto_area_on_foot , 186.4 , 29.0 , 2.0 )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_3 , goto_area_on_foot , 186.6 , 29.0 , 2.0 )
+#ifdef PC
+SET_CHAR_OBJECTIVE ( r_e_1_russian_4 , goto_area_on_foot , 186.8 , 29.0 , 2.0 )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_1 , goto_area_on_foot , 186.2 , 29.0 , 2.0 )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_5 , goto_area_on_foot , 187.0 , 29.0 , 2.0 )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_6 , goto_area_on_foot , 187.2 , 29.0 , 2.0 )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_7 , goto_area_on_foot , 187.4 , 29.0 , 2.0 )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_8 , goto_area_on_foot , 187.6 , 29.0 , 2.0 )
+SET_CHAR_OBJECTIVE ( r_e_1_russian_9 , goto_area_on_foot , 187.8 , 29.0 , 2.0 )
+#endif
+
+
+WHILE_EXEC ( r_e_1_hotdog_van_1_parked = 0 ) 
+
+
+	IF ( ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_hotdog_van_1 ) )
+   	AND ( r_e_1_in_hotdog_van_1 = 0 ) )
+   		SET r_e_1_in_hotdog_van_1 = 1
+		DISPLAY_BRIEF ( 3416 ) // "Deliver the van to the diner across town!"
+   		POINT_ARROW_AT ( arrow , 13.0 , 120.0 , 2.0 )
+   	ENDIF
+
+	
+   	IF ( ( NOT ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_hotdog_van_1 ) ) )
+	AND ( r_e_1_in_hotdog_van_1 = 1 ) )
+		SET r_e_1_in_hotdog_van_1 = 0
+		DISPLAY_BRIEF ( 3417 ) // "What the fuck are you doing? Get back into the hot dog van!"
+		POINT_ARROW_AT ( arrow , r_e_1_hotdog_van_1 )
+	ENDIF
+		
+
+	IF ( ( IS_CAR_IN_BLOCK ( r_e_1_hotdog_van_1 , 12.0 , 120.0 , 2.0 , 2.0 , 2.0 ) )
+//	IF ( ( ( LOCATE_CHARACTER_BY_CAR ( shaft , 13.0 , 120.0 , 2.0 , 4.0 , 2.0 ) ) 
+	AND ( r_e_1_in_hotdog_van_1_parking = 0 ) )
+//	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_1_hotdog_van_1 ) ) )
+		PARK ( r_e_1_hotdog_van_1 , r_e_1_door_2 )
+		SET r_e_1_in_hotdog_van_1_parking = 1
+	ENDIF	
+
+
+	IF ( ( r_e_1_in_hotdog_van_1_parking = 1 )
+	AND ( HAS_PARK_FINISHED ( ) ) )
+		SET r_e_1_hotdog_van_1_parked = 1
+	ENDIF
+		 
+
+	IF ( ( IS_CAR_WRECKED ( r_e_1_hotdog_van_1 ) )
+	AND ( flag_failed_russ_easy_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3419 ) // "You arsehole! The hot dogs are going to be all burnt!"
+		SET flag_failed_russ_easy_phone1_m1	= 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN 
+	ENDIF
+
+ 
+ENDWHILE
+
+
+IF ( flag_passed_russ_easy_phone1_m1 = 0 )  
+	CLEAR_ALL_BRIEFS ( )
+	DISPLAY_BRIEF ( 3420 ) // "Well done, you have served me and the hungry public well!"
+	SET flag_passed_russ_easy_phone1_m1	= 1
+	++ counter_all_missions_passed
+	DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+	ADD_SCORE ( shaft , 40000 )
+	ADD_MULTIPLIER ( shaft , 1 ) 
+	CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , 1 )
+	CLEAR_WANTED_LEVEL ( shaft )
+	SET_PHONE_DEAD ( ph_russ_easy_phone1 ) 
+	DISABLE_THREAD_TRIGGER ( thr_russ_easy_phone1_m1 )
+	RETURN
+ENDIF
+
+
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+// deletes all objects when Russian easy phone1 mission1 is finished...
+				
+clean_up_russ_easy_phone1_m1: 
+	
+	#ifdef PC
+	STOP_CHARS_GETTING_OFF_BUS ( shaft , OFF )
+	#endif
+	REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	MAKE_DOOR_MANUAL ( r_e_1_door_1 ) 
+	MAKE_DOOR_MANUAL ( r_e_1_door_2 ) 
+	
+	IF ( flag_passed_russ_easy_phone1_m1 = 1 )
+		++ flag_russ_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_russ_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3673 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3672 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_russ_easy_phone1_m1 = 1 )
+		++ flag_russ_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_russ_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+	MISSION_HAS_FINISHED ( )
+	
+	SET flag_on_mission	= 0
+	SET flag_on_russ_mission = 0
+	
+	RETURN
+
+
+MISSIONSTART
+
+	GOSUB russ_easy_phone1_m1:
+
+	GOSUB clean_up_russ_easy_phone1_m1:
+
+MISSIONEND
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+

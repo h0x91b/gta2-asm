@@ -1,0 +1,499 @@
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXX STEAL ALL THE LAW ENFORCEMENT VEHICLES XXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+// objects for Zaibatsu hard phone mission1		
+	
+
+COUNTER z_h_1_swat_van_delivered = 0
+
+COUNTER z_h_1_player_in_swat_van = 0
+
+COUNTER z_h_1_mib_car_delivered = 0
+
+COUNTER z_h_1_player_in_mib_car = 0
+
+COUNTER z_h_1_tank_delivered = 0
+
+COUNTER z_h_1_player_in_tank = 0 
+
+COUNTER z_h_1_park_swat_van_started = 0 
+
+COUNTER z_h_1_park_mib_car_started = 0
+
+COUNTER z_h_1_park_tank_started = 0 
+
+OBJ_DATA z_h_1_powerup_1
+
+OBJ_DATA z_h_1_powerup_2
+
+OBJ_DATA z_h_1_powerup_3
+
+OBJ_DATA z_h_1_powerup_4
+
+OBJ_DATA z_h_1_powerup_5
+
+OBJ_DATA z_h_1_powerup_6
+
+CHAR_DATA z_h_1_swat_van_driver
+
+CHAR_DATA z_h_1_MIB_driver
+
+CHAR_DATA z_h_1_tank_driver
+
+CAR_DATA z_h_1_stolen_SWAT
+
+CAR_DATA z_h_1_stolen_MIB
+
+CAR_DATA z_h_1_stolen_tank
+
+CAR_DATA z_h_1_created_swat_van
+
+CAR_DATA z_h_1_created_mib_car
+
+CAR_DATA z_h_1_created_tank
+
+FORWARD	clean_up_zaib_hard_phone_m1:
+
+CAR_DATA z_h_1_SWAT_recreated
+
+CAR_DATA z_h_1_MIB_recreated
+
+CAR_DATA z_h_1_TANK_recreated
+
+
+CAR_DATA z_h_1_SWAT
+
+CAR_DATA z_h_1_MIB
+
+CAR_DATA z_h_1_TANK
+
+
+				
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+		
+// starts Zaibatsu hard phone1 mission1
+					
+
+zaib_hard_phone_m1:
+
+SET flag_failed_zaib_hard_phone_m1 = 0
+
+
+//	DISABLE_THREAD_TRIGGER ( thr_zaib_hard_phone1_m1 )
+	DISPLAY_MESSAGE ( 3852 ) // you have PASSED the mission!"
+	SET flag_on_mission	= 1
+	SET flag_on_zaib_mission = 1
+   	
+// 	z_h_1_SWAT = CREATE_CAR ( 10.5 , 202.5 , 2.0 ) 1 3 swatvan END
+//	z_h_1_MIB = CREATE_CAR ( 12.5 , 202.5 , 2.0 ) 1 3 edselfbi END
+//	z_h_1_TANK = CREATE_CAR ( 14.5 , 202.5 , 2.0 ) 1 3 tank END
+
+
+DISPLAY_BRIEF ( 4000 )  //"We want you to steal a swat van!"
+
+
+// awaits player is told to steal a swat van
+			
+	
+WHILE_EXEC ( z_h_1_swat_van_delivered = 0 )
+
+							
+	IF ( ( IS_CHARACTER_IN_MODEL ( shaft , swatvan ) )   
+	AND ( z_h_1_player_in_swat_van = 0 ) )
+		DISPLAY_BRIEF_NOW ( 4001 )  //"Good now bring the van to the garage!"
+		POINT_ARROW_AT ( arrow , 13.0 , 200.0 , 2.0 )
+		SET z_h_1_player_in_swat_van = 1
+		STORE_CAR_CHARACTER_IS_IN ( shaft , z_h_1_stolen_SWAT )
+		UPDATE_DOOR_TARGET ( z_h_1_door_1 , z_h_1_stolen_SWAT )
+		MAKE_DOOR_AUTOMATIC ( z_h_1_door_1 )
+	ENDIF
+	
+	
+	IF ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , swatvan ) ) )  
+	AND ( z_h_1_player_in_swat_van = 1 ) )
+		DISPLAY_BRIEF_NOW ( 4002 ) //"Get a swat van!"
+		REMOVE_ARROW ( arrow )
+		SET z_h_1_player_in_swat_van = 0
+	ENDIF	
+	
+
+	// waits for player outside door, then parks the vehicle
+	
+//	IF ( ( ( LOCATE_CHARACTER_BY_CAR ( shaft , 13.0 , 199.0 , 2.0 , 2.0 , 2.0 ) ) 
+//	AND ( IS_CHARACTER_IN_CAR ( shaft , z_h_1_stolen_SWAT ) ) )
+	IF ( ( IS_CAR_IN_BLOCK ( z_h_1_stolen_SWAT , 13.0 , 199.0 , 2.0 , 2.0 , 2.0 ) )
+	AND ( z_h_1_park_swat_van_started = 0 ) )
+		REMOVE_ARROW ( arrow )
+		PARK ( z_h_1_stolen_SWAT , z_h_1_door_1 )
+		SET z_h_1_park_swat_van_started = 1
+	ENDIF
+		
+	
+	IF ( ( z_h_1_park_swat_van_started = 1 )
+	AND ( HAS_PARK_FINISHED () ) )
+		SET z_h_1_swat_van_delivered = 1
+		SET z_h_1_park_swat_van_started = 2
+		z_h_1_SWAT_recreated = CREATE_CAR ( 11.5 , 195.0 , 2.0 ) 1 183 swatvan END
+	ENDIF
+		
+
+
+ENDWHILE	
+	  	 
+/*	  
+z_h_1_created_swat_van = CREATE_CAR ( 13.0 , 198.5 , 2.0 ) 1 180 copcar END
+z_h_1_swat_van_driver = CREATE_CHAR ( 11.5 , 198.5 , 2.0 ) 1 0 criminal END
+SET_CHAR_THREAT_SEARCH ( z_h_1_swat_van_driver , no_threats )
+SET_CHAR_THREAT_REACTION ( z_h_1_swat_van_driver , no_reaction )
+SET_CHAR_OBJECTIVE ( z_h_1_swat_van_driver , enter_car_as_driver , z_h_1_created_swat_van )
+		
+	 	
+WHILE ( NOT ( IS_CHAR_OBJECTIVE_PASSED ( z_h_1_swat_van_driver ) ) )
+	DO_NOWT
+ENDEXEC
+ENDWHILE
+
+OPEN_DOOR ( z_h_1_door_2 )  
+MAKE_CAR_DRIVE_AWAY ( z_h_1_created_swat_van )		
+
+WHILE ( NOT ( LOCATE_CHARACTER_BY_CAR ( z_h_1_swat_van_driver , 56.5 , 252.5 , 2.0 , 1.0 , 1.0 ) ) )
+	DO_NOWT
+ENDEXEC
+ENDWHILE	
+
+
+
+SET_CHAR_OBJECTIVE ( z_h_1_swat_van_driver , leave_car , z_h_1_created_swat_van )
+	
+WHILE ( NOT ( IS_CHAR_OBJECTIVE_PASSED ( z_h_1_swat_van_driver ) ) )
+	DO_NOWT
+ENDEXEC
+ENDWHILE
+
+SET_CHAR_OBJECTIVE ( z_h_1_swat_van_driver , goto_area_on_foot , 45.5 , 251.5 , 2.0 )
+	
+WHILE ( NOT ( IS_CHAR_OBJECTIVE_PASSED ( z_h_1_swat_van_driver ) ) )
+DO_NOWT
+ENDEXEC
+ENDWHILE
+
+CLOSE_DOOR ( z_h_1_door_2 ) 	
+DELETE_ITEM ( z_h_1_swat_van_driver )
+	
+  	
+
+*/		 
+
+//player has delivered the swat van and is now told to steal a MIB car
+
+z_h_1_powerup_1 = CREATE_OBJ ( 9.5 , 205.5 , 2.0 ) 0 COLLECT_09 END
+FORCE_CLEANUP ( z_h_1_powerup_1 )
+z_h_1_powerup_2 = CREATE_OBJ ( 10.5 , 205.5 , 2.0 ) 0 COLLECT_30 END
+FORCE_CLEANUP ( z_h_1_powerup_2 )
+z_h_1_powerup_3 = CREATE_OBJ ( 11.5 , 205.5 , 2.0 ) 0 COLLECT_31 END
+FORCE_CLEANUP ( z_h_1_powerup_3 )
+	
+	
+DISPLAY_BRIEF ( 4003 )  //"We now want you to get a MIB car, Get to it!"
+	 
+	
+WHILE_EXEC ( z_h_1_mib_car_delivered = 0 )
+
+	
+	
+	IF ( ( IS_CHARACTER_IN_MODEL ( shaft , edselfbi ) )   
+	AND ( z_h_1_player_in_mib_car = 0 ) )
+		DISPLAY_BRIEF_NOW ( 4004 )  //"Good now bring the car to the garage!"
+	  	POINT_ARROW_AT ( arrow , 13.0 , 200.0 , 2.0 )
+		SET z_h_1_player_in_mib_car = 1
+		STORE_CAR_CHARACTER_IS_IN ( shaft , z_h_1_stolen_MIB )
+		UPDATE_DOOR_TARGET ( z_h_1_door_1 , z_h_1_stolen_MIB )
+	ENDIF
+	
+	
+	IF ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , edselfbi ) ) )  
+	AND ( z_h_1_player_in_mib_car = 1 ) )
+		DISPLAY_BRIEF_NOW ( 4005 ) //"Get a mib car!"
+		REMOVE_ARROW ( arrow )
+		SET z_h_1_player_in_mib_car = 0
+	ENDIF	
+	
+	
+	
+	// waits for player outside door, then parks the vehicle
+	
+//	IF ( ( ( LOCATE_CHARACTER_BY_CAR ( shaft , 13.0 , 199.0 , 2.0 , 2.0 , 2.0 ) ) 
+//	AND ( IS_CHARACTER_IN_CAR ( shaft , z_h_1_stolen_MIB ) ) )
+	IF ( ( IS_CAR_IN_BLOCK ( z_h_1_stolen_MIB , 13.0 , 199.0 , 2.0 , 2.0 , 2.0 ) )
+	AND ( z_h_1_park_mib_car_started = 0 ) )
+		REMOVE_ARROW ( arrow )
+		PARK ( z_h_1_stolen_MIB , z_h_1_door_1 )
+		SET z_h_1_park_mib_car_started = 1
+	ENDIF
+		
+	
+	IF ( ( z_h_1_park_mib_car_started = 1 )
+	AND ( HAS_PARK_FINISHED () ) )
+		SET z_h_1_mib_car_delivered = 1
+		SET z_h_1_park_mib_car_started = 2
+		z_h_1_MIB_recreated = CREATE_CAR ( 13.5 , 195.0 , 2.0 ) 1 177 edselfbi END
+	ENDIF
+
+
+ENDWHILE
+	
+	 
+/*	  
+z_h_1_created_mib_car = CREATE_CAR ( 13.0 , 198.5 , 2.0 ) 1 180 copcar END
+z_h_1_MIB_driver = CREATE_CHAR ( 11.5 , 198.5 , 2.0 ) 1 0 criminal END
+SET_CHAR_THREAT_SEARCH ( z_h_1_MIB_driver , no_threats )
+SET_CHAR_THREAT_REACTION ( z_h_1_MIB_driver , no_reaction )
+SET_CHAR_OBJECTIVE ( z_h_1_MIB_driver , enter_car_as_driver , z_h_1_created_mib_car )
+		
+	 	
+WHILE ( NOT ( IS_CHAR_OBJECTIVE_PASSED ( z_h_1_MIB_driver ) ) )
+	DO_NOWT
+ENDEXEC
+ENDWHILE
+
+OPEN_DOOR ( z_h_1_door_2 )  
+MAKE_CAR_DRIVE_AWAY ( z_h_1_created_mib_car )		
+
+WHILE ( NOT ( LOCATE_CHARACTER_BY_CAR ( z_h_1_MIB_driver , 56.5 , 252.5 , 2.0 , 1.0 , 1.0 ) ) )
+	DO_NOWT
+ENDEXEC
+ENDWHILE	
+
+
+
+SET_CHAR_OBJECTIVE ( z_h_1_MIB_driver , leave_car , z_h_1_created_mib_car )
+	
+WHILE ( NOT ( IS_CHAR_OBJECTIVE_PASSED ( z_h_1_MIB_driver ) ) )
+	DO_NOWT
+ENDEXEC
+ENDWHILE
+
+SET_CHAR_OBJECTIVE ( z_h_1_MIB_driver , goto_area_on_foot , 45.5 , 251.5 , 2.0 )
+	
+WHILE ( NOT ( IS_CHAR_OBJECTIVE_PASSED ( z_h_1_MIB_driver ) ) )
+DO_NOWT
+ENDEXEC
+ENDWHILE
+
+CLOSE_DOOR ( z_h_1_door_2 ) 	
+DELETE_ITEM ( z_h_1_MIB_driver )
+	
+  	
+
+*/		 		 
+		
+//player has safely delivered the mib car to the garage and is now told to get a tank
+	
+	
+z_h_1_powerup_4 = CREATE_OBJ ( 15.5 , 205.5 , 2.0 ) 0 COLLECT_03 END
+FORCE_CLEANUP ( z_h_1_powerup_4 )
+z_h_1_powerup_5 = CREATE_OBJ ( 16.5 , 205.5 , 2.0 ) 0 COLLECT_30 END
+FORCE_CLEANUP ( z_h_1_powerup_5 )
+z_h_1_powerup_6 = CREATE_OBJ ( 17.5 , 205.5 , 2.0 ) 0 COLLECT_31 END
+FORCE_CLEANUP ( z_h_1_powerup_6 )
+	
+DISPLAY_BRIEF ( 4006 )  //"We now want a tank, so go get us one!"
+
+	
+WHILE_EXEC ( z_h_1_tank_delivered = 0 )
+
+	
+	
+	IF ( ( IS_CHARACTER_IN_MODEL ( shaft , tank ) )   
+	AND ( z_h_1_player_in_tank = 0 ) )
+		DISPLAY_BRIEF_NOW ( 4007 )  //"Good now bring the tank to the garage!"
+	  	POINT_ARROW_AT ( arrow , 13.0 , 200.0 , 2.0 )
+		SET z_h_1_player_in_tank = 1
+		STORE_CAR_CHARACTER_IS_IN ( shaft , z_h_1_stolen_tank )
+		UPDATE_DOOR_TARGET ( z_h_1_door_1 , z_h_1_stolen_tank )
+	ENDIF
+	
+	
+	IF ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , tank ) ) )  
+	AND ( z_h_1_player_in_tank = 1 ) )
+		DISPLAY_BRIEF_NOW ( 4008 ) //"Get a tank!"
+		REMOVE_ARROW ( arrow )
+		SET z_h_1_player_in_tank = 0
+	ENDIF	
+	
+   	
+	// waits for player outside door, then parks the vehicle
+	
+//	IF ( ( ( LOCATE_CHARACTER_BY_CAR ( shaft , 13.0 , 199.0 , 2.0 , 2.0 , 2.0 ) ) 
+//	AND ( IS_CHARACTER_IN_CAR ( shaft , z_h_1_stolen_tank ) ) )
+	IF ( ( IS_CAR_IN_BLOCK ( z_h_1_stolen_tank , 13.0 , 199.0 , 2.0 , 2.0 , 2.0 ) )
+	AND ( z_h_1_park_tank_started = 0 ) )
+		REMOVE_ARROW ( arrow )
+		PARK ( z_h_1_stolen_tank , z_h_1_door_1 )
+		SET z_h_1_park_tank_started = 1
+	ENDIF
+		
+	
+	IF ( ( z_h_1_park_tank_started = 1 )
+	AND ( HAS_PARK_FINISHED () ) )
+		SET z_h_1_tank_delivered = 1
+		SET z_h_1_park_tank_started = 2
+		z_h_1_TANK_recreated = CREATE_CAR ( 15.5 , 195.0 , 2.0 ) 1 182 tank END
+	ENDIF
+
+
+ENDWHILE
+			
+/* 		
+	  
+z_h_1_created_tank = CREATE_CAR ( 13.0 , 198.5 , 2.0 ) 1 180 copcar END
+z_h_1_tank_driver = CREATE_CHAR ( 11.5 , 198.5 , 2.0 ) 1 0 criminal END
+SET_CHAR_THREAT_SEARCH ( z_h_1_tank_driver , no_threats )
+SET_CHAR_THREAT_REACTION ( z_h_1_tank_driver , no_reaction )
+SET_CHAR_OBJECTIVE ( z_h_1_tank_driver , enter_car_as_driver , z_h_1_created_tank )
+		
+	 	
+WHILE ( NOT ( IS_CHAR_OBJECTIVE_PASSED ( z_h_1_tank_driver ) ) )
+	DO_NOWT
+ENDEXEC
+ENDWHILE
+
+OPEN_DOOR ( z_h_1_door_2 )  
+MAKE_CAR_DRIVE_AWAY ( z_h_1_created_tank )		
+
+WHILE ( NOT ( LOCATE_CHARACTER_BY_CAR ( z_h_1_tank_driver , 56.5 , 252.5 , 2.0 , 1.0 , 1.0 ) ) )
+	DO_NOWT
+ENDEXEC
+ENDWHILE	
+
+
+
+SET_CHAR_OBJECTIVE ( z_h_1_tank_driver , leave_car , z_h_1_created_tank )
+	
+WHILE ( NOT ( IS_CHAR_OBJECTIVE_PASSED ( z_h_1_tank_driver ) ) )
+	DO_NOWT
+ENDEXEC
+ENDWHILE
+
+SET_CHAR_OBJECTIVE ( z_h_1_tank_driver , goto_area_on_foot , 45.5 , 251.5 , 2.0 )
+	
+WHILE ( NOT ( IS_CHAR_OBJECTIVE_PASSED ( z_h_1_tank_driver ) ) )
+DO_NOWT
+ENDEXEC
+ENDWHILE
+
+CLOSE_DOOR ( z_h_1_door_2 ) 	
+DELETE_ITEM ( z_h_1_tank_driver )
+	
+  	
+*/
+	
+	 	 
+
+	 	  	  
+//player has delivered all three vehicles and so is rewarded
+
+IF ( ( ( ( z_h_1_swat_van_delivered = 1 )
+AND ( z_h_1_mib_car_delivered = 1 ) )
+AND ( z_h_1_tank_delivered = 1 ) )
+AND ( flag_passed_zaib_hard_phone_m1 = 0 ) )
+	SET flag_passed_zaib_hard_phone_m1	= 1
+	CLEAR_ALL_BRIEFS ( )
+	DISPLAY_BRIEF ( 4009 ) // "Well done you have passed the mission!"
+	++ counter_all_missions_passed
+	DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+	ADD_SCORE ( shaft , 80000 )
+	ADD_MULTIPLIER ( shaft , 1 ) 
+	CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , 1 )
+	CLEAR_WANTED_LEVEL ( shaft )
+	RETURN
+ENDIF
+	
+	 
+RETURN
+		  
+
+
+
+/*
+SET flag_failed_zaib_hard_phone_m1 = 1
+CLEAR_ALL_BRIEFS ( )
+DISPLAY_BRIEF ( 3778 ) // "you destroyed the weapons, you have failed me!"
+DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+RETURN
+
+	 
+*/
+
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+// deletes all objects when Zaibatsu easy phone1 mission1 is finished...
+				
+clean_up_zaib_hard_phone_m1: 
+	
+REMOVE_ARROW ( arrow )
+REMOVE_ARROW ( arrow_2 )
+REMOVE_ARROW ( arrow_3 )
+REMOVE_ARROW ( arrow_4 )
+MAKE_DOOR_MANUAL ( z_h_1_door_1 ) 
+	
+	IF ( flag_passed_zaib_hard_phone_m1 = 1 )
+		++ flag_zaib_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_zaib_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3675 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3674 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_zaib_hard_phone_m1 = 1 )
+		++ flag_zaib_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_zaib_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+	MISSION_HAS_FINISHED ( )
+	
+	SET flag_on_mission	= 0
+	SET flag_on_zaib_mission = 0
+
+	RETURN
+
+
+MISSIONSTART
+
+	GOSUB zaib_hard_phone_m1:
+
+	GOSUB clean_up_zaib_hard_phone_m1:
+
+MISSIONEND
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		

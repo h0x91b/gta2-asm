@@ -1,0 +1,595 @@
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXX FUCK UP CONSTRUCTION YARD XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+ 
+
+// objects for Krishna easy phone1 mission1		
+	
+
+
+CHAR_DATA k_e_1_zaib_leader
+CHAR_DATA k_e_1_locksmith
+CHAR_DATA k_e_1_guard_1
+CHAR_DATA k_e_1_guard_2
+CHAR_DATA k_e_1_guard_3
+CHAR_DATA k_e_1_guard_4
+CHAR_DATA k_e_1_group_1_leader
+CHAR_DATA k_e_1_group_2_leader
+CAR_DATA k_e_1_truck_with_trailer_1
+COUNTER k_e_1_generator_destroyed = 0
+COUNTER	k_e_1_guard_1_spotted_player = 0
+COUNTER	k_e_1_guard_2_spotted_player = 0
+COUNTER	k_e_1_guard_3_spotted_player = 0
+COUNTER	k_e_1_guard_4_spotted_player = 0
+COUNTER	k_e_1_group_1_leader_spotted_player = 0
+COUNTER	k_e_1_group_2_leader_spotted_player = 0
+COUNTER k_e_1_truck_with_trailer_1_destroyed = 0
+COUNTER k_e_1_zaib_leader_dead = 0
+COUNTER k_e_1_truck_and_leader_dead = 0
+COUNTER k_e_1_player_killed_1 = 0
+COUNTER k_e_1_player_killed_2 = 0
+COUNTER k_e_1_player_killed_3 = 0
+COUNTER k_e_1_player_killed_4 = 0
+COUNTER k_e_1_locksmith_located = 0
+COUNTER k_e_1_locksmith_obj1_passed = 0
+COUNTER k_e_1_door_1_open = 0
+COUNTER k_e_1_locksmith_on_screen = 0
+COUNTER k_e_1_zaib_leader_spotted_player = 0
+COUNTER k_e_1_zaib_leader_dead_not_truck = 0
+COUNTER k_e_1_locksmith_on_screen_2 = 0
+COUNTER k_e_1_locksmith_located_2 = 0
+COUNTER k_e_1_locksmith_at_door = 0
+COUNTER k_e_1_generator_1_created = 0
+OBJ_DATA k_e_1_powerup_1
+OBJ_DATA k_e_1_powerup_2
+OBJ_DATA k_e_1_powerup_3
+OBJ_DATA k_e_1_powerup_4
+OBJ_DATA k_e_1_powerup_5
+OBJ_DATA k_e_1_powerup_6
+OBJ_DATA k_e_1_generator_1
+OBJ_DATA k_e_1_invisible_object_1
+SOUND k_e_1_generator_1_sound
+SOUND k_e_1_dejected_mumble
+SOUND k_e_1_yeeha
+SOUND k_e_1_tick
+FORWARD clean_up_kris_easy_phone1_m1:
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+		
+// starts Krishna easy phone1 mission1
+					
+
+kris_easy_phone1_m1:
+
+SET flag_failed_kris_easy_phone1_m1 = 0
+
+CLOSE_DOOR ( k_e_1_door_1 )
+//DISABLE_THREAD_TRIGGER ( thr_kris_easy_phone1_m1 ) 
+DISPLAY_MESSAGE ( 3840 ) // you have PASSED the mission!"
+DISPLAY_BRIEF ( 3160 ) // "the Zaibatsu are building too close to our community, i want you to put a stop to this! Go to the construction yard!"
+SET flag_on_mission = 1
+SET flag_on_kris_mission = 1
+POINT_ARROW_AT ( arrow , 69.0 , 234.0 , 2.0 )
+
+WHILE_EXEC ( NOT ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 69.0 , 234.0 , 2.0 , 2.0 , 2.0  ) ) )
+   	
+	
+	DO_NOWT
+	
+
+ENDWHILE
+
+k_e_1_generator_1 = CREATE_OBJ ( 210.0 , 80.0 , 3.0 ) 0 powergen END
+#ifdef PC
+k_e_1_generator_1_sound = CREATE_SOUND ( 210.0 , 80.0 , 6.0 ) generator_rumble play_forever END
+FORCE_CLEANUP ( k_e_1_generator_1_sound )
+
+k_e_1_locksmith = CREATE_CHAR ( 210.0 , 81.5 , 6.0 ) 9 180 stand_still_bloke END
+k_e_1_invisible_object_1 = CREATE_OBJ ( 210.0 , 78.5 , 6.0 ) 0 invisible_target END
+k_e_1_powerup_2 = CREATE_OBJ ( 208.0 , 80.0 , 6.0 ) 0 COLLECT_04 15 END
+FORCE_CLEANUP ( k_e_1_powerup_2 )
+#endif
+#ifdef PSX
+k_e_1_locksmith = CREATE_CHAR ( 210.0 , 81.5 , 5.0 ) 9 180 stand_still_bloke END
+k_e_1_invisible_object_1 = CREATE_OBJ ( 210.0 , 78.5 , 5.0 ) 0 invisible_target END
+k_e_1_powerup_2 = CREATE_OBJ ( 208.0 , 80.0 , 5.0 ) 0 COLLECT_04 15 END
+FORCE_CLEANUP ( k_e_1_powerup_2 )
+#endif
+k_e_1_powerup_1 = CREATE_OBJ ( 199.5 , 77.5 , 2.0 ) 0 COLLECT_31 15 END
+FORCE_CLEANUP ( k_e_1_powerup_1 )
+SET_CHAR_THREAT_SEARCH ( k_e_1_locksmith , line_of_sight )
+SET_CHAR_THREAT_REACTION ( k_e_1_locksmith , no_reaction )
+GIVE_WEAPON ( k_e_1_locksmith , molotov )
+ADD_GROUP_TO_CHARACTER ( k_e_1_locksmith , 0 )
+POINT_ARROW_AT ( arrow , k_e_1_locksmith )
+DISPLAY_BRIEF ( 3162 ) // "Ok, it's locked! I know a man who might be able to help open the door! Go to the water purification towers and ask him for help!"
+SET k_e_1_generator_1_created = 1
+
+
+WHILE_EXEC ( k_e_1_generator_destroyed = 0 )
+   	
+	
+	IF ( ( HAS_CHARACTER_DIED ( k_e_1_locksmith ) )
+	AND ( flag_failed_kris_easy_phone1_m1 = 0 ) )
+		SET flag_failed_kris_easy_phone1_m1 = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3164 ) // "how do you expect to open the door when he's dead, dickhead!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( LOCATE_ANOTHER_CHARACTER_ON_FOOT ( shaft , k_e_1_locksmith , 0.5 , 0.5  ) )
+	AND ( k_e_1_locksmith_located = 0 ) ) 
+		DISPLAY_BRIEF ( 3165 ) // "I'm not helping you, I hate your boss!"
+		POINT_ARROW_AT ( arrow , k_e_1_generator_1 )
+		SET k_e_1_locksmith_located = 1
+		SET k_e_1_locksmith_located_2 = 1
+		// put the locksmith throwing molotovs at the generator
+	ENDIF
+
+	
+	IF ( CHECK_OBJ_MODEL ( k_e_1_generator_1 , powergen_dead ) )
+		
+		IF ( k_e_1_locksmith_located = 1 )
+			SET k_e_1_generator_destroyed = 1
+			#ifdef PC
+			DELETE_ITEM ( k_e_1_generator_1_sound )
+			#endif
+			SET_CHAR_OBJECTIVE  ( k_e_1_locksmith , wait_on_foot )
+		ENDIF
+
+		IF ( k_e_1_locksmith_located = 0 )
+			SET k_e_1_generator_destroyed = 2
+			#ifdef PC
+			DELETE_ITEM ( k_e_1_generator_1_sound )
+			#endif
+			SET_CHAR_OBJECTIVE  ( k_e_1_locksmith , wait_on_foot )
+		ENDIF
+	ENDIF
+
+	
+	IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( k_e_1_locksmith ) )
+	AND ( k_e_1_locksmith_on_screen = 0 ) )
+		SET_CHAR_OBJECTIVE  ( k_e_1_locksmith , destroy_object , k_e_1_invisible_object_1 )
+		SET k_e_1_locksmith_on_screen = 1
+	ENDIF
+
+	
+	IF ( ( k_e_1_locksmith_located_2 = 1 ) 
+	AND ( NOT ( DELAY ( 100 ) ) ) ) 
+		SET k_e_1_locksmith_located_2 = 2
+		DISPLAY_BRIEF_NOW ( 3187 ) // "how do you expect to open the door when he's dead, dickhead!"
+	ENDIF
+
+
+	IF ( ( k_e_1_locksmith_located_2 = 2 ) 
+	AND ( NOT ( DELAY ( 100 ) ) ) ) 
+		SET k_e_1_locksmith_located_2 = 1
+		DISPLAY_BRIEF_NOW ( 3188 ) // "how do you expect to open the door when he's dead, dickhead!"
+	ENDIF
+
+	
+	IF ( ( k_e_1_locksmith_on_screen = 1 ) 
+	AND ( NOT ( DELAY ( 100 ) ) ) ) 
+		SET k_e_1_locksmith_on_screen = 2
+		#ifdef PC
+			k_e_1_dejected_mumble = CREATE_SOUND ( 210.0 , 81.5 , 6.0 ) detected_mumble play_instant END
+		#endif
+	ENDIF
+
+
+	IF ( ( k_e_1_locksmith_on_screen = 2 ) 
+	AND ( NOT ( DELAY ( 100 ) ) ) ) 
+		SET k_e_1_locksmith_on_screen = 1
+		#ifdef PC
+			k_e_1_dejected_mumble = CREATE_SOUND ( 210.0 , 81.5 , 6.0 ) detected_mumble play_instant END
+		#endif
+	ENDIF
+	
+
+ENDWHILE
+
+		
+#ifdef PC
+	k_e_1_yeeha = CREATE_SOUND ( 210.0 , 81.5 , 6.0 ) yeeha_bomb play_instant END
+#endif
+		
+MAKE_NEW_LEADER_OF_GROUP ( k_e_1_locksmith , shaft )
+GIVE_WEAPON ( k_e_1_locksmith , pistol )
+
+DELAY_HERE ( 20 )  
+
+EXPLODE_NO_RING ( 210.0 , 80.0 , 3.0 ) 
+
+DELAY_HERE ( 20 )  
+
+EXPLODE_NO_RING ( 210.0 , 80.0 , 4.0 ) 
+
+DELAY_HERE ( 20 )  
+
+#ifdef PC
+EXPLODE_NO_RING ( 210.0 , 80.0 , 5.0 )
+
+DELAY_HERE ( 20 )  
+#endif
+
+//EXPLODE_NO_RING ( 210.0 , 80.0 , 6.0 )
+
+//DELAY_HERE ( 20 )  
+
+IF ( k_e_1_generator_destroyed = 1 )
+	DISPLAY_BRIEF ( 3166 ) // "Alright, you have done me a favour and I will return the favour. Direct me to your locked door!"
+	SET k_e_1_generator_destroyed = 3
+ENDIF
+
+IF ( k_e_1_generator_destroyed = 2 )
+	DISPLAY_BRIEF ( 3181 ) // "Thank you, I've been trying to hit that generator for ages. Direct me to your locked door!"
+	SET k_e_1_generator_destroyed = 3
+ENDIF
+
+POINT_ARROW_AT ( arrow , 67.0 , 234.0 , 2.0 )
+k_e_1_truck_with_trailer_1 = CREATE_CAR ( 113.5 , 225.0 , 2.0 ) 1 270 boxtruck END
+CHANGE_CAR_LOCK ( k_e_1_truck_with_trailer_1 , locked )
+k_e_1_guard_1 = CREATE_CHAR ( 103.5 , 229.5 , 2.0 ) 8 90 criminal END
+k_e_1_guard_2 = CREATE_CHAR ( 112.5 , 221.5 , 2.0 ) 8 90 criminal END
+k_e_1_guard_3 = CREATE_CHAR ( 108.5 , 235.5 , 2.0 ) 8 90 criminal END
+k_e_1_guard_4 = CREATE_CHAR ( 112.5 , 237.5 , 2.0 ) 8 90 criminal END
+k_e_1_group_1_leader = CREATE_CHAR ( 108.0 , 241.0 , 2.0 ) 8 90 criminal END
+k_e_1_group_2_leader = CREATE_CHAR ( 113.5 , 227.5 , 2.0 ) 8 90 criminal END
+k_e_1_zaib_leader = CREATE_CHAR ( 111.0 , 241.0 , 3.0 ) 8 270 criminal END
+#ifdef PC
+k_e_1_powerup_3 = CREATE_OBJ ( 99.5 , 244.5 , 2.0 ) 0 COLLECT_33 END
+FORCE_CLEANUP ( k_e_1_powerup_3 )
+#endif
+
+#ifdef PSX
+k_e_1_powerup_3 = CREATE_OBJ ( 105.5 , 250.0 , 2.0 ) 0 COLLECT_33 END
+FORCE_CLEANUP ( k_e_1_powerup_3 )
+#endif
+
+k_e_1_powerup_4 = CREATE_OBJ ( 72.0 , 234.0 , 2.0 ) 0 COLLECT_01 END
+k_e_1_powerup_5 = CREATE_OBJ ( 82.5 , 232.5 , 2.0 ) 0 COLLECT_02 END
+k_e_1_powerup_6 = CREATE_OBJ ( 101.5 , 242.5 , 2.0 ) 0 COLLECT_09 END
+FORCE_CLEANUP ( k_e_1_powerup_4 )
+FORCE_CLEANUP ( k_e_1_powerup_5 )
+FORCE_CLEANUP ( k_e_1_powerup_6 )
+ADD_PATROL_POINT ( k_e_1_guard_1 , 106.5 , 229.5 , 2.0 )
+ADD_PATROL_POINT ( k_e_1_guard_1 , 106.5 , 233.5 , 2.0 )
+ADD_PATROL_POINT ( k_e_1_guard_1 , 103.5 , 233.5 , 2.0 )
+ADD_PATROL_POINT ( k_e_1_guard_1 , 103.5 , 229.5 , 2.0 )
+ADD_PATROL_POINT ( k_e_1_guard_2 , 115.5 , 221.5 , 2.0 )
+ADD_PATROL_POINT ( k_e_1_guard_2 , 115.5 , 224.5 , 2.0 )
+ADD_PATROL_POINT ( k_e_1_guard_2 , 112.5 , 224.5 , 2.0 )
+ADD_PATROL_POINT ( k_e_1_guard_2 , 112.5 , 221.5 , 2.0 )
+ADD_PATROL_POINT ( k_e_1_guard_3 , 111.5 , 235.5 , 2.0 )
+ADD_PATROL_POINT ( k_e_1_guard_3 , 111.5 , 237.5 , 2.0 )
+ADD_PATROL_POINT ( k_e_1_guard_3 , 108.5 , 237.5 , 2.0 )
+ADD_PATROL_POINT ( k_e_1_guard_3 , 108.5 , 235.5 , 2.0 )
+ADD_PATROL_POINT ( k_e_1_guard_4 , 115.5 , 237.5 , 2.0 )
+ADD_PATROL_POINT ( k_e_1_guard_4 , 115.5 , 235.5 , 2.0 )
+ADD_PATROL_POINT ( k_e_1_guard_4 , 112.5 , 235.5 , 2.0 )
+ADD_PATROL_POINT ( k_e_1_guard_4 , 112.5 , 237.5 , 2.0 )
+
+SET_CHAR_THREAT_REACTION ( k_e_1_zaib_leader , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_e_1_guard_1 , react_as_normal )
+SET_CHAR_THREAT_REACTION ( k_e_1_guard_2 , react_as_normal )
+SET_CHAR_THREAT_REACTION ( k_e_1_guard_3 , react_as_normal )
+SET_CHAR_THREAT_REACTION ( k_e_1_guard_4 , react_as_normal )
+SET_CHAR_THREAT_REACTION ( k_e_1_group_1_leader , react_as_normal )
+SET_CHAR_THREAT_REACTION ( k_e_1_group_2_leader , react_as_normal )
+SET_CHAR_OBJECTIVE ( k_e_1_group_1_leader , guard_area )
+SET_CHAR_OBJECTIVE ( k_e_1_group_2_leader , guard_area )
+SET_CHAR_THREAT_SEARCH ( k_e_1_zaib_leader , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_e_1_guard_1 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_e_1_guard_2 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_e_1_guard_3 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_e_1_guard_4 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_e_1_group_1_leader , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_e_1_group_2_leader , line_of_sight_player_only )
+GIVE_WEAPON ( k_e_1_zaib_leader , pistol )
+GIVE_WEAPON ( k_e_1_guard_1 , pistol )
+GIVE_WEAPON ( k_e_1_guard_2 , pistol )
+GIVE_WEAPON ( k_e_1_guard_3 , pistol )
+GIVE_WEAPON ( k_e_1_guard_4 , pistol )
+GIVE_WEAPON ( k_e_1_group_1_leader , pistol )
+GIVE_WEAPON ( k_e_1_group_2_leader , pistol )
+ADD_CHAR_TO_GANG ( k_e_1_zaib_leader , zaibgang )
+ADD_CHAR_TO_GANG ( k_e_1_guard_1 , zaibgang )
+ADD_CHAR_TO_GANG ( k_e_1_guard_2 , zaibgang )
+ADD_CHAR_TO_GANG ( k_e_1_guard_3 , zaibgang )
+ADD_CHAR_TO_GANG ( k_e_1_guard_4 , zaibgang ) 
+ADD_CHAR_TO_GANG ( k_e_1_group_1_leader , zaibgang )
+ADD_CHAR_TO_GANG ( k_e_1_group_2_leader , zaibgang )
+#ifdef PC
+ADD_GROUP_TO_CHARACTER ( k_e_1_group_1_leader , 3 )
+ADD_GROUP_TO_CHARACTER ( k_e_1_group_2_leader , 3 )
+#endif
+#ifdef PSX
+ADD_GROUP_TO_CHARACTER ( k_e_1_group_1_leader , 1 )
+ADD_GROUP_TO_CHARACTER ( k_e_1_group_2_leader , 1 )
+#endif
+
+
+
+WHILE_EXEC ( k_e_1_locksmith_at_door = 0 )
+   	
+	
+	IF ( ( LOCATE_CHARACTER_ON_FOOT ( shaft , 67.5 , 234.0 , 2.0 , 3.0 , 2.0  ) )
+	AND ( NOT ( IS_CHARACTER_IN_ANY_CAR ( k_e_1_locksmith	) ) ) )
+		SET k_e_1_locksmith_at_door = 1
+	ENDIF
+
+	
+	IF ( ( HAS_CHARACTER_DIED ( k_e_1_locksmith ) )
+	AND ( flag_failed_kris_easy_phone1_m1 = 0 ) )
+		SET flag_failed_kris_easy_phone1_m1 = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3164 ) // "how do you expect to open the door when he's dead, dickhead!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+	
+	IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( k_e_1_locksmith ) ) )
+	AND ( k_e_1_locksmith_on_screen_2 = 0 ) )
+		POINT_ARROW_AT ( arrow , k_e_1_locksmith )
+		SET k_e_1_locksmith_on_screen_2 = 1
+		DISPLAY_BRIEF_NOW ( 3185 ) // "Where the fuck is the guy? Have you taken off without him? Go and find him now!"
+	ENDIF
+
+
+	IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( k_e_1_locksmith ) )
+	AND ( k_e_1_locksmith_on_screen_2 = 1 ) )
+		POINT_ARROW_AT ( arrow , 67.0 , 234.0 , 2.0 )
+		SET k_e_1_locksmith_on_screen_2 = 0
+		DISPLAY_BRIEF_NOW ( 3186 ) // "Why did you leave me behind? I'm helping YOU! Take me to the locked door!"
+	ENDIF
+	
+
+ENDWHILE
+
+
+REMOVE_CHAR_FROM_GROUP ( shaft , k_e_1_locksmith )			
+SET_CHAR_OBJECTIVE ( k_e_1_locksmith , goto_area_on_foot , 68.8 , 234.0 , 2.0 ) 
+SET_CHAR_THREAT_REACTION ( k_e_1_locksmith , no_reaction )
+REMOVE_ARROW ( arrow )
+DISPLAY_BRIEF_NOW ( 3168 ) // "Ok this won't take long, then i will be on my way!"
+			
+
+WHILE_EXEC ( k_e_1_door_1_open = 0 )
+
+	
+	IF ( ( HAS_CHARACTER_DIED ( k_e_1_locksmith ) )
+	AND ( flag_failed_kris_easy_phone1_m1 = 0 ) )
+		SET flag_failed_kris_easy_phone1_m1 = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3164 ) // "how do you expect to open the door when he's dead, dickhead!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+ 	
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_e_1_locksmith ) ) 
+	AND ( k_e_1_locksmith_obj1_passed = 0 ) )
+		SET k_e_1_locksmith_obj1_passed = 1
+		SET_CHAR_OBJECTIVE ( k_e_1_locksmith , wait_on_foot )
+		#ifdef PC
+		k_e_1_tick = CREATE_SOUND ( 68.8 , 234.0 , 6.0 ) bomb_tick play_forever END
+		FORCE_CLEANUP ( k_e_1_tick )
+		#endif
+   	ENDIF
+
+
+	IF ( ( k_e_1_locksmith_obj1_passed = 1 ) 
+	AND ( NOT ( DELAY ( 60 ) ) ) ) 
+		OPEN_DOOR ( k_e_1_door_1 )
+	   	DISPLAY_BRIEF_NOW ( 3169 ) // "Nice working with you, a word of advice though. Stop working for the Krishnas they will try to brainwash you into their ways!"
+		SET k_e_1_locksmith_obj1_passed = 2
+		SET k_e_1_door_1_open = 1
+		MAKE_CHAR_DO_NOTHING ( k_e_1_locksmith )
+		#ifdef PC
+		DELETE_ITEM ( k_e_1_tick )
+		k_e_1_yeeha = CREATE_SOUND ( 68.8 , 234.0 , 6.0 ) yeeha_bomb play_instant END
+		FORCE_CLEANUP ( k_e_1_yeeha )
+		#endif
+	ENDIF
+
+
+ENDWHILE											 
+
+
+DELAY ( 60 )
+DISPLAY_BRIEF_NOW ( 3170 ) // "You took your time with that door, now get into the yard! I want you to take out the top man. They can't do anything without his money!"
+POINT_ARROW_AT ( arrow , k_e_1_zaib_leader )
+
+
+
+WHILE_EXEC ( k_e_1_truck_and_leader_dead = 0 )
+
+
+	IF ( ( HAS_CHARACTER_DIED ( k_e_1_zaib_leader ) )
+	AND ( k_e_1_zaib_leader_dead = 0 ) )
+		
+		IF ( IS_CAR_WRECKED ( k_e_1_truck_with_trailer_1 ) ) 
+			SET k_e_1_truck_and_leader_dead = 1
+			CLEAR_ALL_BRIEFS ( )
+			DISPLAY_BRIEF_NOW ( 3183 ) // "Well done, feel no guilt he was a non beleiver! We have crippled this site!"
+		ENDIF
+		
+		IF ( NOT ( IS_CAR_WRECKED ( k_e_1_truck_with_trailer_1 ) ) )
+			SET k_e_1_zaib_leader_dead = 1
+			SET k_e_1_zaib_leader_dead_not_truck = 1
+			DISPLAY_BRIEF_NOW ( 3171 ) // "Well done, feel no guilt he was a non beleiver! Take out the truck as well, just to make sure we cripple this site!"
+			POINT_ARROW_AT ( arrow , k_e_1_truck_with_trailer_1 )
+		ENDIF
+	ENDIF
+
+
+	IF ( ( IS_CAR_WRECKED ( k_e_1_truck_with_trailer_1 ) )
+	AND ( k_e_1_zaib_leader_dead_not_truck = 1 ) ) 
+		SET k_e_1_truck_and_leader_dead = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF_NOW ( 3172 ) // "Good work, that should cost them a pretty penny!!"
+	ENDIF
+
+	
+	IF ( ( IS_CAR_WRECKED ( k_e_1_truck_with_trailer_1 ) )
+	AND ( k_e_1_zaib_leader_dead_not_truck = 0 ) ) 
+		SET k_e_1_zaib_leader_dead_not_truck = 2
+		DISPLAY_BRIEF_NOW ( 3184 ) // "Nice shooting! I was going to tell you to take out the truck, that should cost them a pretty penny!"
+	ENDIF
+
+	
+ 	// if player is seen by guard1
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( k_e_1_guard_1 ) ) 
+   	AND ( k_e_1_guard_1_spotted_player = 0 ) )
+		SET k_e_1_guard_1_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3174 ) // "Who the fuck are you! Get off of the site!"	 
+	ENDIF
+	
+							  
+	// if player is seen by guard1
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( k_e_1_guard_2 ) ) 
+   	AND ( k_e_1_guard_2_spotted_player = 0 ) )
+		SET k_e_1_guard_2_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3175 ) // "This is private property, you fucking idiot!"	 
+	ENDIF
+	
+	
+	// if player is seen by guard1
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( k_e_1_guard_3 ) ) 
+   	AND ( k_e_1_guard_3_spotted_player = 0 ) )
+		SET k_e_1_guard_3_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3176 ) // "Can't you read the security signs? You will pay with your life!"	 
+	ENDIF
+	
+	
+	// if player is seen by guard1
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( k_e_1_guard_4 ) ) 
+   	AND ( k_e_1_guard_4_spotted_player = 0 ) )
+		SET k_e_1_guard_4_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3177 ) // "You're a long way from home, and you're going home in a box!"	 
+	ENDIF
+	
+	
+	// if player is seen by guard1
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( k_e_1_group_1_leader ) ) 
+   	AND ( k_e_1_group_1_leader_spotted_player = 0 ) )
+		SET k_e_1_group_1_leader_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3178 ) // "Stand your ground men, he can't take all of us together!"	 
+	ENDIF
+	
+	
+	// if player is seen by guard1
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( k_e_1_group_2_leader ) ) 
+   	AND ( k_e_1_group_2_leader_spotted_player = 0 ) )
+		SET k_e_1_group_2_leader_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3179 ) // "Don't split up, keep your shape and he'll have no chance!"	 
+	ENDIF
+	
+	// if player is seen by guard1
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( k_e_1_zaib_leader ) ) 
+   	AND ( k_e_1_zaib_leader_spotted_player = 0 ) )
+		SET k_e_1_zaib_leader_spotted_player = 1
+		SET_CHAR_OBJECTIVE ( k_e_1_zaib_leader , flee_char_on_foot_always , shaft  )
+		DISPLAY_BRIEF_NOW ( 3182 ) // "Don't split up, keep your shape and he'll have no chance!"	 
+	ENDIF	
+
+
+ENDWHILE
+
+
+IF  ( ( k_e_1_truck_and_leader_dead = 1 )
+AND ( flag_passed_kris_easy_phone1_m1 = 0 )	)
+	DISPLAY_BRIEF ( 3180 ) // "Good work that should stop them building into our community"
+	++ counter_all_missions_passed
+	SET flag_passed_kris_easy_phone1_m1 = 1
+	DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+	ADD_SCORE ( shaft , 40000 )
+	ADD_MULTIPLIER ( shaft , 1 )
+	CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , 1 ) 
+	CLEAR_WANTED_LEVEL ( shaft )
+	SET_PHONE_DEAD ( ph_kris_easy_phone1 ) 
+	DISABLE_THREAD_TRIGGER ( thr_kris_easy_phone1_m1 ) 
+	RETURN
+ENDIF	 
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+// deletes all objects when Krishna easy phone1 mission1 is finished...
+				
+clean_up_kris_easy_phone1_m1: 
+	
+   	REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	OPEN_DOOR ( k_e_1_door_1 )
+
+	IF ( flag_passed_kris_easy_phone1_m1 = 1 )
+		++ flag_kris_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_kris_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3671 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3670 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_kris_easy_phone1_m1 = 1 )
+		++ flag_kris_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_kris_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+	MISSION_HAS_FINISHED ( ) 
+	
+	SET flag_on_mission	= 0
+	SET flag_on_kris_mission = 0
+	
+	RETURN
+
+
+
+MISSIONSTART
+
+	GOSUB kris_easy_phone1_m1:
+
+	GOSUB clean_up_kris_easy_phone1_m1:
+
+MISSIONEND 
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		

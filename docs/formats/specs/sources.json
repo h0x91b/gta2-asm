@@ -1,0 +1,41 @@
+{
+  "downloaded": "2026-09-04",
+  "sources": [
+    {
+      "file": "gta2manual.pdf",
+      "source": "https://gtamp.com/GTA2/gta2manual.pdf",
+      "bytes": 650951,
+      "sha256": "76cd15ddc1e703b647516e24bfffbca0eb8140391a7ee0861d71de366184be05"
+    },
+    {
+      "file": "gta2maps.pdf",
+      "source": "https://gtamp.com/GTA2/gta2maps.pdf",
+      "bytes": 2017382,
+      "sha256": "1a6786ea5d54b177c0dabbe8e32b3f18ae1e8831ea3d5024ae33b2f9a29cf9ff"
+    },
+    {
+      "file": "gtamp-text.html",
+      "source": "https://gtamp.com/text/",
+      "bytes": 4670,
+      "sha256": "19b742ad595a416c703ad5c8271919af9b42011ca5b82107c50be17ba299cfb7"
+    },
+    {
+      "file": "gta2script.7z",
+      "source": "https://gtamp.com/GTA2/gta2script.7z",
+      "bytes": 505151,
+      "sha256": "ace737b854db41ce1bd5b7b38e016d8aa0fe7b48b43efe2e84a4c5b638ce52df"
+    },
+    {
+      "file": "gta2formats.zip",
+      "source": "https://gtamp.com/GTA2/gta2formats.zip",
+      "bytes": 25643,
+      "sha256": "59ea2b0aa7d4c594700177640cff3cf60e65f3d10e20ffdea8818904dd7aeb9d"
+    },
+    {
+      "file": "GTA2_Style_Format.doc",
+      "source": "user attachment",
+      "bytes": 40448,
+      "sha256": "3ed04a3b1c8bbdca90e7fd8837d8fc926faa1850c6155d893d7aac86fdc01963"
+    }
+  ]
+}

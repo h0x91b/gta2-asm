@@ -1,0 +1,798 @@
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX mission 6 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+/*
+
+A basic grand theft auto mission with a few twists.
+
+
+i)		Steal a stationary car
+ii)		Steal a car on the move
+iii)	Steal a car from inside a compound
+iv)		Steal a car from the back of a car transporter.
+
+*/
+
+
+
+
+// general mission objects
+
+
+
+
+CAR_DATA z_e_2_stolen_1
+CAR_DATA z_e_2_stolen_2
+CAR_DATA z_e_2_stolen_3
+CAR_DATA z_e_2_stolen_4
+
+CAR_DATA z_e_2_stolen_cab
+CAR_DATA z_e_2_transporter 
+CAR_DATA z_e_2_copcar
+
+
+CHAR_DATA z_e_2_stolen_1_guard_1
+CHAR_DATA z_e_2_stolen_1_guard_2
+CHAR_DATA z_e_2_stolen_1_guard_3
+CHAR_DATA z_e_2_stolen_1_guard_4
+
+CHAR_DATA z_e_2_stolen_2_driver
+
+
+COUNTER z_e_2_stolen_1_parked = 0
+COUNTER z_e_2_player_in_car = 0
+COUNTER z_e_2_park_stolen_1 = 0
+COUNTER z_e_2_stolen_2_parked = 0
+COUNTER z_e_2_stolen_2_driver_incar = 0
+COUNTER z_e_2_player_spotted = 0
+COUNTER z_e_2_park_stolen_2 = 0
+COUNTER z_e_2_park_stolen_3 = 0
+COUNTER z_e_2_stolen_3_parked = 0
+COUNTER z_e_2_player_in_truckcab = 0
+COUNTER z_e_2_transporter_attached = 0
+COUNTER z_e_2_got_car_info = 0
+COUNTER z_e_2_park_stolen_4 = 0
+COUNTER z_e_2_brief_displayed = 0
+COUNTER z_e_2_car_removed_from_transporter = 0
+COUNTER z_e_2_stolen_4_parked = 0
+COUNTER z_e_2_stolen_1_guard_1_spotted_player = 0
+COUNTER z_e_2_stolen_1_guard_2_spotted_player = 0
+COUNTER z_e_2_stolen_1_guard_3_spotted_player = 0
+COUNTER z_e_2_stolen_1_guard_4_spotted_player = 0
+COUNTER z_e_2_at_crane = 0
+COUNTER z_e_2_weapon = 0
+
+OBJ_DATA z_e_2_powerup_1
+OBJ_DATA z_e_2_powerup_2
+OBJ_DATA z_e_2_powerup_3
+
+FORWARD clean_up_zaib_easy_phone2_m1:
+
+
+
+
+// ****************************************************************************
+// ****************************************************************************
+
+
+
+zaib_easy_phone2_m1:
+
+SET flag_failed_zaib_easy_phone2_m1 = 0
+
+
+
+// i)	Steal a stationary car
+
+SET flag_on_mission	= 1
+SET flag_on_zaib_mission = 1
+
+DISPLAY_MESSAGE ( 3848 ) // mission failed
+
+DISPLAY_BRIEF ( 3880 ) // Go and steal the Trance Am from the Redneck sprayshop.
+
+z_e_2_stolen_1 = CREATE_CAR ( 240.5 , 134.5 , 2.0 ) 30 165 jeffrey END
+
+z_e_2_stolen_1_guard_1 = CREATE_CHAR ( 239.7 , 134.5 , 2.0 ) 9 10 criminal END
+SET_CHAR_THREAT_SEARCH ( z_e_2_stolen_1_guard_1  , LINE_OF_SIGHT_PLAYER_ONLY  )
+SET_CHAR_THREAT_REACTION ( z_e_2_stolen_1_guard_1 , react_as_normal )
+GIVE_WEAPON ( z_e_2_stolen_1_guard_1 , pistol )
+ADD_CHAR_TO_GANG ( z_e_2_stolen_1_guard_1 , krisgang )
+SET_CHAR_OBJECTIVE ( z_e_2_stolen_1_guard_1 , WAIT_ON_FOOT )
+
+z_e_2_stolen_1_guard_2 = CREATE_CHAR ( 239.9 , 135.4 , 2.0 ) 9 140 criminal END
+SET_CHAR_THREAT_SEARCH ( z_e_2_stolen_1_guard_2  , LINE_OF_SIGHT_PLAYER_ONLY  )
+SET_CHAR_THREAT_REACTION ( z_e_2_stolen_1_guard_2 , react_as_normal )
+GIVE_WEAPON ( z_e_2_stolen_1_guard_2 , MACHINE_GUN )
+ADD_CHAR_TO_GANG ( z_e_2_stolen_1_guard_2 , krisgang )
+SET_CHAR_OBJECTIVE ( z_e_2_stolen_1_guard_2 , WAIT_ON_FOOT ) 
+ 
+z_e_2_stolen_1_guard_3 = CREATE_CHAR ( 241.2 , 135.2 , 2.0 ) 9 280 criminal END
+SET_CHAR_THREAT_SEARCH ( z_e_2_stolen_1_guard_3  , LINE_OF_SIGHT_PLAYER_ONLY  )
+SET_CHAR_THREAT_REACTION ( z_e_2_stolen_1_guard_3 , react_as_normal )
+GIVE_WEAPON ( z_e_2_stolen_1_guard_3 , pistol )
+ADD_CHAR_TO_GANG ( z_e_2_stolen_1_guard_3 , krisgang )
+SET_CHAR_OBJECTIVE ( z_e_2_stolen_1_guard_3 , WAIT_ON_FOOT ) 
+
+z_e_2_stolen_1_guard_4 = CREATE_CHAR ( 241.6 , 134.4 , 2.0 ) 9 290 criminal END
+SET_CHAR_THREAT_SEARCH ( z_e_2_stolen_1_guard_4  , LINE_OF_SIGHT_PLAYER_ONLY  )
+SET_CHAR_THREAT_REACTION ( z_e_2_stolen_1_guard_4 , react_as_normal )
+GIVE_WEAPON ( z_e_2_stolen_1_guard_4 , shotgun )
+ADD_CHAR_TO_GANG ( z_e_2_stolen_1_guard_4 , krisgang )
+SET_CHAR_OBJECTIVE ( z_e_2_stolen_1_guard_4 , WAIT_ON_FOOT ) 
+
+POINT_ARROW_AT ( arrow , z_e_2_stolen_1 )
+
+z_e_2_powerup_1 = CREATE_OBJ ( 245.5 , 139.0 , 2.0 ) 0 COLLECT_01 END
+FORCE_CLEANUP ( z_e_2_powerup_1 )
+
+// wait for the player to park stolen_1
+
+
+WHILE_EXEC ( z_e_2_stolen_1_parked = 0 )
+
+
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_e_2_stolen_1_guard_1 ) ) 
+	AND ( z_e_2_stolen_1_guard_1_spotted_player = 0 ) )
+		SET z_e_2_stolen_1_guard_1_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3908 ) // "shit! we've got an intruder"	 
+	ENDIF
+
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_e_2_stolen_1_guard_2 ) ) 
+	AND ( z_e_2_stolen_1_guard_2_spotted_player = 0 ) )
+		SET z_e_2_stolen_1_guard_2_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3909 ) // "shit! we've got an intruder"	 
+	ENDIF
+
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_e_2_stolen_1_guard_3 ) ) 
+	AND ( z_e_2_stolen_1_guard_3_spotted_player = 0 ) )
+		SET z_e_2_stolen_1_guard_3_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3910 ) // "shit! we've got an intruder"	 
+	ENDIF
+
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( z_e_2_stolen_1_guard_4 ) ) 
+	AND ( z_e_2_stolen_1_guard_4_spotted_player = 0 ) )
+		SET z_e_2_stolen_1_guard_4_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3911 ) // "shit! we've got an intruder"	 
+	ENDIF
+
+
+
+
+// wait for the player to enter the car
+
+	IF  ( ( IS_CHARACTER_IN_CAR ( shaft , z_e_2_stolen_1 ) )
+	AND ( z_e_2_player_in_car = 0 ) ) 
+		SET z_e_2_player_in_car = 1
+		DISPLAY_BRIEF_NOW  ( 3882 )	// Well done! Bring it back to the village and park it.		
+		POINT_ARROW_AT ( arrow , 20.0 , 229.0 , 4.0 )
+		UPDATE_DOOR_TARGET ( z_e_2_door_1 , z_e_2_stolen_1 )
+		MAKE_DOOR_AUTOMATIC ( z_e_2_door_1 )
+		IF ( z_e_2_weapon = 0 )
+			z_e_2_powerup_2 = CREATE_OBJ ( 20.0 , 227.0 , 4.0 ) 0 COLLECT_30 END
+			FORCE_CLEANUP ( z_e_2_powerup_2 ) 
+			SET z_e_2_weapon = 1
+		ENDIF
+	ENDIF
+
+
+// if the player leaves the car
+
+	IF  ( ( NOT ( IS_CHARACTER_IN_CAR ( shaft , z_e_2_stolen_1 ) ) ) 
+	AND ( z_e_2_player_in_car = 1 ) ) 
+		SET z_e_2_player_in_car = 0
+		DISPLAY_BRIEF_NOW  ( 3883 )	// What the fuck are you playin' at? Get back in the Trance Am and bring it up to the Village NOW!
+		POINT_ARROW_AT ( arrow , z_e_2_stolen_1 )
+	ENDIF
+
+
+// if the car is destroyed
+
+	IF ( ( IS_CAR_WRECKED ( z_e_2_stolen_1 ) )
+	AND ( flag_failed_zaib_easy_phone2_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3884 )    // Nice one! The Trance Am is completely fucked and I'm completely FUCKED OFF WITH YOU! 
+		SET flag_failed_zaib_easy_phone2_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // mission failed
+		RETURN
+	ENDIF
+
+
+// waits for player outside door, then parks stolen_1
+	
+	IF ( ( IS_CAR_IN_BLOCK ( z_e_2_stolen_1 , 20.0 , 230.0 , 3.0 , 2.0 , 2.0 ) ) 
+	AND ( z_e_2_park_stolen_1 = 0 ) )
+		PARK ( z_e_2_stolen_1 , z_e_2_door_1 )
+		SET z_e_2_park_stolen_1 = 1
+		REMOVE_ARROW ( arrow )
+	ENDIF	
+
+
+// waits for car to finish parking
+
+
+	IF ( ( z_e_2_park_stolen_1 = 1 )
+	AND ( HAS_PARK_FINISHED ( ) ) )
+		SET z_e_2_player_in_car = 2
+		SET z_e_2_park_stolen_1 = 1
+		SET z_e_2_stolen_1_parked = 1
+		DISPLAY_BRIEF ( 3885 ) // "Good work! Let's see how you get on with this. Stop and steal the Scientist car driving through town"
+	ENDIF
+
+ENDWHILE
+
+
+
+
+
+// ii)		Steal a car on the move
+
+
+
+SET z_e_2_player_in_car = 0 
+
+z_e_2_stolen_2 = CREATE_GANG_CAR ( 215.5 , 51.5 , 3.0 ) 28 180 buick END
+
+POINT_ARROW_AT ( arrow , z_e_2_stolen_2 )
+
+z_e_2_stolen_2_driver = CREATE_CHAR ( 167.5 , 59.5 , 2.0 ) 10 90 DUMMY END
+SET_CHAR_THREAT_SEARCH ( z_e_2_stolen_2_driver  , LINE_OF_SIGHT_PLAYER_ONLY  )
+SET_CHAR_THREAT_REACTION ( z_e_2_stolen_2_driver , NO_REACTION )
+GIVE_WEAPON ( z_e_2_stolen_2_driver , MACHINE_GUN )
+ADD_CHAR_TO_GANG ( z_e_2_stolen_2_driver , russgang )
+SET_CHAR_OBJECTIVE ( z_e_2_stolen_2_driver , ENTER_CAR_AS_DRIVER , z_e_2_stolen_2 )
+
+
+
+
+WHILE_EXEC ( z_e_2_stolen_2_parked = 0 )
+
+
+	// check to see if ped is in car
+
+	IF  ( ( IS_CHAR_OBJECTIVE_PASSED ( z_e_2_stolen_2_driver ) )
+	AND ( z_e_2_stolen_2_driver_incar = 0 ) )
+		SET z_e_2_stolen_2_driver_incar = 1
+	ENDIF
+		
+
+	// make driver attack player if spotted
+
+	IF ( ( ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , z_e_2_stolen_2_driver , 1.6 , 1.2 ) )
+	AND ( NOT ( HAS_CHARACTER_DIED ( z_e_2_stolen_2_driver ) ) ) )
+	AND ( z_e_2_stolen_2_driver_incar = 1 ) )
+		SET z_e_2_stolen_2_driver_incar = 2
+		DISPLAY_BRIEF ( 3886 ) // Hey, I know you...you're working for the SRS scum...you ain't getting my car...DIE SCUM!
+		SET_CHAR_OBJECTIVE ( z_e_2_stolen_2_driver , kill_char_any_means , shaft )
+   	ENDIF
+
+ 
+	// if the car is destroyed
+
+	IF ( ( IS_CAR_WRECKED ( z_e_2_stolen_2 ) )
+	AND ( flag_failed_zaib_easy_phone2_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3887 )    // Nice one! The Stratos is completely fucked and I'm completely FUCKED OFF WITH YOU! 
+		SET flag_failed_zaib_easy_phone2_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // mission failed
+		RETURN
+	ENDIF
+
+	// wait for the player to enter the car
+
+	IF  ( ( IS_CHARACTER_IN_CAR ( shaft , z_e_2_stolen_2 ) )
+	AND ( z_e_2_player_in_car = 0 ) ) 
+		SET z_e_2_player_in_car = 1
+		DISPLAY_BRIEF_NOW  ( 3888 )	// Well done! Bring it back to the village and park it.		
+		POINT_ARROW_AT ( arrow , 20.0 , 229.0 , 4.0 )
+		UPDATE_DOOR_TARGET ( z_e_2_door_1 , z_e_2_stolen_2 )
+	ENDIF
+
+
+	// if the player leaves the car
+
+	IF  ( ( NOT ( IS_CHARACTER_IN_CAR ( shaft , z_e_2_stolen_2 ) ) ) 
+	AND ( z_e_2_player_in_car = 1 ) ) 
+		SET z_e_2_player_in_car = 0
+		DISPLAY_BRIEF_NOW  ( 3889 )	// What the fuck are you playin' at? Get back in that car and bring it up to the Village NOW!
+		POINT_ARROW_AT ( arrow , z_e_2_stolen_2 )
+	ENDIF
+		
+
+	// waits for player outside door, then parks stolen_2
+	
+	IF ( ( IS_CAR_IN_BLOCK ( z_e_2_stolen_2 , 20.0 , 230.0 , 3.0 , 2.0 , 2.0 ) ) 
+	AND ( z_e_2_park_stolen_2 = 0 ) )
+		PARK ( z_e_2_stolen_2 , z_e_2_door_1 )
+		SET z_e_2_park_stolen_2 = 1
+		REMOVE_ARROW ( arrow )
+	ENDIF	
+
+
+	// waits for car to finish parking
+
+
+	IF ( ( z_e_2_park_stolen_2 = 1 )
+	AND ( HAS_PARK_FINISHED ( ) ) )
+		SET z_e_2_player_in_car = 2
+		SET z_e_2_park_stolen_2 = 2
+		SET z_e_2_stolen_2_parked = 1
+		#ifdef PC
+		DISPLAY_BRIEF ( 3890 ) // "Good work! Let's see how you get on with this. Steal the Redneck car from Disgracelands"
+		#endif
+		#ifdef PSX
+		DISPLAY_BRIEF ( 3913 ) // "Good work! Let's see how you get on with this. Steal the Redneck car from Disgracelands"
+		#endif
+	ENDIF
+
+
+ENDWHILE
+
+
+
+// iii)	Steal a car from inside a compound
+
+
+SET  z_e_2_player_in_car = 0 
+
+z_e_2_stolen_3 = CREATE_CAR ( 53.5 , 21.5 , 2.0 ) 32 270 wbtwin END
+
+#ifdef PC
+
+
+POINT_ARROW_AT ( arrow , 49.5 , 16.5 , 3.0 )
+
+IF ( NOT ( HAS_CHARACTER_DIED ( z_e_2_stolen_2_driver ) ) )
+//	SET_CHAR_OBJECTIVE ( z_e_2_stolen_2_driver , no_obj )
+	MAKE_CHAR_DO_NOTHING ( z_e_2_stolen_2_driver )
+ENDIF
+
+z_e_2_powerup_3 = CREATE_OBJ ( 49.0 , 64.0 , 2.0 ) 0 COLLECT_33 END
+FORCE_CLEANUP ( z_e_2_powerup_3 )
+
+
+WHILE_EXEC ( NOT ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 49.5 , 16.5 , 3.0 , 1.0 , 1.0  ) ) )
+   	
+	
+	// if the car is destroyed
+
+	IF ( ( IS_CAR_WRECKED ( z_e_2_stolen_3 ) )
+	AND ( flag_failed_zaib_easy_phone2_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3892 )    // Nice one! The GT24640 is completely fucked and I'm completely FUCKED OFF WITH YOU! 
+		SET flag_failed_zaib_easy_phone2_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // mission failed
+		RETURN
+	ENDIF
+	
+
+ENDWHILE
+
+#endif
+
+
+#ifdef PSX
+
+POINT_ARROW_AT ( arrow , 37.5 , 28.5 , 3.0 )
+
+IF ( NOT ( HAS_CHARACTER_DIED ( z_e_2_stolen_2_driver ) ) )
+	MAKE_CHAR_DO_NOTHING ( z_e_2_stolen_2_driver )
+ENDIF
+
+
+WHILE_EXEC ( NOT ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 37.5 , 28.5 , 3.0 , 1.0 , 1.0  ) ) )
+   	
+	
+	// if the car is destroyed
+
+	IF ( ( IS_CAR_WRECKED ( z_e_2_stolen_3 ) )
+	AND ( flag_failed_zaib_easy_phone2_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3892 )    // Nice one! The GT24640 is completely fucked and I'm completely FUCKED OFF WITH YOU! 
+		SET flag_failed_zaib_easy_phone2_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // mission failed
+		RETURN
+	ENDIF
+	
+
+ENDWHILE
+
+#endif
+
+#ifdef PC
+
+DISPLAY_BRIEF ( 3891 ) // Beans having a party, so there's no guards around. Only problem...you'll have to find a way into the enclosed Disgracelands area.
+
+#endif
+
+#ifdef PSX
+
+DISPLAY_BRIEF ( 3914 ) // Beans having a party, so there's no guards around. Only problem...you'll have to find a way into the enclosed Disgracelands area.
+
+#endif
+
+POINT_ARROW_AT ( arrow , z_e_2_stolen_3 )
+
+
+WHILE_EXEC ( z_e_2_stolen_3_parked = 0 )
+
+
+	// if the car is destroyed
+
+	IF ( ( IS_CAR_WRECKED ( z_e_2_stolen_3 ) )
+	AND ( flag_failed_zaib_easy_phone2_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3892 )    // Nice one! The GT24640 is completely fucked and I'm completely FUCKED OFF WITH YOU! 
+		SET flag_failed_zaib_easy_phone2_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // mission failed
+		RETURN
+	ENDIF
+
+	// wait for the player to enter the car
+
+	IF  ( ( IS_CHARACTER_IN_CAR ( shaft , z_e_2_stolen_3 ) )
+	AND ( z_e_2_player_in_car = 0 ) ) 
+		SET z_e_2_player_in_car = 1
+		DISPLAY_BRIEF_NOW  ( 3893 )	// Well done! Bring it back to the village and park it.		
+		POINT_ARROW_AT ( arrow , 20.0 , 229.0 , 4.0 )
+		UPDATE_DOOR_TARGET ( z_e_2_door_1 , z_e_2_stolen_3 )
+	ENDIF
+
+
+	// if the player leaves the car
+
+	IF  ( ( NOT ( IS_CHARACTER_IN_CAR ( shaft , z_e_2_stolen_3 ) ) ) 
+	AND ( z_e_2_player_in_car = 1 ) ) 
+		SET z_e_2_player_in_car = 0
+		DISPLAY_BRIEF_NOW  ( 3894 )	// What the fuck are you playin' at? Get back in that car and bring it up to the Village NOW!
+		POINT_ARROW_AT ( arrow , z_e_2_stolen_3 )
+	ENDIF
+		
+
+	// waits for player outside door, then parks stolen_3
+	
+	IF ( ( IS_CAR_IN_BLOCK ( z_e_2_stolen_3 , 20.0 , 230.0 , 3.0 , 2.0 , 2.0 ) ) 
+	AND ( z_e_2_park_stolen_3 = 0 ) )
+		PARK ( z_e_2_stolen_3 , z_e_2_door_1 )
+		SET z_e_2_park_stolen_3 = 1
+		REMOVE_ARROW ( arrow )
+	ENDIF	
+
+
+	// waits for car to finish parking
+
+
+	IF ( ( z_e_2_park_stolen_3 = 1 )
+	AND ( HAS_PARK_FINISHED ( ) ) )
+		SET z_e_2_player_in_car = 2
+		SET z_e_2_park_stolen_3 = 1
+		SET z_e_2_stolen_3_parked = 1
+		DISPLAY_BRIEF ( 3907 ) // "Nice one! Now there's a cop car on the back of a transporter in the police station. Go find a truckcab and pick it up.
+	ENDIF
+
+
+ENDWHILE
+
+
+
+
+// iv)		Steal a car from the back of a car transporter.
+
+//MAKE_DOOR_AUTOMATIC ( z_e_2_door_1 ) // DELETE THIS LATER
+
+SET z_e_2_player_in_car = 0 
+
+z_e_2_transporter = CREATE_CAR ( 40.5 , 65.5 , 2.0 ) 0 90 truktrns COPCAR END
+ENABLE_CRANE ( zaib_crane_easy_mission_2 )
+
+#ifdef PSX
+SET_RECYCLE_MODEL_WANTED ( trukcab1 ) 
+#endif
+
+
+WHILE_EXEC ( z_e_2_stolen_4_parked = 0 )
+
+
+
+	IF ( ( z_e_2_transporter_attached = 0 )
+	AND ( z_e_2_at_crane = 0 ) )
+
+		IF ( ( IS_CHARACTER_IN_MODEL ( shaft , trukcab1 ) )
+		OR ( IS_CHARACTER_IN_MODEL ( shaft , trukcab2 ) ) )
+			
+//			STORE_CAR_CHARACTER_IS_IN ( shaft , z_e_2_stolen_cab )
+				  	
+  			IF ( ( z_e_2_player_in_truckcab = 0 )
+  			AND ( z_e_2_transporter_attached = 0 ) )  
+				STORE_CAR_CHARACTER_IS_IN ( shaft , z_e_2_stolen_cab )
+				SET z_e_2_player_in_truckcab = 1
+				DISPLAY_BRIEF ( 3895 )		// Alright, go an' pick up the transporter from the police station.
+				POINT_ARROW_AT ( arrow , z_e_2_transporter )
+  			ENDIF
+		ENDIF
+	ENDIF
+
+
+	IF ( ( z_e_2_transporter_attached = 1 )
+	AND ( z_e_2_at_crane = 0 ) )
+
+
+		IF ( IS_CHARACTER_IN_CAR ( shaft , z_e_2_stolen_cab ) )
+			
+  			IF ( ( z_e_2_player_in_truckcab = 0 )
+  			AND ( z_e_2_transporter_attached = 1 ) )  
+				SET z_e_2_player_in_truckcab = 1
+				DISPLAY_BRIEF ( 3912 )		// Stop fucking around and take the trailer to the cranes!
+				POINT_ARROW_AT ( arrow , 13.5 , 211.5 , 2.0 )
+  			ENDIF
+		ENDIF
+	ENDIF
+
+
+
+	// if player leaves truck, told to steal another one
+
+	IF ( ( z_e_2_player_in_truckcab = 1 )
+	AND ( z_e_2_at_crane = 0 ) )
+
+
+		IF  ( ( ( z_e_2_transporter_attached = 0 )
+		AND ( NOT ( IS_CHARACTER_IN_CAR ( shaft , z_e_2_stolen_cab ) ) ) )
+		AND ( z_e_2_car_removed_from_transporter = 0 ) )  
+			SET z_e_2_player_in_truckcab = 0
+			DISPLAY_BRIEF_NOW  ( 3896 )		// Well I know you're quite a strong fella, but how are you goin' to pull a transporter with no FUCKIN CAB!
+			REMOVE_ARROW  ( arrow )
+		ENDIF
+  	
+  		IF  ( ( ( z_e_2_transporter_attached = 1 )
+		AND ( NOT ( IS_CHARACTER_IN_CAR ( shaft , z_e_2_stolen_cab ) ) ) )
+		AND ( z_e_2_car_removed_from_transporter = 0 ) )  
+			SET z_e_2_player_in_truckcab = 0
+			DISPLAY_BRIEF_NOW  ( 3897 ) // Get back in that cab and get to the fucking crane!
+			POINT_ARROW_AT ( arrow , z_e_2_transporter )
+		ENDIF
+	ENDIF
+
+
+	// if player detaches transporter
+	
+	IF  ( ( ( z_e_2_transporter_attached = 1 )
+	AND ( NOT ( IS_TRAILER_ATTACHED ( z_e_2_stolen_cab , z_e_2_transporter  ) ) ) )
+	AND ( z_e_2_at_crane = 0 ) )
+
+	
+		IF ( z_e_2_car_removed_from_transporter = 0 )
+			DISPLAY_BRIEF ( 3899 ) 	// "What are you doing, pick up the fucking transporter!
+			POINT_ARROW_AT ( arrow , z_e_2_transporter  )
+			SET z_e_2_transporter_attached = 0
+		ENDIF 
+	ENDIF
+		
+	// if player picks up transporter
+
+	IF ( ( z_e_2_player_in_truckcab = 1 ) 
+	AND ( z_e_2_at_crane = 0 ) )
+
+
+		IF ( ( ( IS_TRAILER_ATTACHED ( z_e_2_stolen_cab , z_e_2_transporter  ) )
+		AND ( z_e_2_transporter_attached = 0 ) ) 
+		AND ( z_e_2_car_removed_from_transporter = 0 ) )  
+			SET z_e_2_transporter_attached = 1
+			POINT_ARROW_AT ( arrow , 13.5 , 211.5 , 2.0 )
+
+//			IF ( z_e_2_brief_displayed = 0 )
+				DISPLAY_BRIEF ( 3900 )		// "take the transporter to the crane"
+//				SET z_e_2_brief_displayed = 1 
+//			ENDIF
+		ENDIF
+	ENDIF
+
+
+	// if player destroys transporter 
+
+	IF ( ( ( IS_CAR_WRECKED ( z_e_2_transporter ) )
+	AND ( flag_failed_zaib_easy_phone2_m1 = 0 ) )
+	AND ( z_e_2_car_removed_from_transporter = 0 ) )  
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3898 )    // Nice one! The cop car is completely cunted and I'm completely FUCKED OFF WITH YOU! 
+		SET flag_failed_zaib_easy_phone2_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // mission failed
+		RETURN
+	ENDIF
+
+
+	
+	IF  ( ( ( ( IS_ITEM_ONSCREEN ( zaib_crane_easy_mission_2 ) )
+	AND ( z_e_2_at_crane = 0 ) )
+	AND ( z_e_2_transporter_attached = 1 ) )
+	AND ( IS_CAR_IN_BLOCK ( z_e_2_transporter , 13.5 , 211.5 , 2.0 , 7.0 , 7.0 ) ) ) 
+//		DISPLAY_BRIEF ( 3535 ) // Get out of the car and cover your ears, Zaibatsu scum are known to cry like babies!
+		REMOVE_ARROW ( arrow )
+		SET z_e_2_at_crane = 1
+	ENDIF
+	
+	IF  ( ( ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( zaib_crane_easy_mission_2 ) ) )
+	AND ( NOT ( IS_CAR_IN_BLOCK ( z_e_2_transporter , 13.5 , 211.5 , 2.0 , 7.0 , 7.0 ) ) ) )
+	AND ( z_e_2_at_crane = 1 ) )
+	AND ( z_e_2_transporter_attached = 1 ) )
+		DISPLAY_BRIEF ( 3912 ) // Take the car back to the crane so that we can dispose of these scumsuckers!
+		POINT_ARROW_AT ( arrow , 13.5 , 211.5 , 2.0  )
+		SET z_e_2_at_crane = 0
+	ENDIF
+	
+	
+	
+	
+	// if transporter is at crane
+
+   	IF ( ( z_e_2_got_car_info = 0 )
+   	AND ( GET_CAR_INFO_FROM_CRANE ( z_e_2_stolen_4 , zaib_crane_easy_mission_2 ) ) ) 
+		SET z_e_2_got_car_info = 1
+	ENDIF
+
+
+	// if car is removed from transporter by crane
+	
+	IF ( ( z_e_2_got_car_info = 1 ) 
+	AND ( z_e_2_car_removed_from_transporter = 0 ) )
+
+		IF  ( NOT ( IS_CAR_ON_TRAILER ( z_e_2_stolen_4 , z_e_2_transporter ) ) )
+			SET z_e_2_car_removed_from_transporter = 1 
+			POINT_ARROW_AT ( arrow , z_e_2_stolen_4 )
+			DISPLAY_BRIEF ( 3901 )		// "Alright, go and park that cop car"
+			#ifdef PSX
+			SET_RECYCLE_MODEL_WANTED ( none ) 
+			#endif
+		ENDIF
+
+	ENDIF
+
+	// waits for player outside door, then parks stolen_4
+	
+	IF ( z_e_2_got_car_info = 1 )
+		IF ( ( IS_CAR_IN_BLOCK ( z_e_2_stolen_4 , 20.0 , 230.0 , 3.0 , 2.0 , 2.0 ) ) 
+		AND ( z_e_2_park_stolen_4 = 0 ) )
+			PARK ( z_e_2_stolen_4 , z_e_2_door_1 )
+			SET z_e_2_park_stolen_4 = 1
+			REMOVE_ARROW ( arrow )
+		ENDIF	
+	ENDIF
+
+	// waits for car to finish parking
+
+
+	IF ( ( z_e_2_park_stolen_4 = 1 )
+	AND ( HAS_PARK_FINISHED ( ) ) )
+		SET z_e_2_player_in_car = 2
+		SET z_e_2_park_stolen_4 = 1
+		SET z_e_2_stolen_4_parked = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3902 ) // Well Done! We've got ourselves a nice little collection of cars here, and managed to piss off some rivals at the same time.
+	ENDIF
+
+
+	// if the car is destroyed
+
+
+	IF ( z_e_2_got_car_info = 1 )
+		IF ( ( IS_CAR_WRECKED ( z_e_2_stolen_4 ) )
+		AND ( flag_failed_zaib_easy_phone2_m1 = 0 ) )
+			CLEAR_ALL_BRIEFS ( )
+			DISPLAY_BRIEF ( 3903 )    // Nice one! The Cop car is completely fucked and I'm completely FUCKED OFF WITH YOU! 
+			SET flag_failed_zaib_easy_phone2_m1 = 1
+			DISPLAY_MESSAGE ( 3730 ) // mission failed
+			RETURN
+		ENDIF
+	ENDIF
+
+
+	// wait for the player to enter the car
+
+
+	IF ( z_e_2_got_car_info = 1 )
+		IF  ( ( IS_CHARACTER_IN_CAR ( shaft , z_e_2_stolen_4 ) )
+		AND ( z_e_2_player_in_car = 0 ) ) 
+			SET z_e_2_player_in_car = 1
+			POINT_ARROW_AT ( arrow , 20.0 , 229.0 , 4.0 )
+			DISPLAY_BRIEF_NOW ( 3904 ) // go and park it in the usual place
+			UPDATE_DOOR_TARGET ( z_e_2_door_1 , z_e_2_stolen_4 )
+		ENDIF
+	ENDIF
+
+	// if the player leaves the car
+
+	IF ( z_e_2_got_car_info = 1 )
+		IF  ( ( NOT ( IS_CHARACTER_IN_CAR ( shaft , z_e_2_stolen_4 ) ) ) 
+		AND ( z_e_2_player_in_car = 1 ) ) 
+			SET z_e_2_player_in_car = 0
+			DISPLAY_BRIEF_NOW  ( 3905 )	// Hey! Get in the Cop car and park it, alright?
+			POINT_ARROW_AT ( arrow , z_e_2_stolen_4 )
+		ENDIF
+	ENDIF
+
+
+ENDWHILE
+
+
+SET flag_passed_zaib_easy_phone2_m1	= 1
+++ counter_all_missions_passed
+DISPLAY_MESSAGE ( 3100 ) // mission failed
+ADD_SCORE ( shaft , 40000 )
+ADD_MULTIPLIER ( shaft , 1 ) 
+CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , 1 )
+CLEAR_WANTED_LEVEL ( shaft )
+SET_PHONE_DEAD ( ph_zaib_easy_phone2 ) 
+DISABLE_THREAD_TRIGGER ( thr_zaib_easy_phone2_m1 )
+RETURN
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+// deletes all objects when mission1 is finished...
+				
+clean_up_zaib_easy_phone2_m1: 
+	
+	REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	MAKE_DOOR_MANUAL ( z_e_2_door_1 ) 
+	#ifdef PSX
+	SET_RECYCLE_MODEL_WANTED ( none ) 
+	#endif
+
+	IF ( flag_passed_zaib_easy_phone2_m1 = 1 )
+		++ flag_zaib_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_zaib_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3675 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3674 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_zaib_easy_phone2_m1 = 1 )
+		++ flag_zaib_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_zaib_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+
+	MISSION_HAS_FINISHED ( )
+	
+	SET flag_on_mission	= 0
+	SET flag_on_zaib_mission = 0
+	
+	RETURN
+
+
+MISSIONSTART
+
+	GOSUB zaib_easy_phone2_m1:
+
+	GOSUB clean_up_zaib_easy_phone2_m1:
+
+MISSIONEND
+	
+
+
+
+
+
+
+
+
+ 

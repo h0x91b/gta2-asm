@@ -1,0 +1,676 @@
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*************************** INTERCEPT TANK AND DESTROY IT ********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+ 
+//Vehicles for mission
+
+CAR_DATA r_m_3_tank_1
+
+CAR_DATA r_m_3_tank_2
+
+CAR_DATA r_m_3_tank_3
+
+CAR_DATA r_m_3_target_car_1
+
+CAR_DATA r_m_3_target_car_2
+
+CAR_DATA r_m_3_target_car_3
+
+
+//Characters for mission
+
+CHAR_DATA r_m_3_tank_driver_1
+
+CHAR_DATA r_m_3_tank_driver_2
+
+CHAR_DATA r_m_3_tank_driver_3
+
+CHAR_DATA r_m_3_tank_1_guard_1
+
+CHAR_DATA r_m_3_tank_1_guard_2
+
+CHAR_DATA r_m_3_tank_2_guard_1
+
+CHAR_DATA r_m_3_tank_2_guard_2
+
+CHAR_DATA r_m_3_tank_3_guard_1
+
+CHAR_DATA r_m_3_tank_3_guard_2
+
+
+//Counters for mission
+
+COUNTER r_m_3_tank_1_in_location = 0
+
+COUNTER r_m_3_tank_2_in_location = 0
+
+COUNTER r_m_3_tank_3_in_location = 0
+
+COUNTER r_m_3_target_car_1_wrecked = 0
+
+COUNTER r_m_3_target_car_2_wrecked = 0
+
+COUNTER r_m_3_target_car_3_wrecked = 0
+
+COUNTER r_m_3_tank_1_destroyed = 0
+
+COUNTER r_m_3_tank_2_destroyed = 0
+
+COUNTER r_m_3_tank_3_destroyed = 0
+
+COUNTER r_m_3_tank_1_on_screen = 0
+
+COUNTER r_m_3_tank_2_on_screen = 0
+
+COUNTER r_m_3_tank_3_on_screen = 0
+
+COUNTER r_m_3_all_tanks_wrecked = 0
+
+COUNTER r_m_3_target_car_1_wrecked_expl_1 = 0
+
+COUNTER r_m_3_tank_1_on_screen_brief = 0
+
+COUNTER r_m_3_tank_2_on_screen_brief = 0
+
+COUNTER r_m_3_tank_3_on_screen_brief = 0
+
+
+
+//Objects for mission
+
+OBJ_DATA r_m_3_powerup_1
+
+OBJ_DATA r_m_3_powerup_2
+
+OBJ_DATA r_m_3_invisible_obj_tank_to_shoot_at
+
+FORWARD clean_up_russ_med_phone1_2_m3:
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+russ_med_phone1_2_m3:
+
+SET flag_failed_russ_med_phone1_2_m3 = 0
+
+		
+EXEC
+	
+	SET flag_on_mission = 1
+	SET flag_on_russ_mission = 1
+	DISPLAY_MESSAGE ( 3858 ) // you have PASSED the mission!"
+  	#ifdef PC
+  	DISPLAY_BRIEF ( 3640 )  //"There are tanks on the way to destroy our base you must stop them at all costs!"
+	#endif
+	#ifdef PSX
+  	DISPLAY_BRIEF ( 3651 )  //"There are tanks on the way to destroy our base you must stop them at all costs!"
+	#endif
+	DISPLAY_BRIEF ( 3641 )  //"There are tanks on the way to destroy our base you must stop them at all costs!"
+	
+	r_m_3_powerup_1 = CREATE_OBJ ( 197.5 , 15.5 , 2.0 ) 0 collect_02 15 END
+	r_m_3_powerup_2 = CREATE_OBJ ( 198.5 , 15.5 , 2.0 ) 0 collect_03 20 END
+	
+	FORCE_CLEANUP ( r_m_3_powerup_1 )
+	FORCE_CLEANUP ( r_m_3_powerup_2 )
+
+	// tank1 target car
+	
+	r_m_3_invisible_obj_tank_to_shoot_at = CREATE_OBJ ( 144.0 , 45.5 , 2.0 ) 0 invisible_target END
+	r_m_3_target_car_1 = CREATE_CAR ( 144.0 , 46.5 , 2.0 ) 28 265 buick END
+	CHANGE_CAR_LOCK ( r_m_3_target_car_1 , locked )
+  	SET_CAR_BULLETPROOF ( r_m_3_target_car_1 , on )
+ 	SET_CAR_FLAMEPROOF ( r_m_3_target_car_1 , on )
+  	SET_CAR_NO_COLLIDE ( r_m_3_target_car_1 )
+	
+	#ifdef PC
+	
+	// tank1
+
+	r_m_3_tank_1 = CREATE_CAR ( 218.5 , 53.5 , 3.0 ) -1 270 tank END
+  	SET_CAR_BULLETPROOF ( r_m_3_tank_1 , on )
+	SET_CAR_BULLETPROOF ( r_m_3_tank_1 , on )
+ 	CHANGE_CAR_LOCK ( r_m_3_tank_1 , locked )
+ 	r_m_3_tank_driver_1 = CREATE_CHAR_INSIDE_CAR ( r_m_3_tank_1 ) 8 tank_driver END
+	SET_CHAR_THREAT_SEARCH ( r_m_3_tank_driver_1 , no_threats )
+	SET_CHAR_THREAT_REACTION ( r_m_3_tank_driver_1 , no_reaction )
+ 	ADD_CHAR_TO_GANG ( r_m_3_tank_driver_1 , zaibgang )
+ 	SET_CHAR_DRIVE_AGGRESSION ( r_m_3_tank_driver_1 , on )
+ 	SET_CHAR_MAX_DRIVESPEED ( r_m_3_tank_driver_1 , 0.02 )
+  	SET_CHAR_OBJECTIVE ( r_m_3_tank_driver_1 , goto_area_in_car , 143.0 , 53.5 , 2.0 )
+
+  	// tank1 guard1
+  	
+  	r_m_3_tank_1_guard_1 = CREATE_CHAR ( 219.5 , 54.5 , 3.0 ) 8 270 criminal END
+	SET_CHAR_THREAT_SEARCH ( r_m_3_tank_1_guard_1 , area_player_only )
+	SET_CHAR_THREAT_REACTION ( r_m_3_tank_1_guard_1 , react_as_normal )
+	GIVE_WEAPON ( r_m_3_tank_1_guard_1 , machine_gun )
+	ADD_CHAR_TO_GANG ( r_m_3_tank_1_guard_1 , zaibgang )
+	ADD_GROUP_TO_CHARACTER ( r_m_3_tank_1_guard_1 , 2 )
+	SET_GROUP_TYPE ( r_m_3_tank_1_guard_1 , chain )
+	SET_CHAR_OBJECTIVE ( r_m_3_tank_1_guard_1 , follow_car_on_foot_with_offset , r_m_3_tank_1  , 90 , 1.0 )
+	
+	// tank1 guard2
+	
+	r_m_3_tank_1_guard_2 = CREATE_CHAR ( 219.5 , 52.5 , 3.0 ) 8 270 criminal END
+	SET_CHAR_THREAT_SEARCH ( r_m_3_tank_1_guard_2 , area_player_only )
+	SET_CHAR_THREAT_REACTION ( r_m_3_tank_1_guard_2 , react_as_normal )
+  	GIVE_WEAPON ( r_m_3_tank_1_guard_2 , machine_gun )
+  	ADD_CHAR_TO_GANG ( r_m_3_tank_1_guard_2 , zaibgang )
+	ADD_GROUP_TO_CHARACTER ( r_m_3_tank_1_guard_2 , 2 )
+	SET_GROUP_TYPE ( r_m_3_tank_1_guard_2 , chain )
+  	SET_CHAR_OBJECTIVE ( r_m_3_tank_1_guard_2 , follow_car_on_foot_with_offset , r_m_3_tank_1 , 270 , 1.0 )
+  	#endif
+
+
+
+	// tank2 target car
+	
+	r_m_3_target_car_2 = CREATE_CAR ( 142.5 , 46.5 , 2.0 ) 28 95 buick END
+	CHANGE_CAR_LOCK ( r_m_3_target_car_2 , locked )
+  	SET_CAR_BULLETPROOF ( r_m_3_target_car_2 , on )
+ 	SET_CAR_FLAMEPROOF ( r_m_3_target_car_2 , on )
+  	SET_CAR_NO_COLLIDE ( r_m_3_target_car_2 )
+	
+	// tank2
+
+	r_m_3_tank_2 = CREATE_CAR ( 223.5 , 72.5 , 2.0 ) -1 180 tank END
+  	SET_CAR_BULLETPROOF ( r_m_3_tank_2 , on )
+	SET_CAR_BULLETPROOF ( r_m_3_tank_2 , on )
+ 	CHANGE_CAR_LOCK ( r_m_3_tank_2 , locked )
+ 	r_m_3_tank_driver_2 = CREATE_CHAR_INSIDE_CAR ( r_m_3_tank_2 ) 8 tank_driver END
+	SET_CHAR_THREAT_SEARCH ( r_m_3_tank_driver_2 , no_threats )
+	SET_CHAR_THREAT_REACTION ( r_m_3_tank_driver_2 , no_reaction )
+ 	ADD_CHAR_TO_GANG ( r_m_3_tank_driver_2 , zaibgang )
+ 	SET_CHAR_DRIVE_AGGRESSION ( r_m_3_tank_driver_2 , on )
+ 	SET_CHAR_MAX_DRIVESPEED ( r_m_3_tank_driver_2 , 0.02 )
+  	SET_CHAR_OBJECTIVE ( r_m_3_tank_driver_2 , goto_area_in_car , 145.0 , 53.5 , 2.0 )
+
+  	// tank2 guard1
+  	
+  	r_m_3_tank_2_guard_1 = CREATE_CHAR ( 222.5 , 73.5 , 2.0 ) 8 180 criminal END
+	SET_CHAR_THREAT_SEARCH ( r_m_3_tank_2_guard_1 , area_player_only )
+	SET_CHAR_THREAT_REACTION ( r_m_3_tank_2_guard_1 , react_as_normal )
+	GIVE_WEAPON ( r_m_3_tank_2_guard_1 , machine_gun )
+	ADD_CHAR_TO_GANG ( r_m_3_tank_2_guard_1 , zaibgang )
+	#ifdef PC
+	ADD_GROUP_TO_CHARACTER ( r_m_3_tank_2_guard_1 , 2 )
+   	#endif
+   	#ifdef PSX
+	ADD_GROUP_TO_CHARACTER ( r_m_3_tank_2_guard_1 , 1 )
+   	#endif
+   	SET_GROUP_TYPE ( r_m_3_tank_2_guard_1 , chain )
+	SET_CHAR_OBJECTIVE ( r_m_3_tank_2_guard_1 , follow_car_on_foot_with_offset , r_m_3_tank_2  , 90 , 1.0 )
+	
+	// tank2 guard2
+	
+	r_m_3_tank_2_guard_2 = CREATE_CHAR ( 224.5 , 73.5 , 2.0 ) 8 180 criminal END
+	SET_CHAR_THREAT_SEARCH ( r_m_3_tank_2_guard_2 , area_player_only )
+	SET_CHAR_THREAT_REACTION ( r_m_3_tank_2_guard_2 , react_as_normal )
+  	GIVE_WEAPON ( r_m_3_tank_2_guard_2 , machine_gun )
+  	ADD_CHAR_TO_GANG ( r_m_3_tank_2_guard_2 , zaibgang )
+	#ifdef PC
+	ADD_GROUP_TO_CHARACTER ( r_m_3_tank_2_guard_2 , 2 )
+   	#endif
+   	#ifdef PSX
+	ADD_GROUP_TO_CHARACTER ( r_m_3_tank_2_guard_2 , 1 )
+   	#endif
+   	SET_GROUP_TYPE ( r_m_3_tank_2_guard_2 , chain )
+  	SET_CHAR_OBJECTIVE ( r_m_3_tank_2_guard_2 , follow_car_on_foot_with_offset , r_m_3_tank_2 , 270 , 1.0 )
+  	
+
+
+
+	// tank3 target car
+	
+	r_m_3_target_car_3 = CREATE_CAR ( 145.5 , 46.5 , 2.0 ) 28 275 buick END
+	CHANGE_CAR_LOCK ( r_m_3_target_car_3 , locked )
+  	SET_CAR_BULLETPROOF ( r_m_3_target_car_3 , on )
+ 	SET_CAR_FLAMEPROOF ( r_m_3_target_car_3 , on )
+  	SET_CAR_NO_COLLIDE ( r_m_3_target_car_3 )
+	
+	// tank3
+
+	r_m_3_tank_3 = CREATE_CAR ( 223.5 , 87.5 , 2.0 ) -1 180 tank END
+  	SET_CAR_BULLETPROOF ( r_m_3_tank_3 , on )
+	SET_CAR_BULLETPROOF ( r_m_3_tank_3 , on )
+ 	CHANGE_CAR_LOCK ( r_m_3_tank_3 , locked )
+ 	r_m_3_tank_driver_3 = CREATE_CHAR_INSIDE_CAR ( r_m_3_tank_3 ) 8 tank_driver END
+	SET_CHAR_THREAT_SEARCH ( r_m_3_tank_driver_3 , no_threats )
+	SET_CHAR_THREAT_REACTION ( r_m_3_tank_driver_3 , no_reaction )
+ 	ADD_CHAR_TO_GANG ( r_m_3_tank_driver_3 , zaibgang )
+ 	SET_CHAR_DRIVE_AGGRESSION ( r_m_3_tank_driver_3 , on )
+ 	SET_CHAR_MAX_DRIVESPEED ( r_m_3_tank_driver_3 , 0.02 )
+  	SET_CHAR_OBJECTIVE ( r_m_3_tank_driver_3 , goto_area_in_car , 147.0 , 53.5 , 2.0 )
+
+  	// tank3 guard1
+  	
+  	r_m_3_tank_3_guard_1 = CREATE_CHAR ( 222.5 , 88.5 , 2.0 ) 8 180 criminal END
+	SET_CHAR_THREAT_SEARCH ( r_m_3_tank_3_guard_1 , area_player_only )
+	SET_CHAR_THREAT_REACTION ( r_m_3_tank_3_guard_1 , react_as_normal )
+	GIVE_WEAPON ( r_m_3_tank_3_guard_1 , machine_gun )
+	ADD_CHAR_TO_GANG ( r_m_3_tank_3_guard_1 , zaibgang )
+	#ifdef PC
+	ADD_GROUP_TO_CHARACTER ( r_m_3_tank_3_guard_1 , 2 )
+   	#endif
+   	#ifdef PSX
+	ADD_GROUP_TO_CHARACTER ( r_m_3_tank_3_guard_1 , 1 )
+   	#endif
+   	SET_GROUP_TYPE ( r_m_3_tank_3_guard_1 , chain )
+	SET_CHAR_OBJECTIVE ( r_m_3_tank_3_guard_1 , follow_car_on_foot_with_offset , r_m_3_tank_3  , 90 , 1.0 )
+	
+	// tank3 guard2
+	
+	r_m_3_tank_3_guard_2 = CREATE_CHAR ( 224.5 , 88.5 , 2.0 ) 8 180 criminal END
+	SET_CHAR_THREAT_SEARCH ( r_m_3_tank_3_guard_2 , area_player_only )
+	SET_CHAR_THREAT_REACTION ( r_m_3_tank_3_guard_2 , react_as_normal )
+  	GIVE_WEAPON ( r_m_3_tank_3_guard_2 , machine_gun )
+  	ADD_CHAR_TO_GANG ( r_m_3_tank_3_guard_2 , zaibgang )
+	#ifdef PC
+	ADD_GROUP_TO_CHARACTER ( r_m_3_tank_3_guard_2 , 2 )
+   	#endif
+   	#ifdef PSX
+	ADD_GROUP_TO_CHARACTER ( r_m_3_tank_3_guard_2 , 1 )
+   	#endif
+   	SET_GROUP_TYPE ( r_m_3_tank_3_guard_2 , chain )
+  	SET_CHAR_OBJECTIVE ( r_m_3_tank_3_guard_2 , follow_car_on_foot_with_offset , r_m_3_tank_3 , 270 , 1.0 )
+  	
+	#ifdef PC
+	POINT_ARROW_AT ( arrow , r_m_3_tank_1 )
+	#endif
+	POINT_ARROW_AT ( arrow_2 , r_m_3_tank_2 )
+	POINT_ARROW_AT ( arrow_3 , r_m_3_tank_3 )
+
+	SET_CAR_DENSITY ( m01 , 100 ) 
+
+	SET_CAR_DENSITY ( m02 , 100 ) 
+
+	SET_CAR_DENSITY ( m03 , 100 ) 
+
+	SET_CAR_DENSITY ( m04 , 100 ) 
+
+	SET_CAR_DENSITY ( m05 , 100 ) 
+
+	SET_CAR_DENSITY ( m06 , 100 ) 
+
+	SET_CAR_DENSITY ( m07 , 100 ) 
+
+	SET_CAR_DENSITY ( m08 , 100 ) 
+
+	SET_CAR_DENSITY ( m09 , 100 ) 
+
+	SET_CAR_DENSITY ( m10 , 100 ) 
+
+	SET_CAR_DENSITY ( m11 , 100 ) 
+
+	SET_CAR_DENSITY ( m12 , 100 ) 
+
+	SET_CAR_DENSITY ( m13 , 100 ) 
+
+	SET_CAR_DENSITY ( m14 , 100 ) 
+
+	SET_CAR_DENSITY ( m15 , 100 ) 
+
+	SET_CAR_DENSITY ( cityinfo , 100 ) 
+ 			
+ENDEXEC
+
+
+			
+	
+		
+  			
+//waits for tanks to get to location
+		  
+#ifdef PC		  
+WHILE_EXEC ( r_m_3_all_tanks_wrecked < 3 )
+#endif
+#ifdef PSX		  
+WHILE_EXEC ( r_m_3_all_tanks_wrecked < 2 )
+#endif
+
+
+	#ifdef PC
+	IF ( ( ( r_m_3_tank_1_destroyed = 0 )
+	AND ( r_m_3_tank_1_on_screen = 0 ) )
+	AND ( IS_ITEM_ACCURATELY_ONSCREEN ( r_m_3_tank_1 ) ) )
+		MAKE_CHAR_DO_NOTHING ( r_m_3_tank_driver_1 ) 
+		SET_CHAR_OCCUPATION ( r_m_3_tank_driver_1 , road_block_tank_man )
+//		SET_CHAR_OBJECTIVE ( r_m_3_tank_driver_1 , no_obj )
+		MAKE_CHAR_DO_NOTHING ( r_m_3_tank_driver_1 )
+		SET r_m_3_tank_1_on_screen = 1
+		IF ( r_m_3_tank_1_on_screen_brief = 0 )
+			DISPLAY_BRIEF_NOW ( 3645 )  //"Are you mad? Have you noticed the vehicle that I'm driving? DIE!" 
+			SET r_m_3_tank_1_on_screen_brief = 1
+		ENDIF
+	ENDIF
+
+
+	IF ( ( ( r_m_3_tank_1_destroyed = 0 )
+	AND ( r_m_3_tank_1_on_screen = 1 ) )
+	AND ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( r_m_3_tank_1 ) ) ) )
+		SET r_m_3_tank_1_on_screen = 0 
+		SET_CHAR_OCCUPATION ( r_m_3_tank_driver_1 , tank_driver )
+		SET_CHAR_OBJECTIVE ( r_m_3_tank_driver_1 , goto_area_in_car , 145.0 , 54.0 , 2.0 )		
+	ENDIF
+	#endif
+	
+	
+	IF ( ( ( r_m_3_tank_2_destroyed = 0 )
+	AND ( r_m_3_tank_2_on_screen = 0 ) )
+	AND ( IS_ITEM_ACCURATELY_ONSCREEN ( r_m_3_tank_2 ) ) )
+		MAKE_CHAR_DO_NOTHING ( r_m_3_tank_driver_2 ) 
+		SET_CHAR_OCCUPATION ( r_m_3_tank_driver_2 , road_block_tank_man )
+//		SET_CHAR_OBJECTIVE ( r_m_3_tank_driver_2 , no_obj )
+		MAKE_CHAR_DO_NOTHING ( r_m_3_tank_driver_2 )
+		SET r_m_3_tank_2_on_screen = 1 
+		IF ( r_m_3_tank_2_on_screen_brief = 0 )
+			DISPLAY_BRIEF_NOW ( 3646 )  //"Are you mad? Have you noticed the vehicle that I'm driving? DIE!" 
+			SET r_m_3_tank_2_on_screen_brief = 1
+		ENDIF
+	ENDIF
+
+
+	IF ( ( ( r_m_3_tank_2_destroyed = 0 )
+	AND ( r_m_3_tank_2_on_screen = 1 ) )
+	AND ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( r_m_3_tank_2 ) ) ) )
+		SET r_m_3_tank_2_on_screen = 0 
+		SET_CHAR_OCCUPATION ( r_m_3_tank_driver_2 , tank_driver )
+		SET_CHAR_OBJECTIVE ( r_m_3_tank_driver_2 , goto_area_in_car , 145.0 , 54.0 , 2.0 )		
+	ENDIF
+
+
+	IF ( ( ( r_m_3_tank_3_destroyed = 0 )
+	AND ( r_m_3_tank_3_on_screen = 0 ) )
+	AND ( IS_ITEM_ACCURATELY_ONSCREEN ( r_m_3_tank_3 ) ) )
+		MAKE_CHAR_DO_NOTHING ( r_m_3_tank_driver_3 ) 
+		SET_CHAR_OCCUPATION ( r_m_3_tank_driver_3 , road_block_tank_man )
+//		SET_CHAR_OBJECTIVE ( r_m_3_tank_driver_3 , no_obj )
+		MAKE_CHAR_DO_NOTHING ( r_m_3_tank_driver_3 )
+		SET r_m_3_tank_3_on_screen = 1 
+		IF ( r_m_3_tank_3_on_screen_brief = 0 )
+			DISPLAY_BRIEF_NOW ( 3647 )  //"Are you mad? Have you noticed the vehicle that I'm driving? DIE!" 
+			SET r_m_3_tank_3_on_screen_brief = 1
+		ENDIF
+	ENDIF
+
+	
+	IF ( ( ( r_m_3_tank_3_destroyed = 0 )
+	AND ( r_m_3_tank_3_on_screen = 1 ) )
+	AND ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( r_m_3_tank_3 ) ) ) )
+		SET r_m_3_tank_3_on_screen = 0 
+		SET_CHAR_OCCUPATION ( r_m_3_tank_driver_3 , tank_driver )
+		SET_CHAR_OBJECTIVE ( r_m_3_tank_driver_3 , goto_area_in_car , 145.0 , 54.0 , 2.0 )		
+	ENDIF
+
+	
+	IF ( ( IS_CAR_WRECKED ( r_m_3_target_car_1 ) )
+	AND ( r_m_3_target_car_1_wrecked = 0 ) )
+		SET r_m_3_target_car_1_wrecked = 1
+  	ENDIF
+
+
+	IF ( ( ( r_m_3_target_car_1_wrecked = 1 ) 
+	AND ( r_m_3_target_car_1_wrecked_expl_1 = 0 ) )
+	AND ( NOT ( DELAY ( 10 ) ) ) )
+		EXPLODE_NO_RING ( 144.3 , 46.8 , 3.0 ) 
+		SET r_m_3_target_car_1_wrecked_expl_1 = 1
+	ENDIF
+	
+	
+	IF ( ( ( r_m_3_target_car_1_wrecked = 1 ) 
+	AND ( r_m_3_target_car_1_wrecked_expl_1 = 1 ) )
+	AND ( NOT ( DELAY ( 10 ) ) ) )
+		EXPLODE ( 142.5 , 46.5 , 2.0 )
+		SET r_m_3_target_car_1_wrecked_expl_1 = 2
+	ENDIF
+	
+	
+	IF ( ( ( r_m_3_target_car_1_wrecked = 1 ) 
+	AND ( r_m_3_target_car_1_wrecked_expl_1 = 2 ) )
+	AND ( NOT ( DELAY ( 10 ) ) ) )
+		EXPLODE_NO_RING ( 142.8 , 46.3 , 3.0 ) 
+		SET r_m_3_target_car_1_wrecked_expl_1 = 3
+	ENDIF
+
+	IF ( ( ( r_m_3_target_car_1_wrecked = 1 ) 
+	AND ( r_m_3_target_car_1_wrecked_expl_1 = 3 ) )
+	AND ( NOT ( DELAY ( 10 ) ) ) )
+		EXPLODE ( 145.5 , 46.5 , 2.0 ) 
+		SET r_m_3_target_car_1_wrecked_expl_1 = 4
+	ENDIF
+
+	
+	IF ( ( ( r_m_3_target_car_1_wrecked = 1 ) 
+	AND ( r_m_3_target_car_1_wrecked_expl_1 = 4 ) )
+	AND ( NOT ( DELAY ( 10 ) ) ) )
+		EXPLODE_NO_RING ( 145.5 , 46.4 , 3.0 ) 
+		SET r_m_3_target_car_1_wrecked_expl_1 = 5
+		SET r_m_3_all_tanks_wrecked = 3
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3644 )  //"The cars wrecked! Mission Failed!"
+		SET flag_failed_russ_med_phone1_2_m3 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have PASSED the mission!"
+  		RETURN
+	ENDIF
+		
+ 	
+	#ifdef PC
+	IF ( ( r_m_3_tank_1_destroyed = 0 )
+	AND ( IS_CAR_WRECKED ( r_m_3_tank_1 ) ) )
+		++ r_m_3_all_tanks_wrecked
+		REMOVE_ARROW ( arrow )
+		SET r_m_3_tank_1_destroyed = 1
+//		SET_CHAR_OBJECTIVE ( r_m_3_tank_1_guard_1 , kill_char_on_foot , shaft )
+//		SET_CHAR_OBJECTIVE ( r_m_3_tank_1_guard_2 , kill_char_on_foot , shaft )
+		IF ( r_m_3_all_tanks_wrecked = 1 )
+			DISPLAY_BRIEF_NOW ( 3648 ) //"Well done, you destroyed one of the tanks!"
+			ELSE
+				
+			IF ( r_m_3_all_tanks_wrecked = 2 )
+				DISPLAY_BRIEF_NOW ( 3649 ) //"Good work, you've fucked up two of the tanks! One more to go!"
+			ENDIF
+		ENDIF
+	ENDIF
+	#endif
+
+
+	IF ( ( r_m_3_tank_2_destroyed = 0 )
+	AND ( IS_CAR_WRECKED ( r_m_3_tank_2 ) ) )
+		++ r_m_3_all_tanks_wrecked
+		REMOVE_ARROW ( arrow_2 )
+		SET r_m_3_tank_2_destroyed = 1
+//		SET_CHAR_OBJECTIVE ( r_m_3_tank_2_guard_1 , kill_char_on_foot , shaft )
+//		SET_CHAR_OBJECTIVE ( r_m_3_tank_2_guard_2 , kill_char_on_foot , shaft )
+		IF ( r_m_3_all_tanks_wrecked = 1 )
+			DISPLAY_BRIEF_NOW ( 3648 ) //"Well done, you destroyed one of the tanks!"
+			ELSE
+				
+			IF ( r_m_3_all_tanks_wrecked = 2 )
+				DISPLAY_BRIEF_NOW ( 3649 ) //"Good work, you've fucked up two of the tanks! One more to go!"
+			ENDIF
+		ENDIF
+	ENDIF
+
+
+	IF ( ( r_m_3_tank_3_destroyed = 0 )
+	AND ( IS_CAR_WRECKED ( r_m_3_tank_3 ) ) )
+		++ r_m_3_all_tanks_wrecked
+		REMOVE_ARROW ( arrow_3 )
+		SET r_m_3_tank_3_destroyed = 1
+//		SET_CHAR_OBJECTIVE ( r_m_3_tank_3_guard_1 , kill_char_on_foot , shaft )
+//		SET_CHAR_OBJECTIVE ( r_m_3_tank_3_guard_2 , kill_char_on_foot , shaft )
+		IF ( r_m_3_all_tanks_wrecked = 1 )
+			DISPLAY_BRIEF_NOW ( 3648 ) //"Well done, you destroyed one of the tanks!"
+			ELSE
+				
+			IF ( r_m_3_all_tanks_wrecked = 2 )
+				DISPLAY_BRIEF_NOW ( 3649 ) //"Good work, you've fucked up two of the tanks! One more to go!"
+			ENDIF
+		ENDIF
+	ENDIF
+
+	#ifdef PC
+	IF ( ( ( r_m_3_tank_1_destroyed = 0 )
+	AND ( IS_CAR_IN_BLOCK ( r_m_3_tank_1 , 143.0 , 53.5 , 2.0 , 1.5 , 1.5 ) ) )
+	AND ( r_m_3_tank_1_in_location = 0 ) )
+		SET r_m_3_tank_1_in_location = 1
+		SET_CHAR_OBJECTIVE ( r_m_3_tank_driver_1 , fire_at_object_from_vehicle  , r_m_3_invisible_obj_tank_to_shoot_at )
+		DISPLAY_BRIEF_NOW ( 3650 ) //"Good work, you've fucked up two of the tanks! One more to go!"
+	ENDIF
+	#endif
+
+	IF ( ( ( r_m_3_tank_2_destroyed = 0 )
+	AND ( IS_CAR_IN_BLOCK ( r_m_3_tank_2 , 145.0 , 53.5 , 2.0 , 1.5 , 1.5 ) ) )
+	AND ( r_m_3_tank_2_in_location = 0 ) )
+		SET r_m_3_tank_2_in_location = 1
+		SET_CHAR_OBJECTIVE ( r_m_3_tank_driver_2 , fire_at_object_from_vehicle  , r_m_3_invisible_obj_tank_to_shoot_at )
+		DISPLAY_BRIEF_NOW ( 3650 ) //"Good work, you've fucked up two of the tanks! One more to go!"
+	ENDIF
+
+	IF ( ( ( r_m_3_tank_3_destroyed = 0 )
+	AND ( IS_CAR_IN_BLOCK ( r_m_3_tank_3 , 147.0 , 53.5 , 2.0 , 1.5 , 1.5 ) ) )
+	AND ( r_m_3_tank_3_in_location = 0 ) )
+		SET r_m_3_tank_3_in_location = 1
+		SET_CHAR_OBJECTIVE ( r_m_3_tank_driver_3 , fire_at_object_from_vehicle  , r_m_3_invisible_obj_tank_to_shoot_at )
+		DISPLAY_BRIEF_NOW ( 3650 ) //"Good work, you've fucked up two of the tanks! One more to go!"
+	ENDIF
+	
+ 				
+ENDWHILE
+	
+			  
+	
+		
+//checks to see if the player has passed the mission	 	
+
+#ifdef PC	
+IF ( ( r_m_3_all_tanks_wrecked = 3 )
+#endif
+#ifdef PSX	
+IF ( ( r_m_3_all_tanks_wrecked = 2 )
+#endif
+AND ( flag_passed_russ_med_phone1_2_m3 = 0 ) )
+	SET flag_passed_russ_med_phone1_2_m3 = 1
+	CLEAR_ALL_BRIEFS ( )
+	DISPLAY_BRIEF ( 3642 )  //"Well Done! Mission Complete!"
+	++ counter_all_missions_passed
+	DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+	ADD_SCORE ( shaft , 60000 )
+	ADD_MULTIPLIER ( shaft , 1 ) 
+	CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , 1 )
+	CLEAR_WANTED_LEVEL ( shaft )
+ 	IF ( flag_passed_russ_med_phone1_m1 = 1 )
+		SET_PHONE_DEAD ( ph_russ_med_phone1 ) 
+		DISABLE_THREAD_TRIGGER ( thr_russ_med_phone1_m1 )
+	ENDIF
+	IF ( flag_passed_russ_med_phone2_m1 = 1 )
+		SET_PHONE_DEAD ( ph_russ_med_phone2 ) 
+		DISABLE_THREAD_TRIGGER ( thr_russ_med_phone2_m1 )
+	ENDIF
+	RETURN
+ENDIF
+
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+//Mission cleanup
+
+clean_up_russ_med_phone1_2_m3:
+
+	REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	SET_CAR_DENSITY ( cityinfo , 600 ) 
+
+	SET_CAR_DENSITY ( m01 , 400 ) 
+
+	SET_CAR_DENSITY ( m02 , 400 ) 
+
+	SET_CAR_DENSITY ( m03 , 400 ) 
+
+	SET_CAR_DENSITY ( m04 , 400 ) 
+
+	SET_CAR_DENSITY ( m05 , 400 ) 
+
+	SET_CAR_DENSITY ( m06 , 400 ) 
+
+	SET_CAR_DENSITY ( m07 , 400 ) 
+
+	SET_CAR_DENSITY ( m08 , 400 ) 
+
+	SET_CAR_DENSITY ( m09 , 400 ) 
+
+	SET_CAR_DENSITY ( m10 , 400 ) 
+
+	SET_CAR_DENSITY ( m11 , 400 ) 
+
+	SET_CAR_DENSITY ( m12 , 400 ) 
+
+	SET_CAR_DENSITY ( m13 , 400 ) 
+
+	SET_CAR_DENSITY ( m14 , 400 ) 
+
+	SET_CAR_DENSITY ( m15 , 400 ) 
+	
+	IF ( flag_passed_russ_med_phone1_2_m3 = 1 )
+		++ flag_russ_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_russ_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3673 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3672 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_russ_med_phone1_2_m3 = 1 )
+		++ flag_russ_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF 
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_russ_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+		
+	MISSION_HAS_FINISHED ( )
+
+	SET flag_on_mission = 0
+	SET flag_on_russ_mission = 0
+	
+	RETURN
+
+
+MISSIONSTART
+
+	GOSUB russ_med_phone1_2_m3:
+
+	GOSUB clean_up_russ_med_phone1_2_m3:
+
+MISSIONEND
+
+
+
+ 
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+	 
+
+ 		   	  
+	                                                                                                     
+					

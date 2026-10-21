@@ -1,0 +1,945 @@
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXX RESCUE KRISHNAS FROM ZAIBATSU XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+ 
+
+// objects for Krishna med phone1_2 mission3		
+	
+
+
+CHAR_DATA k_m_3_guard_1
+CHAR_DATA k_m_3_guard_2
+CHAR_DATA k_m_3_guard_3
+CHAR_DATA k_m_3_pickup_group_1_leader
+CHAR_DATA k_m_3_pickup_group_2_leader
+CHAR_DATA k_m_3_driver_tank_1
+CHAR_DATA k_m_3_driver_tank_2
+CHAR_DATA k_m_3_driver_tank_3
+
+CAR_DATA k_m_3_armoured_truck_1
+CAR_DATA k_m_3_tank_1
+CAR_DATA k_m_3_tank_2
+CAR_DATA k_m_3_tank_3
+CAR_DATA k_m_3_group_1_bus
+OBJ_DATA k_m_3_generator_1 
+OBJ_DATA k_m_3_generator_2 
+OBJ_DATA k_m_3_generator_3 
+
+COUNTER k_m_3_all_groups_in_bus = 0
+COUNTER k_m_3_send_pickup_group_1_in_bus = 0
+COUNTER k_m_3_send_pickup_group_2_in_bus = 0
+COUNTER k_m_3_pickup_group_1_in_bus =	0
+COUNTER k_m_3_pickup_group_2_in_bus =	0
+COUNTER	k_m_3_guard_1_spotted_player = 0
+COUNTER	k_m_3_guard_2_spotted_player = 0
+COUNTER	k_m_3_guard_3_spotted_player = 0
+COUNTER k_m_3_player_in_bus_1 = 0
+COUNTER k_m_3_in_bus_1_parking = 0
+COUNTER k_m_3_tank_1_spotted_player = 0
+COUNTER k_m_3_tank_2_spotted_player = 0
+COUNTER k_m_3_tank_3_spotted_player = 0
+
+COUNTER k_m_3_player_in_group_1_bus = 0
+COUNTER k_m_3_group_1_leader_onscreen_car = 0
+COUNTER k_m_3_group_1_leader_onscreen_foot = 0
+COUNTER k_m_3_player_in_armoured_truck_1 = 0
+COUNTER k_m_3_player_dead = 0
+COUNTER k_m_3_tank_1_destroyed = 0
+COUNTER k_m_3_tank_2_destroyed = 0
+COUNTER k_m_3_tank_3_destroyed = 0
+COUNTER k_m_3_generator_1_destroyed = 0
+COUNTER k_m_3_generator_2_destroyed = 0
+COUNTER k_m_3_generator_3_destroyed = 0
+COUNTER k_m_3_generator_1_expl_1 = 0
+COUNTER k_m_3_generator_2_expl_1 = 0
+COUNTER k_m_3_generator_3_expl_1 = 0
+COUNTER k_m_3_all_generators_destroyed = 0
+COUNTER k_m_3_all_generators_destroyed_guards_chase = 0
+COUNTER k_m_3_in_bus_1_parked = 0
+COUNTER k_m_3_create_armoured_truck = 0
+COUNTER k_m_3_armoured_truck_1_created = 0
+COUNTER k_m_3_pickup_group_1_leader_onscreen_gens_not_dead = 0
+COUNTER k_m_3_pickup_group_in_bus_going_to_temple = 0
+COUNTER k_m_3_group_1_killed_on_bus = 0
+COUNTER k_m_3_group_2_killed_on_bus = 0
+COUNTER k_m_3_group_dead = 0
+COUNTER k_m_3_player_zone = 0
+COUNTER k_m_3_dead_arrested = 0
+COUNTER k_m_3_generator_1_created = 0
+OBJ_DATA k_m_3_powerup_1
+OBJ_DATA k_m_3_powerup_2
+OBJ_DATA k_m_3_powerup_3
+OBJ_DATA k_m_3_powerup_4
+OBJ_DATA k_m_3_powerup_5
+SOUND k_m_3_generator_1_sound
+SOUND k_m_3_generator_2_sound
+SOUND k_m_3_generator_3_sound
+
+
+FORWARD clean_up_kris_med_phone1_2_m3:
+
+COUNTER deathtimer = 0
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+		
+// starts Krishna med phone1_2 mission3
+					
+
+kris_med_phone1_2_m3:
+
+SET flag_failed_kris_med_phone1_2_m3 = 0
+
+
+//DISABLE_THREAD_TRIGGER ( thr_kris_med_phone1_m1 ) 
+DISPLAY_MESSAGE ( 3844 ) // you have PASSED the mission!"
+DISPLAY_BRIEF ( 3360 ) // "you have selected Krishna med phone1 mission1"
+SET flag_on_mission = 1
+SET flag_on_kris_mission = 1
+
+k_m_3_pickup_group_1_leader = CREATE_CHAR ( 58.0 , 252.0 , 2.0 ) 9 100 criminal END
+k_m_3_pickup_group_2_leader = CREATE_CHAR ( 57.0 , 252.0 , 2.0 ) 9 190 criminal END
+POINT_ARROW_AT ( arrow , k_m_3_pickup_group_1_leader )
+
+k_m_3_tank_1 = CREATE_CAR ( 64.5 , 241.0 , 2.0 ) -1 180 tank END
+k_m_3_tank_2 = CREATE_CAR ( 56.5 , 241.0 , 2.0 ) -1 180 tank END
+k_m_3_tank_3 = CREATE_CAR ( 59.5 , 246.0 , 2.0 ) -1 180 tank END
+SET_CAR_NO_COLLIDE ( k_m_3_tank_1 )
+SET_CAR_NO_COLLIDE ( k_m_3_tank_2 )
+SET_CAR_NO_COLLIDE ( k_m_3_tank_3 )
+CHANGE_CAR_LOCK ( k_m_3_tank_1 , locked ) 
+CHANGE_CAR_LOCK ( k_m_3_tank_2 , locked ) 
+CHANGE_CAR_LOCK ( k_m_3_tank_3 , locked )
+/*
+k_m_3_driver_tank_1 = CREATE_CHAR_INSIDE_CAR ( k_m_3_tank_1 ) 8 road_block_tank_man END
+k_m_3_driver_tank_2 = CREATE_CHAR_INSIDE_CAR ( k_m_3_tank_2 ) 8 road_block_tank_man END
+k_m_3_driver_tank_3 = CREATE_CHAR_INSIDE_CAR ( k_m_3_tank_3 ) 8 road_block_tank_man END
+*/
+k_m_3_guard_1 = CREATE_CHAR ( 63.5 , 243.5 , 5.0 ) 8 90 criminal END
+k_m_3_guard_2 = CREATE_CHAR ( 57.5 , 243.5 , 5.0 ) 8 90 criminal END
+k_m_3_guard_3 = CREATE_CHAR ( 58.5 , 248.5 , 5.0 ) 8 90 criminal END
+#ifdef PC
+ADD_GROUP_TO_CHARACTER ( k_m_3_pickup_group_1_leader , 4 )
+ADD_GROUP_TO_CHARACTER ( k_m_3_pickup_group_2_leader , 4 )
+#endif
+#ifdef PSX
+ADD_GROUP_TO_CHARACTER ( k_m_3_pickup_group_1_leader , 1 )
+ADD_GROUP_TO_CHARACTER ( k_m_3_pickup_group_2_leader , 1 )
+#endif
+SET_GROUP_TYPE ( k_m_3_pickup_group_1_leader , chain ) 
+SET_GROUP_TYPE ( k_m_3_pickup_group_2_leader , chain ) 
+k_m_3_powerup_2 = CREATE_OBJ ( 53.5 , 238.5 , 2.0 ) 0 COLLECT_02 15 END // rocket launcher
+k_m_3_powerup_3 = CREATE_OBJ ( 66.5 , 249.5 , 2.0 ) 0 COLLECT_31 END // armour
+k_m_3_powerup_4 = CREATE_OBJ ( 65.5 , 249.5 , 2.0 ) 0 COLLECT_01 15 END // machine gun
+FORCE_CLEANUP ( k_m_3_powerup_2 )
+FORCE_CLEANUP ( k_m_3_powerup_3 )
+FORCE_CLEANUP ( k_m_3_powerup_4 )
+ADD_PATROL_POINT ( k_m_3_guard_1 , 66.5 , 243.5 , 5.0 )
+ADD_PATROL_POINT ( k_m_3_guard_1 , 66.5 , 245.5 , 5.0 )
+ADD_PATROL_POINT ( k_m_3_guard_1 , 63.5 , 245.5 , 5.0 )
+ADD_PATROL_POINT ( k_m_3_guard_1 , 63.5 , 243.5 , 5.0 )
+ADD_PATROL_POINT ( k_m_3_guard_2 , 54.5 , 243.5 , 5.0 )
+ADD_PATROL_POINT ( k_m_3_guard_2 , 54.5 , 245.5 , 5.0 )
+ADD_PATROL_POINT ( k_m_3_guard_2 , 57.5 , 245.5 , 5.0 )
+ADD_PATROL_POINT ( k_m_3_guard_2 , 57.5 , 243.5 , 5.0 )
+ADD_PATROL_POINT ( k_m_3_guard_3 , 60.5 , 248.5 , 5.0 )
+ADD_PATROL_POINT ( k_m_3_guard_3 , 60.5 , 249.5 , 5.0 )
+ADD_PATROL_POINT ( k_m_3_guard_3 , 58.5 , 249.5 , 5.0 )
+ADD_PATROL_POINT ( k_m_3_guard_3 , 58.5 , 248.5 , 5.0 )
+SET_CHAR_THREAT_REACTION ( k_m_3_guard_1 , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_m_3_guard_2 , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_m_3_guard_3 , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_m_3_pickup_group_1_leader , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_m_3_pickup_group_2_leader , no_reaction )
+SET_CHAR_THREAT_SEARCH ( k_m_3_guard_1 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_m_3_guard_2 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_m_3_guard_3 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_m_3_pickup_group_1_leader , line_of_sight )
+SET_CHAR_THREAT_SEARCH ( k_m_3_pickup_group_2_leader , line_of_sight )
+GIVE_WEAPON ( k_m_3_guard_1 , pistol )
+GIVE_WEAPON ( k_m_3_guard_2 , pistol )
+GIVE_WEAPON ( k_m_3_guard_3 , pistol )
+ADD_CHAR_TO_GANG ( k_m_3_guard_1 , zaibgang )
+ADD_CHAR_TO_GANG ( k_m_3_guard_2 , zaibgang )
+ADD_CHAR_TO_GANG ( k_m_3_guard_3 , zaibgang )
+//ADD_CHAR_TO_GANG ( k_m_3_pickup_group_1_leader , krisgang ) 
+//ADD_CHAR_TO_GANG ( k_m_3_pickup_group_2_leader , krisgang )
+k_m_3_generator_1 = CREATE_OBJ ( 64.5 , 242.5 , 5.0 ) 0 powergen END
+k_m_3_generator_2 = CREATE_OBJ ( 56.5 , 242.5 , 5.0 ) 0 powergen END
+k_m_3_generator_3 = CREATE_OBJ ( 59.5 , 247.5 , 5.0 ) 0 powergen END
+#ifdef PC
+k_m_3_generator_1_sound = CREATE_SOUND ( 64.5 , 242.5 , 6.0 ) generator_rumble play_forever END
+k_m_3_generator_2_sound = CREATE_SOUND ( 56.5 , 242.5 , 6.0 ) generator_rumble play_forever END
+k_m_3_generator_3_sound = CREATE_SOUND ( 59.5 , 247.5 , 6.0 ) generator_rumble play_forever END
+FORCE_CLEANUP ( k_m_3_generator_1_sound )
+FORCE_CLEANUP ( k_m_3_generator_2_sound )
+FORCE_CLEANUP ( k_m_3_generator_3_sound )
+#endif
+SET k_m_3_generator_1_created = 1
+
+
+WHILE_EXEC ( k_m_3_player_zone = 0 )
+
+
+	IF ( IS_CHAR_IN_ZONE ( shaft , B19 ) )
+		SET	k_m_3_player_zone = 1
+		DISPLAY_BRIEF_NOW ( 3382 ) // "You killed all of my new men, you have failed me!"
+	ENDIF
+
+
+ENDWHILE
+
+SET_DEATHARREST_STATE ( shaft , OFF ) 
+
+WHILE_EXEC ( k_m_3_pickup_group_2_in_bus = 0 )
+
+	
+	IF ( ( k_m_3_all_generators_destroyed = 3 )
+	AND ( k_m_3_dead_arrested = 0 ) )
+		SET_DEATHARREST_STATE ( shaft , ON ) 
+		SET	k_m_3_dead_arrested = 1
+		#ifdef PSX
+		SET_RECYCLE_MODEL_WANTED ( krsnabus ) 
+		#endif
+	ENDIF
+
+	
+	IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( k_m_3_tank_1 ) )
+	AND ( k_m_3_tank_1_spotted_player = 0 ) )
+		k_m_3_driver_tank_1 = CREATE_CHAR_INSIDE_CAR ( k_m_3_tank_1 ) 8 road_block_tank_man END
+		SET k_m_3_tank_1_spotted_player = 1 
+	ENDIF
+
+	IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( k_m_3_tank_2 ) )
+	AND ( k_m_3_tank_2_spotted_player = 0 ) )
+		k_m_3_driver_tank_2 = CREATE_CHAR_INSIDE_CAR ( k_m_3_tank_2 ) 8 road_block_tank_man END
+		SET k_m_3_tank_2_spotted_player = 1 
+	ENDIF
+
+	IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( k_m_3_tank_3 ) )
+	AND ( k_m_3_tank_3_spotted_player = 0 ) )
+		k_m_3_driver_tank_3 = CREATE_CHAR_INSIDE_CAR ( k_m_3_tank_3 ) 8 road_block_tank_man END
+		SET k_m_3_tank_3_spotted_player = 1 
+	ENDIF
+ 
+	
+	
+	// generator 1	
+
+	
+	IF ( ( ( IS_CAR_WRECKED ( k_m_3_tank_1 ) )
+	AND ( k_m_3_tank_1_destroyed = 0 ) )
+	AND ( k_m_3_generator_1_destroyed = 0 ) )
+		SET k_m_3_tank_1_destroyed = 1
+	ENDIF
+
+
+	IF ( ( ( CHECK_OBJ_MODEL ( k_m_3_generator_1 , powergen_dead ) )
+	AND ( k_m_3_tank_1_destroyed = 0 ) )
+	AND ( k_m_3_generator_1_destroyed = 0 ) )
+		#ifdef PC
+		DELETE_ITEM ( k_m_3_generator_1_sound )
+		#endif
+		SET k_m_3_generator_1_destroyed = 1
+	ENDIF
+
+
+	IF ( ( ( k_m_3_tank_1_destroyed = 1 ) 
+	AND ( k_m_3_generator_1_expl_1 = 0 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE_NO_RING ( 64.5 , 242.0 , 3.0 ) 
+		SET k_m_3_generator_1_expl_1 = 1
+	ENDIF
+	
+	
+	IF ( ( ( k_m_3_tank_1_destroyed = 1 ) 
+	AND ( k_m_3_generator_1_expl_1 = 1 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE_NO_RING ( 64.5 , 242.0 , 4.0 ) 
+		SET k_m_3_generator_1_expl_1 = 2
+	ENDIF
+	
+	
+	IF ( ( ( k_m_3_tank_1_destroyed = 1 ) 
+	AND ( k_m_3_generator_1_expl_1 = 2 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE ( k_m_3_generator_1 ) 
+		#ifdef PC
+		DELETE_ITEM ( k_m_3_generator_1_sound )
+		#endif
+		SET k_m_3_generator_1_expl_1 = 3
+		++ k_m_3_all_generators_destroyed
+		IF ( k_m_3_all_generators_destroyed = 1 )
+			DISPLAY_BRIEF_NOW ( 3361 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+		IF ( k_m_3_all_generators_destroyed = 2 )
+			DISPLAY_BRIEF_NOW ( 3362 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+		IF ( k_m_3_all_generators_destroyed = 3 )
+			DISPLAY_BRIEF_NOW ( 3363 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+	ENDIF
+	
+	
+	IF ( ( ( k_m_3_generator_1_destroyed = 1 ) 
+	AND ( k_m_3_generator_1_expl_1 = 0 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE_NO_RING ( 64.5 , 242.0 , 4.0 ) 
+		SET k_m_3_generator_1_expl_1 = 1
+	ENDIF
+	
+	
+	IF ( ( ( k_m_3_generator_1_destroyed = 1 ) 
+	AND ( k_m_3_generator_1_expl_1 = 1 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE_NO_RING ( 64.5 , 242.0 , 3.0 ) 
+		SET k_m_3_generator_1_expl_1 = 2
+	ENDIF
+	
+	
+	IF ( ( ( k_m_3_generator_1_destroyed = 1 ) 
+	AND ( k_m_3_generator_1_expl_1 = 2 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE ( k_m_3_tank_1 ) 
+		SET k_m_3_generator_1_expl_1 = 3
+		++ k_m_3_all_generators_destroyed
+		IF ( k_m_3_all_generators_destroyed = 1 )
+			DISPLAY_BRIEF_NOW ( 3361 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+		IF ( k_m_3_all_generators_destroyed = 2 )
+			DISPLAY_BRIEF_NOW ( 3362 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+		IF ( k_m_3_all_generators_destroyed = 3 )
+			DISPLAY_BRIEF_NOW ( 3363 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+	ENDIF
+
+	
+	// generator 2
+
+
+	IF ( ( ( IS_CAR_WRECKED ( k_m_3_tank_2 ) )
+	AND ( k_m_3_tank_2_destroyed = 0 ) )
+	AND ( k_m_3_generator_2_destroyed = 0 ) )
+		SET k_m_3_tank_2_destroyed = 1
+	ENDIF
+
+
+	IF ( ( ( CHECK_OBJ_MODEL ( k_m_3_generator_2 , powergen_dead ) )
+	AND ( k_m_3_tank_2_destroyed = 0 ) )
+	AND ( k_m_3_generator_2_destroyed = 0 ) )
+		#ifdef PC
+		DELETE_ITEM ( k_m_3_generator_2_sound )
+		#endif
+		SET k_m_3_generator_2_destroyed = 1
+	ENDIF
+
+
+	IF ( ( ( k_m_3_tank_2_destroyed = 1 ) 
+	AND ( k_m_3_generator_2_expl_1 = 0 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE_NO_RING ( 56.5 , 242.0 , 3.0 ) 
+		SET k_m_3_generator_2_expl_1 = 1
+	ENDIF
+	
+	
+	IF ( ( ( k_m_3_tank_2_destroyed = 1 ) 
+	AND ( k_m_3_generator_2_expl_1 = 1 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE_NO_RING ( 56.5 , 242.0 , 4.0 ) 
+		SET k_m_3_generator_2_expl_1 = 2
+	ENDIF
+	
+	
+	IF ( ( ( k_m_3_tank_2_destroyed = 1 ) 
+	AND ( k_m_3_generator_2_expl_1 = 2 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE ( k_m_3_generator_2 ) 
+		#ifdef PC
+		DELETE_ITEM ( k_m_3_generator_2_sound )
+		#endif
+		SET k_m_3_generator_2_expl_1 = 3
+		++ k_m_3_all_generators_destroyed
+		IF ( k_m_3_all_generators_destroyed = 1 )
+			DISPLAY_BRIEF_NOW ( 3361 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+		IF ( k_m_3_all_generators_destroyed = 2 )
+			DISPLAY_BRIEF_NOW ( 3362 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+		IF ( k_m_3_all_generators_destroyed = 3 )
+			DISPLAY_BRIEF_NOW ( 3363 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+	ENDIF
+	
+	
+	IF ( ( ( k_m_3_generator_2_destroyed = 1 ) 
+	AND ( k_m_3_generator_2_expl_1 = 0 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE_NO_RING ( 56.5 , 242.0 , 4.0 ) 
+		SET k_m_3_generator_2_expl_1 = 1
+	ENDIF
+	
+	
+	IF ( ( ( k_m_3_generator_2_destroyed = 1 ) 
+	AND ( k_m_3_generator_2_expl_1 = 1 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE_NO_RING ( 56.5 , 242.0 , 3.0 ) 
+		SET k_m_3_generator_2_expl_1 = 2
+	ENDIF
+	
+	
+	IF ( ( ( k_m_3_generator_2_destroyed = 1 ) 
+	AND ( k_m_3_generator_2_expl_1 = 2 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE ( k_m_3_tank_2 ) 
+		SET k_m_3_generator_2_expl_1 = 3
+		++ k_m_3_all_generators_destroyed
+		IF ( k_m_3_all_generators_destroyed = 1 )
+			DISPLAY_BRIEF_NOW ( 3361 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+		IF ( k_m_3_all_generators_destroyed = 2 )
+			DISPLAY_BRIEF_NOW ( 3362 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+		IF ( k_m_3_all_generators_destroyed = 3 )
+			DISPLAY_BRIEF_NOW ( 3363 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+	ENDIF
+
+	 
+	// generator 3	
+
+
+	IF ( ( ( IS_CAR_WRECKED ( k_m_3_tank_3 ) )
+	AND ( k_m_3_tank_3_destroyed = 0 ) )
+	AND ( k_m_3_generator_3_destroyed = 0 ) )
+		SET k_m_3_tank_3_destroyed = 1
+	ENDIF
+
+
+	IF ( ( ( CHECK_OBJ_MODEL ( k_m_3_generator_3 , powergen_dead ) )
+	AND ( k_m_3_tank_3_destroyed = 0 ) )
+	AND ( k_m_3_generator_3_destroyed = 0 ) )
+		#ifdef PC
+		DELETE_ITEM ( k_m_3_generator_3_sound )
+		#endif
+		SET k_m_3_generator_3_destroyed = 1
+	ENDIF
+
+
+	IF ( ( ( k_m_3_tank_3_destroyed = 1 ) 
+	AND ( k_m_3_generator_3_expl_1 = 0 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE_NO_RING ( 59.5 , 247.0 , 3.0 ) 
+		SET k_m_3_generator_3_expl_1 = 1
+	ENDIF
+	
+	
+	IF ( ( ( k_m_3_tank_3_destroyed = 1 ) 
+	AND ( k_m_3_generator_3_expl_1 = 1 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE_NO_RING ( 59.5 , 247.0 , 4.0 ) 
+		SET k_m_3_generator_3_expl_1 = 2
+	ENDIF
+	
+	
+	IF ( ( ( k_m_3_tank_3_destroyed = 1 ) 
+	AND ( k_m_3_generator_3_expl_1 = 2 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE ( k_m_3_generator_3 ) 
+		#ifdef PC
+		DELETE_ITEM ( k_m_3_generator_3_sound )
+		#endif
+		SET k_m_3_generator_3_expl_1 = 3
+		++ k_m_3_all_generators_destroyed
+		IF ( k_m_3_all_generators_destroyed = 1 )
+			DISPLAY_BRIEF_NOW ( 3361 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+		IF ( k_m_3_all_generators_destroyed = 2 )
+			DISPLAY_BRIEF_NOW ( 3362 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+		IF ( k_m_3_all_generators_destroyed = 3 )
+			DISPLAY_BRIEF_NOW ( 3363 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+	ENDIF
+	
+	
+	IF ( ( ( k_m_3_generator_3_destroyed = 1 ) 
+	AND ( k_m_3_generator_3_expl_1 = 0 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE_NO_RING ( 59.5 , 247.0 , 4.0 ) 
+		SET k_m_3_generator_3_expl_1 = 1
+	ENDIF
+	
+	
+	IF ( ( ( k_m_3_generator_3_destroyed = 1 ) 
+	AND ( k_m_3_generator_3_expl_1 = 1 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE_NO_RING ( 59.5 , 247.0 , 3.0 ) 
+		SET k_m_3_generator_3_expl_1 = 2
+	ENDIF
+	
+	
+	IF ( ( ( k_m_3_generator_3_destroyed = 1 ) 
+	AND ( k_m_3_generator_3_expl_1 = 2 ) )
+	AND ( NOT ( DELAY ( 20 ) ) ) )
+		EXPLODE ( k_m_3_tank_3 ) 
+		SET k_m_3_generator_3_expl_1 = 3
+		++ k_m_3_all_generators_destroyed
+		IF ( k_m_3_all_generators_destroyed = 1 )
+			DISPLAY_BRIEF_NOW ( 3361 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+		IF ( k_m_3_all_generators_destroyed = 2 )
+			DISPLAY_BRIEF_NOW ( 3362 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+		IF ( k_m_3_all_generators_destroyed = 3 )
+			DISPLAY_BRIEF_NOW ( 3363 ) // "You killed all of my new men, you have failed me!"
+		ENDIF
+	ENDIF
+
+
+   
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_m_3_guard_1 ) )
+	AND ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 65.5 , 245.0 , 5.0 , 5.0 , 4.0  ) ) )
+	AND ( k_m_3_guard_1_spotted_player = 0 ) )
+		SET k_m_3_guard_1_spotted_player = 1
+		SET_CHAR_THREAT_REACTION ( k_m_3_guard_1 , react_as_normal )
+		DISPLAY_BRIEF_NOW ( 3364 ) // "shit! we've got an intruder"	 
+	ENDIF
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_m_3_guard_2 ) ) 
+	AND ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 55.5 , 245.0 , 5.0 , 5.0 , 4.0  ) ) )
+	AND ( k_m_3_guard_2_spotted_player = 0 ) )
+		SET k_m_3_guard_2_spotted_player = 1
+		SET_CHAR_THREAT_REACTION ( k_m_3_guard_2 , react_as_normal )
+		DISPLAY_BRIEF_NOW ( 3365 ) // "shit! we've got an intruder"	 
+	ENDIF
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_m_3_guard_3 ) ) 
+	AND ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 59.0 , 249.5 , 5.0 , 4.0 , 3.0  ) ) )
+	AND ( k_m_3_guard_3_spotted_player = 0 ) )
+		SET k_m_3_guard_3_spotted_player = 1
+		SET_CHAR_THREAT_REACTION ( k_m_3_guard_3 , react_as_normal )
+		DISPLAY_BRIEF_NOW ( 3366 ) // "shit! we've got an intruder"	 
+	ENDIF	
+	
+	
+	IF ( ( k_m_3_all_generators_destroyed = 3 )
+	AND ( k_m_3_all_generators_destroyed_guards_chase = 0 ) )
+		SET k_m_3_all_generators_destroyed_guards_chase = 1 
+		SET_CHAR_OBJECTIVE  ( k_m_3_guard_1 , kill_char_on_foot , shaft )
+		SET_CHAR_OBJECTIVE  ( k_m_3_guard_2 , kill_char_on_foot , shaft )
+		SET_CHAR_OBJECTIVE  ( k_m_3_guard_3 , kill_char_on_foot , shaft )
+	ENDIF
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_m_3_guard_1 ) )
+	AND ( k_m_3_all_generators_destroyed_guards_chase = 1 )	)
+	AND ( k_m_3_guard_1_spotted_player = 0 ) )
+		SET k_m_3_guard_1_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3364 ) // "shit! we've got an intruder"	 
+	ENDIF
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_m_3_guard_2 ) ) 
+	AND ( k_m_3_all_generators_destroyed_guards_chase = 1 ) )
+	AND ( k_m_3_guard_2_spotted_player = 0 ) )
+		SET k_m_3_guard_2_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3365 ) // "shit! we've got an intruder"	 
+	ENDIF
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_m_3_guard_3 ) ) 
+	AND ( k_m_3_all_generators_destroyed_guards_chase = 1 ) )
+	AND ( k_m_3_guard_3_spotted_player = 0 ) )
+		SET k_m_3_guard_3_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3366 ) // "shit! we've got an intruder"	 
+	ENDIF
+																    
+	
+	// player dead once, create armoured truck
+
+
+
+	IF ( k_m_3_armoured_truck_1_created = 1 )
+		DISPLAY_BRIEF ( 3367 ) // "I didn't think you would manage to get in. I've got an armoured truck waiting for you go pick it up!"
+		k_m_3_powerup_1 = CREATE_OBJ ( 64.5 , 237.5 , 2.0 ) 0 COLLECT_29 END // extra life
+		k_m_3_powerup_5 = CREATE_OBJ ( 60.0 , 235.5 , 2.0 ) 0 COLLECT_02 15 END // rocket launcher
+		FORCE_CLEANUP ( k_m_3_powerup_1 )
+		FORCE_CLEANUP ( k_m_3_powerup_5 )
+		#ifdef PC
+		k_m_3_armoured_truck_1 = CREATE_CAR ( 171.0 , 249.5 , 3.0 ) -1 90 gtruck END
+		#endif
+		#ifdef PSX
+		k_m_3_armoured_truck_1 = CREATE_CAR ( 171.0 , 249.5 , 3.0 ) -1 90 van END
+		#endif
+		SET_CAR_BULLETPROOF ( k_m_3_armoured_truck_1 , on )
+		SET_CAR_FLAMEPROOF ( k_m_3_armoured_truck_1 , on )
+		SET_CAR_ROCKETPROOF ( k_m_3_armoured_truck_1 , on ) 
+		POINT_ARROW_AT ( arrow , k_m_3_armoured_truck_1 )
+		SET k_m_3_armoured_truck_1_created = 2
+		SET_DEATHARREST_STATE ( shaft , ON )
+	ENDIF
+				
+/*	
+	// player dead check how many times
+
+	IF ( ( HAS_CHARACTER_DIED ( shaft ) )
+	AND ( k_m_3_player_dead = 1 ) )
+		SET k_m_3_player_dead = 2
+		SET flag_failed_kris_med_phone1_2_m3 = 1
+		DISPLAY_BRIEF ( 3367 ) // "You killed all of my new men, you have failed me!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+*/	
+	
+	IF ( ( ( ( HAS_CHARACTER_DIED ( shaft ) )
+	AND ( k_m_3_player_dead < 1 ) )
+	AND ( k_m_3_all_generators_destroyed < 3 ) )
+	AND ( k_m_3_dead_arrested = 0 ) )
+		SET k_m_3_dead_arrested = 1
+		++ k_m_3_player_dead
+		SET k_m_3_armoured_truck_1_created = 1
+
+		// WAIT IN HERE UNTIL PLAYER HAS RESPAWNED 
+		WHILE ( NOT ( CHECK_CHARACTER_HEALTH ( shaft , 100 ) ) ) 
+			DO_NOWT
+			ENDEXEC
+		ENDWHILE
+
+		SET deathtimer = 0
+		WHILE (deathtimer < 100 ) 
+			++ deathtimer
+			ENDEXEC
+		ENDWHILE
+//		SET_DEATHARREST_STATE ( shaft , ON ) 
+	ENDIF
+
+	
+	/*
+	IF ( ( ( ( HAS_CHARACTER_DIED ( shaft ) )
+	AND ( k_m_3_player_dead < 1 ) )
+	AND ( k_m_3_all_generators_destroyed = 3 ) )
+	AND ( flag_failed_kris_med_phone1_2_m3 = 0 ) )
+		SET flag_failed_kris_med_phone1_2_m3 = 1
+		DISPLAY_BRIEF ( 3367 ) // "You killed all of my new men, you have failed me!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+*/	
+
+	IF ( ( k_m_3_armoured_truck_1_created = 2 )
+	AND ( k_m_3_player_in_armoured_truck_1 = 0 ) )
+		IF ( IS_CHARACTER_IN_CAR ( shaft , k_m_3_armoured_truck_1 ) ) 
+			SET k_m_3_player_in_armoured_truck_1 = 1
+			DISPLAY_BRIEF ( 3368 ) // "Ok get back over there, the tanks can't harm you now!"
+   			POINT_ARROW_AT ( arrow , k_m_3_pickup_group_1_leader )
+		ENDIF
+   	ENDIF
+
+	
+	// if player gets out of car points back at car and says to get back in
+		
+   	IF ( ( k_m_3_armoured_truck_1_created = 2 )
+   	AND ( k_m_3_player_in_armoured_truck_1 = 1 ) )
+		IF ( NOT ( IS_CHARACTER_IN_CAR ( shaft , k_m_3_armoured_truck_1 ) ) ) 
+			SET k_m_3_player_in_armoured_truck_1 = 0
+			DISPLAY_BRIEF ( 3369 ) // "What the fuck are you doing? do you want fucked up again? Get back into the truck!"
+			POINT_ARROW_AT ( arrow , k_m_3_armoured_truck_1 )
+		ENDIF
+	ENDIF 
+
+
+	IF ( ( k_m_3_armoured_truck_1_created = 2 )
+	AND ( k_m_3_all_generators_destroyed < 3 ) )
+		IF ( IS_CAR_WRECKED ( k_m_3_armoured_truck_1 ) ) 
+			SET k_m_3_armoured_truck_1_created = 3
+			POINT_ARROW_AT ( arrow , k_m_3_pickup_group_1_leader )
+			DISPLAY_BRIEF ( 3370 ) // "How did you manage to destroy an armoured truck! Now you have no protection! Finish the job!"
+		ENDIF
+	ENDIF
+
+	IF ( ( ( k_m_3_armoured_truck_1_created = 2 )
+	AND ( k_m_3_all_generators_destroyed < 3 ) )
+	AND ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 62.0 , 249.0 , 2.0 , 2.0 , 2.0  ) ) )
+		SET k_m_3_armoured_truck_1_created = 3
+		POINT_ARROW_AT ( arrow , k_m_3_pickup_group_1_leader )
+		DISPLAY_BRIEF ( 3371 ) // "Ok go and see if my people are all right!"
+	ENDIF
+
+
+	// check for player seeing group with the generators still intact
+
+
+	IF ( ( ( LOCATE_ANOTHER_CHARACTER_ANY_MEANS ( shaft , k_m_3_pickup_group_1_leader , 3.0 , 3.0  ) )
+	AND	( k_m_3_all_generators_destroyed < 3 ) )
+	AND ( k_m_3_pickup_group_1_leader_onscreen_gens_not_dead = 0 ) )
+		DISPLAY_BRIEF ( 3372 ) // "We're not going anywhere until you get rid of the defences!"
+		SET k_m_3_pickup_group_1_leader_onscreen_gens_not_dead = 1
+	ENDIF
+
+
+	IF ( (  k_m_3_pickup_group_1_leader_onscreen_gens_not_dead = 1 )
+	AND ( NOT ( IS_ITEM_ONSCREEN ( k_m_3_pickup_group_1_leader ) ) ) )
+		SET k_m_3_pickup_group_1_leader_onscreen_gens_not_dead = 0
+	ENDIF
+
+
+	  	// checks for in car and onscreen, stores current car info
+			
+	IF ( ( ( ( k_m_3_all_generators_destroyed = 3 )
+	AND ( IS_CHARACTER_IN_MODEL ( shaft , krsnabus ) ) ) 
+	AND ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , k_m_3_pickup_group_1_leader , 3.0 , 3.0  ) ) )
+	AND ( k_m_3_send_pickup_group_1_in_bus = 0 ) )
+		STORE_CAR_CHARACTER_IS_IN ( shaft , k_m_3_group_1_bus )
+		ORDER_CHAR_TO_BACKDOOR ( k_m_3_pickup_group_1_leader , k_m_3_group_1_bus )
+		SET k_m_3_send_pickup_group_1_in_bus = 1
+		DISPLAY_BRIEF_NOW ( 3373 ) // "Everyone on the bus, he is here to help us!"
+	ELSE
+		
+		// tells player to steal a car with bigger capacity
+
+		IF ( ( ( ( ( k_m_3_all_generators_destroyed = 3 )
+		AND ( IS_CHARACTER_IN_ANY_CAR ( shaft ) ) )
+		AND ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , k_m_3_pickup_group_1_leader , 3.0 , 3.0  ) ) )
+		AND ( k_m_3_group_1_leader_onscreen_car = 0 ) )
+		AND ( k_m_3_send_pickup_group_1_in_bus = 0 ) ) 
+			DISPLAY_BRIEF_NOW ( 3374 ) // "How do we know we can trust you? We will only travel in a Krishna bus!"
+			SET k_m_3_group_1_leader_onscreen_car = 1
+		ENDIF
+	ENDIF
+
+	IF ( ( ( k_m_3_all_generators_destroyed = 3 )
+	AND ( NOT ( IS_ITEM_ONSCREEN ( k_m_3_pickup_group_1_leader ) ) ) )
+	AND ( k_m_3_group_1_leader_onscreen_car = 1 ) )
+		SET k_m_3_group_1_leader_onscreen_car = 0
+	ENDIF
+	
+
+	// tells player to steal a car and pick them up
+
+	IF ( ( ( ( k_m_3_all_generators_destroyed = 3 )
+	AND ( LOCATE_ANOTHER_CHARACTER_ON_FOOT ( shaft , k_m_3_pickup_group_1_leader , 2.0 , 2.0  ) ) ) 
+	AND ( k_m_3_group_1_leader_onscreen_foot = 0 ) )
+	AND ( k_m_3_send_pickup_group_1_in_bus = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3375 ) // "What are you going to do you foolish man? Carry us? Get a Krishna Bus!"
+		SET k_m_3_group_1_leader_onscreen_foot = 1
+	ENDIF
+
+
+	IF ( ( ( k_m_3_all_generators_destroyed = 3 )
+	AND ( NOT ( IS_ITEM_ONSCREEN ( k_m_3_pickup_group_1_leader ) ) ) )
+	AND ( k_m_3_group_1_leader_onscreen_foot = 1 ) )
+		SET k_m_3_group_1_leader_onscreen_foot = 0
+	ENDIF
+
+
+	IF ( ( ( ( k_m_3_send_pickup_group_1_in_bus = 1 ) 
+	AND ( k_m_3_pickup_group_1_in_bus = 0 ) )
+	AND ( IS_GROUP_IN_CAR ( k_m_3_pickup_group_1_leader ) ) )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( k_m_3_pickup_group_1_leader ) ) )
+		DISPLAY_BRIEF_NOW ( 3376 ) // "Wait until we are all on the bus!"	
+		SET k_m_3_pickup_group_1_in_bus = 1
+		SET k_m_3_send_pickup_group_2_in_bus = 1
+		SET k_m_3_group_1_killed_on_bus = 1				
+		KILL_ALL_PASSENGERS ( k_m_3_group_1_bus )
+		ORDER_CHAR_TO_BACKDOOR ( k_m_3_pickup_group_2_leader , k_m_3_group_1_bus )
+	ENDIF
+
+
+	IF ( ( ( ( k_m_3_send_pickup_group_2_in_bus = 1 ) 
+	AND ( k_m_3_pickup_group_2_in_bus = 0 ) )
+	AND ( IS_GROUP_IN_CAR ( k_m_3_pickup_group_2_leader ) ) )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( k_m_3_pickup_group_2_leader ) ) )
+		DISPLAY_BRIEF_NOW ( 3377 ) // "Take us back to the temple, we need to see the boss!"	
+		SET k_m_3_pickup_group_2_in_bus = 1
+		SET k_m_3_pickup_group_in_bus_going_to_temple = 1
+		SET k_m_3_group_2_killed_on_bus = 1
+		KILL_ALL_PASSENGERS ( k_m_3_group_1_bus )
+		UPDATE_DOOR_TARGET ( k_m_3_door_2 , k_m_3_group_1_bus )
+		MAKE_DOOR_AUTOMATIC ( k_m_3_door_2 )
+	ENDIF
+
+	
+	IF ( ( ( ( k_m_3_group_1_killed_on_bus = 0 )
+	AND ( k_m_3_group_dead = 0 ) )
+	AND ( HAS_CHARACTER_DIED ( k_m_3_pickup_group_1_leader ) ) )
+	AND ( flag_failed_kris_med_phone1_2_m3 = 0 ) )
+		SET k_m_3_group_dead = 1
+		SET flag_failed_kris_med_phone1_2_m3 = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3380 ) // "You were supposed to save them from testing and now they are dead! You have failed me!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( ( ( k_m_3_group_2_killed_on_bus = 0 )
+	AND ( k_m_3_group_dead = 0 ) )
+	AND ( HAS_CHARACTER_DIED ( k_m_3_pickup_group_2_leader ) ) )
+	AND ( flag_failed_kris_med_phone1_2_m3 = 0 ) )
+		SET k_m_3_group_dead = 1
+		SET flag_failed_kris_med_phone1_2_m3 = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3380 ) // "You were supposed to save them from testing and now they are dead! You have failed me!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+ENDWHILE
+
+	
+
+WHILE_EXEC ( k_m_3_in_bus_1_parked = 0 )
+
+
+	// if player gets out of car points back at car and says to get back in
+		
+   	IF ( ( ( k_m_3_pickup_group_in_bus_going_to_temple = 1 )
+   	AND ( k_m_3_player_in_group_1_bus = 1 ) )
+	AND ( NOT ( IS_CHARACTER_IN_CAR ( shaft , k_m_3_group_1_bus ) ) ) )
+		SET k_m_3_player_in_group_1_bus = 0
+		DISPLAY_BRIEF ( 3379 ) // "Where are you going you can't just leave us here! Come back!"
+		POINT_ARROW_AT ( arrow , k_m_3_group_1_bus )
+	ENDIF
+	
+	
+	// player is in bus with the two groups
+
+
+	IF ( ( ( k_m_3_pickup_group_in_bus_going_to_temple = 1 )
+	AND ( k_m_3_player_in_group_1_bus = 0 ) )
+	AND ( IS_CHARACTER_IN_CAR ( shaft , k_m_3_group_1_bus ) ) )
+		SET k_m_3_player_in_group_1_bus = 1
+		DISPLAY_BRIEF ( 3378 ) // "What have you been doing? Take us to the temple!"
+   		POINT_ARROW_AT ( arrow , 189.0 , 192.0 , 2.0 )
+	ENDIF
+
+	
+	IF ( ( ( k_m_3_pickup_group_in_bus_going_to_temple = 1 )
+	AND ( flag_failed_kris_med_phone1_2_m3 = 0 ) )
+	AND ( IS_CAR_WRECKED ( k_m_3_group_1_bus ) ) )
+		SET flag_failed_kris_med_phone1_2_m3 = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3380 ) // "You were supposed to save them from testing and now they are dead! You have failed me!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	// waits for player outside door, then parks the truck
+	
+	IF ( ( ( k_m_3_pickup_group_in_bus_going_to_temple = 1 )
+	AND ( IS_CAR_IN_BLOCK ( k_m_3_group_1_bus , 189.0 , 193.0 , 2.0 , 2.0 , 2.0 ) )	)
+//	AND ( LOCATE_CHARACTER_BY_CAR ( shaft , 189.0 , 193.0 , 2.0 , 2.0 , 2.0 ) ) )
+	AND ( k_m_3_in_bus_1_parking = 0 ) )
+//	AND ( IS_CHARACTER_IN_CAR ( shaft , k_m_3_group_1_bus ) ) )
+		PARK ( k_m_3_group_1_bus , k_m_3_door_2 )
+		SET k_m_3_in_bus_1_parking = 1
+	ENDIF	
+
+
+// waits for truck to finish parking, then passes mission
+
+
+	IF ( ( k_m_3_in_bus_1_parking = 1 )
+	AND ( HAS_PARK_FINISHED ( ) ) )
+		SET flag_passed_kris_med_phone1_2_m3 = 1
+		SET k_m_3_in_bus_1_parked = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3381 ) // "Well done my people are safe because of you, you have passed the mission!"
+		++ counter_all_missions_passed
+		DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+		ADD_SCORE ( shaft , 60000 )
+		ADD_MULTIPLIER ( shaft , 1 ) 
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , 1 )
+		CLEAR_WANTED_LEVEL ( shaft )
+		IF ( flag_passed_kris_med_phone1_m1 = 1 )
+			SET_PHONE_DEAD ( ph_kris_med_phone1 ) 
+			DISABLE_THREAD_TRIGGER ( thr_kris_med_phone1_m1 )
+		ENDIF
+		IF ( flag_passed_kris_med_phone2_m1 = 1 )
+			SET_PHONE_DEAD ( ph_kris_med_phone2 ) 
+			DISABLE_THREAD_TRIGGER ( thr_kris_med_phone2_m1 )
+		ENDIF
+		RETURN
+	ENDIF
+
+		
+
+
+
+ENDWHILE
+
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+// deletes all objects when Krishna med phone1_2 mission3 is finished...
+				
+clean_up_kris_med_phone1_2_m3: 
+	
+	REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	MAKE_DOOR_MANUAL ( k_m_3_door_2 ) 
+	SET_DEATHARREST_STATE ( shaft , ON )
+
+	
+	IF ( flag_passed_kris_med_phone1_2_m3 = 1 )
+		++ flag_kris_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_kris_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3671 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3670 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_kris_med_phone1_2_m3 = 1 )
+		++ flag_kris_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_kris_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+	MISSION_HAS_FINISHED ( )
+	
+	SET flag_on_mission	= 0
+	SET flag_on_kris_mission = 0
+   	
+   	RETURN
+
+
+MISSIONSTART
+
+	GOSUB kris_med_phone1_2_m3:
+
+	GOSUB clean_up_kris_med_phone1_2_m3:
+
+MISSIONEND
+
+
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		

@@ -1,0 +1,3094 @@
+// player's normal start position
+PLAYER_PED shaft = ( 44.5 , 102.0 , 2.0 ) 25 0			 
+
+// kill frenzy moltov 1
+//PLAYER_PED shaft = ( 18.5 , 44.5 , 6.0 ) 25 0			 
+
+// Krishna easy phones
+//PLAYER_PED shaft = ( 250.5 , 200.5 , 5.0 ) 25 1			 
+
+// Krishna medium phones
+//PLAYER_PED shaft = ( 236.5 , 135.5 , 3.0 ) 25 1			 
+
+// Krishna hard phone
+//PLAYER_PED shaft = ( 216.5 , 220.5 , 4.0 ) 25 1			 
+
+// Russian easy phones
+//PLAYER_PED shaft = ( 188.5 , 75.5 , 6.0 ) 25 1			 
+
+// Russian medium phones
+//PLAYER_PED shaft = ( 206.5 , 13.5 , 5.0 ) 25 1			 
+
+// Russian hard phone
+//PLAYER_PED shaft = ( 145.5 , 33.5 , 6.0 ) 25 1			 
+
+// Zaibatsu easy phones
+//PLAYER_PED shaft = ( 45.5 , 167.5 , 2.0 ) 25 1			 
+
+// Zaibatsu medium phones
+//PLAYER_PED shaft = ( 7.5 , 183.5 , 4.0 ) 25 1			 
+
+// Zaibatsu hard phone
+//PLAYER_PED shaft = ( 27.0 , 248.0 , 4.0 ) 25 1			 
+
+
+
+// general mission objects
+
+
+ARROW_DATA arrow
+
+ARROW_DATA arrow_2
+
+ARROW_DATA arrow_3
+
+ARROW_DATA arrow_4
+
+ARROW_DATA arrow_end
+
+// map zones, ped and car densities
+
+MAP_ZONE B01 = ( 0 , 0 , 0 , 0 , 200 , 0 , 0 , 0 , 1000 , 0 , 200 )
+
+MAP_ZONE B02 = ( 0 , 0 , 0 , 0 , 300 , 0 , 0 , 0 , 1000 , 0 , 200 )
+
+MAP_ZONE B03 = ( 0 , 0 , 0 , 0 , 200 , 0 , 0 , 0 , 1000 , 0 , 200 )
+
+MAP_ZONE B04 = ( 0 , 0 , 0 , 0 , 300 , 0 , 0 , 0 , 1000 , 0 , 200 )
+
+MAP_ZONE B05 = ( 0 , 0 , 0 , 0 , 400 , 0 , 0 , 0 , 1000 , 0 , 200 )
+
+MAP_ZONE B06 = ( 0 , 0 , 0 , 0 , 200 , 0 , 0 , 0 , 1000 , 0 , 200 )
+
+MAP_ZONE B07 = ( 0 , 0 , 0 , 0 , 300 , 0 , 0 , 0 , 1000 , 0 , 200 )
+
+MAP_ZONE B08 = ( 0 , 0 , 0 , 0 , 400 , 0 , 0 , 0 , 1000 , 0 , 200 )
+
+MAP_ZONE B09 = ( 400 , 100 , 100 , 500 , 600 , 0 , 0 , 0 , 0 , 1000 , 0 )
+
+MAP_ZONE B10 = ( 400 , 100 , 100 , 500 , 600 , 0 , 0 , 0 , 0 , 1000 , 0 )
+
+MAP_ZONE B11 = ( 300 , 100 , 500 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 100 )
+
+MAP_ZONE B12 = ( 300 , 300 , 300 , 0 , 100 , 0 , 0 , 0 , 1000 , 0 , 100 )
+
+MAP_ZONE B13 = ( 300 , 300 , 300 , 0 , 100 , 0 , 0 , 0 , 1000 , 0 , 100 )
+
+MAP_ZONE B14 = ( 300 , 300 , 300 , 0 , 100 , 0 , 0 , 0 , 1000 , 0 , 100 )
+ 
+MAP_ZONE B15 = ( 300 , 100 , 500 , 0 , 50 , 0 , 0 , 0 , 800 , 0 , 100 )
+
+MAP_ZONE B16 = ( 300 , 100 , 500 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 100 )
+
+#ifdef PC
+MAP_ZONE B17 = ( 200 , 0 , 0 , 0 , 300 , 200 , 200 , 10 , 590 , 0 , 900 )
+#endif
+
+MAP_ZONE B18 = ( 300 , 100 , 500 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 100 )
+
+MAP_ZONE B19 = ( 0 , 0 , 0 , 0 , 200 , 0 , 0 , 0 , 1000 , 0 , 0 )
+
+MAP_ZONE k_h_1_zone = ( 300 , 500 , 100 , 0 , 50 , 0 , 0 , 0 , 800 , 0 , 100 )
+
+MAP_ZONE z_m_1_zone = ( 300 , 300 , 300 , 0 , 200 , 0 , 0 , 0 , 800 , 0 , 100 )
+
+MAP_ZONE r_m_3_zone = ( 0 , 0 , 0 , 0 , 400 , 0 , 0 , 0 , 1000 , 0 , 0 )
+
+
+// will be changed...
+
+
+MAP_ZONE m01 = ( 400 , 400 , 100 , 100 , 600 , 10 , 10 , 10 , 100 , 10 , 100 )
+MAP_ZONE m02 = ( 400 , 200 , 300 , 100 , 600 , 10 , 10 , 10 , 100 , 10 , 100 )
+MAP_ZONE m03 = ( 400 , 100 , 400 , 100 , 600 , 10 , 10 , 10 , 100 , 10 , 100 )
+MAP_ZONE m04 = ( 400 , 100 , 300 , 100 , 600 , 10 , 10 , 10 , 100 , 10 , 100 )
+
+MAP_ZONE m05 = ( 0 , 0 , 0 , 0 , 400 , 0 , 0 , 0 , 1000 , 0 , 200 )
+MAP_ZONE m06 = ( 400 , 200 , 300 , 100 , 600 , 10 , 10 , 10 , 100 , 10 , 100 )
+MAP_ZONE m07 = ( 400 , 200 , 300 , 100 , 600 , 10 , 10 , 10 , 100 , 10 , 100 )
+MAP_ZONE m08 = ( 400 , 200 , 300 , 100 , 600 , 10 , 10 , 10 , 100 , 10 , 100 )
+
+MAP_ZONE m09 = ( 400 , 300 , 200 , 100 , 600 , 10 , 10 , 10 , 100 , 10 , 100 )
+MAP_ZONE m10 = ( 400 , 300 , 200 , 100 , 600 , 10 , 10 , 10 , 100 , 10 , 100 )
+MAP_ZONE m11 = ( 400 , 300 , 200 , 100 , 600 , 10 , 10 , 10 , 100 , 10 , 100 )
+MAP_ZONE m12 = ( 400 , 300 , 200 , 100 , 600 , 10 , 10 , 10 , 100 , 10 , 100 )
+
+MAP_ZONE m13 = ( 600 , 300 , 200 , 200 , 600 , 10 , 10 , 10 , 0 , 100 , 0 )
+MAP_ZONE m14 = ( 600 , 300 , 200 , 200 , 600 , 10 , 10 , 10 , 0 , 100 , 0 )
+MAP_ZONE m15 = ( 600 , 300 , 200 , 200 , 600 , 10 , 10 , 10 , 0 , 100 , 0 )
+
+
+MAP_ZONE cityinfo = ( 600 , 300 , 200 , 200 , 600 , 10 , 10 , 10 , 0 , 100 , 0 )
+
+
+// gang information, colours weapons, information phone co-ords
+
+SET_GANG_INFO ( krisgang , 9 , pistol , molotov , flame_thrower , 6 , 234.5 , 193.5 , 2.0 , 1 , krsnabus , -1 )
+
+SET_GANG_INFO ( zaibgang , 8 , pistol , silenced_machine_gun , rocket_launcher , 3 , 64.0 , 189.5 , 2.0 , 1 , vtype , 2 )
+
+SET_GANG_INFO ( russgang , 10 , pistol , shotgun , machine_gun , 7 , 202.5 , 34.5 , 2.0 , 1 , buick , 28 ) 
+
+#ifdef PC
+
+SET_GANG_INFO ( islagang , 6 , pistol , shotgun , machine_gun , 0 , 0.0 , 0.0 , 0.0 , 0 , graham , 30 ) 
+
+#endif 
+
+							
+// gang phones
+
+OBJ_DATA ph_kris_easy_phone1 = ( 249.5 , 199.5 , 5.0 ) 180 green_phone
+
+OBJ_DATA ph_kris_easy_phone2 = ( 249.5 , 201.5 , 5.0 ) 180 green_phone
+
+OBJ_DATA ph_kris_med_phone1 = ( 233.5 , 132.5 , 3.0 ) 90 yellow_phone
+
+OBJ_DATA ph_kris_med_phone2 = ( 235.5 , 132.5 , 3.0 ) 90 yellow_phone
+
+OBJ_DATA ph_kris_hard_phone = ( 216.5 , 219.5 , 4.0 ) 0 red_phone
+
+OBJ_DATA ph_russ_easy_phone1 = ( 187.5 , 76.5 , 6.0 ) 0 green_phone
+
+OBJ_DATA ph_russ_easy_phone2 = ( 189.5 , 76.5 , 6.0 ) 180 green_phone
+
+OBJ_DATA ph_russ_med_phone1 = ( 204.5 , 10.5 , 5.0 ) 270 yellow_phone
+
+OBJ_DATA ph_russ_med_phone2 = ( 204.5 , 13.5 , 5.0 ) 90 yellow_phone
+
+OBJ_DATA ph_russ_hard_phone = ( 144.5 , 33.5 , 6.0 ) 180 red_phone
+
+OBJ_DATA ph_zaib_easy_phone1 = ( 44.5 , 163.5 , 3.0 ) 270 green_phone
+
+OBJ_DATA ph_zaib_easy_phone2 = ( 45.5 , 161.5 , 3.0 ) 90 green_phone
+
+OBJ_DATA ph_zaib_med_phone1 = ( 6.5 , 183.5 , 4.0 ) 180 yellow_phone
+
+OBJ_DATA ph_zaib_med_phone2 = ( 9.5 , 183.5 , 4.0 ) 0 yellow_phone
+
+OBJ_DATA ph_zaib_hard_phone = ( 27.0 , 249.0 , 4.0 ) 270 red_phone
+
+
+OBJ_DATA ph_zaib_info_phone = ( 64.0 , 189.5 , 2.0 ) 270 phone
+
+OBJ_DATA ph_russ_info_phone = ( 202.5 , 34.5 , 2.0 ) 90 phone
+
+OBJ_DATA ph_kris_info_phone = ( 234.5 , 193.5 , 2.0 ) 270 phone
+
+
+
+
+// mission failed flags
+
+SAVED_COUNTER flag_failed_kris_easy_phone1_m1 = 0
+
+SAVED_COUNTER flag_failed_kris_easy_phone2_m1 = 0
+
+SAVED_COUNTER flag_failed_kris_med_phone1_m1 = 0
+
+SAVED_COUNTER flag_failed_kris_med_phone2_m1 = 0
+
+SAVED_COUNTER flag_failed_kris_hard_phone_m1 = 0
+
+SAVED_COUNTER flag_failed_russ_easy_phone1_m1 = 0
+
+SAVED_COUNTER flag_failed_russ_easy_phone2_m1 = 0
+
+SAVED_COUNTER flag_failed_russ_med_phone1_m1 = 0
+
+SAVED_COUNTER flag_failed_russ_med_phone2_m1 = 0
+
+SAVED_COUNTER flag_failed_russ_hard_phone_m1 = 0
+
+SAVED_COUNTER flag_failed_zaib_easy_phone1_m1 = 0
+
+SAVED_COUNTER flag_failed_zaib_easy_phone2_m1 = 0
+
+SAVED_COUNTER flag_failed_zaib_med_phone1_m1 = 0
+
+SAVED_COUNTER flag_failed_zaib_med_phone2_m1 = 0
+
+SAVED_COUNTER flag_failed_zaib_hard_phone_m1 = 0
+
+SAVED_COUNTER flag_failed_kris_med_phone1_2_m3 = 0
+
+SAVED_COUNTER flag_failed_kris_hard_phone_m2 = 0
+
+SAVED_COUNTER flag_failed_russ_med_phone1_2_m3 = 0
+
+SAVED_COUNTER flag_failed_russ_hard_phone_m2 = 0
+
+SAVED_COUNTER flag_failed_zaib_med_phone1_2_m3 = 0
+
+SAVED_COUNTER flag_failed_zaib_hard_phone_m2 = 0
+
+
+
+SAVED_COUNTER flag_failed_kris_easy_phone1_m1a = 0
+
+SAVED_COUNTER flag_failed_kris_easy_phone2_m1a = 0
+
+SAVED_COUNTER flag_failed_kris_med_phone1_m1a = 0
+
+SAVED_COUNTER flag_failed_kris_med_phone2_m1a = 0
+
+SAVED_COUNTER flag_failed_kris_hard_phone_m1a = 0
+
+SAVED_COUNTER flag_failed_russ_easy_phone1_m1a = 0
+
+SAVED_COUNTER flag_failed_russ_easy_phone2_m1a = 0
+
+SAVED_COUNTER flag_failed_russ_med_phone1_m1a = 0
+
+SAVED_COUNTER flag_failed_russ_med_phone2_m1a = 0
+
+SAVED_COUNTER flag_failed_russ_hard_phone_m1a = 0
+
+SAVED_COUNTER flag_failed_zaib_easy_phone1_m1a = 0
+
+SAVED_COUNTER flag_failed_zaib_easy_phone2_m1a = 0
+
+SAVED_COUNTER flag_failed_zaib_med_phone1_m1a = 0
+
+SAVED_COUNTER flag_failed_zaib_med_phone2_m1a = 0
+
+SAVED_COUNTER flag_failed_zaib_hard_phone_m1a = 0
+
+SAVED_COUNTER flag_failed_kris_med_phone1_2_m3a = 0
+
+SAVED_COUNTER flag_failed_kris_hard_phone_m2a = 0
+
+SAVED_COUNTER flag_failed_russ_med_phone1_2_m3a = 0
+
+SAVED_COUNTER flag_failed_russ_hard_phone_m2a = 0
+
+SAVED_COUNTER flag_failed_zaib_med_phone1_2_m3a = 0
+
+SAVED_COUNTER flag_failed_zaib_hard_phone_m2a = 0
+
+
+
+
+// mission passed flags
+
+SAVED_COUNTER flag_passed_kris_easy_phone1_m1 = 0
+
+SAVED_COUNTER flag_passed_kris_easy_phone2_m1 = 0
+
+SAVED_COUNTER flag_passed_kris_med_phone1_m1 = 0
+
+SAVED_COUNTER flag_passed_kris_med_phone2_m1 = 0
+
+SAVED_COUNTER flag_passed_kris_hard_phone_m1 = 0
+
+SAVED_COUNTER flag_passed_russ_easy_phone1_m1 = 0
+
+SAVED_COUNTER flag_passed_russ_easy_phone2_m1 = 0
+
+SAVED_COUNTER flag_passed_russ_med_phone1_m1 = 0
+
+SAVED_COUNTER flag_passed_russ_med_phone2_m1 = 0
+
+SAVED_COUNTER flag_passed_russ_hard_phone_m1 = 0
+
+SAVED_COUNTER flag_passed_zaib_easy_phone1_m1 = 0
+
+SAVED_COUNTER flag_passed_zaib_easy_phone2_m1 = 0
+
+SAVED_COUNTER flag_passed_zaib_med_phone1_m1 = 0
+
+SAVED_COUNTER flag_passed_zaib_med_phone2_m1 = 0
+
+SAVED_COUNTER flag_passed_zaib_hard_phone_m1 = 0
+
+SAVED_COUNTER flag_passed_kris_med_phone1_2_m3 = 0
+
+SAVED_COUNTER flag_passed_kris_hard_phone_m2 = 0
+
+SAVED_COUNTER flag_passed_russ_med_phone1_2_m3 = 0
+
+SAVED_COUNTER flag_passed_russ_hard_phone_m2 = 0
+
+SAVED_COUNTER flag_passed_zaib_med_phone1_2_m3 = 0
+
+SAVED_COUNTER flag_passed_zaib_hard_phone_m2 = 0
+
+
+
+// mission played flags	  
+
+SAVED_COUNTER flag_played_kris_med_phone1_2_m3 = 0
+
+SAVED_COUNTER flag_played_kris_hard_phone_m2 = 0
+
+SAVED_COUNTER flag_played_russ_med_phone1_2_m3 = 0
+
+SAVED_COUNTER flag_played_russ_hard_phone_m2 = 0
+
+SAVED_COUNTER flag_played_zaib_med_phone1_2_m3 = 0
+
+SAVED_COUNTER flag_played_zaib_hard_phone_m2 = 0
+
+SAVED_COUNTER flag_failed_final_mission = 0
+
+
+
+SAVED_COUNTER flag_played_kris_med_phone1_2_m3a = 0
+
+SAVED_COUNTER flag_played_kris_hard_phone_m2a = 0
+
+SAVED_COUNTER flag_played_russ_med_phone1_2_m3a = 0
+
+SAVED_COUNTER flag_played_russ_hard_phone_m2a = 0
+
+SAVED_COUNTER flag_played_zaib_med_phone1_2_m3a = 0
+
+SAVED_COUNTER flag_played_zaib_hard_phone_m2a = 0
+
+SAVED_COUNTER flag_failed_final_missiona = 0
+
+
+// on mission flags
+
+SAVED_COUNTER flag_on_mission = 0 
+
+DECLARE_MISSION_FLAG ( shaft , flag_on_mission )
+
+SAVED_COUNTER flag_on_kris_mission = 0
+
+SAVED_COUNTER flag_on_russ_mission = 0
+
+SAVED_COUNTER flag_on_zaib_mission = 0
+
+SAVED_COUNTER flag_kris_missions_passed = 0
+
+SAVED_COUNTER flag_zaib_missions_passed = 0
+
+SAVED_COUNTER flag_russ_missions_passed = 0
+
+SAVED_COUNTER flag_kris_missions_failed = 0
+
+SAVED_COUNTER flag_zaib_missions_failed = 0
+
+SAVED_COUNTER flag_russ_missions_failed = 0
+
+SAVED_COUNTER flag_all_missions_passed = 0
+
+SAVED_COUNTER flag_all_missions_failed = 0
+
+SAVED_COUNTER flag_secrets_passed = 0
+
+SAVED_COUNTER flag_secrets_failed = 0
+
+SAVED_COUNTER flag_passed_final_mission = 0
+
+SAVED_COUNTER flag_game_been_saved = 0
+
+
+
+DECLARE_GANG_ONE_MISSIONS_PASSED_FLAG ( flag_kris_missions_passed ) 
+
+DECLARE_GANG_TWO_MISSIONS_PASSED_FLAG ( flag_zaib_missions_passed ) 
+
+DECLARE_GANG_THREE_MISSIONS_PASSED_FLAG ( flag_russ_missions_passed ) 
+
+//DECLARE_GANG_ONE_MISSIONS_FAILED_FLAG ( flag_kris_missions_failed )
+
+//DECLARE_GANG_TWO_MISSIONS_FAILED_FLAG ( flag_zaib_missions_failed )
+
+//DECLARE_GANG_THREE_MISSIONS_FAILED_FLAG ( flag_russ_missions_failed )
+
+DECLARE_MISSIONS_PASSED_FLAG ( flag_all_missions_passed ) 
+
+//DECLARE_MISSIONS_FAILED_FLAG ( flag_all_missions_failed )
+
+DECLARE_FINISH_SCORE ( 5000000 )
+
+DECLARE_TOTAL_MISSIONS ( 22 ) 
+
+DECLARE_TOTAL_SECRETS ( 20 )
+
+DECLARE_GANG_ONE_MISSIONS_TOTAL ( 7 ) 
+
+DECLARE_GANG_TWO_MISSIONS_TOTAL ( 7 ) 
+
+DECLARE_GANG_THREE_MISSIONS_TOTAL ( 7 ) 
+
+DECLARE_SECRETS_PASSED_FLAG ( flag_secrets_passed )
+
+DECLARE_SECRETS_FAILED_FLAG ( flag_secrets_failed )
+
+
+DECLARE_GANG_ONE_MISSION_FLAG ( shaft , flag_on_kris_mission )
+
+DECLARE_GANG_TWO_MISSION_FLAG ( shaft , flag_on_zaib_mission )
+
+DECLARE_GANG_THREE_MISSION_FLAG ( shaft , flag_on_russ_mission )
+
+
+DECLARE_GANG_ONE_DEATH_BASE_BRIEF ( shaft , 4200 )
+
+DECLARE_GANG_TWO_DEATH_BASE_BRIEF ( shaft , 4210 )
+
+DECLARE_GANG_THREE_DEATH_BASE_BRIEF ( shaft , 4220 )
+
+
+
+// all missions passed flag
+
+
+SAVED_COUNTER counter_all_missions_passed = 0
+
+SAVED_COUNTER true = 1 
+
+SAVED_COUNTER false = 0 
+
+COUNTER flag_reached_finish_score = 0
+
+
+
+// if no missions are left the phones are turned off
+
+SAVED_COUNTER kris_easy_phones_killed
+
+SAVED_COUNTER kris_med_phones_killed
+
+SAVED_COUNTER kris_hard_phones_killed
+
+SAVED_COUNTER zaib_easy_phones_killed
+
+SAVED_COUNTER zaib_med_phones_killed
+
+SAVED_COUNTER zaib_hard_phones_killed
+
+SAVED_COUNTER russ_easy_phones_killed
+
+SAVED_COUNTER russ_med_phones_killed
+
+SAVED_COUNTER russ_hard_phones_killed
+
+
+
+// awaits player to answer phone, then checks respect
+
+FORWARD ans_kris_easy_phone1_m1:
+
+FORWARD ans_kris_easy_phone2_m1:
+
+FORWARD ans_kris_med_phone1_m1:
+
+FORWARD ans_kris_med_phone2_m1:
+
+FORWARD ans_kris_hard_phone_m1:
+
+FORWARD ans_zaib_easy_phone1_m1:
+
+FORWARD ans_zaib_easy_phone2_m1:
+
+FORWARD ans_zaib_med_phone1_m1:
+
+FORWARD ans_zaib_med_phone2_m1:
+
+FORWARD ans_zaib_hard_phone_m1:
+
+FORWARD ans_russ_easy_phone1_m1:
+
+FORWARD ans_russ_easy_phone2_m1:
+
+FORWARD ans_russ_med_phone1_m1:
+
+FORWARD ans_russ_med_phone2_m1:
+
+FORWARD ans_russ_hard_phone_m1:
+
+FORWARD savepoint_1:
+
+FORWARD ans_zaib_info_phone:
+
+FORWARD ans_russ_info_phone:
+
+FORWARD ans_kris_info_phone:
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX CONVEYORS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+#ifdef PC
+
+CONVEYOR conveyor_russ_factory_1 = ( 167.5 , 39.5 , 3.0 ) ( 5.0 , 1.0 ) 1 0
+CONVEYOR conveyor_kris_factory_1 = ( 236.0 , 126.5 , 3.0 ) ( 8.0 , 1.0 ) 1 0
+CONVEYOR conveyor_kris_factory_2 = ( 235.0 , 145.5 , 3.0 ) ( 8.0 , 1.0 ) -1 0
+CONVEYOR conveyor_russ_coal_mine_1 = ( 239.0 , 56.5 , 3.0 ) ( 8.0 , 1.0 ) 1 0
+
+CONVEYOR conveyor_zaib_crusher_crane_in_1 = ( 16.5 , 153.5 , 3.0 ) ( 1.0 , 13.0 ) 0 1
+CONVEYOR conveyor_zaib_crusher_crane_out_1 = ( 11.5 , 157.5 , 3.0 ) ( 1.0 , 6.0 ) 0 -1
+CONVEYOR conveyor_russ_crusher_crane_in_1 = ( 166.5 , 26.0 , 3.0 ) ( 1.0 , 8.0 ) 0 1
+CONVEYOR conveyor_russ_crusher_crane_out_1 = ( 160.5 , 26.0 , 3.0 ) ( 1.0 , 6.0 ) 0 -1
+CONVEYOR conveyor_kris_crusher_crane_in_1 = ( 181.0 , 242.5 , 4.0 ) ( 8.0 , 1.0 ) 1 0
+CONVEYOR conveyor_kris_crusher_crane_out_1 = ( 185.5 , 246.0 , 4.0 ) ( 1.0 , 6.0 ) 0 1
+
+#endif
+
+CONVEYOR conveyor_russ_mincer_1 = ( 188.5 , 24.0 , 3.0 ) ( 5.0 , 2.0 ) 1 0
+CONVEYOR conveyor_kris_gun_factory_1 = ( 135.5 , 230.5 , 3.0 ) ( 1.0 , 7.0 ) 0 1
+
+#ifdef PSX
+
+CONVEYOR conveyor_neutral_crusher_crane_in_1 = ( 153.0 , 108.5 , 3.0 ) ( 8.0 , 1.0 ) 1 0
+CONVEYOR conveyor_neutral_crusher_crane_out_1 = ( 157.5 , 112.5 , 3.0 ) ( 1.0 , 6.0 ) 0 1
+
+#endif
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX vRATORS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+#ifdef PC
+
+GENERATOR generator_zaib_crusher_crane_powerup = ( 11.5 , 158.5 , 3.0 ) 0 bin 80 80
+
+GENERATOR generator_russ_crusher_crane_powerup = ( 160.5 , 27.5 , 3.0 ) 0 bin 80 80
+
+GENERATOR generator_kris_crusher_crane_powerup = ( 185.5 , 244.5 , 4.0 ) 0 bin 80 80
+
+#endif
+
+
+#ifdef PSX
+
+GENERATOR generator_neutral_crusher_crane_powerup = ( 157.5 , 110.5 , 3.0 ) 0 bin 80 80
+
+#endif
+
+
+//DECLARE_POWERUP_CARLIST ( model  1  ,  model 2  , model 3  , model 4  , model 5  , model 6  ,  model  7  ,  model 8  , model 9  , model 10 , model 11 ,  model 12 , model 13  , model 14 , model 15 , model 16 , model 17 , model 18  )
+
+GENERATOR generator_kris_easy_machine_gun_powerup = ( 251.5 , 200.5 , 5.0 ) 0 collect_10 1800 1800 15
+
+GENERATOR generator_kris_easy_armour_powerup = ( 248.0 , 197.0 , 4.0 ) 0 collect_31 1800 1800
+
+GENERATOR generator_kris_easy_health_powerup = ( 245.5 , 202.5 , 5.0 ) 0 collect_30 1800 1800
+
+GENERATOR generator_kris_med_machine_gun_powerup = ( 234.5 , 134.5 , 3.0 ) 0 collect_04 1800 1800 15
+
+GENERATOR generator_kris_med_armour_powerup = ( 234.0 , 140.0 , 3.0 ) 0 collect_31 1800 1800
+
+GENERATOR generator_kris_med_health_powerup = ( 231.5 , 128.5 , 3.0 ) 0 collect_30 1800 1800
+
+GENERATOR generator_kris_hard_machine_gun_powerup = ( 210.5 , 214.5 , 5.0 ) 0 collect_08 1800 1800 20
+
+GENERATOR generator_kris_hard_armour_powerup = ( 210.5 , 225.5 , 5.0 ) 0 collect_31 1800 1800
+
+GENERATOR generator_kris_hard_health_powerup = ( 214.5 , 229.5 , 5.0 ) 0 collect_30 1800 1800
+
+
+GENERATOR generator_zaib_easy_machine_gun_powerup = ( 43.5 , 161.5 , 4.0 ) 0 collect_10 1800 1800 15
+
+GENERATOR generator_zaib_easy_armour_powerup = ( 43.5 , 163.5 , 4.0 ) 0 collect_31 1800 1800
+
+GENERATOR generator_zaib_easy_health_powerup = ( 41.5 , 164.5 , 4.0 ) 0 collect_30 1800 1800
+
+GENERATOR generator_zaib_med_machine_gun_powerup = ( 8.0 , 183.5 , 4.0 ) 0 collect_09 1800 1800 15
+
+GENERATOR generator_zaib_med_armour_powerup = ( 8.5 , 179.5 , 4.0 ) 0 collect_31 1800 1800
+
+GENERATOR generator_zaib_med_health_powerup = ( 15.5 , 184.5 , 4.0 ) 0 collect_30 1800 1800
+
+GENERATOR generator_zaib_hard_machine_gun_powerup = ( 27.0 , 247.0 , 4.0 ) 0 collect_02 1800 1800 15
+
+GENERATOR generator_zaib_hard_armour_powerup = ( 13.0 , 250.5 , 4.0 ) 0 collect_31 1800 1800
+
+GENERATOR generator_zaib_hard_health_powerup = ( 41.0 , 250.5 , 4.0 ) 0 collect_30 1800 1800
+
+
+GENERATOR generator_russ_easy_machine_gun_powerup = ( 188.5 , 77.5 , 6.0 ) 0 collect_10 1800 1800 15
+
+GENERATOR generator_russ_easy_armour_powerup = ( 187.5 , 66.5 , 2.0 ) 0 collect_31 1800 1800
+
+GENERATOR generator_russ_easy_health_powerup = ( 198.5 , 75.5 , 2.0 ) 0 collect_30 1800 1800
+
+GENERATOR generator_russ_med_machine_gun_powerup = ( 203.5 , 9.5 , 5.0 ) 0 collect_06 1800 1800 15
+
+GENERATOR generator_russ_med_armour_powerup = ( 205.5 , 4.5 , 6.0 ) 0 collect_31 1800 1800
+
+GENERATOR generator_russ_med_health_powerup = ( 210.5 , 7.5 , 5.0 ) 0 collect_30 1800 1800
+
+GENERATOR generator_russ_hard_machine_gun_powerup = ( 146.0 , 33.5 , 6.0 ) 0 collect_01 1800 1800 15
+
+GENERATOR generator_russ_hard_armour_powerup = ( 145.5 , 38.5 , 5.0 ) 0 collect_31 1800 1800
+
+GENERATOR generator_russ_hard_health_powerup = ( 143.5 , 28.5 , 5.0 ) 0 collect_30 1800 1800
+
+ 
+GENERATOR generator_russ_hospital_machine_gun_powerup = ( 198.0 , 45.5 , 2.0 ) 0 collect_01 1800 1800 15
+
+GENERATOR generator_kris_hospital_machine_gun_powerup = ( 166.0 , 219.5 , 2.0 ) 0 collect_01 1800 1800 15
+
+GENERATOR generator_zaib_hospital_machine_gun_powerup = ( 41.5 , 193.0 , 2.0 ) 0 collect_01 1800 1800 15
+
+GENERATOR generator_neutral_hospital_machine_gun_powerup = ( 129.5 , 122.0 , 2.0 ) 0 collect_01 1800 1800 15
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX DESTRUCTORS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+#ifdef PC
+
+DESTRUCTOR destructor_russ_factory_1 = ( 169.8 , 39.5 , 3.0 )  ( 0.6 , 1.0 )
+DESTRUCTOR destructor_kris_factory_1 = ( 239.8 , 126.5 , 3.0 )  ( 0.6 , 1.0 )
+DESTRUCTOR destructor_kris_factory_2 = ( 231.2 , 145.5 , 3.0 )  ( 0.6 , 1.0 )
+DESTRUCTOR destructor_kris_gun_factory_1 = ( 135.5 , 233.8 , 3.0 )  ( 1.0 , 0.6 )
+DESTRUCTOR destructor_russ_coal_mine_1 = ( 242.0 , 56.5 , 3.0 )  ( 0.6 , 1.0 )
+
+DESTRUCTOR destructor_zaib_crusher_crane_1_in = ( 16.5 , 158.8 , 3.0 )  ( 1.0 , 0.6 )
+DESTRUCTOR destructor_zaib_crusher_crane_1_out = ( 11.5 , 154.2 , 3.0 )  ( 1.0 , 0.6 )
+DESTRUCTOR destructor_russ_crusher_crane_1_in = ( 166.5 , 28.8 , 3.0 )  ( 1.0 , 0.6 )
+DESTRUCTOR destructor_russ_crusher_crane_1_out = ( 160.5 , 23.2 , 3.0 )  ( 1.0 , 0.6 )
+DESTRUCTOR destructor_kris_crusher_crane_1_in = ( 183.8 , 242.5 , 4.0 )  ( 0.6 , 1.0 )
+DESTRUCTOR destructor_kris_crusher_crane_1_out = ( 185.5 , 248.8 , 4.0 )  ( 1.0 , 0.6 )
+
+#endif
+
+DESTRUCTOR destructor_russ_mincer_1 = ( 190.0 , 24.0 , 3.0 )  ( 1.0 , 2.0 )
+
+#ifdef PSX
+
+DESTRUCTOR destructor_neutral_crusher_crane_1_in = ( 155.8 , 108.5 , 3.0 )  ( 0.6 , 1.0 )
+DESTRUCTOR destructor_neutral_crusher_crane_1_out = ( 157.5 , 114.8 , 3.0 )  ( 1.0 , 0.6 )
+
+#endif
+
+				   
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX CRANES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+#ifdef PC
+
+CRANE_DATA crusher_zaib_crane_1 = ( 10.5 , 149.5 ) 200 NO_HOMECRANE FIRST ( 12.5 , 151.5 ) 180
+CRANE_DATA crusher_zaib_crane_2 = ( 14.5 , 153.5 ) 135 crusher_zaib_crane_1 SECOND ( 16.5 , 151.5 ) 180
+
+CRANE_DATA crusher_russ_crane_1 = ( 173.5 , 27.5 ) 170 NO_HOMECRANE FIRST ( 171.5 , 25.5 ) 180
+CRANE_DATA crusher_russ_crane_2 = ( 169.5 , 23.5 ) 320 crusher_russ_crane_1 SECOND ( 166.5 , 23.5 ) 180
+
+CRANE_DATA crusher_kris_crane_1 = ( 176.5 , 249.5 ) 200 NO_HOMECRANE FIRST ( 178.5 , 247.5 ) 180
+CRANE_DATA crusher_kris_crane_2 = ( 180.5 , 245.5 ) 180 crusher_kris_crane_1 SECOND ( 180.5 , 242.5 ) 270
+
+#endif
+
+
+#ifdef PSX
+
+CRANE_DATA crusher_neutral_crane_1 = ( 148.5 , 115.5 ) 200 NO_HOMECRANE FIRST ( 150.5 , 113.5 ) 180
+CRANE_DATA crusher_neutral_crane_2 = ( 152.5 , 111.5 ) 180 crusher_neutral_crane_1 SECOND ( 152.5 , 108.5 ) 270
+
+#endif
+
+
+CRANE_DATA kris_crane_easy_mission_2 = ( 135.5 , 5.5 ) 290 NO_HOMECRANE FIRST ( 135.5 , 8.5 ) 180
+
+CRANE_DATA zaib_crane_easy_mission_2 = ( 13.5 , 211.5 ) 105 NO_HOMECRANE 
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX CRUSHERS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+#ifdef PC
+
+CRUSHER crusher_zaib_1 = ( 12.5 , 151.5 )
+CRUSHER crusher_russ_1 = ( 171.5 , 25.5 )
+CRUSHER crusher_kris_1 = ( 178.5 , 247.5 )
+
+#endif
+
+
+#ifdef PSX
+
+CRUSHER crusher_neutral_1 = ( 150.5 , 113.5 )
+
+#endif
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX MACHINE GUN SHOPS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+OBJ_DATA machinegunshop_1 = ( 173.5 , 14.5 , 2.0 ) 0 car_shop machinegun_shop  
+
+OBJ_DATA machinegunshop_2 = ( 238.5 , 154.5 , 2.0 ) 0 car_shop machinegun_shop  
+
+OBJ_DATA machinegunshop_3 = ( 34.5 , 216.5 , 2.0 ) 0 car_shop machinegun_shop  
+
+OBJ_DATA machinegunshop_4 = ( 68.5 , 90.5 , 2.0 ) 0 car_shop machinegun_shop  
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX MINE SHOPS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+OBJ_DATA minesshop_1 = ( 175.5 , 14.5 , 2.0 ) 0 car_shop mines_shop  
+
+OBJ_DATA minesshop_2 = ( 236.5 , 154.5 , 2.0 ) 0 car_shop mines_shop  
+
+OBJ_DATA minesshop_3 = ( 32.5 , 216.5 , 2.0 ) 0 car_shop mines_shop  
+
+OBJ_DATA minesshop_4 = ( 66.5 , 90.5 , 2.0 ) 0 car_shop mines_shop  
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX SPRAY SHOPS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+OBJ_DATA sprayshop_1 = ( 177.5 , 14.5 , 2.0 ) 0 car_shop 28 
+
+OBJ_DATA sprayshop_2 = ( 234.5 , 154.5 , 2.0 ) 0 car_shop 24 
+
+OBJ_DATA sprayshop_3 = ( 30.5 , 216.5 , 2.0 ) 0 car_shop 2 
+
+OBJ_DATA sprayshop_4 = ( 64.5 , 90.5 , 2.0 ) 0 car_shop 0 
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX OIL SLICK SHOPS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+OBJ_DATA oilslickshop_1 = ( 179.5 , 14.5 , 2.0 ) 0 car_shop oilslick_shop  
+
+OBJ_DATA oilslickshop_2 = ( 232.5 , 154.5 , 2.0 ) 0 car_shop oilslick_shop  
+
+OBJ_DATA oilslickshop_3 = ( 28.5 , 216.5 , 2.0 ) 0 car_shop oilslick_shop  
+
+OBJ_DATA oilslickshop_4 = ( 62.5 , 90.5 , 2.0 ) 0 car_shop oilslick_shop  
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX BOMB SHOPS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+OBJ_DATA bombshop_1 = ( 181.5 , 14.5 , 2.0 ) 0 car_shop bomb_shop  
+
+OBJ_DATA bombshop_2 = ( 230.5 , 154.5 , 2.0 ) 0 car_shop bomb_shop  
+
+OBJ_DATA bombshop_3 = ( 26.5 , 216.5 , 2.0 ) 0 car_shop bomb_shop  
+
+OBJ_DATA bombshop_4 = ( 60.5 , 90.5 , 2.0 ) 0 car_shop bomb_shop  
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX WEAPONS POWERUPS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+OBJ_DATA powerup_1 = ( 3.0 , 18.0 , 3.0 ) 0 COLLECT_31 1 
+OBJ_DATA powerup_2 = ( 23.0 , 15.5 , 3.0 ) 0 COLLECT_34 1 
+OBJ_DATA powerup_3 = ( 53.5 , 4.0 , 3.0 ) 0 COLLECT_03 20 
+OBJ_DATA powerup_4 = ( 55.5 , 30.5 , 2.0 ) 0 COLLECT_33 1 
+OBJ_DATA powerup_5 = ( 66.0 , 3.0 , 2.0 ) 0 COLLECT_32 1 
+OBJ_DATA powerup_6 = ( 80.0 , 3.0 , 2.0 ) 0 COLLECT_34 1 
+OBJ_DATA powerup_7 = ( 102.5 , 5.5 , 2.0 ) 0 COLLECT_37 1 
+OBJ_DATA powerup_8 = ( 90.0 , 10.0 , 2.0 ) 0 COLLECT_03 20 
+OBJ_DATA powerup_9 = ( 114.5 , 10.0 , 2.0 ) 0 COLLECT_02 15 
+OBJ_DATA powerup_10 = ( 130.5 , 3.5 , 2.0 ) 0 COLLECT_06 15 
+OBJ_DATA powerup_11 = ( 145.5 , 9.5 , 2.0 ) 0 COLLECT_35 1 
+OBJ_DATA powerup_12 = ( 168.5 , 3.5 , 2.0 ) 0 COLLECT_08 20 
+OBJ_DATA powerup_13 = ( 174.5 , 3.5 , 2.0 ) 0 COLLECT_39 1 
+OBJ_DATA powerup_14 = ( 222.5 , 7.5 , 2.0 ) 0 COLLECT_05 15 
+OBJ_DATA powerup_15 = ( 235.5 , 9.5 , 4.0 ) 0 COLLECT_02 15 
+OBJ_DATA powerup_16 = ( 4.5 , 47.5 , 2.0 ) 0 COLLECT_09 15 
+OBJ_DATA powerup_17 = ( 9.5 , 88.5 , 2.0 ) 0 COLLECT_08 20 
+OBJ_DATA powerup_18 = ( 44.5 , 105.5 , 2.0 ) 0 COLLECT_01 15 
+OBJ_DATA powerup_19 = ( 13.5 , 73.5 , 2.0 ) 0 COLLECT_39 1 
+OBJ_DATA powerup_20 = ( 16.5 , 145.5 , 2.0 ) 0 COLLECT_32 1 
+OBJ_DATA powerup_21 = ( 16.5 , 162.5 , 2.0 ) 0 COLLECT_33 1 
+OBJ_DATA powerup_22 = ( 14.5 , 178.5 , 3.0 ) 0 COLLECT_03 20 
+OBJ_DATA powerup_23 = ( 11.5 , 217.5 , 2.0 ) 0 COLLECT_09 15 
+OBJ_DATA powerup_24 = ( 3.5 , 209.5 , 4.0 ) 0 COLLECT_34 1 
+OBJ_DATA powerup_25 = ( 48.0 , 217.5 , 2.0 ) 0 COLLECT_04 15 
+OBJ_DATA powerup_26 = ( 60.5 , 220.5 , 5.0 ) 0 COLLECT_30 1 
+OBJ_DATA powerup_27 = ( 70.0 , 217.0 , 2.0 ) 0 COLLECT_31 1 
+OBJ_DATA powerup_28 = ( 52.5 , 243.5 , 2.0 ) 0 COLLECT_36 1 
+OBJ_DATA powerup_29 = ( 68.5 , 253.5 , 2.0 ) 0 COLLECT_02 15 
+OBJ_DATA powerup_30 = ( 82.5 , 253.5 , 2.0 ) 0 COLLECT_35 1 
+OBJ_DATA powerup_31 = ( 112.5 , 252.5 , 2.0 ) 0 COLLECT_30 1 
+OBJ_DATA powerup_32 = ( 88.0 , 221.0 , 2.0 ) 0 COLLECT_04 15 
+OBJ_DATA powerup_33 = ( 96.0 , 221.0 , 2.0 ) 0 COLLECT_06 15 
+OBJ_DATA powerup_34 = ( 130.5 , 234.5 , 2.0 ) 0 COLLECT_08 20 
+OBJ_DATA powerup_35 = ( 145.5 , 225.5 , 5.0 ) 0 COLLECT_31 1 
+OBJ_DATA powerup_36 = ( 167.0 , 250.0 , 2.0 ) 0 COLLECT_37 1 
+OBJ_DATA powerup_37 = ( 241.0 , 242.5 , 4.0 ) 0 COLLECT_02 15 
+OBJ_DATA powerup_38 = ( 238.5 , 205.0 , 3.0 ) 0 COLLECT_05 15 
+OBJ_DATA powerup_39 = ( 242.5 , 167.0 , 2.0 ) 0 COLLECT_08 20 
+OBJ_DATA powerup_40 = ( 188.5 , 168.0 , 2.0 ) 0 COLLECT_04 15 
+OBJ_DATA powerup_41 = ( 189.1 , 196.7 , 3.0 ) 0 COLLECT_01 15 
+OBJ_DATA powerup_42 = ( 191.0 , 140.5 , 2.0 ) 0 COLLECT_06 15 
+OBJ_DATA powerup_43 = ( 227.0 , 43.5 , 5.0 ) 0 COLLECT_30 1 
+OBJ_DATA powerup_44 = ( 252.0 , 3.5 , 2.0 ) 0 COLLECT_32 1 
+OBJ_DATA powerup_45 = ( 190.5 , 46.5 , 2.0 ) 0 COLLECT_37 1 
+OBJ_DATA powerup_46 = ( 70.0 , 35.0 , 2.0 ) 0 COLLECT_09 15 
+OBJ_DATA powerup_47 = ( 57.0 , 61.5 , 4.0 ) 0 COLLECT_32 1 
+OBJ_DATA powerup_48 = ( 43.0 , 68.5 , 5.0 ) 0 COLLECT_30 1 
+OBJ_DATA powerup_49 = ( 75.5 , 153.5 , 5.0 ) 0 COLLECT_32 1 
+OBJ_DATA powerup_50 = ( 161.5 , 44.5 , 2.0 ) 0 COLLECT_09 15 
+OBJ_DATA powerup_51 = ( 119.0 , 29.0 , 2.0 ) 0 COLLECT_05 15 
+OBJ_DATA powerup_52 = ( 51.0 , 42.5 , 2.0 ) 0 COLLECT_35 1 
+OBJ_DATA powerup_53 = ( 49.5 , 35.5 , 2.0 ) 0 COLLECT_03 20 
+OBJ_DATA powerup_54 = ( 63.5 , 13.5 , 2.0 ) 0 COLLECT_02 15 
+OBJ_DATA powerup_55 = ( 59.5 , 113.5 , 5.0 ) 0 COLLECT_17 10 
+OBJ_DATA powerup_56 = ( 77.0 , 66.5 , 2.0 ) 0 COLLECT_39 1 
+OBJ_DATA powerup_57 = ( 73.5 , 84.5 , 2.0 ) 0 COLLECT_06 15 
+OBJ_DATA powerup_58 = ( 56.5 , 131.5 , 4.0 ) 0 COLLECT_34 1 
+OBJ_DATA powerup_59 = ( 71.5 , 128.5 , 4.0 ) 0 COLLECT_35 1 
+OBJ_DATA powerup_60 = ( 44.5 , 132.5 , 2.0 ) 0 COLLECT_16 10 
+OBJ_DATA powerup_61 = ( 45.5 , 143.5 , 2.0 ) 0 COLLECT_02 15 
+OBJ_DATA powerup_62 = ( 27.5 , 144.5 , 2.0 ) 0 COLLECT_08 20 
+OBJ_DATA powerup_63 = ( 63.0 , 145.0 , 2.0 ) 0 COLLECT_35 1 
+OBJ_DATA powerup_64 = ( 69.0 , 145.0 , 2.0 ) 0 COLLECT_36 1 
+OBJ_DATA powerup_65 = ( 78.5 , 145.0 , 2.0 ) 0 COLLECT_01 15 
+OBJ_DATA powerup_66 = ( 39.5 , 177.0 , 2.0 ) 0 COLLECT_16 10 
+OBJ_DATA powerup_67 = ( 7.5 , 170.5 , 2.0 ) 0 COLLECT_33 1 
+OBJ_DATA powerup_68 = ( 49.5 , 203.5 , 2.0 ) 0 COLLECT_03 20 
+OBJ_DATA powerup_69 = ( 64.0 , 202.5 , 3.0 ) 0 COLLECT_17 10 
+OBJ_DATA powerup_70 = ( 61.0 , 187.5 , 5.0 ) 0 COLLECT_04 15 
+OBJ_DATA powerup_71 = ( 67.0 , 187.5 , 5.0 ) 0 COLLECT_05 15 
+OBJ_DATA powerup_72 = ( 76.5 , 185.0 , 2.0 ) 0 COLLECT_02 15 
+OBJ_DATA powerup_73 = ( 76.5 , 189.0 , 2.0 ) 0 COLLECT_09 15 
+OBJ_DATA powerup_74 = ( 84.0 , 205.0 , 3.0 ) 0 COLLECT_16 10 
+OBJ_DATA powerup_75 = ( 110.5 , 173.5 , 3.0 ) 0 COLLECT_34 1 
+OBJ_DATA powerup_76 = ( 96.5 , 165.5 , 3.0 ) 0 COLLECT_31 1 
+OBJ_DATA powerup_77 = ( 96.5 , 159.5 , 3.0 ) 0 COLLECT_30 1 
+OBJ_DATA powerup_78 = ( 28.5 , 47.5 , 3.0 ) 0 COLLECT_32 1 
+OBJ_DATA powerup_79 = ( 18.5 , 42.5 , 6.0 ) 0 COLLECT_04 15 
+OBJ_DATA powerup_80 = ( 39.5 , 177.0 , 3.0 ) 0 COLLECT_17 10 
+OBJ_DATA powerup_81 = ( 28.0 , 171.5 , 2.0 ) 0 COLLECT_06 15 
+OBJ_DATA powerup_82 = ( 66.5 , 175.5 , 2.0 ) 0 COLLECT_01 15 
+OBJ_DATA powerup_83 = ( 62.5 , 178.5 , 2.0 ) 0 COLLECT_35 1 
+OBJ_DATA powerup_84 = ( 89.5 , 184.5 , 6.0 ) 0 COLLECT_03 20
+OBJ_DATA powerup_85 = ( 107.0 , 183.5 , 2.0 ) 0 COLLECT_08 20 
+OBJ_DATA powerup_86 = ( 133.0 , 203.5 , 2.0 ) 0 COLLECT_37 1 
+OBJ_DATA powerup_87 = ( 148.0 , 205.0 , 2.0 ) 0 COLLECT_02 15 
+OBJ_DATA powerup_88 = ( 123.5 , 236.0 , 2.0 ) 0 COLLECT_08 20 
+OBJ_DATA powerup_89 = ( 158.0 , 196.0 , 2.0 ) 0 COLLECT_06 15 
+OBJ_DATA powerup_90 = ( 163.0 , 204.5 , 2.0 ) 0 COLLECT_09 15 
+OBJ_DATA powerup_91 = ( 133.5 , 161.5 , 3.0 ) 0 COLLECT_33 1 
+OBJ_DATA powerup_92 = ( 157.5 , 173.5 , 2.0 ) 0 COLLECT_05 15 
+OBJ_DATA powerup_93 = ( 138.5 , 146.5 , 4.0 ) 0 COLLECT_39 1 
+OBJ_DATA powerup_94 = ( 144.5 , 163.0 , 3.0 ) 0 COLLECT_32 1 
+OBJ_DATA powerup_95 = ( 163.5 , 124.5 , 2.0 ) 0 COLLECT_01 15 
+OBJ_DATA powerup_96 = ( 146.0 , 124.5 , 2.0 ) 0 COLLECT_06 15 
+OBJ_DATA powerup_97 = ( 164.5 , 91.0 , 2.0 ) 0 COLLECT_36 1 
+OBJ_DATA powerup_98 = ( 138.0 , 91.0 , 2.0 ) 0 COLLECT_35 1 
+OBJ_DATA powerup_99 = ( 140.0 , 107.0 , 2.0 ) 0 COLLECT_02 15 
+OBJ_DATA powerup_100 = ( 102.5 , 91.0 , 2.0 ) 0 COLLECT_37 1 
+OBJ_DATA powerup_101 = ( 86.0 , 106.0 , 2.0 ) 0 COLLECT_09 15 
+OBJ_DATA powerup_102 = ( 77.5 , 129.5 , 2.0 ) 0 COLLECT_04 15 
+OBJ_DATA powerup_103 = ( 104.5 , 137.5 , 5.0 ) 0 COLLECT_31 1 
+OBJ_DATA powerup_104 = ( 150.0 , 95.0 , 2.0 ) 0 COLLECT_33 1 
+OBJ_DATA powerup_105 = ( 103.0 , 76.0 , 2.0 ) 0 COLLECT_01 15 
+OBJ_DATA powerup_106 = ( 162.0 , 69.0 , 2.0 ) 0 COLLECT_06 15 
+OBJ_DATA powerup_107 = ( 204.5 , 63.5 , 2.0 ) 0 COLLECT_02 15 
+OBJ_DATA powerup_108 = ( 245.5 , 64.5 , 2.0 ) 0 COLLECT_03 20 
+OBJ_DATA powerup_109 = ( 240.5 , 91.5 , 2.0 ) 0 COLLECT_02 15 
+OBJ_DATA powerup_110 = ( 240.0 , 100.5 , 2.0 ) 0 COLLECT_01 15 
+OBJ_DATA powerup_111 = ( 252.5 , 165.5 , 2.0 ) 0 COLLECT_09 15 
+OBJ_DATA powerup_112 = ( 244.5 , 53.5 , 3.0 ) 0 COLLECT_06 15 
+OBJ_DATA powerup_113 = ( 192.5 , 28.5 , 3.0 ) 0 COLLECT_03 20 
+OBJ_DATA powerup_114 = ( 175.5 , 45.5 , 3.0 ) 0 COLLECT_36 1 
+OBJ_DATA powerup_115 = ( 28.5 , 41.5 , 6.0 ) 0 COLLECT_04 14 
+
+/*
+OBJ_DATA powerup_109 = ( .5 , .5 , .0 ) 0 COLLECT_02 1 
+OBJ_DATA powerup_109 = ( .5 , .5 , .0 ) 0 COLLECT_02 1 
+OBJ_DATA powerup_109 = ( .5 , .5 , .0 ) 0 COLLECT_02 1 
+*/
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ANIMATION FOR DOORS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+#ifdef PC
+
+DECLARE_DOOR_INFO ( 928 , 935 , 2 ) 
+
+DECLARE_DOOR_INFO ( 232 , 239 , 2 )
+
+#endif
+
+
+#ifdef PSX
+
+DECLARE_DOOR_INFO ( 366 , 367 , 2 ) 
+
+#endif
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX DOORS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+DOOR_DATA k_m_1_door_1 = DOUBLE ( 238 , 112 , 2 ) ( 238.0 , 112.0 , 2.0 , 4.0 , 2.0 ) LEFT 0 ANY_PLAYER_ONE_CAR CLOSE_WHEN_OPEN_RULE_FAILS 0 FLIP_RIGHT NOT_REVERSED 
+
+DOOR_DATA k_m_3_door_2 = DOUBLE ( 188 , 192 , 2 ) ( 189.0 , 192.0 , 2.0 , 4.0 , 2.0 ) TOP 0 ANY_PLAYER_ONE_CAR CLOSE_WHEN_OPEN_RULE_FAILS 0 FLIP_RIGHT NOT_REVERSED	
+
+
+
+DOOR_DATA z_e_2_door_1 = DOUBLE ( 19 , 229 , 4 ) ( 20.0 , 229.0 , 4.0 , 2.0 , 4.0 ) TOP 0 ANY_PLAYER_ONE_CAR CLOSE_WHEN_OPEN_RULE_FAILS 0 FLIP_RIGHT NOT_REVERSED	
+
+DOOR_DATA z_m_1_door_2 = DOUBLE ( 61 , 166 , 2 ) ( 61.0 , 167.0 , 2.0 , 2.0 , 4.0 ) BOTTOM 0 ANY_PLAYER_ONE_CAR CLOSE_WHEN_OPEN_RULE_FAILS 0 FLIP_RIGHT NOT_REVERSED 
+
+DOOR_DATA z_m_2_door_4 = DOUBLE ( 55 , 174 , 2 ) ( 56.0 , 174.0 , 2.0 , 2.0 , 4.0 ) TOP 0 ANY_PLAYER_ONE_CAR CLOSE_WHEN_OPEN_RULE_FAILS 0 FLIP_RIGHT NOT_REVERSED 
+
+DOOR_DATA z_h_1_door_1 = DOUBLE ( 13 , 199 , 2 ) ( 13.0 , 200.0 , 2.0 , 2.0 , 4.0 ) BOTTOM 0 ANY_PLAYER_ONE_CAR CLOSE_WHEN_OPEN_RULE_FAILS 0 FLIP_RIGHT NOT_REVERSED
+
+//DOOR_DATA z_h_2_door_1 = DOUBLE ( 33 , 229 , 4 ) ( 34.0 , 229.0 , 2.0 , 4.0 , 4.0 ) TOP 0 ONE_CAR CLOSE_WHEN_CLEAR 0 FLIP_RIGHT NOT_REVERSED	
+
+
+DOOR_DATA r_e_1_door_1 = DOUBLE ( 184 , 30 , 2 ) ( 184.0 , 31.0 , 2.0 , 2.0 , 4.0 ) BOTTOM 0 ANY_PLAYER_ONE_CAR CLOSE_WHEN_OPEN_RULE_FAILS 0 FLIP_RIGHT NOT_REVERSED	
+
+DOOR_DATA r_e_1_door_2 = DOUBLE ( 12 , 119 , 2 ) ( 13.0 , 120.0 , 2.0 , 4.0 , 2.0 ) RIGHT 0 ANY_PLAYER_ONE_CAR CLOSE_WHEN_OPEN_RULE_FAILS 0 FLIP_RIGHT NOT_REVERSED	
+
+
+
+DOOR_DATA k_e_1_door_1 = DOUBLE ( 69 , 234 , 2 ) ( 69.0 , 234.0 , 2.0 , 2.0 , 2.0 ) LEFT 0 ONE_CAR CLOSE_NEVER 0 FLIP_RIGHT NOT_REVERSED	
+
+DOOR_DATA k_h_1_door_1 = DOUBLE ( 104 , 199 , 3 ) ( 0.0 , 0.0 , 0.0 , 0.0 , 0.0 ) BOTTOM 0 ANY_PLAYER CLOSE_NEVER 0 FLIP_RIGHT NOT_REVERSED
+
+DOOR_DATA k_h_1_door_2 = DOUBLE ( 82 , 179 , 2 ) ( 82.0 , 180.0 , 2.0 , 2.0 , 3.0 ) BOTTOM 0 ONE_CAR CLOSE_NEVER 0 FLIP_RIGHT NOT_REVERSED	
+
+DOOR_DATA z_m_1_door_1_1 = DOUBLE ( 234 , 20 , 2 ) ( 0.0 , 0.0 , 0.0 , 0.0 , 0.0 ) LEFT 0 ONE_CAR CLOSE_NEVER 0 FLIP_RIGHT NOT_REVERSED
+
+DOOR_DATA z_m_2_door_1_1 = DOUBLE ( 34 , 58 , 2 ) ( 34.0 , 58.0 , 2.0 , 2.0 , 2.0 ) LEFT 0 ONE_CAR CLOSE_NEVER 0 FLIP_RIGHT NOT_REVERSED	
+
+DOOR_DATA z_m_2_door_2_1 = DOUBLE ( 37 , 52 , 2 ) ( 37.0 , 52.0 , 2.0 , 2.0 , 2.0 ) BOTTOM 0 ONE_CAR CLOSE_NEVER 0 FLIP_RIGHT NOT_REVERSED	
+
+DOOR_DATA z_m_2_door_3_1 = DOUBLE ( 27 , 37 , 3 ) ( 27.0 , 37.0 , 3.0 , 2.0 , 2.0 ) LEFT 0 ONE_CAR CLOSE_NEVER 0 FLIP_RIGHT NOT_REVERSED	
+
+DOOR_DATA z_m_2_door_3_2 = DOUBLE ( 28 , 37 , 3 ) ( 27.0 , 37.0 , 3.0 , 2.0 , 2.0 ) LEFT 0 ONE_CAR CLOSE_NEVER 0 FLIP_RIGHT REVERSED	
+
+DOOR_DATA r_h_2_door_1_1 = DOUBLE ( 27 , 224 , 4 ) ( 27.0 , 224.0 , 4.0 , 2.0 , 4.0 ) BOTTOM 0 ONE_CAR CLOSE_NEVER 0 FLIP_RIGHT NOT_REVERSED	
+
+
+
+
+
+#ifdef PC
+
+DOOR_DATA z_m_1_door_1_2 = DOUBLE ( 235 , 20 , 2 ) ( 0.0 , 0.0 , 0.0 , 0.0 , 0.0 ) LEFT 0 ONE_CAR CLOSE_NEVER 0 FLIP_RIGHT REVERSED
+
+DOOR_DATA z_m_2_door_1_2 = DOUBLE ( 35 , 58 , 2 ) ( 35.0 , 58.0 , 2.0 , 2.0 , 2.0 ) LEFT 0 ONE_CAR CLOSE_NEVER 0 FLIP_RIGHT NOT_REVERSED	
+
+DOOR_DATA z_m_2_door_2_2 = DOUBLE ( 37 , 51 , 2 ) ( 37.0 , 52.0 , 2.0 , 2.0 , 2.0 ) BOTTOM 0 ONE_CAR CLOSE_NEVER 0 FLIP_RIGHT NOT_REVERSED	
+
+DOOR_DATA r_h_2_door_1_2 = DOUBLE ( 26 , 225 , 4 ) ( 26.0 , 224.0 , 4.0 , 2.0 , 4.0 ) TOP 0 ONE_CAR CLOSE_NEVER 0 FLIP_RIGHT REVERSED	
+
+#endif
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX CARS FOR CRANES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+RADIO_STATION kris_radio_station = STATION_KRISHNA ( 242.5 , 214.5 ) 
+RADIO_STATION russ_radio_station = STATION_RUSSIAN ( 201.5 , 21.5 ) 
+RADIO_STATION zaib_radio_station = STATION_ZAIBATSU ( 20.5 , 230.5 ) 
+RADIO_STATION head_radio_station = STATION_INDUSTRIAL ( 110.5 , 108.5 ) 
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX CARS FOR CRANES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+#ifdef PC
+CAR_DATA zaib_crane_2_car
+CAR_DATA russ_crane_2_car
+CAR_DATA kris_crane_2_car
+#endif
+
+
+#ifdef PSX
+CAR_DATA neutral_crane_2_car
+#endif
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX POWERUPS FOR CRANES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+
+#ifdef PC
+DECLARE_POWERUP_CARLIST ( spider , graham , xk120 , alfa , fiat , buick , buick , dart , vtype , morris 
+, monster , jeffrey , copcar , jeep , stypecab , wbtwin , stingray , edselfbi , stype )
+#endif
+
+#ifdef PSX
+DECLARE_POWERUP_CARLIST ( spider , graham , xk120 , alfa , alfa , buick , buick , dart , vtype , morris 
+, vespa , jeffrey , copcar , jeep , stypecab , wbtwin , stingray , edselfbi , stype )
+#endif
+ 
+
+#ifdef PC
+DECLARE_CRANE_POWERUP ( crusher_zaib_crane_2 , generator_zaib_crusher_crane_powerup , 16 , 157 , 3 ) 
+DECLARE_CRANE_POWERUP ( crusher_russ_crane_2 , generator_russ_crusher_crane_powerup , 166 , 27 , 3 ) 
+DECLARE_CRANE_POWERUP ( crusher_kris_crane_2 , generator_kris_crusher_crane_powerup , 182 , 242 , 4 ) 
+#endif
+
+
+#ifdef PSX
+DECLARE_CRANE_POWERUP ( crusher_neutral_crane_2 , generator_neutral_crusher_crane_powerup , 154 , 108 , 3 ) 
+#endif
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX PARKED CARS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+#ifdef PC
+
+PARKED_CAR_DATA parked_car_1 = ( 13.5 , 111.5 , 2.0 ) 28 135 spider
+PARKED_CAR_DATA parked_car_2 = ( 10.5 , 113.5 , 2.0 ) 29 45 morris
+PARKED_CAR_DATA parked_car_3 = ( 9.5 , 111.5 , 2.0 ) 31 135 alfa
+PARKED_CAR_DATA parked_car_4 = ( 12.5 , 113.5 , 2.0 ) 19 45 dart
+PARKED_CAR_DATA parked_car_5 = ( 12.5 , 126.5 , 2.0 ) 23 135 fiat
+PARKED_CAR_DATA parked_car_6 = ( 15.5 , 128.5 , 2.0 ) 27 225 stingray
+PARKED_CAR_DATA parked_car_7 = ( 8.5 , 126.5 , 2.0 ) 22 315 stype
+CAR_DATA parked_car_8
+CAR_DATA parked_car_9
+CAR_DATA parked_car_10
+PARKED_CAR_DATA parked_car_11 = ( 225.5 , 40.5 , 2.0 ) -1 317 copcar
+PARKED_CAR_DATA parked_car_12 = ( 229.5 , 40.5 , 2.0 ) -1 133 copcar
+PARKED_CAR_DATA parked_car_13 = ( 30.5 , 92.5 , 3.0 ) 22 224 spider
+PARKED_CAR_DATA parked_car_14 = ( 32.5 , 89.5 , 3.0 ) 28 316 morris
+PARKED_CAR_DATA parked_car_15 = ( 36.5 , 89.5 , 3.0 ) 15 134 stype
+PARKED_CAR_DATA parked_car_16 = ( 41.5 , 92.5 , 3.0 ) 22 43 stingray
+PARKED_CAR_DATA parked_car_17 = ( 45.5 , 92.5 , 3.0 ) 24 227 xk120
+PARKED_CAR_DATA parked_car_18 = ( 40.5 , 89.5 , 3.0 ) 2 136 wbtwin
+PARKED_CAR_DATA parked_car_19 = ( 44.5 , 89.5 , 3.0 ) 8 314 jeffrey
+PARKED_CAR_DATA parked_car_20 = ( 30.5 , 89.5 , 3.0 ) 25 137 vespa
+PARKED_CAR_DATA parked_car_21 = ( 42.5 , 89.5 , 3.0 ) 29 133 graham
+PARKED_CAR_DATA parked_car_22 = ( 45.5 , 192.0 , 2.0 ) -1 136 medicar
+PARKED_CAR_DATA parked_car_23 = ( 43.8 , 193.8 , 2.0 ) -1 224 medicar
+PARKED_CAR_DATA parked_car_24 = ( 80.4 , 126.5 , 2.0 ) 24 137 morris
+PARKED_CAR_DATA parked_car_25 = ( 82.0 , 127.5 , 2.0 ) 11 313 van
+PARKED_CAR_DATA parked_car_26 = ( 78.5 , 131.5 , 2.0 ) 30 226 xk120
+PARKED_CAR_DATA parked_car_27 = ( 80.5 , 133.5 , 2.0 ) 16 134 wbtwin
+PARKED_CAR_DATA parked_car_28 = ( 109.5 , 139.5 , 2.0 ) -1 187 copcar
+PARKED_CAR_DATA parked_car_29 = ( 209.5 , 111.5 , 2.0 ) 16 133 wbtwin
+PARKED_CAR_DATA parked_car_30 = ( 215.5 , 120.5 , 2.0 ) 30 226 stingray
+PARKED_CAR_DATA parked_car_31 = ( 216.5 , 121.5 , 2.0 ) 7 43 graham
+PARKED_CAR_DATA parked_car_32 = ( 139.5 , 143.5 , 4.0 ) 7 227 spider
+PARKED_CAR_DATA parked_car_33 = ( 143.5 , 143.5 , 4.0 ) 28 46 jeffrey
+PARKED_CAR_DATA parked_car_34 = ( 141.5 , 146.5 , 4.0 ) 24 223 vespa
+PARKED_CAR_DATA parked_car_35 = ( 143.5 , 146.5 , 4.0 ) 25 46 stingray
+PARKED_CAR_DATA parked_car_36 = ( 153.5 , 148.5 , 4.0 ) 11 47 xk120
+PARKED_CAR_DATA parked_car_37 = ( 158.5 , 144.5 , 4.0 ) 16 224 morris
+PARKED_CAR_DATA parked_car_38 = ( 155.5 , 141.5 , 4.0 ) 2 226 wbtwin
+PARKED_CAR_DATA parked_car_40 = ( 204.3 , 38.0 , 2.0 ) -1 44 medicar
+PARKED_CAR_DATA parked_car_41 = ( 41.5 , 71.5 , 2.0 ) -1 46 copcar
+PARKED_CAR_DATA parked_car_42 = ( 82.5 , 65.5 , 2.0 ) 7 136 spider
+PARKED_CAR_DATA parked_car_43 = ( 86.5 , 66.5 , 2.0 ) 25 314 vespa
+PARKED_CAR_DATA parked_car_44 = ( 80.5 , 68.5 , 2.0 ) 11 316 graham
+PARKED_CAR_DATA parked_car_45 = ( 84.5 , 72.5 , 2.0 ) 22 316 morris
+PARKED_CAR_DATA parked_car_46 = ( 84.5 , 65.5 , 2.0 ) 30 316 wbtwin
+
+
+
+PARKED_CAR_DATA parked_trailer_1 = ( 5.0 , 70.0 , 2.0 ) 19 95 truktrns
+PARKED_CAR_DATA parked_trailer_2 = ( 15.0 , 14.5 , 3.0 ) 19 5 trukcont
+PARKED_CAR_DATA parked_trailer_3 = ( 215.5 , 21.5 , 2.0 ) 19 355 truktrns
+PARKED_CAR_DATA parked_trailer_5 = ( 13.2 , 130.0 , 2.0 ) 19 224 truktrns
+PARKED_CAR_DATA parked_trailer_6 = ( 177.5 , 23.5 , 2.0 ) 19 2 trukcont
+PARKED_CAR_DATA parked_trailer_7 = ( 143.5 , 21.5 , 2.0 ) 19 265 truktrns
+PARKED_CAR_DATA parked_trailer_8 = ( 90.5 , 14.5 , 2.0 ) 19 5 trukcont
+PARKED_CAR_DATA parked_trailer_10 = ( 34.2 , 92.0 , 3.0 ) 19 227 truktrns
+
+#endif
+
+PARKED_CAR_DATA parked_cab_1 = ( 11.5 , 213.5 , 2.0 ) 3 91 trukcab1
+PARKED_CAR_DATA parked_cab_2 = ( 11.5 , 130.5 , 2.0 ) 21 227 trukcab1
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX SOUND OBJECTS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+#ifdef PC
+
+SOUND pulse_1 = ( 9.0 , 231.0 , 6.0 ) power_plant play_forever 
+SOUND pulse_2 = ( 45.0 , 231.0 , 6.0 ) power_plant play_forever 
+SOUND pulse_3 = ( 45.0 , 247.0 , 6.0 ) power_plant play_forever 
+SOUND pulse_4 = ( 9.0 , 247.0 , 6.0 ) power_plant play_forever 
+
+SOUND pulse_5 = ( 17.5 , 253.0 , 6.0 ) power_plant play_forever 
+SOUND pulse_6 = ( 27.0 , 253.0 , 6.0 ) power_plant play_forever 
+SOUND pulse_7 = ( 36.5 , 253.0 , 6.0 ) power_plant play_forever 
+
+SOUND pulse_8 = ( 56.5 , 242.5 , 6.0 ) power_plant play_forever 
+SOUND pulse_9 = ( 64.5 , 242.5 , 6.0 ) power_plant play_forever 
+SOUND pulse_10 = ( 59.5 , 247.5 , 6.0 ) power_plant play_forever 
+
+SOUND temple_1 = ( 216.5 , 220.0 , 6.0 ) temple_chant play_forever
+SOUND temple_2 = ( 220.0 , 216.5 , 6.0 ) temple_chant play_forever
+SOUND temple_3 = ( 223.5 , 220.0 , 6.0 ) temple_chant play_forever
+SOUND temple_4 = ( 220.0 , 223.5 , 6.0 ) temple_chant play_forever
+
+SOUND temple_5 = ( 207.0 , 209.0 , 6.0 ) temple_2 play_forever
+SOUND temple_6 = ( 233.0 , 209.0 , 6.0 ) temple_2 play_forever
+SOUND temple_7 = ( 207.0 , 231.0 , 6.0 ) temple_2 play_forever
+SOUND temple_8 = ( 233.0 , 231.0 , 6.0 ) temple_2 play_forever
+
+SOUND save_game_1 = ( 44.5 , 101.5 , 6.0 ) church_singing play_forever
+
+SOUND porta_loo_1 = ( 235.5 , 85.5 , 6.0 ) porta_loo play_forever
+
+SOUND waterfall_1 = ( 210.5 , 63.5 , 6.0 ) waterfall play_forever
+
+SOUND pylon_1 = ( 3.5 , 78.5 , 6.0 ) pylon play_forever
+SOUND pylon_2 = ( 3.5 , 88.5 , 6.0 ) pylon play_forever
+SOUND pylon_3 = ( 3.5 , 98.5 , 6.0 ) pylon play_forever
+SOUND pylon_4 = ( 3.5 , 108.5 , 6.0 ) pylon play_forever
+SOUND pylon_5 = ( 3.5 , 118.5 , 6.0 ) pylon play_forever
+SOUND pylon_6 = ( 3.5 , 128.5 , 6.0 ) pylon play_forever
+SOUND pylon_7 = ( 3.5 , 138.5 , 6.0 ) pylon play_forever
+SOUND pylon_8 = ( 3.5 , 148.5 , 6.0 ) pylon play_forever
+SOUND pylon_9 = ( 3.5 , 158.5 , 6.0 ) pylon play_forever
+SOUND pylon_10 = ( 3.5 , 168.5 , 6.0 ) pylon play_forever
+SOUND pylon_11 = ( 3.5 , 178.5 , 6.0 ) pylon play_forever
+SOUND pylon_12 = ( 3.5 , 188.5 , 6.0 ) pylon play_forever
+SOUND pylon_13 = ( 3.5 , 198.5 , 6.0 ) pylon play_forever
+
+SOUND pylon_14 = ( 252.5 , 10.5 , 6.0 ) pylon play_forever
+SOUND pylon_15 = ( 252.5 , 20.5 , 6.0 ) pylon play_forever
+SOUND pylon_16 = ( 252.5 , 30.5 , 6.0 ) pylon play_forever
+SOUND pylon_17 = ( 252.5 , 40.5 , 6.0 ) pylon play_forever
+SOUND pylon_18 = ( 252.5 , 50.5 , 6.0 ) pylon play_forever
+SOUND pylon_19 = ( 252.5 , 60.5 , 6.0 ) pylon play_forever
+SOUND pylon_20 = ( 252.5 , 70.5 , 6.0 ) pylon play_forever
+SOUND pylon_21 = ( 252.5 , 80.5 , 6.0 ) pylon play_forever
+SOUND pylon_22 = ( 252.5 , 90.5 , 6.0 ) pylon play_forever
+SOUND pylon_23 = ( 252.5 , 100.5 , 6.0 ) pylon play_forever
+SOUND pylon_24 = ( 252.5 , 110.5 , 6.0 ) pylon play_forever
+SOUND pylon_25 = ( 252.5 , 120.5 , 6.0 ) pylon play_forever
+SOUND pylon_26 = ( 252.5 , 130.5 , 6.0 ) pylon play_forever
+SOUND pylon_27 = ( 252.5 , 140.5 , 6.0 ) pylon play_forever
+SOUND pylon_28 = ( 252.5 , 150.5 , 6.0 ) pylon play_forever
+SOUND pylon_29 = ( 252.5 , 160.5 , 6.0 ) pylon play_forever
+SOUND pylon_30 = ( 252.5 , 170.5 , 6.0 ) pylon play_forever
+SOUND pylon_31 = ( 252.5 , 180.5 , 6.0 ) pylon play_forever
+SOUND pylon_32 = ( 252.5 , 190.5 , 6.0 ) pylon play_forever
+
+SOUND crickets_1 = ( 188.0 , 198.0 , 6.0 ) crickets play_forever
+SOUND crickets_2 = ( 185.0 , 219.0 , 6.0 ) crickets play_forever
+SOUND crickets_3 = ( 196.0 , 235.0 , 6.0 ) crickets play_forever
+SOUND crickets_4 = ( 163.0 , 230.0 , 6.0 ) crickets play_forever
+SOUND crickets_5 = ( 122.0 , 236.0 , 6.0 ) crickets play_forever
+SOUND crickets_6 = ( 230.0 , 250.0 , 6.0 ) crickets play_forever
+
+SOUND vat_1 = ( 206.0 , 6.0 , 6.0 ) vat play_forever 
+SOUND vat_2 = ( 205.0 , 12.0 , 6.0 ) vat play_forever
+SOUND vat_11 = ( 217.0 , 11.0 , 6.0 ) vat play_forever 
+SOUND vat_3 = ( 224.0 , 6.0 , 6.0 ) vat play_forever 
+SOUND vat_4 = ( 224.0 , 11.0 , 6.0 ) vat play_forever 
+SOUND vat_5 = ( 221.0 , 6.0 , 6.0 ) vat play_forever 
+SOUND vat_6 = ( 221.0 , 11.0 , 6.0 ) vat play_forever 
+
+SOUND vat_12 = ( 207.0 , 77.0 , 6.0 ) vat play_forever 
+SOUND vat_13 = ( 213.0 , 77.0 , 6.0 ) vat play_forever 
+SOUND vat_14 = ( 207.0 , 83.0 , 6.0 ) vat play_forever 
+SOUND vat_15 = ( 213.0 , 83.0 , 6.0 ) vat play_forever 
+
+SOUND r_s_and_l_bows_1 = ( 189.0 , 22.0 , 6.0 ) human_abattoir play_forever
+SOUND r_s_and_l_bows_2 = ( 192.0 , 22.0 , 6.0 ) human_abattoir play_forever
+SOUND r_s_and_l_bows_3 = ( 189.0 , 25.0 , 6.0 ) human_abattoir play_forever
+SOUND r_s_and_l_bows_4 = ( 192.0 , 25.0 , 6.0 ) human_abattoir play_forever
+
+SOUND fan_1 = ( 205.5 , 95.5 , 6.0 ) fan_noise play_forever
+SOUND fan_2 = ( 215.5 , 95.5 , 6.0 ) fan_noise play_forever
+SOUND fan_3 = ( 205.5 , 101.5 , 6.0 ) fan_noise play_forever
+SOUND fan_4 = ( 215.5 , 101.5 , 6.0 ) fan_noise play_forever
+
+
+
+#endif
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX TOWER OBJECTS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+#ifdef PC
+
+OBJ_DATA tower_1 = ( 13.5 , 146.5 , 2.0 ) 0 tower
+OBJ_DATA tower_2 = ( 10.5 , 155.5 , 2.0 ) 0 tower
+OBJ_DATA tower_3 = ( 16.5 , 161.5 , 2.0 ) 0 tower
+OBJ_DATA tower_4 = ( 9.5 , 131.5 , 2.0 ) 0 tower
+OBJ_DATA tower_5 = ( 16.5 , 127.5 , 2.0 ) 0 tower
+OBJ_DATA tower_6 = ( 16.5 , 112.5 , 2.0 ) 0 tower
+OBJ_DATA tower_7 = ( 9.5 , 107.5 , 2.0 ) 0 tower
+OBJ_DATA tower_8 = ( 181.5 , 241.5 , 3.0 ) 0 tower
+OBJ_DATA tower_9 = ( 181.5 , 250.5 , 3.0 ) 0 tower
+OBJ_DATA tower_10 = ( 188.5 , 247.5 , 3.0 ) 0 tower
+OBJ_DATA tower_11 = ( 234.5 , 146.5 , 2.0 ) 0 tower
+OBJ_DATA tower_12 = ( 228.5 , 141.5 , 2.0 ) 0 tower
+OBJ_DATA tower_13 = ( 237.5 , 139.5 , 2.0 ) 0 tower
+OBJ_DATA tower_14 = ( 229.5 , 135.5 , 2.0 ) 0 tower
+OBJ_DATA tower_15 = ( 239.5 , 133.5 , 2.0 ) 0 tower
+OBJ_DATA tower_16 = ( 233.5 , 130.5 , 2.0 ) 0 tower
+OBJ_DATA tower_17 = ( 228.5 , 125.5 , 2.0 ) 0 tower
+OBJ_DATA tower_18 = ( 237.5 , 124.5 , 2.0 ) 0 tower
+OBJ_DATA tower_19 = ( 165.5 , 49.5 , 2.0 ) 0 tower
+OBJ_DATA tower_20 = ( 174.5 , 46.5 , 2.0 ) 0 tower
+OBJ_DATA tower_21 = ( 167.5 , 40.5 , 2.0 ) 0 tower
+OBJ_DATA tower_22 = ( 180.5 , 40.5 , 2.0 ) 0 tower
+OBJ_DATA tower_23 = ( 188.5 , 48.5 , 2.0 ) 0 tower
+OBJ_DATA tower_24 = ( 189.5 , 44.5 , 2.0 ) 0 tower
+OBJ_DATA tower_25 = ( 189.5 , 39.5 , 2.0 ) 0 tower
+OBJ_DATA tower_26 = ( 173.5 , 29.5 , 2.0 ) 0 tower
+OBJ_DATA tower_27 = ( 165.5 , 27.5 , 2.0 ) 0 tower
+OBJ_DATA tower_28 = ( 173.5 , 21.5 , 2.0 ) 0 tower
+OBJ_DATA tower_29 = ( 160.5 , 21.5 , 2.0 ) 0 tower
+OBJ_DATA tower_30 = ( 206.5 , 15.5 , 2.0 ) 0 tower
+OBJ_DATA tower_31 = ( 202.5 , 7.5 , 2.0 ) 0 tower
+OBJ_DATA tower_32 = ( 206.5 , 3.5 , 2.0 ) 0 tower
+OBJ_DATA tower_33 = ( 214.5 , 3.5 , 2.0 ) 0 tower
+OBJ_DATA tower_34 = ( 216.5 , 14.5 , 2.0 ) 0 tower
+OBJ_DATA tower_35 = ( 227.5 , 14.5 , 2.0 ) 0 tower
+OBJ_DATA tower_36 = ( 236.5 , 14.5 , 2.0 ) 0 tower
+OBJ_DATA tower_37 = ( 237.5 , 21.5 , 2.0 ) 0 tower
+OBJ_DATA tower_38 = ( 79.5 , 178.5 , 2.0 ) 0 tower
+OBJ_DATA tower_39 = ( 9.5 , 100.5 , 2.0 ) 0 tower
+OBJ_DATA tower_40 = ( 13.5 , 140.5 , 2.0 ) 0 tower
+OBJ_DATA tower_41 = ( 32.5 , 93.5 , 3.0 ) 0 tower
+OBJ_DATA tower_42 = ( 43.5 , 93.5 , 3.0 ) 0 tower
+
+#endif
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX TUNNEL BLOCKER OBJECTS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+#ifdef PC
+
+OBJ_DATA tunnel_blocker_1 = ( 83.5 , 160.5 , 3.5 ) 0 tunnel_blocker
+OBJ_DATA tunnel_blocker_2 = ( 109.5 , 160.5 , 3.5 ) 0 tunnel_blocker
+OBJ_DATA tunnel_blocker_3 = ( 83.5 , 164.5 , 3.5 ) 0 tunnel_blocker
+OBJ_DATA tunnel_blocker_4 = ( 109.5 , 164.5 , 3.5 ) 0 tunnel_blocker
+OBJ_DATA tunnel_blocker_5 = ( 135.5 , 62.5 , 3.5 ) 0 tunnel_blocker
+OBJ_DATA tunnel_blocker_6 = ( 143.5 , 62.5 , 3.5 ) 0 tunnel_blocker
+OBJ_DATA tunnel_blocker_7 = ( 202.5 , 135.5 , 3.5 ) 0 tunnel_blocker
+OBJ_DATA tunnel_blocker_8 = ( 202.5 , 145.5 , 3.5 ) 0 tunnel_blocker
+OBJ_DATA tunnel_blocker_9 = ( 2.5 , 168.5 , 3.5 ) 0 tunnel_blocker
+OBJ_DATA tunnel_blocker_10 = ( 2.5 , 159.5 , 3.5 ) 0 tunnel_blocker
+OBJ_DATA tunnel_blocker_11 = ( 39.5 , 59.5 , 3.5 ) 0 tunnel_blocker
+OBJ_DATA tunnel_blocker_12 = ( 49.5 , 59.5 , 3.5 ) 0 tunnel_blocker
+OBJ_DATA tunnel_blocker_13 = ( 249.5 , 193.5 , 2.5 ) 0 tunnel_blocker
+OBJ_DATA tunnel_blocker_14 = ( 247.5 , 193.5 , 2.5 ) 0 tunnel_blocker
+OBJ_DATA tunnel_blocker_15 = ( 249.5 , 8.5 , 2.5 ) 0 tunnel_blocker
+OBJ_DATA tunnel_blocker_16 = ( 247.5 , 8.5 , 2.5 ) 0 tunnel_blocker
+
+#endif
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXX GTA 2 TOKENS FOR KILL BONUS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+OBJ_DATA gta2_token_1 = ( 30.5 , 33.5 , 4.0 ) 0 bonus_token
+OBJ_DATA gta2_token_2 = ( 48.5 , 35.5 , 3.0 ) 0 bonus_token
+OBJ_DATA gta2_token_3 = ( 13.5 , 88.5 , 3.0 ) 0 bonus_token
+OBJ_DATA gta2_token_4 = ( 62.5 , 66.0 , 5.0 ) 0 bonus_token
+OBJ_DATA gta2_token_5 = ( 16.0 , 100.0 , 3.0 ) 0 bonus_token
+OBJ_DATA gta2_token_6 = ( 44.5 , 127.5 , 2.0 ) 0 bonus_token
+OBJ_DATA gta2_token_7 = ( 65.0 , 113.5 , 6.0 ) 0 bonus_token
+OBJ_DATA gta2_token_8 = ( 99.0 , 144.5 , 5.0 ) 0 bonus_token
+OBJ_DATA gta2_token_9 = ( 12.0 , 184.0 , 3.0 ) 0 bonus_token
+OBJ_DATA gta2_token_10 = ( 53.5 , 201.5 , 5.0 ) 0 bonus_token
+OBJ_DATA gta2_token_11 = ( 61.5 , 229.5 , 3.0 ) 0 bonus_token
+OBJ_DATA gta2_token_12 = ( 78.0 , 185.0 , 4.0 ) 0 bonus_token
+OBJ_DATA gta2_token_13 = ( 144.5 , 66.5 , 2.0 ) 0 bonus_token
+OBJ_DATA gta2_token_14 = ( 181.5 , 41.5 , 4.0 ) 0 bonus_token
+OBJ_DATA gta2_token_15 = ( 234.5 , 9.5 , 4.0 ) 0 bonus_token
+OBJ_DATA gta2_token_16 = ( 247.5 , 5.5 , 5.0 ) 0 bonus_token
+OBJ_DATA gta2_token_17 = ( 210.5 , 103.5 , 6.0 ) 0 bonus_token
+OBJ_DATA gta2_token_18 = ( 236.0 , 85.0 , 3.0 ) 0 bonus_token
+OBJ_DATA gta2_token_19 = ( 166.5 , 167.0 , 4.0 ) 0 bonus_token
+OBJ_DATA gta2_token_20 = ( 237.5 , 127.5 , 2.0 ) 0 bonus_token
+#ifdef PC
+OBJ_DATA gta2_token_21 = ( 121.5 , 185.5 , 5.0 ) 0 bonus_token
+#endif
+#ifdef PSX
+OBJ_DATA gta2_token_21 = ( 148.5 , 197.0 , 5.0 ) 0 bonus_token
+#endif
+OBJ_DATA gta2_token_22 = ( 140.0 , 248.0 , 2.0 ) 0 bonus_token
+OBJ_DATA gta2_token_23 = ( 166.5 , 201.5 , 3.0 ) 0 bonus_token
+#ifdef PC
+OBJ_DATA gta2_token_24 = ( 201.5 , 245.5 , 4.0 ) 0 bonus_token
+#endif
+#ifdef PSX
+OBJ_DATA gta2_token_24 = ( 180.5 , 247.5 , 3.0 ) 0 bonus_token
+#endif
+OBJ_DATA gta2_token_25 = ( 237.0 , 201.0 , 3.0 ) 0 bonus_token
+
+#ifdef PC
+OBJ_DATA gta2_token_26 = ( 5.5 , 42.5 , 3.0 ) 0 bonus_token
+OBJ_DATA gta2_token_27 = ( 31.0 , 22.5 , 4.0 ) 0 bonus_token
+OBJ_DATA gta2_token_28 = ( 4.0 , 24.0 , 3.0 ) 0 bonus_token
+OBJ_DATA gta2_token_29 = ( 22.5 , 22.5 , 3.0 ) 0 bonus_token
+OBJ_DATA gta2_token_30 = ( 37.0 , 27.0 , 3.0 ) 0 bonus_token
+OBJ_DATA gta2_token_31 = ( 95.0 , 252.5 , 2.0 ) 0 bonus_token
+OBJ_DATA gta2_token_32 = ( 122.5 , 228.5 , 6.0 ) 0 bonus_token
+OBJ_DATA gta2_token_33 = ( 96.5 , 198.5 , 3.0 ) 0 bonus_token
+OBJ_DATA gta2_token_34 = ( 57.5 , 57.0 , 4.0 ) 0 bonus_token
+OBJ_DATA gta2_token_35 = ( 71.0 , 6.0 , 2.0 ) 0 bonus_token
+OBJ_DATA gta2_token_36 = ( 103.5 , 3.5 , 3.0 ) 0 bonus_token
+OBJ_DATA gta2_token_37 = ( 187.0 , 29.0 , 4.0 ) 0 bonus_token
+OBJ_DATA gta2_token_38 = ( 204.5 , 73.5 , 2.0 ) 0 bonus_token
+OBJ_DATA gta2_token_39 = ( 146.5 , 36.5 , 2.0 ) 0 bonus_token
+OBJ_DATA gta2_token_40 = ( 141.5 , 10.5 , 2.0 ) 0 bonus_token
+OBJ_DATA gta2_token_41 = ( 119.0 , 31.5 , 2.0 ) 0 bonus_token
+OBJ_DATA gta2_token_42 = ( 95.0 , 29.0 , 2.0 ) 0 bonus_token
+OBJ_DATA gta2_token_43 = ( 78.5 , 76.5 , 2.0 ) 0 bonus_token
+OBJ_DATA gta2_token_44 = ( 64.0 , 126.5 , 2.0 ) 0 bonus_token
+OBJ_DATA gta2_token_45 = ( 3.5 , 189.5 , 2.0 ) 0 bonus_token
+OBJ_DATA gta2_token_46 = ( 245.0 , 86.0 , 2.0 ) 0 bonus_token
+OBJ_DATA gta2_token_47 = ( 223.5 , 38.5 , 3.0 ) 0 bonus_token
+OBJ_DATA gta2_token_48 = ( 96.5 , 163.5 , 3.0 ) 0 bonus_token
+OBJ_DATA gta2_token_49 = ( 7.5 , 120.0 , 2.0 ) 0 bonus_token
+OBJ_DATA gta2_token_50 = ( 59.5 , 69.0 , 6.0 ) 0 bonus_token
+#endif
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX OBJECTS FOR KILL FRENZYS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+
+// kill frenzy objects
+
+#ifdef PSX
+PARKED_CAR_DATA KF_1_tank =  ( 141.0 , 10.0 , 2.0 ) 0 0 tank
+PARKED_CAR_DATA KF_2_tank = ( 72.0 , 219.5 , 2.0 ) 0 184 tank
+
+PARKED_CAR_DATA KF_3_car = ( 71.0 , 241.0 , 2.0 ) -1 90 jeep
+
+PARKED_CAR_DATA KF_4_car = ( 156.0 , 146.0 , 4.0 ) 2 0 jeffrey
+
+PARKED_CAR_DATA KF_5_car = ( 246.5 , 26.5 , 2.0 ) 9 0 xk120
+
+PARKED_CAR_DATA KF_3_trailer_1 = ( 71.0 , 242.0 , 2.0 ) 2 92 truktrns
+PARKED_CAR_DATA KF_4_trailer_1 = ( 155.2 , 148.0 , 4.0 ) 2 225 truktrns
+PARKED_CAR_DATA KF_5_trailer_1 = ( 245.0 , 26.0 , 2.0 ) 2 2 truktrns
+
+OBJ_DATA KF_6_icon = ( 49.0 , 43.0 , 3.0 ) 0 kill_frenzy 
+OBJ_DATA KF_7_icon = ( 170.5 , 219.5 , 5.0 ) 0 kill_frenzy 
+OBJ_DATA KF_8_icon = ( 215.0 , 80.0 , 5.0 ) 0 kill_frenzy 
+OBJ_DATA KF_9_icon = ( 100.5 , 126.5 , 5.0 ) 0 kill_frenzy 
+OBJ_DATA KF_10_icon =  ( 55.0 , 73.0 , 6.0 ) 0 kill_frenzy 
+OBJ_DATA KF_11_icon =  ( 125.5 , 123.5 , 2.0 ) 0 kill_frenzy 
+OBJ_DATA KF_12_icon =  ( 234.0 , 124.0 , 2.0 ) 0 kill_frenzy 
+OBJ_DATA KF_13_icon =  ( 157.0 , 163.0 , 4.0 ) 0 kill_frenzy 
+OBJ_DATA KF_14_icon =  ( 2.0 , 82.0 , 2.0 ) 0 kill_frenzy 
+OBJ_DATA KF_15_icon =  ( 175.5 , 56.5 , 4.0 ) 0 kill_frenzy 
+OBJ_DATA KF_16_icon =  ( 234.5 , 180.5 , 2.0 ) 0 kill_frenzy 
+OBJ_DATA KF_17_icon =  ( 31.5 , 107.5 , 3.0 ) 0 kill_frenzy 
+OBJ_DATA KF_18_icon =  ( 13.0 , 164.5 , 2.0 ) 0 kill_frenzy 
+OBJ_DATA KF_19_icon =  ( 98.0 , 33.0 , 2.0 ) 0 kill_frenzy 
+OBJ_DATA KF_20_icon =  ( 64.0 , 191.0 , 4.0 ) 0 kill_frenzy 
+#endif
+
+
+
+// kill frenzy objects
+
+#ifdef PC
+PARKED_CAR_DATA KF_1_tank =  ( 3.0 , 30.0 , 3.0 ) 0 92 tank
+PARKED_CAR_DATA KF_2_tank = ( 72.0 , 219.5 , 2.0 ) 0 184 tank
+
+PARKED_CAR_DATA KF_3_car = ( 71.0 , 241.0 , 2.0 ) -1 90 jeep
+
+PARKED_CAR_DATA KF_4_car = ( 156.0 , 146.0 , 4.0 ) 2 0 jeffrey
+
+PARKED_CAR_DATA KF_5_car = ( 246.5 , 26.5 , 2.0 ) 9 0 xk120
+
+PARKED_CAR_DATA KF_3_trailer_1 = ( 71.0 , 242.0 , 2.0 ) 2 92 truktrns
+PARKED_CAR_DATA KF_4_trailer_1 = ( 155.2 , 148.0 , 4.0 ) 2 225 truktrns
+PARKED_CAR_DATA KF_5_trailer_1 = ( 245.0 , 26.0 , 2.0 ) 2 2 truktrns
+
+OBJ_DATA KF_6_icon = ( 72.5 , 26.5 , 2.0 ) 0 kill_frenzy 
+OBJ_DATA KF_7_icon = ( 170.5 , 219.5 , 5.0 ) 0 kill_frenzy 
+OBJ_DATA KF_8_icon = ( 215.0 , 80.0 , 6.0 ) 0 kill_frenzy 
+OBJ_DATA KF_9_icon = ( 97.5 , 126.5 , 5.0 ) 0 kill_frenzy 
+OBJ_DATA KF_10_icon =  ( 55.0 , 73.0 , 6.0 ) 0 kill_frenzy 
+OBJ_DATA KF_11_icon =  ( 125.5 , 123.5 , 2.0 ) 0 kill_frenzy 
+OBJ_DATA KF_12_icon =  ( 234.0 , 124.0 , 2.0 ) 0 kill_frenzy 
+OBJ_DATA KF_13_icon =  ( 157.0 , 163.0 , 4.0 ) 0 kill_frenzy 
+OBJ_DATA KF_14_icon =  ( 2.0 , 82.0 , 2.0 ) 0 kill_frenzy 
+OBJ_DATA KF_15_icon =  ( 175.5 , 56.5 , 4.0 ) 0 kill_frenzy 
+OBJ_DATA KF_16_icon =  ( 234.5 , 180.5 , 2.0 ) 0 kill_frenzy 
+OBJ_DATA KF_17_icon =  ( 31.5 , 107.5 , 3.0 ) 0 kill_frenzy 
+OBJ_DATA KF_18_icon =  ( 13.5 , 164.5 , 2.0 ) 0 kill_frenzy 
+OBJ_DATA KF_19_icon =  ( 95.0 , 33.0 , 2.0 ) 0 kill_frenzy 
+OBJ_DATA KF_20_icon =  ( 64.0 , 191.0 , 4.0 ) 0 kill_frenzy 
+#endif
+
+
+BONUS kill_frenzy_1
+BONUS kill_frenzy_2
+BONUS kill_frenzy_3
+BONUS kill_frenzy_4
+BONUS kill_frenzy_5
+BONUS kill_frenzy_6
+BONUS kill_frenzy_7	 
+BONUS kill_frenzy_8
+BONUS kill_frenzy_9
+BONUS kill_frenzy_10
+BONUS kill_frenzy_11
+BONUS kill_frenzy_12
+BONUS kill_frenzy_13
+BONUS kill_frenzy_14
+BONUS kill_frenzy_15
+BONUS kill_frenzy_16
+BONUS kill_frenzy_17
+BONUS kill_frenzy_18
+BONUS kill_frenzy_19
+BONUS kill_frenzy_20
+
+
+ONSCREEN_COUNTER kf_counter  
+SAVED_COUNTER counter_total
+SAVED_COUNTER kf_counter_total
+TIMER_DATA kf_timer
+
+
+FORWARD do_kill_frenzy_1:
+FORWARD do_kill_frenzy_2:
+FORWARD do_kill_frenzy_3:
+FORWARD do_kill_frenzy_4:
+FORWARD do_kill_frenzy_5:
+FORWARD do_kill_frenzy_6:
+FORWARD do_kill_frenzy_7:
+FORWARD do_kill_frenzy_8:
+FORWARD do_kill_frenzy_9:
+FORWARD do_kill_frenzy_10:
+FORWARD do_kill_frenzy_11:
+FORWARD do_kill_frenzy_12:
+FORWARD do_kill_frenzy_13:
+FORWARD do_kill_frenzy_14:
+FORWARD do_kill_frenzy_15:
+FORWARD do_kill_frenzy_16:
+FORWARD do_kill_frenzy_17:
+FORWARD do_kill_frenzy_18:
+FORWARD do_kill_frenzy_19:
+FORWARD do_kill_frenzy_20:
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXKrishna easy phone1 mission1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+// waits for player to answer Krishna easy phone1 mission1
+
+
+
+THREAD_TRIGGER thr_kris_easy_phone1_m1 = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_kris_easy_phone1 , ans_kris_easy_phone1_m1: )  
+
+ans_kris_easy_phone1_m1:
+DO_EASY_PHONE_TEMPLATE ( 3098 , bil_ke1.mis , flag_passed_kris_easy_phone1_m1 , flag_failed_kris_easy_phone1_m1a , flag_on_kris_mission , flag_on_russ_mission , flag_on_zaib_mission , krisgang , 0 )
+RETURN
+
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXKrishna easy phone2 mission1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+// waits for player to answer Krishna easy phone2 mission1
+
+
+THREAD_TRIGGER thr_kris_easy_phone2_m1 = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_kris_easy_phone2 , ans_kris_easy_phone2_m1: )  
+
+ans_kris_easy_phone2_m1:
+DO_EASY_PHONE_TEMPLATE ( 3098 , bil_ke2.mis , flag_passed_kris_easy_phone2_m1 , flag_failed_kris_easy_phone2_m1a , flag_on_kris_mission , flag_on_russ_mission , flag_on_zaib_mission , krisgang , 0 )
+RETURN
+
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXKrishna med phone1 mission1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+// waits for player to answer Krishna med phone1 mission1
+
+
+THREAD_TRIGGER thr_kris_med_phone1_m1 = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_kris_med_phone1 , ans_kris_med_phone1_m1: )  
+
+ans_kris_med_phone1_m1:
+DO_PHONE_TEMPLATE ( 3098 , bil_km1.mis , bil_km3.mis , flag_passed_kris_med_phone1_m1 , flag_failed_kris_med_phone1_m1a , flag_played_kris_med_phone1_2_m3a , flag_on_kris_mission , flag_on_russ_mission , flag_on_zaib_mission , krisgang , 2 )
+//DO_PHONE_TEMPLATE ( 3098 , bil_km3.mis , bil_km1.mis , flag_passed_kris_med_phone1_m1 , flag_failed_kris_med_phone1_m1a , flag_played_kris_med_phone1_2_m3a , flag_on_kris_mission , flag_on_russ_mission , flag_on_zaib_mission , krisgang , 2 )
+RETURN
+
+				
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXKrishna med phone2 mission1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+// waits for player to answer Krishna med phone2 mission1
+
+
+THREAD_TRIGGER thr_kris_med_phone2_m1 = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_kris_med_phone2 , ans_kris_med_phone2_m1: )  
+
+ans_kris_med_phone2_m1:
+DO_PHONE_TEMPLATE ( 3098 , bil_km2.mis , bil_km3.mis , flag_passed_kris_med_phone2_m1 , flag_failed_kris_med_phone2_m1a , flag_played_kris_med_phone1_2_m3a , flag_on_kris_mission , flag_on_russ_mission , flag_on_zaib_mission , krisgang , 2 )
+RETURN
+
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXKrishna hard phone mission1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+// waits for player to answer Krishna hard phone mission1
+
+
+THREAD_TRIGGER thr_kris_hard_phone_m1 = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_kris_hard_phone , ans_kris_hard_phone_m1: )  
+
+ans_kris_hard_phone_m1:
+DO_PHONE_TEMPLATE ( 3098 , bil_kh1.mis , bil_kh2.mis , flag_passed_kris_hard_phone_m1 , flag_failed_kris_hard_phone_m1a , flag_played_kris_hard_phone_m2a , flag_on_kris_mission , flag_on_russ_mission , flag_on_zaib_mission , krisgang , 4 )
+//DO_PHONE_TEMPLATE ( 3098 , bil_kh2.mis , bil_kh1.mis , flag_passed_kris_hard_phone_m1 , flag_failed_kris_hard_phone_m1a , flag_played_kris_hard_phone_m2a , flag_on_kris_mission , flag_on_russ_mission , flag_on_zaib_mission , krisgang , 4 )
+RETURN
+
+
+				
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXZaibatsu easy phone1 mission1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+// waits for player to answer Zaibatsu easy phone1 mission1
+
+
+THREAD_TRIGGER thr_zaib_easy_phone1_m1 = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_zaib_easy_phone1 , ans_zaib_easy_phone1_m1: )  
+
+ans_zaib_easy_phone1_m1:
+DO_EASY_PHONE_TEMPLATE  ( 3118 , bil_ze1.mis , flag_passed_zaib_easy_phone1_m1 , flag_failed_zaib_easy_phone1_m1a , flag_on_zaib_mission , flag_on_russ_mission , flag_on_kris_mission , zaibgang , 0 )
+RETURN
+
+				
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXZaibatsu easy phone2 mission1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+// waits for player to answer Zaibatsu easy phone2 mission1
+
+
+THREAD_TRIGGER thr_zaib_easy_phone2_m1 = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_zaib_easy_phone2 , ans_zaib_easy_phone2_m1: )  
+
+ans_zaib_easy_phone2_m1:
+DO_EASY_PHONE_TEMPLATE  ( 3118 , bil_ze2.mis , flag_passed_zaib_easy_phone2_m1 , flag_failed_zaib_easy_phone2_m1a , flag_on_zaib_mission , flag_on_russ_mission , flag_on_kris_mission , zaibgang , 0 )
+RETURN
+
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXZaibatsu med phone1 mission1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+// waits for player to answer Zaibatsu med phone1 mission1
+
+
+THREAD_TRIGGER thr_zaib_med_phone1_m1 = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_zaib_med_phone1 , ans_zaib_med_phone1_m1: )  
+
+ans_zaib_med_phone1_m1:
+DO_PHONE_TEMPLATE ( 3118 , bil_zm1.mis , bil_zm3.mis , flag_passed_zaib_med_phone1_m1 , flag_failed_zaib_med_phone1_m1a , flag_played_zaib_med_phone1_2_m3a , flag_on_zaib_mission , flag_on_russ_mission , flag_on_kris_mission , zaibgang , 2 )
+//DO_PHONE_TEMPLATE ( 3118 , bil_zm3.mis , bil_zm1.mis , flag_passed_zaib_med_phone1_m1 , flag_failed_zaib_med_phone1_m1a , flag_played_zaib_med_phone1_2_m3a , flag_on_zaib_mission , flag_on_russ_mission , flag_on_kris_mission , zaibgang , 2 )
+RETURN
+
+	
+
+				
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXZaibatsu med phone2 mission1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+// waits for player to answer Zaibatsu med phone2 mission1
+
+
+THREAD_TRIGGER thr_zaib_med_phone2_m1 = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_zaib_med_phone2 , ans_zaib_med_phone2_m1: )  
+
+ans_zaib_med_phone2_m1:
+DO_PHONE_TEMPLATE ( 3118 , bil_zm2.mis , bil_zm3.mis , flag_passed_zaib_med_phone2_m1 , flag_failed_zaib_med_phone2_m1a , flag_played_zaib_med_phone1_2_m3a , flag_on_zaib_mission , flag_on_russ_mission , flag_on_kris_mission , zaibgang , 2 )
+RETURN
+
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXZaibatsu hard phone mission1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+// waits for player to answer Zaibatsu hard phone mission1
+
+
+THREAD_TRIGGER thr_zaib_hard_phone_m1 = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_zaib_hard_phone , ans_zaib_hard_phone_m1: )  
+
+ans_zaib_hard_phone_m1:
+DO_PHONE_TEMPLATE ( 3118 , bil_zh1.mis , bil_zh2.mis , flag_passed_zaib_hard_phone_m1 , flag_failed_zaib_hard_phone_m1a , flag_played_zaib_hard_phone_m2a , flag_on_zaib_mission , flag_on_russ_mission , flag_on_kris_mission , zaibgang , 4 )
+//DO_PHONE_TEMPLATE ( 3118 , bil_zh2.mis , bil_zh1.mis , flag_passed_zaib_hard_phone_m1 , flag_failed_zaib_hard_phone_m1a , flag_played_zaib_hard_phone_m2a , flag_on_zaib_mission , flag_on_russ_mission , flag_on_kris_mission , zaibgang , 4 )
+RETURN
+
+
+				
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXRussian easy phone1 mission1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+// waits for player to answer Russian easy phone1 mission1
+
+
+THREAD_TRIGGER thr_russ_easy_phone1_m1 = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_russ_easy_phone1 , ans_russ_easy_phone1_m1: )  
+
+ans_russ_easy_phone1_m1:
+DO_EASY_PHONE_TEMPLATE  ( 3108 , bil_re1.mis , flag_passed_russ_easy_phone1_m1 , flag_failed_russ_easy_phone1_m1a , flag_on_russ_mission , flag_on_kris_mission , flag_on_zaib_mission , russgang , 0 )
+RETURN
+
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXRussian easy phone2 mission1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+// waits for player to answer Russian easy phone2 mission1
+
+
+THREAD_TRIGGER thr_russ_easy_phone2_m1 = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_russ_easy_phone2 , ans_russ_easy_phone2_m1: )  
+
+ans_russ_easy_phone2_m1:
+DO_EASY_PHONE_TEMPLATE  ( 3108 , bil_re2.mis , flag_passed_russ_easy_phone2_m1 , flag_failed_russ_easy_phone2_m1a , flag_on_russ_mission , flag_on_kris_mission , flag_on_zaib_mission , russgang , 0 )
+RETURN
+
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXRussian med phone1 mission1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+// waits for player to answer Russian med phone1 mission1
+
+
+THREAD_TRIGGER thr_russ_med_phone1_m1 = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_russ_med_phone1 , ans_russ_med_phone1_m1: )  
+
+ans_russ_med_phone1_m1:
+DO_PHONE_TEMPLATE ( 3108 , bil_rm1.mis , bil_rm3.mis , flag_passed_russ_med_phone1_m1 , flag_failed_russ_med_phone1_m1a , flag_played_russ_med_phone1_2_m3a , flag_on_russ_mission , flag_on_kris_mission , flag_on_zaib_mission , russgang , 2 )
+//DO_PHONE_TEMPLATE ( 3108 , bil_rm3.mis , bil_rm1.mis , flag_passed_russ_med_phone1_m1 , flag_failed_russ_med_phone1_m1a , flag_played_russ_med_phone1_2_m3a , flag_on_russ_mission , flag_on_kris_mission , flag_on_zaib_mission , russgang , 2 )
+RETURN
+
+	
+				
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXRussian med phone2 mission1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+// waits for player to answer Russian med phone2 mission1
+
+
+THREAD_TRIGGER thr_russ_med_phone2_m1 = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_russ_med_phone2 , ans_russ_med_phone2_m1: )  
+
+ans_russ_med_phone2_m1:
+DO_PHONE_TEMPLATE ( 3108 , bil_rm2.mis , bil_rm3.mis , flag_passed_russ_med_phone2_m1 , flag_failed_russ_med_phone2_m1a , flag_played_russ_med_phone1_2_m3a , flag_on_russ_mission , flag_on_kris_mission , flag_on_zaib_mission , russgang , 2 )
+RETURN
+
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXRussian hard phone mission1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+// waits for player to answer Russian hard phone mission1
+
+
+THREAD_TRIGGER thr_russ_hard_phone_m1 = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_russ_hard_phone , ans_russ_hard_phone_m1: )  
+
+ans_russ_hard_phone_m1:
+DO_PHONE_TEMPLATE ( 3108 , bil_rh1.mis , bil_rh2.mis , flag_passed_russ_hard_phone_m1 , flag_failed_russ_hard_phone_m1a , flag_played_russ_hard_phone_m2a , flag_on_russ_mission , flag_on_kris_mission , flag_on_zaib_mission , russgang , 4 )
+//DO_PHONE_TEMPLATE ( 3108 , bil_rh2.mis , bil_rh1.mis , flag_passed_russ_hard_phone_m1 , flag_failed_russ_hard_phone_m1a , flag_played_russ_hard_phone_m2a , flag_on_russ_mission , flag_on_kris_mission , flag_on_zaib_mission , russgang , 4 )
+RETURN
+
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Save Game, Hotel 1 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+THREAD_TRIGGER thr_savepoint_1 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 44.5 , 100.5 , 2.0 , 3.0 , 1.0 , savepoint_1: )
+savepoint_1:
+	PERFORM_SAVE_GAME ( thr_savepoint_1 , 44.5 , 100.5 , 2.0 , 3.0 , 1.0 )	
+RETURN
+
+	 			
+#ifdef PSX			
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY ONE***********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_1 = THREAD_WAIT_FOR_CHAR_IN_CAR ( shaft , KF_1_tank , do_kill_frenzy_1: )
+
+
+do_kill_frenzy_1:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_1 , 3210 , KF_1_tank , shaft , tank_gun )
+	
+	kill_frenzy_1 = START_BONUS_CHECK ( no_zone , 3600 , 20 , 0 , char , not_exclusive , by_rocket_launcher , tank , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_1 , kf_timer , 120 , kf_counter , kf_counter_total , 20 , 3210 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY TWO***********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_2 = THREAD_WAIT_FOR_CHAR_IN_CAR ( shaft , KF_2_tank , do_kill_frenzy_2: )
+
+
+do_kill_frenzy_2:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_2 , 3211 , KF_2_tank , shaft , tank_gun )
+	
+	kill_frenzy_2 = START_BONUS_CHECK ( no_zone , 3600 , 20 , 0 , car , not_exclusive , by_rocket_launcher , tank , none ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_2 , kf_timer , 120 , kf_counter , kf_counter_total , 20 , 3211 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY THREE*********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_3 = THREAD_WAIT_FOR_CHAR_IN_CAR ( shaft , KF_3_car , do_kill_frenzy_3: )
+
+
+do_kill_frenzy_3:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_3 , 3212 , KF_3_car , shaft , car_machine_gun )
+	
+	kill_frenzy_3 = START_BONUS_CHECK ( no_zone , 3600 , 30 , 0 , char , not_exclusive , by_gun , jeep , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_3 , kf_timer , 120 , kf_counter , kf_counter_total , 30 , 3212 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY FOUR**********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_4 = THREAD_WAIT_FOR_CHAR_IN_CAR ( shaft , KF_4_car , do_kill_frenzy_4: )
+
+
+do_kill_frenzy_4:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_4 , 3213 , KF_4_car , shaft , no_weapon )
+	
+	kill_frenzy_4 = START_BONUS_CHECK ( no_zone , 2700 , 30 , 0 , char , not_exclusive , by_vehicle , jeffrey , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_4 , kf_timer , 90 , kf_counter , kf_counter_total , 30 , 3213 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY FIVE**********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_5 = THREAD_WAIT_FOR_CHAR_IN_CAR ( shaft , KF_5_car , do_kill_frenzy_5: )
+
+
+do_kill_frenzy_5:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_5 , 3214 , KF_5_car , shaft , car_mine )
+	
+	kill_frenzy_5 = START_BONUS_CHECK ( no_zone , 3600 , 15 , 0 , car , not_exclusive , by_car_mine , xk120 , none ) 
+//	kill_frenzy_5 = START_BONUS_CHECK ( no_zone , 3600 , 15 , 0 , car , not_exclusive , by_car_mine , xk120 , copcar ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_5 , kf_timer , 120 , kf_counter , kf_counter_total , 15 , 3214 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY SIX***********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_6 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 49.0 , 43.0 , 3.0 , 0.2 , 0.2 , do_kill_frenzy_6: )
+
+
+do_kill_frenzy_6:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_6 , 3215 , KF_6_icon , shaft , machine_gun )
+	
+	kill_frenzy_6 = START_BONUS_CHECK ( no_zone , 1800 , 20 , 0 , char , not_exclusive , by_gun , none , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_6 , kf_timer , 60 , kf_counter , kf_counter_total , 20 , 3215 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY SEVEN*********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_7 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 170.5 , 219.5 , 5.0 , 0.2 , 0.2 , do_kill_frenzy_7: )
+
+
+do_kill_frenzy_7:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_7 , 3216 , KF_7_icon , shaft , machine_gun )
+	
+	kill_frenzy_7= START_BONUS_CHECK ( no_zone , 2700 , 10 , 0 , char , not_exclusive , by_gun , none , no_occupation ) 
+//	kill_frenzy_7= START_BONUS_CHECK ( no_zone , 2700 , 10 , 0 , char , not_exclusive , by_gun , none , any_law_enforcement ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_7 , kf_timer , 90 , kf_counter , kf_counter_total , 10 , 3216 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY EIGHT*********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_8 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 215.0 , 80.0 , 5.0 , 0.2 , 0.2 , do_kill_frenzy_8: )
+
+
+do_kill_frenzy_8:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_8 , 3217 , KF_8_icon , shaft , molotov )
+	
+	kill_frenzy_8 = START_BONUS_CHECK ( no_zone , 1800 , 10 , 0 , char , not_exclusive , by_molotov , none , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_8 , kf_timer , 60 , kf_counter , kf_counter_total , 10 , 3217 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY NINE**********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_9 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 100.5 , 126.5 , 5.0 , 0.2 , 0.2 , do_kill_frenzy_9: )
+
+
+do_kill_frenzy_9:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_9 , 3218 , KF_9_icon , shaft , molotov )
+	
+	kill_frenzy_9 = START_BONUS_CHECK ( no_zone , 2700 , 15 , 0 , car , not_exclusive , by_molotov , none , none ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_9 , kf_timer , 90 , kf_counter , kf_counter_total , 15 , 3218 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY TEN***********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_10 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 55.0 , 73.0 , 6.0 , 0.2 , 0.2 , do_kill_frenzy_10: )
+
+
+do_kill_frenzy_10:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_10 , 3219 , KF_10_icon , shaft , rocket_launcher )
+	
+	kill_frenzy_10 = START_BONUS_CHECK ( no_zone , 1800 , 20 , 0 , char , not_exclusive , by_rocket_launcher , none , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_10 , kf_timer , 60 , kf_counter , kf_counter_total , 20 , 3219 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY ELEVEN********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_11 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 125.5 , 123.5 , 2.0 , 0.2 , 0.2 , do_kill_frenzy_11: )
+
+
+do_kill_frenzy_11:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_11 , 3220 , KF_11_icon , shaft , rocket_launcher )
+	
+	kill_frenzy_11 = START_BONUS_CHECK ( no_zone , 3600 , 10 , 0 , car , not_exclusive , by_rocket_launcher , none , none ) 
+//	kill_frenzy_11 = START_BONUS_CHECK ( no_zone , 3600 , 10 , 0 , car , not_exclusive , by_rocket_launcher , none , copcar ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_11 , kf_timer , 120 , kf_counter , kf_counter_total , 10 , 3220 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY TWELVE********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_12 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 234.0 , 124.0 , 2.0 , 0.2 , 0.2 , do_kill_frenzy_12: )
+
+
+do_kill_frenzy_12:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_12 , 3221 , KF_12_icon , shaft , rocket_launcher )
+	
+	kill_frenzy_12 = START_BONUS_CHECK ( no_zone , 1800 , 20 , 0 , car , not_exclusive , by_rocket_launcher , none , none ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_12 , kf_timer , 60 , kf_counter , kf_counter_total , 20 , 3221 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY THIRTEEN******************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+
+THREAD_TRIGGER thr_kill_frenzy_13 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 157.0 , 163.0 , 4.0 , 0.2 , 0.2 , do_kill_frenzy_13: )
+
+
+do_kill_frenzy_13:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_13 , 3222 , KF_13_icon , shaft , flame_thrower )
+	
+	kill_frenzy_13 = START_BONUS_CHECK ( no_zone , 1800 , 20 , 0 , char , not_exclusive , by_flamethrower , none , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_13 , kf_timer , 60 , kf_counter , kf_counter_total , 20 , 3222 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY FOURTEEN******************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_14 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 2.0 , 82.0 , 2.0 , 0.2 , 0.2 , do_kill_frenzy_14: )
+
+
+do_kill_frenzy_14:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_14 , 3223 , KF_14_icon , shaft , flame_thrower )
+	
+	kill_frenzy_14 = START_BONUS_CHECK ( no_zone , 2700 , 10 , 0 , char , not_exclusive , by_flamethrower , none , no_occupation ) 
+//	kill_frenzy_14 = START_BONUS_CHECK ( no_zone , 2700 , 10 , 0 , char , not_exclusive , by_flamethrower , none , any_law_enforcement ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_14 , kf_timer , 90 , kf_counter , kf_counter_total , 10 , 3223 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY FIFTEEN*******************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_15 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 175.5 , 56.5 , 4.0 , 0.2 , 0.2 , do_kill_frenzy_15: )
+
+
+do_kill_frenzy_15:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_15 , 3224 , KF_15_icon , shaft , electro_gun )
+	
+	kill_frenzy_15 = START_BONUS_CHECK ( no_zone , 1800 , 20 , 0 , char , not_exclusive , by_electro_weapon , none , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_15 , kf_timer , 60 , kf_counter , kf_counter_total , 20 , 3224 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY SIXTEEN*******************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_16 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 234.5 , 180.5 , 2.0 , 0.2 , 0.2 , do_kill_frenzy_16: )
+
+
+do_kill_frenzy_16:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_16 , 3225 , KF_16_icon , shaft , electro_gun )
+	
+	kill_frenzy_16 = START_BONUS_CHECK ( no_zone , 1800 , 20 , 0 , char , not_exclusive , by_electro_weapon , none , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_16 , kf_timer , 60 , kf_counter , kf_counter_total , 20 , 3225 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY SEVENTEEN*****************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_17 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 31.5 , 107.5 , 3.0 , 0.2 , 0.2 , do_kill_frenzy_17: )
+
+
+do_kill_frenzy_17:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_17 , 3226 , KF_17_icon , shaft , electro_gun )
+	
+	kill_frenzy_17 = START_BONUS_CHECK ( no_zone , 3600 , 10 , 0 , char , not_exclusive , by_electro_weapon , none , no_occupation ) 
+//	kill_frenzy_17 = START_BONUS_CHECK ( no_zone , 3600 , 10 , 0 , char , not_exclusive , by_electro_weapon , none , any_law_enforcement ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_17 , kf_timer , 120 , kf_counter , kf_counter_total , 10 , 3226 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY EIGHTEEN******************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_18 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 13.0 , 164.5 , 2.0 , 0.2 , 0.2 , do_kill_frenzy_18: )
+
+
+do_kill_frenzy_18:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_18 , 3227 , KF_18_icon , shaft , electro_gun )
+	
+	kill_frenzy_18 = START_BONUS_CHECK ( no_zone , 2700 , 5 , 0 , car , not_exclusive , by_electro_weapon , none , none ) 
+//	kill_frenzy_18 = START_BONUS_CHECK ( no_zone , 2700 , 5 , 0 , car , not_exclusive , by_electro_weapon , none , copcar ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_18 , kf_timer , 90 , kf_counter , kf_counter_total , 5 , 3227 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY NINETEEN******************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_19 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 98.0 , 33.0 , 2.0 , 0.2 , 0.2 , do_kill_frenzy_19: )
+
+
+do_kill_frenzy_19:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_19 , 3228 , KF_19_icon , shaft , shotgun )
+	
+	kill_frenzy_19 = START_BONUS_CHECK ( no_zone , 1800 , 20 , 0 , char , not_exclusive , by_shotgun , none , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_19 , kf_timer , 60 , kf_counter , kf_counter_total , 20 , 3228 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*********************************** PSX KILL FRENZY TWENTY********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+   			 		 
+THREAD_TRIGGER thr_kill_frenzy_20 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 64.0 , 191.0 , 4.0 , 0.2 , 0.2 , do_kill_frenzy_20: )
+
+
+do_kill_frenzy_20:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_20 , 3229 , KF_20_icon , shaft , shotgun )
+	
+	kill_frenzy_20 = START_BONUS_CHECK ( no_zone , 2700 , 10 , 0 , char , not_exclusive , by_shotgun , none , no_occupation ) 
+//	kill_frenzy_20 = START_BONUS_CHECK ( no_zone , 2700 , 10 , 0 , char , not_exclusive , by_shotgun , none , any_law_enforcement ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_20 , kf_timer , 90 , kf_counter , kf_counter_total , 10 , 3229 , shaft , lives , 1 ) 
+
+RETURN
+#endif
+
+
+
+
+
+
+#ifdef PC			
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************* PC KILL FRENZY ONE**********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_1 = THREAD_WAIT_FOR_CHAR_IN_CAR ( shaft , KF_1_tank , do_kill_frenzy_1: )
+
+
+do_kill_frenzy_1:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_1 , 4310 , KF_1_tank , shaft , tank_gun )
+	
+	kill_frenzy_1 = START_BONUS_CHECK ( no_zone , 3600 , 30 , 0 , char , not_exclusive , by_rocket_launcher , tank , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_1 , kf_timer , 120 , kf_counter , kf_counter_total , 30 , 4310 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY TWO***********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_2 = THREAD_WAIT_FOR_CHAR_IN_CAR ( shaft , KF_2_tank , do_kill_frenzy_2: )
+
+
+do_kill_frenzy_2:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_2 , 4311 , KF_2_tank , shaft , tank_gun )
+	
+	kill_frenzy_2 = START_BONUS_CHECK ( no_zone , 3600 , 30 , 0 , car , not_exclusive , by_rocket_launcher , tank , none ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_2 , kf_timer , 120 , kf_counter , kf_counter_total , 30 , 4311 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY THREE*********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_3 = THREAD_WAIT_FOR_CHAR_IN_CAR ( shaft , KF_3_car , do_kill_frenzy_3: )
+
+
+do_kill_frenzy_3:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_3 , 4312 , KF_3_car , shaft , car_machine_gun )
+	
+	kill_frenzy_3 = START_BONUS_CHECK ( no_zone , 3600 , 60 , 0 , char , not_exclusive , by_gun , jeep , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_3 , kf_timer , 120 , kf_counter , kf_counter_total , 60 , 4312 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY FOUR**********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_4 = THREAD_WAIT_FOR_CHAR_IN_CAR ( shaft , KF_4_car , do_kill_frenzy_4: )
+
+
+do_kill_frenzy_4:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_4 , 4313 , KF_4_car , shaft , no_weapon )
+	
+	kill_frenzy_4 = START_BONUS_CHECK ( no_zone , 2700 , 60 , 0 , char , not_exclusive , by_vehicle , jeffrey , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_4 , kf_timer , 90 , kf_counter , kf_counter_total , 60 , 4313 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY FIVE**********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_5 = THREAD_WAIT_FOR_CHAR_IN_CAR ( shaft , KF_5_car , do_kill_frenzy_5: )
+
+
+do_kill_frenzy_5:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_5 , 4314 , KF_5_car , shaft , car_mine )
+	
+//	kill_frenzy_5 = START_BONUS_CHECK ( no_zone , 3600 , 20 , 0 , car , not_exclusive , by_car_mine , xk120 , none ) 
+	kill_frenzy_5 = START_BONUS_CHECK ( no_zone , 3600 , 20 , 0 , car , not_exclusive , by_car_mine , xk120 , copcar ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_5 , kf_timer , 120 , kf_counter , kf_counter_total , 20 , 4314 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY SIX***********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_6 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 72.5 , 26.5 , 2.0 , 0.2 , 0.2 , do_kill_frenzy_6: )
+
+
+do_kill_frenzy_6:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_6 , 4315 , KF_6_icon , shaft , machine_gun )
+	
+	kill_frenzy_6 = START_BONUS_CHECK ( no_zone , 1800 , 40 , 0 , char , not_exclusive , by_gun , none , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_6 , kf_timer , 60 , kf_counter , kf_counter_total , 40 , 4315 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY SEVEN*********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_7 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 170.5 , 219.5 , 5.0 , 0.2 , 0.2 , do_kill_frenzy_7: )
+
+
+do_kill_frenzy_7:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_7 , 4316 , KF_7_icon , shaft , machine_gun )
+	
+//	kill_frenzy_7= START_BONUS_CHECK ( no_zone , 2700 , 20 , 0 , char , not_exclusive , by_gun , none , no_occupation ) 
+	kill_frenzy_7= START_BONUS_CHECK ( no_zone , 2700 , 20 , 0 , char , not_exclusive , by_gun , none , any_law_enforcement ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_7 , kf_timer , 90 , kf_counter , kf_counter_total , 20 , 4316 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY EIGHT*********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_8 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 215.0 , 80.0 , 6.0 , 0.2 , 0.2 , do_kill_frenzy_8: )
+
+
+do_kill_frenzy_8:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_8 , 4317 , KF_8_icon , shaft , molotov )
+	
+	kill_frenzy_8 = START_BONUS_CHECK ( no_zone , 1800 , 20 , 0 , char , not_exclusive , by_molotov , none , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_8 , kf_timer , 60 , kf_counter , kf_counter_total , 20 , 4317 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY NINE**********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_9 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 97.5 , 126.5 , 5.0 , 0.2 , 0.2 , do_kill_frenzy_9: )
+
+
+do_kill_frenzy_9:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_9 , 4318 , KF_9_icon , shaft , molotov )
+	
+	kill_frenzy_9 = START_BONUS_CHECK ( no_zone , 2700 , 30 , 0 , car , not_exclusive , by_molotov , none , none ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_9 , kf_timer , 90 , kf_counter , kf_counter_total , 30 , 4318 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY TEN***********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_10 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 55.0 , 73.0 , 6.0 , 0.2 , 0.2 , do_kill_frenzy_10: )
+
+
+do_kill_frenzy_10:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_10 , 4319 , KF_10_icon , shaft , rocket_launcher )
+	
+	kill_frenzy_10 = START_BONUS_CHECK ( no_zone , 1800 , 40 , 0 , char , not_exclusive , by_rocket_launcher , none , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_10 , kf_timer , 60 , kf_counter , kf_counter_total , 40 , 4319 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY ELEVEN********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_11 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 125.5 , 123.5 , 2.0 , 0.2 , 0.2 , do_kill_frenzy_11: )
+
+
+do_kill_frenzy_11:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_11 , 4320 , KF_11_icon , shaft , rocket_launcher )
+	
+//	kill_frenzy_11 = START_BONUS_CHECK ( no_zone , 3600 , 20 , 0 , car , not_exclusive , by_rocket_launcher , none , none ) 
+	kill_frenzy_11 = START_BONUS_CHECK ( no_zone , 3600 , 20 , 0 , car , not_exclusive , by_rocket_launcher , none , copcar ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_11 , kf_timer , 120 , kf_counter , kf_counter_total , 20 , 4320 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY TWELVE********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_12 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 234.0 , 124.0 , 2.0 , 0.2 , 0.2 , do_kill_frenzy_12: )
+
+
+do_kill_frenzy_12:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_12 , 4321 , KF_12_icon , shaft , rocket_launcher )
+	
+	kill_frenzy_12 = START_BONUS_CHECK ( no_zone , 1800 , 15 , 0 , car , not_exclusive , by_rocket_launcher , none , none ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_12 , kf_timer , 60 , kf_counter , kf_counter_total , 15 , 4321 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY THIRTEEN******************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+
+THREAD_TRIGGER thr_kill_frenzy_13 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 157.0 , 163.0 , 4.0 , 0.2 , 0.2 , do_kill_frenzy_13: )
+
+
+do_kill_frenzy_13:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_13 , 4322 , KF_13_icon , shaft , flame_thrower )
+	
+	kill_frenzy_13 = START_BONUS_CHECK ( no_zone , 1800 , 40 , 0 , char , not_exclusive , by_flamethrower , none , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_13 , kf_timer , 60 , kf_counter , kf_counter_total , 40 , 4322 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY FOURTEEN******************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_14 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 2.0 , 82.0 , 2.0 , 0.2 , 0.2 , do_kill_frenzy_14: )
+
+
+do_kill_frenzy_14:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_14 , 4323 , KF_14_icon , shaft , flame_thrower )
+	
+//	kill_frenzy_14 = START_BONUS_CHECK ( no_zone , 2700 , 20 , 0 , char , not_exclusive , by_flamethrower , none , no_occupation ) 
+	kill_frenzy_14 = START_BONUS_CHECK ( no_zone , 2700 , 20 , 0 , char , not_exclusive , by_flamethrower , none , any_law_enforcement ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_14 , kf_timer , 90 , kf_counter , kf_counter_total , 20 , 4323 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY FIFTEEN*******************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_15 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 175.5 , 56.5 , 4.0 , 0.2 , 0.2 , do_kill_frenzy_15: )
+
+
+do_kill_frenzy_15:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_15 , 4324 , KF_15_icon , shaft , electro_gun )
+	
+	kill_frenzy_15 = START_BONUS_CHECK ( no_zone , 1800 , 40 , 0 , char , not_exclusive , by_electro_weapon , none , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_15 , kf_timer , 60 , kf_counter , kf_counter_total , 40 , 4324 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY SIXTEEN*******************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_16 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 234.5 , 180.5 , 2.0 , 0.2 , 0.2 , do_kill_frenzy_16: )
+
+
+do_kill_frenzy_16:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_16 , 4325 , KF_16_icon , shaft , electro_gun )
+	
+	kill_frenzy_16 = START_BONUS_CHECK ( no_zone , 1800 , 40 , 0 , char , not_exclusive , by_electro_weapon , none , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_16 , kf_timer , 60 , kf_counter , kf_counter_total , 40 , 4325 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY SEVENTEEN*****************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_17 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 31.5 , 107.5 , 3.0 , 0.2 , 0.2 , do_kill_frenzy_17: )
+
+
+do_kill_frenzy_17:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_17 , 4326 , KF_17_icon , shaft , electro_gun )
+	
+//	kill_frenzy_17 = START_BONUS_CHECK ( no_zone , 2700 , 20 , 0 , char , not_exclusive , by_electro_weapon , none , no_occupation ) 
+	kill_frenzy_17 = START_BONUS_CHECK ( no_zone , 2700 , 20 , 0 , char , not_exclusive , by_electro_weapon , none , any_law_enforcement ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_17 , kf_timer , 90 , kf_counter , kf_counter_total , 20 , 4326 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY EIGHTEEN******************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_18 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 13.5 , 164.5 , 2.0 , 0.2 , 0.2 , do_kill_frenzy_18: )
+
+
+do_kill_frenzy_18:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_18 , 4327 , KF_18_icon , shaft , electro_gun )
+	
+//	kill_frenzy_18 = START_BONUS_CHECK ( no_zone , 2700 , 10 , 0 , car , not_exclusive , by_electro_weapon , none , none ) 
+	kill_frenzy_18 = START_BONUS_CHECK ( no_zone , 2700 , 10 , 0 , car , not_exclusive , by_electro_weapon , none , copcar ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_18 , kf_timer , 90 , kf_counter , kf_counter_total , 10 , 4327 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY NINETEEN******************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+THREAD_TRIGGER thr_kill_frenzy_19 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 95.0 , 33.0 , 2.0 , 0.2 , 0.2 , do_kill_frenzy_19: )
+
+
+do_kill_frenzy_19:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_19 , 4328 , KF_19_icon , shaft , shotgun )
+	
+	kill_frenzy_19 = START_BONUS_CHECK ( no_zone , 1800 , 40 , 0 , char , not_exclusive , by_shotgun , none , no_occupation ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_19 , kf_timer , 60 , kf_counter , kf_counter_total , 40 , 4328 , shaft , lives , 1 ) 
+
+RETURN
+
+
+
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//************************************ PC KILL FRENZY TWENTY********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+   			 		 
+THREAD_TRIGGER thr_kill_frenzy_20 = THREAD_WAIT_FOR_CHAR_IN_AREA ( shaft , 64.0 , 191.0 , 4.0 , 0.2 , 0.2 , do_kill_frenzy_20: )
+
+
+do_kill_frenzy_20:
+	
+	START_BASIC_KF_TEMPLATE ( thr_kill_frenzy_20 , 4329 , KF_20_icon , shaft , shotgun )
+	
+//	kill_frenzy_20 = START_BONUS_CHECK ( no_zone , 2700 , 20 , 0 , char , not_exclusive , by_shotgun , none , no_occupation ) 
+	kill_frenzy_20 = START_BONUS_CHECK ( no_zone , 2700 , 20 , 0 , char , not_exclusive , by_shotgun , none , any_law_enforcement ) 
+	
+	DO_BASIC_KF_TEMPLATE ( kill_frenzy_20 , kf_timer , 90 , kf_counter , kf_counter_total , 20 , 4329 , shaft , lives , 1 ) 
+
+RETURN
+#endif
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Zaibatsu Information phone XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+THREAD_TRIGGER thr_zaib_info_phone = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_zaib_info_phone , ans_zaib_info_phone: )
+
+ans_zaib_info_phone:
+
+	DISPLAY_BRIEF ( 3724 )  //"The Yakuza brothers are dressed in blue."
+		
+	DISPLAY_BRIEF ( 3725 )  //"We are Yakuza. We are strong. We have no time for the Zaibatsu. We have no time for you unless you prove yourself." 
+
+RETURN
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Russian Information phone XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+THREAD_TRIGGER thr_russ_info_phone = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_russ_info_phone , ans_russ_info_phone: )
+
+ans_russ_info_phone:
+
+	DISPLAY_BRIEF ( 3726 )  //"The Yakuza brothers are dressed in blue."
+		
+	DISPLAY_BRIEF ( 3727 )  //"We are Yakuza. We are strong. We have no time for the Zaibatsu. We have no time for you unless you prove yourself." 
+
+RETURN
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Krishna Information phone XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+THREAD_TRIGGER thr_kris_info_phone = THREAD_WAIT_FOR_ANSWER_PHONE ( shaft , ph_kris_info_phone , ans_kris_info_phone: )
+
+ans_kris_info_phone:
+
+	DISPLAY_BRIEF ( 3728 )  //"The Yakuza brothers are dressed in blue."
+		
+	DISPLAY_BRIEF ( 3729 )  //"We are Yakuza. We are strong. We have no time for the Zaibatsu. We have no time for you unless you prove yourself." 
+
+RETURN
+			
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+			
+// starts all missions...
+	
+LEVELSTART
+
+parked_car_8 = CREATE_GANG_CAR ( 8.5 , 189.5 , 3.0 ) 2 315 vtype END
+parked_car_9 = CREATE_GANG_CAR ( 238.8 , 140.2 , 2.0 ) -1 135 krsnabus END
+parked_car_10 = CREATE_GANG_CAR ( 235.5 , 53.2 , 2.0 ) 28 225 buick END
+
+IF ( flag_game_been_saved = 0 )
+	DISPLAY_BRIEF ( 3230 ) // "initial brief WELCOME!"
+	SET flag_game_been_saved = 1
+ENDIF
+
+SET_AMBIENT_LEVEL ( 0.3 , 0 )
+
+#ifdef PC
+
+SET_SHADING_LEVEL ( 27 )
+
+#endif
+
+//ADD_SCORE ( shaft , 5999999 )
+//SET counter_all_missions_passed = 21
+
+/*
+GIVE_WEAPON ( shaft , machine_gun , 15 ) 
+GIVE_WEAPON ( shaft , rocket_launcher , 15 ) 
+GIVE_WEAPON ( shaft , electro_gun , 20 ) 
+GIVE_WEAPON ( shaft , molotov , 15 ) 
+GIVE_WEAPON ( shaft , shotgun , 15 ) 
+GIVE_WEAPON ( shaft , silenced_machine_gun , 15 ) 
+GIVE_WEAPON ( shaft , flame_thrower , 20 ) 
+GIVE_WEAPON ( shaft , grenade , 15 ) 
+*/
+
+SET_GANG_KILL_REACTION ( krisgang , zaibgang , 1 )
+
+SET_GANG_KILL_REACTION ( zaibgang , russgang , 1 )
+														
+SET_GANG_KILL_REACTION ( russgang , krisgang , 1 )
+
+SET_DEATHARREST_STATE ( shaft , ON ) 
+
+MAKE_DOOR_MANUAL ( k_e_1_door_1 )
+
+OPEN_DOOR ( k_e_1_door_1 )
+
+MAKE_DOOR_MANUAL ( k_m_1_door_1 ) 
+
+MAKE_DOOR_MANUAL ( k_m_3_door_2 )
+
+MAKE_DOOR_MANUAL ( k_h_1_door_1 )
+
+MAKE_DOOR_MANUAL ( k_h_1_door_2 )
+
+OPEN_DOOR ( k_h_1_door_2 )
+
+MAKE_DOOR_MANUAL ( z_e_2_door_1 )
+
+MAKE_DOOR_MANUAL ( z_m_1_door_1_1 )
+
+OPEN_DOOR ( z_m_1_door_1_1 )
+
+MAKE_DOOR_MANUAL ( z_m_1_door_2 )
+
+MAKE_DOOR_MANUAL ( z_m_2_door_1_1 ) 
+
+OPEN_DOOR ( z_m_2_door_1_1 )
+
+MAKE_DOOR_MANUAL ( z_m_2_door_2_1 ) 
+
+OPEN_DOOR ( z_m_2_door_2_1 )
+
+MAKE_DOOR_MANUAL ( z_m_2_door_3_1 )
+
+OPEN_DOOR ( z_m_2_door_3_1 )
+
+MAKE_DOOR_MANUAL ( z_m_2_door_4 )
+
+MAKE_DOOR_MANUAL ( z_h_1_door_1 )
+
+//MAKE_DOOR_MANUAL ( z_h_2_door_1 )
+
+MAKE_DOOR_MANUAL ( r_e_1_door_1 )
+
+MAKE_DOOR_MANUAL ( r_e_1_door_2 )
+
+MAKE_DOOR_MANUAL ( r_h_2_door_1_1 )
+
+OPEN_DOOR ( r_h_2_door_1_1 )
+
+
+#ifdef PC
+
+MAKE_DOOR_MANUAL ( z_m_1_door_1_2 )
+
+OPEN_DOOR ( z_m_1_door_1_2 )
+
+MAKE_DOOR_MANUAL ( z_m_2_door_1_2 ) 
+
+OPEN_DOOR ( z_m_2_door_1_2 )
+
+MAKE_DOOR_MANUAL ( z_m_2_door_2_2 ) 
+
+OPEN_DOOR ( z_m_2_door_2_2 )
+
+MAKE_DOOR_MANUAL ( z_m_2_door_3_2 )
+
+OPEN_DOOR ( z_m_2_door_3_2 )
+
+MAKE_DOOR_MANUAL ( r_h_2_door_1_2 )
+
+OPEN_DOOR ( r_h_2_door_1_2 )
+
+#endif
+
+PUT_CAR_ON_TRAILER ( KF_3_car , KF_3_trailer_1 )
+PUT_CAR_ON_TRAILER ( KF_4_car , KF_4_trailer_1 )
+PUT_CAR_ON_TRAILER ( KF_5_car , KF_5_trailer_1 )
+
+SWITCH_GENERATOR ( generator_kris_easy_machine_gun_powerup , ON ) 
+SWITCH_GENERATOR ( generator_kris_easy_armour_powerup , ON ) 
+SWITCH_GENERATOR ( generator_kris_easy_health_powerup , ON ) 
+SWITCH_GENERATOR ( generator_kris_med_machine_gun_powerup , ON ) 
+SWITCH_GENERATOR ( generator_kris_med_armour_powerup , ON ) 
+SWITCH_GENERATOR ( generator_kris_med_health_powerup , ON ) 
+SWITCH_GENERATOR ( generator_kris_hard_machine_gun_powerup , ON ) 
+SWITCH_GENERATOR ( generator_kris_hard_armour_powerup , ON ) 
+SWITCH_GENERATOR ( generator_kris_hard_health_powerup , ON ) 
+
+SWITCH_GENERATOR ( generator_zaib_easy_machine_gun_powerup , ON ) 
+SWITCH_GENERATOR ( generator_zaib_easy_armour_powerup , ON ) 
+SWITCH_GENERATOR ( generator_zaib_easy_health_powerup , ON ) 
+SWITCH_GENERATOR ( generator_zaib_med_machine_gun_powerup , ON ) 
+SWITCH_GENERATOR ( generator_zaib_med_armour_powerup , ON ) 
+SWITCH_GENERATOR ( generator_zaib_med_health_powerup , ON ) 
+SWITCH_GENERATOR ( generator_zaib_hard_machine_gun_powerup , ON ) 
+SWITCH_GENERATOR ( generator_zaib_hard_armour_powerup , ON ) 
+SWITCH_GENERATOR ( generator_zaib_hard_health_powerup , ON ) 
+
+SWITCH_GENERATOR ( generator_russ_easy_machine_gun_powerup , ON ) 
+SWITCH_GENERATOR ( generator_russ_easy_armour_powerup , ON ) 
+SWITCH_GENERATOR ( generator_russ_easy_health_powerup , ON ) 
+SWITCH_GENERATOR ( generator_russ_med_machine_gun_powerup , ON ) 
+SWITCH_GENERATOR ( generator_russ_med_armour_powerup , ON ) 
+SWITCH_GENERATOR ( generator_russ_med_health_powerup , ON ) 
+SWITCH_GENERATOR ( generator_russ_hard_machine_gun_powerup , ON ) 
+SWITCH_GENERATOR ( generator_russ_hard_armour_powerup , ON ) 
+SWITCH_GENERATOR ( generator_russ_hard_health_powerup , ON ) 
+
+SWITCH_GENERATOR ( generator_russ_hospital_machine_gun_powerup , ON ) 
+SWITCH_GENERATOR ( generator_kris_hospital_machine_gun_powerup , ON ) 
+SWITCH_GENERATOR ( generator_zaib_hospital_machine_gun_powerup , ON ) 
+SWITCH_GENERATOR ( generator_neutral_hospital_machine_gun_powerup , ON )  
+
+
+
+DISABLE_CRANE ( kris_crane_easy_mission_2 )
+
+ENABLE_CRANE ( zaib_crane_easy_mission_2 )
+
+#ifdef PC
+
+CHANGE_GANG_CHAR_RESPECT ( islagang ,  shaft , -5 )
+
+#endif
+
+
+#ifdef PC
+
+SET_STATION_INFO ( trak10  ,  3 , 0 , 0 ) 
+
+SET_STATION_INFO ( trak11  ,  no_train ) 
+
+SET_STATION_INFO ( trak12  ,  2 , 0 , 0 ) 
+
+SET_STATION_INFO ( trak20  ,  3 , 0 , 0 ) 
+
+SET_STATION_INFO ( trak21  ,  no_train ) 
+
+SET_STATION_INFO ( trak22  ,  1 , 1 , 0 ) 
+
+SET_STATION_INFO ( trak00  ,  1 , 1 , 1 ) 
+
+SET_STATION_INFO ( trak01  ,  1 , 1 , 1 ) 
+
+GIVE_CAR_ALARM ( parked_car_13 )
+GIVE_CAR_ALARM ( parked_car_16 )
+GIVE_CAR_ALARM ( parked_car_19 )
+GIVE_CAR_ALARM ( parked_car_26 )
+GIVE_CAR_ALARM ( parked_car_33 )
+GIVE_CAR_ALARM ( parked_car_38 )
+GIVE_CAR_ALARM ( parked_car_44 )
+
+#endif			  
+
+SET_DIR_OF_TV_VANS ( 44.5 , 101.0 )
+
+// zaibatsu crane for stolen cars that create weapons
+
+WHILE ( true = 1 ) 
+
+
+	IF ( ( counter_all_missions_passed = 21 ) 
+	AND ( flag_on_mission = 0 ) )
+		SET counter_all_missions_passed = 22 
+		LAUNCH_MISSION ( bil_end.mis ) 	
+	ENDIF
+	
+
+	IF ( ( ( CHECK_SCORE_GREATER ( shaft , 4999999 ) )
+	AND ( flag_on_mission = 0 ) )
+	AND ( flag_reached_finish_score = 0 ) )
+		LEVEL_END_POINT_ARROW_AT ( arrow_end , 44.5 , 99.0 , 3.0 ) 
+		SET	flag_reached_finish_score = 1
+		DISPLAY_BRIEF ( 3752 )
+	ENDIF
+
+	IF ( ( ( flag_reached_finish_score = 1 )
+	AND ( flag_on_mission = 1 ) )
+	AND ( CHECK_SCORE_GREATER ( shaft , 4999999 ) ) )
+		REMOVE_ARROW ( arrow_end )
+		SET flag_reached_finish_score = 0
+	ENDIF
+
+	IF ( ( ( flag_reached_finish_score = 1 )
+	AND ( flag_on_mission = 0 ) )
+	AND ( NOT ( CHECK_SCORE_GREATER ( shaft , 4999999 ) ) ) )
+		REMOVE_ARROW ( arrow_end )
+		SET flag_reached_finish_score = 0
+		DISPLAY_BRIEF ( 3753 )
+	ENDIF
+
+	IF ( ( ( flag_reached_finish_score = 1 )
+	AND ( flag_on_mission = 0 ) )
+	AND ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 44.5 , 99.0 , 3.0 , 1.0 , 1.0 ) ) )
+		FINISH_LEVEL ( bonus_1 )
+	ENDIF
+
+
+ENDWHILE
+
+   			 		 
+LEVELEND

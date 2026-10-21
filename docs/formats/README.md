@@ -3,7 +3,7 @@
 What the game's data files look like on disk, the traps in reading them, and (in
 [loader-map.md](loader-map.md)) which `gta2.exe` functions read them into which structures.
 The decoders that embody these layouts are in [`tools/formats/`](../../tools/formats/README.md).
-DMA's own format specs are third-party and not committed: [../reference.md](../reference.md).
+DMA's own specs (format + scripting, with example missions): [specs/](specs/README.md).
 
 | File | What |
 |---|---|
@@ -36,4 +36,4 @@ and player observations of the original game.
 Left behind in my-games: `asset-pipeline.md` (its importer; the one format fact, CMAP≠DMAP,
 is in lessons.md), `pedestrian-collisions.md` and `traffic-drivers.md` (pure simulation
 design, no original-game evidence), the screenshot gallery, the listening-evidence JSON,
-and every third-party file (see ../reference.md).
+and the third-party binaries/PDFs (see ../reference.md; DMA's specs are in specs/).

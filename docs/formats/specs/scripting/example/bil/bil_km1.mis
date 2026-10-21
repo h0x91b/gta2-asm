@@ -1,0 +1,809 @@
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX KRISHNA CONVERSION XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+ 
+
+// objects for Krishna med phone1 mission1		
+	
+
+
+CHAR_DATA k_m_1_guard_1
+CHAR_DATA k_m_1_guard_2
+CHAR_DATA k_m_1_guard_3
+CHAR_DATA k_m_1_guard_4
+CHAR_DATA k_m_1_guard_5
+CHAR_DATA k_m_1_guard_6
+CHAR_DATA k_m_1_group_1_leader
+CHAR_DATA k_m_1_group_2_leader
+CHAR_DATA k_m_1_group_3_leader
+CHAR_DATA k_m_1_pickup_group_1_leader
+CHAR_DATA k_m_1_pickup_group_2_leader
+CHAR_DATA k_m_1_pickup_group_3_leader
+CHAR_DATA k_m_1_pickup_group_4_leader
+CHAR_DATA k_m_1_pickup_group_1_leader_reincarnated
+CHAR_DATA k_m_1_pickup_group_2_leader_reincarnated
+CHAR_DATA k_m_1_pickup_group_3_leader_reincarnated
+CHAR_DATA k_m_1_pickup_group_4_leader_reincarnated
+CAR_DATA k_m_1_truck_1
+COUNTER	k_m_1_alarm_raised_now = 0
+COUNTER k_m_1_all_groups_in_truck = 0
+COUNTER k_m_1_send_pickup_group_1_in_truck = 0
+COUNTER k_m_1_send_pickup_group_2_in_truck = 0
+COUNTER k_m_1_send_pickup_group_3_in_truck = 0
+COUNTER k_m_1_send_pickup_group_4_in_truck = 0
+COUNTER k_m_1_pickup_group_1_in_truck =	0
+COUNTER k_m_1_pickup_group_2_in_truck =	0
+COUNTER k_m_1_pickup_group_3_in_truck =	0
+COUNTER k_m_1_pickup_group_4_in_truck =	0
+COUNTER k_m_1_press_horn = 0
+COUNTER	k_m_1_guard_1_spotted_player = 0
+COUNTER	k_m_1_guard_2_spotted_player = 0
+COUNTER	k_m_1_guard_3_spotted_player = 0
+COUNTER	k_m_1_guard_4_spotted_player = 0
+COUNTER	k_m_1_guard_5_spotted_player = 0
+COUNTER	k_m_1_guard_6_spotted_player = 0
+COUNTER k_m_1_in_truck_1 = 0
+COUNTER k_m_1_in_truck_1_parking = 0
+COUNTER k_m_1_pickup_group_1_leader_reincarnated_obj1_passed = 0
+COUNTER k_m_1_pickup_group_2_leader_reincarnated_obj1_passed = 0
+COUNTER k_m_1_pickup_group_3_leader_reincarnated_obj1_passed = 0
+COUNTER k_m_1_pickup_group_4_leader_reincarnated_obj1_passed = 0
+COUNTER k_m_1_park_finished = 0
+COUNTER k_m_1_pickup_group_1_leader_dead = 0
+COUNTER k_m_1_pickup_group_2_leader_dead = 0
+COUNTER k_m_1_pickup_group_3_leader_dead = 0
+COUNTER k_m_1_pickup_group_4_leader_dead = 0
+COUNTER k_m_1_guards_dead = 0
+OBJ_DATA k_m_1_powerup_1
+OBJ_DATA k_m_1_powerup_2
+OBJ_DATA k_m_1_powerup_3
+OBJ_DATA k_m_1_powerup_4
+LIGHT k_m_1_light_1
+LIGHT k_m_1_light_2
+LIGHT k_m_1_light_3
+SOUND k_m_1_alarm_1
+SOUND k_m_1_alarm_2
+SOUND k_m_1_alarm_3
+SOUND k_m_1_chant 
+
+FORWARD k_m_1_alarm_raised:
+FORWARD clean_up_kris_med_phone1_m1:
+
+
+k_m_1_alarm_raised:
+	
+	SET_CHAR_OBJECTIVE  ( k_m_1_guard_1 , kill_char_on_foot , shaft )
+	SET_CHAR_OBJECTIVE  ( k_m_1_guard_2 , kill_char_on_foot , shaft )
+	SET_CHAR_OBJECTIVE  ( k_m_1_guard_3 , kill_char_on_foot , shaft )
+	SET_CHAR_OBJECTIVE  ( k_m_1_guard_4 , kill_char_on_foot , shaft )
+	SET_CHAR_OBJECTIVE  ( k_m_1_guard_5 , kill_char_on_foot , shaft )
+	SET_CHAR_OBJECTIVE  ( k_m_1_guard_6 , kill_char_on_foot , shaft )
+	#ifdef PC
+	k_m_1_light_1 = CREATE_LIGHT ( 166.0 , 40.0 , 3.0 ) 7.9 255 ( 255 , 0 , 0 ) 30 90 0
+	k_m_1_light_2 = CREATE_LIGHT ( 171.0 , 48.0 , 3.0 ) 7.9 255 ( 255 , 0 , 0 ) 30 90 0
+	k_m_1_light_3 = CREATE_LIGHT ( 180.0 , 44.0 , 3.0 ) 7.9 255 ( 255 , 0 , 0 ) 30 90 0
+
+	DELAY_HERE ( 90 )
+	k_m_1_alarm_1 = CREATE_SOUND ( 166.0 , 40.0 , 6.0 ) prison_alarm play_forever END
+	k_m_1_alarm_2 = CREATE_SOUND ( 171.0 , 48.0 , 6.0 ) prison_alarm play_forever END
+	k_m_1_alarm_3 = CREATE_SOUND ( 180.0 , 44.0 , 6.0 ) prison_alarm play_forever END
+	FORCE_CLEANUP ( k_m_1_alarm_1 )
+	FORCE_CLEANUP ( k_m_1_alarm_2 )
+	FORCE_CLEANUP ( k_m_1_alarm_3 )
+	#endif
+	SET k_m_1_alarm_raised_now = 1
+	DISPLAY_BRIEF ( 3241 ) // "INTRUDER ALERT! INTRUDER ALERT!"
+	k_m_1_group_1_leader = CREATE_CHAR ( 165.5 , 41.5 , 2.0 ) 10 90 criminal END
+	k_m_1_group_2_leader = CREATE_CHAR ( 169.5 , 45.5 , 2.0 ) 10 90 criminal END
+	k_m_1_group_3_leader = CREATE_CHAR ( 179.5 , 44.5 , 2.0 ) 10 90 criminal END
+	SET_CHAR_THREAT_REACTION ( k_m_1_group_1_leader , no_reaction )
+	SET_CHAR_THREAT_REACTION ( k_m_1_group_2_leader , no_reaction )
+	SET_CHAR_THREAT_REACTION ( k_m_1_group_3_leader , no_reaction )
+    GIVE_WEAPON ( k_m_1_group_1_leader , pistol )
+	GIVE_WEAPON ( k_m_1_group_2_leader , dual_pistol )
+	GIVE_WEAPON ( k_m_1_group_3_leader , shotgun )
+	#ifdef PSX
+	GIVE_WEAPON ( k_m_1_group_1_leader , shotgun )
+	GIVE_WEAPON ( k_m_1_group_2_leader , shotgun )
+	GIVE_WEAPON ( k_m_1_group_3_leader , shotgun )
+	#endif
+	ADD_CHAR_TO_GANG ( k_m_1_group_1_leader , russgang )
+	ADD_CHAR_TO_GANG ( k_m_1_group_2_leader , russgang )
+	ADD_CHAR_TO_GANG ( k_m_1_group_3_leader , russgang )	
+	#ifdef PC
+	ADD_GROUP_TO_CHARACTER ( k_m_1_group_1_leader , 4 )
+	ADD_GROUP_TO_CHARACTER ( k_m_1_group_2_leader , 4 )
+	ADD_GROUP_TO_CHARACTER ( k_m_1_group_3_leader , 4 )
+	#endif
+	#ifdef PSX
+	ADD_GROUP_TO_CHARACTER ( k_m_1_group_1_leader , 1 )
+	#endif
+	SET_CHAR_OBJECTIVE  ( k_m_1_group_1_leader , kill_char_on_foot , shaft )
+	SET_CHAR_OBJECTIVE  ( k_m_1_group_2_leader , kill_char_on_foot , shaft )
+	SET_CHAR_OBJECTIVE  ( k_m_1_group_3_leader , kill_char_on_foot , shaft )
+RETURN
+
+				
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+		
+// starts Krishna med phone1 mission1
+					
+
+kris_med_phone1_m1:
+
+SET flag_failed_kris_med_phone1_m1 = 0
+
+
+//DISABLE_THREAD_TRIGGER ( thr_kris_med_phone1_m1 ) 
+DISPLAY_MESSAGE ( 3842 ) // you have PASSED the mission!"
+DISPLAY_BRIEF ( 3252 ) // "you have selected Krishna med phone1 mission1"
+SET flag_on_mission = 1
+SET flag_on_kris_mission = 1
+k_m_1_truck_1 = CREATE_CAR ( 165.0 , 43.5 , 2.0 )	1 90 boxtruck END
+POINT_ARROW_AT ( arrow , k_m_1_truck_1 )
+UPDATE_DOOR_TARGET ( k_m_1_door_1 , k_m_1_truck_1 ) 
+
+k_m_1_guard_1 = CREATE_CHAR ( 166.5 , 40.5 , 2.0 )	10 90 criminal END
+k_m_1_guard_2 = CREATE_CHAR ( 174.5 , 44.5 , 2.0 )	10 90 criminal END
+k_m_1_guard_3 = CREATE_CHAR ( 171.5 , 37.5 , 2.0 )	10 90 criminal END
+k_m_1_guard_4 = CREATE_CHAR ( 177.5 , 42.5 , 2.0 )	10 90 criminal END
+k_m_1_guard_5 = CREATE_CHAR ( 181.5 , 38.5 , 2.0 )	10 90 criminal END
+k_m_1_guard_6 = CREATE_CHAR ( 175.5 , 49.5 , 4.0 )	10 90 criminal END
+k_m_1_powerup_1 = CREATE_OBJ ( 227.5 , 133.5 , 3.0 ) 0 COLLECT_01 15 END
+k_m_1_powerup_2 = CREATE_OBJ ( 175.5 , 58.5 , 4.0 ) 0 COLLECT_04 15 END
+k_m_1_powerup_3 = CREATE_OBJ ( 181.5 , 42.5 , 4.0 ) 0 COLLECT_39 END
+k_m_1_powerup_4 = CREATE_OBJ ( 173.5 , 47.5 , 3.0 ) 0 COLLECT_31 END
+FORCE_CLEANUP ( k_m_1_powerup_1 )
+FORCE_CLEANUP ( k_m_1_powerup_2 )
+FORCE_CLEANUP ( k_m_1_powerup_3 )
+FORCE_CLEANUP ( k_m_1_powerup_4 )
+ADD_PATROL_POINT ( k_m_1_guard_1 , 166.5 , 44.5 , 2.0 )
+ADD_PATROL_POINT ( k_m_1_guard_1 , 166.5 , 40.5 , 2.0 )
+ADD_PATROL_POINT ( k_m_1_guard_2 , 174.5 , 44.5 , 2.0 )
+ADD_PATROL_POINT ( k_m_1_guard_2 , 166.5 , 44.5 , 2.0 )
+ADD_PATROL_POINT ( k_m_1_guard_3 , 175.5 , 37.5 , 2.0 )
+ADD_PATROL_POINT ( k_m_1_guard_3 , 171.5 , 37.5 , 2.0 )
+ADD_PATROL_POINT ( k_m_1_guard_4 , 177.5 , 46.5 , 2.0 )
+ADD_PATROL_POINT ( k_m_1_guard_4 , 177.5 , 42.5 , 2.0 )
+ADD_PATROL_POINT ( k_m_1_guard_5 , 179.5 , 41.5 , 2.0 )
+ADD_PATROL_POINT ( k_m_1_guard_5 , 181.5 , 38.5 , 2.0 )
+ADD_PATROL_POINT ( k_m_1_guard_6 , 175.5 , 49.5 , 4.0 )
+ADD_PATROL_POINT ( k_m_1_guard_6 , 175.5 , 52.5 , 4.0 )
+SET_CHAR_THREAT_REACTION ( k_m_1_guard_1 , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_m_1_guard_2 , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_m_1_guard_3 , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_m_1_guard_4 , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_m_1_guard_5 , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_m_1_guard_6 , no_reaction )
+SET_CHAR_THREAT_SEARCH ( k_m_1_guard_1 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_m_1_guard_2 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_m_1_guard_3 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_m_1_guard_4 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_m_1_guard_5 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_m_1_guard_6 , line_of_sight_player_only )
+GIVE_WEAPON ( k_m_1_guard_1 , pistol )
+GIVE_WEAPON ( k_m_1_guard_2 , pistol )
+GIVE_WEAPON ( k_m_1_guard_3 , pistol )
+GIVE_WEAPON ( k_m_1_guard_4 , pistol )
+GIVE_WEAPON ( k_m_1_guard_5 , pistol )
+GIVE_WEAPON ( k_m_1_guard_6 , pistol )
+ADD_CHAR_TO_GANG ( k_m_1_guard_1 , russgang )
+ADD_CHAR_TO_GANG ( k_m_1_guard_2 , russgang )
+ADD_CHAR_TO_GANG ( k_m_1_guard_3 , russgang )
+ADD_CHAR_TO_GANG ( k_m_1_guard_4 , russgang ) 
+ADD_CHAR_TO_GANG ( k_m_1_guard_5 , russgang )
+ADD_CHAR_TO_GANG ( k_m_1_guard_6 , russgang )
+
+
+
+WHILE_EXEC ( k_m_1_all_groups_in_truck = 0 )
+
+	 
+	// if player is seen by guard1
+	
+	IF ( k_m_1_guards_dead = 0 )
+		IF ( ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_m_1_guard_1 ) ) 
+		AND	( IS_CHAR_IN_ZONE ( shaft , B11 ) ) )
+		AND ( k_m_1_guard_1_spotted_player = 0 ) )
+		AND ( k_m_1_alarm_raised_now = 0 ) )
+			SET k_m_1_guard_1_spotted_player = 1
+			SET_CHAR_OBJECTIVE  ( k_m_1_guard_1 , goto_area_on_foot , 168.5 , 44.5 , 2.0 )
+			DISPLAY_BRIEF_NOW ( 3240 ) // "shit! we've got an intruder"	 
+		ENDIF
+	
+
+
+	// if guard1 gets to alarm all groups kill player, later add if only inside area and not in truck
+
+		IF ( ( ( k_m_1_guard_1_spotted_player = 1 ) 
+		AND ( IS_CHAR_OBJECTIVE_PASSED ( k_m_1_guard_1 ) ) )
+		AND ( k_m_1_alarm_raised_now = 0 ) )
+			GOSUB k_m_1_alarm_raised:
+		ENDIF
+
+
+	// if player is seen by guard2
+	
+		IF ( ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_m_1_guard_2 ) ) 
+		AND	( IS_CHAR_IN_ZONE ( shaft , B11 ) ) )
+		AND ( k_m_1_guard_2_spotted_player = 0 ) )		
+		AND ( k_m_1_alarm_raised_now = 0 ) )
+			SET k_m_1_guard_2_spotted_player = 1
+			SET_CHAR_OBJECTIVE  ( k_m_1_guard_2 , goto_area_on_foot , 168.5 , 44.5 , 2.0 )
+			DISPLAY_BRIEF_NOW ( 3240 ) // "shit! we've got an intruder"	 
+		ENDIF
+
+
+		// if guard2 gets to alarm all groups kill player, later add if only inside area and not in truck
+
+		IF ( ( ( k_m_1_guard_2_spotted_player = 1 ) 
+		AND ( IS_CHAR_OBJECTIVE_PASSED ( k_m_1_guard_2 ) ) )
+		AND ( k_m_1_alarm_raised_now = 0 ) )
+			GOSUB k_m_1_alarm_raised:
+		ENDIF
+
+
+		// if player is seen by guard3
+		
+		IF ( ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_m_1_guard_3 ) ) 
+		AND	( IS_CHAR_IN_ZONE ( shaft , B11 ) ) )
+		AND ( k_m_1_guard_3_spotted_player = 0 ) )
+		AND ( k_m_1_alarm_raised_now = 0 ) )
+			SET k_m_1_guard_3_spotted_player = 1
+			SET_CHAR_OBJECTIVE  ( k_m_1_guard_3 , goto_area_on_foot , 166.5 , 38.5 , 2.0 )
+			DISPLAY_BRIEF_NOW ( 3240 ) // "shit! we've got an intruder"	 
+		ENDIF
+
+
+		// if guard3 gets to alarm all groups kill player, later add if only inside area and not in truck
+
+		IF ( ( ( k_m_1_guard_3_spotted_player = 1 ) 
+		AND ( IS_CHAR_OBJECTIVE_PASSED ( k_m_1_guard_3 ) ) )
+		AND ( k_m_1_alarm_raised_now = 0 ) )
+			GOSUB k_m_1_alarm_raised:
+		ENDIF
+
+
+		// if player is seen by guard4
+		
+		IF ( ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_m_1_guard_4 ) ) 
+		AND	( IS_CHAR_IN_ZONE ( shaft , B11 ) ) )
+		AND ( k_m_1_guard_4_spotted_player = 0 ) )
+		AND ( k_m_1_alarm_raised_now = 0 ) )
+			SET k_m_1_guard_4_spotted_player = 1
+			SET_CHAR_OBJECTIVE  ( k_m_1_guard_4 , goto_area_on_foot , 180.5 , 43.5 , 2.0 )
+			DISPLAY_BRIEF_NOW ( 3240 ) // "shit! we've got an intruder"	 
+		ENDIF
+
+
+		// if guard4 gets to alarm all groups kill player, later add if only inside area and not in truck
+
+		IF ( ( ( k_m_1_guard_4_spotted_player = 1 ) 
+		AND ( IS_CHAR_OBJECTIVE_PASSED ( k_m_1_guard_4 ) ) )
+		AND ( k_m_1_alarm_raised_now = 0 ) )
+			GOSUB k_m_1_alarm_raised:
+		ENDIF
+
+
+		// if player is seen by guard5
+		
+		IF ( ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_m_1_guard_5 ) ) 
+		AND	( IS_CHAR_IN_ZONE ( shaft , B11 ) ) )
+		AND ( k_m_1_guard_5_spotted_player = 0 ) )
+		AND ( k_m_1_alarm_raised_now = 0 ) )
+			SET k_m_1_guard_5_spotted_player = 1
+			SET_CHAR_OBJECTIVE  ( k_m_1_guard_5 , goto_area_on_foot , 180.5 , 43.5 , 2.0 )
+			DISPLAY_BRIEF_NOW ( 3240 ) // "shit! we've got an intruder"	 
+		ENDIF
+
+
+		// if guard5 gets to alarm all groups kill player, later add if only inside area and not in truck
+
+		IF ( ( ( k_m_1_guard_5_spotted_player = 1 ) 
+		AND ( IS_CHAR_OBJECTIVE_PASSED ( k_m_1_guard_5 ) ) )
+		AND ( k_m_1_alarm_raised_now = 0 ) )
+			GOSUB k_m_1_alarm_raised:
+		ENDIF
+
+
+		// if player is seen by guard6
+		
+		IF ( ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_m_1_guard_6 ) ) 
+		AND	( IS_CHAR_IN_ZONE ( shaft , B11 ) ) )
+		AND ( k_m_1_guard_6_spotted_player = 0 ) )
+		AND ( k_m_1_alarm_raised_now = 0 ) )
+			SET k_m_1_guard_6_spotted_player = 1
+			SET_CHAR_OBJECTIVE  ( k_m_1_guard_6 , goto_area_on_foot , 168.5 , 44.5 , 2.0 )
+			DISPLAY_BRIEF_NOW ( 3240 ) // "shit! we've got an intruder"	 
+		ENDIF
+
+
+		// if guard6 gets to alarm all groups kill player, later add if only inside area and not in truck
+
+		IF ( ( ( k_m_1_guard_6_spotted_player = 1 ) 
+		AND ( IS_CHAR_OBJECTIVE_PASSED ( k_m_1_guard_6 ) ) )
+		AND ( k_m_1_alarm_raised_now = 0 ) )
+			GOSUB k_m_1_alarm_raised:
+		ENDIF
+	ENDIF
+
+
+	// if car is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( k_m_1_truck_1 ) )
+	AND ( flag_failed_kris_med_phone1_m1 = 0 ) )
+//		DELAY_HERE ( 90 )
+		SET flag_failed_kris_med_phone1_m1 = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3242 ) // "you can't pick anybody up without the truck, you have failed me!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+	
+
+	// if player gets in car points at target
+
+   	IF ( ( IS_CHARACTER_IN_CAR ( shaft , k_m_1_truck_1 ) )
+   	AND ( k_m_1_in_truck_1 = 0 ) )
+//   		DELAY ( 90 )
+		SET k_m_1_in_truck_1 = 1
+		DISPLAY_BRIEF_NOW ( 3243 ) // "get the truck across to the dockside near Mad Island!"
+   		POINT_ARROW_AT ( arrow , 8.5 , 83.5 , 2.0 )
+   	ENDIF
+
+	
+	// if player gets out of car points back at car and says to get back in
+		
+   	IF ( ( NOT ( IS_CHARACTER_IN_CAR ( shaft , k_m_1_truck_1 ) ) )
+	AND ( k_m_1_in_truck_1 = 1 ) )
+//		DELAY ( 90 )
+		SET k_m_1_in_truck_1 = 0
+		DISPLAY_BRIEF_NOW ( 3244 ) // "what the fuck are you doing! get your arse back in the truck"
+		POINT_ARROW_AT ( arrow , k_m_1_truck_1 )
+	ENDIF
+
+
+	// if car is at destination it says to press horn and wait
+
+//	IF ( ( ( IS_CAR_IN_BLOCK ( k_m_1_truck_1 , 8.5 , 83.5 , 2.0 ) ) 
+	IF ( ( ( IS_CAR_IN_BLOCK ( k_m_1_truck_1 , 8.5 , 83.5 , 2.0 , 2.0 , 2.0 ) )
+	AND ( IS_CHARACTER_IN_CAR ( shaft , k_m_1_truck_1 ) ) )
+	AND ( k_m_1_press_horn = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3245 ) // "press the horn and wait here"
+		SET k_m_1_press_horn = 1
+		REMOVE_ARROW ( arrow )
+	ENDIF
+
+	
+	IF ( ( ( NOT ( IS_CAR_IN_BLOCK ( k_m_1_truck_1 , 8.5 , 83.5 , 2.0 , 2.0 , 2.0 ) ) )
+	AND ( IS_CHARACTER_IN_CAR ( shaft , k_m_1_truck_1 ) ) )
+	AND ( k_m_1_press_horn = 1 ) )
+		DISPLAY_BRIEF_NOW ( 3254 ) // "Didn't I tell you to wait there? Get the truck back to  "
+		SET k_m_1_press_horn = 0
+		POINT_ARROW_AT ( arrow , 8.5 , 83.5 , 2.0 )
+	ENDIF
+
+
+	IF ( ( ( ( NOT ( IS_CAR_IN_BLOCK ( k_m_1_truck_1 , 8.5 , 83.5 , 2.0 , 2.0 , 2.0 ) ) )
+	AND ( IS_CHARACTER_IN_CAR ( shaft , k_m_1_truck_1 ) ) )
+	AND ( k_m_1_pickup_group_4_in_truck = 0 ) )
+	AND ( k_m_1_press_horn = 2 ) )
+		DISPLAY_BRIEF_NOW ( 3254 ) // "Didn't I tell you to wait there? Get the truck back to  "
+		SET k_m_1_press_horn = 3
+		POINT_ARROW_AT ( arrow , 8.5 , 83.5 , 2.0 )
+	ENDIF
+
+	IF ( ( ( IS_CAR_IN_BLOCK ( k_m_1_truck_1 , 8.5 , 83.5 , 2.0 , 2.0 , 2.0 ) )
+	AND ( IS_CHARACTER_IN_CAR ( shaft , k_m_1_truck_1 ) ) )
+	AND ( k_m_1_press_horn = 3 ) )
+	   	SET k_m_1_press_horn = 2
+		REMOVE_ARROW ( arrow )
+	ENDIF
+
+
+	// if player presses horn group1 is created and sent to back of car
+
+	IF ( ( ( ( ( IS_CAR_IN_BLOCK ( k_m_1_truck_1 , 8.5 , 83.5 , 2.0 , 2.0 , 2.0 ) ) 
+	AND ( IS_CHARACTER_IN_CAR ( shaft , k_m_1_truck_1 ) ) )
+	AND ( IS_CHAR_PRESSING_HORN ( shaft ) ) )
+	AND ( k_m_1_press_horn = 1 ) )
+	AND ( k_m_1_send_pickup_group_1_in_truck = 0 ) )
+		REMOVE_ARROW ( arrow )
+		SET k_m_1_send_pickup_group_1_in_truck = 1
+		SET k_m_1_press_horn = 2
+		DISPLAY_BRIEF_NOW ( 3246 ) // "sit and wait for the stupid russians to get into the truck"
+		#ifdef PSX
+		DELETE_ITEM ( k_m_1_guard_1 )
+		DELETE_ITEM ( k_m_1_guard_2 )
+		DELETE_ITEM ( k_m_1_guard_3 )
+		DELETE_ITEM ( k_m_1_guard_4 )
+		DELETE_ITEM ( k_m_1_guard_5 )
+		DELETE_ITEM ( k_m_1_guard_6 )
+		DELETE_ITEM ( k_m_1_group_1_leader )
+		DELETE_ITEM ( k_m_1_group_2_leader )
+		DELETE_ITEM ( k_m_1_group_3_leader )
+		SET k_m_1_guards_dead = 1
+		#endif
+		k_m_1_pickup_group_1_leader = CREATE_CHAR ( 6.5 , 81.7 , 2.0 ) 10 90 criminal END
+		SET_CHAR_THREAT_REACTION ( k_m_1_pickup_group_1_leader , no_reaction )
+		ADD_CHAR_TO_GANG ( k_m_1_pickup_group_1_leader , russgang )
+		ADD_GROUP_TO_CHARACTER ( k_m_1_pickup_group_1_leader , 4 )
+//		SET_CHAR_OBJECTIVE ( k_m_1_pickup_group_1_leader , ENTER_CAR_AS_PASSENGER , k_m_1_truck_1 )
+		ORDER_CHAR_TO_BACKDOOR ( k_m_1_pickup_group_1_leader , k_m_1_truck_1 )
+	ENDIF
+
+
+	IF ( ( ( ( ( k_m_1_send_pickup_group_1_in_truck = 1 )
+	AND ( NOT ( CHECK_NUMBER_ALIVE_IN_GROUP ( k_m_1_pickup_group_1_leader , 4 ) ) ) )
+	AND ( k_m_1_pickup_group_1_leader_dead = 0 ) )
+	AND ( k_m_1_send_pickup_group_1_in_truck = 1 ) )
+	AND ( flag_failed_kris_med_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		SET k_m_1_pickup_group_1_leader_dead = 1
+		SET flag_failed_kris_med_phone1_m1 = 1
+		DISPLAY_BRIEF ( 3255 ) // "You were told to pick them up not kill them, come back when you think you can handle the job!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( ( ( k_m_1_pickup_group_1_in_truck = 0 ) 
+	AND ( k_m_1_send_pickup_group_1_in_truck = 1 ) )
+	AND ( IS_GROUP_IN_CAR ( k_m_1_pickup_group_1_leader ) ) )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( k_m_1_pickup_group_1_leader ) ) )
+		SET k_m_1_send_pickup_group_1_in_truck = 2
+		SET k_m_1_pickup_group_1_in_truck = 1
+		SET k_m_1_send_pickup_group_2_in_truck = 1				
+		KILL_ALL_PASSENGERS ( k_m_1_truck_1 ) 
+		k_m_1_pickup_group_2_leader = CREATE_CHAR ( 11.5 , 84.3 , 2.0 ) 10 90 criminal END
+		SET_CHAR_THREAT_REACTION ( k_m_1_pickup_group_2_leader , no_reaction )
+		ADD_CHAR_TO_GANG ( k_m_1_pickup_group_2_leader , russgang )
+		ADD_GROUP_TO_CHARACTER ( k_m_1_pickup_group_2_leader , 4 )
+//		SET_CHAR_OBJECTIVE ( k_m_1_pickup_group_2_leader , ENTER_CAR_AS_PASSENGER , k_m_1_truck_1 )
+		ORDER_CHAR_TO_BACKDOOR ( k_m_1_pickup_group_2_leader , k_m_1_truck_1 )
+	ENDIF
+
+
+	IF ( ( ( ( ( k_m_1_send_pickup_group_2_in_truck = 1 )
+	AND ( NOT ( CHECK_NUMBER_ALIVE_IN_GROUP ( k_m_1_pickup_group_2_leader , 4 ) ) ) )
+	AND ( k_m_1_pickup_group_2_leader_dead = 0 ) )
+	AND ( k_m_1_send_pickup_group_2_in_truck = 1 ) )
+	AND ( flag_failed_kris_med_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		SET k_m_1_pickup_group_2_leader_dead = 1
+		SET flag_failed_kris_med_phone1_m1 = 1
+		DISPLAY_BRIEF ( 3255 ) // "You were told to pick them up not kill them, come back when you think you can handle the job!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( ( ( k_m_1_pickup_group_2_in_truck = 0 ) 
+	AND ( k_m_1_send_pickup_group_2_in_truck = 1 ) )
+	AND ( IS_GROUP_IN_CAR ( k_m_1_pickup_group_2_leader ) ) )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( k_m_1_pickup_group_2_leader ) ) )
+		SET k_m_1_send_pickup_group_2_in_truck = 2
+		DISPLAY_BRIEF_NOW ( 3247 ) // "ok there are still more of the sewer rats to come be patient!"	
+		SET k_m_1_pickup_group_2_in_truck = 1
+		SET k_m_1_send_pickup_group_3_in_truck = 1				
+		KILL_ALL_PASSENGERS ( k_m_1_truck_1 )
+		k_m_1_pickup_group_3_leader = CREATE_CHAR ( 6.5 , 82.3 , 2.0 ) 10 90 criminal END
+		SET_CHAR_THREAT_REACTION ( k_m_1_pickup_group_3_leader , no_reaction )
+		ADD_CHAR_TO_GANG ( k_m_1_pickup_group_3_leader , russgang )
+		ADD_GROUP_TO_CHARACTER ( k_m_1_pickup_group_3_leader , 4 )
+//		SET_CHAR_OBJECTIVE ( k_m_1_pickup_group_3_leader , ENTER_CAR_AS_PASSENGER , k_m_1_truck_1 )
+		ORDER_CHAR_TO_BACKDOOR ( k_m_1_pickup_group_3_leader , k_m_1_truck_1 )
+	ENDIF
+
+
+	IF ( ( ( ( ( k_m_1_send_pickup_group_3_in_truck = 1 )
+	AND ( NOT ( CHECK_NUMBER_ALIVE_IN_GROUP ( k_m_1_pickup_group_3_leader , 4 ) ) ) )
+	AND ( k_m_1_pickup_group_3_leader_dead = 0 ) )
+	AND ( k_m_1_send_pickup_group_3_in_truck = 1 ) )
+	AND ( flag_failed_kris_med_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		SET k_m_1_pickup_group_3_leader_dead = 1
+		SET flag_failed_kris_med_phone1_m1 = 1
+		DISPLAY_BRIEF ( 3255 ) // "You were told to pick them up not kill them, come back when you think you can handle the job!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( ( ( k_m_1_pickup_group_3_in_truck = 0 ) 
+	AND ( k_m_1_send_pickup_group_3_in_truck = 1 ) )
+	AND ( IS_GROUP_IN_CAR ( k_m_1_pickup_group_3_leader ) ) )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( k_m_1_pickup_group_3_leader ) ) )
+		SET k_m_1_send_pickup_group_3_in_truck = 2
+		SET k_m_1_pickup_group_3_in_truck = 1
+		SET k_m_1_send_pickup_group_4_in_truck = 1				
+		KILL_ALL_PASSENGERS ( k_m_1_truck_1 )
+		k_m_1_pickup_group_4_leader = CREATE_CHAR ( 11.5 , 83.7 , 2.0 ) 10 90 criminal END
+		SET_CHAR_THREAT_REACTION ( k_m_1_pickup_group_4_leader , no_reaction )
+		ADD_CHAR_TO_GANG ( k_m_1_pickup_group_4_leader , russgang )
+		ADD_GROUP_TO_CHARACTER ( k_m_1_pickup_group_4_leader , 4 )
+//		SET_CHAR_OBJECTIVE ( k_m_1_pickup_group_4_leader , ENTER_CAR_AS_PASSENGER , k_m_1_truck_1 )
+		ORDER_CHAR_TO_BACKDOOR ( k_m_1_pickup_group_4_leader , k_m_1_truck_1 )
+	ENDIF
+
+
+	IF ( ( ( ( ( k_m_1_send_pickup_group_4_in_truck = 1 )
+	AND ( NOT ( CHECK_NUMBER_ALIVE_IN_GROUP ( k_m_1_pickup_group_4_leader , 4 ) ) ) )
+	AND ( k_m_1_pickup_group_4_leader_dead = 0 ) )
+	AND ( k_m_1_send_pickup_group_4_in_truck = 1 ) )
+	AND ( flag_failed_kris_med_phone1_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		SET k_m_1_pickup_group_4_leader_dead = 1
+		SET flag_failed_kris_med_phone1_m1 = 1
+		DISPLAY_BRIEF ( 3255 ) // "You were told to pick them up not kill them, come back when you think you can handle the job!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( ( ( k_m_1_pickup_group_4_in_truck = 0 ) 
+	AND ( k_m_1_send_pickup_group_4_in_truck = 1 ) )
+	AND ( IS_GROUP_IN_CAR ( k_m_1_pickup_group_4_leader ) ) )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( k_m_1_pickup_group_4_leader ) ) )
+		SET k_m_1_send_pickup_group_4_in_truck = 2
+		DISPLAY_BRIEF_NOW ( 3248 ) // "ok that's all of them, now bring them down to the conversion house."	
+		SET k_m_1_pickup_group_4_in_truck = 1				
+		SET k_m_1_all_groups_in_truck = 1
+		POINT_ARROW_AT ( arrow , 238.0 , 112.0 , 2.0 )
+	ENDIF
+ENDWHILE
+
+MAKE_DOOR_AUTOMATIC ( k_m_1_door_1 ) 
+
+	
+WHILE_EXEC ( k_m_1_all_groups_in_truck = 1 )
+	 
+
+	// if car is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( k_m_1_truck_1 ) )
+	AND ( flag_failed_kris_med_phone1_m1 = 0 ) )
+//		DELAY_HERE ( 90 )
+		SET flag_failed_kris_med_phone1_m1 = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3249 ) // "You killed all of my new men, you have failed me!"
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+	
+
+	// if player gets in car points at target
+
+   	IF ( ( IS_CHARACTER_IN_CAR ( shaft , k_m_1_truck_1 ) )
+   	AND ( k_m_1_in_truck_1 = 0 ) )
+//   		DELAY ( 90 )
+   		SET k_m_1_in_truck_1 = 1
+		DISPLAY_BRIEF_NOW ( 3250 ) // "get the truck across to the conversion house near Krishna Krushers!"
+   		POINT_ARROW_AT ( arrow , 239.0 , 112.0 , 2.0 )
+   	ENDIF
+
+	
+	// if player gets out of car points back at car and says to get back in
+		
+   	IF ( ( NOT ( IS_CHARACTER_IN_CAR ( shaft , k_m_1_truck_1 ) ) )
+	AND ( k_m_1_in_truck_1 = 1 ) )
+//		DELAY ( 90 )
+		SET k_m_1_in_truck_1 = 0
+		DISPLAY_BRIEF_NOW ( 3244 ) // "what the fuck are you doing! get your arse back in the truck"
+		POINT_ARROW_AT ( arrow , k_m_1_truck_1 )
+	ENDIF
+
+	// waits for player outside door, then parks the truck
+	
+//	IF ( ( ( LOCATE_CHARACTER_BY_CAR ( shaft , 239.0 , 112.0 , 2.0 , 2.0 , 2.0 ) ) 
+	IF ( ( IS_CAR_IN_BLOCK ( k_m_1_truck_1 , 239.0 , 112.0 , 2.0 , 2.0 , 2.0 ) )
+//	AND ( IS_CHARACTER_IN_CAR ( shaft , k_m_1_truck_1 ) ) )
+	AND ( k_m_1_in_truck_1_parking = 0 ) )
+		SET k_m_1_all_groups_in_truck = 2
+	   	PARK ( k_m_1_truck_1 , k_m_1_door_1 )
+		SET k_m_1_in_truck_1_parking = 1
+	ENDIF	
+
+ENDWHILE
+
+
+	// waits for truck to finish parking, then passes mission
+
+WHILE_EXEC ( k_m_1_in_truck_1_parking = 1 )
+
+	IF ( ( HAS_PARK_FINISHED ( ) )
+	AND ( k_m_1_park_finished = 0 ) )
+	
+		
+		#ifdef PC
+		k_m_1_chant = CREATE_SOUND ( 240.0 , 112.0 , 6.0 ) gang_dumped play_forever END
+		FORCE_CLEANUP ( k_m_1_chant )
+		#endif
+		k_m_1_pickup_group_1_leader_reincarnated = CREATE_CHAR ( 240.0 , 110.5 , 4.0 ) 9 90 drone END
+		SET_CHAR_THREAT_REACTION ( k_m_1_pickup_group_1_leader_reincarnated , no_reaction )
+		ADD_CHAR_TO_GANG ( k_m_1_pickup_group_1_leader_reincarnated , krisgang )
+		#ifdef PC
+		ADD_GROUP_TO_CHARACTER ( k_m_1_pickup_group_1_leader_reincarnated , 4 )
+		#endif
+		#ifdef PSX
+		ADD_GROUP_TO_CHARACTER ( k_m_1_pickup_group_1_leader_reincarnated , 1 )
+		#endif
+//	    SET_CHAR_OBJECTIVE  ( k_m_1_pickup_group_1_leader_reincarnated , goto_area_on_foot , 237.5 , 108.5 , 4.0 ) 
+	    SET_CHAR_OBJECTIVE  ( k_m_1_pickup_group_1_leader_reincarnated , goto_area_on_foot , 238.5 , 110.5 , 4.0 ) 
+		k_m_1_pickup_group_2_leader_reincarnated = CREATE_CHAR ( 240.0 , 111.5 , 4.0 ) 9 90 drone END
+		SET_CHAR_THREAT_REACTION ( k_m_1_pickup_group_2_leader_reincarnated , no_reaction )
+		ADD_CHAR_TO_GANG ( k_m_1_pickup_group_2_leader_reincarnated , krisgang )
+		#ifdef PC
+		ADD_GROUP_TO_CHARACTER ( k_m_1_pickup_group_2_leader_reincarnated , 4 )
+		#endif
+		#ifdef PSX
+		ADD_GROUP_TO_CHARACTER ( k_m_1_pickup_group_2_leader_reincarnated , 2 )
+		#endif
+//	    SET_CHAR_OBJECTIVE  ( k_m_1_pickup_group_2_leader_reincarnated , goto_area_on_foot , 237.5 , 109.5 , 4.0 ) 
+	    SET_CHAR_OBJECTIVE  ( k_m_1_pickup_group_2_leader_reincarnated , goto_area_on_foot , 238.5 , 111.5 , 4.0 ) 
+		k_m_1_pickup_group_3_leader_reincarnated = CREATE_CHAR ( 240.0 , 112.5 , 4.0 ) 9 90 drone END
+		SET_CHAR_THREAT_REACTION ( k_m_1_pickup_group_3_leader_reincarnated , no_reaction )
+		ADD_CHAR_TO_GANG ( k_m_1_pickup_group_3_leader_reincarnated , krisgang )
+		#ifdef PC
+		ADD_GROUP_TO_CHARACTER ( k_m_1_pickup_group_3_leader_reincarnated , 4 )
+		#endif
+		#ifdef PSX
+		ADD_GROUP_TO_CHARACTER ( k_m_1_pickup_group_3_leader_reincarnated , 2 )
+		#endif
+//		SET_CHAR_OBJECTIVE  ( k_m_1_pickup_group_3_leader_reincarnated , goto_area_on_foot , 237.5 , 114.5 , 4.0 ) 
+		SET_CHAR_OBJECTIVE  ( k_m_1_pickup_group_3_leader_reincarnated , goto_area_on_foot , 238.5 , 112.5 , 4.0 ) 
+		k_m_1_pickup_group_4_leader_reincarnated = CREATE_CHAR ( 240.0 , 113.5 , 4.0 ) 9 90 drone END
+		SET_CHAR_THREAT_REACTION ( k_m_1_pickup_group_4_leader_reincarnated , no_reaction )
+		ADD_CHAR_TO_GANG ( k_m_1_pickup_group_4_leader_reincarnated , krisgang )
+		#ifdef PC
+		ADD_GROUP_TO_CHARACTER ( k_m_1_pickup_group_4_leader_reincarnated , 4 )
+		#endif
+		#ifdef PSX
+		ADD_GROUP_TO_CHARACTER ( k_m_1_pickup_group_4_leader_reincarnated , 1 )
+		#endif
+//		SET_CHAR_OBJECTIVE  ( k_m_1_pickup_group_4_leader_reincarnated , goto_area_on_foot , 237.5 , 115.5 , 4.0 ) 
+		SET_CHAR_OBJECTIVE  ( k_m_1_pickup_group_4_leader_reincarnated , goto_area_on_foot , 238.5 , 113.5 , 4.0 ) 
+		SET k_m_1_park_finished = 1
+
+
+	ENDIF	
+
+	WHILE ( k_m_1_park_finished = 1 )
+
+		IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_m_1_pickup_group_1_leader_reincarnated ) ) 
+		AND ( k_m_1_pickup_group_1_leader_reincarnated_obj1_passed = 0 ) )
+			SET k_m_1_pickup_group_1_leader_reincarnated_obj1_passed = 1	
+//			SET_CHAR_OBJECTIVE  ( k_m_1_pickup_group_1_leader_reincarnated , no_obj )
+			MAKE_CHAR_DO_NOTHING ( k_m_1_pickup_group_1_leader_reincarnated )
+		ENDIF
+
+		IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_m_1_pickup_group_2_leader_reincarnated ) ) 
+		AND ( k_m_1_pickup_group_2_leader_reincarnated_obj1_passed = 0 ) )
+			SET k_m_1_pickup_group_2_leader_reincarnated_obj1_passed = 1	
+//			SET_CHAR_OBJECTIVE  ( k_m_1_pickup_group_2_leader_reincarnated , no_obj )
+			MAKE_CHAR_DO_NOTHING ( k_m_1_pickup_group_2_leader_reincarnated )
+		ENDIF
+
+		IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_m_1_pickup_group_3_leader_reincarnated ) ) 
+		AND ( k_m_1_pickup_group_3_leader_reincarnated_obj1_passed = 0 ) )
+			SET k_m_1_pickup_group_3_leader_reincarnated_obj1_passed = 1	
+//			SET_CHAR_OBJECTIVE  ( k_m_1_pickup_group_3_leader_reincarnated , no_obj )
+			MAKE_CHAR_DO_NOTHING ( k_m_1_pickup_group_3_leader_reincarnated )
+		ENDIF
+
+		IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_m_1_pickup_group_4_leader_reincarnated ) ) 
+		AND ( k_m_1_pickup_group_4_leader_reincarnated_obj1_passed = 0 ) )
+			SET k_m_1_pickup_group_4_leader_reincarnated_obj1_passed = 1	
+//			SET_CHAR_OBJECTIVE  ( k_m_1_pickup_group_4_leader_reincarnated , no_obj )
+			MAKE_CHAR_DO_NOTHING ( k_m_1_pickup_group_4_leader_reincarnated )
+		ENDIF
+
+		
+		IF ( ( ( ( k_m_1_pickup_group_1_leader_reincarnated_obj1_passed = 1 )
+		AND ( k_m_1_pickup_group_2_leader_reincarnated_obj1_passed = 1 ) )
+		AND ( k_m_1_pickup_group_3_leader_reincarnated_obj1_passed = 1 ) )
+		AND ( k_m_1_pickup_group_4_leader_reincarnated_obj1_passed = 1 ) )
+			SET k_m_1_in_truck_1_parking = 2
+			SET k_m_1_park_finished = 2
+			CLEAR_ALL_BRIEFS ( )
+			DISPLAY_BRIEF ( 3251 ) // "well done you have passed!"
+			++ counter_all_missions_passed
+			SET flag_passed_kris_med_phone1_m1 = 1
+			DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+			ADD_SCORE ( shaft , 60000 )
+			ADD_MULTIPLIER ( shaft , 1 ) 
+			CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , 1 )
+			CLEAR_WANTED_LEVEL ( shaft )
+			IF ( flag_passed_kris_med_phone1_2_m3 = 1 )
+				SET_PHONE_DEAD ( ph_kris_med_phone1 ) 
+				DISABLE_THREAD_TRIGGER ( thr_kris_med_phone1_m1 )
+			ENDIF
+			RETURN
+		ENDIF
+		ENDEXEC
+
+	ENDWHILE
+
+ENDWHILE
+
+
+	
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+// deletes all objects when Krishna med phone1 mission1 is finished...
+				
+clean_up_kris_med_phone1_m1: 
+	
+	SET k_m_1_all_groups_in_truck = 2
+	REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	MAKE_DOOR_MANUAL ( k_m_1_door_1 ) 
+	
+	#ifdef PC
+	IF ( k_m_1_alarm_raised_now = 1 )
+		DELETE_ITEM ( k_m_1_light_1 )
+		DELETE_ITEM ( k_m_1_light_2 )
+		DELETE_ITEM ( k_m_1_light_3 )
+	ENDIF
+	#endif
+	
+	
+	IF ( flag_passed_kris_med_phone1_m1 = 1 )
+		++ flag_kris_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_kris_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3671 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3670 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_kris_med_phone1_m1 = 1 )
+		++ flag_kris_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_kris_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+	MISSION_HAS_FINISHED ( )
+	
+	SET flag_on_mission	= 0
+	SET flag_on_kris_mission = 0
+	
+	RETURN
+
+
+MISSIONSTART
+
+	GOSUB kris_med_phone1_m1:
+
+	GOSUB clean_up_kris_med_phone1_m1:
+
+MISSIONEND
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		

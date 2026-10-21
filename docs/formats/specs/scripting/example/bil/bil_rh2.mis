@@ -1,0 +1,1537 @@
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXX RESCUE PROTECT, DISGUISE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+
+
+// objects for Russian hard phone1 mission2		
+	
+CHAR_DATA r_h_2_group_1_leader
+CHAR_DATA r_h_2_group_1_follow_1
+CHAR_DATA r_h_2_group_1_follow_2
+CHAR_DATA r_h_2_group_1_follow_3
+CHAR_DATA r_h_2_hitman_1
+CHAR_DATA r_h_2_hitman_2
+CHAR_DATA r_h_2_hitman_3
+CHAR_DATA r_h_2_target_ped
+CHAR_DATA r_h_2_the_man
+CHAR_DATA r_h_2_group_2_leader
+CHAR_DATA r_h_2_group_2_leader_2
+CHAR_DATA r_h_2_group_2_leader_3
+CHAR_DATA r_h_2_group_2_leader_4
+CHAR_DATA r_h_2_flame_guy
+CHAR_DATA r_h_2_generator_1_guard
+CHAR_DATA r_h_2_generator_2_guard
+CHAR_DATA r_h_2_generator_3_guard
+CHAR_DATA r_h_2_generator_4_guard
+CHAR_DATA r_h_2_patrol_guard_1
+CHAR_DATA r_h_2_patrol_guard_2
+CHAR_DATA r_h_2_patrol_guard_3
+CHAR_DATA r_h_2_patrol_guard_4
+
+CAR_DATA r_h_2_fbi_car
+CAR_DATA r_h_2_target_ped_car
+
+OBJ_DATA r_h_2_generator_1
+OBJ_DATA r_h_2_generator_2
+OBJ_DATA r_h_2_generator_3
+OBJ_DATA r_h_2_generator_4
+OBJ_DATA r_h_2_generator_1_sound
+OBJ_DATA r_h_2_generator_2_sound
+OBJ_DATA r_h_2_generator_3_sound
+OBJ_DATA r_h_2_generator_4_sound
+OBJ_DATA r_h_2_powerup_1
+OBJ_DATA r_h_2_powerup_2
+OBJ_DATA r_h_2_powerup_3
+OBJ_DATA r_h_2_powerup_4
+OBJ_DATA r_h_2_powerup_5
+
+COUNTER r_h_2_generators_destroyed = 0
+COUNTER r_h_2_generator_1_destroyed = 0
+COUNTER r_h_2_generator_2_destroyed = 0
+COUNTER r_h_2_generator_3_destroyed = 0
+COUNTER r_h_2_generator_4_destroyed = 0
+
+COUNTER r_h_2_generator_1_guard_spotted_player = 0
+COUNTER r_h_2_generator_2_guard_spotted_player = 0
+COUNTER r_h_2_generator_3_guard_spotted_player = 0
+COUNTER r_h_2_generator_4_guard_spotted_player = 0
+COUNTER r_h_2_patrol_guard_1_spotted_player = 0
+COUNTER r_h_2_patrol_guard_2_spotted_player = 0
+COUNTER r_h_2_patrol_guard_3_spotted_player = 0
+COUNTER r_h_2_patrol_guard_4_spotted_player = 0
+COUNTER z_h_2_player_killed_1 = 0
+COUNTER z_h_2_player_killed_2 = 0
+COUNTER r_h_2_group_1_leader_dead = 0
+COUNTER r_h_2_hitmen_dead = 0
+COUNTER r_h_2_hitman_1_dead	= 0
+COUNTER r_h_2_hitman_2_dead	= 0
+COUNTER r_h_2_hitman_3_dead	= 0
+COUNTER r_h_2_hitman_1_spotted_player = 0
+COUNTER r_h_2_hitman_2_spotted_player = 0
+COUNTER r_h_2_hitman_3_spotted_player = 0
+COUNTER r_h_2_generators_destroyed_2 = 0
+COUNTER r_h_2_the_man_on_screen_on_foot	= 0
+COUNTER r_h_2_the_man_on_screen_in_car = 0
+COUNTER r_h_2_the_man_with_group_1 = 0
+COUNTER r_h_2_group_1_leader_on_screen_2 = 0
+COUNTER r_h_2_target_ped_flamed = 0
+COUNTER r_h_2_in_fbi_car_already = 0
+COUNTER r_h_2_in_fbi_car = 0
+COUNTER r_h_2_target_ped_located = 0
+COUNTER r_h_2_target_ped_in_car = 0
+COUNTER r_h_2_in_fbi_car_with_ped = 0
+COUNTER r_h_2_group_2_leader_on_screen_in_car = 0
+COUNTER r_h_2_group_2_leader_on_screen_on_foot = 0
+COUNTER r_h_2_target_ped_flamed_2 = 0
+COUNTER r_h_2_group_2_leader_obj_1 = 0
+COUNTER r_h_2_target_ped_obj_1 = 0
+COUNTER r_h_2_in_fbi_car_remap = 0
+COUNTER r_h_2_target_ped_on_screen = 0
+COUNTER r_h_2_generator_1_created = 0
+COUNTER r_h_2_group_1_leader_dead_1 = 0
+COUNTER r_h_2_group_1_follow_1_dead = 0
+COUNTER r_h_2_group_1_follow_2_dead = 0
+COUNTER r_h_2_group_1_follow_3_dead = 0
+COUNTER r_h_2_group_1_leader_on_screen = 0
+COUNTER r_h_2_group_1_follow_1_on_screen = 0
+COUNTER r_h_2_group_1_follow_2_on_screen = 0
+COUNTER r_h_2_group_1_follow_3_on_screen = 0
+  
+FORWARD clean_up_russ_hard_phone_m2:
+
+SOUND r_h_2_crying 
+SOUND r_h_2_scream 
+SOUND r_h_2_laugh 
+
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+		
+// starts Russian hard phone1 mission2
+
+
+russ_hard_phone_m2:
+
+SET flag_failed_russ_hard_phone_m2 = 0
+
+
+
+DISPLAY_MESSAGE ( 3860 ) // you have PASSED the mission!"
+DISPLAY_BRIEF ( 3960 ) // "A few of my men had some information for me, but they ran into the Zaibatsu! They are being held at the Power Core, get over there!"
+SET flag_on_mission = 1
+SET flag_on_russ_mission = 1
+
+SET_PEDDENSITY ( B08 , 0 )
+//
+POINT_ARROW_AT ( arrow , 25.0 , 243.0 , 4.0 )
+
+
+r_h_2_powerup_1 = CREATE_OBJ ( 6.5 , 239.0 , 5.0 ) 0 COLLECT_04 15 END
+r_h_2_powerup_2 = CREATE_OBJ ( 47.5 , 239.0 , 5.0 ) 0 COLLECT_31 END
+r_h_2_powerup_3 = CREATE_OBJ ( 25.0 , 244.0 , 4.0 ) 0 COLLECT_01 15 END
+r_h_2_powerup_4 = CREATE_OBJ ( 14.5 , 227.5 , 4.0 ) 0 COLLECT_35 END
+r_h_2_powerup_5 = CREATE_OBJ ( 39.5 , 227.5 , 4.0 ) 0 COLLECT_36 END
+
+FORCE_CLEANUP ( r_h_2_powerup_1 )
+FORCE_CLEANUP ( r_h_2_powerup_2 )
+FORCE_CLEANUP ( r_h_2_powerup_3 )
+FORCE_CLEANUP ( r_h_2_powerup_4 )
+FORCE_CLEANUP ( r_h_2_powerup_5 )
+
+r_h_2_generator_1 = CREATE_OBJ ( 4.5 , 226.5 , 5.0 ) 0 powergen END
+r_h_2_generator_2 = CREATE_OBJ ( 49.5 , 226.5 , 5.0 ) 0 powergen END
+r_h_2_generator_3 = CREATE_OBJ ( 4.5 , 251.5 , 5.0 ) 0 powergen END
+r_h_2_generator_4 = CREATE_OBJ ( 49.5 , 251.5 , 5.0 ) 0 powergen END
+#ifdef PC
+r_h_2_generator_4_sound = CREATE_SOUND ( 49.5 , 251.5 , 5.0 ) generator_rumble play_forever END
+r_h_2_generator_1_sound = CREATE_SOUND ( 4.5 , 226.5 , 5.0 ) generator_rumble play_forever END
+r_h_2_generator_2_sound = CREATE_SOUND ( 49.5 , 226.5 , 5.0 ) generator_rumble play_forever END
+r_h_2_generator_3_sound = CREATE_SOUND ( 4.5 , 251.5 , 5.0 ) generator_rumble play_forever END
+FORCE_CLEANUP ( r_h_2_generator_1_sound )
+FORCE_CLEANUP ( r_h_2_generator_2_sound )
+FORCE_CLEANUP ( r_h_2_generator_3_sound )
+FORCE_CLEANUP ( r_h_2_generator_4_sound )
+#endif
+SET r_h_2_generator_1_created = 1
+r_h_2_generator_1_guard = CREATE_CHAR ( 3.5 , 225.5 , 4.0 ) 8 90 criminal END
+ADD_PATROL_POINT ( r_h_2_generator_1_guard , 5.5 , 225.5 , 4.0 )
+ADD_PATROL_POINT ( r_h_2_generator_1_guard , 5.5 , 227.5 , 4.0 )
+ADD_PATROL_POINT ( r_h_2_generator_1_guard , 3.5 , 227.5 , 4.0 )
+ADD_PATROL_POINT ( r_h_2_generator_1_guard , 3.5 , 225.5 , 4.0 )
+SET_CHAR_THREAT_REACTION ( r_h_2_generator_1_guard , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( r_h_2_generator_1_guard , line_of_sight_player_only )
+GIVE_WEAPON ( r_h_2_generator_1_guard , pistol )
+ADD_CHAR_TO_GANG ( r_h_2_generator_1_guard , zaibgang )
+
+r_h_2_generator_2_guard = CREATE_CHAR ( 50.5 , 225.5 , 4.0 ) 8 90 criminal END
+ADD_PATROL_POINT ( r_h_2_generator_2_guard , 48.5 , 225.5 , 4.0 )
+ADD_PATROL_POINT ( r_h_2_generator_2_guard , 48.5 , 227.5 , 4.0 )
+ADD_PATROL_POINT ( r_h_2_generator_2_guard , 50.5 , 227.5 , 4.0 )
+ADD_PATROL_POINT ( r_h_2_generator_2_guard , 50.5 , 225.5 , 4.0 )
+SET_CHAR_THREAT_REACTION ( r_h_2_generator_2_guard , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( r_h_2_generator_2_guard , line_of_sight_player_only )
+GIVE_WEAPON ( r_h_2_generator_2_guard , pistol )
+ADD_CHAR_TO_GANG ( r_h_2_generator_2_guard , zaibgang )
+
+r_h_2_generator_3_guard = CREATE_CHAR ( 3.5 , 250.5 , 4.0 ) 8 90 criminal END
+ADD_PATROL_POINT ( r_h_2_generator_3_guard , 5.5 , 250.5 , 4.0 )
+ADD_PATROL_POINT ( r_h_2_generator_3_guard , 5.5 , 252.5 , 4.0 )
+ADD_PATROL_POINT ( r_h_2_generator_3_guard , 3.5 , 252.5 , 4.0 )
+ADD_PATROL_POINT ( r_h_2_generator_3_guard , 3.5 , 250.5 , 4.0 )
+SET_CHAR_THREAT_REACTION ( r_h_2_generator_3_guard , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( r_h_2_generator_3_guard , line_of_sight_player_only )
+GIVE_WEAPON ( r_h_2_generator_3_guard , pistol )
+ADD_CHAR_TO_GANG ( r_h_2_generator_3_guard , zaibgang )
+
+r_h_2_generator_4_guard = CREATE_CHAR ( 48.5 , 250.5 , 4.0 ) 8 90 criminal END
+ADD_PATROL_POINT ( r_h_2_generator_4_guard , 50.5 , 250.5 , 4.0 )
+ADD_PATROL_POINT ( r_h_2_generator_4_guard , 50.5 , 252.5 , 4.0 )
+ADD_PATROL_POINT ( r_h_2_generator_4_guard , 48.5 , 252.5 , 4.0 )
+ADD_PATROL_POINT ( r_h_2_generator_4_guard , 48.5 , 250.5 , 4.0 )
+SET_CHAR_THREAT_REACTION ( r_h_2_generator_4_guard , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( r_h_2_generator_4_guard , line_of_sight_player_only )
+GIVE_WEAPON ( r_h_2_generator_4_guard , pistol )
+ADD_CHAR_TO_GANG ( r_h_2_generator_4_guard , zaibgang )
+
+#ifdef PC
+r_h_2_patrol_guard_1 = CREATE_CHAR ( 7.5 , 229.5 , 6.0 ) 8 90 criminal END
+ADD_PATROL_POINT ( r_h_2_patrol_guard_1 , 8.5 , 236.5 , 6.0 )
+ADD_PATROL_POINT ( r_h_2_patrol_guard_1 , 7.5 , 229.5 , 6.0 )
+SET_CHAR_THREAT_REACTION ( r_h_2_patrol_guard_1 , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( r_h_2_patrol_guard_1 , line_of_sight_player_only )
+GIVE_WEAPON ( r_h_2_patrol_guard_1 , pistol )
+ADD_CHAR_TO_GANG ( r_h_2_patrol_guard_1 , zaibgang )
+
+r_h_2_patrol_guard_2 = CREATE_CHAR ( 45.5 , 236.5 , 6.0 ) 8 90 criminal END
+ADD_PATROL_POINT ( r_h_2_patrol_guard_2 , 46.5 , 229.5 , 6.0 )
+ADD_PATROL_POINT ( r_h_2_patrol_guard_2 , 45.5 , 236.5 , 6.0 )
+SET_CHAR_THREAT_REACTION ( r_h_2_patrol_guard_2 , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( r_h_2_patrol_guard_2 , line_of_sight_player_only )
+GIVE_WEAPON ( r_h_2_patrol_guard_2 , pistol )
+ADD_CHAR_TO_GANG ( r_h_2_patrol_guard_2 , zaibgang )
+
+r_h_2_patrol_guard_3 = CREATE_CHAR ( 7.5 , 248.5 , 6.0 ) 8 90 criminal END
+ADD_PATROL_POINT ( r_h_2_patrol_guard_3 , 8.5 , 241.5 , 6.0 )
+ADD_PATROL_POINT ( r_h_2_patrol_guard_3 , 7.5 , 248.5 , 6.0 )
+SET_CHAR_THREAT_REACTION ( r_h_2_patrol_guard_3 , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( r_h_2_patrol_guard_3 , line_of_sight_player_only )
+GIVE_WEAPON ( r_h_2_patrol_guard_3 , pistol )
+ADD_CHAR_TO_GANG ( r_h_2_patrol_guard_3 , zaibgang )
+
+r_h_2_patrol_guard_4 = CREATE_CHAR ( 45.5 , 241.5 , 6.0 ) 8 90 criminal END
+ADD_PATROL_POINT ( r_h_2_patrol_guard_4 , 46.5 , 248.5 , 6.0 )
+ADD_PATROL_POINT ( r_h_2_patrol_guard_4 , 45.5 , 241.5 , 6.0 )
+SET_CHAR_THREAT_REACTION ( r_h_2_patrol_guard_4 , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( r_h_2_patrol_guard_4 , line_of_sight_player_only )
+GIVE_WEAPON ( r_h_2_patrol_guard_4 , pistol )
+ADD_CHAR_TO_GANG ( r_h_2_patrol_guard_4 , zaibgang )
+#endif
+
+
+
+WHILE_EXEC ( NOT ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 25.0 , 243.0 , 4.0 , 2.0 , 2.0  ) ) )
+   	
+	
+	DO_NOWT
+	
+
+ENDWHILE
+
+
+REMOVE_ARROW ( arrow )
+DISPLAY_BRIEF_NOW ( 3962 ) // "Shit the door's locked. Try taking out the generators! That should drain enough power to open the doors!"
+POINT_ARROW_AT ( arrow , r_h_2_generator_1 )
+POINT_ARROW_AT ( arrow_2 , r_h_2_generator_2 )
+POINT_ARROW_AT ( arrow_3 , r_h_2_generator_3 )
+POINT_ARROW_AT ( arrow_4 , r_h_2_generator_4 )
+//
+//
+WHILE_EXEC ( ( r_h_2_generators_destroyed < 4 )
+AND ( r_h_2_generators_destroyed_2 < 4 ) )
+
+	
+	// generator 1 destroyed
+	
+	IF ( ( CHECK_OBJ_MODEL ( r_h_2_generator_1 , powergen_dead ) )
+	AND	( r_h_2_generator_1_destroyed = 0 ) )
+		++ r_h_2_generators_destroyed
+		SET r_h_2_generator_1_destroyed = 1
+		#ifdef PC
+		DELETE_ITEM ( r_h_2_generator_1_sound )
+		#endif
+		REMOVE_ARROW ( arrow )
+		IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_generator_1_guard ) ) ) 	
+			SET_CHAR_OBJECTIVE ( r_h_2_generator_1_guard , kill_char_on_foot , shaft )   
+		ENDIF
+		#ifdef PC
+		IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_patrol_guard_1 ) ) ) 	
+			SET_CHAR_OBJECTIVE ( r_h_2_patrol_guard_1 , kill_char_on_foot , shaft )   
+		ENDIF
+		#endif
+		IF ( r_h_2_generators_destroyed = 1 )
+			DISPLAY_BRIEF ( 3963 ) // "Good work, you've destroyed one of the generators, now get the rest of them!"
+		ELSE
+			IF ( r_h_2_generators_destroyed = 2 )
+				DISPLAY_BRIEF ( 3964 ) // "Well done, that's two out, two to go!"
+			ELSE
+				IF ( r_h_2_generators_destroyed = 3 )
+					DISPLAY_BRIEF ( 3965 ) // "Nice shooting! Destroy the last one and the doors should open!"
+				ENDIF
+			ENDIF
+		ENDIF	
+	ENDIF
+
+
+	IF ( ( r_h_2_generator_1_destroyed = 1 ) 
+	AND ( NOT ( DELAY ( 15 ) ) ) ) 
+		SET r_h_2_generator_1_destroyed = 2
+		EXPLODE_NO_RING ( 4.5 , 226.5 , 4.0 )
+	ENDIF
+
+
+	IF ( ( r_h_2_generator_1_destroyed = 2 ) 
+	AND ( NOT ( DELAY ( 15 ) ) ) ) 
+		SET r_h_2_generator_1_destroyed = 3
+		EXPLODE_NO_RING ( 4.5 , 226.5 , 6.0 )
+		++ r_h_2_generators_destroyed_2
+	ENDIF
+
+
+	// generator 2 destroyed
+	
+	IF ( ( CHECK_OBJ_MODEL ( r_h_2_generator_2 , powergen_dead ) )
+	AND	( r_h_2_generator_2_destroyed = 0 ) )
+		++ r_h_2_generators_destroyed
+		SET r_h_2_generator_2_destroyed = 1
+		#ifdef PC
+		DELETE_ITEM ( r_h_2_generator_2_sound )
+		#endif
+		REMOVE_ARROW ( arrow_2 )
+		IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_generator_2_guard ) ) ) 	
+			SET_CHAR_OBJECTIVE ( r_h_2_generator_2_guard , kill_char_on_foot , shaft )   
+		ENDIF
+		#ifdef PC
+		IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_patrol_guard_2 ) ) ) 	
+			SET_CHAR_OBJECTIVE ( r_h_2_patrol_guard_2 , kill_char_on_foot , shaft )   
+		ENDIF
+		#endif
+		IF ( r_h_2_generators_destroyed = 1 )
+			DISPLAY_BRIEF ( 3963 ) // "Good work, you've destroyed one of the generators, now get the rest of them!"
+		ELSE
+			IF ( r_h_2_generators_destroyed = 2 )
+				DISPLAY_BRIEF ( 3964 ) // "Well done, that's two out, two to go!"
+			ELSE
+				IF ( r_h_2_generators_destroyed = 3 )
+					DISPLAY_BRIEF ( 3965 ) // "Nice shooting! Destroy the last one and the doors should open!"
+				ENDIF
+			ENDIF
+		ENDIF	
+	ENDIF
+
+
+	IF ( ( r_h_2_generator_2_destroyed = 1 ) 
+	AND ( NOT ( DELAY ( 15 ) ) ) ) 
+		SET r_h_2_generator_2_destroyed = 2
+		EXPLODE_NO_RING ( 49.5 , 226.5 , 4.0 )
+	ENDIF
+
+
+	IF ( ( r_h_2_generator_2_destroyed = 2 ) 
+	AND ( NOT ( DELAY ( 15 ) ) ) ) 
+		SET r_h_2_generator_2_destroyed = 3
+		EXPLODE_NO_RING ( 49.5 , 226.5 , 6.0 )
+		++ r_h_2_generators_destroyed_2
+	ENDIF
+
+
+	// generator 3 destroyed
+	
+	IF ( ( CHECK_OBJ_MODEL ( r_h_2_generator_3 , powergen_dead ) )
+	AND	( r_h_2_generator_3_destroyed = 0 ) )
+		++ r_h_2_generators_destroyed
+		SET r_h_2_generator_3_destroyed = 1
+		#ifdef PC
+		DELETE_ITEM ( r_h_2_generator_3_sound )
+		#endif
+		REMOVE_ARROW ( arrow_3 )
+		IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_generator_3_guard ) ) ) 	
+			SET_CHAR_OBJECTIVE ( r_h_2_generator_3_guard , kill_char_on_foot , shaft )   
+		ENDIF
+		#ifdef PC
+		IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_patrol_guard_3 ) ) ) 	
+			SET_CHAR_OBJECTIVE ( r_h_2_patrol_guard_3 , kill_char_on_foot , shaft )   
+		ENDIF
+		#endif
+		IF ( r_h_2_generators_destroyed = 1 )
+			DISPLAY_BRIEF ( 3963 ) // "Good work, you've destroyed one of the generators, now get the rest of them!"
+		ELSE
+			IF ( r_h_2_generators_destroyed = 2 )
+				DISPLAY_BRIEF ( 3964 ) // "Well done, that's two out, two to go!"
+			ELSE
+				IF ( r_h_2_generators_destroyed = 3 )
+					DISPLAY_BRIEF ( 3965 ) // "Nice shooting! Destroy the last one and the doors should open!"
+				ENDIF
+			ENDIF
+		ENDIF	
+	ENDIF
+
+
+	IF ( ( r_h_2_generator_3_destroyed = 1 ) 
+	AND ( NOT ( DELAY ( 15 ) ) ) ) 
+		SET r_h_2_generator_3_destroyed = 2
+		EXPLODE_NO_RING ( 4.5 , 251.5 , 4.0 )
+	ENDIF
+
+
+	IF ( ( r_h_2_generator_3_destroyed = 2 ) 
+	AND ( NOT ( DELAY ( 15 ) ) ) ) 
+		SET r_h_2_generator_3_destroyed = 3
+		EXPLODE_NO_RING ( 4.5 , 251.5 , 6.0 )
+		++ r_h_2_generators_destroyed_2
+	ENDIF
+
+
+	// generator 4 destroyed
+	
+	IF ( ( CHECK_OBJ_MODEL ( r_h_2_generator_4 , powergen_dead ) )
+	AND	( r_h_2_generator_4_destroyed = 0 ) )
+		++ r_h_2_generators_destroyed
+		SET r_h_2_generator_4_destroyed = 1
+		#ifdef PC
+		DELETE_ITEM ( r_h_2_generator_4_sound )
+		#endif
+		REMOVE_ARROW ( arrow_4 )
+		IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_generator_4_guard ) ) ) 	
+			SET_CHAR_OBJECTIVE ( r_h_2_generator_4_guard , kill_char_on_foot , shaft )   
+		ENDIF
+		#ifdef PC
+		IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_patrol_guard_4 ) ) ) 	
+			SET_CHAR_OBJECTIVE ( r_h_2_patrol_guard_4 , kill_char_on_foot , shaft )   
+		ENDIF
+		#endif
+		IF ( r_h_2_generators_destroyed = 1 )
+			DISPLAY_BRIEF ( 3963 ) // "Good work, you've destroyed one of the generators, now get the rest of them!"
+		ELSE
+			IF ( r_h_2_generators_destroyed = 2 )
+				DISPLAY_BRIEF ( 3964 ) // "Well done, that's two out, two to go!"
+			ELSE
+				IF ( r_h_2_generators_destroyed = 3 )
+					DISPLAY_BRIEF ( 3965 ) // "Nice shooting! Destroy the last one and the doors should open!"
+				ENDIF
+			ENDIF
+		ENDIF	
+	ENDIF
+//
+//
+	IF ( ( r_h_2_generator_4_destroyed = 1 ) 
+	AND ( NOT ( DELAY ( 15 ) ) ) ) 
+		SET r_h_2_generator_4_destroyed = 2
+		EXPLODE_NO_RING ( 49.5 , 251.5 , 4.0 )
+	ENDIF
+
+
+	IF ( ( r_h_2_generator_4_destroyed = 2 ) 
+	AND ( NOT ( DELAY ( 15 ) ) ) ) 
+		SET r_h_2_generator_4_destroyed = 3
+		EXPLODE_NO_RING ( 49.5 , 251.5 , 6.0 )
+		++ r_h_2_generators_destroyed_2
+	ENDIF
+	
+ 
+	// if player is seen by guard1
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( r_h_2_generator_1_guard ) ) 
+   	AND ( r_h_2_generator_1_guard_spotted_player = 0 ) )
+		SET r_h_2_generator_1_guard_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3966 ) // "Keep away from the generators!"	 
+	ENDIF
+
+	// if player is seen by guard1
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( r_h_2_generator_2_guard ) ) 
+   	AND ( r_h_2_generator_2_guard_spotted_player = 0 ) )
+		SET r_h_2_generator_2_guard_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3967 ) // "Where the fuck did you come from!"	 
+	ENDIF
+
+	// if player is seen by guard1
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( r_h_2_generator_3_guard ) ) 
+   	AND ( r_h_2_generator_3_guard_spotted_player = 0 ) )
+		SET r_h_2_generator_3_guard_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3968 ) // "I'm gonna bloe your fuckin face off!"	 
+	ENDIF
+
+	// if player is seen by guard1
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( r_h_2_generator_4_guard ) ) 
+   	AND ( r_h_2_generator_4_guard_spotted_player = 0 ) )
+		SET r_h_2_generator_4_guard_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3969 ) // "Nobody destroys a generator on my shift!"	 
+	ENDIF
+
+	#ifdef PC
+	// if player is seen by guard1
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( r_h_2_patrol_guard_1 ) ) 
+   	AND ( r_h_2_patrol_guard_1_spotted_player = 0 ) )
+		SET r_h_2_patrol_guard_1_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3970 ) // "What the fuck are you doing here!"	 
+	ENDIF
+
+	// if player is seen by guard1
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( r_h_2_patrol_guard_2 ) ) 
+   	AND ( r_h_2_patrol_guard_2_spotted_player = 0 ) )
+		SET r_h_2_patrol_guard_2_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3971 ) // "You just came to the wrong place pal!"	 
+	ENDIF
+
+	// if player is seen by guard1
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( r_h_2_patrol_guard_3 ) ) 
+   	AND ( r_h_2_patrol_guard_3_spotted_player = 0 ) )
+		SET r_h_2_patrol_guard_3_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3972 ) // "It's time to meet your maker motherfucker!"	 
+	ENDIF
+
+	// if player is seen by guard1
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( r_h_2_patrol_guard_4 ) ) 
+   	AND ( r_h_2_patrol_guard_4_spotted_player = 0 ) )
+		SET r_h_2_patrol_guard_4_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3973 ) // "I'm gonna enjoy killing you shitbreath!"	 
+	ENDIF
+	#endif
+
+ 
+ENDWHILE
+
+//
+//
+r_h_2_group_1_leader = CREATE_CHAR ( 25.0 , 244.0 , 4.0 ) 10 280 refugees END
+SET_CHAR_THREAT_REACTION ( r_h_2_group_1_leader , no_reaction )
+SET_CHAR_THREAT_SEARCH ( r_h_2_group_1_leader , line_of_sight )
+ADD_CHAR_TO_GANG ( r_h_2_group_1_leader , russgang )
+ADD_GROUP_TO_CHARACTER ( r_h_2_group_1_leader , 0 )
+		
+r_h_2_group_1_follow_1 = CREATE_CHAR ( 25.3 , 244.0 , 4.0 ) 10 280 refugees END
+SET_CHAR_THREAT_REACTION ( r_h_2_group_1_follow_1 , no_reaction )
+SET_CHAR_THREAT_SEARCH ( r_h_2_group_1_follow_1 , line_of_sight )
+ADD_CHAR_TO_GANG ( r_h_2_group_1_follow_1 , russgang )
+ADD_GROUP_TO_CHARACTER ( r_h_2_group_1_follow_1 , 0 )
+
+r_h_2_group_1_follow_2 = CREATE_CHAR ( 25.0 , 244.3 , 4.0 ) 10 280 refugees END
+SET_CHAR_THREAT_REACTION ( r_h_2_group_1_follow_2 , no_reaction )
+SET_CHAR_THREAT_SEARCH ( r_h_2_group_1_follow_2 , line_of_sight )
+ADD_CHAR_TO_GANG ( r_h_2_group_1_follow_2 , russgang )
+ADD_GROUP_TO_CHARACTER ( r_h_2_group_1_follow_2 , 0 )
+
+r_h_2_group_1_follow_3 = CREATE_CHAR ( 24.7 , 244.0 , 4.0 ) 10 280 refugees END
+SET_CHAR_THREAT_REACTION ( r_h_2_group_1_follow_3 , no_reaction )
+SET_CHAR_THREAT_SEARCH ( r_h_2_group_1_follow_3 , line_of_sight )
+ADD_CHAR_TO_GANG ( r_h_2_group_1_follow_3 , russgang )
+ADD_GROUP_TO_CHARACTER ( r_h_2_group_1_follow_3 , 0 )
+
+ADD_EXISTING_CHAR_TO_GROUP ( r_h_2_group_1_leader , r_h_2_group_1_follow_3 )
+ADD_EXISTING_CHAR_TO_GROUP ( r_h_2_group_1_leader , r_h_2_group_1_follow_1 )
+ADD_EXISTING_CHAR_TO_GROUP ( r_h_2_group_1_leader , r_h_2_group_1_follow_2 )
+
+
+POINT_ARROW_AT ( arrow , r_h_2_group_1_leader )
+DISPLAY_BRIEF_NOW ( 3975 ) // "Ok the doors should be open, get across there and find my men!"
+
+
+WHILE_EXEC ( NOT ( LOCATE_ANOTHER_CHARACTER_ANY_MEANS ( shaft , r_h_2_group_1_leader , 2.0 , 2.0 ) ) )
+
+
+	IF ( ( ( HAS_CHARACTER_DIED ( r_h_2_group_1_leader ) )
+	AND ( r_h_2_group_1_leader_dead = 0 ) )
+   	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		SET r_h_2_group_1_leader_dead = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3978 ) // "SHIT! You let my men die, you were sent to protect them! Now they are dead I will never know the information!"
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+	
+
+ENDWHILE
+
+
+MAKE_NEW_LEADER_OF_GROUP ( r_h_2_group_1_leader , shaft )
+DISPLAY_BRIEF_NOW ( 3977 ) // "Protect my men, I need at least one of them to make it back here with the information! Get moving!"
+CLOSE_DOOR ( r_h_2_door_1_1 )
+#ifdef PC
+CLOSE_DOOR ( r_h_2_door_1_2 )
+#endif
+POINT_ARROW_AT ( arrow , 27.0 , 225.0 , 4.0 )
+
+
+WHILE_EXEC ( NOT ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 26.0 , 225.0 , 4.0 , 2.0 , 3.0  ) ) )
+   	
+	
+	IF ( ( ( NOT ( CHECK_NUMBER_ALIVE_IN_GROUP ( shaft , 1 ) ) )
+	AND ( r_h_2_group_1_leader_dead = 0 ) )
+   	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		SET r_h_2_group_1_leader_dead = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3978 ) // "SHIT! You let my men die, you were sent to protect them! Now they are dead I will never know the information!"
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+	
+
+ENDWHILE
+
+
+
+DISPLAY_BRIEF ( 3979 ) // "FUCK! They must know that you opened the doors! I'll try to get the doors open from outside! Stay alive and protect my men!"
+DISPLAY_BRIEF ( 3980 ) // "I think there are three hitmen coming for you! Take them out and I'll get a man to open the doors!"
+
+r_h_2_hitman_1 = CREATE_CHAR ( 11.5 , 252.5 , 4.0 ) 8 90 criminal END
+SET_CHAR_THREAT_REACTION ( r_h_2_hitman_1 , no_reaction )
+SET_CHAR_THREAT_SEARCH ( r_h_2_hitman_1 , line_of_sight_player_only )
+GIVE_WEAPON ( r_h_2_hitman_1 , pistol )
+ADD_CHAR_TO_GANG ( r_h_2_hitman_1 , zaibgang )
+SET_CHAR_OBJECTIVE ( r_h_2_hitman_1 , kill_char_on_foot , shaft )
+
+r_h_2_hitman_2 = CREATE_CHAR ( 42.5 , 252.5 , 4.0 ) 8 90 criminal END
+SET_CHAR_THREAT_REACTION ( r_h_2_hitman_2 , no_reaction )
+SET_CHAR_THREAT_SEARCH ( r_h_2_hitman_2 , line_of_sight_player_only )
+GIVE_WEAPON ( r_h_2_hitman_2 , pistol )
+ADD_CHAR_TO_GANG ( r_h_2_hitman_2 , zaibgang )
+SET_CHAR_OBJECTIVE ( r_h_2_hitman_2 , kill_char_on_foot , shaft )
+
+r_h_2_hitman_3 = CREATE_CHAR ( 27.0 , 249.5 , 4.0 ) 8 90 criminal END
+SET_CHAR_THREAT_REACTION ( r_h_2_hitman_3 , no_reaction )
+SET_CHAR_THREAT_SEARCH ( r_h_2_hitman_3 , line_of_sight_player_only )
+GIVE_WEAPON ( r_h_2_hitman_3 , pistol )
+ADD_CHAR_TO_GANG ( r_h_2_hitman_3 , zaibgang )
+SET_CHAR_OBJECTIVE ( r_h_2_hitman_3 , kill_char_on_foot , shaft )
+POINT_ARROW_AT ( arrow_3 , r_h_2_hitman_3 )
+
+POINT_ARROW_AT ( arrow , r_h_2_hitman_1 )
+POINT_ARROW_AT ( arrow_2 , r_h_2_hitman_2 )
+//
+//
+WHILE_EXEC ( r_h_2_hitmen_dead < 3 )
+
+
+	IF ( ( ( NOT ( CHECK_NUMBER_ALIVE_IN_GROUP ( shaft , 1 ) ) )
+	AND ( r_h_2_group_1_leader_dead = 0 ) )
+   	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		SET r_h_2_group_1_leader_dead = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3978 ) // "SHIT! You let my men die, you were sent to protect them! Now they are dead I will never know the information!"
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_hitman_1 ) )
+	AND ( r_h_2_hitman_1_dead = 0 ) ) 
+		++ r_h_2_hitmen_dead
+		SET r_h_2_hitman_1_dead = 1
+		REMOVE_ARROW ( arrow )
+		IF ( r_h_2_hitmen_dead = 1 )
+			DISPLAY_BRIEF_NOW ( 3981 ) // "You got one of the bastards! Keep going and watch your back!"
+		ELSE
+			IF ( r_h_2_hitmen_dead = 2 )
+				DISPLAY_BRIEF_NOW ( 3982 ) // "Well done, there's only one of them still after you!"
+			ENDIF
+		ENDIF
+	ENDIF
+
+
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_hitman_2 ) )
+	AND ( r_h_2_hitman_2_dead = 0 ) ) 
+		++ r_h_2_hitmen_dead
+		SET r_h_2_hitman_2_dead = 1
+		REMOVE_ARROW ( arrow_2 )
+		IF ( r_h_2_hitmen_dead = 1 )
+			DISPLAY_BRIEF_NOW ( 3981 ) // "You got one of the bastards! Keep going and watch your back!"
+		ELSE
+			IF ( r_h_2_hitmen_dead = 2 )
+				DISPLAY_BRIEF_NOW ( 3982 ) // "Well done, there's only one of them still after you!"
+			ENDIF
+		ENDIF
+	ENDIF
+
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_hitman_3 ) )
+	AND ( r_h_2_hitman_3_dead = 0 ) ) 
+		++ r_h_2_hitmen_dead
+		SET r_h_2_hitman_3_dead = 1
+		REMOVE_ARROW ( arrow_3 )
+		IF ( r_h_2_hitmen_dead = 1 )
+			DISPLAY_BRIEF_NOW ( 3981 ) // "You got one of the bastards! Keep going and watch your back!"
+		ELSE
+			IF ( r_h_2_hitmen_dead = 2 )
+				DISPLAY_BRIEF_NOW ( 3982 ) // "Well done, there's only one of them still after you!"
+			ENDIF
+		ENDIF
+	ENDIF
+
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( r_h_2_hitman_1 ) ) 
+   	AND ( r_h_2_hitman_1_spotted_player = 0 ) )
+		SET r_h_2_hitman_1_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3983 ) // "You're a long way from home, and you're going home in a box!"	 
+	ENDIF
+
+	
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( r_h_2_hitman_2 ) ) 
+   	AND ( r_h_2_hitman_2_spotted_player = 0 ) )
+		SET r_h_2_hitman_2_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3984 ) // "You're a long way from home, and you're going home in a box!"	 
+	ENDIF
+
+
+	IF ( ( HAS_CHAR_SPOTTED_PLAYER ( r_h_2_hitman_3 ) ) 
+   	AND ( r_h_2_hitman_3_spotted_player = 0 ) )
+		SET r_h_2_hitman_3_spotted_player = 1
+		DISPLAY_BRIEF_NOW ( 3985 ) // "You're a long way from home, and you're going home in a box!"	 
+	ENDIF
+
+
+ENDWHILE
+
+
+OPEN_DOOR ( r_h_2_door_1_1 )
+#ifdef PC
+OPEN_DOOR ( r_h_2_door_1_2 )
+#endif
+DISPLAY_BRIEF_NOW ( 3986 ) // "Great work, the hitmen are all dead and doors are open! I have a man waiting to translate the information! Take my men to meet him!"	 
+r_h_2_the_man = CREATE_CHAR ( 205.5 , 18.5 , 2.0 ) 10 290 criminal END
+SET_CHAR_THREAT_REACTION ( r_h_2_the_man , no_reaction )
+SET_CHAR_THREAT_SEARCH ( r_h_2_the_man , line_of_sight )
+ADD_CHAR_TO_GANG ( r_h_2_the_man , russgang )
+SET_CHAR_OBJECTIVE ( r_h_2_the_man , wait_on_foot )
+ADD_GROUP_TO_CHARACTER ( r_h_2_the_man , 0 )
+POINT_ARROW_AT ( arrow , r_h_2_the_man )
+
+//
+//
+WHILE_EXEC ( r_h_2_the_man_with_group_1 = 0 )
+
+
+	IF ( r_h_2_group_1_leader_dead_1 = 0 )
+		IF ( HAS_CHARACTER_DIED ( r_h_2_group_1_leader ) )
+			SET r_h_2_group_1_leader_dead_1 = 1
+			SET r_h_2_group_1_leader_on_screen = 1
+		ENDIF
+	ENDIF
+
+	IF ( r_h_2_group_1_follow_1_dead = 0 )
+		IF ( HAS_CHARACTER_DIED ( r_h_2_group_1_follow_1 ) )
+			SET r_h_2_group_1_follow_1_dead = 1
+			SET r_h_2_group_1_follow_1_on_screen = 1
+		ENDIF
+	ENDIF
+
+	IF ( r_h_2_group_1_follow_2_dead = 0 )
+		IF ( HAS_CHARACTER_DIED ( r_h_2_group_1_follow_2 ) )
+			SET r_h_2_group_1_follow_2_dead = 1
+			SET r_h_2_group_1_follow_2_on_screen = 1
+		ENDIF
+	ENDIF
+
+	IF ( r_h_2_group_1_follow_3_dead = 0 )
+		IF ( HAS_CHARACTER_DIED ( r_h_2_group_1_follow_3 ) )
+			SET r_h_2_group_1_follow_3_dead = 1
+			SET r_h_2_group_1_follow_3_on_screen = 1
+		ENDIF
+	ENDIF
+	
+	
+	IF ( ( ( ( ( ( r_h_2_group_1_leader_on_screen = 1 ) 
+	AND ( r_h_2_group_1_follow_1_on_screen = 1 ) ) 
+	AND ( r_h_2_group_1_follow_2_on_screen = 1 ) ) 
+	AND ( r_h_2_group_1_follow_3_on_screen = 1 ) ) 
+	AND ( r_h_2_group_1_leader_on_screen_2 = 0 ) )
+	AND ( r_h_2_the_man_on_screen_on_foot = 0 ) )
+		
+		IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_group_1_leader ) ) )
+			POINT_ARROW_AT ( arrow , r_h_2_group_1_leader )
+			SET r_h_2_group_1_leader_on_screen_2 = 1
+			DISPLAY_BRIEF_NOW ( 3987 ) // "Where the fuck are my men? Have you taken off without them? Go and find them now!"
+		ELSE
+		
+			IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_group_1_follow_1 ) ) )
+				POINT_ARROW_AT ( arrow , r_h_2_group_1_follow_1 )
+			   	SET r_h_2_group_1_leader_on_screen_2 = 1
+			   	DISPLAY_BRIEF_NOW ( 3987 ) // "Where the fuck are my men? Have you taken off without them? Go and find them now!"
+			ELSE
+			
+				IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_group_1_follow_2 ) ) )
+					POINT_ARROW_AT ( arrow , r_h_2_group_1_follow_2 )
+					SET r_h_2_group_1_leader_on_screen_2 = 1
+					DISPLAY_BRIEF_NOW ( 3987 ) // "Where the fuck are my men? Have you taken off without them? Go and find them now!"	
+				ELSE
+		
+					IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_group_1_follow_3 ) ) )
+						POINT_ARROW_AT ( arrow , r_h_2_group_1_follow_3 )
+						SET r_h_2_group_1_leader_on_screen_2 = 1
+						DISPLAY_BRIEF_NOW ( 3987 ) // "Where the fuck are my men? Have you taken off without them? Go and find them now!"
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+ 
+
+	IF ( r_h_2_group_1_leader_dead_1 = 0 )
+		IF ( IS_ITEM_ACCURATELY_ONSCREEN ( r_h_2_group_1_leader ) )
+ 			IF ( ( r_h_2_group_1_leader_on_screen_2 = 1 ) 
+			AND ( r_h_2_the_man_on_screen_on_foot = 0 ) )
+				POINT_ARROW_AT ( arrow , r_h_2_the_man )
+				SET r_h_2_group_1_leader_on_screen_2 = 0
+				DISPLAY_BRIEF_NOW ( 3988 ) // "Do not leave them behind again!"
+			ENDIF
+		ENDIF
+
+		IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( r_h_2_group_1_leader ) ) )
+		AND ( r_h_2_group_1_leader_on_screen = 0 ) )
+ 			SET r_h_2_group_1_leader_on_screen = 1
+		ENDIF
+
+		IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( r_h_2_group_1_leader ) ) 
+		AND ( r_h_2_group_1_leader_on_screen = 1 ) )
+ 			SET r_h_2_group_1_leader_on_screen = 0
+		ENDIF
+	ENDIF
+
+
+	IF ( r_h_2_group_1_follow_1_dead = 0 )
+		IF ( IS_ITEM_ACCURATELY_ONSCREEN ( r_h_2_group_1_follow_1 ) )
+ 			IF ( ( r_h_2_group_1_leader_on_screen_2 = 1 ) 
+			AND ( r_h_2_the_man_on_screen_on_foot = 0 ) )
+				POINT_ARROW_AT ( arrow , r_h_2_the_man )
+				SET r_h_2_group_1_leader_on_screen_2 = 0
+				DISPLAY_BRIEF_NOW ( 3988 ) // "Do not leave them behind again!"
+			ENDIF
+		ENDIF
+
+		IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( r_h_2_group_1_follow_1 ) ) )
+		AND ( r_h_2_group_1_follow_1_on_screen = 0 ) )
+ 			SET r_h_2_group_1_follow_1_on_screen = 1
+		ENDIF
+
+		IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( r_h_2_group_1_follow_1 ) ) 
+		AND ( r_h_2_group_1_follow_1_on_screen = 1 ) )
+ 			SET r_h_2_group_1_follow_1_on_screen = 0
+		ENDIF
+	ENDIF
+
+		
+	IF ( r_h_2_group_1_follow_2_dead = 0 )
+		IF ( IS_ITEM_ACCURATELY_ONSCREEN ( r_h_2_group_1_follow_2 ) )
+ 			IF ( ( r_h_2_group_1_leader_on_screen_2 = 1 ) 
+			AND ( r_h_2_the_man_on_screen_on_foot = 0 ) )
+				POINT_ARROW_AT ( arrow , r_h_2_the_man )
+				SET r_h_2_group_1_leader_on_screen_2 = 0
+				DISPLAY_BRIEF_NOW ( 3988 ) // "Do not leave them behind again!"
+			ENDIF
+		ENDIF
+
+		IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( r_h_2_group_1_follow_2 ) ) )
+		AND ( r_h_2_group_1_follow_2_on_screen = 0 ) )
+ 			SET r_h_2_group_1_follow_2_on_screen = 1
+		ENDIF
+
+		IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( r_h_2_group_1_follow_2 ) ) 
+		AND ( r_h_2_group_1_follow_2_on_screen = 1 ) )
+ 			SET r_h_2_group_1_follow_2_on_screen = 0
+		ENDIF
+	ENDIF
+//
+//
+	IF ( r_h_2_group_1_follow_3_dead = 0 )
+		IF ( IS_ITEM_ACCURATELY_ONSCREEN ( r_h_2_group_1_follow_3 ) )
+ 			IF ( ( r_h_2_group_1_leader_on_screen_2 = 1 ) 
+			AND ( r_h_2_the_man_on_screen_on_foot = 0 ) )
+				POINT_ARROW_AT ( arrow , r_h_2_the_man )
+				SET r_h_2_group_1_leader_on_screen_2 = 0
+				DISPLAY_BRIEF_NOW ( 3988 ) // "Do not leave them behind again!"
+			ENDIF
+		ENDIF
+
+		IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( r_h_2_group_1_follow_3 ) ) )
+		AND ( r_h_2_group_1_follow_3_on_screen = 0 ) )
+ 			SET r_h_2_group_1_follow_3_on_screen = 1
+		ENDIF
+
+		IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( r_h_2_group_1_follow_3 ) ) 
+		AND ( r_h_2_group_1_follow_3_on_screen = 1 ) )
+ 			SET r_h_2_group_1_follow_3_on_screen = 0
+		ENDIF
+	ENDIF
+	
+	
+	IF ( ( LOCATE_ANOTHER_CHARACTER_ON_FOOT ( shaft , r_h_2_the_man , 3.0 , 3.0 ) ) 
+	AND ( r_h_2_the_man_on_screen_on_foot = 0 ) )
+		SET r_h_2_the_man_on_screen_on_foot = 1
+		DISPLAY_BRIEF_NOW ( 3989 ) // "Come here and give me the information!"	 
+	ENDIF
+
+	
+	IF ( ( ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , r_h_2_the_man , 3.0 , 3.0 ) ) 
+	AND ( r_h_2_the_man_on_screen_in_car = 0 ) )
+	AND ( r_h_2_the_man_on_screen_on_foot = 0 ) )
+		SET r_h_2_the_man_on_screen_in_car = 1
+		DISPLAY_BRIEF_NOW ( 3990 ) // "Get out of the car so that he can translate the information!"	 
+   	ENDIF
+
+
+	IF ( ( ( ( NOT ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , r_h_2_the_man , 3.0 , 3.0 ) ) )
+	AND ( NOT ( LOCATE_ANOTHER_CHARACTER_ON_FOOT ( shaft , r_h_2_the_man , 3.0 , 3.0 ) ) ) )
+	AND ( r_h_2_the_man_on_screen_in_car = 1 ) )
+	AND ( r_h_2_the_man_on_screen_on_foot = 0 ) )
+		SET r_h_2_the_man_on_screen_in_car = 0
+		DISPLAY_BRIEF_NOW ( 3991 ) // "Where are you going? He told you to get out of the car not drive away, get back there!"	 
+   	ENDIF
+
+
+	IF ( ( r_h_2_the_man_on_screen_on_foot = 1 )
+//	AND ( NOT ( IS_GROUP_IN_CAR ( shaft ) ) ) )
+	AND ( NOT ( DELAY ( 10 ) ) ) ) 
+		SET r_h_2_the_man_on_screen_on_foot = 2
+		SET r_h_2_the_man_with_group_1 = 1
+	ENDIF
+
+	
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_the_man ) )
+	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3993 ) // "You killed him, he was going to translate the information, my men are useless to me now!
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( ( ( NOT ( CHECK_NUMBER_ALIVE_IN_GROUP ( shaft , 1 ) ) )
+	AND ( r_h_2_group_1_leader_dead = 0 ) )
+   	AND ( flag_failed_russ_hard_phone_m2 = 0 ) )
+   	AND ( r_h_2_the_man_on_screen_on_foot = 0 ) ) 
+		SET r_h_2_group_1_leader_dead = 1
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3978 ) // "SHIT! You let my men die, you were sent to protect them! Now they are dead I will never know the information!"
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+ENDWHILE
+
+
+IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_group_1_leader ) ) )
+	WHILE ( IS_CHARACTER_IN_ANY_CAR ( r_h_2_group_1_leader ) )
+		DO_NOWT
+	ENDWHILE
+ENDIF
+IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_group_1_follow_1 ) ) )
+	WHILE ( IS_CHARACTER_IN_ANY_CAR ( r_h_2_group_1_follow_1 ) )
+		DO_NOWT
+	ENDWHILE
+ENDIF
+IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_group_1_follow_2 ) ) )
+	WHILE ( IS_CHARACTER_IN_ANY_CAR ( r_h_2_group_1_follow_2 ) )
+		DO_NOWT
+	ENDWHILE
+ENDIF
+
+IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_group_1_follow_3 ) ) )
+	WHILE ( IS_CHARACTER_IN_ANY_CAR ( r_h_2_group_1_follow_3 ) )
+		DO_NOWT
+	ENDWHILE
+ENDIF
+	
+
+DESTROY_GROUP ( shaft )
+DELAY_HERE ( 20 )
+ 
+
+IF ( ( NOT ( HAS_CHARACTER_DIED ( r_h_2_group_1_leader ) ) )
+AND ( NOT ( IS_CHARACTER_IN_ANY_CAR ( r_h_2_group_1_leader ) ) ) )
+	ADD_GROUP_TO_CHARACTER ( r_h_2_group_1_leader , 0 )
+	ADD_EXISTING_CHAR_TO_GROUP ( r_h_2_the_man , r_h_2_group_1_leader )
+ENDIF
+IF ( ( NOT ( HAS_CHARACTER_DIED ( r_h_2_group_1_follow_1 ) ) )
+AND ( NOT ( IS_CHARACTER_IN_ANY_CAR ( r_h_2_group_1_follow_1 ) ) ) )
+	ADD_GROUP_TO_CHARACTER ( r_h_2_group_1_follow_1 , 0 )
+	ADD_EXISTING_CHAR_TO_GROUP ( r_h_2_the_man , r_h_2_group_1_follow_1 )
+ENDIF
+IF ( ( NOT ( HAS_CHARACTER_DIED ( r_h_2_group_1_follow_2 ) ) )
+AND ( NOT ( IS_CHARACTER_IN_ANY_CAR ( r_h_2_group_1_follow_2 ) ) ) )
+	ADD_GROUP_TO_CHARACTER ( r_h_2_group_1_follow_2 , 0 )
+	ADD_EXISTING_CHAR_TO_GROUP ( r_h_2_the_man , r_h_2_group_1_follow_2 )
+ENDIF
+IF ( ( NOT ( HAS_CHARACTER_DIED ( r_h_2_group_1_follow_3 ) ) )
+AND ( NOT ( IS_CHARACTER_IN_ANY_CAR ( r_h_2_group_1_follow_3 ) ) ) )
+	ADD_GROUP_TO_CHARACTER ( r_h_2_group_1_follow_3 , 0 )
+	ADD_EXISTING_CHAR_TO_GROUP ( r_h_2_the_man , r_h_2_group_1_follow_3 )
+ENDIF
+
+//
+
+#ifdef PSX
+DELETE_ITEM ( r_h_2_generator_1_guard )
+DELETE_ITEM ( r_h_2_generator_2_guard )
+DELETE_ITEM ( r_h_2_generator_3_guard )
+DELETE_ITEM ( r_h_2_generator_4_guard )
+#endif
+
+DISPLAY_BRIEF_NOW ( 3994 ) // "He says that a guy has some info about the bosses son! He's going to inform the Police!"
+DISPLAY_BRIEF ( 3995 ) // "My son wants to deal with this fucker himself! Steal a copcar and I'll call you!"
+REMOVE_ARROW ( arrow )   		
+r_h_2_target_ped_car = CREATE_CAR ( 117.5 , 177.5 , 3.0 ) 6 180 stingray END
+r_h_2_target_ped = CREATE_CHAR_INSIDE_CAR ( r_h_2_target_ped_car ) 8 refugees END
+SET_CHAR_THREAT_REACTION ( r_h_2_target_ped , no_reaction )
+SET_CHAR_THREAT_SEARCH ( r_h_2_target_ped , line_of_sight_player_only )
+ADD_CHAR_TO_GANG ( r_h_2_target_ped , zaibgang )
+CHANGE_CAR_LOCK ( r_h_2_target_ped_car , locked )
+MAKE_CAR_DRIVE_AWAY ( r_h_2_target_ped_car )
+SET_CHAR_DRIVE_AGGRESSION ( r_h_2_target_ped , on )
+
+//
+DELAY_HERE ( 60 )
+//SET_CHAR_OBJECTIVE ( r_h_2_the_man , no_obj )
+MAKE_CHAR_DO_NOTHING ( r_h_2_the_man )
+//
+
+WHILE_EXEC ( r_h_2_target_ped_in_car = 0 )
+
+	
+	IF ( ( ( IS_CHARACTER_IN_MODEL ( shaft , copcar ) )
+	AND ( r_h_2_in_fbi_car = 0 ) )
+	AND ( r_h_2_target_ped_located = 0 ) )
+		SET r_h_2_in_fbi_car = 1
+		SET r_h_2_in_fbi_car_remap = 1
+		DISPLAY_BRIEF_NOW ( 3996 ) // "Find him and pull over in front of him , don't forget the siren, he won't stop if it's not on!!"
+   		POINT_ARROW_AT ( arrow , r_h_2_target_ped_car )
+		STORE_CAR_CHARACTER_IS_IN ( shaft , r_h_2_fbi_car )
+		IF ( r_h_2_in_fbi_car_already = 0 )
+			SET_CHAR_GRAPHIC_TYPE  ( shaft , emerg_graphic , 0 )
+			SET r_h_2_in_fbi_car_already = 1
+		ENDIF
+
+   	ENDIF
+
+
+	// if player gets out of car points back at car and says to get back in
+		
+   	IF ( ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , copcar ) ) )
+	AND ( r_h_2_in_fbi_car = 1 ) )
+	AND ( r_h_2_target_ped_located = 0 ) )
+		SET r_h_2_in_fbi_car = 0
+		DISPLAY_BRIEF_NOW ( 3997 ) // "Where are you going? Get in a copcar now!"
+		REMOVE_ARROW ( arrow )
+	ENDIF
+
+
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_target_ped ) )
+	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3998 ) // "You killed him, my son wanted the pleasure you fuckwit!
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+   
+	IF ( ( ( ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , r_h_2_target_ped , 1.6 , 1.2 ) )
+	AND ( ARE_EMERG_LIGHTS_ON ( r_h_2_fbi_car ) ) )
+	AND ( r_h_2_in_fbi_car = 1 ) )
+	AND ( r_h_2_target_ped_located = 0 ) )
+		SET r_h_2_target_ped_located = 1
+		CHANGE_CAR_LOCK ( r_h_2_target_ped_car , no_lock )
+		SET_CHAR_OBJECTIVE ( r_h_2_target_ped , leave_car , r_h_2_target_ped_car )   
+   	ENDIF
+
+
+	IF ( ( r_h_2_target_ped_located = 1 )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( r_h_2_target_ped ) ) )
+		DISPLAY_BRIEF_NOW ( 3999 ) // "where the hell are you going"
+		DISPLAY_BRIEF ( 3472 ) // "Catch him and get him in a copcar!"
+//		SET_CHAR_MAX_RUNSPEED ( r_h_2_target_ped , 0.05 )
+		SET_CHAR_OBJECTIVE ( r_h_2_target_ped , flee_char_on_foot_always , shaft ) 
+		SET_CHAR_THREAT_REACTION ( r_h_2_target_ped , no_reaction )
+		ADD_GROUP_TO_CHARACTER ( r_h_2_target_ped , 0 )
+		POINT_ARROW_AT ( arrow , r_h_2_target_ped )
+		SET r_h_2_target_ped_located = 2
+		SET r_h_2_target_ped_in_car = 1
+	ENDIF
+
+
+ENDWHILE
+
+
+#ifdef PSX
+DELETE_ITEM ( r_h_2_group_1_leader )
+DELETE_ITEM ( r_h_2_group_1_follow_1 )
+DELETE_ITEM ( r_h_2_group_1_follow_2 )
+DELETE_ITEM ( r_h_2_group_1_follow_3 )
+DELETE_ITEM ( r_h_2_the_man )
+#endif
+
+r_h_2_group_2_leader = CREATE_CHAR ( 186.7 , 3.8 , 2.0 ) 10 165 criminal END
+SET_CHAR_THREAT_REACTION ( r_h_2_group_2_leader , no_reaction )
+SET_CHAR_THREAT_SEARCH ( r_h_2_group_2_leader , line_of_sight )
+ADD_CHAR_TO_GANG ( r_h_2_group_2_leader , russgang )
+SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader , wait_on_foot )
+
+r_h_2_group_2_leader_2 = CREATE_CHAR ( 187.1 , 4.3 , 2.0 ) 10 110 criminal END
+SET_CHAR_THREAT_REACTION ( r_h_2_group_2_leader_2 , no_reaction )
+SET_CHAR_THREAT_SEARCH ( r_h_2_group_2_leader_2 , line_of_sight )
+ADD_CHAR_TO_GANG ( r_h_2_group_2_leader_2 , russgang )
+SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader_2 , wait_on_foot )
+
+r_h_2_group_2_leader_3 = CREATE_CHAR ( 187.5 , 3.2 , 2.0 ) 10 290 criminal END
+SET_CHAR_THREAT_REACTION ( r_h_2_group_2_leader_3 , no_reaction )
+SET_CHAR_THREAT_SEARCH ( r_h_2_group_2_leader_3 , line_of_sight )
+ADD_CHAR_TO_GANG ( r_h_2_group_2_leader_3 , russgang )
+SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader_3 , wait_on_foot )
+
+r_h_2_group_2_leader_4 = CREATE_CHAR ( 187.8 , 3.8 , 2.0 ) 10 275 criminal END
+SET_CHAR_THREAT_REACTION ( r_h_2_group_2_leader_4 , no_reaction )
+SET_CHAR_THREAT_SEARCH ( r_h_2_group_2_leader_4 , line_of_sight )
+ADD_CHAR_TO_GANG ( r_h_2_group_2_leader_4 , russgang )
+SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader_4 , wait_on_foot )
+
+r_h_2_flame_guy = CREATE_CHAR ( 184.5 , 3.5 , 2.0 ) 10 0 criminal END
+SET_CHAR_THREAT_REACTION ( r_h_2_flame_guy , no_reaction )
+SET_CHAR_THREAT_SEARCH ( r_h_2_flame_guy , line_of_sight )
+ADD_CHAR_TO_GANG ( r_h_2_flame_guy , russgang )
+SET_CHAR_OBJECTIVE ( r_h_2_flame_guy , wait_on_foot )
+
+
+WHILE_EXEC ( r_h_2_target_ped_flamed = 0 )
+
+
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_target_ped ) )
+	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3998 ) // "You killed him, he was going to translate the information, my men are useless to me now!
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_group_2_leader ) )
+	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3460 ) // "You killed him, he was going to translate the information, my men are useless to me now!
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_group_2_leader_2 ) )
+	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3460 ) // "You killed him, he was going to translate the information, my men are useless to me now!
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_group_2_leader_3 ) )
+	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3460 ) // "You killed him, he was going to translate the information, my men are useless to me now!
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_group_2_leader_4 ) )
+	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3460 ) // "You killed him, he was going to translate the information, my men are useless to me now!
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_flame_guy ) )
+	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3461 ) // "You killed him, he was going to translate the information, my men are useless to me now!
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+	
+	IF ( ( LOCATE_ANOTHER_CHARACTER_ON_FOOT ( shaft , r_h_2_target_ped , 0.8 , 0.8 ) ) 
+	AND ( r_h_2_target_ped_located = 2 ) )
+		SET r_h_2_target_ped_located = 3
+		SET r_h_2_target_ped_on_screen = 0
+		DISPLAY_BRIEF_NOW ( 3462 ) // "Come here and give me the information!"	 
+		MAKE_NEW_LEADER_OF_GROUP ( r_h_2_target_ped , shaft )
+//		SET_CHAR_MAX_RUNSPEED ( r_h_2_target_ped , 0.0625 )
+		REMOVE_ARROW ( arrow )
+	ENDIF
+
+
+	IF ( ( ( IS_CHARACTER_IN_ANY_CAR ( shaft ) )
+	AND ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , copcar ) ) ) )
+	AND ( r_h_2_target_ped_located = 3 ) )
+		DISPLAY_BRIEF_NOW ( 3463 ) // "where the hell are you going"
+		REMOVE_CHAR_FROM_GROUP  ( shaft , r_h_2_target_ped )
+		MAKE_CHAR_DO_NOTHING ( r_h_2_target_ped )
+		WHILE ( DELAY ( 15 ) ) 
+			ENDEXEC			
+		ENDWHILE
+//		SET_CHAR_MAX_RUNSPEED ( r_h_2_target_ped , 0.05 )
+		SET_CHAR_OBJECTIVE ( r_h_2_target_ped , flee_char_on_foot_always , shaft ) 
+		SET_CHAR_THREAT_REACTION ( r_h_2_target_ped , no_reaction )
+		ADD_GROUP_TO_CHARACTER ( r_h_2_target_ped , 0 )
+		POINT_ARROW_AT ( arrow , r_h_2_target_ped )
+		SET r_h_2_target_ped_located = 2
+	ENDIF
+
+//V8.5
+//	IF ( ( ( ( IS_CHARACTER_IN_MODEL ( shaft , copcar ) )
+	IF ( ( ( IS_CHARACTER_IN_MODEL ( shaft , copcar ) )
+//	AND ( IS_CHARACTER_IN_ANY_CAR ( r_h_2_target_ped ) ) )
+   	AND ( r_h_2_in_fbi_car_with_ped = 0 ) )
+	AND ( r_h_2_target_ped_located = 3 ) )
+		SET r_h_2_in_fbi_car_with_ped = 1
+		DISPLAY_BRIEF_NOW ( 3464 ) // "get the truck across to the dockside near Mad Island!"
+   		POINT_ARROW_AT ( arrow , r_h_2_group_2_leader )
+	ENDIF
+
+
+	// if player gets out of car points back at car and says to get back in
+		
+   	IF ( ( ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , copcar ) ) )
+	AND ( r_h_2_in_fbi_car_with_ped = 1 ) )
+	AND ( r_h_2_target_ped_located = 3 ) )
+	AND ( NOT ( LOCATE_ANOTHER_CHARACTER_ON_FOOT ( shaft , r_h_2_group_2_leader , 3.0 , 3.0 ) ) ) )
+		SET r_h_2_in_fbi_car_with_ped = 0
+		DISPLAY_BRIEF_NOW ( 3465 ) // "what the fuck are you doing! get your arse back in the truck"
+		REMOVE_ARROW ( arrow )
+	ENDIF
+
+
+	IF ( ( ( LOCATE_ANOTHER_CHARACTER_ON_FOOT ( shaft , r_h_2_group_2_leader , 3.0 , 3.0 ) )
+	AND ( r_h_2_target_ped_located = 3 ) )
+	AND ( r_h_2_group_2_leader_on_screen_on_foot = 0 ) )
+		SET r_h_2_group_2_leader_on_screen_on_foot = 1
+		DISPLAY_BRIEF_NOW ( 3466 ) // "Come here and give me the information!"	 
+	ENDIF
+
+	
+	IF ( ( ( ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , r_h_2_group_2_leader , 3.0 , 3.0 ) ) 
+	AND ( r_h_2_in_fbi_car_with_ped = 1 ) )
+	AND ( r_h_2_group_2_leader_on_screen_in_car = 0 ) )
+	AND ( r_h_2_group_2_leader_on_screen_on_foot = 0 ) )
+		SET r_h_2_group_2_leader_on_screen_in_car = 1
+		DISPLAY_BRIEF_NOW ( 3467 ) // "Get out of the car so that he can translate the information!"	 
+   	ENDIF
+
+
+	IF ( ( ( ( ( NOT ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , r_h_2_group_2_leader , 3.0 , 3.0 ) ) )
+	AND ( NOT ( LOCATE_ANOTHER_CHARACTER_ON_FOOT ( shaft , r_h_2_group_2_leader , 3.0 , 3.0 ) ) ) )
+	AND ( r_h_2_in_fbi_car_with_ped = 1 ) )
+	AND ( r_h_2_group_2_leader_on_screen_in_car = 1 ) )
+	AND ( r_h_2_group_2_leader_on_screen_on_foot = 0 ) )
+		SET r_h_2_group_2_leader_on_screen_in_car = 0
+		DISPLAY_BRIEF_NOW ( 3468 ) // "Where are you going? He told you to get out of the car not drive away, get back there!"	 
+   	ENDIF
+
+
+	IF ( ( r_h_2_group_2_leader_on_screen_on_foot = 1 )
+//	AND ( NOT ( IS_GROUP_IN_CAR ( shaft ) ) ) )
+	AND ( NOT ( DELAY ( 10 ) ) ) ) 
+		SET r_h_2_group_2_leader_on_screen_on_foot = 2
+		SET r_h_2_target_ped_flamed = 1
+	ENDIF
+
+
+	IF ( ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( r_h_2_target_ped ) ) )
+	AND ( r_h_2_target_ped_on_screen = 0 ) )
+	AND ( r_h_2_target_ped_located = 3 ) )
+		
+		IF ( NOT ( HAS_CHARACTER_DIED ( r_h_2_target_ped ) ) )
+			POINT_ARROW_AT ( arrow , r_h_2_target_ped )
+			SET r_h_2_target_ped_on_screen = 1
+			DISPLAY_BRIEF_NOW ( 3473 ) // "Where are you going? Get back and find the informer!"
+		ENDIF
+	ENDIF
+
+	IF ( ( ( ( IS_ITEM_ONSCREEN ( r_h_2_target_ped ) )
+ 	AND ( NOT ( HAS_CHARACTER_DIED ( r_h_2_target_ped ) ) ) )
+ 	AND ( r_h_2_target_ped_located = 3 ) )
+	AND ( r_h_2_target_ped_on_screen = 1 ) )
+		SET r_h_2_target_ped_on_screen = 0
+		DISPLAY_BRIEF_NOW ( 3474 ) // "Do not leave him behind again, take him to the Lubyanka Docks!"
+		IF ( IS_CHARACTER_IN_MODEL ( shaft , copcar ) )
+			POINT_ARROW_AT ( arrow , r_h_2_group_2_leader )
+		ELSE	
+			REMOVE_ARROW ( arrow )
+		ENDIF
+	ENDIF
+
+
+ENDWHILE
+/*
+	IF ( ( LOCATE_CHARACTER_ON_FOOT ( shaft , 67.5 , 234.0 , 2.0 , 3.0 , 2.0  ) )
+	AND ( NOT ( IS_CHARACTER_IN_ANY_CAR ( k_e_1_locksmith	) ) ) )
+		SET k_e_1_locksmith_at_door = 1
+	ENDIF
+*/
+REMOVE_CHAR_FROM_GROUP ( shaft , r_h_2_target_ped )
+MAKE_CHAR_DO_NOTHING ( r_h_2_target_ped )
+SET_CHAR_OBJECTIVE ( r_h_2_target_ped , goto_area_on_foot , 185.5 , 5.5 , 2.0 ) 		
+
+WHILE_EXEC ( r_h_2_target_ped_flamed_2 = 0 )
+
+
+	IF ( ( r_h_2_target_ped_obj_1 = 0 ) 
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( r_h_2_target_ped ) ) )
+		SET r_h_2_target_ped_obj_1 = 1
+		SET_CHAR_OBJECTIVE ( r_h_2_target_ped , wait_on_foot )
+		SET_CHAR_THREAT_REACTION ( r_h_2_target_ped , no_reaction )
+		SET_CHAR_INVINCIBLE ( r_h_2_target_ped , ON ) 	  
+		REMOVE_ARROW ( arrow )
+		SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader , kill_char_on_foot , r_h_2_target_ped ) 
+		SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader_2 , kill_char_on_foot , r_h_2_target_ped ) 
+		SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader_3 , kill_char_on_foot , r_h_2_target_ped ) 
+		SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader_4 , kill_char_on_foot , r_h_2_target_ped ) 
+		SET r_h_2_group_2_leader_obj_1 = 1
+		#ifdef PC
+		r_h_2_laugh = CREATE_SOUND ( 184.5 , 3.5 , 6.0 ) smug_laugh play_forever END
+		FORCE_CLEANUP ( r_h_2_laugh )
+		r_h_2_crying = CREATE_SOUND ( 185.5 , 5.5 , 6.0 ) crying play_instant END
+		FORCE_CLEANUP ( r_h_2_crying )
+		#endif
+	ENDIF
+	
+	
+	IF ( ( ( HAS_CHARACTER_DIED ( r_h_2_target_ped ) )
+	AND ( r_h_2_group_2_leader_obj_1 < 3 ) )
+	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3998 ) // "You killed him, he was going to translate the information, my men are useless to me now!
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_group_2_leader ) )
+	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3460 ) // "You killed him, he was going to translate the information, my men are useless to me now!
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_group_2_leader_2 ) )
+	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3460 ) // "You killed him, he was going to translate the information, my men are useless to me now!
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_group_2_leader_3 ) )
+	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3460 ) // "You killed him, he was going to translate the information, my men are useless to me now!
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_group_2_leader_4 ) )
+	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3460 ) // "You killed him, he was going to translate the information, my men are useless to me now!
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_flame_guy ) )
+	AND ( flag_failed_russ_hard_phone_m2 = 0 ) ) 
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3461 ) // "You killed him, he was going to translate the information, my men are useless to me now!
+		SET flag_failed_russ_hard_phone_m2 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	IF ( ( r_h_2_group_2_leader_obj_1 = 1 ) 
+	AND ( NOT ( DELAY ( 160 ) ) ) ) 
+		#ifdef PC
+		r_h_2_crying = CREATE_SOUND ( 185.5 , 5.5 , 6.0 ) crying play_instant END
+		FORCE_CLEANUP ( r_h_2_crying )
+		#endif
+		SET r_h_2_group_2_leader_obj_1 = 2
+		DISPLAY_BRIEF_NOW ( 3469 ) // "What the fuck happened to you? Where are my men? All you had to do was drop them off!
+		MAKE_CHAR_DO_NOTHING ( r_h_2_group_2_leader )
+		SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader , goto_area_on_foot , 186.0 , 3.5 , 2.0 )
+		MAKE_CHAR_DO_NOTHING ( r_h_2_group_2_leader_2 )
+		SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader_2 , goto_area_on_foot , 186.5 , 3.5 , 2.0 )
+		MAKE_CHAR_DO_NOTHING ( r_h_2_group_2_leader_3 )
+		SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader_3 , goto_area_on_foot , 187.0 , 3.5 , 2.0 )
+		MAKE_CHAR_DO_NOTHING ( r_h_2_group_2_leader_4 )
+		SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader_4 , goto_area_on_foot , 187.5 , 3.5 , 2.0 )  
+	ENDIF
+
+
+	IF ( ( ( ( r_h_2_group_2_leader_obj_1 = 2 ) 
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( r_h_2_group_2_leader_2 ) ) )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( r_h_2_group_2_leader_3 ) ) )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( r_h_2_group_2_leader_4 ) ) )
+		SET r_h_2_group_2_leader_obj_1 = 3
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF_NOW ( 3470 ) // "What the fuck happened to you? Where are my men? All you had to do was drop them off!
+		MAKE_CHAR_DO_NOTHING ( r_h_2_group_2_leader )
+		SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader , wait_on_foot )
+		MAKE_CHAR_DO_NOTHING ( r_h_2_group_2_leader_2 )
+		SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader_2 , wait_on_foot )
+		MAKE_CHAR_DO_NOTHING ( r_h_2_group_2_leader_3 )
+		SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader_3 , wait_on_foot )
+		MAKE_CHAR_DO_NOTHING ( r_h_2_group_2_leader_4 )
+		SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader_4 , wait_on_foot )  
+		GIVE_WEAPON ( r_h_2_flame_guy , flame_thrower )
+		SET_CHAR_OBJECTIVE ( r_h_2_flame_guy , kill_char_on_foot , r_h_2_target_ped )
+		SET_CHAR_INVINCIBLE ( r_h_2_target_ped , OFF )
+		#ifdef PC
+		DELETE_ITEM ( r_h_2_laugh )
+		r_h_2_scream = CREATE_SOUND ( 185.5 , 5.5 , 6.0 ) scream play_instant END
+		FORCE_CLEANUP ( r_h_2_scream )
+		#endif 	  
+	ENDIF
+
+
+	IF ( ( HAS_CHARACTER_DIED ( r_h_2_target_ped ) )
+	AND ( r_h_2_group_2_leader_obj_1 = 3 ) )
+		MAKE_CHAR_DO_NOTHING ( r_h_2_flame_guy )
+		MAKE_CHAR_DO_NOTHING ( r_h_2_group_2_leader )
+		MAKE_CHAR_DO_NOTHING ( r_h_2_group_2_leader_2 )
+		MAKE_CHAR_DO_NOTHING ( r_h_2_group_2_leader_3 )
+		MAKE_CHAR_DO_NOTHING ( r_h_2_group_2_leader_4 )
+		MAKE_CHAR_DO_NOTHING ( r_h_2_flame_guy )
+		MAKE_CHAR_DO_NOTHING ( r_h_2_group_2_leader )
+//		SET_CHAR_OBJECTIVE ( r_h_2_flame_guy , no_obj )  
+//		SET_CHAR_OBJECTIVE ( r_h_2_group_2_leader , no_obj )  
+		SET	r_h_2_target_ped_flamed_2 = 1
+	ENDIF
+
+
+ENDWHILE
+
+	
+IF ( flag_passed_russ_hard_phone_m2 = 0 )  
+	DISPLAY_BRIEF ( 3471 ) // "you have stayed alive and passed my test. Well done"
+	SET flag_passed_russ_hard_phone_m2 = 1
+	++ counter_all_missions_passed
+	DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+	ADD_SCORE ( shaft , 80000 )
+	ADD_MULTIPLIER ( shaft , 1 ) 
+	CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , 1 )
+	CLEAR_WANTED_LEVEL ( shaft )
+ 	IF ( flag_passed_russ_hard_phone_m1 = 1 )
+		SET_PHONE_DEAD ( ph_russ_hard_phone ) 
+		DISABLE_THREAD_TRIGGER ( thr_russ_hard_phone_m1 )
+	ENDIF
+	RETURN
+ENDIF
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+// deletes all objects when Russian hard phone mission2 is finished...
+				
+clean_up_russ_hard_phone_m2: 
+	
+	REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	
+	SET_PEDDENSITY ( B08 , 400 )
+	OPEN_DOOR ( r_h_2_door_1_1 )
+	#ifdef PC
+	OPEN_DOOR ( r_h_2_door_1_2 )
+	#endif
+
+
+	IF ( r_h_2_in_fbi_car_remap = 1 )
+		SET_CHAR_GRAPHIC_TYPE  ( shaft , gang_graphic , 25 )
+	ENDIF
+
+	IF ( flag_passed_russ_hard_phone_m2 = 1 )
+		++ flag_russ_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_russ_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3673 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3672 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_russ_hard_phone_m2 = 1 )
+		++ flag_russ_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_russ_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+	MISSION_HAS_FINISHED ( )
+
+	SET flag_on_mission	= 0
+	SET flag_on_russ_mission = 0
+	
+	RETURN
+
+
+
+MISSIONSTART
+
+	GOSUB russ_hard_phone_m2:
+
+	GOSUB clean_up_russ_hard_phone_m2:
+
+MISSIONEND
+
+			
+					 
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+	 

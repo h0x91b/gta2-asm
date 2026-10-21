@@ -1,0 +1,433 @@
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ste_se1 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+// Pickup'n'drown 
+
+// Use a taxi to pick up four peds. Take them to the crane and dump them in the water. Add some 
+// more exciting bullshit to the end of theis mission for instant thrills! 
+
+
+
+// general mission objects
+
+COUNTER r_e_2_taxi_1_sunk = 0
+COUNTER r_e_2_in_taxi_for_first_time = 0
+COUNTER r_e_2_out_of_taxi = 0
+COUNTER r_e_2_is_taxi_pass_1_created = 0
+COUNTER r_e_2_is_taxi_pass_2_created = 0
+COUNTER r_e_2_is_taxi_pass_3_created = 0
+COUNTER r_e_2_is_taxi_pass_4_created = 0
+COUNTER r_e_2_at_crane = 0
+COUNTER r_e_2_is_horn_pressed = 0
+
+COUNTER r_e_2_pass_1_brief = 0
+COUNTER r_e_2_pass_2_brief = 0
+COUNTER r_e_2_pass_3_brief = 0
+COUNTER r_e_2_pass_4_brief = 0
+COUNTER r_e_2_taxi_passengers_picked_up = 0
+COUNTER r_e_2_taxi_passenger_alive = 0
+COUNTER r_e_2_at_crane_out_of_car = 0
+COUNTER r_e_2_taxi_1_ready = 0
+ 
+
+COUNTER r_e_2_at_the_base = 0
+
+SOUND r_e_2_crying 
+
+CAR_DATA r_e_2_taxi_1
+CHAR_DATA r_e_2_taxi_passenger
+
+FORWARD clean_up_russ_easy_phone2_m1:
+
+
+
+
+
+
+// start of mission
+
+
+russ_easy_phone2_m1:
+
+SET flag_failed_russ_easy_phone2_m1 = 0
+
+SET flag_on_mission = 1
+SET flag_on_russ_mission = 1
+
+DISPLAY_MESSAGE ( 3855 ) // mission name
+
+
+
+
+
+// create taxi and first r_e_2_taxi_passenger
+
+r_e_2_taxi_passenger = CREATE_CHAR ( 95.5 , 171.5 , 2.0 ) 8 270 DUMMY END
+SET r_e_2_taxi_passenger_alive = 1
+SET r_e_2_is_taxi_pass_1_created = 1
+SET_CHAR_THREAT_REACTION ( r_e_2_taxi_passenger , no_reaction )
+SET_CHAR_OBJECTIVE ( r_e_2_taxi_passenger , wait_on_foot )
+r_e_2_taxi_1 = CREATE_GANG_CAR ( 48.0 , 73.0 , 2.0 ) 2 0 vtype END
+POINT_ARROW_AT ( arrow , r_e_2_taxi_1 )
+		
+DISPLAY_BRIEF ( 3520 ) // We need to take out some of the key Zaibatsu players before they become all too powerfull. 
+
+
+// Part 1 - Get in the taxi, pick up the four peds and then take them to the crane.
+
+WHILE_EXEC ( r_e_2_taxi_1_sunk = 0 )
+
+	// if any of the r_e_2_taxi_passengers are killed
+	
+	IF ( r_e_2_taxi_passengers_picked_up = 0 )
+
+		IF ( ( HAS_CHARACTER_DIED ( r_e_2_taxi_passenger ) ) 
+		AND ( flag_failed_russ_easy_phone2_m1 = 0 ) )
+			CLEAR_ALL_BRIEFS ( )
+			DISPLAY_BRIEF ( 3522 )	// "You've killed one of their men, we'll be in the shit once they find the body!"
+			SET flag_failed_russ_easy_phone2_m1 = 1
+			DISPLAY_MESSAGE ( 3730 )
+			RETURN
+		ENDIF
+
+	ENDIF
+
+	// if taxi is destroyed
+
+	IF 	( ( ( IS_CAR_WRECKED ( r_e_2_taxi_1 ) ) 
+	AND ( r_e_2_taxi_1_ready = 0 ) )
+	AND ( flag_failed_russ_easy_phone2_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3523 ) // After all the attention Cleo gave that Limo, you decide to destroy it - you tit!  	
+		SET flag_failed_russ_easy_phone2_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // mission failed
+		RETURN
+	ENDIF
+
+	
+	// if player is in taxi (r_e_2_taxi_passengers)
+
+	IF  ( ( IS_CHARACTER_IN_CAR ( shaft , r_e_2_taxi_1 ) )
+	AND ( r_e_2_taxi_passengers_picked_up = 0 ) )
+		POINT_ARROW_AT ( arrow , r_e_2_taxi_passenger )
+		SET r_e_2_out_of_taxi = 0
+		
+		IF ( r_e_2_in_taxi_for_first_time = 0 )
+			DISPLAY_BRIEF ( 3524 ) // Alright, we have someone waiting to be picked up, he's by the clocktower.
+			STORE_CAR_CHARACTER_IS_IN ( shaft , r_e_2_taxi_1 )
+			SET r_e_2_in_taxi_for_first_time = 1
+		ENDIF
+	ENDIF
+
+
+	// if shaft is in taxi (crane)
+
+	IF  ( ( ( r_e_2_taxi_passengers_picked_up = 1 ) 
+	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_2_taxi_1 ) ) )
+	AND ( r_e_2_out_of_taxi = 1 ) )
+		POINT_ARROW_AT ( arrow , 135.5 , 5.5 , 2.0 )
+		SET r_e_2_out_of_taxi = 0
+	ENDIF
+
+
+	// if shaft leaves taxi
+
+	IF  ( ( ( ( ( r_e_2_in_taxi_for_first_time = 1 ) 
+	AND ( NOT ( IS_CHARACTER_IN_CAR ( shaft , r_e_2_taxi_1 ) ) ) )
+	AND ( NOT ( IS_CAR_IN_BLOCK ( r_e_2_taxi_1 , 135.5 , 5.5 , 2.0 , 7.0 , 7.0 ) ) ) )
+	AND ( r_e_2_out_of_taxi = 0 ) )
+	AND ( r_e_2_at_crane = 0 ) )	
+		POINT_ARROW_AT ( arrow , r_e_2_taxi_1 )
+		DISPLAY_BRIEF_NOW ( 3525 ) // Get your arse back in that Limo and follow my instructions boy!
+		SET r_e_2_out_of_taxi = 1 
+	ENDIF
+
+	// pick up first r_e_2_taxi_passenger 
+
+				
+	IF  ( ( ( ( r_e_2_is_taxi_pass_1_created = 1 )
+	AND ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , r_e_2_taxi_passenger , 3.0 , 3.0 ) ) )	
+	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_2_taxi_1 ) ) )
+	AND ( r_e_2_pass_1_brief = 0 ) )
+		DISPLAY_BRIEF_NOW ( 3526 )		// "beep your horn"
+		SET r_e_2_pass_1_brief = 1
+		REMOVE_ARROW ( arrow )
+	ENDIF
+/*
+	IF  ( ( ( NOT ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , r_e_2_taxi_passenger , 3.0 , 3.0 ) ) )	
+	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_2_taxi_1 ) ) )
+	AND ( r_e_2_pass_1_brief = 1 ) )
+		DISPLAY_BRIEF ( 3526 )		// "Get back there and pick the guy up!"
+		SET r_e_2_pass_1_brief = 0
+		POINT_ARROW_AT ( arrow , r_e_2_taxi_passenger )
+	ENDIF
+*/
+	IF  ( ( ( ( IS_CHAR_PRESSING_HORN  ( shaft ) )
+	AND ( r_e_2_is_horn_pressed = 0 ) ) 
+	AND ( r_e_2_pass_1_brief = 1 ) )
+	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_2_taxi_1 ) ) )
+		DISPLAY_BRIEF_NOW ( 3527 ) 		// Yeah, yeah! I'm coming, just stop beeping that damn horn. My fucking head's killing me!
+		SET_CHAR_OBJECTIVE ( r_e_2_taxi_passenger , ENTER_CAR_AS_PASSENGER , r_e_2_taxi_1 )
+		SET r_e_2_is_horn_pressed = 1
+		SET r_e_2_pass_1_brief = 2
+	ENDIF
+			
+		
+		
+	IF	( ( r_e_2_pass_1_brief = 2 ) 
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( r_e_2_taxi_passenger ) ) )
+	 	DELETE_ITEM ( r_e_2_taxi_passenger )
+		SET r_e_2_pass_1_brief = 3
+		SET r_e_2_is_taxi_pass_1_created = 2
+		SET r_e_2_taxi_passenger_alive = 0
+		r_e_2_taxi_passenger = CREATE_CHAR ( 46.0 , 187.0 , 2.0 ) 8 180 DUMMY END
+		SET r_e_2_taxi_passenger_alive = 1
+		SET_CHAR_THREAT_REACTION ( r_e_2_taxi_passenger , no_reaction )
+		SET_CHAR_OBJECTIVE ( r_e_2_taxi_passenger , wait_on_foot )
+		POINT_ARROW_AT ( arrow , r_e_2_taxi_passenger )
+		DISPLAY_BRIEF ( 3528 ) // Good work, now pick up gullable Zaibatsu No2.
+		SET r_e_2_is_taxi_pass_2_created = 1
+	ENDIF
+	   
+	// pick up second r_e_2_taxi_passenger 
+
+	IF  ( ( ( ( r_e_2_is_taxi_pass_2_created = 1 )
+	AND ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , r_e_2_taxi_passenger , 3.0 , 3.0 ) ) ) 	
+	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_2_taxi_1 ) ) ) 
+	AND ( r_e_2_pass_2_brief = 0 ) )
+		SET r_e_2_is_horn_pressed = 0
+	 	DISPLAY_BRIEF_NOW ( 3526 )		// "beep your horn"
+		SET r_e_2_pass_2_brief = 1
+	ENDIF
+			
+
+	IF  ( ( ( ( ( r_e_2_is_taxi_pass_2_created = 1 )		
+	AND ( IS_CHAR_PRESSING_HORN  ( shaft ) ) )
+	AND ( r_e_2_is_horn_pressed = 0 ) )
+	AND ( r_e_2_pass_2_brief = 1 ) )
+	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_2_taxi_1 ) ) )
+		DISPLAY_BRIEF_NOW ( 3529 ) 		// Hey! Are you beeping to me?
+		SET_CHAR_OBJECTIVE ( r_e_2_taxi_passenger , ENTER_CAR_AS_PASSENGER , r_e_2_taxi_1 )
+		SET r_e_2_is_horn_pressed = 1
+		SET r_e_2_pass_2_brief = 2
+	ENDIF
+					
+	IF  ( ( r_e_2_pass_2_brief = 2 ) 
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( r_e_2_taxi_passenger ) ) )
+		DELETE_ITEM ( r_e_2_taxi_passenger )
+		SET r_e_2_pass_2_brief = 3
+		SET r_e_2_is_taxi_pass_2_created = 2
+		SET r_e_2_taxi_passenger_alive = 0
+		r_e_2_taxi_passenger = CREATE_CHAR ( 13.5 , 233.5 , 4.0 ) 8 45 DUMMY END
+		SET r_e_2_taxi_passenger_alive = 1
+		SET_CHAR_THREAT_REACTION ( r_e_2_taxi_passenger , no_reaction )
+		SET_CHAR_OBJECTIVE ( r_e_2_taxi_passenger , wait_on_foot )
+		POINT_ARROW_AT ( arrow , r_e_2_taxi_passenger )
+		DISPLAY_BRIEF ( 3530 ) // Two down - two to go! This is easy, if only they new their destination.
+		SET r_e_2_is_taxi_pass_3_created = 1
+	ENDIF				
+			
+
+
+	// pick up third r_e_2_taxi_passenger 
+
+	IF  ( ( ( ( r_e_2_is_taxi_pass_3_created = 1 )
+	AND ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , r_e_2_taxi_passenger , 3.0 , 3.0 ) ) ) 	
+	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_2_taxi_1 ) ) )
+	AND ( r_e_2_pass_3_brief = 0 ) )
+		SET r_e_2_is_horn_pressed = 0
+	 	DISPLAY_BRIEF_NOW ( 3526 )		// "beep your horn"
+		SET r_e_2_pass_3_brief = 1
+	ENDIF
+			
+	IF  ( ( ( ( ( IS_CHAR_PRESSING_HORN  ( shaft ) )
+	AND ( r_e_2_is_horn_pressed = 0 ) )
+	AND ( r_e_2_is_taxi_pass_3_created = 1 ) )
+	AND ( r_e_2_pass_3_brief = 1 ) )
+	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_2_taxi_1 ) ) )
+		DISPLAY_BRIEF_NOW ( 3531 ) 		// About fucking time, I'm freezing my nuts off out here.
+		SET_CHAR_OBJECTIVE ( r_e_2_taxi_passenger , ENTER_CAR_AS_PASSENGER , r_e_2_taxi_1 )
+		SET r_e_2_is_horn_pressed = 1
+		SET r_e_2_pass_3_brief = 2
+
+	ENDIF
+					
+	IF  ( ( r_e_2_pass_3_brief = 2 )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( r_e_2_taxi_passenger ) ) )
+		DELETE_ITEM ( r_e_2_taxi_passenger )
+		SET r_e_2_is_taxi_pass_3_created = 2
+		r_e_2_taxi_passenger = CREATE_CHAR ( 85.0 , 147.0 , 2.0 ) 8 0 DUMMY END
+		SET_CHAR_THREAT_REACTION ( r_e_2_taxi_passenger , no_reaction )
+		SET_CHAR_OBJECTIVE ( r_e_2_taxi_passenger , wait_on_foot )
+		POINT_ARROW_AT ( arrow , r_e_2_taxi_passenger )
+		DISPLAY_BRIEF ( 3532 ) // Okay Travis, pick up our fourth customer.  
+		SET r_e_2_pass_3_brief = 3
+	 	SET r_e_2_is_taxi_pass_4_created = 1
+	 	SET r_e_2_is_horn_pressed = 0
+	ENDIF				
+ 		
+	
+
+	// pick up fourth r_e_2_taxi_passenger 
+
+	IF  ( ( ( ( r_e_2_is_taxi_pass_4_created = 1 )
+	AND ( LOCATE_ANOTHER_CHARACTER_BY_CAR ( shaft , r_e_2_taxi_passenger , 3.0 , 3.0 ) ) ) 	
+	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_2_taxi_1 ) ) ) 
+	AND ( r_e_2_pass_4_brief = 0 ) )
+		SET r_e_2_is_horn_pressed = 0
+		DISPLAY_BRIEF_NOW ( 3526 )		// "beep your horn"
+		SET r_e_2_pass_4_brief = 1
+   	ENDIF
+
+
+	IF  ( ( ( ( IS_CHAR_PRESSING_HORN  ( shaft ) )
+	AND ( r_e_2_is_horn_pressed = 0 ) )
+	AND ( r_e_2_pass_4_brief = 1 ) )
+	AND ( IS_CHARACTER_IN_CAR ( shaft , r_e_2_taxi_1 ) ) )
+	  	DISPLAY_BRIEF_NOW ( 3533 ) 		// Hey, prison was less crowded than this fucking car!
+		SET_CHAR_OBJECTIVE ( r_e_2_taxi_passenger , ENTER_CAR_AS_PASSENGER , r_e_2_taxi_1 )
+		SET r_e_2_is_horn_pressed = 1
+		SET r_e_2_pass_4_brief = 2
+	ENDIF
+
+		 	
+	IF  ( ( ( r_e_2_taxi_passengers_picked_up = 0 )				
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( r_e_2_taxi_passenger ) ) )
+	AND	( r_e_2_pass_4_brief = 2 ) )
+		DELETE_ITEM ( r_e_2_taxi_passenger )
+		SET r_e_2_taxi_passengers_picked_up = 1
+		SET r_e_2_is_taxi_pass_4_created = 2
+		SET r_e_2_pass_4_brief = 3
+		POINT_ARROW_AT ( arrow , 135.5 , 5.5 , 2.0  )
+		DISPLAY_BRIEF ( 3534 ) // Four sardines in a can...take 'em to the crane Scientist.
+		ENABLE_CRANE ( kris_crane_easy_mission_2 )
+	ENDIF			  
+
+									
+			
+	// if taxi is at crane
+
+ 	
+	IF  ( ( ( IS_ITEM_ONSCREEN ( kris_crane_easy_mission_2 ) )
+	AND ( r_e_2_at_crane = 0 ) )
+	AND ( r_e_2_taxi_passengers_picked_up = 1 ) )
+		DISPLAY_BRIEF ( 3535 ) // Get out of the car and cover your ears, Zaibatsu scum are known to cry like babies!
+		REMOVE_ARROW ( arrow )
+		SET r_e_2_at_crane = 1
+	ENDIF
+	
+	IF  ( ( ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( kris_crane_easy_mission_2 ) ) )
+	AND ( NOT ( IS_CAR_IN_BLOCK ( r_e_2_taxi_1 , 135.5 , 5.5 , 2.0 , 7.0 , 7.0 ) ) ) )
+	AND ( r_e_2_at_crane = 1 ) )
+	AND ( r_e_2_taxi_passengers_picked_up = 1 ) )
+		DISPLAY_BRIEF ( 3538 ) // Take the car back to the crane so that we can dispose of these scumsuckers!
+		POINT_ARROW_AT ( arrow , 135.5 , 5.5 , 2.0  )
+		SET r_e_2_at_crane = 0
+	ENDIF
+	
+	
+	IF ( ( ( IS_CAR_IN_BLOCK ( r_e_2_taxi_1 , 135.5 , 5.5 , 2.0 , 7.0 , 7.0 ) ) 
+	AND ( r_e_2_at_crane_out_of_car = 0 ) )
+	AND ( NOT ( IS_CHARACTER_IN_CAR ( shaft , r_e_2_taxi_1 ) ) ) )
+		SET r_e_2_at_crane_out_of_car = 1
+		CHANGE_CAR_LOCK ( r_e_2_taxi_1 , locked )
+		SET r_e_2_taxi_1_ready = 1
+		#ifdef PC
+		r_e_2_crying = CREATE_SOUND ( 135.5 , 5.5 , 6.0 ) gang_dumped play_forever END
+		FORCE_CLEANUP ( r_e_2_crying )
+		#endif
+	ENDIF 
+	
+   
+	IF  ( ( r_e_2_at_crane = 1 ) 
+	AND ( HAS_CAR_JUST_SUNK ( r_e_2_taxi_1 ) ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3536 ) // Glug, glug...what a waste of a good car.
+		SET r_e_2_at_crane = 2
+		SET r_e_2_taxi_1_sunk = 1
+		#ifdef PC
+		DELETE_ITEM ( r_e_2_crying )
+		#endif
+   	ENDIF
+	
+
+ENDWHILE
+
+IF ( ( flag_passed_russ_easy_phone2_m1 = 0 )
+AND ( r_e_2_taxi_1_sunk = 1 ) )  
+	DISPLAY_BRIEF ( 3537 ) // "you have stayed alive and passed my test. Well done"
+	SET flag_passed_russ_easy_phone2_m1	= 1
+	++ counter_all_missions_passed
+	DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+	ADD_SCORE ( shaft , 40000 )
+	ADD_MULTIPLIER ( shaft , 1 ) 
+	CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , 1 )
+	CLEAR_WANTED_LEVEL ( shaft )
+	SET_PHONE_DEAD ( ph_russ_easy_phone2 ) 
+	DISABLE_THREAD_TRIGGER ( thr_russ_easy_phone2_m1 )
+	RETURN
+ENDIF
+
+	
+
+
+
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+// deletes all objects when Scientist easy phone1 mission1 is finished...
+				
+clean_up_russ_easy_phone2_m1: 
+	
+    REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	DISABLE_CRANE ( kris_crane_easy_mission_2 )
+	
+	IF ( flag_passed_russ_easy_phone2_m1 = 1 )
+		++ flag_russ_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_russ_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3673 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3672 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_russ_easy_phone2_m1 = 1 )
+		++ flag_russ_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_russ_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( russgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+	MISSION_HAS_FINISHED ( )
+
+	SET flag_on_mission	= 0
+	SET flag_on_russ_mission = 0
+	
+	RETURN
+
+
+MISSIONSTART
+
+	GOSUB russ_easy_phone2_m1:
+
+	GOSUB clean_up_russ_easy_phone2_m1:
+
+MISSIONEND

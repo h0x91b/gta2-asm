@@ -1,0 +1,716 @@
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+//*************************** REDNECK EASY PHONE MISSION 2**********************************
+//******************************************************************************************
+//******************************************************************************************
+//******************************************************************************************
+
+
+
+// general mission objects
+
+CAR_DATA z_m_3_russian_car
+
+COUNTER z_m_3_in_krishna_gang_car = 0
+COUNTER z_m_3_all_krishnas_dead = 0
+COUNTER z_m_3_in_krishna_zone_4_first_time = 0
+COUNTER z_m_3_in_krisgang_zone = 0
+COUNTER z_m_3_in_krishna_gang_car_in_zone = 0
+
+CAR_DATA z_m_3_krishna_car
+
+COUNTER z_m_3_in_russian_gang_car = 0
+COUNTER z_m_3_all_russians_dead = 0
+COUNTER z_m_3_in_russian_zone_4_first_time = 0
+COUNTER z_m_3_bonus_started = 0
+COUNTER z_m_3_in_russgang_zone = 0
+COUNTER z_m_3_in_russian_gang_car_in_zone = 0
+
+ONSCREEN_COUNTER z_m_3_counter 
+ONSCREEN_COUNTER z_m_3_counter_2 
+  
+COUNTER z_m_3_counter_total = 0 
+COUNTER z_m_3_counter_2_total = 0
+COUNTER z_m_3_constant_50 = 50
+COUNTER z_m_3_constant_20 = 20
+
+COUNTER z_m_3_total = 0			 
+COUNTER z_m_3_total_2 = 0			 
+			 
+BONUS z_m_3_kris
+
+BONUS z_m_3_russ
+
+
+FORWARD	clean_up_zaib_med_phone1_2_m3:
+
+
+// start of mission
+
+
+zaib_med_phone1_2_m3:
+
+SET flag_failed_zaib_med_phone1_2_m3 = 0
+
+DISPLAY_MESSAGE ( 3847 ) // mission name
+
+
+SET flag_on_mission = 1
+SET flag_on_zaib_mission = 1
+
+
+
+
+DISPLAY_BRIEF_NOW ( 3800 ) // We're going to mess with the SRS and Scientists minds. By the time you're finished, 
+					   // they'll be ready to kill each other. Go and steal a Zaibatsu V-Type.
+#ifdef PC
+
+// part one - kill scientists
+
+WHILE_EXEC ( z_m_3_all_krishnas_dead = 0 )
+
+
+	IF ( ( IS_CHAR_IN_GANGZONE ( shaft , krisgang ) )
+	AND ( z_m_3_in_krisgang_zone = 0 ) )
+		SET z_m_3_in_krisgang_zone = 1
+	ENDIF
+
+
+	IF ( ( NOT ( IS_CHAR_IN_GANGZONE ( shaft , krisgang ) ) )
+	AND ( z_m_3_in_krisgang_zone = 1 ) )
+		SET z_m_3_in_krisgang_zone = 0
+		IF ( z_m_3_in_krishna_zone_4_first_time = 1 )
+			IF ( IS_CHARACTER_IN_MODEL ( shaft , buick ) )
+				SET	z_m_3_in_russian_gang_car = 0
+				SET z_m_3_in_russian_gang_car_in_zone = 1
+			ENDIF
+			IF ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , buick ) ) )
+				SET	z_m_3_in_russian_gang_car = 1
+				SET z_m_3_in_russian_gang_car_in_zone = 1
+			ENDIF
+		ENDIF
+	ENDIF
+
+
+	IF ( z_m_3_in_krisgang_zone = 0 )
+
+		IF  ( ( IS_CHARACTER_IN_MODEL ( shaft , buick ) )
+		AND ( z_m_3_in_russian_gang_car = 0 ) )
+			POINT_ARROW_AT ( arrow , 234.5 , 193.5 , 2.0 )
+			SET z_m_3_in_russian_gang_car = 1
+			IF ( z_m_3_in_krishna_zone_4_first_time = 0 )
+				DISPLAY_BRIEF_NOW ( 3801 ) // Alright, head down to the Scientist area and kill some Scientist scum!
+			ELSE
+				DISPLAY_BRIEF_NOW ( 3804 ) // Alright, head down to the Scientist area and kill some Scientist scum!
+			ENDIF
+		ENDIF
+
+
+		IF  ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , buick ) ) )
+   		AND ( z_m_3_in_russian_gang_car = 1 ) )
+			SET z_m_3_in_russian_gang_car = 0
+			REMOVE_ARROW ( arrow )
+			IF ( z_m_3_in_krishna_zone_4_first_time = 0 )
+				DISPLAY_BRIEF_NOW ( 3802 )		// Get a V-Type now and follow orders!
+			ELSE
+				DISPLAY_BRIEF_NOW ( 3814 ) // Alright, head down to the Scientist area and kill some Scientist scum!
+			ENDIF
+		ENDIF
+
+ 	ENDIF
+
+
+	IF ( z_m_3_in_krisgang_zone = 1 )
+
+
+		IF  ( ( IS_CHARACTER_IN_MODEL ( shaft , buick ) )
+		AND ( z_m_3_in_krishna_zone_4_first_time = 0 ) )
+			DISPLAY_BRIEF_NOW ( 3803 ) // KILL THEM!
+			z_m_3_kris = START_BONUS_CHECK ( krisgang , -1 , 50 , 0 , char , not_exclusive , by_vehicle , buick , krisgang , 9 ) 
+			SET z_m_3_counter_total = 50
+			SET z_m_3_in_krishna_zone_4_first_time = 1
+			SET z_m_3_bonus_started = 1 
+			ADD_ONSCREEN_COUNTER ( z_m_3_counter , z_m_3_counter_total )
+			REMOVE_ARROW ( arrow )
+		ENDIF
+
+
+		IF  ( ( IS_CHARACTER_IN_MODEL ( shaft , buick ) )
+		AND ( z_m_3_in_russian_gang_car_in_zone = 1 ) )
+			SET z_m_3_in_russian_gang_car_in_zone = 0
+			DISPLAY_BRIEF_NOW ( 3803 ) // Alright, head down to the Scientist area and kill some Scientist scum!
+			REMOVE_ARROW ( arrow )
+		ENDIF
+
+
+		IF  ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , buick ) ) )
+   		AND ( z_m_3_in_russian_gang_car_in_zone = 0 ) )
+			SET z_m_3_in_russian_gang_car_in_zone = 1
+			DISPLAY_BRIEF_NOW ( 3806 )		// Get a V-Type now and follow orders!
+		ENDIF
+
+	ENDIF
+ 
+
+	// store counter
+	
+	IF ( z_m_3_bonus_started = 1 )
+		STORE_BONUS_COUNT ( z_m_3_kris , z_m_3_total )   
+	ENDIF
+
+	// calculate count
+
+	IF ( z_m_3_bonus_started = 1 )
+		SET z_m_3_counter_total = ( z_m_3_constant_50 - z_m_3_total )
+	ENDIF 
+
+	
+	// if bonus is passed						
+	
+	IF ( z_m_3_in_krishna_zone_4_first_time = 1 )								
+
+		IF ( HAS_BONUS_PASSED ( z_m_3_kris ) )
+			DISPLAY_BRIEF_NOW ( 3805 )  //"Well Done!" Now steal a stratosb and do it all again in the Zaibatsu Village.
+			CLEAR_ONSCREEN_COUNTER ( z_m_3_counter )
+			SET z_m_3_all_krishnas_dead = 1
+			SET z_m_3_bonus_started = 0 
+		ENDIF
+	ENDIF
+
+
+	// if bonus is failed
+
+	IF ( z_m_3_in_krishna_zone_4_first_time = 1 )		
+			
+   		IF ( HAS_BONUS_FAILED ( z_m_3_kris ) )
+   			CLEAR_ALL_BRIEFS ( )
+   			DISPLAY_BRIEF_NOW ( 3812 )  //"You useless idiot!!"
+   			CLEAR_ONSCREEN_COUNTER ( z_m_3_counter )
+			SET flag_failed_zaib_med_phone1_2_m3 = 1
+			DISPLAY_MESSAGE ( 3730 )
+			RETURN
+		ENDIF
+	ENDIF
+
+
+ENDWHILE
+
+
+// part two - kill russians
+
+WHILE_EXEC ( z_m_3_all_russians_dead = 0 )
+
+
+
+	IF ( ( IS_CHAR_IN_GANGZONE ( shaft , russgang ) )
+	AND ( z_m_3_in_russgang_zone = 0 ) )
+		SET z_m_3_in_russgang_zone = 1
+	ENDIF
+
+
+	IF ( ( NOT ( IS_CHAR_IN_GANGZONE ( shaft , russgang ) ) )
+	AND ( z_m_3_in_russgang_zone = 1 ) )
+		SET z_m_3_in_russgang_zone = 0
+		IF (z_m_3_in_russian_zone_4_first_time = 1 )
+			IF ( IS_CHARACTER_IN_MODEL ( shaft , krsnabus ) )
+				SET	z_m_3_in_krishna_gang_car = 0
+				SET z_m_3_in_krishna_gang_car_in_zone = 1
+			ENDIF
+			IF ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , krsnabus ) ) )
+				SET	z_m_3_in_krishna_gang_car = 1
+				SET z_m_3_in_krishna_gang_car_in_zone = 1
+			ENDIF
+		ENDIF
+	ENDIF
+
+
+	IF ( z_m_3_in_russgang_zone = 0 )
+
+		IF  ( ( IS_CHARACTER_IN_MODEL ( shaft , krsnabus ) )
+		AND ( z_m_3_in_krishna_gang_car = 0 ) )
+			POINT_ARROW_AT ( arrow , 202.5 , 34.5 , 3.0 )
+			SET z_m_3_in_krishna_gang_car = 1
+			IF ( z_m_3_in_russian_zone_4_first_time = 0 )
+				DISPLAY_BRIEF_NOW ( 3807 ) // Alright, head down to the Scientist area and kill some Scientist scum!
+			ELSE
+				DISPLAY_BRIEF_NOW ( 3810 ) // Alright, head down to the Scientist area and kill some Scientist scum!
+			ENDIF
+		ENDIF
+
+
+		IF  ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , krsnabus ) ) )
+   		AND ( z_m_3_in_krishna_gang_car = 1 ) )
+			SET z_m_3_in_krishna_gang_car = 0
+			REMOVE_ARROW ( arrow )
+			IF ( z_m_3_in_russian_zone_4_first_time = 0 )
+				DISPLAY_BRIEF_NOW ( 3808 )		// Get a V-Type now and follow orders!
+			ELSE
+				DISPLAY_BRIEF_NOW ( 3816 ) // Alright, head down to the Scientist area and kill some Scientist scum!
+			ENDIF
+		ENDIF
+ 	ENDIF
+
+
+	IF ( z_m_3_in_russgang_zone = 1 )
+
+
+		IF  ( ( IS_CHARACTER_IN_MODEL ( shaft , krsnabus ) )
+		AND ( z_m_3_in_russian_zone_4_first_time = 0 ) )
+		   	DISPLAY_BRIEF_NOW ( 3809 ) // KILL THEM!
+			z_m_3_russ = START_BONUS_CHECK ( rusgang , -1 , 50 , 0 , char , not_exclusive , by_vehicle , krsnabus , russgang , 10 ) 
+			SET z_m_3_counter_2_total = 50
+			SET z_m_3_in_russian_zone_4_first_time = 1
+			SET z_m_3_bonus_started = 1 
+			ADD_ONSCREEN_COUNTER ( z_m_3_counter_2 , z_m_3_counter_2_total )
+			REMOVE_ARROW ( arrow )
+		ENDIF
+
+
+		IF  ( ( IS_CHARACTER_IN_MODEL ( shaft , krsnabus ) )
+		AND ( z_m_3_in_krishna_gang_car_in_zone = 1 ) )
+			SET z_m_3_in_krishna_gang_car_in_zone = 0
+			DISPLAY_BRIEF_NOW ( 3809 ) // Alright, head down to the Scientist area and kill some Scientist scum!
+			REMOVE_ARROW ( arrow )
+		ENDIF
+
+
+		IF  ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , krsnabus ) ) )
+   		AND ( z_m_3_in_krishna_gang_car_in_zone = 0 ) )
+			SET z_m_3_in_krishna_gang_car_in_zone = 1
+			DISPLAY_BRIEF_NOW ( 3813 )		// Get a V-Type now and follow orders!
+		ENDIF
+	ENDIF
+ 
+
+	// store counter
+	
+	IF ( z_m_3_bonus_started = 1 )
+		STORE_BONUS_COUNT ( z_m_3_russ , z_m_3_total_2 )   
+	ENDIF
+ 
+	
+	// calculate count
+
+	IF ( z_m_3_bonus_started = 1 )
+		SET z_m_3_counter_2_total = ( z_m_3_constant_50 - z_m_3_total_2 )
+	ENDIF 
+ 
+
+	// if bonus is passed						
+	
+	IF ( z_m_3_in_russian_zone_4_first_time = 1 )								
+
+		IF ( HAS_BONUS_PASSED ( z_m_3_russ ) )
+			CLEAR_ALL_BRIEFS ( )
+			DISPLAY_BRIEF_NOW ( 3811 )  //"Well Done!"
+			CLEAR_ONSCREEN_COUNTER ( z_m_3_counter_2 )
+			SET z_m_3_all_russians_dead = 1 
+		ENDIF
+	ENDIF
+
+
+	// if bonus is failed
+
+	IF ( z_m_3_in_russian_zone_4_first_time = 1 )		
+			
+		IF ( HAS_BONUS_FAILED ( z_m_3_russ ) )
+   			CLEAR_ALL_BRIEFS ( )
+   			DISPLAY_BRIEF_NOW ( 3812 )  //"You useless idiot!!"
+   			CLEAR_ONSCREEN_COUNTER ( z_m_3_counter_2 )
+			SET flag_failed_zaib_med_phone1_2_m3 = 1
+			DISPLAY_MESSAGE ( 3730 )
+			RETURN
+		ENDIF
+	ENDIF
+
+  
+ENDWHILE
+#endif
+
+
+#ifdef PSX
+SET_RECYCLE_MODEL_WANTED ( buick ) 
+
+// part one - kill scientists
+
+WHILE_EXEC ( z_m_3_all_krishnas_dead = 0 )
+
+
+	IF ( ( IS_CHAR_IN_GANGZONE ( shaft , krisgang ) )
+	AND ( z_m_3_in_krisgang_zone = 0 ) )
+		SET z_m_3_in_krisgang_zone = 1
+	ENDIF
+
+
+	IF ( ( NOT ( IS_CHAR_IN_GANGZONE ( shaft , krisgang ) ) )
+	AND ( z_m_3_in_krisgang_zone = 1 ) )
+		SET z_m_3_in_krisgang_zone = 0
+		IF ( z_m_3_in_krishna_zone_4_first_time = 1 )
+			IF ( IS_CHARACTER_IN_MODEL ( shaft , buick ) )
+				SET	z_m_3_in_russian_gang_car = 0
+				SET z_m_3_in_russian_gang_car_in_zone = 1
+			ENDIF
+			IF ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , buick ) ) )
+				SET	z_m_3_in_russian_gang_car = 1
+				SET z_m_3_in_russian_gang_car_in_zone = 1
+			ENDIF
+		ENDIF
+	ENDIF
+
+
+	IF ( z_m_3_in_krisgang_zone = 0 )
+
+		IF  ( ( IS_CHARACTER_IN_MODEL ( shaft , buick ) )
+		AND ( z_m_3_in_russian_gang_car = 0 ) )
+			POINT_ARROW_AT ( arrow , 234.5 , 193.5 , 2.0 )
+			SET z_m_3_in_russian_gang_car = 1
+			IF ( z_m_3_in_krishna_zone_4_first_time = 0 )
+				DISPLAY_BRIEF_NOW ( 3801 ) // Alright, head down to the Scientist area and kill some Scientist scum!
+			ELSE
+				DISPLAY_BRIEF_NOW ( 3804 ) // Alright, head down to the Scientist area and kill some Scientist scum!
+			ENDIF
+		ENDIF
+
+
+		IF  ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , buick ) ) )
+   		AND ( z_m_3_in_russian_gang_car = 1 ) )
+			SET z_m_3_in_russian_gang_car = 0
+			REMOVE_ARROW ( arrow )
+			IF ( z_m_3_in_krishna_zone_4_first_time = 0 )
+				DISPLAY_BRIEF_NOW ( 3802 )		// Get a V-Type now and follow orders!
+			ELSE
+				DISPLAY_BRIEF_NOW ( 3814 ) // Alright, head down to the Scientist area and kill some Scientist scum!
+			ENDIF
+		ENDIF
+
+ 	ENDIF
+
+
+	IF ( z_m_3_in_krisgang_zone = 1 )
+
+
+		IF  ( ( IS_CHARACTER_IN_MODEL ( shaft , buick ) )
+		AND ( z_m_3_in_krishna_zone_4_first_time = 0 ) )
+			DISPLAY_BRIEF_NOW ( 3803 ) // KILL THEM!
+			z_m_3_kris = START_BONUS_CHECK ( krisgang , -1 , 20 , 0 , char , not_exclusive , by_vehicle , buick , krisgang , 9 ) 
+			SET z_m_3_counter_total = 20
+			SET z_m_3_in_krishna_zone_4_first_time = 1
+			SET z_m_3_bonus_started = 1 
+			ADD_ONSCREEN_COUNTER ( z_m_3_counter , z_m_3_counter_total )
+			REMOVE_ARROW ( arrow )
+		ENDIF
+
+
+		IF  ( ( IS_CHARACTER_IN_MODEL ( shaft , buick ) )
+		AND ( z_m_3_in_russian_gang_car_in_zone = 1 ) )
+			SET z_m_3_in_russian_gang_car_in_zone = 0
+			DISPLAY_BRIEF_NOW ( 3803 ) // Alright, head down to the Scientist area and kill some Scientist scum!
+			REMOVE_ARROW ( arrow )
+		ENDIF
+
+
+		IF  ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , buick ) ) )
+   		AND ( z_m_3_in_russian_gang_car_in_zone = 0 ) )
+			SET z_m_3_in_russian_gang_car_in_zone = 1
+			DISPLAY_BRIEF_NOW ( 3806 )		// Get a V-Type now and follow orders!
+		ENDIF
+
+	ENDIF
+ 
+
+	// store counter
+	
+	IF ( z_m_3_bonus_started = 1 )
+		STORE_BONUS_COUNT ( z_m_3_kris , z_m_3_total )   
+	ENDIF
+
+	// calculate count
+
+	IF ( z_m_3_bonus_started = 1 )
+		SET z_m_3_counter_total = ( z_m_3_constant_20 - z_m_3_total )
+	ENDIF 
+
+	
+	// if bonus is passed						
+	
+	IF ( z_m_3_in_krishna_zone_4_first_time = 1 )								
+
+		IF ( HAS_BONUS_PASSED ( z_m_3_kris ) )
+			DISPLAY_BRIEF_NOW ( 3817 )  //"Well Done!" Now steal a stratosb and do it all again in the Zaibatsu Village.
+			CLEAR_ONSCREEN_COUNTER ( z_m_3_counter )
+			SET z_m_3_all_krishnas_dead = 1
+			SET z_m_3_bonus_started = 0 
+		ENDIF
+	ENDIF
+
+
+	// if bonus is failed
+
+	IF ( z_m_3_in_krishna_zone_4_first_time = 1 )		
+			
+   		IF ( HAS_BONUS_FAILED ( z_m_3_kris ) )
+   			CLEAR_ALL_BRIEFS ( )
+   			DISPLAY_BRIEF_NOW ( 3812 )  //"You useless idiot!!"
+   			CLEAR_ONSCREEN_COUNTER ( z_m_3_counter )
+			SET flag_failed_zaib_med_phone1_2_m3 = 1
+			DISPLAY_MESSAGE ( 3730 )
+			RETURN
+		ENDIF
+	ENDIF
+
+
+ENDWHILE
+
+
+SET_RECYCLE_MODEL_WANTED ( krsnabus ) 
+
+
+// part two - kill russians
+
+WHILE_EXEC ( z_m_3_all_russians_dead = 0 )
+
+
+
+	IF ( ( IS_CHAR_IN_GANGZONE ( shaft , russgang ) )
+	AND ( z_m_3_in_russgang_zone = 0 ) )
+		SET z_m_3_in_russgang_zone = 1
+	ENDIF
+
+
+	IF ( ( NOT ( IS_CHAR_IN_GANGZONE ( shaft , russgang ) ) )
+	AND ( z_m_3_in_russgang_zone = 1 ) )
+		SET z_m_3_in_russgang_zone = 0
+		IF (z_m_3_in_russian_zone_4_first_time = 1 )
+			IF ( IS_CHARACTER_IN_MODEL ( shaft , krsnabus ) )
+				SET	z_m_3_in_krishna_gang_car = 0
+				SET z_m_3_in_krishna_gang_car_in_zone = 1
+			ENDIF
+			IF ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , krsnabus ) ) )
+				SET	z_m_3_in_krishna_gang_car = 1
+				SET z_m_3_in_krishna_gang_car_in_zone = 1
+			ENDIF
+		ENDIF
+	ENDIF
+
+
+	IF ( z_m_3_in_russgang_zone = 0 )
+
+		IF  ( ( IS_CHARACTER_IN_MODEL ( shaft , krsnabus ) )
+		AND ( z_m_3_in_krishna_gang_car = 0 ) )
+			POINT_ARROW_AT ( arrow , 202.5 , 34.5 , 3.0 )
+			SET z_m_3_in_krishna_gang_car = 1
+			IF ( z_m_3_in_russian_zone_4_first_time = 0 )
+				DISPLAY_BRIEF_NOW ( 3818 ) // Alright, head down to the Scientist area and kill some Scientist scum!
+			ELSE
+				DISPLAY_BRIEF_NOW ( 3810 ) // Alright, head down to the Scientist area and kill some Scientist scum!
+			ENDIF
+		ENDIF
+
+
+		IF  ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , krsnabus ) ) )
+   		AND ( z_m_3_in_krishna_gang_car = 1 ) )
+			SET z_m_3_in_krishna_gang_car = 0
+			REMOVE_ARROW ( arrow )
+			IF ( z_m_3_in_russian_zone_4_first_time = 0 )
+				DISPLAY_BRIEF_NOW ( 3808 )		// Get a V-Type now and follow orders!
+			ELSE
+				DISPLAY_BRIEF_NOW ( 3816 ) // Alright, head down to the Scientist area and kill some Scientist scum!
+			ENDIF
+		ENDIF
+ 	ENDIF
+
+
+	IF ( z_m_3_in_russgang_zone = 1 )
+
+
+		IF  ( ( IS_CHARACTER_IN_MODEL ( shaft , krsnabus ) )
+		AND ( z_m_3_in_russian_zone_4_first_time = 0 ) )
+		   	DISPLAY_BRIEF_NOW ( 3809 ) // KILL THEM!
+			z_m_3_russ = START_BONUS_CHECK ( rusgang , -1 , 20 , 0 , char , not_exclusive , by_vehicle , krsnabus , russgang , 10 ) 
+			SET z_m_3_counter_2_total = 20
+			SET z_m_3_in_russian_zone_4_first_time = 1
+			SET z_m_3_bonus_started = 1 
+			ADD_ONSCREEN_COUNTER ( z_m_3_counter_2 , z_m_3_counter_2_total )
+			REMOVE_ARROW ( arrow )
+		ENDIF
+
+
+		IF  ( ( IS_CHARACTER_IN_MODEL ( shaft , krsnabus ) )
+		AND ( z_m_3_in_krishna_gang_car_in_zone = 1 ) )
+			SET z_m_3_in_krishna_gang_car_in_zone = 0
+			DISPLAY_BRIEF_NOW ( 3809 ) // Alright, head down to the Scientist area and kill some Scientist scum!
+			REMOVE_ARROW ( arrow )
+		ENDIF
+
+
+		IF  ( ( NOT ( IS_CHARACTER_IN_MODEL ( shaft , krsnabus ) ) )
+   		AND ( z_m_3_in_krishna_gang_car_in_zone = 0 ) )
+			SET z_m_3_in_krishna_gang_car_in_zone = 1
+			DISPLAY_BRIEF_NOW ( 3813 )		// Get a V-Type now and follow orders!
+		ENDIF
+	ENDIF
+ 
+
+	// store counter
+	
+	IF ( z_m_3_bonus_started = 1 )
+		STORE_BONUS_COUNT ( z_m_3_russ , z_m_3_total_2 )   
+	ENDIF
+ 
+	
+	// calculate count
+
+	IF ( z_m_3_bonus_started = 1 )
+		SET z_m_3_counter_2_total = ( z_m_3_constant_20 - z_m_3_total_2 )
+	ENDIF 
+ 
+
+	// if bonus is passed						
+	
+	IF ( z_m_3_in_russian_zone_4_first_time = 1 )								
+
+		IF ( HAS_BONUS_PASSED ( z_m_3_russ ) )
+			CLEAR_ALL_BRIEFS ( )
+			DISPLAY_BRIEF_NOW ( 3819 )  //"Well Done!"
+			CLEAR_ONSCREEN_COUNTER ( z_m_3_counter_2 )
+			SET z_m_3_all_russians_dead = 1 
+		ENDIF
+	ENDIF
+
+
+	// if bonus is failed
+
+	IF ( z_m_3_in_russian_zone_4_first_time = 1 )		
+			
+		IF ( HAS_BONUS_FAILED ( z_m_3_russ ) )
+   			CLEAR_ALL_BRIEFS ( )
+   			DISPLAY_BRIEF_NOW ( 3812 )  //"You useless idiot!!"
+   			CLEAR_ONSCREEN_COUNTER ( z_m_3_counter_2 )
+			SET flag_failed_zaib_med_phone1_2_m3 = 1
+			DISPLAY_MESSAGE ( 3730 )
+			RETURN
+		ENDIF
+	ENDIF
+
+  
+ENDWHILE
+#endif
+
+
+IF ( flag_passed_zaib_med_phone1_2_m3 = 0 )
+	SET flag_passed_zaib_med_phone1_2_m3	= 1
+	DISPLAY_BRIEF ( 3815 ) // "Well done you have passed the mission!"
+	++ counter_all_missions_passed
+	DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+	ADD_SCORE ( shaft , 60000 )
+	ADD_MULTIPLIER ( shaft , 1 )
+	CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , 1 ) 
+	CLEAR_WANTED_LEVEL ( shaft )
+  	IF ( flag_passed_zaib_med_phone1_m1 = 1 )
+		SET_PHONE_DEAD ( ph_zaib_med_phone1 ) 
+		DISABLE_THREAD_TRIGGER ( thr_zaib_med_phone1_m1 )
+	ENDIF
+	IF ( flag_passed_zaib_med_phone2_m1 = 1 )
+		SET_PHONE_DEAD ( ph_zaib_med_phone2 ) 
+		DISABLE_THREAD_TRIGGER ( thr_zaib_med_phone2_m1 )
+	ENDIF
+	RETURN
+ENDIF
+
+	
+
+
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+// deletes all objects when mission1 is finished...
+				
+clean_up_zaib_med_phone1_2_m3: 
+
+	REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	CLEAR_ONSCREEN_COUNTER ( z_m_3_counter )
+			
+ 		
+	IF ( flag_passed_zaib_med_phone1_2_m3 = 1 )
+		++ flag_zaib_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_zaib_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3675 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3674 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_zaib_med_phone1_2_m3 = 1 )
+		++ flag_zaib_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_zaib_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( zaibgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+	MISSION_HAS_FINISHED (  ) 
+    
+    SET flag_on_mission	= 0
+	SET flag_on_zaib_mission = 0
+	
+	RETURN
+
+
+MISSIONSTART
+
+	GOSUB zaib_med_phone1_2_m3:
+
+	GOSUB clean_up_zaib_med_phone1_2_m3:
+
+MISSIONEND
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

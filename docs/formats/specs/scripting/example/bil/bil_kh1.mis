@@ -1,0 +1,1139 @@
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXX RESCUE KRISHNA GANG MEMBERS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+
+
+
+// objects for Krishna hard phone mission1		
+
+
+CAR_DATA k_h_1_limo_1
+CAR_DATA k_h_1_limo_2
+CAR_DATA k_h_1_van_1
+CAR_DATA k_h_1_van_2
+CAR_DATA k_h_1_van_3
+CHAR_DATA k_h_1_guard_1
+CHAR_DATA k_h_1_guard_2
+CHAR_DATA k_h_1_guard_3
+CHAR_DATA k_h_1_guard_4
+CHAR_DATA k_h_1_group_1_leader
+CHAR_DATA k_h_1_group_2_leader
+CHAR_DATA k_h_1_group_3_leader
+CHAR_DATA k_h_1_group_4_leader
+CHAR_DATA k_h_1_group_5_leader
+CHAR_DATA k_h_1_group_6_leader
+CHAR_DATA k_h_1_archie_leader_1
+OBJ_DATA k_h_1_generator_1 
+OBJ_DATA k_h_1_generator_2 
+OBJ_DATA k_h_1_generator_3 
+OBJ_DATA k_h_1_powerup_1
+OBJ_DATA k_h_1_powerup_2
+OBJ_DATA k_h_1_powerup_3
+OBJ_DATA k_h_1_powerup_4
+OBJ_DATA k_h_1_powerup_5
+OBJ_DATA k_h_1_powerup_6
+OBJ_DATA k_h_1_powerup_7
+COUNTER k_h_1_archie_escaped = 0
+COUNTER k_h_1_guard_1_spotted_player = 0
+COUNTER k_h_1_guard_2_spotted_player = 0
+COUNTER k_h_1_guard_3_spotted_player = 0
+COUNTER k_h_1_guard_4_spotted_player = 0
+COUNTER k_h_1_found_door_1 = 0
+COUNTER k_h_1_archie_leader_1_obj1_passed = 0
+COUNTER k_h_1_archie_leader_1_obj2_passed = 0
+COUNTER k_h_1_archie_leader_1_obj3_passed = 0
+COUNTER k_h_1_archie_leader_1_obj4_passed = 0
+COUNTER k_h_1_archie_leader_1_obj5_passed = 0
+COUNTER k_h_1_archie_leader_1_obj6_passed = 0
+COUNTER k_h_1_archie_leader_1_obj7_passed = 0
+COUNTER k_h_1_archie_leader_1_obj8_passed = 0
+COUNTER k_h_1_archie_leader_1_obj9_passed = 0
+COUNTER k_h_1_archie_leader_1_obj10_passed = 0
+COUNTER k_h_1_archie_leader_1_obj11_passed = 0
+COUNTER k_h_1_archie_leader_1_obj12_passed = 0
+COUNTER k_h_1_archie_leader_1_obj13_passed = 0
+COUNTER k_h_1_archie_leader_1_obj14_passed = 0
+COUNTER k_h_1_archie_in_limo = 0
+COUNTER k_h_1_archie_at_gates = 0
+COUNTER k_h_1_road_clear = 0
+COUNTER k_h_1_all_guards_dead = 0
+COUNTER	k_h_1_limo_1_onscreen_vans = 0
+COUNTER k_h_1_limo_1_onscreen_guards = 0
+COUNTER k_h_1_limo_1_parked = 0
+COUNTER k_h_1_limo_2_parked = 0
+COUNTER k_h_1_in_limo_1_parking	= 0
+COUNTER k_h_1_in_limo_2_parking	= 0
+COUNTER k_h_1_generator_1_dead = 0
+COUNTER k_h_1_generator_2_dead = 0
+COUNTER k_h_1_generator_3_dead = 0
+COUNTER k_h_1_groups_created = 0
+COUNTER k_h_1_group_5_leader_onscreen = 0
+COUNTER k_h_1_group_6_leader_onscreen = 0
+COUNTER k_h_1_limo_1_on_screen_2 = 0
+COUNTER k_h_1_group_5_leader_onscreen_brief = 0
+COUNTER k_h_1_group_6_leader_onscreen_brief = 0
+COUNTER k_h_1_archie_leader_1_safe = 0
+COUNTER k_h_1_in_limo_2 = 0
+COUNTER k_h_1_group_5_leader_dead = 0
+COUNTER k_h_1_group_6_leader_dead = 0
+COUNTER k_h_1_all_generators_dead = 0
+COUNTER k_h_1_generator_1_created = 0
+COUNTER k_h_1_limos_safe = 0
+SOUND k_h_1_generator_1_sound
+SOUND k_h_1_generator_2_sound
+SOUND k_h_1_generator_3_sound
+FORWARD clean_up_kris_hard_phone_m1:
+
+	
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+		
+// starts Krishna hard phone mission1
+					
+kris_hard_phone_m1:
+
+SET flag_failed_kris_hard_phone_m1 = 0
+
+CLOSE_DOOR ( k_h_1_door_1 )
+//DISABLE_THREAD_TRIGGER ( thr_kris_hard_phone_m1 ) 
+DISPLAY_MESSAGE ( 3845 ) // you have PASSED the mission!"
+DISPLAY_BRIEF ( 3280 ) // "you have selected Krishna hard phone1 mission1"
+SET flag_on_mission = 1
+SET flag_on_kris_mission = 1
+POINT_ARROW_AT ( arrow , 104.0 , 200.0 , 3.0 )
+
+k_h_1_generator_1 = CREATE_OBJ ( 104.0 , 196.0 , 5.0 ) 0 powergen END
+k_h_1_generator_2 = CREATE_OBJ ( 101.0 , 202.0 , 5.0 ) 0 powergen END
+k_h_1_generator_3 = CREATE_OBJ ( 107.0 , 202.0 , 5.0 ) 0 powergen END
+#ifdef PC
+k_h_1_generator_1_sound = CREATE_SOUND ( 104.0 , 196.0 , 6.0 ) generator_rumble play_forever END
+k_h_1_generator_2_sound = CREATE_SOUND ( 101.0 , 202.0 , 6.0 ) generator_rumble play_forever END
+k_h_1_generator_3_sound = CREATE_SOUND ( 107.0 , 202.0 , 6.0 ) generator_rumble play_forever END
+FORCE_CLEANUP ( k_h_1_generator_1_sound )
+FORCE_CLEANUP ( k_h_1_generator_2_sound )
+FORCE_CLEANUP ( k_h_1_generator_3_sound )
+
+SET k_h_1_generator_1_created = 1
+
+k_h_1_guard_1 = CREATE_CHAR ( 108.5 , 193.0 , 5.0 ) 8 90 criminal END
+k_h_1_guard_3 = CREATE_CHAR ( 104.0 , 197.5 , 5.0 ) 8 90 criminal END
+ADD_PATROL_POINT ( k_h_1_guard_1 , 110.5 , 193.0 , 5.0 )
+ADD_PATROL_POINT ( k_h_1_guard_1 , 108.5 , 193.0 , 5.0 )
+ADD_PATROL_POINT ( k_h_1_guard_3 , 104.0 , 199.5 , 5.0 )
+ADD_PATROL_POINT ( k_h_1_guard_3 , 104.0 , 197.5 , 5.0 )
+SET_CHAR_THREAT_REACTION ( k_h_1_guard_1 , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_h_1_guard_3 , no_reaction )
+SET_CHAR_THREAT_SEARCH ( k_h_1_guard_1 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_h_1_guard_3 , line_of_sight_player_only )
+GIVE_WEAPON ( k_h_1_guard_1 , shotgun )
+GIVE_WEAPON ( k_h_1_guard_3 , shotgun )
+ADD_CHAR_TO_GANG ( k_h_1_guard_1 , zaibgang )
+ADD_CHAR_TO_GANG ( k_h_1_guard_3 , zaibgang )
+#endif
+
+k_h_1_guard_2 = CREATE_CHAR ( 107.0 , 194.5 , 5.0 ) 8 90 criminal END
+k_h_1_guard_4 = CREATE_CHAR ( 101.0 , 194.5 , 5.0 ) 8 90 criminal END
+k_h_1_powerup_1 = CREATE_OBJ ( 108.5 , 185.5 , 5.0 ) 0 COLLECT_01 15 END
+k_h_1_powerup_2 = CREATE_OBJ ( 100.5 , 199.0 , 5.0 ) 0 COLLECT_04 15 END
+k_h_1_powerup_5 = CREATE_OBJ ( 96.5 , 197.5 , 4.0 ) 0 COLLECT_30 END
+k_h_1_powerup_6 = CREATE_OBJ ( 108.5 , 189.5 , 5.0 ) 0 COLLECT_31 END
+FORCE_CLEANUP ( k_h_1_powerup_1 )
+FORCE_CLEANUP ( k_h_1_powerup_2 )
+FORCE_CLEANUP ( k_h_1_powerup_5 )
+FORCE_CLEANUP ( k_h_1_powerup_6 )
+ADD_PATROL_POINT ( k_h_1_guard_2 , 107.0 , 196.5 , 5.0 )
+ADD_PATROL_POINT ( k_h_1_guard_2 , 107.0 , 194.5 , 5.0 )
+ADD_PATROL_POINT ( k_h_1_guard_4 , 101.0 , 196.5 , 5.0 )
+ADD_PATROL_POINT ( k_h_1_guard_4 , 101.0 , 194.5 , 5.0 )
+SET_CHAR_THREAT_REACTION ( k_h_1_guard_2 , no_reaction )
+SET_CHAR_THREAT_REACTION ( k_h_1_guard_4 , no_reaction )
+SET_CHAR_THREAT_SEARCH ( k_h_1_guard_2 , line_of_sight_player_only )
+SET_CHAR_THREAT_SEARCH ( k_h_1_guard_4 , line_of_sight_player_only )
+GIVE_WEAPON ( k_h_1_guard_2 , pistol )
+GIVE_WEAPON ( k_h_1_guard_4 , pistol )
+ADD_CHAR_TO_GANG ( k_h_1_guard_2 , zaibgang )
+ADD_CHAR_TO_GANG ( k_h_1_guard_4 , zaibgang ) 
+
+WHILE_EXEC ( k_h_1_archie_escaped = 0 )
+
+	#ifdef PC 
+	// if player is seen by guard1
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_h_1_guard_1 ) ) 
+	AND	( IS_CHAR_IN_ZONE ( shaft , B15 ) ) )
+	AND ( k_h_1_guard_1_spotted_player = 0 ) )
+		SET k_h_1_guard_1_spotted_player = 1
+		SET_CHAR_OBJECTIVE  ( k_h_1_guard_1 , kill_char_on_foot , shaft )
+		DISPLAY_BRIEF_NOW ( 3281 ) // "Who the fuck are you! Die motherfucker!"	 
+	ENDIF
+
+	// if player is seen by guard1
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_h_1_guard_3 ) ) 
+	AND	( IS_CHAR_IN_ZONE ( shaft , B15 ) ) )
+	AND ( k_h_1_guard_3_spotted_player = 0 ) )
+		SET k_h_1_guard_3_spotted_player = 1
+		SET_CHAR_OBJECTIVE  ( k_h_1_guard_3 , kill_char_on_foot , shaft )
+		DISPLAY_BRIEF_NOW ( 3283 ) // "I'm gonna tear you a new asshole!"	 
+	ENDIF
+	#endif
+	
+	// if player is seen by guard1
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_h_1_guard_2 ) ) 
+	AND	( IS_CHAR_IN_ZONE ( shaft , B15 ) ) )
+	AND ( k_h_1_guard_2_spotted_player = 0 ) )
+		SET k_h_1_guard_2_spotted_player = 1
+		SET_CHAR_OBJECTIVE  ( k_h_1_guard_2 , kill_char_on_foot , shaft )
+		DISPLAY_BRIEF_NOW ( 3282 ) // "I'm gonna fuck you up!"	 
+	ENDIF
+
+		// if player is seen by guard1
+	
+	IF ( ( ( HAS_CHAR_SPOTTED_PLAYER ( k_h_1_guard_4 ) ) 
+	AND	( IS_CHAR_IN_ZONE ( shaft , B15 ) ) )
+	AND ( k_h_1_guard_4_spotted_player = 0 ) )
+		SET k_h_1_guard_4_spotted_player = 1
+		SET_CHAR_OBJECTIVE  ( k_h_1_guard_4 , kill_char_on_foot , shaft )
+		DISPLAY_BRIEF_NOW ( 3284 ) // "You're gonna die, you piece of shit!"	 
+	ENDIF
+
+	   
+	// waits for player to find archie
+
+	IF ( ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 104.0 , 200.0 , 3.0 , 2.0 , 2.0  ) )
+	AND ( k_h_1_found_door_1 = 0 ) )
+		SET k_h_1_found_door_1 = 1
+		DISPLAY_BRIEF ( 3285 ) // "Ok they're in there. Try taking out the generators to open the doors."
+		REMOVE_ARROW ( arrow )
+	ENDIF
+
+
+	IF ( ( CHECK_OBJ_MODEL ( k_h_1_generator_1 , powergen_dead ) )
+	AND ( k_h_1_generator_1_dead = 0 ) )
+		#ifdef PC
+		DELETE_ITEM ( k_h_1_generator_1_sound )
+		#endif
+		SET k_h_1_generator_1_dead = 1
+		++ k_h_1_all_generators_dead
+		IF ( k_h_1_all_generators_dead = 1 )
+			DISPLAY_BRIEF_NOW ( 3309 ) // "You're gonna die, you piece of shit!"	 
+		ENDIF
+		IF ( k_h_1_all_generators_dead = 2 )
+			DISPLAY_BRIEF_NOW ( 3310 ) // "You're gonna die, you piece of shit!"	 
+		ENDIF	
+	ENDIF
+
+	IF ( ( CHECK_OBJ_MODEL ( k_h_1_generator_2 , powergen_dead ) )
+	AND ( k_h_1_generator_2_dead = 0 ) )
+		#ifdef PC
+		DELETE_ITEM ( k_h_1_generator_2_sound )
+		#endif
+		SET k_h_1_generator_2_dead = 1
+		++ k_h_1_all_generators_dead
+		IF ( k_h_1_all_generators_dead = 1 )
+			DISPLAY_BRIEF_NOW ( 3309 ) // "You're gonna die, you piece of shit!"	 
+		ENDIF
+		IF ( k_h_1_all_generators_dead = 2 )
+			DISPLAY_BRIEF_NOW ( 3310 ) // "You're gonna die, you piece of shit!"	 
+		ENDIF 
+	ENDIF
+
+	IF ( ( CHECK_OBJ_MODEL ( k_h_1_generator_3 , powergen_dead ) )
+	AND ( k_h_1_generator_3_dead = 0 ) )
+		#ifdef PC
+		DELETE_ITEM ( k_h_1_generator_3_sound )
+		#endif
+		SET k_h_1_generator_3_dead = 1
+		++ k_h_1_all_generators_dead
+		IF ( k_h_1_all_generators_dead = 1 )
+			DISPLAY_BRIEF_NOW ( 3309 ) // "You're gonna die, you piece of shit!"	 
+		ENDIF
+		IF ( k_h_1_all_generators_dead = 2 )
+			DISPLAY_BRIEF_NOW ( 3310 ) // "You're gonna die, you piece of shit!"	 
+		ENDIF 
+	ENDIF
+	
+	// when all three power cores are destroyed doors open archie's escaped
+
+//	IF ( ( ( ( k_h_1_found_door_1 = 1 )  
+	IF ( ( ( CHECK_OBJ_MODEL ( k_h_1_generator_1 , powergen_dead ) ) 
+	AND ( CHECK_OBJ_MODEL ( k_h_1_generator_2 , powergen_dead ) ) )
+	AND ( CHECK_OBJ_MODEL ( k_h_1_generator_3 , powergen_dead ) ) )
+		SET k_h_1_archie_escaped = 1
+		DISPLAY_BRIEF ( 3286 ) // "Good job the doors are open, follow and protect my men."
+//		DELETE_ITEM ( k_h_1_generator_1_sound )
+//		DELETE_ITEM ( k_h_1_generator_2_sound )
+//		DELETE_ITEM ( k_h_1_generator_3_sound )
+		#ifdef PC
+		SET_CHAR_OBJECTIVE  ( k_h_1_guard_1 , kill_char_on_foot , shaft )
+		SET_CHAR_OBJECTIVE  ( k_h_1_guard_3 , kill_char_on_foot , shaft )
+		#endif
+		SET_CHAR_OBJECTIVE  ( k_h_1_guard_2 , kill_char_on_foot , shaft )
+		SET_CHAR_OBJECTIVE  ( k_h_1_guard_4 , kill_char_on_foot , shaft )
+	ENDIF
+
+ENDWHILE 
+
+
+k_h_1_limo_2 = CREATE_CAR ( 81.5 , 176.5 , 2.0 ) 1 3 limo END
+k_h_1_limo_1 = CREATE_CAR ( 81.5 , 174.5 , 2.0 ) 1 357 limo END
+k_h_1_archie_leader_1 = CREATE_CHAR ( 104.0 , 199.0 , 3.0 ) 9 90 criminal END
+SET_CHAR_THREAT_REACTION ( k_h_1_archie_leader_1 , no_reaction )
+ADD_CHAR_TO_GANG ( k_h_1_archie_leader_1 , krisgang )
+ADD_GROUP_TO_CHARACTER ( k_h_1_archie_leader_1 , 3 )
+POINT_ARROW_AT ( arrow , 104.0 , 200.0 , 3.0 )
+
+
+WHILE_EXEC ( k_h_1_archie_escaped = 1 )
+
+	IF ( LOCATE_CHARACTER_ANY_MEANS ( shaft , 104.0 , 200.0 , 3.0 , 2.0 , 2.0  ) )
+		SET k_h_1_archie_escaped = 2
+	ENDIF
+
+ENDWHILE
+
+
+OPEN_DOOR ( k_h_1_door_1 )
+CLOSE_DOOR ( k_h_1_door_2 )
+SET_CHAR_OBJECTIVE  ( k_h_1_archie_leader_1 , goto_area_on_foot , 96.5 , 200.5 , 2.0 )
+DISPLAY_BRIEF ( 3287 ) // "Cover me, I know where they took the limos."
+POINT_ARROW_AT ( arrow , k_h_1_archie_leader_1 )
+k_h_1_powerup_3 = CREATE_OBJ ( 82.5 , 176.5 , 2.0 ) 0 COLLECT_01 END
+k_h_1_powerup_7 = CREATE_OBJ ( 82.5 , 177.5 , 2.0 ) 0 COLLECT_33 END
+//k_h_1_powerup_4 = CREATE_OBJ ( 84.5 , 180.0 , 5.0 ) 0 COLLECT_04 END
+FORCE_CLEANUP ( k_h_1_powerup_3 )
+FORCE_CLEANUP ( k_h_1_powerup_7 )
+//FORCE_CLEANUP ( k_h_1_powerup_4 )
+k_h_1_van_1 = CREATE_CAR ( 80.65 , 187.5 , 2.0 ) 1 260 van END
+k_h_1_van_2 = CREATE_CAR ( 81.95 , 187.5 , 2.0 ) 1 100 van END
+k_h_1_van_3 = CREATE_CAR ( 83.3 , 187.5 , 2.0 ) 1 260 van END
+k_h_1_group_1_leader = CREATE_CHAR ( 80.5 , 185.5 , 2.0 ) 8 180 criminal END
+SET_CHAR_OBJECTIVE  ( k_h_1_group_1_leader , guard_spot ) 
+SET_CHAR_THREAT_REACTION ( k_h_1_group_1_leader , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( k_h_1_group_1_leader , line_of_sight_player_only )
+GIVE_WEAPON ( k_h_1_group_1_leader , machine_gun )
+ADD_CHAR_TO_GANG ( k_h_1_group_1_leader , zaibgang )
+//ADD_GROUP_TO_CHARACTER ( k_h_1_group_1_leader , 1 )
+k_h_1_group_2_leader = CREATE_CHAR ( 81.5 , 185.5 , 2.0 ) 8 180 criminal END
+SET_CHAR_OBJECTIVE  ( k_h_1_group_2_leader , guard_spot ) 
+SET_CHAR_THREAT_REACTION ( k_h_1_group_2_leader , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( k_h_1_group_2_leader , line_of_sight_player_only )
+GIVE_WEAPON ( k_h_1_group_2_leader , machine_gun )
+ADD_CHAR_TO_GANG ( k_h_1_group_2_leader , zaibgang )
+//ADD_GROUP_TO_CHARACTER ( k_h_1_group_2_leader , 1 )
+k_h_1_group_3_leader = CREATE_CHAR ( 82.5 , 185.5 , 2.0 ) 8 180 criminal END
+SET_CHAR_OBJECTIVE  ( k_h_1_group_3_leader , guard_spot ) 
+SET_CHAR_THREAT_REACTION ( k_h_1_group_3_leader , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( k_h_1_group_3_leader , line_of_sight_player_only )
+GIVE_WEAPON ( k_h_1_group_3_leader , machine_gun )
+ADD_CHAR_TO_GANG ( k_h_1_group_3_leader , zaibgang )
+//ADD_GROUP_TO_CHARACTER ( k_h_1_group_3_leader , 1 )
+k_h_1_group_4_leader = CREATE_CHAR ( 83.5 , 185.5 , 2.0 ) 8 180 criminal END
+SET_CHAR_OBJECTIVE  ( k_h_1_group_4_leader , guard_spot ) 
+SET_CHAR_THREAT_REACTION ( k_h_1_group_4_leader , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( k_h_1_group_4_leader , line_of_sight_player_only )
+GIVE_WEAPON ( k_h_1_group_4_leader , machine_gun )
+ADD_CHAR_TO_GANG ( k_h_1_group_4_leader , zaibgang )
+
+		
+WHILE_EXEC ( k_h_1_archie_in_limo = 0 )
+
+	// sends archie over the roof and to the limo
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_h_1_archie_leader_1 ) ) 
+	AND ( k_h_1_archie_leader_1_obj1_passed = 0 ) )
+		SET k_h_1_archie_leader_1_obj1_passed	= 1	
+		SET_CHAR_OBJECTIVE  ( k_h_1_archie_leader_1 , goto_area_on_foot , 90.5 , 193.5 , 2.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_h_1_archie_leader_1 ) ) 
+	AND ( k_h_1_archie_leader_1_obj2_passed = 0 ) )
+		SET k_h_1_archie_leader_1_obj2_passed	= 1	
+		SET_CHAR_OBJECTIVE  ( k_h_1_archie_leader_1 , goto_area_on_foot , 85.5 , 193.5 , 4.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_h_1_archie_leader_1 ) ) 
+	AND ( k_h_1_archie_leader_1_obj3_passed = 0 ) )
+		SET k_h_1_archie_leader_1_obj3_passed	= 1	
+		SET_CHAR_OBJECTIVE  ( k_h_1_archie_leader_1 , goto_area_on_foot , 88.5 , 191.5 , 4.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_h_1_archie_leader_1 ) ) 
+	AND ( k_h_1_archie_leader_1_obj4_passed = 0 ) )
+		SET k_h_1_archie_leader_1_obj4_passed	= 1	
+		SET_CHAR_OBJECTIVE  ( k_h_1_archie_leader_1 , goto_area_on_foot , 88.5 , 188.5 , 5.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_h_1_archie_leader_1 ) ) 
+	AND ( k_h_1_archie_leader_1_obj5_passed = 0 ) )
+		SET k_h_1_archie_leader_1_obj5_passed	= 1	
+		SET_CHAR_OBJECTIVE  ( k_h_1_archie_leader_1 , goto_area_on_foot , 84.5 , 186.5 , 5.0 )
+	ENDIF
+
+    IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_h_1_archie_leader_1 ) ) 
+	AND ( k_h_1_archie_leader_1_obj6_passed = 0 ) )
+		SET k_h_1_archie_leader_1_obj6_passed	= 1	
+		SET_CHAR_OBJECTIVE  ( k_h_1_archie_leader_1 , goto_area_on_foot , 84.5 , 180.5 , 5.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_h_1_archie_leader_1 ) ) 
+	AND ( k_h_1_archie_leader_1_obj7_passed = 0 ) )
+		SET k_h_1_archie_leader_1_obj7_passed	= 1	
+		SET_CHAR_OBJECTIVE  ( k_h_1_archie_leader_1 , goto_area_on_foot , 84.5 , 173.5 , 4.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_h_1_archie_leader_1 ) ) 
+	AND ( k_h_1_archie_leader_1_obj8_passed = 0 ) )
+		SET k_h_1_archie_leader_1_obj8_passed	= 1	
+		SET_CHAR_OBJECTIVE  ( k_h_1_archie_leader_1 , goto_area_on_foot , 83.5 , 173.5 , 4.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_h_1_archie_leader_1 ) ) 
+	AND ( k_h_1_archie_leader_1_obj9_passed = 0 ) )
+		SET k_h_1_archie_leader_1_obj9_passed	= 1	
+		SET_CHAR_OBJECTIVE  ( k_h_1_archie_leader_1 , goto_area_on_foot , 83.5 , 178.5 , 2.0 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_h_1_archie_leader_1 ) ) 
+	AND ( k_h_1_archie_leader_1_obj10_passed = 0 ) )
+		SET k_h_1_archie_leader_1_obj10_passed = 1	
+		SET_CHAR_OBJECTIVE ( k_h_1_archie_leader_1 , enter_car_as_driver , k_h_1_limo_1 )
+	ENDIF
+
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_h_1_archie_leader_1 ) ) 
+	AND ( k_h_1_archie_leader_1_obj11_passed = 0 ) )
+		SET k_h_1_archie_leader_1_obj11_passed = 1
+		SET_CHAR_OBJECTIVE ( k_h_1_archie_leader_1 , wait_in_car )
+	ENDIF
+		
+	IF ( ( IS_GROUP_IN_CAR ( k_h_1_archie_leader_1 ) ) 
+	AND ( k_h_1_archie_leader_1_obj11_passed = 1 ) )
+		SET k_h_1_archie_leader_1_obj11_passed = 2	
+		SET k_h_1_archie_at_gates = 1
+		SET k_h_1_archie_in_limo = 1
+		CHANGE_CAR_LOCK ( k_h_1_limo_1 , locked ) 
+	ENDIF
+
+
+	
+	// if archie is killed the mission is failed
+	
+	IF ( ( HAS_CHARACTER_DIED ( k_h_1_archie_leader_1 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3288 ) // "You needed one of my men to drive one of the limos and guide you to our safehouse. You failed me."
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+ 
+ 	// if the limo_1 is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( k_h_1_limo_1 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		IF ( k_h_1_archie_in_limo = 1 )
+	    	DISPLAY_BRIEF ( 3297 ) // "Shit the limo has been destroyed, I needed them both!"
+		ELSE
+			DISPLAY_BRIEF ( 3296 ) // "Shit the limo has been destroyed, I needed them both!"
+		ENDIF
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	// if the limo_2 is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( k_h_1_limo_2 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3296 ) // "You were supposed to follow my men in that! You have failed me!"
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+ENDWHILE
+
+
+
+DISPLAY_BRIEF ( 3289 ) // "Ok follow me in the other limo. I'll lead you to the safehouse."
+REMOVE_ARROW ( arrow )
+OPEN_DOOR ( k_h_1_door_2 )
+DISPLAY_BRIEF ( 3290 ) // "blocked the road. You'll have to take out the guards and clear the road"
+		
+/*
+// sends archie to gates
+
+SET_CHAR_OBJECTIVE  ( k_h_1_archie_leader_1 , goto_area_in_car , 81.5 , 179.5 , 2.0 ) 
+
+
+WHILE_EXEC ( k_h_1_archie_at_gates = 1 )
+
+// checks for archie at gates 
+
+	IF ( ( IS_CAR_IN_BLOCK ( k_h_1_limo_1 , 81.5 , 179.5 , 2.0 ) )
+	AND ( k_h_1_archie_leader_1_obj12_passed = 0 ) )
+		SET k_h_1_archie_leader_1_obj12_passed = 1
+		SET k_h_1_archie_at_gates = 2	
+		SET_CHAR_OBJECTIVE ( k_h_1_archie_leader_1 , wait_in_car )
+	ENDIF
+
+ENDWHILE
+*/
+
+
+WHILE_EXEC ( k_h_1_all_guards_dead = 0 )
+   		
+	IF ( ( ( ( HAS_CHARACTER_DIED ( k_h_1_group_1_leader ) )
+	AND ( HAS_CHARACTER_DIED ( k_h_1_group_2_leader ) ) )
+	AND ( HAS_CHARACTER_DIED ( k_h_1_group_3_leader ) ) )
+	AND ( HAS_CHARACTER_DIED ( k_h_1_group_4_leader ) ) )
+		DISPLAY_BRIEF ( 3291 ) // "Good work now clear the the road so that I can drive away from this shithole!"
+		SET k_h_1_all_guards_dead = 1
+	ENDIF
+
+	IF ( ( IS_ITEM_ONSCREEN ( k_h_1_limo_1 ) )  
+	AND ( k_h_1_limo_1_onscreen_guards = 1 ) )
+		DISPLAY_BRIEF ( 3292 ) // "what are you waiting for kill the Zaibatsu fuckers!"
+		SET k_h_1_limo_1_onscreen_guards = 0
+	ENDIF
+
+	IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( k_h_1_limo_1 ) ) )
+	AND ( k_h_1_limo_1_onscreen_guards = 0 ) )
+		SET k_h_1_limo_1_onscreen_guards = 1
+	ENDIF
+
+	// if archie is killed the mission is failed
+	
+	IF ( ( HAS_CHARACTER_DIED ( k_h_1_archie_leader_1 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3288 ) // "You needed one of my men to drive one of the limos and guide you to our safehouse. You failed me."
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	// if the limo_1 is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( k_h_1_limo_1 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3297 ) // "Shit the limo has been destroyed, I needed them both!"
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	// if the limo_2 is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( k_h_1_limo_2 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3296 ) // "You were supposed to follow my men in that! You have failed me!"
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+ENDWHILE 
+
+WHILE ( ( ( IS_CAR_IN_BLOCK ( k_h_1_van_1 , 82.0 , 187.5 , 2.0 , 1.0 , 6.0 ) )
+OR ( IS_CAR_IN_BLOCK ( k_h_1_van_2 , 82.0 , 187.5 , 2.0 , 1.0 , 6.0 ) ) )
+OR ( IS_CAR_IN_BLOCK ( k_h_1_van_3 , 82.0 , 187.5 , 2.0 , 1.0 , 6.0 ) ) )
+
+	IF ( ( IS_ITEM_ONSCREEN ( k_h_1_limo_1 ) )  
+	AND ( k_h_1_limo_1_onscreen_vans = 1 ) )
+		DISPLAY_BRIEF ( 3293 ) // "what the hell are you doing, clear the fucking road!"
+		SET k_h_1_limo_1_onscreen_vans = 0
+	ENDIF
+
+	IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( k_h_1_limo_1 ) ) )
+	AND ( k_h_1_limo_1_onscreen_vans = 0 ) )
+		SET k_h_1_limo_1_onscreen_vans = 1
+	ENDIF
+
+	// if archie is killed the mission is failed
+	
+	IF ( ( HAS_CHARACTER_DIED ( k_h_1_archie_leader_1 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3288 ) // "You needed one of my men to drive one of the limos and guide you to our safehouse. You failed me."
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+ 	
+	// if the limo_1 is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( k_h_1_limo_1 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3297 ) // "Shit the limo has been destroyed, I needed them both!"
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	// if the limo_2 is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( k_h_1_limo_2 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3296 ) // "You were supposed to follow my men in that! You have failed me!"
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+	
+ENDWHILE
+
+SET k_h_1_all_guards_dead = 2
+DISPLAY_BRIEF ( 3294 ) // "Ok get in the limo and follow me!"
+POINT_ARROW_AT ( arrow , k_h_1_limo_2 )
+
+WHILE_EXEC ( k_h_1_all_guards_dead = 2 )
+
+	IF ( IS_CHARACTER_IN_CAR ( shaft , k_h_1_limo_2 ) ) 
+		DISPLAY_BRIEF ( 3295 ) // "I don't think they'll give up that easy. If anybody comes after us you'll have to take them out!"
+		SET k_h_1_all_guards_dead = 3
+	ENDIF
+
+	// if archie is killed the mission is failed
+	
+	IF ( ( HAS_CHARACTER_DIED ( k_h_1_archie_leader_1 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3288 ) // "You needed one of my men to drive one of the limos and guide you to our safehouse. You failed me."
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+ 	
+	// if the limo_1 is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( k_h_1_limo_1 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3297 ) // "Shit the limo has been destroyed, I needed them both!"
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	// if the limo_2 is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( k_h_1_limo_2 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3296 ) // "You were supposed to follow my men in that! You have failed me!"
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+ENDWHILE
+
+
+SET_CHAR_OBJECTIVE ( k_h_1_archie_leader_1 , follow_car_in_car , k_h_1_limo_2 )
+POINT_ARROW_AT ( arrow , 228.0 , 113.0 , 2.0 )
+
+SET_CAR_DENSITY ( m01 , 100 ) 
+SET_PEDDENSITY ( m01 , 100 )
+
+SET_CAR_DENSITY ( m02 , 100 ) 
+SET_PEDDENSITY ( m02 , 100 )
+
+SET_CAR_DENSITY ( m03 , 100 ) 
+SET_PEDDENSITY ( m03 , 100 )
+
+SET_CAR_DENSITY ( m04 , 100 ) 
+SET_PEDDENSITY ( m04 , 100 )
+
+SET_CAR_DENSITY ( m05 , 100 ) 
+SET_PEDDENSITY ( m05 , 100 )
+
+SET_CAR_DENSITY ( m06 , 100 ) 
+SET_PEDDENSITY ( m06 , 100 )
+
+SET_CAR_DENSITY ( m07 , 100 ) 
+SET_PEDDENSITY ( m07 , 100 )
+
+SET_CAR_DENSITY ( m08 , 100 ) 
+SET_PEDDENSITY ( m08 , 100 )
+
+SET_CAR_DENSITY ( m09 , 100 ) 
+SET_PEDDENSITY ( m09 , 100 )
+
+SET_CAR_DENSITY ( m10 , 100 ) 
+SET_PEDDENSITY ( m10 , 100 )
+
+SET_CAR_DENSITY ( m11 , 100 ) 
+SET_PEDDENSITY ( m11 , 100 )
+
+SET_CAR_DENSITY ( m12 , 100 ) 
+SET_PEDDENSITY ( m12 , 100 )
+
+SET_CAR_DENSITY ( m13 , 100 ) 
+SET_PEDDENSITY ( m13 , 100 )
+
+SET_CAR_DENSITY ( m14 , 100 ) 
+SET_PEDDENSITY ( m14 , 100 )
+
+SET_CAR_DENSITY ( m15 , 100 ) 
+SET_PEDDENSITY ( m15 , 100 )
+
+
+SET_CAR_DENSITY ( cityinfo , 100 ) 
+SET_PEDDENSITY ( cityinfo , 100 )
+
+
+WHILE_EXEC ( k_h_1_groups_created = 0 )
+
+	
+	IF ( ( IS_CAR_IN_BLOCK ( k_h_1_limo_2 , 78.5 , 196.0 , 2.0 , 1.0 , 6.0 ) )
+	OR ( IS_CAR_IN_BLOCK ( k_h_1_limo_2 , 86.5 , 196.0 , 2.0 , 1.0 , 6.0 ) ) )
+		SET k_h_1_groups_created = 1
+	ENDIF
+	
+	// if archie is killed the mission is failed
+	
+	IF ( ( HAS_CHARACTER_DIED ( k_h_1_archie_leader_1 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3288 ) // "You needed one of my men to drive one of the limos and guide you to our safehouse. You failed me."
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+ 	
+	// if the limo_1 is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( k_h_1_limo_1 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3297 ) // "Shit the limo has been destroyed, I needed them both!"
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	// if the limo_2 is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( k_h_1_limo_2 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3296 ) // "You were supposed to follow my men in that! You have failed me!"
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+	
+	IF ( ( IS_CHARACTER_IN_CAR ( shaft , k_h_1_limo_2 ) )
+   	AND ( k_h_1_in_limo_2 = 1 ) )
+   		SET k_h_1_in_limo_2 = 0
+		DISPLAY_BRIEF_NOW ( 3305 ) // "Stop wasting time and get my men back home!!"
+   		POINT_ARROW_AT ( arrow , 228.0 , 113.0 , 2.0 )
+		SET_CHAR_OBJECTIVE ( k_h_1_archie_leader_1 , follow_car_in_car , k_h_1_limo_2 )
+   	ENDIF
+
+	
+	// if player gets out of car points back at car and says to get back in
+		
+   	IF ( ( NOT ( IS_CHARACTER_IN_CAR ( shaft , k_h_1_limo_2 ) ) )
+	AND ( k_h_1_in_limo_2 = 0 ) )
+		SET k_h_1_in_limo_2 = 1
+		DISPLAY_BRIEF_NOW ( 3306 ) // "Get back in the limo! My men don't know where they are going! You must lead them home!"
+		POINT_ARROW_AT ( arrow , k_h_1_limo_2 )
+		SET_CHAR_OBJECTIVE ( k_h_1_archie_leader_1 , wait_in_car )
+	ENDIF
+
+ENDWHILE
+
+k_h_1_group_5_leader = CREATE_CHAR ( 78.5 , 188.5 , 2.0 ) 8 90 criminal END
+//SET_CHAR_OBJECTIVE  ( k_h_1_group_5_leader , kill_char_any_means , k_h_1_archie_leader_1 ) 
+SET_CHAR_THREAT_REACTION ( k_h_1_group_5_leader , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( k_h_1_group_5_leader , line_of_sight_player_only )
+GIVE_WEAPON ( k_h_1_group_5_leader , pistol )
+ADD_CHAR_TO_GANG ( k_h_1_group_5_leader , zaibgang )
+k_h_1_group_6_leader = CREATE_CHAR ( 78.5 , 189.5 , 2.0 ) 8 90 criminal END
+//SET_CHAR_OBJECTIVE  ( k_h_1_group_6_leader , kill_char_any_means , k_h_1_archie_leader_1 ) 
+SET_CHAR_THREAT_REACTION ( k_h_1_group_6_leader , react_as_normal )
+SET_CHAR_THREAT_SEARCH ( k_h_1_group_6_leader , line_of_sight_player_only )
+GIVE_WEAPON ( k_h_1_group_6_leader , pistol )
+ADD_CHAR_TO_GANG ( k_h_1_group_6_leader , zaibgang )
+
+
+WHILE_EXEC ( k_h_1_limos_safe = 0 )
+
+
+	IF ( ( IS_CAR_IN_BLOCK ( k_h_1_limo_2 , 228.0 , 113.0 , 2.0 , 3.0 , 4.0 ) )
+	AND ( IS_CAR_IN_BLOCK ( k_h_1_limo_1 , 228.0 , 113.0 , 2.0 , 4.0 , 3.0 ) ) )
+		SET k_h_1_limos_safe = 1
+	ENDIF
+	
+	
+	IF ( k_h_1_limo_1_on_screen_2 = 0 )
+		
+		IF ( ( IS_CHARACTER_IN_CAR ( shaft , k_h_1_limo_2 ) )
+   		AND ( k_h_1_in_limo_2 = 1 ) )
+   			SET k_h_1_in_limo_2 = 0
+			DISPLAY_BRIEF_NOW ( 3305 ) // "Stop wasting time and get my men back home!!"
+   			POINT_ARROW_AT ( arrow , 228.0 , 113.0 , 2.0 )
+			SET_CHAR_OBJECTIVE ( k_h_1_archie_leader_1 , follow_car_in_car , k_h_1_limo_2 )
+   		ENDIF
+
+		
+		// if player gets out of car points back at car and says to get back in
+			
+   		IF ( ( NOT ( IS_CHARACTER_IN_CAR ( shaft , k_h_1_limo_2 ) ) )
+		AND ( k_h_1_in_limo_2 = 0 ) )
+			SET k_h_1_in_limo_2 = 1
+			DISPLAY_BRIEF_NOW ( 3306 ) // "Get back in the limo! My men don't know where they are going! You must lead them home!"
+			POINT_ARROW_AT ( arrow , k_h_1_limo_2 )
+			SET_CHAR_OBJECTIVE ( k_h_1_archie_leader_1 , wait_in_car )
+		ENDIF
+
+	ENDIF
+	
+	
+	// if archie is killed the mission is failed
+	
+	IF ( ( HAS_CHARACTER_DIED ( k_h_1_group_5_leader ) )
+	AND ( k_h_1_group_5_leader_dead = 0 ) )
+		SET k_h_1_group_5_leader_dead = 1
+		REMOVE_ARROW ( arrow_2 )
+		IF ( ( k_h_1_group_5_leader_dead = 1 )
+		AND ( k_h_1_group_6_leader_dead = 1 ) )
+			DISPLAY_BRIEF ( 3307 ) // "Good work you killed one of them!."
+		ELSE
+			IF ( k_h_1_group_5_leader_dead = 1 )
+				DISPLAY_BRIEF ( 3308 ) // "Good work you killed one of them!."
+			ENDIF
+		ENDIF
+	ENDIF
+
+	
+	IF ( ( HAS_CHARACTER_DIED ( k_h_1_group_6_leader ) )
+	AND ( k_h_1_group_6_leader_dead = 0 ) )
+		SET k_h_1_group_6_leader_dead = 1
+		REMOVE_ARROW ( arrow_3 )
+		IF ( ( k_h_1_group_5_leader_dead = 1 )
+		AND ( k_h_1_group_6_leader_dead = 1 ) )
+			DISPLAY_BRIEF ( 3307 ) // "Good work you killed both of them!."
+		ELSE
+			IF ( k_h_1_group_6_leader_dead = 1 )
+				DISPLAY_BRIEF ( 3308 ) // "Good work you killed one of them!."
+			ENDIF
+		ENDIF
+	ENDIF
+	
+	
+	IF ( ( ( IS_ITEM_ACCURATELY_ONSCREEN ( k_h_1_group_5_leader ) )
+	AND ( NOT ( HAS_CHARACTER_DIED ( k_h_1_group_5_leader ) ) ) )
+	AND ( k_h_1_group_5_leader_onscreen = 0 ) )
+		POINT_ARROW_AT ( arrow_2 , k_h_1_group_5_leader )
+	  	SET k_h_1_group_5_leader_onscreen = 1
+		IF ( k_h_1_group_5_leader_onscreen_brief = 0 ) 
+			DISPLAY_BRIEF_NOW ( 3300 ) // "SHIT! THEY'RE FOLLOWING US!"
+			SET k_h_1_group_5_leader_onscreen_brief = 1
+		ENDIF
+	ENDIF
+
+
+	IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( k_h_1_group_5_leader ) ) )
+	AND ( k_h_1_group_5_leader_onscreen = 1 ) )
+		SET k_h_1_group_5_leader_onscreen = 0
+		REMOVE_ARROW ( arrow_2 )
+	ENDIF
+
+	
+	IF ( ( ( IS_ITEM_ACCURATELY_ONSCREEN ( k_h_1_group_6_leader ) )
+	AND ( NOT ( HAS_CHARACTER_DIED ( k_h_1_group_6_leader ) ) ) )
+	AND ( k_h_1_group_6_leader_onscreen = 0 ) )
+		POINT_ARROW_AT ( arrow_3 , k_h_1_group_6_leader )
+	  	SET k_h_1_group_6_leader_onscreen = 1
+		IF ( k_h_1_group_6_leader_onscreen_brief = 0 ) 
+			DISPLAY_BRIEF_NOW ( 3300 ) // "SHIT! THEY'RE FOLLOWING US!"
+			SET k_h_1_group_6_leader_onscreen_brief = 1
+		ENDIF
+	ENDIF
+
+
+	IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( k_h_1_group_6_leader ) ) )
+	AND ( k_h_1_group_6_leader_onscreen = 1 ) )
+		SET k_h_1_group_6_leader_onscreen = 0
+		REMOVE_ARROW ( arrow_3 )
+	ENDIF
+
+
+	IF ( ( NOT ( IS_ITEM_ACCURATELY_ONSCREEN ( k_h_1_limo_1 ) ) )
+	AND ( k_h_1_limo_1_on_screen_2 = 0 ) )
+		POINT_ARROW_AT ( arrow , k_h_1_limo_1 )
+		SET k_h_1_limo_1_on_screen_2 = 1
+		DISPLAY_BRIEF_NOW ( 3301 ) // "Where the fuck are my men? Have you taken off without them? Go and find them now!"
+	ENDIF
+
+
+	IF ( ( IS_ITEM_ACCURATELY_ONSCREEN ( k_h_1_limo_1 ) )
+	AND ( k_h_1_limo_1_on_screen_2 = 1 ) )
+		SET k_h_1_limo_1_on_screen_2 = 0
+		DISPLAY_BRIEF_NOW ( 3302 ) // "OK lead them back home, don't leave them behind again!"
+		POINT_ARROW_AT ( arrow , 228.0 , 113.0 , 2.0 )
+	ENDIF
+	
+
+	// if archie is killed the mission is failed
+	
+	IF ( ( HAS_CHARACTER_DIED ( k_h_1_archie_leader_1 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3288 ) // "You needed one of my men to drive one of the limos and guide you to our safehouse. You failed me."
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+ 	
+	// if the limo_1 is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( k_h_1_limo_1 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3297 ) // "Shit the limo has been destroyed, I needed them both!"
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	// if the limo_2 is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( k_h_1_limo_2 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3296 ) // "You were supposed to follow my men in that! You have failed me!"
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+ENDWHILE
+
+
+CHANGE_CAR_LOCK ( k_h_1_limo_1 , unlocked )
+SET_CHAR_OBJECTIVE ( k_h_1_archie_leader_1 , leave_car , k_h_1_limo_1 )
+
+
+WHILE_EXEC ( k_h_1_archie_leader_1_safe = 0 )
+
+		
+	// if archie is killed the mission is failed
+	
+	IF ( ( HAS_CHARACTER_DIED ( k_h_1_archie_leader_1 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3288 ) // "You needed one of my men to drive one of the limos and guide you to our safehouse. You failed me."
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+	
+	// if the limo_1 is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( k_h_1_limo_1 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3296 ) // "Shit the limo has been destroyed, I needed them both!"
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+
+
+	// if the limo_2 is destroyed the mission is failed
+	
+	IF ( ( IS_CAR_WRECKED ( k_h_1_limo_2 ) )
+	AND ( flag_failed_kris_hard_phone_m1 = 0 ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3296 ) // "You were supposed to follow my men in that! You have failed me!"
+		SET flag_failed_kris_hard_phone_m1 = 1
+		DISPLAY_MESSAGE ( 3730 ) // you have FAILED the mission!"
+		RETURN
+	ENDIF
+	
+	
+	IF ( ( k_h_1_archie_leader_1_obj14_passed = 0 )
+	AND ( IS_CHAR_OBJECTIVE_PASSED ( k_h_1_archie_leader_1 ) ) )
+		CLEAR_ALL_BRIEFS ( )
+		DISPLAY_BRIEF ( 3303 ) // "Nice working with you!"
+		SET_CHAR_OBJECTIVE  ( k_h_1_archie_leader_1 , goto_area_on_foot , 231.5 , 113.0 , 2.0 )
+		SET_CHAR_THREAT_REACTION ( k_h_1_archie_leader_1 , no_reaction )
+		POINT_ARROW_AT ( arrow , k_h_1_archie_leader_1 )
+		SET k_h_1_archie_leader_1_obj14_passed = 1
+	ENDIF
+
+	
+	IF ( ( IS_CHAR_OBJECTIVE_PASSED ( k_h_1_archie_leader_1 ) ) 
+	AND ( k_h_1_archie_leader_1_obj14_passed = 1 ) )
+		SET k_h_1_archie_leader_1_obj14_passed = 2	
+		SET_CHAR_OBJECTIVE  ( k_h_1_archie_leader_1 , wait_on_foot )
+		SET k_h_1_archie_leader_1_safe = 1
+	ENDIF
+
+		
+ENDWHILE
+
+
+IF ( ( k_h_1_archie_leader_1_safe = 1 )
+AND ( flag_passed_kris_hard_phone_m1 = 0 ) )
+	SET flag_passed_kris_hard_phone_m1	= 1
+	DISPLAY_BRIEF_NOW ( 3304 ) // "Good work, my men and my limos are safe!"
+	++ counter_all_missions_passed
+	DISPLAY_MESSAGE ( 3100 ) // you have PASSED the mission!"
+	ADD_SCORE ( shaft , 80000 )
+	ADD_MULTIPLIER ( shaft , 1 )
+	CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , 1 ) 
+	CLEAR_WANTED_LEVEL ( shaft )
+	RETURN
+ENDIF
+
+
+
+	
+
+//------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
+
+
+// deletes all objects when Krishna hard phone mission1 is finished...
+				
+clean_up_kris_hard_phone_m1: 
+	
+	REMOVE_ARROW ( arrow )
+	REMOVE_ARROW ( arrow_2 )
+	REMOVE_ARROW ( arrow_3 )
+	REMOVE_ARROW ( arrow_4 )
+	OPEN_DOOR ( k_h_1_door_2 )
+
+  	SET_CAR_DENSITY ( cityinfo , 600 ) 
+	SET_PEDDENSITY ( cityinfo , 600 )
+
+	SET_CAR_DENSITY ( m01 , 400 ) 
+	SET_PEDDENSITY ( m01 , 600 )
+
+	SET_CAR_DENSITY ( m02 , 400 ) 
+	SET_PEDDENSITY ( m02 , 600 )
+
+	SET_CAR_DENSITY ( m03 , 400 ) 
+	SET_PEDDENSITY ( m03 , 600 )
+
+	SET_CAR_DENSITY ( m04 , 400 ) 
+	SET_PEDDENSITY ( m04 , 600 )
+
+	SET_CAR_DENSITY ( m05 , 400 ) 
+	SET_PEDDENSITY ( m05 , 600 )
+
+	SET_CAR_DENSITY ( m06 , 400 ) 
+	SET_PEDDENSITY ( m06 , 600 )
+
+	SET_CAR_DENSITY ( m07 , 400 ) 
+	SET_PEDDENSITY ( m07 , 600 )
+
+	SET_CAR_DENSITY ( m08 , 400 ) 
+	SET_PEDDENSITY ( m08 , 600 )
+
+	SET_CAR_DENSITY ( m09 , 400 ) 
+	SET_PEDDENSITY ( m09 , 600 )
+
+	SET_CAR_DENSITY ( m10 , 400 ) 
+	SET_PEDDENSITY ( m10 , 600 )
+
+	SET_CAR_DENSITY ( m11 , 400 ) 
+	SET_PEDDENSITY ( m11 , 600 )
+
+	SET_CAR_DENSITY ( m12 , 400 ) 
+	SET_PEDDENSITY ( m12 , 600 )
+
+	SET_CAR_DENSITY ( m13 , 400 ) 
+	SET_PEDDENSITY ( m13 , 600 )
+
+	SET_CAR_DENSITY ( m14 , 400 ) 
+	SET_PEDDENSITY ( m14 , 600 )
+
+	SET_CAR_DENSITY ( m15 , 400 ) 
+	SET_PEDDENSITY ( m15 , 600 )
+
+	IF ( flag_passed_kris_hard_phone_m1 = 1 )
+		++ flag_kris_missions_passed
+		++ flag_all_missions_passed
+		IF ( flag_kris_missions_passed = 7 )
+			DISPLAY_BRIEF ( 3671 ) // "Good work that should stop them building into our community"
+			DISPLAY_MESSAGE ( 3670 ) // you have PASSED the mission!"
+		ENDIF
+	ENDIF
+
+	IF ( flag_failed_kris_hard_phone_m1 = 1 )
+		++ flag_kris_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+//		CLEAR_ALL_BRIEFS ( )
+	ENDIF
+
+	IF ( CHECK_DEATHARREST_EXECUTED ( ) )
+		++ flag_kris_missions_failed
+		++ flag_all_missions_failed
+		CHANGE_GANG_CHAR_RESPECT_AND_UPDATE ( krisgang , shaft , -1 ) 
+		CLEAR_WANTED_LEVEL ( shaft )
+	ENDIF
+
+	MISSION_HAS_FINISHED ( )
+	
+	SET flag_on_mission	= 0
+	SET flag_on_kris_mission = 0
+	
+	RETURN
+
+
+
+MISSIONSTART
+
+	GOSUB kris_hard_phone_m1:
+
+	GOSUB clean_up_kris_hard_phone_m1:
+
+MISSIONEND
+
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
