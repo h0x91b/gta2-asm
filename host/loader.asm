@@ -8,6 +8,8 @@
 ;                                 and check the results; exit 0 when every check passes
 ;   ./loader [data.pak] --entry   same, then jump to the real PE entry point and run the
 ;                                 game through the Win32 shims
+;   --config=PATH                 settings file instead of config.yaml in the overlay dir
+;                                 (config.asm; see config.example.yaml)
 ;
 ; Exit codes: 0 ok, 1 load/setup failure, 2 a function check failed,
 ;             3 the game called an unimplemented import, 4 SIGSEGV/SIGBUS.
@@ -914,6 +916,17 @@ _main:
     add rsp, 64
     jmp .arg
 .not_dump:
+    mov rdi, [rbx]                  ; --config=PATH: settings file instead of config.yaml
+    lea rsi, [arg_config]
+    mov edx, 9
+    call _strncmp
+    test eax, eax
+    jnz .not_config
+    mov rdi, [rbx]
+    add rdi, 9
+    call cfg_set_path
+    jmp .arg
+.not_config:
     lea rdi, [arg_options]          ; flags that only set a byte
 .opt:
     mov rsi, [rdi]
@@ -1093,6 +1106,7 @@ arg_keys:    db "--keys=", 0
 arg_window:  db "--window=", 0
 msg_bad_window: db "--window=WxH: expected e.g. --window=1280x720 (320x240 .. 4096x4096)", 0
 arg_audio_dump: db "--audio-dump=", 0
+arg_config:  db "--config=", 0
 s_wb:        db "wb", 0
 s_opt_trace_input: db "--trace-input", 0
 s_opt_input_test: db "--input-test", 0
@@ -1152,6 +1166,7 @@ section .text
 %include "w32_locale.asm"
 %include "w32_user32.asm"
 %include "w32_advapi32.asm"
+%include "config.asm"
 %include "w32_misc.asm"
 %include "w32_dinput.asm"
 %include "w32_hooks.asm"

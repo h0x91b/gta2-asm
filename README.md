@@ -36,4 +36,8 @@ host/build.sh --load --entry
 
 Saves and other files the game writes go to
 `~/Library/Application Support/gta2-resurrected/`. Delete that folder to start clean.
+Settings (for now the game's own debug flags: FPS counter, camera coordinates, skip
+the main menu, …) go in `config.yaml` in that folder; copy
+[config.example.yaml](config.example.yaml), which lists every one, or point at a file with
+`--config=PATH`.
 Flags and internals: [host/README.md](host/README.md), [docs/](docs/).

@@ -65,6 +65,7 @@ a window titled "GTA2", 1280×960 client area, black).
 | `--frames=N` | exit (status 0) after N presented frames (`renderer-sdl.md`) |
 | `--shot=PATH` | with `--frames`: save the last frame's back buffer as BMP (the presented part: 640×480 in the frontend, the window size in gameplay) |
 | `--window=WxH` | override the registry's `screen\window_width/height` for this run (320×240 … 4096×4096; default 1280×960, the install seeds 960×720): the window size and the gameplay resolution (`renderer-sdl.md`, "Resolution") |
+| `--config=PATH` | read settings from PATH instead of the overlay's `config.yaml` (see "Registry", config.yaml) |
 | `--trace-input` | log every key change, Acquire, `GetDeviceState` view change and delivered `GetDeviceData` record (implied by `--trace`) |
 | `--keys=F:KEY,...` | scripted taps: KEY (a DIK name, e.g. `DOWN`, `RETURN`, `ESCAPE`) goes down at presented frame F, up 4 frames later; pushed into SDL's queue, so it takes the real key path |
 | `--input-test` | no game run: drive the game's own input code (see "Input") for ~15 s against real keys pressed in a test window |
@@ -130,6 +131,14 @@ match the 64-bit-inode struct layouts; the plain names are the legacy ABI.
   for them, and the renderer's back buffer follows (`renderer-sdl.md`, "Resolution"), so
   gameplay is rendered natively at that size. (Until 2026-10-21 they were forced to
   640×480 by `reg_force_screen` and the window was shown 1.5× bigger; both are gone.)
+- **config.yaml** (`host/config.asm`). After seeding, `config_apply` reads
+  `config.yaml` from the overlay dir (optional; `--config=PATH` names another file, which
+  then must exist). A YAML subset: `section:` headers, indented `key: value`, `#` comments,
+  spaces only; a syntax error stops the loader with the line number, unknown keys only warn.
+  The one section today is `debug:` — the game's own developer flags, which
+  HiddenDebugFlags (`0x451930`) reads once from `HKCU\SOFTWARE\DMA Design Ltd\GTA2\Debug`
+  (a flag is on when its value exists, so `false` deletes the value; `show_player_names` is
+  value-based). Every flag with comments: `config.example.yaml`.
 - **Threads.** None exist; sync objects are tokens. `CreateThread` is not imported.
 - **OS identity.** Windows XP SP3 (5.1.2600, NT), code page 1252 (implemented as
   Latin-1), US-English locale, 1 CPU, DirectX 8.1.

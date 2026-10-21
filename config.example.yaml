@@ -1,0 +1,103 @@
+# gta2-resurrected settings. Copy to
+#   ~/Library/Application Support/gta2-resurrected/config.yaml
+# (or pass --config=PATH to the loader). Read once at startup: restart after a change.
+#
+# Format: a small subset of YAML (host/config.asm) — `section:` headers, indented
+# `key: value` lines, `#` comments, spaces only. Values: true/false (yes/no, on/off, 1/0).
+# Anything else stops the loader with the line number; unknown keys are skipped.
+
+# The game's own debug flags (DMA Design developer switches), read by HiddenDebugFlags
+# (0x451930) from HKCU\SOFTWARE\DMA Design Ltd\GTA2\Debug. A flag is on when its
+# registry value exists, so `false` removes it. Leave a line out to keep the default
+# from gta2_install.reg: there do_blood and do_debug_keys are ON, everything else off.
+# Meanings marked (?) are guesses from the name only; flags marked RISKY are known or
+# expected to hang or break the game (seuko-mod's warning, replay/load logic).
+debug:
+  # --- on-screen debug info
+  do_show_timing: false          # frame timing / FPS
+  do_show_camera: false          # camera position and height
+  do_show_counters: false        # object/ped/car counters (?)
+  do_show_input: false           # current input state
+  do_show_ids: false             # object ids (?)
+  do_show_object_ids: false      # object ids
+  do_show_junc_ids: false        # road junction ids
+  do_show_traffic_lights_info: false
+  do_show_physics: false         # (?)
+  do_show_collision_box: false   # RISKY (unstable per seuko-mod)
+  do_show_imaginary: false       # invisible helper objects
+  do_show_instruments: false     # (?)
+  do_show_horn: false            # car horn info
+  show_brief_number: false       # mission brief numbers
+  show_cycle: false              # (?)
+  show_all_arrows: false         # every mission arrow
+  show_hidden_faces: false       # tile faces that are normally culled
+  show_player_names: true        # multiplayer names; on by default
+  do_corner_window: false        # (?) RISKY
+
+  # --- gameplay cheats
+  do_invulnerable: false
+  do_infinite_lives: false
+  keep_weapons_after_death: false
+  get_all_weapons: false
+  do_free_shopping: false        # free respray/shops
+  dont_get_car_back: false
+  no_annoying_chars: false       # (?)
+  do_blood: true
+
+  # --- skip things
+  skip_frontend: false           # straight into the game, no main menu
+  skip_quit_confirm: false       # ESC quits without "Is that it?"
+  skip_police: false
+  skip_ambulance: false
+  skip_fire_engines: false
+  skip_traffic_lights: false
+  skip_buses: false
+  skip_trains: false             # RISKY (unstable per seuko-mod)
+  skip_dummies: false            # (?) no pedestrians
+  skip_particles: false
+  skip_skidmarks: false
+  skip_audio: false
+  skip_user: false               # (?)
+  skip_mission: false            # RISKY (unstable per seuko-mod)
+  skip_window_check: false       # RISKY (unstable per seuko-mod)
+
+  # --- renderer debugging: hide parts of the map
+  skip_tiles: false
+  skip_lid: false
+  skip_top: false
+  skip_bottom: false
+  skip_left: false
+  skip_right: false
+  skip_slopes: false
+  skip_draw: false               # RISKY: draws nothing
+
+  # --- developer tests and keys
+  do_debug_keys: true            # DMA debug keys (bindings unknown)
+  do_test: false                 # RISKY
+  do_brian_test: false           # RISKY
+  do_iain_test: false            # RISKY
+  do_mike: false                 # RISKY
+  do_text_id_test: false
+  do_police_1: false             # RISKY
+  do_police_2: false             # RISKY
+  do_police_3: false             # RISKY
+  do_kill_phones_on_answer: false
+  do_sync_check: false
+  skip_recycling: false
+  limit_recycling: false
+
+  # --- logging (output destination unknown)
+  log_collisions: false
+  log_routefinder: false
+  log_random: false
+  log_random_extra: false
+  log_input: false
+  log_directinput: false
+  do_miss_logging: false
+
+  # --- replays and saves: RISKY, they change how the game starts
+  play_replay: false
+  do_exit_after_replay: false
+  ignore_replay_header: false
+  skip_replay_sync_check: false
+  do_load_savegame: false
