@@ -21,7 +21,8 @@
 ; the game's own value (the arrow keys still work) plus the mouse delta of that tick. The
 ; game ramps turnRate from its previous value, so ours is put back before each call.
 ; SDL relative mode is switched on while the player walks with mouse turning enabled
-; (mouse_capture_on, w32_dinput.asm); focus loss releases it.
+; (mouse_capture_on, w32_dinput.asm); focus loss releases it, and so does switching it off.
+; Both features are also toggles on the debug menu's main page (debug_menu.asm).
 ;
 ; Prior art, both only turned the ped by pressing virtual left/right keys (turn speed capped
 ; by turnRate) and neither strafed: gta2-seuko-mod by izawartka
@@ -115,9 +116,16 @@ hk_MoveOnFoot:
     mov [pm_offset], ax
 .mouse:
     cmp byte [pm_mouse_on], 0
-    je .out
+    jne .mouse_on
+    cmp byte [pm_captured], 0       ; switched off (debug menu): give the cursor back,
+    je .out                         ; but only if we took it (full screen takes it too)
+    mov byte [pm_captured], 0
+    call mouse_capture_off
+    jmp .out
+.mouse_on:
     cmp byte [have_focus], 0
     je .out
+    mov byte [pm_captured], 1
     call mouse_capture_on
     lea rdi, [mouse_dx]
     call take_axis                  ; whole pixels since the last tick
@@ -363,4 +371,5 @@ pm_gobj:        resd 1              ; the player's GameObject this tick, 0 = not
 pm_mouse_frame: resd 1              ; r_frames at the last MoveOnFoot call
 pm_offset:      resw 1              ; heading offset for this tick's move, 0 = none
 pm_game_turn:   resw 1              ; turnRate as the game computed it
+pm_captured:    resb 1              ; relative mouse mode switched on by us
 section .text

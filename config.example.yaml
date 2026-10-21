@@ -22,7 +22,8 @@ camera:
 # --keys: Q, E, A, D, LSHIFT, ...; the defaults Q and E are unused by the game). Together
 # with forward or back it walks diagonally; the ped keeps facing the same way.
 # mouse_turn: turn the ped smoothly with the mouse while on foot (the cursor is captured
-# while you walk; switch apps to release it). The arrow keys keep working.
+# while you walk; switch apps to release it). The arrow keys keep working. Both can also
+# be switched in game from the debug menu (K): "Mouse turning", "Strafe (Q/E)".
 # mouse_sensitivity: percent; 100 = half a degree per mouse point. 10..1000.
 controls:
   strafe: true

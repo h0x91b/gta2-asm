@@ -149,7 +149,8 @@ match the 64-bit-inode struct layouts; the plain names are the legacy ABI.
   without it the camera runs at 70% (`ZOOM_DEFAULT`), `zoom: 100` is vanilla. Section
   `controls:` (`host/player_move.asm`): `strafe` (default on), `strafe_left` / `strafe_right`
   (key names as in `--keys`, default Q / E), `mouse_turn` (default off),
-  `mouse_sensitivity` (percent, 10..1000, 100 = 0.5° per mouse point); see "Hooks",
+  `mouse_sensitivity` (percent, 10..1000, 100 = 0.5° per mouse point); the first two also
+  toggle at run time from the debug menu (K); see "Hooks",
   `0x4A7901` and `0x49AC76`.
 - **Threads.** None exist; sync objects are tokens. `CreateThread` is not imported.
 - **OS identity.** Windows XP SP3 (5.1.2600, NT), code page 1252 (implemented as

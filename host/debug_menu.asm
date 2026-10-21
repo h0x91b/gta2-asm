@@ -6,8 +6,8 @@
 ;
 ; While the menu is open every key press goes to it, not to the game; keys held when it
 ; opens are released, so the player stops. Key releases always reach the game.
-; Pages: the main one (quick save, all weapons, +$100000, camera zoom, ped paths drawn by
-; debug_paths.asm) leads to Player
+; Pages: the main one (quick save, all weapons, +$100000, camera zoom, mouse turning and
+; strafe toggles from player_move.asm, ped paths drawn by debug_paths.asm) leads to Player
 ; (wanted level and its lock, skin), Vehicle (spawn a car; colour, repair, invincibility
 ; and explosion of the current or last car) and Debug flags (a few of the game's own,
 ; written straight into their bytes, which HiddenDebugFlags 0x451930 filled from the
@@ -1347,6 +1347,8 @@ dmp_main_items:
     DMITEM DM_ACTION, "Add $100000", DMA_MONEY
     DMITEM DM_ZOOM,   "Camera zoom: ", 0
     DMITEM DM_FLAG,   "Ped paths: ", dm_paths
+    DMITEM DM_FLAG,   "Mouse turning: ", pm_mouse_on        ; player_move.asm
+    DMITEM DM_FLAG,   "Strafe (Q/E): ", pm_strafe_on        ; player_move.asm
     DMITEM DM_PAGE,   "Player...", dmp_player
     DMITEM DM_PAGE,   "Vehicle...", dmp_vehicle
     DMITEM DM_PAGE,   "Debug flags...", dmp_flags
