@@ -997,18 +997,6 @@ struc StyleFileHeader
     .version_code                     resb 2      ; 0x4 Uint16
 endstruc
 
-; enum /_car/CAR_COUNTER  (4 bytes)
-CAR_COUNTER.RECYCLED_CAR equ 1
-CAR_COUNTER.PROT_RECYCLED_CAR equ 2
-CAR_COUNTER.UNK4 equ 3
-CAR_COUNTER.UNK1 equ 4
-CAR_COUNTER.UNK2 equ 5
-CAR_COUNTER.UNIT_CAR equ 6
-CAR_COUNTER.UNK3 equ 7
-CAR_COUNTER.MISSION_CAR equ 8
-CAR_COUNTER.UNK5 equ 9
-CAR_COUNTER.UNK6 equ 10
-
 ; enum /_car/CAR_ENGINE_STATE  (4 bytes)
 CAR_ENGINE_STATE.BROKEN_DOESNT_WORK equ 0
 CAR_ENGINE_STATE.ENGINE_OFF equ 1
@@ -1150,18 +1138,6 @@ CAR_SIREN_STATE.SIREN_ON equ 4
 CAR_SIREN_STATE.CAR_ALARM equ 8
 CAR_SIREN_STATE.SIREN_UNK_10 equ 16
 
-; enum /_car/CAR_UNK_TYPE  (4 bytes)
-CAR_UNK_TYPE.UNK_CARS_1 equ 1
-CAR_UNK_TYPE.UNK_CARS_2 equ 2
-CAR_UNK_TYPE.UNK_CARS_3 equ 3
-CAR_UNK_TYPE.UNK_CARS_4 equ 4
-CAR_UNK_TYPE.UNK_CARS_5 equ 5
-CAR_UNK_TYPE.UNIT_CARS equ 6
-CAR_UNK_TYPE.UNK_CARS_7 equ 7
-CAR_UNK_TYPE.MISSION_CARS equ 8
-CAR_UNK_TYPE.UNK_CARS_9 equ 9
-CAR_UNK_TYPE.UNK_CARS_a equ 10
-
 ; enum /_car/CAR_UPGRADE  (4 bytes)
 CAR_UPGRADE.UPGRADE_FREE equ 0
 CAR_UPGRADE.UPGRADE_5k_PAINT_SUICIDE equ 15
@@ -1291,58 +1267,6 @@ endstruc
 struc MaybeCarEngineHolder
     .firstElement                     resb 4      ; 0x0 MaybeCarEngine *
     .arr306                           resb 4      ; 0x4 MaybeCarEngine *
-endstruc
-
-; /_car/SRelToCars2  (16 bytes)
-struc SRelToCars2
-    .field0_0x0                       resb 1      ; 0x0 byte
-    .field1_0x1                       resb 1      ; 0x1 byte
-    .field2_0x2                       resb 1      ; 0x2 byte
-    resb 1
-    .field4_0x4                       resb 4      ; 0x4 undefined4
-    .field5_0x8                       resb 4      ; 0x8 undefined4
-    .field6_0xc                       resb 1      ; 0xc byte
-    resb 3
-endstruc
-
-; /_car/SRelToCars3  (188 bytes)
-struc SRelToCars3
-    resb 12
-    .arr4                             resb 64     ; 0xc SRelToCars2[4]
-    .field13_0x4c                     resb 4      ; 0x4c undefined4
-    .field14_0x50                     resb 4      ; 0x50 undefined4
-    .field15_0x54                     resb 4      ; 0x54 undefined4
-    .field16_0x58                     resb 4      ; 0x58 undefined4
-    .field17_0x5c                     resb 4      ; 0x5c undefined4
-    resb 4
-    .field22_0x64                     resb 4      ; 0x64 undefined4
-    .field23_0x68                     resb 4      ; 0x68 SRelToCars3 *
-    .field24_0x6c                     resb 4      ; 0x6c undefined4
-    .field25_0x70                     resb 4      ; 0x70 undefined4
-    .field26_0x74                     resb 2      ; 0x74 undefined2
-    .field27_0x76                     resb 2      ; 0x76 undefined2
-    .field28_0x78                     resb 2      ; 0x78 undefined2
-    resb 2
-    .field31_0x7c                     resb 4      ; 0x7c undefined4
-    .field32_0x80                     resb 1      ; 0x80 byte
-    resb 3
-    .field36_0x84                     resb 4      ; 0x84 undefined4
-    .field37_0x88                     resb 4      ; 0x88 undefined4
-    .field38_0x8c                     resb 1      ; 0x8c byte
-    .field39_0x8d                     resb 1      ; 0x8d byte
-    .field40_0x8e                     resb 1      ; 0x8e byte
-    resb 1
-    .field42_0x90                     resb 4      ; 0x90 undefined4
-    .field43_0x94                     resb 1      ; 0x94 byte
-    .field44_0x95                     resb 1      ; 0x95 byte
-    resb 2
-    .field47_0x98                     resb 4      ; 0x98 undefined4
-    .field48_0x9c                     resb 4      ; 0x9c undefined4
-    .field49_0xa0                     resb 4      ; 0xa0 undefined4
-    .field50_0xa4                     resb 1      ; 0xa4 byte
-    .field51_0xa5                     resb 1      ; 0xa5 byte
-    .field52_0xa6                     resb 1      ; 0xa6 byte
-    resb 21
 endstruc
 
 ; enum /_enums/CHEATS  (4 bytes)
@@ -3378,20 +3302,6 @@ struc CarsS3
     .field_0xaf                       resb 1      ; 0xaf undefined1
 endstruc
 
-; /imported/gzf-2021/CarsS4  (36724 bytes)
-struc CarsS4
-    .field0_0x0                       resb 4      ; 0x0 int *
-    .arr                              resb 36720  ; 0x4 CarsS5[306]
-endstruc
-
-; /imported/gzf-2021/CarsS5  (120 bytes)
-struc CarsS5
-    resb 36
-    .field14_0x24                     resb 4      ; 0x24 uint
-    resb 79
-    .field_0x77                       resb 1      ; 0x77 undefined1
-endstruc
-
 ; /imported/gzf-2021/FrontendS1  (3018 bytes)
 struc FrontendS1
     resb 4
@@ -3508,14 +3418,6 @@ struc S8
     .field_0xc1ea7                    resb 1      ; 0xc1ea7 undefined1
 endstruc
 
-; /imported/gzf-2021/S9_cars  (108 bytes)
-struc S9_cars
-    resb 105
-    .do_free_shopping                 resb 1      ; 0x69 bool
-    resb 1
-    .field_0x6b                       resb 1      ; 0x6b undefined1
-endstruc
-
 ; /imported/gzf-2021/SKeyboard  (1028 bytes)
 struc SKeyboard
     resb 1027
@@ -3536,12 +3438,6 @@ struc TrafficLights_Gzf2021
     .field400_0x190                   resb 2      ; 0x190 ushort
     .phase                            resb 1      ; 0x192 byte
     .timer                            resb 1      ; 0x193 byte
-endstruc
-
-; /imported/gzf-2021/TrafficManagerS1  (48 bytes)
-struc TrafficManagerS1
-    resb 47
-    .field_0x2f                       resb 1      ; 0x2f undefined1
 endstruc
 
 ; enum /imported/gzf-2021/WEAPON  (4 bytes)
@@ -5300,32 +5196,6 @@ endstruc
 struc Tick
     .tick                             resb 4      ; 0x0 uint
     .random                           resb 4      ; 0x4 uint
-endstruc
-
-; /imported/seuko-mod/TrafficManager  (106 bytes)
-struc TrafficManager
-    resb 4
-    .ptr1                             resb 4      ; 0x4 void *
-    resb 8
-    .field_0x10                       resb 2      ; 0x10 short
-    resb 2
-    .nextCarId                        resb 4      ; 0x14 undefined4
-    resb 16
-    .recycledCars                     resb 4      ; 0x28 undefined4
-    resb 8
-    .unitCars                         resb 4      ; 0x34 undefined4
-    resb 4
-    .missionCars                      resb 4      ; 0x3c undefined4
-    .protRecycledCars                 resb 4      ; 0x40 undefined4
-    resb 4
-    .unkCarTypeACounter               resb 4      ; 0x48 int
-    resb 8
-    .minimalCarSpawnDelay             resb 1      ; 0x54 byte
-    .inc                              resb 1      ; 0x55 byte
-    resb 2
-    .carModel                         resb 1      ; 0x58 CAR_MODEL
-    resb 16
-    .do_free_shoping                  resb 1      ; 0x69 bool
 endstruc
 
 ; /imported/seuko-mod/TrailerController  (16 bytes)

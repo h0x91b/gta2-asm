@@ -10,11 +10,11 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00418050,FUN_00418050,,DEFAULT,__fastcall,USER_DEFINED,167,,void __fastcall FUN_00418050(S6 * param_1)
 0x0041e540,FUN_0041e540,,DEFAULT,__fastcall,USER_DEFINED,53,,void __fastcall FUN_0041e540(undefined param_1)
 0x0041eac0,unsure_Camera_UpdateBoundaries,,DEFAULT,__fastcall,USER_DEFINED,5,unsure_Camera_UpdateBoundaries,undefined __fastcall unsure_Camera_UpdateBoundaries(Camera * param_1)
-0x00421310,FUN_00421310,,DEFAULT,__fastcall,USER_DEFINED,23,,undefined __fastcall FUN_00421310(SRelToCars2 * param_1)
+0x00421310,FUN_00421310,,DEFAULT,__fastcall,USER_DEFINED,23,,undefined __fastcall FUN_00421310(undefined param_1)
 0x00421f40,FUN_00421f40,,DEFAULT,default,USER_DEFINED,58,,"uint FUN_00421f40(Car * car, int iParm1, byte param_3)"
 0x004233b0,FUN_004233b0,,DEFAULT,__fastcall,USER_DEFINED,208,,void __fastcall FUN_004233b0(Car * param_1)
 0x0042a630,FUN_0042a630,,DEFAULT,__stdcall,USER_DEFINED,33,,"undefined __stdcall FUN_0042a630(SCR_f * x, SCR_f * y)"
-0x0042a9e0,FUN_0042a9e0,,DEFAULT,__fastcall,USER_DEFINED,215,,undefined __fastcall FUN_0042a9e0(CarsS5 * param_1)
+0x0042a9e0,FUN_0042a9e0,,DEFAULT,__fastcall,USER_DEFINED,215,,undefined __fastcall FUN_0042a9e0(undefined param_1)
 0x00433830,FUN_00433830,,DEFAULT,__fastcall,USER_DEFINED,13,,undefined __fastcall FUN_00433830(S3Bytes * param_1)
 0x004339c0,FUN_004339c0,,DEFAULT,__thiscall,USER_DEFINED,18,,"int __thiscall FUN_004339c0(void * sprite, int iParm1, undefined4 * param_3, Ped * ped)"
 0x004339e0,FUN_004339e0,,DEFAULT,__thiscall,USER_DEFINED,18,,"void __thiscall FUN_004339e0(void * this, int iParm1, undefined4 * param_2)"

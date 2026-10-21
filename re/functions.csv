@@ -279,7 +279,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00420700,Position_SetNoRemapState,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall Position_SetNoRemapState(Position * param_1)
 0x00420760,getUpgradeType,,USER_DEFINED,__stdcall,USER_DEFINED,46,,CAR_UPGRADE __stdcall getUpgradeType(int param_1)
 0x004207f0,TeleportCar,,USER_DEFINED,__fastcall,USER_DEFINED,76,,"void __fastcall TeleportCar(Car * car, DWORD edx, SCR_f x, SCR_f y, SCR_f z)"
-0x00420840,Car_SetCategory,,USER_DEFINED,__thiscall,USER_DEFINED,122,,"void __thiscall Car_SetCategory(void * this, CAR_COUNTER param_1)"
+0x00420840,Car_SetCategory,,USER_DEFINED,__thiscall,USER_DEFINED,122,,"void __thiscall Car_SetCategory(void * this, CAR_CATEGORY category)"
 0x004208f0,Car_MakeProtectedRecycled,,USER_DEFINED,__fastcall,ANALYSIS,44,,undefined __fastcall Car_MakeProtectedRecycled(int param_1)
 0x00420920,Car_MakeRecycled,,USER_DEFINED,__fastcall,ANALYSIS,44,,undefined __fastcall Car_MakeRecycled(int param_1)
 0x00420950,Car_AttachRoofLightObject,,USER_DEFINED,__thiscall,ANALYSIS,150,,"undefined __thiscall Car_AttachRoofLightObject(void * this, undefined4 param_1, int param_2)"
@@ -287,7 +287,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00420a10,CarManager_BuildTrafficModelLists,,USER_DEFINED,__fastcall,ANALYSIS,300,,CarInfo * __fastcall CarManager_BuildTrafficModelLists(short param_1)
 0x00420b70,Ped_GetPedClass,,USER_DEFINED,__fastcall,USER_DEFINED,7,,uint __fastcall Ped_GetPedClass(Ped * param_1)
 0x00420b80,Ped_ClearCopLevel,,USER_DEFINED,__fastcall,USER_DEFINED,10,,void __fastcall Ped_ClearCopLevel(Ped * param_1)
-0x00420b90,CarManager_DecrementCounter,,USER_DEFINED,default,USER_DEFINED,71,,"void CarManager_DecrementCounter(CarManager * this, CAR_COUNTER param_2)"
+0x00420b90,CarManager_DecrementCounter,,USER_DEFINED,__thiscall,USER_DEFINED,71,,"void __thiscall CarManager_DecrementCounter(void * this, CAR_CATEGORY category)"
 0x00420c00,CarManager_UpdateFreeShoppingFlag,,USER_DEFINED,__thiscall,USER_DEFINED,44,,void __thiscall CarManager_UpdateFreeShoppingFlag(void * this)
 0x00420c40,CarManager_HasRoomForType_Strict,,USER_DEFINED,__thiscall,USER_DEFINED,117,,"bool __thiscall CarManager_HasRoomForType_Strict(void * this, CAR_CATEGORY category)"
 0x00420ce0,CarManager_HasRoomForType,,USER_DEFINED,__thiscall,USER_DEFINED,117,,"bool __thiscall CarManager_HasRoomForType(void * this, CAR_CATEGORY category)"
@@ -296,7 +296,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00420e20,CarDeltas_IsBitSet,,USER_DEFINED,__thiscall,ANALYSIS,27,,"uint __thiscall CarDeltas_IsBitSet(void * this, undefined4 * param_1)"
 0x00420e50,CarPool_GetUsedHead,,USER_DEFINED,__fastcall,ANALYSIS,4,,undefined4 __fastcall CarPool_GetUsedHead(int param_1)
 0x00420e90,ResetIntPtr,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall ResetIntPtr(int * param_1)
-0x00420eb0,CarAIPool_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,61,,CarsS4 * __fastcall CarAIPool_Ctor(CarsS4 * param_1)
+0x00420eb0,CarAIPool_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,61,,CarAIPool * __fastcall CarAIPool_Ctor(CarAIPool * pool)
 0x00420ef0,CarAIPool_Alloc,,USER_DEFINED,__fastcall,ANALYSIS,19,,undefined4 * __fastcall CarAIPool_Alloc(undefined4 * param_1)
 0x00420f10,OwnerSlotTable_GetPedId,OwnerSlotTable,USER_DEFINED,__thiscall,USER_DEFINED,15,,"int __thiscall OwnerSlotTable_GetPedId(OwnerSlotTable * this, uint slot)"
 0x00420f20,CarPool_PushUsed,,USER_DEFINED,__thiscall,ANALYSIS,16,,"undefined __thiscall CarPool_PushUsed(void * this, int param_1)"
@@ -406,15 +406,15 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00424470,NotEnoughMoney,,USER_DEFINED,__stdcall,USER_DEFINED,41,,undefined __stdcall NotEnoughMoney(int cost)
 0x004244a0,Car_BuyUpgrade,,USER_DEFINED,__thiscall,USER_DEFINED,351,,"void __thiscall Car_BuyUpgrade(void * this, CAR_UPGRADE upgradeType)"
 0x00424620,Car_InitAttachments,,USER_DEFINED,__fastcall,USER_DEFINED,12,,undefined4 * __fastcall Car_InitAttachments(Car * param_1)
-0x00424630,Car_SetCategoryWithTrailer,,USER_DEFINED,default,USER_DEFINED,40,,"void Car_SetCategoryWithTrailer(void * this, CAR_COUNTER type)"
-0x00424660,Car_ChangeCounterCategory,,USER_DEFINED,__thiscall,ANALYSIS,27,,"undefined __thiscall Car_ChangeCounterCategory(void * this, CAR_COUNTER param_1)"
-0x00424680,Car_ChangeCounterCategoryNoTrailer,,USER_DEFINED,__thiscall,ANALYSIS,32,,"undefined __thiscall Car_ChangeCounterCategoryNoTrailer(void * this, CAR_COUNTER param_1)"
+0x00424630,Car_SetCategoryWithTrailer,,USER_DEFINED,__thiscall,USER_DEFINED,40,,"void __thiscall Car_SetCategoryWithTrailer(void * this, CAR_CATEGORY category)"
+0x00424660,Car_ChangeCounterCategory,,USER_DEFINED,__thiscall,USER_DEFINED,27,,"void __thiscall Car_ChangeCounterCategory(void * this, CAR_CATEGORY category)"
+0x00424680,Car_ChangeCounterCategoryNoTrailer,,USER_DEFINED,__thiscall,USER_DEFINED,32,,"void __thiscall Car_ChangeCounterCategoryNoTrailer(void * this, CAR_CATEGORY category)"
 0x004246a0,Car_GetResponsiblePedId,,USER_DEFINED,__fastcall,ANALYSIS,93,,uint __fastcall Car_GetResponsiblePedId(int param_1)
 0x00424700,Car_AttachEmergencyLights,,USER_DEFINED,__fastcall,ANALYSIS,373,,undefined __fastcall Car_AttachEmergencyLights(Car * param_1)
 0x00424880,Car_Reset,,USER_DEFINED,__fastcall,ANALYSIS,220,,undefined __fastcall Car_Reset(int * * param_1)
 0x00424980,CarManager_PickTrafficModel,,USER_DEFINED,__thiscall,USER_DEFINED,586,,"int __thiscall CarManager_PickTrafficModel(void * this, Player * player, ushort * zoneInfo, SCR_f scale, ushort * outCategory)"
 0x00424bd0,CarManager_FindNearestCar,,USER_DEFINED,__stdcall,ANALYSIS,600,,Car * __stdcall CarManager_FindNearestCar(void)
-0x00424e70,Ped_FindEnterableCarInFront,,USER_DEFINED,__fastcall,USER_DEFINED,259,,"Car * __fastcall Ped_FindEnterableCarInFront(TrafficManager * trafficManager, DWORD edx, Sprite * pedSprite, DWORD param_4)"
+0x00424e70,Ped_FindEnterableCarInFront,,USER_DEFINED,__fastcall,USER_DEFINED,259,,"Car * __fastcall Ped_FindEnterableCarInFront(void * unusedEcx, DWORD edx, Sprite * pedSprite, DWORD param_4)"
 0x00425460,CarAIPool_Free,,USER_DEFINED,__thiscall,ANALYSIS,27,,"undefined __thiscall CarAIPool_Free(void * this, undefined4 * param_1)"
 0x00425480,CarPool_AllocPrepend,,USER_DEFINED,__fastcall,USER_DEFINED,28,,Car * __fastcall CarPool_AllocPrepend(int * param_1)
 0x004254a0,CarPool_AllocAppend,,USER_DEFINED,__fastcall,USER_DEFINED,67,,Car * __fastcall CarPool_AllocAppend(int * param_1)

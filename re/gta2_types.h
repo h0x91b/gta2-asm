@@ -108,8 +108,6 @@ typedef struct CarManager CarManager;
 typedef struct CarPool CarPool;
 typedef struct MaybeCarEngine MaybeCarEngine;
 typedef struct MaybeCarEngineHolder MaybeCarEngineHolder;
-typedef struct SRelToCars2 SRelToCars2;
-typedef struct SRelToCars3 SRelToCars3;
 typedef struct AnimatedValue AnimatedValue;
 typedef struct FrontEnd FrontEnd;
 typedef struct Game Game;
@@ -196,8 +194,6 @@ typedef struct CarS1 CarS1;
 typedef struct CarSprite CarSprite;
 typedef struct CarsS2 CarsS2;
 typedef struct CarsS3 CarsS3;
-typedef struct CarsS4 CarsS4;
-typedef struct CarsS5 CarsS5;
 typedef struct FrontendS1 FrontendS1;
 typedef struct FrontendS1S1 FrontendS1S1;
 typedef struct FrontendS1S2 FrontendS1S2;
@@ -210,11 +206,9 @@ typedef struct S1 S1;
 typedef struct S3 S3;
 typedef struct S3Bytes S3Bytes;
 typedef struct S8 S8;
-typedef struct S9_cars S9_cars;
 typedef struct SKeyboard SKeyboard;
 typedef struct Timing Timing;
 typedef struct TrafficLights_Gzf2021 TrafficLights_Gzf2021;
-typedef struct TrafficManagerS1 TrafficManagerS1;
 typedef struct FrontendImage FrontendImage;
 typedef struct Ambulance Ambulance;
 typedef struct AmbulanceSub AmbulanceSub;
@@ -285,7 +279,6 @@ typedef struct Texture Texture;
 typedef struct Texture_S1 Texture_S1;
 typedef struct Texture_S2 Texture_S2;
 typedef struct Tick Tick;
-typedef struct TrafficManager TrafficManager;
 typedef struct TrailerController TrailerController;
 typedef struct TrailerControllerPool TrailerControllerPool;
 typedef struct Vert Vert;
@@ -502,21 +495,6 @@ enum CarInfoFlags2_values {
     popup = 2,
 };
 
-// /_car/CAR_COUNTER
-typedef uint32_t CAR_COUNTER;
-enum CAR_COUNTER_values {
-    RECYCLED_CAR = 1,
-    PROT_RECYCLED_CAR = 2,
-    UNK4 = 3,
-    UNK1 = 4,
-    UNK2 = 5,
-    UNIT_CAR = 6,
-    UNK3 = 7,
-    MISSION_CAR = 8,
-    UNK5 = 9,
-    UNK6 = 10,
-};
-
 // /_car/CAR_ENGINE_STATE
 typedef uint32_t CAR_ENGINE_STATE;
 enum CAR_ENGINE_STATE_values {
@@ -668,21 +646,6 @@ enum CAR_SIREN_STATE_values {
     SIREN_ON = 4,
     CAR_ALARM = 8,
     SIREN_UNK_10 = 16,
-};
-
-// /_car/CAR_UNK_TYPE
-typedef uint32_t CAR_UNK_TYPE;
-enum CAR_UNK_TYPE_values {
-    UNK_CARS_1 = 1,
-    UNK_CARS_2 = 2,
-    UNK_CARS_3 = 3,
-    UNK_CARS_4 = 4,
-    UNK_CARS_5 = 5,
-    UNIT_CARS = 6,
-    UNK_CARS_7 = 7,
-    MISSION_CARS = 8,
-    UNK_CARS_9 = 9,
-    UNK_CARS_a = 10,
 };
 
 // /_car/CAR_UPGRADE
@@ -3474,58 +3437,6 @@ struct MaybeCarEngineHolder {
     MaybeCarEngine *arr306; /* 0x4 */
 };
 
-// /_car/SRelToCars2  size 0x10
-struct SRelToCars2 {
-    byte field0_0x0; /* 0x0 */
-    byte field1_0x1; /* 0x1 */
-    byte field2_0x2; /* 0x2 */
-    uint8_t _gap_0x3[0x1];
-    undefined4 field4_0x4; /* 0x4 */
-    undefined4 field5_0x8; /* 0x8 */
-    byte field6_0xc; /* 0xc */
-    uint8_t _gap_0xd[0x3];
-};
-
-// /_car/SRelToCars3  size 0xbc
-struct SRelToCars3 {
-    uint8_t _gap_0x0[0xc];
-    SRelToCars2 arr4[4]; /* 0xc */
-    undefined4 field13_0x4c; /* 0x4c */
-    undefined4 field14_0x50; /* 0x50 */
-    undefined4 field15_0x54; /* 0x54 */
-    undefined4 field16_0x58; /* 0x58 */
-    undefined4 field17_0x5c; /* 0x5c */
-    uint8_t _gap_0x60[0x4];
-    undefined4 field22_0x64; /* 0x64 */
-    SRelToCars3 *field23_0x68; /* 0x68 */
-    undefined4 field24_0x6c; /* 0x6c */
-    undefined4 field25_0x70; /* 0x70 */
-    undefined2 field26_0x74; /* 0x74 */
-    undefined2 field27_0x76; /* 0x76 */
-    undefined2 field28_0x78; /* 0x78 */
-    uint8_t _gap_0x7a[0x2];
-    undefined4 field31_0x7c; /* 0x7c */
-    byte field32_0x80; /* 0x80 */
-    uint8_t _gap_0x81[0x3];
-    undefined4 field36_0x84; /* 0x84 */
-    undefined4 field37_0x88; /* 0x88 */
-    byte field38_0x8c; /* 0x8c */
-    byte field39_0x8d; /* 0x8d */
-    byte field40_0x8e; /* 0x8e */
-    uint8_t _gap_0x8f[0x1];
-    undefined4 field42_0x90; /* 0x90 */
-    byte field43_0x94; /* 0x94 */
-    byte field44_0x95; /* 0x95 */
-    uint8_t _gap_0x96[0x2];
-    undefined4 field47_0x98; /* 0x98 */
-    undefined4 field48_0x9c; /* 0x9c */
-    undefined4 field49_0xa0; /* 0xa0 */
-    byte field50_0xa4; /* 0xa4 */
-    byte field51_0xa5; /* 0xa5 */
-    byte field52_0xa6; /* 0xa6 */
-    uint8_t _gap_0xa7[0x15];
-};
-
 // /_game/FrontEnd  size 0x1eb40
 struct FrontEnd {
     uint8_t _gap_0x0[0x8];
@@ -4944,20 +4855,6 @@ struct CarsS2 {
     CarsS3 arr[306]; /* 0x4 */
 };
 
-// /imported/gzf-2021/CarsS5  size 0x78
-struct CarsS5 {
-    uint8_t _gap_0x0[0x24];
-    uint field14_0x24; /* 0x24 */
-    uint8_t _gap_0x28[0x4f];
-    undefined1 field_0x77; /* 0x77 */
-};
-
-// /imported/gzf-2021/CarsS4  size 0x8f74
-struct CarsS4 {
-    int *field0_0x0; /* 0x0 */
-    CarsS5 arr[306]; /* 0x4 */
-};
-
 // /imported/gzf-2021/FrontendS1S1  size 0x82
 struct FrontendS1S1 {
     uint8_t _gap_0x0[0x2];
@@ -5057,14 +4954,6 @@ struct S8 {
     undefined1 field_0xc1ea7; /* 0xc1ea7 */
 };
 
-// /imported/gzf-2021/S9_cars  size 0x6c
-struct S9_cars {
-    uint8_t _gap_0x0[0x69];
-    bool_ do_free_shopping; /* 0x69 */
-    uint8_t _gap_0x6a[0x1];
-    undefined1 field_0x6b; /* 0x6b */
-};
-
 // /imported/gzf-2021/SKeyboard  size 0x404
 struct SKeyboard {
     uint8_t _gap_0x0[0x403];
@@ -5085,12 +4974,6 @@ struct TrafficLights_Gzf2021 {
     ushort field400_0x190; /* 0x190 */
     byte phase; /* 0x192 */
     byte timer; /* 0x193 */
-};
-
-// /imported/gzf-2021/TrafficManagerS1  size 0x30
-struct TrafficManagerS1 {
-    uint8_t _gap_0x0[0x2f];
-    undefined1 field_0x2f; /* 0x2f */
 };
 
 // /imported/renderer-doc/FrontendImage  size 0x88
@@ -5945,32 +5828,6 @@ struct Texture_S2 {
 struct Tick {
     uint tick; /* 0x0 */
     uint random; /* 0x4 */
-};
-
-// /imported/seuko-mod/TrafficManager  size 0x6a
-struct TrafficManager {
-    uint8_t _gap_0x0[0x4];
-    void *ptr1; /* 0x4 */
-    uint8_t _gap_0x8[0x8];
-    short field_0x10; /* 0x10 */
-    uint8_t _gap_0x12[0x2];
-    undefined4 nextCarId; /* 0x14 */
-    uint8_t _gap_0x18[0x10];
-    undefined4 recycledCars; /* 0x28 */
-    uint8_t _gap_0x2c[0x8];
-    undefined4 unitCars; /* 0x34 */
-    uint8_t _gap_0x38[0x4];
-    undefined4 missionCars; /* 0x3c */
-    undefined4 protRecycledCars; /* 0x40 */
-    uint8_t _gap_0x44[0x4];
-    int unkCarTypeACounter; /* 0x48 */
-    uint8_t _gap_0x4c[0x8];
-    byte minimalCarSpawnDelay; /* 0x54 */
-    byte inc; /* 0x55 */
-    uint8_t _gap_0x56[0x2];
-    CAR_MODEL carModel; /* 0x58 */
-    uint8_t _gap_0x59[0x10];
-    bool_ do_free_shoping; /* 0x69 */
 };
 
 // /imported/seuko-mod/TrailerController  size 0x10
