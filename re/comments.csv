@@ -2849,6 +2849,7 @@ Library: Visual Studio 2003 Release"
 0x005d7e2c,plate,,"Ang16 constant 90 degrees (= 360), set by CRT initialiser 0x4EBA70: Ang16_MulFix16(&amp;g_Ang16PerDegree, this, Fix16(90))."
 0x005d7e58,plate,,"Trailer controller pool (0xA4 B: head + 9 TrailerController of 0x10), created by CarManager_Ctor (TrailerPool_Ctor 0x425500); used by Car_AttachTrailer / Car_DetachTrailer / CarManager_SpawnArticulated."
 0x005d81dc,eol,,"SoundEventQueue (0xC88), per-frame audio events, only when skip_audio==0"
+0x005e3cc4,plate,,"Was ptrToGameStats. Points at the local player's view Camera (&Game.localPlayer->viewCamera, Player+0x14C; Seq 41 from eachFrame disasm). Camera +0x98/+0x9C x/y read by DrawTileBlock."
 0x005e4088,plate,,"Set by Ai_SetProbing around the CarAI look-ahead probe in CarAI_DriveStep; while set, CAR_CROSSING (0x7A) stop-line objects are solid unless the traffic light is green for their axis (CarCrossing_ShouldBlock)."
 0x005e408c,plate,,Entry count of g_trafficModelsGood.
 0x005e4090,plate,,Entry count of g_trafficModelsAverage.

@@ -126,7 +126,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005dcbed,CDVol,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005e202c,ptrToPlayAVocal,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e21cc,ptrToS5,,USER_DEFINED,.data.exp,,/auto_structs/S5 *,4
-0x005e3cc4,ptrToGameStats,,USER_DEFINED,.data.exp,,/_game/GameStats *,4
+0x005e3cc4,g_ViewCamera,,USER_DEFINED,.data.exp,,/imported/seuko-mod/Camera *,4
 0x005e3f54,eq8192,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e4088,g_aiProbing,,USER_DEFINED,.data.exp,,/byte,1
 0x005e408c,g_trafficModelsGoodCount,,USER_DEFINED,.data.exp,,/undefined4,4

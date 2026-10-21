@@ -3203,7 +3203,7 @@ struct PlayerScore {
     byte carModelFlags[256]; /* 0x8c */
     int msAccum; /* 0x18c */
     int airtimeMs; /* 0x190 */
-    uint8_t _gap_0x194[0x4];
+    int lastAccuracyResult; /* 0x194 */
     byte accuracyCount; /* 0x198 */
     uint8_t _gap_0x199[0x3];
     uint reverseDrivingMs; /* 0x19c */
@@ -3871,8 +3871,8 @@ struct Game {
     byte playerCount; /* 0x23 */
     char localPlayerIndex; /* 0x24 */
     uint8_t _gap_0x25[0x3];
-    int field11_0x28; /* 0x28 */
-    int relatedToQuitGame; /* 0x2c */
+    int unsure_exitFrame; /* 0x28 */
+    int quitReason; /* 0x2c */
     byte compensationFPSTime; /* 0x30 */
     uint8_t _gap_0x31[0x3];
     int relToSkipPoliceEnum; /* 0x34 */

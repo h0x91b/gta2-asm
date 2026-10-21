@@ -884,7 +884,7 @@ struc PlayerScore
     .carModelFlags                    resb 256    ; 0x8c byte[256]
     .msAccum                          resb 4      ; 0x18c int
     .airtimeMs                        resb 4      ; 0x190 int
-    resb 4
+    .lastAccuracyResult               resb 4      ; 0x194 int
     .accuracyCount                    resb 1      ; 0x198 byte
     resb 3
     .reverseDrivingMs                 resb 4      ; 0x19c uint
@@ -1849,8 +1849,8 @@ struc Game
     .playerCount                      resb 1      ; 0x23 byte
     .localPlayerIndex                 resb 1      ; 0x24 char
     resb 3
-    .field11_0x28                     resb 4      ; 0x28 int
-    .relatedToQuitGame                resb 4      ; 0x2c int
+    .unsure_exitFrame                 resb 4      ; 0x28 int
+    .quitReason                       resb 4      ; 0x2c int
     .compensationFPSTime              resb 1      ; 0x30 byte
     resb 3
     .relToSkipPoliceEnum              resb 4      ; 0x34 int

@@ -3301,7 +3301,7 @@ g_SFXVolume                                      equ 0x005dcbec ; undefined1 (1 
 g_CDVol                                          equ 0x005dcbed ; undefined1 (1 bytes)
 g_ptrToPlayAVocal                                equ 0x005e202c ; undefined4 (4 bytes)
 g_ptrToS5                                        equ 0x005e21cc ; S5 * (4 bytes)
-g_ptrToGameStats                                 equ 0x005e3cc4 ; GameStats * (4 bytes)
+g_ViewCamera                                     equ 0x005e3cc4 ; Camera * (4 bytes)
 g_eq8192                                         equ 0x005e3f54 ; undefined4 (4 bytes)
 g_aiProbing                                      equ 0x005e4088 ; byte (1 bytes)
 g_trafficModelsGoodCount                         equ 0x005e408c ; undefined4 (4 bytes)
