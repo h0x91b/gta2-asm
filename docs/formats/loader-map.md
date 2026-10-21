@@ -198,8 +198,10 @@ GXT name forces the language to `e` (and the expected magic to `GBLE`). It retur
 | other | `0x402F60` | — | V | skipped |
 
 Shipped: `e/f/g/i/s.gxt` (and `bob_*.gxt`) = header `GBL?` + u16 100, TKEY then TDAT.
-`FUN_004C2450`/`0x4C21A0` (upper-casing tables `0x594CF8`/`0x594DF8` per language) are text
-layout helpers, not loaders.
+`Text_WordWrap` 0x4C2450 and `LocaleSettings_ToUpperChar` 0x4C21A0 (upper-casing tables
+`0x594DF8`/`0x594EF8` per language) are text layout helpers, not loaders. Full subsystem (TKEY
+offsets are byte offsets, keys ≤ 7 chars sorted by `strcmp`, `textLength` is 32-bit, font code
+page, control codes, limits): `docs/re/gxt.md`.
 
 ## `.sdt` + `.raw` — district sound bank (`FUN_004B6B40`)
 

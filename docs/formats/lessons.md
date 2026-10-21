@@ -78,6 +78,17 @@ dropped; what is left is about the data, plus the two RE-hygiene lessons at the 
   65536 (per gta2_re). 83 models.
 - District stems: `wil` = Downtown, `ste` = Residential, `bil` = Industrial.
 
+## Text (`.gxt`, GBL?)
+
+- **TDAT units are font glyph codes, not Unicode.** The game draws sprite `fontBase + code − 0x21`;
+  accents are 0x80–0xB0 in the font's own order (é = 0x9E, not 0xE9). Convert with
+  `gxt.ts` `toUnicode`/`fromUnicode`. `bob_*.gxt` are the exception: real Latin-1, not loaded by
+  `gta2.exe`.
+- **TDAT is in authoring order, TKEY in `strcmp` order**: offsets are non-monotonic, and an edited
+  table must stay key-sorted or the game's `bsearch` misses keys silently (text renders blank).
+- The first unit of a brief (0x216B–0x217A) is the speaker icon, not text. Table and limits:
+  `docs/re/gxt.md`.
+
 ## RE hygiene
 
 - Reverse-engineered handler names are hypotheses, not identities: a gta2_re "engine" sound

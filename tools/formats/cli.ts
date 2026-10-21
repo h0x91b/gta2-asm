@@ -14,6 +14,7 @@ import { parseSoundBank, soundWav } from './sound.ts';
 import { parseGci } from './gci.ts';
 import { decodeTga } from './tga.ts';
 import { png } from './png.ts';
+import { decodeGxt, escapeText, toUnicode } from './gxt.ts';
 import { parseScr, hex, STRING_TYPE_MISSION_FILE } from './scr.ts';
 
 const HELP = `bun tools/formats/cli.ts [--pak data.pak] <command> ...
@@ -32,6 +33,7 @@ const HELP = `bun tools/formats/cli.ts [--pak data.pak] <command> ...
   gci [file] [--model N]                 nyc.gci car handling records
   tga <file> --out f.png
   scr <file> [--summary|--list|--strings] mission script: header, opcode counts / one line per command / strings
+  gxt <file> [--summary|--list [--unicode]|--key KEY] text table: summary + validation / key<TAB>text, non-printables escaped (--unicode: font accent codes as letters) / one entry
 Paths inside the pak are case-insensitive; '\\\\' or '/' both work. JSON goes to stdout.`;
 
 const argv = process.argv.slice(2);
@@ -120,6 +122,19 @@ function scr(pak: Pak, file: string) {
     opcodes: Object.fromEntries(Object.entries(opcodes).sort((a, b) => b[1] - a[1])) });
 }
 
+function gxt(pak: Pak, file: string) {
+  const g = decodeGxt(pak.read(file)), key = option('--key');
+  if (flag('--list')) { const uni = flag('--unicode'); for (const e of g.entries) console.log(`${e.key.padEnd(8)}\t${escapeText(uni ? toUnicode(e.raw) : e.text)}`); return; }
+  if (key !== undefined) {
+    const e = g.entries.find(x => x.key === key); if (!e) throw Error(`no key ${key} in ${file}`);
+    return json({ key: e.key, offset: e.offset, units: e.raw.length, text: e.text, escaped: escapeText(e.text), unicode: toUnicode(e.raw), codeUnits: Array.from(e.raw, u => u.toString(16)).join(' ') });
+  }
+  const cps = new Set<number>(); let longest = { key: '', units: 0 };
+  for (const e of g.entries) { for (const u of e.raw) if (u < 0x20 || u > 0x7e) cps.add(u); if (e.raw.length > longest.units) longest = { key: e.key, units: e.raw.length }; }
+  json({ file, lang: g.lang, version: g.version, chunks: g.chunks.map(c => `${c.tag}:${c.data.length}`), keys: g.entries.length, tdatUnits: g.tdat.length, longest,
+    nonAscii: Array.from(cps).sort((a, b) => a - b).map(u => u.toString(16)), issues: g.issues });
+}
+
 function main() {
   const pakPath = option('--pak'), cmd = argv.shift();
   if (!cmd || cmd === 'help' || cmd === '--help') return console.log(HELP);
@@ -133,6 +148,7 @@ function main() {
     else if (cmd === 'gmp') gmp(pak, file);
     else if (cmd === 'sdt') sdt(pak, file);
     else if (cmd === 'scr') scr(pak, file);
+    else if (cmd === 'gxt') gxt(pak, file);
     else if (cmd === 'tga') { const r = decodeTga(pak.read(file)); console.log(`${file}: ${r.width}x${r.height}`); writeOut(option('--out'), png(r.width, r.height, r.rgba)); }
     else throw Error(`unknown command ${cmd}\n\n${HELP}`);
     flag('--summary');

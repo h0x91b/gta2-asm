@@ -50,9 +50,13 @@ typedef struct FrameCounter FrameCounter;
 typedef struct GTAVertex GTAVertex;
 typedef struct Generator Generator;
 typedef struct GeneratorManager GeneratorManager;
+typedef struct HudBigLabel HudBigLabel;
+typedef struct HudBriefNode HudBriefNode;
+typedef struct HudBriefQueue HudBriefQueue;
 typedef struct IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct;
 typedef union IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion;
 typedef struct KanjiFont KanjiFont;
+typedef struct MapZoneInfo MapZoneInfo;
 typedef struct MissionCleanupEntry MissionCleanupEntry;
 typedef struct ObjectSpawner ObjectSpawner;
 typedef struct OwnerSlot OwnerSlot;
@@ -456,6 +460,13 @@ enum PURSUIT_STATE_values {
     PURSUIT_ACTIVE = 3,
     PURSUIT_ENDED = 4,
     PURSUIT_SEARCHING = 5,
+};
+
+// /ZZ_SLICE4_TEST
+typedef uint32_t ZZ_SLICE4_TEST;
+enum ZZ_SLICE4_TEST_values {
+    ZZ_C = 1,
+    ZZ_B = 2,
 };
 
 // /_STY/CarInfoFlags
@@ -2380,7 +2391,21 @@ typedef wchar_t WCHAR;
 
 // /AmbulanceSlot  size 0x20
 struct AmbulanceSlot {
-    byte raw[32]; /* 0x0 */
+    byte spawnTileX; /* 0x0 */
+    byte spawnTileY; /* 0x1 */
+    byte spawnTileZ; /* 0x2 */
+    uint8_t _gap_0x3[0x1];
+    EmergencyVehicleSlot *vehicle; /* 0x4 */
+    Ped *driverTargetPed; /* 0x8 */
+    Ped *passengerTargetPed; /* 0xc */
+    int pedQueue; /* 0x10 */
+    byte queuedCount; /* 0x14 */
+    uint8_t _gap_0x15[0x1];
+    short unk16; /* 0x16 */
+    int state; /* 0x18 */
+    byte idle; /* 0x1c */
+    byte reviveTicks; /* 0x1d */
+    uint8_t _gap_0x1e[0x2];
 };
 
 // /AmbulanceManager  size 0x110
@@ -2538,13 +2563,15 @@ struct EmergencyVehicleSlot {
     SCR_f spawnY; /* 0x10 */
     SCR_f spawnZ; /* 0x14 */
     short timer; /* 0x18 */
-    byte unk1a[4]; /* 0x1a */
+    short offscreenLimit; /* 0x1a */
+    short spawnWaitTicks; /* 0x1c */
     byte inUse; /* 0x1e */
     byte unk1f[1]; /* 0x1f */
     EMERGENCY_CREW_TYPE crewType; /* 0x20 */
-    int state24; /* 0x24 */
-    int state28; /* 0x28 */
-    byte unk2c[4]; /* 0x2c */
+    int crewStatus; /* 0x24 */
+    int stage; /* 0x28 */
+    byte stageDone; /* 0x2c */
+    uint8_t _gap_0x2d[0x3];
 };
 
 // /EmergencyVehiclePool  size 0x1e0
@@ -2554,13 +2581,24 @@ struct EmergencyVehiclePool {
 
 // /FireEngineSlot  size 0x28
 struct FireEngineSlot {
-    byte raw[40]; /* 0x0 */
+    ushort serial; /* 0x0 */
+    uint8_t _gap_0x2[0x2];
+    int active; /* 0x4 */
+    int state; /* 0x8 */
+    Car *targetCar; /* 0xc */
+    SCR_f spawnX; /* 0x10 */
+    SCR_f spawnY; /* 0x14 */
+    SCR_f spawnZ; /* 0x18 */
+    Car *truck; /* 0x1c */
+    Ped *driver; /* 0x20 */
+    ushort timer; /* 0x24 */
+    uint8_t _gap_0x26[0x2];
 };
 
 // /FireEngineManager  size 0x54
 struct FireEngineManager {
     FireEngineSlot slots[2]; /* 0x0 */
-    ushort unk50; /* 0x50 */
+    ushort nextSerial; /* 0x50 */
     uint8_t _gap_0x52[0x2];
 };
 
@@ -2648,6 +2686,45 @@ struct _s_HandlerType {
     void *addressOfHandler; /* 0xc */
 };
 
+// /HudBigLabel  size 0x1c8
+struct HudBigLabel {
+    byte timer; /* 0x0 */
+    byte pad1; /* 0x1 */
+    wchar_t srcText[100]; /* 0x2 */
+    wchar_t wrappedText[121]; /* 0xca */
+    int x; /* 0x1bc */
+    int y; /* 0x1c0 */
+    int priority; /* 0x1c4 */
+};
+
+// /HudBriefNode  size 0x18
+struct HudBriefNode {
+    char key[8]; /* 0x0 */
+    int priority; /* 0x8 */
+    void *next; /* 0xc */
+    byte started; /* 0x10 */
+    byte pad11[3]; /* 0x11 */
+    int arg; /* 0x14 */
+};
+
+// /HudBriefQueue  size 0x704
+struct HudBriefQueue {
+    wchar_t text[640]; /* 0x0 */
+    ushort guard; /* 0x500 */
+    byte iconType; /* 0x502 */
+    byte pad503; /* 0x503 */
+    short timer; /* 0x504 */
+    short pad506; /* 0x506 */
+    int lineCount; /* 0x508 */
+    int field_50c; /* 0x50c */
+    int textLen; /* 0x510 */
+    int phase; /* 0x514 */
+    HudBriefNode pool[20]; /* 0x518 */
+    HudBriefNode *head; /* 0x6f8 */
+    HudBriefNode *freeList; /* 0x6fc */
+    HudBriefNode *pending; /* 0x700 */
+};
+
 // /IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct  size 0x8
 struct IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct {
     dword OffsetToDirectory; /* 0x0 */
@@ -2669,6 +2746,21 @@ struct KanjiFont {
     byte marker24; /* 0x24 */
     byte marker25; /* 0x25 */
     uint8_t _gap_0x26[0x2];
+};
+
+// /MapZoneInfo  size 0x16
+struct MapZoneInfo {
+    ushort carDensity; /* 0x0 */
+    ushort goodCarRatio; /* 0x2 */
+    ushort badCarRatio; /* 0x4 */
+    ushort policeCarRatio; /* 0x6 */
+    ushort gangCarRatio; /* 0x8 */
+    ushort pedDensity; /* 0xa */
+    ushort muggerRatio; /* 0xc */
+    ushort carThiefRatio; /* 0xe */
+    ushort elvisRatio; /* 0x10 */
+    ushort gangPedRatio; /* 0x12 */
+    ushort policePedRatio; /* 0x14 */
 };
 
 // /MissionCleanupEntry  size 0xc
@@ -3737,10 +3829,10 @@ struct Ped {
 
 // /_ped/PedManager_S25  size 0x203ac
 struct PedManager_S25 {
-    Ped *firstPedInArray; /* 0x0 */
-    Ped *lastPedInArray; /* 0x4 */
+    Ped *freeListHead; /* 0x0 */
+    Ped *activeListHead; /* 0x4 */
     Ped peds[200]; /* 0x8 Created by retype action */
-    short pedsInUse_; /* 0x203a8 */
+    short activeCountLastTick; /* 0x203a8 */
     uint8_t _gap_0x203aa[0x2];
 };
 
@@ -3850,13 +3942,13 @@ struct CrimeEventQueue {
 // /auto_structs/DummyPedManager  size 0xc
 struct DummyPedManager {
     short targetCount; /* 0x0 */
-    byte dummyChars; /* 0x2 */
-    byte field2_0x3; /* 0x3 */
-    byte field3_0x4; /* 0x4 */
-    byte field4_0x5; /* 0x5 */
-    byte field5_0x6; /* 0x6 */
-    byte field6_0x7; /* 0x7 */
-    Position *position; /* 0x8 */
+    byte ambientPeds; /* 0x2 */
+    byte activePeds; /* 0x3 */
+    byte missionPeds; /* 0x4 */
+    byte emergencyPeds; /* 0x5 */
+    byte onScreenPeds; /* 0x6 */
+    byte makeAllCharsMuggers; /* 0x7 */
+    Position *spawnProbe; /* 0x8 */
 };
 
 // /auto_structs/FrameTimingStats  size 0x54
@@ -3879,35 +3971,33 @@ struct GangRespect {
     bool_ present; /* 0x0 */
     char id; /* 0x1 */
     char gangName[10]; /* 0x2 */
-    uint8_t _gap_0xc[0xf8];
-    undefined4 field251_0x104; /* 0x104 */
-    undefined4 field252_0x108; /* 0x108 */
-    undefined4 field253_0x10c; /* 0x10c */
-    uint8_t _gap_0x110[0xc];
-    int respect; /* 0x11c */
-    undefined2 field267_0x120; /* 0x120 */
-    uint8_t _gap_0x122[0x16];
-    byte spritesOffset; /* 0x138 */
-    bool_ shouldDraw; /* 0x139 */
+    uint8_t _gap_0xc[0xf5];
+    byte pedRemap; /* 0x101 */
+    uint8_t _gap_0x102[0x2];
+    int basicWeapon; /* 0x104 */
+    int angryWeapon; /* 0x108 */
+    int hateWeapon; /* 0x10c */
+    byte highRespectFlag; /* 0x110 */
+    byte killAffectsRespect; /* 0x111 */
+    byte hostileToGang[10]; /* 0x112 */
+    char respect[4]; /* 0x11c */
+    undefined2 field258_0x120; /* 0x120 */
+    char killReaction[10]; /* 0x122 */
+    int arrowTargetX; /* 0x12c */
+    int arrowTargetY; /* 0x130 */
+    int arrowTargetZ; /* 0x134 */
+    byte arrowColour; /* 0x138 */
+    bool_ hasRespectMeter; /* 0x139 */
     uint8_t _gap_0x13a[0x2];
-    undefined4 field294_0x13c; /* 0x13c */
-    uint8_t _gap_0x140[0x4];
+    int carModel; /* 0x13c */
+    byte carRemap; /* 0x140 */
+    byte weaponsLocked; /* 0x141 */
+    uint8_t _gap_0x142[0x2];
 };
 
 // /auto_structs/GangRespectContainer  size 0xca8
 struct GangRespectContainer {
     GangRespect gang[10]; /* 0x0 */
-};
-
-// /imported/seuko-mod/S10_TxtMessage  size 0x704
-struct S10_TxtMessage {
-    WCHAR message[640]; /* 0x0 */
-    uint8_t _gap_0x500[0x24];
-    int *field_0x524; /* 0x524 */
-    uint8_t _gap_0x528[0x1d0];
-    S10_TxtMessage *prev; /* 0x6f8 */
-    int field_0x6fc; /* 0x6fc */
-    char *messageCode; /* 0x700 */
 };
 
 // /auto_structs/HudManager  size 0x2af8
@@ -3917,7 +4007,7 @@ struct HudManager {
     uint8_t _gap_0x2f[0x1d];
     void *field76_0x4c; /* 0x4c */
     uint8_t _gap_0x50[0x94];
-    S10_TxtMessage txtMessage; /* 0xe4 */
+    HudBriefQueue briefQueue; /* 0xe4 */
     uint8_t _gap_0x7e8[0x1f78];
     void *field8282_0x2760; /* 0x2760 */
     uint8_t _gap_0x2764[0x51];
@@ -3980,8 +4070,7 @@ struct LocaleSettings {
     LocaleSingle *keys; /* 0x0 */
     int keyCount; /* 0x4 Created by retype action */
     wchar_t *text; /* 0x8 */
-    ushort textLength; /* 0xc */
-    uint8_t _gap_0xe[0x2];
+    uint textLength; /* 0xc */
     char language; /* 0x10 Created by retype action */
 };
 
@@ -4819,10 +4908,10 @@ struct PedSprite {
 
 // /imported/gzf-2021/PedsManager  size 0x203ac
 struct PedsManager {
-    Ped *firstPed; /* 0x0 */
-    undefined4 _lastPed; /* 0x4 */
+    Ped *freeListHead; /* 0x0 */
+    Ped *activeListHead; /* 0x4 */
     Ped peds[200]; /* 0x8 */
-    undefined2 _length; /* 0x203a8 */
+    short activeCountLastTick; /* 0x203a8 */
     uint8_t _gap_0x203aa[0x1];
     undefined1 field_0x203ab; /* 0x203ab */
 };
@@ -5483,6 +5572,17 @@ struct PhysicalPalette {
 struct RoofSpritesHolder {
     CarAttachment *last; /* 0x0 */
     CarAttachment arr[300]; /* 0x4 */
+};
+
+// /imported/seuko-mod/S10_TxtMessage  size 0x704
+struct S10_TxtMessage {
+    WCHAR message[640]; /* 0x0 */
+    uint8_t _gap_0x500[0x24];
+    int *field_0x524; /* 0x524 */
+    uint8_t _gap_0x528[0x1d0];
+    S10_TxtMessage *prev; /* 0x6f8 */
+    int field_0x6fc; /* 0x6fc */
+    char *messageCode; /* 0x700 */
 };
 
 // /imported/seuko-mod/S21  size 0x59aa3

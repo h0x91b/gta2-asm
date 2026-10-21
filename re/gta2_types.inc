@@ -16,7 +16,21 @@ endstruc
 
 ; /AmbulanceSlot  (32 bytes)
 struc AmbulanceSlot
-    .raw                              resb 32     ; 0x0 byte[32]
+    .spawnTileX                       resb 1      ; 0x0 byte
+    .spawnTileY                       resb 1      ; 0x1 byte
+    .spawnTileZ                       resb 1      ; 0x2 byte
+    resb 1
+    .vehicle                          resb 4      ; 0x4 EmergencyVehicleSlot *
+    .driverTargetPed                  resb 4      ; 0x8 Ped *
+    .passengerTargetPed               resb 4      ; 0xc Ped *
+    .pedQueue                         resb 4      ; 0x10 int
+    .queuedCount                      resb 1      ; 0x14 byte
+    resb 1
+    .unk16                            resb 2      ; 0x16 short
+    .state                            resb 4      ; 0x18 int
+    .idle                             resb 1      ; 0x1c byte
+    .reviveTicks                      resb 1      ; 0x1d byte
+    resb 2
 endstruc
 
 ; /C1  (9336 bytes)
@@ -221,25 +235,38 @@ struc EmergencyVehicleSlot
     .spawnY                           resb 4      ; 0x10 SCR_f
     .spawnZ                           resb 4      ; 0x14 SCR_f
     .timer                            resb 2      ; 0x18 short
-    .unk1a                            resb 4      ; 0x1a byte[4]
+    .offscreenLimit                   resb 2      ; 0x1a short
+    .spawnWaitTicks                   resb 2      ; 0x1c short
     .inUse                            resb 1      ; 0x1e byte
     .unk1f                            resb 1      ; 0x1f byte[1]
     .crewType                         resb 4      ; 0x20 EMERGENCY_CREW_TYPE
-    .state24                          resb 4      ; 0x24 int
-    .state28                          resb 4      ; 0x28 int
-    .unk2c                            resb 4      ; 0x2c byte[4]
+    .crewStatus                       resb 4      ; 0x24 int
+    .stage                            resb 4      ; 0x28 int
+    .stageDone                        resb 1      ; 0x2c byte
+    resb 3
 endstruc
 
 ; /FireEngineManager  (84 bytes)
 struc FireEngineManager
     .slots                            resb 80     ; 0x0 FireEngineSlot[2]
-    .unk50                            resb 2      ; 0x50 ushort
+    .nextSerial                       resb 2      ; 0x50 ushort
     resb 2
 endstruc
 
 ; /FireEngineSlot  (40 bytes)
 struc FireEngineSlot
-    .raw                              resb 40     ; 0x0 byte[40]
+    .serial                           resb 2      ; 0x0 ushort
+    resb 2
+    .active                           resb 4      ; 0x4 int
+    .state                            resb 4      ; 0x8 int
+    .targetCar                        resb 4      ; 0xc Car *
+    .spawnX                           resb 4      ; 0x10 SCR_f
+    .spawnY                           resb 4      ; 0x14 SCR_f
+    .spawnZ                           resb 4      ; 0x18 SCR_f
+    .truck                            resb 4      ; 0x1c Car *
+    .driver                           resb 4      ; 0x20 Ped *
+    .timer                            resb 2      ; 0x24 ushort
+    resb 2
 endstruc
 
 ; /FloatingScore  (80 bytes)
@@ -312,6 +339,45 @@ HUD_DIGIT_SPRITE.HUD_DIGITS_LIVES equ 115
 HUD_DIGIT_SPRITE.HUD_DIGITS_MULTIPLIER equ 116
 HUD_DIGIT_SPRITE.HUD_DIGITS_MONEY equ 158
 
+; /HudBigLabel  (456 bytes)
+struc HudBigLabel
+    .timer                            resb 1      ; 0x0 byte
+    .pad1                             resb 1      ; 0x1 byte
+    .srcText                          resb 200    ; 0x2 wchar_t[100]
+    .wrappedText                      resb 242    ; 0xca wchar_t[121]
+    .x                                resb 4      ; 0x1bc int
+    .y                                resb 4      ; 0x1c0 int
+    .priority                         resb 4      ; 0x1c4 int
+endstruc
+
+; /HudBriefNode  (24 bytes)
+struc HudBriefNode
+    .key                              resb 8      ; 0x0 char[8]
+    .priority                         resb 4      ; 0x8 int
+    .next                             resb 4      ; 0xc void *
+    .started                          resb 1      ; 0x10 byte
+    .pad11                            resb 3      ; 0x11 byte[3]
+    .arg                              resb 4      ; 0x14 int
+endstruc
+
+; /HudBriefQueue  (1796 bytes)
+struc HudBriefQueue
+    .text                             resb 1280   ; 0x0 wchar_t[640]
+    .guard                            resb 2      ; 0x500 ushort
+    .iconType                         resb 1      ; 0x502 byte
+    .pad503                           resb 1      ; 0x503 byte
+    .timer                            resb 2      ; 0x504 short
+    .pad506                           resb 2      ; 0x506 short
+    .lineCount                        resb 4      ; 0x508 int
+    .field_50c                        resb 4      ; 0x50c int
+    .textLen                          resb 4      ; 0x510 int
+    .phase                            resb 4      ; 0x514 int
+    .pool                             resb 480    ; 0x518 HudBriefNode[20]
+    .head                             resb 4      ; 0x6f8 HudBriefNode *
+    .freeList                         resb 4      ; 0x6fc HudBriefNode *
+    .pending                          resb 4      ; 0x700 HudBriefNode *
+endstruc
+
 ; /IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct  (8 bytes)
 struc IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct
     .OffsetToDirectory                resb 4      ; 0x0 dword
@@ -332,6 +398,21 @@ struc KanjiFont
     .marker24                         resb 1      ; 0x24 byte
     .marker25                         resb 1      ; 0x25 byte
     resb 2
+endstruc
+
+; /MapZoneInfo  (22 bytes)
+struc MapZoneInfo
+    .carDensity                       resb 2      ; 0x0 ushort
+    .goodCarRatio                     resb 2      ; 0x2 ushort
+    .badCarRatio                      resb 2      ; 0x4 ushort
+    .policeCarRatio                   resb 2      ; 0x6 ushort
+    .gangCarRatio                     resb 2      ; 0x8 ushort
+    .pedDensity                       resb 2      ; 0xa ushort
+    .muggerRatio                      resb 2      ; 0xc ushort
+    .carThiefRatio                    resb 2      ; 0xe ushort
+    .elvisRatio                       resb 2      ; 0x10 ushort
+    .gangPedRatio                     resb 2      ; 0x12 ushort
+    .policePedRatio                   resb 2      ; 0x14 ushort
 endstruc
 
 ; /MissionCleanupEntry  (12 bytes)
@@ -686,6 +767,10 @@ struc WeaponManager
     .weaponCount                      resb 2      ; 0x4 short
     resb 2
 endstruc
+
+; enum /ZZ_SLICE4_TEST  (4 bytes)
+ZZ_SLICE4_TEST.ZZ_C equ 1
+ZZ_SLICE4_TEST.ZZ_B equ 2
 
 ; /_STY/AllCarsInfo  (1028 bytes)
 struc AllCarsInfo
@@ -1803,10 +1888,10 @@ endstruc
 
 ; /_ped/PedManager_S25  (132012 bytes)
 struc PedManager_S25
-    .firstPedInArray                  resb 4      ; 0x0 Ped *
-    .lastPedInArray                   resb 4      ; 0x4 Ped *
+    .freeListHead                     resb 4      ; 0x0 Ped *
+    .activeListHead                   resb 4      ; 0x4 Ped *
     .peds                             resb 132000 ; 0x8 Ped[200]
-    .pedsInUse_                       resb 2      ; 0x203a8 short
+    .activeCountLastTick              resb 2      ; 0x203a8 short
     resb 2
 endstruc
 
@@ -2205,13 +2290,13 @@ endstruc
 ; /auto_structs/DummyPedManager  (12 bytes)
 struc DummyPedManager
     .targetCount                      resb 2      ; 0x0 short
-    .dummyChars                       resb 1      ; 0x2 byte
-    .field2_0x3                       resb 1      ; 0x3 byte
-    .field3_0x4                       resb 1      ; 0x4 byte
-    .field4_0x5                       resb 1      ; 0x5 byte
-    .field5_0x6                       resb 1      ; 0x6 byte
-    .field6_0x7                       resb 1      ; 0x7 byte
-    .position                         resb 4      ; 0x8 Position *
+    .ambientPeds                      resb 1      ; 0x2 byte
+    .activePeds                       resb 1      ; 0x3 byte
+    .missionPeds                      resb 1      ; 0x4 byte
+    .emergencyPeds                    resb 1      ; 0x5 byte
+    .onScreenPeds                     resb 1      ; 0x6 byte
+    .makeAllCharsMuggers              resb 1      ; 0x7 byte
+    .spawnProbe                       resb 4      ; 0x8 Position *
 endstruc
 
 ; /auto_structs/FrameTimingStats  (84 bytes)
@@ -2234,19 +2319,28 @@ struc GangRespect
     .present                          resb 1      ; 0x0 bool
     .id                               resb 1      ; 0x1 char
     .gangName                         resb 10     ; 0x2 char[10]
-    resb 248
-    .field251_0x104                   resb 4      ; 0x104 undefined4
-    .field252_0x108                   resb 4      ; 0x108 undefined4
-    .field253_0x10c                   resb 4      ; 0x10c undefined4
-    resb 12
-    .respect                          resb 4      ; 0x11c int
-    .field267_0x120                   resb 2      ; 0x120 undefined2
-    resb 22
-    .spritesOffset                    resb 1      ; 0x138 byte
-    .shouldDraw                       resb 1      ; 0x139 bool
+    resb 245
+    .pedRemap                         resb 1      ; 0x101 byte
     resb 2
-    .field294_0x13c                   resb 4      ; 0x13c undefined4
-    resb 4
+    .basicWeapon                      resb 4      ; 0x104 int
+    .angryWeapon                      resb 4      ; 0x108 int
+    .hateWeapon                       resb 4      ; 0x10c int
+    .highRespectFlag                  resb 1      ; 0x110 byte
+    .killAffectsRespect               resb 1      ; 0x111 byte
+    .hostileToGang                    resb 10     ; 0x112 byte[10]
+    .respect                          resb 4      ; 0x11c char[4]
+    .field258_0x120                   resb 2      ; 0x120 undefined2
+    .killReaction                     resb 10     ; 0x122 char[10]
+    .arrowTargetX                     resb 4      ; 0x12c int
+    .arrowTargetY                     resb 4      ; 0x130 int
+    .arrowTargetZ                     resb 4      ; 0x134 int
+    .arrowColour                      resb 1      ; 0x138 byte
+    .hasRespectMeter                  resb 1      ; 0x139 bool
+    resb 2
+    .carModel                         resb 4      ; 0x13c int
+    .carRemap                         resb 1      ; 0x140 byte
+    .weaponsLocked                    resb 1      ; 0x141 byte
+    resb 2
 endstruc
 
 ; /auto_structs/GangRespectContainer  (3240 bytes)
@@ -2261,7 +2355,7 @@ struc HudManager
     resb 29
     .field76_0x4c                     resb 4      ; 0x4c void *
     resb 148
-    .txtMessage                       resb 1796   ; 0xe4 S10_TxtMessage
+    .briefQueue                       resb 1796   ; 0xe4 HudBriefQueue
     resb 8056
     .field8282_0x2760                 resb 4      ; 0x2760 void *
     resb 81
@@ -2297,8 +2391,7 @@ struc LocaleSettings
     .keys                             resb 4      ; 0x0 LocaleSingle *
     .keyCount                         resb 4      ; 0x4 int
     .text                             resb 4      ; 0x8 wchar_t *
-    .textLength                       resb 2      ; 0xc ushort
-    resb 2
+    .textLength                       resb 4      ; 0xc uint
     .language                         resb 1      ; 0x10 char
 endstruc
 
@@ -3263,10 +3356,10 @@ endstruc
 
 ; /imported/gzf-2021/PedsManager  (132012 bytes)
 struc PedsManager
-    .firstPed                         resb 4      ; 0x0 Ped *
-    ._lastPed                         resb 4      ; 0x4 undefined4
+    .freeListHead                     resb 4      ; 0x0 Ped *
+    .activeListHead                   resb 4      ; 0x4 Ped *
     .peds                             resb 132000 ; 0x8 Ped[200]
-    ._length                          resb 2      ; 0x203a8 undefined2
+    .activeCountLastTick              resb 2      ; 0x203a8 short
     resb 1
     .field_0x203ab                    resb 1      ; 0x203ab undefined1
 endstruc
