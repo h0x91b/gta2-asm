@@ -70,8 +70,8 @@ and ends the game with GXT 'g_over'. Confidence: medium-high."
 0x00461de0,plate,InitGame,MainMenu
 0x00464a40,plate,MapBlocks_Ctor,"Map block store singleton (GMP data), looked up by (x,y,z). Created by ConstructGame; loaded in LoadGMP_and_STY_Files; freed in Game_Dtor via MapBlocks_Dtor."
 0x00472640,plate,ResetRandomSeedTo1,Resets the game RNG seed (random_seed) to 1 via Crt_Srand. Called first in ConstructGame so every session starts deterministic.
-0x004760ad,pre,loadSubScripts,wil_tra.mis
-0x004760b9,pre,loadSubScripts,"replase ""mis"" to ""SCR"""
+0x004760ad,pre,MissionScript_LoadSubScripts,wil_tra.mis
+0x004760b9,pre,MissionScript_LoadSubScripts,"replase ""mis"" to ""SCR"""
 0x0047a914,pre,FUN_0047a860,save goes here
 0x00481960,plate,MissionScript_Ctor,"Mission script engine ctor (miss2.cpp). Zeroes script/string/base-pointer buffers, allocates S16 missions (2284 B) and S17_mission (0x25c B) if absent, opens test\MISS_LOG.TXT if do_miss_logging. Object ~794 KB."
 0x00482050,plate,MultiplayerTag_Reset,"Reset of the multiplayer Tag-mode state (global 0x665704, multip.cpp): zeroes it-player SaveSlot* (+0),
@@ -85,10 +85,10 @@ Evidence: FUN_004821c0/4820d0 ('yourit' label), death -> FUN_004822a0. Confidenc
 0x0048a880,plate,ParticleStatePool20_Ctor,"Pool of 20 slots x 0x30 B + 20 in-use flags at +0x3C0. Slot ctor ParticleState_Ctor (id byte +4, serial +6). Companion of the 40-slot pool g_ParticleStatePool40. Name is a hypothesis (medium-low)."
 0x00491b90,plate,ParticleManager_Ctor,"Particle manager ctor (8 B, particle.cpp). Zeroes two object pointers [0],[1] and lazily creates the particle pool DAT_00669e70 (0x947c B, ctor 0x48F1E0). [0]/[1] are cached game objects used by the car-explosion particle FUN_00490130 (medium)."
 0x00491da0,plate,PedPatrolRoutePool_Ctor,"PedPatrolRoutePool ctor (0x1D7E): 50 route buffers of 0x96 B (up to 50 xyz byte waypoints, 0-terminated) + 50 in-use flags at +0x1d4c. Allocated by PedSetObjective for PED_OBJECTIVE_PATROL_ON_FOOT; nothing frees slots."
-0x004a49c0,plate,KeyUp,KeyDown
+0x004a49c0,plate,Player_OnKeyUp,KeyDown
 0x004af780,plate,PublicTransportManager_Ctor,"PublicTransportManager ctor. 100 x 0x34 stop/track entries at +0, 10 x 0x58 train/bus actors at +0x1450, one extra 0x58 actor at +0x17C0. Loaded from map by relToTrainsAndBuses (trak0..4); updated by PublicTransportManager_Update (honours skip_trains/skip_buses)."
 0x004b2f20,plate,SoundManager_InitOnce,"One-shot (unknown_used_with_s6 guard) SoundManager init: clears 5 channel slots, queues sound 1, creates the stream at +0x5508. Hypothesis name."
-0x004b7662,eol,ChangeMoney2,current money
+0x004b7662,eol,PlayerScore_AddMoney,current money
 0x004b9490,plate,FloatingScoreManager_Ctor,"FloatingScoreManager: floating money popups on kills/rewards. Created only when the exploding_on debug flag is 0. 3 popups x 0x50 with free/active lists. Spawn 0x4b91f0, Update 0x4b9260 (GameTick), Draw 0x4b98b0 (eachFrame)."
 0x004b9960,plate,OwnerSlotTable_Ctor,"Owner slot table, 255 x 8 bytes: [+0 ped id][+4 refcount byte]. A ped gets a 1..254 slot (ped+0x267) via OwnerSlotTable_AllocSlot; projectiles/objects keep it at obj+0x26 so damage is credited to the shooter (OwnerSlotTable_GetPedId)."
 0x004be5b0,plate,SpriteManager_Ctor,"Sprite manager root (sprite.cpp 0xca7-0xcae). Creates PositionsArray_S21, S22, S23 and the 0x1c24-B object at 0x6702bc. Object itself: {field0 = sprites drawn this frame, inc = Position id generator}. Name: medium."

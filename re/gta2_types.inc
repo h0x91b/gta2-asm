@@ -104,11 +104,41 @@ struc CarModelTable
     .engineDataBlock                  resb 4      ; 0x804 CarEngineData *
 endstruc
 
+; /ChatInput  (168 bytes)
+struc ChatInput
+    .isOpen                           resb 1      ; 0x0 byte
+    resb 1
+    .text                             resb 160    ; 0x2 wchar_t[80]
+    resb 2
+    .length                           resb 4      ; 0xa4 int
+endstruc
+
 ; /CollisionManager  (12 bytes)
 struc CollisionManager
     .visitCount                       resb 4      ; 0x0 int
     .queryStamp                       resb 4      ; 0x4 int
     .movingCheckActive                resb 4      ; 0x8 int
+endstruc
+
+; /ComboEntry  (44 bytes)
+struc ComboEntry
+    resb 28
+    .unsure_duration                  resb 4      ; 0x1c uint
+    .unsure_startFrame                resb 4      ; 0x20 int
+    resb 1
+    .targetCount                      resb 1      ; 0x25 byte
+    .count                            resb 1      ; 0x26 byte
+    resb 1
+    .reward                           resb 2      ; 0x28 ushort
+    .unsure_flag2A                    resb 1      ; 0x2a byte
+    .isActive                         resb 1      ; 0x2b byte
+endstruc
+
+; /ComboList  (448 bytes)
+struc ComboList
+    .entries                          resb 440    ; 0x0 ComboEntry[10]
+    .owner                            resb 4      ; 0x1b8 PlayerScore *
+    .lastFrame                        resb 4      ; 0x1bc int
 endstruc
 
 ; /Crane  (348 bytes)
@@ -120,6 +150,15 @@ endstruc
 struc CraneManager
     .cranes                           resb 3480   ; 0x0 Crane[10]
     .count                            resb 4      ; 0xd98 int
+endstruc
+
+; /CrimeStats  (60 bytes)
+struc CrimeStats
+    .crimeCount                       resb 40     ; 0x0 int[10]
+    .oneShotFlag                      resb 10     ; 0x28 byte[10]
+    resb 2
+    .unsure_totalEarned               resb 4      ; 0x34 int
+    .unsure_wantedStarSeconds         resb 4      ; 0x38 int
 endstruc
 
 ; /Crusher  (48 bytes)
@@ -244,6 +283,11 @@ struc GeneratorManager
     .sliceSize                        resb 1      ; 0x14a8 byte
     .pad                              resb 3      ; 0x14a9 byte[3]
 endstruc
+
+; enum /HUD_DIGIT_SPRITE  (2 bytes)
+HUD_DIGIT_SPRITE.HUD_DIGITS_LIVES equ 115
+HUD_DIGIT_SPRITE.HUD_DIGITS_MULTIPLIER equ 116
+HUD_DIGIT_SPRITE.HUD_DIGITS_MONEY equ 158
 
 ; /IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct  (8 bytes)
 struc IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct
@@ -379,6 +423,36 @@ endstruc
 struc PedPatrolRoutePool
     .routes                           resb 7500   ; 0x0 PatrolRoute[50]
     .inUse                            resb 50     ; 0x1d4c byte[50]
+endstruc
+
+; /PlayerScore  (876 bytes)
+struc PlayerScore
+    .money                            resb 56     ; 0x0 AnimatedValue
+    .frags                            resb 56     ; 0x38 AnimatedValue
+    .lastCarEventFrame                resb 4      ; 0x70 int
+    .carComboMult                     resb 1      ; 0x74 byte
+    .pedKillComboMult                 resb 1      ; 0x75 byte
+    resb 2
+    .lastPedKillFrame                 resb 4      ; 0x78 int
+    .pedKillStreak                    resb 2      ; 0x7c short
+    resb 2
+    .lastElvisKillFrame               resb 4      ; 0x80 int
+    .elvisKillStreak                  resb 2      ; 0x84 short
+    .pedKillTotal                     resb 2      ; 0x86 short
+    .unsure_copCarKills               resb 2      ; 0x88 short
+    .carjackCount                     resb 2      ; 0x8a short
+    .carModelFlags                    resb 256    ; 0x8c byte[256]
+    .msAccum                          resb 4      ; 0x18c int
+    .airtimeMs                        resb 4      ; 0x190 int
+    resb 4
+    .accuracyCount                    resb 1      ; 0x198 byte
+    resb 3
+    .reverseDrivingMs                 resb 4      ; 0x19c uint
+    .lastEmergencyVehicleFrame        resb 4      ; 0x1a0 int
+    .emergencyDestroyedMask           resb 1      ; 0x1a4 byte
+    resb 3
+    .comboList                        resb 448    ; 0x1a8 ComboList
+    .owner                            resb 4      ; 0x368 Player *
 endstruc
 
 ; /PublicTransportManager  (6172 bytes)
@@ -1155,6 +1229,29 @@ VOCAL.TASTE_MY_WRATH__ICE_CREAM_BOY_ equ 60
 VOCAL.HALLELUJAH__ANOTHER_SOUL_SAVED_ equ 61
 VOCAL.DAMNATION__NO_DONATION__NO_SALVATION_ equ 62
 
+; /_game/AnimatedValue  (56 bytes)
+struc AnimatedValue
+    .value                            resb 4      ; 0x0 int
+    .shownValue                       resb 4      ; 0x4 int
+    .countingUp                       resb 1      ; 0x8 byte
+    resb 7
+    .accuracyCount                    resb 1      ; 0x10 byte
+    resb 3
+    .reverseCount                     resb 4      ; 0x14 int
+    resb 8
+    .ptrToSaveSlot                    resb 4      ; 0x20 Player *
+    resb 3
+    .digitWidth                       resb 1      ; 0x27 byte
+    .digitHeight                      resb 1      ; 0x28 byte
+    resb 1
+    .maxDigits                        resb 2      ; 0x2a ushort
+    .scrollSpeed                      resb 2      ; 0x2c ushort
+    .firstAnimatedDigit               resb 2      ; 0x2e ushort
+    .max                              resb 4      ; 0x30 int
+    .textureHandle                    resb 2      ; 0x34 short
+    .spriteId                         resb 2      ; 0x36 HUD_DIGIT_SPRITE
+endstruc
+
 ; /_game/FrontEnd  (125760 bytes)
 struc FrontEnd
     resb 8
@@ -1238,21 +1335,21 @@ endstruc
 ; /_game/Game  (64 bytes)
 struc Game
     .gameStatus                       resb 4      ; 0x0 GAME_STATUS
-    .saveSlotArr                      resb 24     ; 0x4 SaveSlot *[6]
-    .field2_0x1c                      resb 4      ; 0x1c void *
+    .players                          resb 24     ; 0x4 Player *[6]
+    .localPlayer                      resb 4      ; 0x1c Player *
     .field3_0x20                      resb 1      ; 0x20 byte
     .field4_0x21                      resb 1      ; 0x21 byte
     .field5_0x22                      resb 1      ; 0x22 byte
-    .length                           resb 1      ; 0x23 byte
-    .slotIndex                        resb 1      ; 0x24 char
+    .playerCount                      resb 1      ; 0x23 byte
+    .localPlayerIndex                 resb 1      ; 0x24 char
     resb 3
     .field11_0x28                     resb 4      ; 0x28 int
     .relatedToQuitGame                resb 4      ; 0x2c int
     .compensationFPSTime              resb 1      ; 0x30 byte
     resb 3
     .relToSkipPoliceEnum              resb 4      ; 0x34 int
-    .CurrentSaveSlot                  resb 4      ; 0x38 SaveSlot *
-    .skip_police                      resb 1      ; 0x3c bool
+    .currentPlayer                    resb 4      ; 0x38 Player *
+    .savedSkipPolice                  resb 1      ; 0x3c bool
     resb 3
 endstruc
 
@@ -1294,147 +1391,107 @@ struc Menu
     .unk1                             resb 4      ; 0x574 int
 endstruc
 
-; /_game/SaveSlot  (2140 bytes)
-struc SaveSlot
-    .f0                               resb 1      ; 0x0 byte
+; /_game/Player  (2140 bytes)
+struc Player
+    .isLocal                          resb 1      ; 0x0 byte
     resb 3
-    .keyboardKeys                     resb 4      ; 0x4 int
-    .field5_0x8                       resb 2      ; 0x8 short
-    .field6_0xa                       resb 2      ; 0xa short
-    .field7_0xc                       resb 4      ; 0xc int
-    .playerPed3                       resb 4      ; 0x10 Ped *
-    .field9_0x14                      resb 2      ; 0x14 short
-    .field10_0x16                     resb 2      ; 0x16 short
-    .field11_0x18                     resb 2      ; 0x18 short
-    resb 14
-    .unknown2                         resb 1      ; 0x28 byte
-    .field27_0x29                     resb 1      ; 0x29 byte
-    .field28_0x2a                     resb 2      ; 0x2a short
-    .field29_0x2c                     resb 2      ; 0x2c short
-    .field30_0x2e                     resb 1      ; 0x2e byte
-    .field31_0x2f                     resb 1      ; 0x2f byte
-    .field32_0x30                     resb 1      ; 0x30 byte
-    .field33_0x31                     resb 1      ; 0x31 byte
+    .inputWord                        resb 4      ; 0x4 uint
+    .turnRate                         resb 2      ; 0x8 short
+    .unsure_turnStep                  resb 2      ; 0xa short
+    .moveSpeed                        resb 4      ; 0xc SCR_f
+    .unused_0x10                      resb 4      ; 0x10 SCR_f
+    .savedPedWeapon                   resb 2      ; 0x14 short
+    .savedCarWeapon                   resb 2      ; 0x16 short
+    .kfSavedWeapon                    resb 2      ; 0x18 short
+    .kfSavedAmmo                      resb 2      ; 0x1a short
+    .kfWeapon                         resb 4      ; 0x1c CAR_WEAPON_INDEX
+    .kfCar                            resb 4      ; 0x20 Car *
+    .kfCarId                          resb 4      ; 0x24 int
+    .isDeadOrBusted                   resb 1      ; 0x28 byte
+    .auxPedDying                      resb 1      ; 0x29 byte
+    .unused_0x2a                      resb 2      ; 0x2a short
+    .deathCountdown                   resb 2      ; 0x2c short
+    .playerIndex                      resb 1      ; 0x2e byte
+    .controlsDisabled                 resb 1      ; 0x2f byte
+    .enterExitDisabled                resb 1      ; 0x30 byte
+    .weaponSelectLocked               resb 1      ; 0x31 byte
     resb 2
-    .field36_0x34                     resb 4      ; 0x34 int
-    .field37_0x38                     resb 4      ; 0x38 int
-    .field38_0x3c                     resb 4      ; 0x3c int
-    resb 4
+    .gangZone                         resb 4      ; 0x34 void *
+    .localNavZone                     resb 4      ; 0x38 void *
+    .navZone                          resb 4      ; 0x3c void *
+    .arrowBlockerZone                 resb 4      ; 0x40 void *
     .deathReason                      resb 4      ; 0x44 DEATH_REASON
-    .field44_0x48                     resb 1      ; 0x48 byte
+    .dbgCamFollowPlayer               resb 1      ; 0x48 byte
     resb 3
-    .field48_0x4c                     resb 4      ; 0x4c int
-    .field49_0x50                     resb 4      ; 0x50 void *
-    .field50_0x54                     resb 4      ; 0x54 int
-    .field51_0x58                     resb 4      ; 0x58 int
-    .field52_0x5c                     resb 4      ; 0x5c int
-    .field53_0x60                     resb 4      ; 0x60 int
-    .field54_0x64                     resb 1      ; 0x64 byte
+    .soundListener                    resb 4      ; 0x4c void *
+    .unsure_throwCharge               resb 4      ; 0x50 int
+    .lastCarOldest                    resb 4      ; 0x54 Car *
+    .lastCarMiddle                    resb 4      ; 0x58 Car *
+    .lastCarNewest                    resb 4      ; 0x5c Car *
+    .scoreTargetReached               resb 4      ; 0x60 int
+    .unsure_turnProfile               resb 1      ; 0x64 byte
     resb 3
-    .someState                        resb 4      ; 0x68 int
-    .field59_0x6c                     resb 4      ; 0x6c int
-    .field60_0x70                     resb 1      ; 0x70 byte
-    .field61_0x71                     resb 1      ; 0x71 byte
-    .field62_0x72                     resb 1      ; 0x72 byte
-    .field63_0x73                     resb 1      ; 0x73 byte
-    .field64_0x74                     resb 1      ; 0x74 byte
-    .field65_0x75                     resb 1      ; 0x75 byte
-    .debugKey1                        resb 1      ; 0x76 byte
-    .debugKey2                        resb 1      ; 0x77 byte
-    .field68_0x78                     resb 1      ; 0x78 bool
-    .field69_0x79                     resb 1      ; 0x79 bool
-    .field70_0x7a                     resb 1      ; 0x7a bool
-    .field71_0x7b                     resb 1      ; 0x7b bool
-    .excutin                          resb 2      ; 0x7c short
-    .field73_0x7e                     resb 1      ; 0x7e bool
-    .field74_0x7f                     resb 1      ; 0x7f bool
-    .field75_0x80                     resb 1      ; 0x80 bool
-    .field76_0x81                     resb 1      ; 0x81 bool
-    .field77_0x82                     resb 1      ; 0x82 bool
-    .field78_0x83                     resb 1      ; 0x83 bool
-    .elvis_d                          resb 2      ; 0x84 short
-    .gencide                          resb 2      ; 0x86 short
-    .copKill                          resb 2      ; 0x88 short
-    .carjaka                          resb 2      ; 0x8a short
-    .field83_0x8c                     resb 1      ; 0x8c bool
-    .field84_0x8d                     resb 1      ; 0x8d bool
-    .some_bool                        resb 1      ; 0x8e bool
-    .field86_0x8f                     resb 1      ; 0x8f byte
-    resb 52
-    .playerPed                        resb 4      ; 0xc4 Ped *
-    resb 96
-    .encodedCameraX                   resb 4      ; 0x128 int
-    .encodedCameraY                   resb 4      ; 0x12c int
-    .encodedCameraZ                   resb 4      ; 0x130 int
-    resb 24
-    .ptrToSomeStruct                  resb 4      ; 0x14c void *
-    resb 60
-    .relToTime                        resb 4      ; 0x18c int
-    .fly_car                          resb 4      ; 0x190 int
-    resb 4
-    .accurcy                          resb 1      ; 0x198 byte
+    .controlState                     resb 4      ; 0x68 PLAYER_CONTROL_STATE
+    .viewCamDetached                  resb 4      ; 0x6c int
+    .dbgKeyUp                         resb 1      ; 0x70 byte
+    .dbgKeyDown                       resb 1      ; 0x71 byte
+    .dbgKeyLeft                       resb 1      ; 0x72 byte
+    .dbgKeyRight                      resb 1      ; 0x73 byte
+    .dbgKeyZDown                      resb 1      ; 0x74 byte
+    .dbgKeyZUp                        resb 1      ; 0x75 byte
+    .dbgZoomOut                       resb 1      ; 0x76 byte
+    .dbgZoomIn                        resb 1      ; 0x77 byte
+    .keyForward                       resb 1      ; 0x78 bool
+    .keyBackward                      resb 1      ; 0x79 bool
+    .keyLeft                          resb 1      ; 0x7a bool
+    .keyRight                         resb 1      ; 0x7b bool
+    .keyAttack                        resb 1      ; 0x7c bool
+    .keyEnterExit                     resb 1      ; 0x7d bool
+    .keyJump                          resb 1      ; 0x7e bool
+    .keyPrevWeapon                    resb 1      ; 0x7f bool
+    .keyNextWeapon                    resb 1      ; 0x80 bool
+    .keySpecial1                      resb 1      ; 0x81 bool
+    .keySpecial2                      resb 1      ; 0x82 bool
+    .keySpecial3                      resb 1      ; 0x83 bool
+    .keySpecial1Changed               resb 1      ; 0x84 bool
+    .keySpecial2Changed               resb 1      ; 0x85 bool
+    .keySpecial3Changed               resb 1      ; 0x86 bool
+    .keyNextWeaponChanged             resb 1      ; 0x87 bool
+    .keyPrevWeaponChanged             resb 1      ; 0x88 bool
+    .keyEnterExitChanged              resb 1      ; 0x89 bool
+    .keyJumpChanged                   resb 1      ; 0x8a bool
+    .keyForwardChanged                resb 1      ; 0x8b bool
+    .keyBackwardChanged               resb 1      ; 0x8c bool
+    .keyAttackChanged                 resb 1      ; 0x8d bool
+    .isActive                         resb 1      ; 0x8e bool
+    .blockAttackUntilRelease          resb 1      ; 0x8f byte
+    .gameCamera                       resb 188    ; 0x90 Camera
+    .viewCamera                       resb 188    ; 0x14c Camera
+    .auxCamera                        resb 188    ; 0x208 Camera
+    .ped                              resb 4      ; 0x2c4 Ped *
+    .auxPed                           resb 4      ; 0x2c8 Ped *
+    .auxCar                           resb 4      ; 0x2cc Car *
+    .auxActive                        resb 1      ; 0x2d0 byte
     resb 3
-    .wrngway                          resb 4      ; 0x19c uint
-    resb 4
-    .em_dest                          resb 1      ; 0x1a4 byte
+    .score                            resb 876    ; 0x2d4 PlayerScore
+    .isBeingBusted                    resb 1      ; 0x640 byte
     resb 3
-    .field343_0x1a8                   resb 4      ; 0x1a8 void *
-    resb 244
-    .auxGameCameraX                   resb 4      ; 0x2a0 int
-    .auxGameCameraY                   resb 4      ; 0x2a4 int
-    .auxGameCameraZ                   resb 4      ; 0x2a8 int
-    resb 24
-    .playerPed2                       resb 4      ; 0x2c4 Ped *
-    .pedRelTo_fieldx68                resb 4      ; 0x2c8 Ped *
-    .field617_0x2cc                   resb 4      ; 0x2cc int
-    .field618_0x2d0                   resb 1      ; 0x2d0 byte
-    resb 3
-    .animatedValues_firstMoney        resb 840    ; 0x2d4 SaveSlotAnimatedValue[15]
-    resb 36
-    .unknown                          resb 1      ; 0x640 byte
-    resb 3
-    .field663_0x644                   resb 4      ; 0x644 S26 *
-    resb 48
-    .field712_0x678                   resb 4      ; 0x678 int
-    .field713_0x67c                   resb 4      ; 0x67c int
-    .incToBe100                       resb 2      ; 0x680 ushort
-    .eq_1000                          resb 2      ; 0x682 short
-    .lives                            resb 56     ; 0x684 SaveSlotAnimatedValue
-    .moneyMultiplier                  resb 56     ; 0x6bc SaveSlotAnimatedValue
-    resb 8
-    .field726_0x6fc                   resb 2      ; 0x6fc short
+    .crimeStats                       resb 60     ; 0x644 CrimeStats
+    .trafficSpawnCredit               resb 2      ; 0x680 ushort
+    .trafficSpawnCost                 resb 2      ; 0x682 ushort
+    .lives                            resb 56     ; 0x684 AnimatedValue
+    .moneyMultiplier                  resb 56     ; 0x6bc AnimatedValue
+    .powerups                         resb 34     ; 0x6f4 short[17]
     resb 2
-    .bonus1                           resb 2      ; 0x700 short
-    .bonus2                           resb 2      ; 0x702 short
-    .bonus3                           resb 2      ; 0x704 short
-    .bonus4                           resb 2      ; 0x706 short
+    .weapons                          resb 112    ; 0x718 WEAPON_STRUCT *[28]
+    .selectedWeapon                   resb 2      ; 0x788 short
+    .quitConfirmPending               resb 1      ; 0x78a byte
+    resb 1
+    .unsure_hudTextStyle              resb 4      ; 0x78c int
+    .unsure_hudTextColour             resb 2      ; 0x790 short
     resb 2
-    .bonus5                           resb 2      ; 0x70a short
-    resb 12
-    .iArr28                           resb 112    ; 0x718 int[28]
-    .field749_0x788                   resb 2      ; 0x788 short
-    .field750_0x78a                   resb 1      ; 0x78a byte
-    resb 177
-    .field928_0x83c                   resb 2      ; 0x83c short
-    resb 30
-endstruc
-
-; /_game/SaveSlotAnimatedValue  (56 bytes)
-struc SaveSlotAnimatedValue
-    .value                            resb 4      ; 0x0 int
-    resb 12
-    .accuracyCount                    resb 1      ; 0x10 byte
-    resb 3
-    .reverseCount                     resb 4      ; 0x14 int
-    resb 8
-    .ptrToSaveSlot                    resb 4      ; 0x20 SaveSlot *
-    resb 6
-    .maxDigitsInValue                 resb 2      ; 0x2a short
-    .min                              resb 2      ; 0x2c short
-    .digitOffsetForAnimationOfChange  resb 2      ; 0x2e short
-    .max                              resb 4      ; 0x30 int
-    resb 2
-    .id                               resb 2      ; 0x36 short
+    .chat                             resb 168    ; 0x794 ChatInput
+    .name                             resb 32     ; 0x83c wchar_t[16]
 endstruc
 
 ; enum /_mainmenu/MAIN_MENU_SOUND  (4 bytes)
@@ -1564,7 +1621,7 @@ struc Ped
     .objectiveTargetCar               resb 4      ; 0x150 Car *
     .taskTargetCar                    resb 4      ; 0x154 Car *
     .carToEnter                       resb 4      ; 0x158 Car *
-    .player                           resb 4      ; 0x15c SaveSlot *
+    .player                           resb 4      ; 0x15c Player *
     .nextPed                          resb 4      ; 0x160 Ped *
     .group                            resb 4      ; 0x164 PedGroup *
     .sprite                           resb 4      ; 0x168 Sprite *
@@ -3014,7 +3071,7 @@ struc Save
     .pedRelTo_fieldx68                resb 4      ; 0x394 Ped *
     .field_0x2cc                      resb 4      ; 0x398 int
     resb 4
-    .animatedValues_firstMoney        resb 840    ; 0x3a0 SaveSlotAnimatedValue[15]
+    .animatedValues_firstMoney        resb 840    ; 0x3a0 AnimatedValue[15]
     resb 40
     .field_0x644                      resb 4      ; 0x710 S26 *
     resb 48
@@ -3022,8 +3079,8 @@ struc Save
     .field_0x67c                      resb 4      ; 0x748 int
     .incToBe100                       resb 2      ; 0x74c ushort
     .eq_1000                          resb 2      ; 0x74e short
-    .lives                            resb 56     ; 0x750 SaveSlotAnimatedValue
-    .moneyMultiplier                  resb 56     ; 0x788 SaveSlotAnimatedValue
+    .lives                            resb 56     ; 0x750 AnimatedValue
+    .moneyMultiplier                  resb 56     ; 0x788 AnimatedValue
     resb 8
     .field_0x6fc                      resb 2      ; 0x7c8 short
     resb 2
@@ -3772,7 +3829,7 @@ struc Camera
     .cameraBoundaries                 resb 16     ; 0x20 WorldRect
     .movementBitmask                  resb 4      ; 0x30 CAMERA_MOVEMENT
     .ped                              resb 4      ; 0x34 Ped *
-    resb 4
+    .followCar                        resb 4      ; 0x38 Car *
     .followState                      resb 4      ; 0x3c CAMERA_FOLLOW_STATE
     .targetElevation                  resb 4      ; 0x40 int
     .flyTimerMaybe                    resb 4      ; 0x44 int
@@ -4829,15 +4886,15 @@ struc PhysicalPalette
     .field_0x3ff                      resb 1      ; 0x3ff undefined1
 endstruc
 
-; /imported/seuko-mod/Player  (2140 bytes)
-struc Player
+; /imported/seuko-mod/Player_SeukoMod  (2140 bytes)
+struc Player_SeukoMod
     .f0                               resb 2      ; 0x0 undefined2
     resb 2
     .keyboardKeys                     resb 4      ; 0x4 KEYBOARD_STATE
     .field_0x8                        resb 2      ; 0x8 short
     .field_0xa                        resb 2      ; 0xa short
     .field_0xc                        resb 4      ; 0xc int
-    .playerPed3                       resb 4      ; 0x10 Ped *
+    resb 4
     .field_0x14                       resb 2      ; 0x14 short
     .field_0x16                       resb 2      ; 0x16 short
     .field_0x18                       resb 2      ; 0x18 short
@@ -4857,33 +4914,11 @@ struc Player
     resb 4
     .controlState                     resb 4      ; 0x68 PLAYER_CONTROL_STATE
     .teleportMode                     resb 4      ; 0x6c int
-    .up                               resb 1      ; 0x70 byte
-    .down                             resb 1      ; 0x71 byte
-    .left                             resb 1      ; 0x72 byte
-    .right                            resb 1      ; 0x73 byte
-    .prevWeapon                       resb 1      ; 0x74 byte
-    .nextWeapon                       resb 1      ; 0x75 byte
-    .debugKey1                        resb 1      ; 0x76 byte
-    .debugKey2                        resb 1      ; 0x77 byte
-    .keyUp                            resb 1      ; 0x78 bool
-    .keyDown                          resb 1      ; 0x79 bool
-    .keyLeft                          resb 1      ; 0x7a bool
-    .keyRight                         resb 1      ; 0x7b bool
-    .keyAttack                        resb 1      ; 0x7c bool
-    .keyEnter                         resb 1      ; 0x7d bool
-    .keySpace                         resb 1      ; 0x7e bool
-    .keyPrevWeapon                    resb 1      ; 0x7f bool
-    .keyNexWeapon                     resb 1      ; 0x80 bool
-    .keySpecial                       resb 1      ; 0x81 bool
-    .keySpecial2                      resb 1      ; 0x82 bool
-    resb 13
-    .ph1                              resb 188    ; 0x90 Camera
-    .ph2                              resb 188    ; 0x14c Camera
-    .ph3                              resb 188    ; 0x208 Camera
+    resb 596
     .ped                              resb 4      ; 0x2c4 Ped *
     .ped2                             resb 4      ; 0x2c8 Ped *
     resb 8
-    .animatedMoney                    resb 56     ; 0x2d4 SaveSlotAnimatedValue
+    .animatedMoney                    resb 56     ; 0x2d4 AnimatedValue
     resb 824
     .field_0x644                      resb 4      ; 0x644 S26 *
     resb 48
@@ -4891,8 +4926,8 @@ struc Player
     .field_0x67c                      resb 4      ; 0x67c int
     .incToBe100                       resb 2      ; 0x680 ushort
     .eq_1000                          resb 2      ; 0x682 short
-    .lives                            resb 56     ; 0x684 SaveSlotAnimatedValue
-    .moneyMultiplier                  resb 56     ; 0x6bc SaveSlotAnimatedValue
+    .lives                            resb 56     ; 0x684 AnimatedValue
+    .moneyMultiplier                  resb 56     ; 0x6bc AnimatedValue
     resb 6
     .armor                            resb 2      ; 0x6fa ushort
     .field_0x6fc                      resb 2      ; 0x6fc short

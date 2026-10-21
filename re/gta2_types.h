@@ -28,9 +28,13 @@ typedef struct CLIENT_ID CLIENT_ID;
 typedef struct CarDriveOrder CarDriveOrder;
 typedef struct CarDriveOrderPool CarDriveOrderPool;
 typedef struct CarModelTable CarModelTable;
+typedef struct ChatInput ChatInput;
 typedef struct CollisionManager CollisionManager;
+typedef struct ComboEntry ComboEntry;
+typedef struct ComboList ComboList;
 typedef struct Crane Crane;
 typedef struct CraneManager CraneManager;
+typedef struct CrimeStats CrimeStats;
 typedef struct Crusher Crusher;
 typedef struct CrusherManager CrusherManager;
 typedef struct DoorManager DoorManager;
@@ -58,6 +62,7 @@ typedef struct ParticleStatePool40 ParticleStatePool40;
 typedef struct PatrolRoute PatrolRoute;
 typedef struct PedPathfinder PedPathfinder;
 typedef struct PedPatrolRoutePool PedPatrolRoutePool;
+typedef struct PlayerScore PlayerScore;
 typedef struct PublicTransportManager PublicTransportManager;
 typedef struct RoadNetwork RoadNetwork;
 typedef struct RoadNode RoadNode;
@@ -93,12 +98,12 @@ typedef struct MaybeCarEngineHolder MaybeCarEngineHolder;
 typedef struct SRelToCars SRelToCars;
 typedef struct SRelToCars2 SRelToCars2;
 typedef struct SRelToCars3 SRelToCars3;
+typedef struct AnimatedValue AnimatedValue;
 typedef struct FrontEnd FrontEnd;
 typedef struct Game Game;
 typedef struct GameStats GameStats;
 typedef struct Menu Menu;
-typedef struct SaveSlot SaveSlot;
-typedef struct SaveSlotAnimatedValue SaveSlotAnimatedValue;
+typedef struct Player Player;
 typedef struct Ped Ped;
 typedef struct PedManager_S25 PedManager_S25;
 typedef struct _s_FuncInfo _s_FuncInfo;
@@ -252,7 +257,7 @@ typedef struct Passenger Passenger;
 typedef struct PedGameObjectManager PedGameObjectManager;
 typedef struct PedGroup PedGroup;
 typedef struct PhysicalPalette PhysicalPalette;
-typedef struct Player Player;
+typedef struct Player_SeukoMod Player_SeukoMod;
 typedef struct RenderDistanceArrayItem RenderDistanceArrayItem;
 typedef struct RoofSpritesHolder RoofSpritesHolder;
 typedef struct S10_TxtMessage S10_TxtMessage;
@@ -355,6 +360,14 @@ enum CAR_PHYSICS_MODE_values {
     CAR_PHYSICS_PLAYER = 2,
     CAR_PHYSICS_UNSURE_3 = 3,
     CAR_PHYSICS_UNSURE_KINEMATIC = 4,
+};
+
+// /HUD_DIGIT_SPRITE
+typedef uint16_t HUD_DIGIT_SPRITE;
+enum HUD_DIGIT_SPRITE_values {
+    HUD_DIGITS_LIVES = 115,
+    HUD_DIGITS_MULTIPLIER = 116,
+    HUD_DIGITS_MONEY = 158,
 };
 
 // /PED_CLASS
@@ -2389,11 +2402,41 @@ struct CarModelTable {
     CarEngineData *engineDataBlock; /* 0x804 */
 };
 
+// /ChatInput  size 0xa8
+struct ChatInput {
+    byte isOpen; /* 0x0 */
+    uint8_t _gap_0x1[0x1];
+    wchar_t text[80]; /* 0x2 */
+    uint8_t _gap_0xa2[0x2];
+    int length; /* 0xa4 */
+};
+
 // /CollisionManager  size 0xc
 struct CollisionManager {
     int visitCount; /* 0x0 */
     int queryStamp; /* 0x4 */
     int movingCheckActive; /* 0x8 */
+};
+
+// /ComboEntry  size 0x2c
+struct ComboEntry {
+    uint8_t _gap_0x0[0x1c];
+    uint unsure_duration; /* 0x1c */
+    int unsure_startFrame; /* 0x20 */
+    uint8_t _gap_0x24[0x1];
+    byte targetCount; /* 0x25 */
+    byte count; /* 0x26 */
+    uint8_t _gap_0x27[0x1];
+    ushort reward; /* 0x28 */
+    byte unsure_flag2A; /* 0x2a */
+    byte isActive; /* 0x2b */
+};
+
+// /ComboList  size 0x1c0
+struct ComboList {
+    ComboEntry entries[10]; /* 0x0 */
+    PlayerScore *owner; /* 0x1b8 */
+    int lastFrame; /* 0x1bc */
 };
 
 // /Crane  size 0x15c
@@ -2405,6 +2448,15 @@ struct Crane {
 struct CraneManager {
     Crane cranes[10]; /* 0x0 */
     int count; /* 0xd98 */
+};
+
+// /CrimeStats  size 0x3c
+struct CrimeStats {
+    int crimeCount[10]; /* 0x0 */
+    byte oneShotFlag[10]; /* 0x28 */
+    uint8_t _gap_0x32[0x2];
+    int unsure_totalEarned; /* 0x34 */
+    int unsure_wantedStarSeconds; /* 0x38 */
 };
 
 // /Crusher  size 0x30
@@ -2654,6 +2706,60 @@ struct PedPathfinder {
 struct PedPatrolRoutePool {
     PatrolRoute routes[50]; /* 0x0 */
     byte inUse[50]; /* 0x1d4c */
+};
+
+// /_game/AnimatedValue  size 0x38
+// Used for animate changing of values
+struct AnimatedValue {
+    int value; /* 0x0 */
+    int shownValue; /* 0x4 */
+    byte countingUp; /* 0x8 */
+    uint8_t _gap_0x9[0x7];
+    byte accuracyCount; /* 0x10 */
+    uint8_t _gap_0x11[0x3];
+    int reverseCount; /* 0x14 */
+    uint8_t _gap_0x18[0x8];
+    Player *ptrToSaveSlot; /* 0x20 */
+    uint8_t _gap_0x24[0x3];
+    byte digitWidth; /* 0x27 */
+    byte digitHeight; /* 0x28 */
+    uint8_t _gap_0x29[0x1];
+    ushort maxDigits; /* 0x2a */
+    ushort scrollSpeed; /* 0x2c */
+    ushort firstAnimatedDigit; /* 0x2e */
+    int max; /* 0x30 */
+    short textureHandle; /* 0x34 */
+    HUD_DIGIT_SPRITE spriteId; /* 0x36 */
+};
+
+// /PlayerScore  size 0x36c
+struct PlayerScore {
+    AnimatedValue money; /* 0x0 */
+    AnimatedValue frags; /* 0x38 */
+    int lastCarEventFrame; /* 0x70 */
+    byte carComboMult; /* 0x74 */
+    byte pedKillComboMult; /* 0x75 */
+    uint8_t _gap_0x76[0x2];
+    int lastPedKillFrame; /* 0x78 */
+    short pedKillStreak; /* 0x7c */
+    uint8_t _gap_0x7e[0x2];
+    int lastElvisKillFrame; /* 0x80 */
+    short elvisKillStreak; /* 0x84 */
+    short pedKillTotal; /* 0x86 */
+    short unsure_copCarKills; /* 0x88 */
+    short carjackCount; /* 0x8a */
+    byte carModelFlags[256]; /* 0x8c */
+    int msAccum; /* 0x18c */
+    int airtimeMs; /* 0x190 */
+    uint8_t _gap_0x194[0x4];
+    byte accuracyCount; /* 0x198 */
+    uint8_t _gap_0x199[0x3];
+    uint reverseDrivingMs; /* 0x19c */
+    int lastEmergencyVehicleFrame; /* 0x1a0 */
+    byte emergencyDestroyedMask; /* 0x1a4 */
+    uint8_t _gap_0x1a5[0x3];
+    ComboList comboList; /* 0x1a8 */
+    Player *owner; /* 0x368 */
 };
 
 // /TransportStop  size 0x34
@@ -3201,21 +3307,21 @@ struct FrontEnd {
 // S8
 struct Game {
     GAME_STATUS gameStatus; /* 0x0 1 - run, 2 - pause game */
-    SaveSlot *saveSlotArr[6]; /* 0x4 */
-    void *field2_0x1c; /* 0x1c */
+    Player *players[6]; /* 0x4 */
+    Player *localPlayer; /* 0x1c */
     byte field3_0x20; /* 0x20 */
     byte field4_0x21; /* 0x21 */
     byte field5_0x22; /* 0x22 */
-    byte length; /* 0x23 */
-    char slotIndex; /* 0x24 */
+    byte playerCount; /* 0x23 */
+    char localPlayerIndex; /* 0x24 */
     uint8_t _gap_0x25[0x3];
     int field11_0x28; /* 0x28 */
     int relatedToQuitGame; /* 0x2c */
     byte compensationFPSTime; /* 0x30 */
     uint8_t _gap_0x31[0x3];
     int relToSkipPoliceEnum; /* 0x34 */
-    SaveSlot *CurrentSaveSlot; /* 0x38 Created by retype action */
-    bool_ skip_police; /* 0x3c Created by retype action */
+    Player *currentPlayer; /* 0x38 Created by retype action */
+    bool_ savedSkipPolice; /* 0x3c Created by retype action */
     uint8_t _gap_0x3d[0x3];
 };
 
@@ -3257,148 +3363,159 @@ struct Menu {
     int unk1; /* 0x574 */
 };
 
-// /_game/SaveSlotAnimatedValue  size 0x38
-// Used for animate changing of values
-struct SaveSlotAnimatedValue {
-    int value; /* 0x0 */
-    uint8_t _gap_0x4[0xc];
-    byte accuracyCount; /* 0x10 */
-    uint8_t _gap_0x11[0x3];
-    int reverseCount; /* 0x14 */
-    uint8_t _gap_0x18[0x8];
-    SaveSlot *ptrToSaveSlot; /* 0x20 */
-    uint8_t _gap_0x24[0x6];
-    short maxDigitsInValue; /* 0x2a */
-    short min; /* 0x2c */
-    short digitOffsetForAnimationOfChange; /* 0x2e */
-    int max; /* 0x30 */
-    uint8_t _gap_0x34[0x2];
-    short id; /* 0x36 */
+// /imported/seuko-mod/CameraPos  size 0x10
+struct CameraPos {
+    SCR_f x; /* 0x0 */
+    SCR_f y; /* 0x4 */
+    SCR_f z; /* 0x8 */
+    int zoom; /* 0xc */
 };
 
-// /_game/SaveSlot  size 0x85c
-struct SaveSlot {
-    byte f0; /* 0x0 */
+// /imported/seuko-mod/WorldRect  size 0x10
+struct WorldRect {
+    SCR_f left; /* 0x0 */
+    SCR_f right; /* 0x4 */
+    SCR_f top; /* 0x8 */
+    SCR_f bottom; /* 0xc */
+};
+
+// /imported/seuko-mod/SCR_Vector2  size 0x8
+struct SCR_Vector2 {
+    SCR_f x; /* 0x0 */
+    SCR_f y; /* 0x4 */
+};
+
+// /imported/seuko-mod/Camera  size 0xbc
+struct Camera {
+    CameraPos cameraPosTarget2; /* 0x0 */
+    CameraPos cameraPosTarget; /* 0x10 */
+    WorldRect cameraBoundaries; /* 0x20 */
+    CAMERA_MOVEMENT movementBitmask; /* 0x30 */
+    Ped *ped; /* 0x34 */
+    Car *followCar; /* 0x38 */
+    CAMERA_FOLLOW_STATE followState; /* 0x3c */
+    int targetElevation; /* 0x40 */
+    int flyTimerMaybe; /* 0x44 */
+    SCR_Vector2 altMovingPosition; /* 0x48 */
+    SCR_f altMovingStateUp; /* 0x50 */
+    SCR_f altMovingStateDown; /* 0x54 */
+    SCR_f altMovingStateLeft; /* 0x58 */
+    SCR_f altMovingStateRight; /* 0x5c */
+    SCR_f field_0x60; /* 0x60 */
+    uint8_t _gap_0x64[0x2];
+    short altMovingLimit; /* 0x66 */
+    int screenPxWidth; /* 0x68 */
+    int screenPxHeight; /* 0x6c */
+    int screenPxCenterX; /* 0x70 */
+    int screenPxCenterY; /* 0x74 */
+    WorldRect cameraBoundariesNonNegative; /* 0x78 */
+    CameraPos cameraPos2; /* 0x88 */
+    CameraPos cameraPos; /* 0x98 */
+    SCR_f uiScale; /* 0xa8 */
+    CameraPos cameraVelocity; /* 0xac */
+};
+
+// /_game/Player  size 0x85c
+struct Player {
+    byte isLocal; /* 0x0 */
     uint8_t _gap_0x1[0x3];
-    int keyboardKeys; /* 0x4 */
-    short field5_0x8; /* 0x8 */
-    short field6_0xa; /* 0xa */
-    int field7_0xc; /* 0xc */
-    Ped *playerPed3; /* 0x10 */
-    short field9_0x14; /* 0x14 */
-    short field10_0x16; /* 0x16 */
-    short field11_0x18; /* 0x18 */
-    uint8_t _gap_0x1a[0xe];
-    byte unknown2; /* 0x28 */
-    byte field27_0x29; /* 0x29 */
-    short field28_0x2a; /* 0x2a */
-    short field29_0x2c; /* 0x2c */
-    byte field30_0x2e; /* 0x2e */
-    byte field31_0x2f; /* 0x2f */
-    byte field32_0x30; /* 0x30 */
-    byte field33_0x31; /* 0x31 */
+    uint inputWord; /* 0x4 */
+    short turnRate; /* 0x8 */
+    short unsure_turnStep; /* 0xa */
+    SCR_f moveSpeed; /* 0xc */
+    SCR_f unused_0x10; /* 0x10 */
+    short savedPedWeapon; /* 0x14 */
+    short savedCarWeapon; /* 0x16 */
+    short kfSavedWeapon; /* 0x18 */
+    short kfSavedAmmo; /* 0x1a */
+    CAR_WEAPON_INDEX kfWeapon; /* 0x1c */
+    Car *kfCar; /* 0x20 */
+    int kfCarId; /* 0x24 */
+    byte isDeadOrBusted; /* 0x28 */
+    byte auxPedDying; /* 0x29 */
+    short unused_0x2a; /* 0x2a */
+    short deathCountdown; /* 0x2c */
+    byte playerIndex; /* 0x2e */
+    byte controlsDisabled; /* 0x2f */
+    byte enterExitDisabled; /* 0x30 */
+    byte weaponSelectLocked; /* 0x31 */
     uint8_t _gap_0x32[0x2];
-    int field36_0x34; /* 0x34 */
-    int field37_0x38; /* 0x38 */
-    int field38_0x3c; /* 0x3c */
-    uint8_t _gap_0x40[0x4];
+    void *gangZone; /* 0x34 */
+    void *localNavZone; /* 0x38 */
+    void *navZone; /* 0x3c */
+    void *arrowBlockerZone; /* 0x40 */
     DEATH_REASON deathReason; /* 0x44 */
-    byte field44_0x48; /* 0x48 */
+    byte dbgCamFollowPlayer; /* 0x48 */
     uint8_t _gap_0x49[0x3];
-    int field48_0x4c; /* 0x4c */
-    void *field49_0x50; /* 0x50 */
-    int field50_0x54; /* 0x54 */
-    int field51_0x58; /* 0x58 */
-    int field52_0x5c; /* 0x5c */
-    int field53_0x60; /* 0x60 */
-    byte field54_0x64; /* 0x64 */
+    void *soundListener; /* 0x4c */
+    int unsure_throwCharge; /* 0x50 */
+    Car *lastCarOldest; /* 0x54 */
+    Car *lastCarMiddle; /* 0x58 */
+    Car *lastCarNewest; /* 0x5c */
+    int scoreTargetReached; /* 0x60 */
+    byte unsure_turnProfile; /* 0x64 */
     uint8_t _gap_0x65[0x3];
-    int someState; /* 0x68 */
-    int field59_0x6c; /* 0x6c */
-    byte field60_0x70; /* 0x70 */
-    byte field61_0x71; /* 0x71 */
-    byte field62_0x72; /* 0x72 */
-    byte field63_0x73; /* 0x73 */
-    byte field64_0x74; /* 0x74 */
-    byte field65_0x75; /* 0x75 */
-    byte debugKey1; /* 0x76 */
-    byte debugKey2; /* 0x77 */
-    bool_ field68_0x78; /* 0x78 */
-    bool_ field69_0x79; /* 0x79 */
-    bool_ field70_0x7a; /* 0x7a */
-    bool_ field71_0x7b; /* 0x7b */
-    short excutin; /* 0x7c */
-    bool_ field73_0x7e; /* 0x7e */
-    bool_ field74_0x7f; /* 0x7f */
-    bool_ field75_0x80; /* 0x80 */
-    bool_ field76_0x81; /* 0x81 */
-    bool_ field77_0x82; /* 0x82 */
-    bool_ field78_0x83; /* 0x83 */
-    short elvis_d; /* 0x84 */
-    short gencide; /* 0x86 */
-    short copKill; /* 0x88 */
-    short carjaka; /* 0x8a */
-    bool_ field83_0x8c; /* 0x8c */
-    bool_ field84_0x8d; /* 0x8d */
-    bool_ some_bool; /* 0x8e */
-    byte field86_0x8f; /* 0x8f */
-    uint8_t _gap_0x90[0x34];
-    Ped *playerPed; /* 0xc4 */
-    uint8_t _gap_0xc8[0x60];
-    int encodedCameraX; /* 0x128 */
-    int encodedCameraY; /* 0x12c Created by retype action */
-    int encodedCameraZ; /* 0x130 Created by retype action */
-    uint8_t _gap_0x134[0x18];
-    void *ptrToSomeStruct; /* 0x14c */
-    uint8_t _gap_0x150[0x3c];
-    int relToTime; /* 0x18c */
-    int fly_car; /* 0x190 */
-    uint8_t _gap_0x194[0x4];
-    byte accurcy; /* 0x198 */
-    uint8_t _gap_0x199[0x3];
-    uint wrngway; /* 0x19c */
-    uint8_t _gap_0x1a0[0x4];
-    byte em_dest; /* 0x1a4 */
-    uint8_t _gap_0x1a5[0x3];
-    void *field343_0x1a8; /* 0x1a8 */
-    uint8_t _gap_0x1ac[0xf4];
-    int auxGameCameraX; /* 0x2a0 Created by retype action */
-    int auxGameCameraY; /* 0x2a4 Created by retype action */
-    int auxGameCameraZ; /* 0x2a8 */
-    uint8_t _gap_0x2ac[0x18];
-    Ped *playerPed2; /* 0x2c4 */
-    Ped *pedRelTo_fieldx68; /* 0x2c8 */
-    int field617_0x2cc; /* 0x2cc */
-    byte field618_0x2d0; /* 0x2d0 */
+    PLAYER_CONTROL_STATE controlState; /* 0x68 */
+    int viewCamDetached; /* 0x6c */
+    byte dbgKeyUp; /* 0x70 */
+    byte dbgKeyDown; /* 0x71 */
+    byte dbgKeyLeft; /* 0x72 */
+    byte dbgKeyRight; /* 0x73 */
+    byte dbgKeyZDown; /* 0x74 */
+    byte dbgKeyZUp; /* 0x75 */
+    byte dbgZoomOut; /* 0x76 */
+    byte dbgZoomIn; /* 0x77 */
+    bool_ keyForward; /* 0x78 */
+    bool_ keyBackward; /* 0x79 */
+    bool_ keyLeft; /* 0x7a */
+    bool_ keyRight; /* 0x7b */
+    bool_ keyAttack; /* 0x7c */
+    bool_ keyEnterExit; /* 0x7d */
+    bool_ keyJump; /* 0x7e */
+    bool_ keyPrevWeapon; /* 0x7f */
+    bool_ keyNextWeapon; /* 0x80 */
+    bool_ keySpecial1; /* 0x81 */
+    bool_ keySpecial2; /* 0x82 */
+    bool_ keySpecial3; /* 0x83 */
+    bool_ keySpecial1Changed; /* 0x84 */
+    bool_ keySpecial2Changed; /* 0x85 */
+    bool_ keySpecial3Changed; /* 0x86 */
+    bool_ keyNextWeaponChanged; /* 0x87 */
+    bool_ keyPrevWeaponChanged; /* 0x88 */
+    bool_ keyEnterExitChanged; /* 0x89 */
+    bool_ keyJumpChanged; /* 0x8a */
+    bool_ keyForwardChanged; /* 0x8b */
+    bool_ keyBackwardChanged; /* 0x8c */
+    bool_ keyAttackChanged; /* 0x8d */
+    bool_ isActive; /* 0x8e */
+    byte blockAttackUntilRelease; /* 0x8f */
+    Camera gameCamera; /* 0x90 */
+    Camera viewCamera; /* 0x14c */
+    Camera auxCamera; /* 0x208 */
+    Ped *ped; /* 0x2c4 */
+    Ped *auxPed; /* 0x2c8 */
+    Car *auxCar; /* 0x2cc */
+    byte auxActive; /* 0x2d0 */
     uint8_t _gap_0x2d1[0x3];
-    SaveSlotAnimatedValue animatedValues_firstMoney[15]; /* 0x2d4 */
-    uint8_t _gap_0x61c[0x24];
-    byte unknown; /* 0x640 */
+    PlayerScore score; /* 0x2d4 */
+    byte isBeingBusted; /* 0x640 */
     uint8_t _gap_0x641[0x3];
-    S26 *field663_0x644; /* 0x644 */
-    uint8_t _gap_0x648[0x30];
-    int field712_0x678; /* 0x678 */
-    int field713_0x67c; /* 0x67c */
-    ushort incToBe100; /* 0x680 */
-    short eq_1000; /* 0x682 */
-    SaveSlotAnimatedValue lives; /* 0x684 */
-    SaveSlotAnimatedValue moneyMultiplier; /* 0x6bc */
-    uint8_t _gap_0x6f4[0x8];
-    short field726_0x6fc; /* 0x6fc */
-    uint8_t _gap_0x6fe[0x2];
-    short bonus1; /* 0x700 */
-    short bonus2; /* 0x702 */
-    short bonus3; /* 0x704 */
-    short bonus4; /* 0x706 */
-    uint8_t _gap_0x708[0x2];
-    short bonus5; /* 0x70a */
-    uint8_t _gap_0x70c[0xc];
-    int iArr28[28]; /* 0x718 */
-    short field749_0x788; /* 0x788 */
-    byte field750_0x78a; /* 0x78a */
-    uint8_t _gap_0x78b[0xb1];
-    short field928_0x83c; /* 0x83c */
-    uint8_t _gap_0x83e[0x1e];
+    CrimeStats crimeStats; /* 0x644 */
+    ushort trafficSpawnCredit; /* 0x680 */
+    ushort trafficSpawnCost; /* 0x682 */
+    AnimatedValue lives; /* 0x684 */
+    AnimatedValue moneyMultiplier; /* 0x6bc */
+    short powerups[17]; /* 0x6f4 */
+    uint8_t _gap_0x716[0x2];
+    WEAPON_STRUCT *weapons[28]; /* 0x718 */
+    short selectedWeapon; /* 0x788 */
+    byte quitConfirmPending; /* 0x78a */
+    uint8_t _gap_0x78b[0x1];
+    int unsure_hudTextStyle; /* 0x78c */
+    short unsure_hudTextColour; /* 0x790 */
+    uint8_t _gap_0x792[0x2];
+    ChatInput chat; /* 0x794 */
+    wchar_t name[16]; /* 0x83c */
 };
 
 // /imported/gzf-2021/S3Bytes  size 0x3
@@ -3431,7 +3548,7 @@ struct Ped {
     Car *objectiveTargetCar; /* 0x150 */
     Car *taskTargetCar; /* 0x154 */
     Car *carToEnter; /* 0x158 */
-    SaveSlot *player; /* 0x15c */
+    Player *player; /* 0x15c */
     Ped *nextPed; /* 0x160 */
     PedGroup *group; /* 0x164 */
     Sprite *sprite; /* 0x168 */
@@ -3812,12 +3929,6 @@ struct MapBlocks {
     byte field824_0x36d; /* 0x36d */
     byte field825_0x36e; /* 0x36e */
     byte field826_0x36f; /* 0x36f */
-};
-
-// /imported/seuko-mod/SCR_Vector2  size 0x8
-struct SCR_Vector2 {
-    SCR_f x; /* 0x0 */
-    SCR_f y; /* 0x4 */
 };
 
 // /imported/seuko-mod/RenderDistanceArrayItem  size 0x8
@@ -4566,7 +4677,7 @@ struct Save {
     Ped *pedRelTo_fieldx68; /* 0x394 */
     int field_0x2cc; /* 0x398 */
     uint8_t _gap_0x39c[0x4];
-    SaveSlotAnimatedValue animatedValues_firstMoney[15]; /* 0x3a0 */
+    AnimatedValue animatedValues_firstMoney[15]; /* 0x3a0 */
     uint8_t _gap_0x6e8[0x28];
     S26 *field_0x644; /* 0x710 */
     uint8_t _gap_0x714[0x30];
@@ -4574,8 +4685,8 @@ struct Save {
     int field_0x67c; /* 0x748 */
     ushort incToBe100; /* 0x74c */
     short eq_1000; /* 0x74e */
-    SaveSlotAnimatedValue lives; /* 0x750 */
-    SaveSlotAnimatedValue moneyMultiplier; /* 0x788 */
+    AnimatedValue lives; /* 0x750 */
+    AnimatedValue moneyMultiplier; /* 0x788 */
     uint8_t _gap_0x7c0[0x8];
     short field_0x6fc; /* 0x7c8 */
     uint8_t _gap_0x7ca[0x2];
@@ -5012,52 +5123,6 @@ struct BusAndTrainsHolder {
     BusAndTrains2 arr2[10]; /* 0x1450 */
     uint8_t _gap_0x17c0[0x5b];
     undefined1 field_0x181b; /* 0x181b */
-};
-
-// /imported/seuko-mod/CameraPos  size 0x10
-struct CameraPos {
-    SCR_f x; /* 0x0 */
-    SCR_f y; /* 0x4 */
-    SCR_f z; /* 0x8 */
-    int zoom; /* 0xc */
-};
-
-// /imported/seuko-mod/WorldRect  size 0x10
-struct WorldRect {
-    SCR_f left; /* 0x0 */
-    SCR_f right; /* 0x4 */
-    SCR_f top; /* 0x8 */
-    SCR_f bottom; /* 0xc */
-};
-
-// /imported/seuko-mod/Camera  size 0xbc
-struct Camera {
-    CameraPos cameraPosTarget2; /* 0x0 */
-    CameraPos cameraPosTarget; /* 0x10 */
-    WorldRect cameraBoundaries; /* 0x20 */
-    CAMERA_MOVEMENT movementBitmask; /* 0x30 */
-    Ped *ped; /* 0x34 */
-    uint8_t _gap_0x38[0x4];
-    CAMERA_FOLLOW_STATE followState; /* 0x3c */
-    int targetElevation; /* 0x40 */
-    int flyTimerMaybe; /* 0x44 */
-    SCR_Vector2 altMovingPosition; /* 0x48 */
-    SCR_f altMovingStateUp; /* 0x50 */
-    SCR_f altMovingStateDown; /* 0x54 */
-    SCR_f altMovingStateLeft; /* 0x58 */
-    SCR_f altMovingStateRight; /* 0x5c */
-    SCR_f field_0x60; /* 0x60 */
-    uint8_t _gap_0x64[0x2];
-    short altMovingLimit; /* 0x66 */
-    int screenPxWidth; /* 0x68 */
-    int screenPxHeight; /* 0x6c */
-    int screenPxCenterX; /* 0x70 */
-    int screenPxCenterY; /* 0x74 */
-    WorldRect cameraBoundariesNonNegative; /* 0x78 */
-    CameraPos cameraPos2; /* 0x88 */
-    CameraPos cameraPos; /* 0x98 */
-    SCR_f uiScale; /* 0xa8 */
-    CameraPos cameraVelocity; /* 0xac */
 };
 
 // /imported/seuko-mod/CarAI  size 0x78
@@ -5556,15 +5621,15 @@ struct PhysicalPalette {
     undefined1 field_0x3ff; /* 0x3ff */
 };
 
-// /imported/seuko-mod/Player  size 0x85c
-struct Player {
+// /imported/seuko-mod/Player_SeukoMod  size 0x85c
+struct Player_SeukoMod {
     undefined2 f0; /* 0x0 */
     uint8_t _gap_0x2[0x2];
     KEYBOARD_STATE keyboardKeys; /* 0x4 */
     short field_0x8; /* 0x8 */
     short field_0xa; /* 0xa */
     int field_0xc; /* 0xc */
-    Ped *playerPed3; /* 0x10 */
+    uint8_t _gap_0x10[0x4];
     short field_0x14; /* 0x14 */
     short field_0x16; /* 0x16 */
     short field_0x18; /* 0x18 */
@@ -5584,33 +5649,11 @@ struct Player {
     uint8_t _gap_0x64[0x4];
     PLAYER_CONTROL_STATE controlState; /* 0x68 */
     int teleportMode; /* 0x6c */
-    byte up; /* 0x70 */
-    byte down; /* 0x71 */
-    byte left; /* 0x72 */
-    byte right; /* 0x73 */
-    byte prevWeapon; /* 0x74 */
-    byte nextWeapon; /* 0x75 */
-    byte debugKey1; /* 0x76 */
-    byte debugKey2; /* 0x77 */
-    bool_ keyUp; /* 0x78 */
-    bool_ keyDown; /* 0x79 */
-    bool_ keyLeft; /* 0x7a */
-    bool_ keyRight; /* 0x7b */
-    bool_ keyAttack; /* 0x7c */
-    bool_ keyEnter; /* 0x7d */
-    bool_ keySpace; /* 0x7e */
-    bool_ keyPrevWeapon; /* 0x7f */
-    bool_ keyNexWeapon; /* 0x80 */
-    bool_ keySpecial; /* 0x81 */
-    bool_ keySpecial2; /* 0x82 */
-    uint8_t _gap_0x83[0xd];
-    Camera ph1; /* 0x90 */
-    Camera ph2; /* 0x14c */
-    Camera ph3; /* 0x208 */
+    uint8_t _gap_0x70[0x254];
     Ped *ped; /* 0x2c4 */
     Ped *ped2; /* 0x2c8 */
     uint8_t _gap_0x2cc[0x8];
-    SaveSlotAnimatedValue animatedMoney; /* 0x2d4 */
+    AnimatedValue animatedMoney; /* 0x2d4 */
     uint8_t _gap_0x30c[0x338];
     S26 *field_0x644; /* 0x644 */
     uint8_t _gap_0x648[0x30];
@@ -5618,8 +5661,8 @@ struct Player {
     int field_0x67c; /* 0x67c */
     ushort incToBe100; /* 0x680 */
     short eq_1000; /* 0x682 */
-    SaveSlotAnimatedValue lives; /* 0x684 */
-    SaveSlotAnimatedValue moneyMultiplier; /* 0x6bc */
+    AnimatedValue lives; /* 0x684 */
+    AnimatedValue moneyMultiplier; /* 0x6bc */
     uint8_t _gap_0x6f4[0x6];
     ushort armor; /* 0x6fa */
     short field_0x6fc; /* 0x6fc */
