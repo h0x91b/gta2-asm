@@ -341,12 +341,9 @@ not yet applied: needs a Structure Editor Clear of HudManager +0x2854..+0x2A1B).
 5. Length: briefs ≤ ~640 units after wrapping (also: 0.1 s per character on screen), big labels
    ≤ 99, zone and pickup names ≤ 64, car names ≤ 32 — these copies have no bounds checks and
    overwrite the neighbouring HUD fields. Menu labels are cut at 50.
-6. New characters (Cyrillic, Polish, …) need font work in the `.sty`: either repaint blank
-   placeholder slots (`# & + < = > @ [ \ ] ^ _ { | }` in font 1) or add glyphs to FONB and rebuild
-   the sprite index (every later sprite id moves). A new language letter needs code patches:
-   `LocaleSettings_Ctor` compare chain 0x4C2652–0x4C26A7, `LocaleSettings_ToUpperChar` switch,
-   `Font_AssignRolesByLocale`, `Gxt_AreAllFilesMissing`. Replacing an existing language's file
-   needs none.
+6. New characters (Cyrillic, Polish, …) need font work, and a new language letter needs code
+   patches. Options, fonts to draw and drawing rules: [fonts-localization.md](fonts-localization.md).
+   Replacing an existing language's file needs none.
 7. Edited files go into the overlay (`~/Library/Application Support/gta2-resurrected/data/`), never
    into `data.pak`; they are picked up at the next frontend or level start.
 

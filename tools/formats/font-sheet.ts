@@ -6,6 +6,7 @@
  * the letters that look like Latin ones are pre-filled with a copy of that Latin glyph.
  * Cells are 1 px apart on a magenta (shipped) / cyan (new) grid; pixels are the sprite's own palette
  * at 1:1, transparent where the sprite uses colour 0. Each glyph sits at its cell's top-left.
+ * Drawing rules and the plan for new alphabets: docs/re/fonts-localization.md.
  */
 import { decodeSprite, type Style } from './style.ts';
 import { styleMetadata } from './style-metadata.ts';

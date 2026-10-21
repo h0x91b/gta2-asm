@@ -18,7 +18,7 @@ traps: `docs/formats/`.
 | `scr.ts`, `scr-opcodes.ts` | `.scr` mission scripts (main and sub-script layouts, commands, strings); VM: `docs/re/script-engine.md` |
 | `gxt.ts` | `.gxt` GBL text tables: TKEY (sorted 8-byte keys + TDAT offsets) / TDAT (u16 strings); byte-identical `encodeGxt`, `buildGxt`, font code page `toUnicode`/`fromUnicode` (`docs/re/gxt.md`) |
 | `gxt-edit.ts` | editable text form (`key<TAB>text`), import over the original with checks (printf args, buffer limits, speaker marker, key rules, glyphs) |
-| `font-sheet.ts` | a `.sty` font as an editable PNG grid + JSON manifest, with empty Cyrillic cells |
+| `font-sheet.ts` | a `.sty` font as an editable PNG grid + JSON manifest, with empty Cyrillic cells (drawing rules: `docs/re/fonts-localization.md`) |
 | `scr-mis.ts`, `scr-mis-ops.ts`, `scr-consts.ts` | `.scr` → `.mis` decompiler: per-opcode templates, enum names, IF / WHILE / AND / OR rebuilt from the jump graph |
 | `tga.ts`, `png.ts` | frontend TGA decode, PNG encode |
 | `cli.ts` | the command line below |
