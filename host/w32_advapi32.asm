@@ -171,13 +171,11 @@ reg_val_set:
     pop rbx
     ret
 
-; reg_window_override: --window=WxH replaces screen\window_width/height for this run
-; (the install seeds 960x720). Windowed play (start_mode 0) sizes the window and lays the
-; game view out for that size, and the renderer's gameplay back buffer follows it
-; (docs/renderer-sdl.md, "Resolution"). No flag = the registry's values as seeded.
+; reg_window_override: replaces screen\window_width/height for this run with 1280x960, or
+; with --window=WxH (the install seeds 960x720). Windowed play (start_mode 0) sizes the
+; window and lays the game view out for that size, and the renderer's gameplay back buffer
+; follows it (docs/renderer-sdl.md, "Resolution").
 reg_window_override:
-    cmp dword [reg_win_w], 0
-    je .out
     push rbx
     lea rdi, [s_reg_screen]
     call reg_key_find
@@ -209,7 +207,6 @@ reg_window_override:
     xor eax, eax
     call _printf
     pop rbx
-.out:
     ret
 
 ; rax = reg_path(edi = HKEY, rsi = subkey or 0) -> full path in reg_pathbuf, or 0
@@ -748,7 +745,7 @@ s_regfile:   db "gta2_install.reg", 0
 s_reg_screen: db "HKEY_CURRENT_USER\Software\DMA Design Ltd\GTA2\screen", 0
 s_reg_ww:    db "window_width", 0
 s_reg_wh:    db "window_height", 0
-fmt_reg_screen: db "registry: screen\window_width/height = %dx%d (--window)", 10, 0
+fmt_reg_screen: db "registry: screen\window_width/height = %dx%d", 10, 0
 s_mode_r:    db "r", 0
 s_dword:     db "dword:", 0
 s_hexc:      db "hex:", 0
@@ -760,11 +757,13 @@ fmt_reg_open: db "  [w32] RegOpenKeyExA(%s) -> 0x%x", 10, 0
 fmt_reg_nokey: db "  [w32] registry key not found: %s", 10, 0
 fmt_reg_noval: db "  [w32] registry value not found: %s", 10, 0
 
+section .data
+reg_win_w:   dd 1280             ; window size for the run; --window=WxH overrides
+reg_win_h:   dd 960
+
 section .bss
 alignb 8
 reg_file_buf: resq 1
-reg_win_w:   resd 1              ; --window=WxH (0 = keep the registry's)
-reg_win_h:   resd 1
 reg_nkeys:   resd 1
 reg_nvals:   resd 1
 reg_end:     resq 1

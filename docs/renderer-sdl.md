@@ -26,7 +26,7 @@ renderer.
 
 | piece | what it is |
 |---|---|
-| back buffer | an `ARGB8888` render-target texture of the game's windowed size, `window_width × window_height` (960×720 by default, never smaller than 640×480; see "Resolution"). All drawing goes into it. |
+| back buffer | an `ARGB8888` render-target texture of the game's windowed size, `window_width × window_height` (1280×960 by default, never smaller than 640×480; see "Resolution"). All drawing goes into it. |
 | present | `Vid_FlipBuffers`: the top-left 640×480 of the render target in the frontend, all of it in gameplay → window, letterboxed by `SDL_SetRenderLogicalPresentation(w, h, LETTERBOX)` on the window target (re-set when the size changes), linear scaling, vsync on. The window is exactly the size the game asked for. |
 | 2D surface | an `RGB565` CPU buffer of the back buffer's size (pitch = width × 2) in low memory, handed out as `ctx->surface` by `Vid_GetSurface` (Bink writes there). If the game locked it since the last upload, it is uploaded to a streaming texture and drawn into the back buffer at `gbh_BeginScene` (under the 3D primitives) or at `Vid_FlipBuffers` (Bink-only frames). `Vid_ClearScreen` clears both. |
 | textures | up to 262 143 (`MAX_TEX`; `wil` registers 73 104, plus ~29 000 for the frontend, which are not freed). `gbh_RegisterTexture` allocates a real 0x20-byte `GbhTexture` in low memory (the game pokes `width/height/pixels`) plus a host cache entry (index in `GbhTexture.cache`). On draw, the 8-bit indices (pitch 256) are expanded through the palette into an `ARGB8888` SDL texture of exactly `w×h`, index 0 = alpha 0. The cache key is (pixels, width, height, palette, palette generation), and Lock/Unlock/AssignPalette mark it dirty, so retargeted textures rebuild. |
@@ -162,8 +162,8 @@ Gameplay renders natively at the window size; the frontend stays 640×480.
   `ctx->mode_id == -2` (else from `ctx->width/height`), stores `w-1`/`h-1` at
   `0x673584`/`0x673474` and passes them to `gbh_SetWindow`; gameplay centres the camera
   and anchors the HUD on that size. So `Vid_SetMode` sizes the back buffer to the same two
-  globals (at least 640×480) — nothing is forced in the registry any more, and
-  `--window=WxH` overrides both values for one run.
+  globals (at least 640×480) — the host sets both values to 1280×960 after
+  seeding the registry (the install's are 960×720), and `--window=WxH` picks others.
 - **Frontend vs gameplay.** The frontend draws at fixed 640×480 coordinates into the
   top-left of the same back buffer; a flip presents that 640×480 part, letterboxed into the
   window. Gameplay is told apart by `ptrToGame` (`0x5EB4FC`, seuko-mod `memory.h`): set by

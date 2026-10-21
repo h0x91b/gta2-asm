@@ -13,7 +13,7 @@ drawing the main menu**, until the window is closed (or `--frames=N`). The secti
 below is the record of the stop before that step.
 
 The game runs the MSVC CRT startup and WinMain, creates its window (a real SDL3
-window, 960×720), initialises DirectInput, loads its video plugin, resolves its 22
+window, 1280×960), initialises DirectInput, loads its video plugin, resolves its 22
 `Vid_*` exports, and stops at the **first renderer call: `dmavideo.dll!Vid_InitDLL`,
 called from `0x4D3505`**. That is where the renderer work picks up.
 
@@ -50,7 +50,7 @@ unimplemented import dmavideo.dll!Vid_InitDLL (called from 0x4d3505)
 Exit code 3. With `--trace` every shim call is logged with its arguments, result and
 caller (about 1 000 lines to this point, most of them CRT `HeapSize` calls). With
 `--hold` the process keeps the SDL window up for 5 s when it stops (screenshot check:
-a window titled "GTA2", 960×720 client area, black).
+a window titled "GTA2", 1280×960 client area, black).
 
 `d3ddll.dll` is not loaded yet: the game loads `dmavideo.dll` first and calls
 `Vid_InitDLL` before anything else.
@@ -64,7 +64,7 @@ a window titled "GTA2", 960×720 client area, black).
 | `--hold` | when the run stops, keep pumping SDL events for 5 s so the window is visible |
 | `--frames=N` | exit (status 0) after N presented frames (`renderer-sdl.md`) |
 | `--shot=PATH` | with `--frames`: save the last frame's back buffer as BMP (the presented part: 640×480 in the frontend, the window size in gameplay) |
-| `--window=WxH` | override the registry's `screen\window_width/height` for this run (320×240 … 4096×4096; default = the install's 960×720): the window size and the gameplay resolution (`renderer-sdl.md`, "Resolution") |
+| `--window=WxH` | override the registry's `screen\window_width/height` for this run (320×240 … 4096×4096; default 1280×960, the install seeds 960×720): the window size and the gameplay resolution (`renderer-sdl.md`, "Resolution") |
 | `--trace-input` | log every key change, Acquire, `GetDeviceState` view change and delivered `GetDeviceData` record (implied by `--trace`) |
 | `--keys=F:KEY,...` | scripted taps: KEY (a DIK name, e.g. `DOWN`, `RETURN`, `ESCAPE`) goes down at presented frame F, up 4 frames later; pushed into SDL's queue, so it takes the real key path |
 | `--input-test` | no game run: drive the game's own input code (see "Input") for ~15 s against real keys pressed in a test window |
@@ -123,11 +123,11 @@ match the 64-bit-inode struct layouts; the plain names are the legacy ABI.
   `OPEN_EXISTING`/`OPEN_ALWAYS` is copied there first. The pak is read-only.
 - **Registry.** In memory, seeded from `gta2_install.reg` (overlay or pak) at startup. Writes are
   kept for the life of the process only — not persisted (later: write back to a text
-  file next to the game). The only override after seeding is `--window=WxH`
-  (`reg_window_override`), which replaces `screen\window_width/height` for the run.
+  file next to the game). The only override after seeding is `reg_window_override`, which replaces
+  `screen\window_width/height` for the run with 1280×960, or with `--window=WxH`.
   Windowed play (`start_mode` 0) sizes the window to those values and lays gameplay out
   for them, and the renderer's back buffer follows (`renderer-sdl.md`, "Resolution"), so
-  the install's 960×720 is now rendered natively. (Until 2026-10-21 they were forced to
+  gameplay is rendered natively at that size. (Until 2026-10-21 they were forced to
   640×480 by `reg_force_screen` and the window was shown 1.5× bigger; both are gone.)
 - **Threads.** None exist; sync objects are tokens. `CreateThread` is not imported.
 - **OS identity.** Windows XP SP3 (5.1.2600, NT), code page 1252 (implemented as
@@ -213,7 +213,7 @@ and not yet exercised by the game.
 | RegisterClassA ✓ | name + WndProc |
 | CreateWindowExA ✓ | `SDL_CreateWindow` (hidden until `ShowWindow`), sends WM_NCCREATE, WM_CREATE (CREATESTRUCTA in low memory), WM_SIZE, WM_MOVE |
 | ShowWindow ✓ | `SDL_ShowWindow`/`HideWindow`; first show sends WM_SHOWWINDOW, WM_ACTIVATEAPP, WM_NCACTIVATE, WM_ACTIVATE, WM_SETFOCUS |
-| UpdateWindow ✓, GetWindowRect ✓, GetClientRect ✓, SetWindowPos ✓ | no frame: window rect = client rect at x,y; `SetWindowPos` resizes/moves the SDL window and sends WM_SIZE/WM_MOVE. The SDL window is exactly the size the game asked for (960×720 from the registry, or `--window`) |
+| UpdateWindow ✓, GetWindowRect ✓, GetClientRect ✓, SetWindowPos ✓ | no frame: window rect = client rect at x,y; `SetWindowPos` resizes/moves the SDL window and sends WM_SIZE/WM_MOVE. The SDL window is exactly the size the game asked for (1280×960 by default, or `--window`) |
 | DestroyWindow, SetWindowTextA, Get/SetWindowLongA, CallWindowProcA | WM_DESTROY + `SDL_DestroyWindow`; title; WNDPROC/STYLE/EXSTYLE/USERDATA; call32 |
 | PeekMessageA, DispatchMessageA, PostMessageA, SendMessageA, PostQuitMessage, TranslateMessage | posted-message queue fed by SDL events (see "Input": close → WM_CLOSE, keys → WM_(SYS)KEYDOWN/UP, focus → WM_ACTIVATE); filters ignored; no WM_CHAR (TranslateMessage is a no-op: the game never reads characters from messages) |
 | DefWindowProcA ✓ | WM_NCCREATE/WM_NCACTIVATE → TRUE, WM_CLOSE → DestroyWindow, else 0 |
