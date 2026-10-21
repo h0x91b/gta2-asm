@@ -69,6 +69,7 @@ a window titled "GTA2", 1280×960 client area, black).
 | `--keys=F:KEY,...` | scripted taps: KEY (a DIK name, e.g. `DOWN`, `RETURN`, `ESCAPE`) goes down at presented frame F, up 4 frames later; pushed into SDL's queue, so it takes the real key path |
 | `--input-test` | no game run: drive the game's own input code (see "Input") for ~15 s against real keys pressed in a test window |
 | `--input-selftest` | the same with a scripted SDL event sequence; prints PASS/FAIL per check, exit = number of failures |
+| `--bg-audio` | keep the game audible while the window is not focused (default: muted, see "Audio") |
 
 ## Mechanism
 
@@ -410,7 +411,25 @@ never minimizes. Our own options screen replaces this later.
 - **Streams** are loaded whole on `AIL_open_stream` (PCM WAV, or IMA ADPCM decoded up
   front to s16) — the files are small. Missing/unsupported file → 0, logged once per
   name.
-- **Focus**: `AIL_digital_handle_release/reacquire` pause/resume the device.
+- **Focus (the game's own)**: `AIL_digital_handle_release/reacquire` pause/resume the
+  device. The game calls them only from WndProc `0x4D0A00` on `WM_KILLFOCUS`
+  (`0x4D0B2B` → `0x410640` → `0x416620` → `0x4B6670`) and `WM_SETFOCUS` (`0x4D0A39` →
+  `0x410650` → `0x416D60` → `0x4B6680`); jump table `0x4D0E10`, own analysis. Those two
+  messages also close/reopen the video mode, so the host never sends them (see
+  "Input"); `WM_ACTIVATE(APP)` does not touch audio, and nothing pauses the game, which
+  keeps running in the background.
+- **Mute while unfocused (host)**: `SDL_EVENT_WINDOW_FOCUS_LOST` (also Cmd-Tab, a click
+  on another app, minimise — all of them take key focus) sets the device stream's gain
+  to 0 (`SDL_SetAudioStreamGain`); `FOCUS_GAINED` sets it back to 1. Logged as
+  `[aud] window focus lost: output muted …` / `[aud] window focus gained: output
+  unmuted`. The mixer keeps running on the device clock, so samples and streams
+  advance and end exactly as if audible: no game state changes, nothing restarts,
+  nothing is lost, and on return you hear what is playing *now*. A pause
+  (`SDL_PauseAudioStreamDevice`) was rejected: it stalls the device-clock mixer while the
+  game runs on, so sounds would end late and stream positions drift. The gain is
+  applied when SDL pulls data, so the ~93 ms already queued goes silent at once.
+  `--audio-dump` records the mix before the gain (unaffected). `--bg-audio` disables
+  the mute. Independent of the game's own release/reacquire above.
 - **No audio device**: the mixer advances on the wall clock instead, so
   `--audio-dump` works headless.
 

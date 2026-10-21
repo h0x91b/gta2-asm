@@ -1097,11 +1097,13 @@ s_wb:        db "wb", 0
 s_opt_trace_input: db "--trace-input", 0
 s_opt_input_test: db "--input-test", 0
 s_opt_input_selftest: db "--input-selftest", 0
+s_opt_bg_audio: db "--bg-audio", 0
 align 8
 arg_options:                        ; {name, byte flag}
     dq s_opt_trace_input, trace_input
     dq s_opt_input_test, input_test_on
     dq s_opt_input_selftest, input_selftest
+    dq s_opt_bg_audio, aud_bg_audio
     dq 0
 prot_names:  db "---", 0, "r--", 0, "-w-", 0, "rw-", 0, "--x", 0, "r-x", 0, "-wx", 0, "rwx", 0
 str_pass:    db "PASS", 0

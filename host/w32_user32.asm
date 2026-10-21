@@ -332,7 +332,10 @@ pump_sdl:
     xor edi, edi
     cmp eax, SDL_EVENT_WINDOW_FOCUS_GAINED
     sete dil
+    mov ebx, edi
     call input_focus
+    mov edi, ebx
+    call audio_focus                ; mute while unfocused (w32_audio.asm)
     jmp .poll
 .motion:
     movss xmm0, [rsp + SDL_MOTION_XREL]

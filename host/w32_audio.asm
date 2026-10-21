@@ -68,6 +68,7 @@ section .text
     AFN SDL_PutAudioStreamData
     AFN SDL_GetAudioStreamQueued
     AFN SDL_GetCurrentAudioDriver
+    AFN SDL_SetAudioStreamGain
 %endmacro
 
 setup_audio:
@@ -562,6 +563,7 @@ aud_open_device:
     mov [aud_stream], rax
     mov rdi, rax
     call [a_SDL_ResumeAudioStreamDevice]
+    call aud_apply_gain             ; the window may have lost focus before
     call [a_SDL_GetCurrentAudioDriver]
     lea rdi, [fmt_aud_dev]
     mov rsi, rax
@@ -581,6 +583,49 @@ aud_open_device:
 .out:
     add rsp, 16
     pop rbx
+    ret
+
+; audio_focus(edi = 1 gained / 0 lost): mute the output while the window is not
+; focused (unless --bg-audio). Only the device stream's gain changes: the mixer keeps
+; running on the device clock, so samples and streams advance and end exactly as if
+; audible and the game sees no difference. Independent of the game's own
+; AIL_digital_handle_release (WM_KILLFOCUS, which the host never sends).
+audio_focus:
+    cmp byte [aud_bg_audio], 0
+    jne .r
+    xor eax, eax
+    test edi, edi
+    sete al
+    cmp [aud_muted], al
+    je .r
+    mov [aud_muted], al
+    sub rsp, 8
+    lea rdi, [fmt_aud_unmute]
+    lea rsi, [fmt_aud_mute]
+    test al, al
+    cmovnz rdi, rsi
+    xor eax, eax
+    call _printf
+    call aud_apply_gain
+    add rsp, 8
+.r:
+    ret
+
+; aud_apply_gain: device stream gain 0 while muted, 1 otherwise
+aud_apply_gain:
+    mov rdi, [aud_stream]
+    test rdi, rdi
+    jz .r
+    xorps xmm0, xmm0
+    cmp byte [aud_muted], 0
+    jne .set
+    mov eax, 0x3F800000             ; 1.0f
+    movd xmm0, eax
+.set:
+    sub rsp, 8
+    call [a_SDL_SetAudioStreamGain]
+    add rsp, 8
+.r:
     ret
 
 ; aud_atexit: finish the --audio-dump WAV and print its per-second levels
@@ -1413,6 +1458,8 @@ fmt_aud_nodev:  db "  [aud] no SDL audio device (%s): mixing on the wall clock, 
 fmt_aud_start:  db "  [aud] start_sample 0x%x: data 0x%llx len %u rate %u vol %u pan %u", 10, 0
 fmt_aud_stream: db "  [aud] open_stream(%s): %u Hz fmt %u, %u ms -> 0x%x", 10, 0
 fmt_aud_nostream: db "  [aud] open_stream(%s): missing or unsupported file -> 0 (logged once while it repeats)", 10, 0
+fmt_aud_mute:   db "  [aud] window focus lost: output muted (mixer keeps running; --bg-audio keeps it audible)", 10, 0
+fmt_aud_unmute: db "  [aud] window focus gained: output unmuted", 10, 0
 fmt_aud_dump:   db "  [aud] --audio-dump %s: %u ms (%llu frames, 22050 Hz stereo s16), %u sample starts, %u streams opened, %u missing", 10, 0
 fmt_aud_sec:    db "  [aud]   second %3u: peak %5u (%3u%%)  rms %5u", 10, 0
 align 4
@@ -1446,6 +1493,7 @@ a_SDL_PauseAudioStreamDevice: resq 1
 a_SDL_PutAudioStreamData:   resq 1
 a_SDL_GetAudioStreamQueued: resq 1
 a_SDL_GetCurrentAudioDriver: resq 1
+a_SDL_SetAudioStreamGain:   resq 1
 aud_stream:     resq 1          ; SDL_AudioStream*, 0 = no device
 aud_dump_path:  resq 1          ; --audio-dump=PATH
 aud_dump_file:  resq 1
@@ -1468,6 +1516,8 @@ aud_nsec:       resd 1
 aud_peaks:      resd MAX_SECONDS
 aud_rms:        resd MAX_SECONDS
 aud_open:       resb 1
-aud_paused:     resb 1
+aud_paused:     resb 1          ; the game's AIL_digital_handle_release
+aud_muted:      resb 1          ; window unfocused (audio_focus)
+aud_bg_audio:   resb 1          ; --bg-audio: never mute
 aud_dev_tried:  resb 1
 section .text
