@@ -49,7 +49,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004524c0,FUN_004524c0,,DEFAULT,__fastcall,USER_DEFINED,56,,void __fastcall FUN_004524c0(FrontEnd * param_1)
 0x00452b30,FUN_00452b30,,DEFAULT,__fastcall,USER_DEFINED,85,,undefined __fastcall FUN_00452b30(FrontendS1S1 * param_1)
 0x00452c80,FUN_00452c80,,DEFAULT,__fastcall,USER_DEFINED,53,,undefined __fastcall FUN_00452c80(FrontendS1S2 * param_1)
-0x00455340,FUN_00455340,,DEFAULT,__fastcall,USER_DEFINED,823,,void __fastcall FUN_00455340(FrontEnd * param_1)
 0x00455c20,FUN_00455c20,,DEFAULT,__fastcall,USER_DEFINED,107,,void __fastcall FUN_00455c20(FrontEnd * param_1)
 0x00455e50,FUN_00455e50,,DEFAULT,__fastcall,USER_DEFINED,159,,undefined __fastcall FUN_00455e50(FrontendS1 * param_1)
 0x00455f90,FUN_00455f90,,DEFAULT,__fastcall,USER_DEFINED,361,,void __fastcall FUN_00455f90(FrontEnd * frontend)
@@ -76,7 +75,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0045c3b0,FUN_0045c3b0,,DEFAULT,__fastcall,USER_DEFINED,104,,void __fastcall FUN_0045c3b0(Game * game)
 0x0045c420,FUN_0045c420,,DEFAULT,default,USER_DEFINED,79,,"uint FUN_0045c420(Game * game, uint uParm1, undefined4 param_3, undefined4 param_4)"
 0x0045c470,FUN_0045c470,,DEFAULT,default,USER_DEFINED,92,,"uint FUN_0045c470(Game * game, uint uParm1, undefined4 param_3, undefined4 param_4)"
-0x0045e510,FUN_0045e510,,DEFAULT,__fastcall,USER_DEFINED,7,,char * __fastcall FUN_0045e510(Menu * param_1)
 0x0045e550,FUN_0045e550,,DEFAULT,__fastcall,USER_DEFINED,7,,undefined __fastcall FUN_0045e550(void * param_1)
 0x0045ec20,FUN_0045ec20,,DEFAULT,__stdcall,USER_DEFINED,93,,undefined __stdcall FUN_0045ec20(SaveSlot * param_1)
 0x00460fd0,FUN_00460fd0,,DEFAULT,__fastcall,USER_DEFINED,28,,undefined4 * __fastcall FUN_00460fd0(SKeyboard * param_1)
@@ -88,7 +86,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00466b70,FUN_00466b70,,DEFAULT,__stdcall,USER_DEFINED,361,,"uint __stdcall FUN_00466b70(SCR_f x, SCR_f y, uint * param_3)"
 0x004744b0,GetTickCount,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::GetTickCount,DWORD __stdcall GetTickCount(void)
 0x004766d0,FUN_004766d0,,DEFAULT,__fastcall,USER_DEFINED,4,,undefined4 __fastcall FUN_004766d0(Player_S4 * param_1)
-0x0047f0b0,FUN_0047f0b0,,DEFAULT,default,USER_DEFINED,323,,"void FUN_0047f0b0(MissionScript * this, char * iParm1, char * param_3)"
 0x004820a0,FUN_004820a0,,DEFAULT,__thiscall,USER_DEFINED,17,,"void __thiscall FUN_004820a0(void * this, undefined4 param_1)"
 0x00493710,FUN_00493710,,DEFAULT,__fastcall,USER_DEFINED,104,,void __fastcall FUN_00493710(PedS1 * param_1)
 0x00493850,FUN_00493850,,DEFAULT,__fastcall,USER_DEFINED,77,,undefined __fastcall FUN_00493850(Sprite * param_1)
@@ -124,7 +121,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004b99f0,FUN_004b99f0,,DEFAULT,__fastcall,USER_DEFINED,27,,undefined __fastcall FUN_004b99f0(Position * pos)
 0x004b9e50,FUN_004b9e50,,DEFAULT,__fastcall,USER_DEFINED,7,,void __fastcall FUN_004b9e50(SpriteManager * param_1)
 0x004bcb40,FUN_004bcb40,,DEFAULT,__fastcall,USER_DEFINED,80,,void __fastcall FUN_004bcb40(PedSprite * param_1)
-0x004bf790,FUN_004bf790,,DEFAULT,__fastcall,USER_DEFINED,25,,"short __fastcall FUN_004bf790(undefined4 param_1, int param_2)"
 0x004c23a0,FindLocale,,DEFAULT,default,USER_DEFINED,5,FindLocale,"wchar_t * FindLocale(LocaleSettings * s1, char * key, void * param_3)"
 0x004c4b70,FUN_004c4b70,,DEFAULT,__fastcall,USER_DEFINED,11,,void __fastcall FUN_004c4b70(void * param_1)
 0x004c4d60,FUN_004c4d60,,DEFAULT,__fastcall,USER_DEFINED,22,,void __fastcall FUN_004c4d60(int * param_1)

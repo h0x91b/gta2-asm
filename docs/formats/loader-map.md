@@ -309,8 +309,12 @@ Things worth knowing before writing a loader-compatible tool or patch:
 
 ## Proposed names for Seq 27
 
-Nothing below was applied. "was" is the current Ghidra name; types are offsets within the
-object the function works on.
+Applied to the Ghidra project and `re/`, except: no function was created at `0x40D250` (its
+code is already inside `MapChunk_RGEN`'s body), `g_FontRole_*`, the new `MapGrid`,
+`MssAudioDevice`/`SdtEntry` and `GciRecord` types (`CarModelTable` already has
+`CarEngineData *engineData[256]` for the same records) and the `RoadNetwork` RGEN arrays.
+H rows got the `unsure_` prefix (`g_unsure_skipAudio`, `StyleData.unsure_tileRemap`).
+"was" is the Ghidra name before the change.
 
 Functions:
 

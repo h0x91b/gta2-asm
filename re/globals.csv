@@ -95,11 +95,12 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00595410,random_seed,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00595428,RTTI_Type_Descriptor,type_info,IMPORTED,.data.exp,,/TypeDescriptor,8
 0x00595ffb,replay_number,,USER_DEFINED,.data.exp,,,
-0x005d25f0,hFile,,USER_DEFINED,.data.exp,,/undefined4,4
-0x005d25f4,isFileOpened,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005d25f0,g_File,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005d25f4,g_FileIsOpen,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005d31d8,ptrToS1,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005d351c,g_RoadNetwork,,USER_DEFINED,.data.exp,,/RoadNetwork *,4
 0x005d81dc,g_SoundEventQueue,,USER_DEFINED,.data.exp,,/SoundEventQueue *,4
+0x005dcb08,g_LevelStem,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005dcb58,IsGamePaused,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005dcbc8,g_SoundManager,,USER_DEFINED,.data.exp,,/auto_structs/S6 *,4
 0x005dcbe5,g_sound3DActive,,USER_DEFINED,.data.exp,,/undefined1,1
@@ -121,6 +122,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e500c,JeepGunRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
 0x005e5014,AntennaRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
 0x005e508c,pCarsS4,,USER_DEFINED,.data.exp,,/imported/gzf-2021/CarsS4 *,4
+0x005e5448,g_CarModelTable_GciPath,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005e5488,g_CarModelTable,,USER_DEFINED,.data.exp,,/CarModelTable *,4
 0x005e5bbc,ptrToPedManager,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e5bc0,g_DummyPedManager,,USER_DEFINED,.data.exp,,/auto_structs/DummyPedManager *,4
@@ -213,7 +215,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005ead6f,g_doShowImaginary,,USER_DEFINED,.data.exp,,/bool,1
 0x005ead70,g_cheatElectroGun,,USER_DEFINED,.data.exp,,/bool,1
 0x005ead71,g_doInvulnerable,,USER_DEFINED,.data.exp,,/bool,1
-0x005ead72,g_skipAudio,,USER_DEFINED,.data.exp,,/bool,1
+0x005ead72,g_unsure_skipAudio,,USER_DEFINED,.data.exp,,/bool,1
 0x005ead73,g_gxtFileExists,,USER_DEFINED,.data.exp,,/bool,1
 0x005ead74,g_getAllWeapons,,USER_DEFINED,.data.exp,,/bool,1
 0x005ead75,g_noAnnoyingChars,,USER_DEFINED,.data.exp,,/bool,1
@@ -403,8 +405,11 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x0067535c,d3ddll_DrawLine,,USER_DEFINED,.data.exp,,/undefined,1
 0x00675360,g_GbhStats,,USER_DEFINED,.data.exp,,/void *,4
 0x00675364,g_hRenderDll,,USER_DEFINED,.data.exp,,/WinDef.h/HMODULE,4
+0x00676204,g_Patch1144_LoadingLevel,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00676704,lpCmdLine,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00676cd8,strPathToGXT,,USER_DEFINED,.data.exp,,/undefined,1
+0x00676ddc,g_MmpPath,,USER_DEFINED,.data.exp,,/undefined1,1
+0x00676eec,g_GciPath,,USER_DEFINED,.data.exp,,/undefined1,1
 0x006771f0,Rsrc_Icon_1_c09,,IMPORTED,.rsrc,,/IconResource,1384
 0x00677758,Rsrc_Icon_2_c09,,IMPORTED,.rsrc,,/IconResource,1736
 0x00677e20,Rsrc_Icon_3_c09,,IMPORTED,.rsrc,,/IconResource,2216

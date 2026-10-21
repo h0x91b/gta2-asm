@@ -525,7 +525,7 @@ endstruc
 ; /_STY/CarInfo  (47 bytes)
 struc CarInfo
     .model                            resb 1      ; 0x0 UINT8
-    .sprite                           resb 1      ; 0x1 bool
+    .spriteIndex                      resb 1      ; 0x1 byte
     .w                                resb 1      ; 0x2 UINT8
     .h                                resb 1      ; 0x3 UINT8
     .num_remaps                       resb 1      ; 0x4 UINT8
@@ -606,39 +606,39 @@ endstruc
 
 ; /_STY/StyleData  (4204 bytes)
 struc StyleData
-    ._countOfpalettes                 resb 2      ; 0x0 short
-    .relToFontBase                    resb 2      ; 0x2 short
-    .spriteIndexRel                   resb 2      ; 0x4 short
-    .relToMapObjectInfo               resb 2      ; 0x6 short
-    .size_physical_palette            resb 2      ; 0x8 short
+    .totalVirtualPalettes             resb 2      ; 0x0 short
+    .totalFontSprites                 resb 2      ; 0x2 short
+    .spriteCount                      resb 2      ; 0x4 short
+    .mapObjectInfoCount               resb 2      ; 0x6 short
+    .physicalPaletteCount             resb 2      ; 0x8 short
     resb 2
-    .paletteBase2                     resb 4      ; 0xc PaletteBase *
-    .paletteBase                      resb 4      ; 0x10 PaletteBase *
-    .spriteBase2                      resb 4      ; 0x14 SpriteBase *
-    .spriteBase                       resb 4      ; 0x18 SpriteBase *
-    .fontBase                         resb 4      ; 0x1c void *
+    .paletteBases                     resb 4      ; 0xc PaletteBase *
+    .paletteCounts                    resb 4      ; 0x10 PaletteBase *
+    .spriteBases                      resb 4      ; 0x14 SpriteBase *
+    .spriteCounts                     resb 4      ; 0x18 SpriteBase *
+    .fontBases                        resb 4      ; 0x1c void *
     .spriteIndex                      resb 4      ; 0x20 void *
     .map_object_info                  resb 4      ; 0x24 void *
     .palleteIndex                     resb 4      ; 0x28 PaletteIndex *
     .physical_palettes                resb 4      ; 0x2c void *
-    .i9                               resb 4      ; 0x30 int
+    .physicalPalettesRaw              resb 4      ; 0x30 int
     .sprite_graphics                  resb 4      ; 0x34 void *
-    .i13                              resb 4      ; 0x38 undefined4
-    .i10                              resb 4      ; 0x3c int
-    .i21                              resb 4      ; 0x40 undefined4
-    .i11                              resb 4      ; 0x44 undefined4
-    .i14                              resb 4      ; 0x48 undefined4
-    .i18                              resb 4      ; 0x4c undefined4
-    .i15                              resb 4      ; 0x50 undefined4
-    .i20                              resb 4      ; 0x54 undefined4
-    .car_info_chunk                   resb 4      ; 0x58 void *
+    .spriteGraphicsRaw                resb 4      ; 0x38 undefined4
+    .tiles                            resb 4      ; 0x3c int
+    .unsure_tileRemap                 resb 4      ; 0x40 undefined4
+    .tilesRaw                         resb 4      ; 0x44 undefined4
+    .deltaStore                       resb 4      ; 0x48 undefined4
+    .deltaIndexRaw                    resb 4      ; 0x4c undefined4
+    .deltaIndex                       resb 4      ; 0x50 undefined4
+    .deltaBySprite                    resb 4      ; 0x54 undefined4
+    .carInfoRaw                       resb 4      ; 0x58 void *
     .allCarsInfo                      resb 4      ; 0x5c AllCarsInfo *
-    .i19                              resb 4      ; 0x60 undefined4
-    .i1                               resb 4      ; 0x64 int
-    .short1                           resb 2      ; 0x68 short
+    .deltaIndexSize                   resb 4      ; 0x60 undefined4
+    .recycleModels                    resb 4      ; 0x64 int
+    .recycleModelsSize                resb 2      ; 0x68 short
     .b1                               resb 1      ; 0x6a byte
     resb 1
-    .iArr1024                         resb 4096   ; 0x6c int[1024]
+    .tileSurfaceType                  resb 4096   ; 0x6c int[1024]
 endstruc
 
 ; /_STY/StyleFileHeader  (6 bytes)
@@ -2157,44 +2157,45 @@ endstruc
 
 ; /auto_structs/LocaleSettings  (17 bytes)
 struc LocaleSettings
-    .ptrToLocales                     resb 4      ; 0x0 void *
-    .length                           resb 4      ; 0x4 int
-    .s2                               resb 8      ; 0x8 S2
+    .keys                             resb 4      ; 0x0 LocaleSingle *
+    .keyCount                         resb 4      ; 0x4 int
+    .text                             resb 4      ; 0x8 wchar_t *
+    .textLength                       resb 2      ; 0xc ushort
+    resb 2
     .language                         resb 1      ; 0x10 char
 endstruc
 
 ; /auto_structs/MapBlocks  (880 bytes)
 struc MapBlocks
-    .field0_0x0                       resb 4      ; 0x0 int
+    .grid                             resb 4      ; 0x0 void *
     resb 796
     .field797_0x320                   resb 4      ; 0x320 int
     resb 4
-    .field802_0x328                   resb 4      ; 0x328 undefined4
-    .len                              resb 2      ; 0x32c ushort
-    resb 2
-    .ptrRelToMap                      resb 4      ; 0x330 void *
-    .probablyArray                    resb 4      ; 0x334 void *
-    .field808_0x338                   resb 4      ; 0x338 undefined4
-    .field809_0x33c                   resb 4      ; 0x33c undefined4
-    .field810_0x340                   resb 4      ; 0x340 undefined4
-    .field811_0x344                   resb 4      ; 0x344 undefined4
-    .field812_0x348                   resb 4      ; 0x348 undefined4
-    .field813_0x34c                   resb 4      ; 0x34c undefined4
-    .field814_0x350                   resb 4      ; 0x350 undefined4
-    .field815_0x354                   resb 4      ; 0x354 undefined4
-    .field816_0x358                   resb 4      ; 0x358 undefined4
-    .field817_0x35c                   resb 4      ; 0x35c undefined4
-    .field818_0x360                   resb 4      ; 0x360 undefined4
+    .zoneData                         resb 4      ; 0x328 void *
+    .zoneIndex                        resb 4      ; 0x32c void *
+    .zoneInfoSlot                     resb 4      ; 0x330 byte *
+    .zoneInfo                         resb 4      ; 0x334 void *
+    .mapObjects                       resb 4      ; 0x338 void *
+    .lights                           resb 4      ; 0x33c void *
+    .tileAnims                        resb 4      ; 0x340 void *
+    .mapObjectCount                   resb 4      ; 0x344 uint
+    .lightCount                       resb 4      ; 0x348 uint
+    .blockCount                       resb 4      ; 0x34c uint
+    .blockCapacity                    resb 4      ; 0x350 uint
+    .blockCountCopy                   resb 4      ; 0x354 uint
+    .columnWordCount                  resb 4      ; 0x358 uint
+    .columnWordCapacity               resb 4      ; 0x35c uint
+    .columnWordCountCopy              resb 4      ; 0x360 uint
     .lenOrCounter                     resb 2      ; 0x364 ushort
-    .field820_0x366                   resb 2      ; 0x366 undefined2
-    .field821_0x368                   resb 1      ; 0x368 byte
-    .field822_0x369                   resb 1      ; 0x369 byte
-    .field823_0x36a                   resb 1      ; 0x36a byte
-    .field824_0x36b                   resb 1      ; 0x36b byte
-    .field825_0x36c                   resb 1      ; 0x36c byte
-    .field826_0x36d                   resb 1      ; 0x36d byte
-    .field827_0x36e                   resb 1      ; 0x36e byte
-    .field828_0x36f                   resb 1      ; 0x36f byte
+    .field818_0x366                   resb 2      ; 0x366 undefined2
+    .field819_0x368                   resb 1      ; 0x368 byte
+    .field820_0x369                   resb 1      ; 0x369 byte
+    .field821_0x36a                   resb 1      ; 0x36a byte
+    .field822_0x36b                   resb 1      ; 0x36b byte
+    .field823_0x36c                   resb 1      ; 0x36c byte
+    .field824_0x36d                   resb 1      ; 0x36d byte
+    .field825_0x36e                   resb 1      ; 0x36e byte
+    .field826_0x36f                   resb 1      ; 0x36f byte
 endstruc
 
 ; /auto_structs/MapRenderer  (12036 bytes)

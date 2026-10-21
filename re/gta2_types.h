@@ -2831,7 +2831,7 @@ struct DoorInfo {
 // /_STY/CarInfo  size 0x2f
 struct CarInfo {
     UINT8 model; /* 0x0 */
-    bool_ sprite; /* 0x1 */
+    byte spriteIndex; /* 0x1 */
     UINT8 w; /* 0x2 */
     UINT8 h; /* 0x3 */
     UINT8 num_remaps; /* 0x4 max 64 */
@@ -2892,39 +2892,39 @@ struct SpriteEntry {
 
 // /_STY/StyleData  size 0x106c
 struct StyleData {
-    short _countOfpalettes; /* 0x0 */
-    short relToFontBase; /* 0x2 */
-    short spriteIndexRel; /* 0x4 */
-    short relToMapObjectInfo; /* 0x6 */
-    short size_physical_palette; /* 0x8 */
+    short totalVirtualPalettes; /* 0x0 */
+    short totalFontSprites; /* 0x2 */
+    short spriteCount; /* 0x4 */
+    short mapObjectInfoCount; /* 0x6 */
+    short physicalPaletteCount; /* 0x8 */
     uint8_t _gap_0xa[0x2];
-    PaletteBase *paletteBase2; /* 0xc */
-    PaletteBase *paletteBase; /* 0x10 */
-    SpriteBase *spriteBase2; /* 0x14 */
-    SpriteBase *spriteBase; /* 0x18 */
-    void *fontBase; /* 0x1c */
+    PaletteBase *paletteBases; /* 0xc */
+    PaletteBase *paletteCounts; /* 0x10 */
+    SpriteBase *spriteBases; /* 0x14 */
+    SpriteBase *spriteCounts; /* 0x18 */
+    void *fontBases; /* 0x1c */
     void *spriteIndex; /* 0x20 */
     void *map_object_info; /* 0x24 */
     PaletteIndex *palleteIndex; /* 0x28 */
     void *physical_palettes; /* 0x2c */
-    int i9; /* 0x30 */
+    int physicalPalettesRaw; /* 0x30 */
     void *sprite_graphics; /* 0x34 */
-    undefined4 i13; /* 0x38 */
-    int i10; /* 0x3c */
-    undefined4 i21; /* 0x40 */
-    undefined4 i11; /* 0x44 */
-    undefined4 i14; /* 0x48 */
-    undefined4 i18; /* 0x4c */
-    undefined4 i15; /* 0x50 */
-    undefined4 i20; /* 0x54 */
-    void *car_info_chunk; /* 0x58 */
+    undefined4 spriteGraphicsRaw; /* 0x38 */
+    int tiles; /* 0x3c */
+    undefined4 unsure_tileRemap; /* 0x40 */
+    undefined4 tilesRaw; /* 0x44 */
+    undefined4 deltaStore; /* 0x48 */
+    undefined4 deltaIndexRaw; /* 0x4c */
+    undefined4 deltaIndex; /* 0x50 */
+    undefined4 deltaBySprite; /* 0x54 */
+    void *carInfoRaw; /* 0x58 */
     AllCarsInfo *allCarsInfo; /* 0x5c */
-    undefined4 i19; /* 0x60 */
-    int i1; /* 0x64 */
-    short short1; /* 0x68 */
+    undefined4 deltaIndexSize; /* 0x60 */
+    int recycleModels; /* 0x64 */
+    short recycleModelsSize; /* 0x68 */
     byte b1; /* 0x6a */
     uint8_t _gap_0x6b[0x1];
-    int iArr1024[1024]; /* 0x6c */
+    int tileSurfaceType[1024]; /* 0x6c */
 };
 
 // /_STY/StyleFileHeader  size 0x6
@@ -3771,52 +3771,47 @@ struct ListNodePool {
     S18_sub s18_sub_50[50]; /* 0x4 */
 };
 
-// /auto_structs/S2  size 0x8
-struct S2 {
-    int f1; /* 0x0 */
-    int f2; /* 0x4 */
-};
-
 // /auto_structs/LocaleSettings  size 0x11
 struct LocaleSettings {
-    void *ptrToLocales; /* 0x0 */
-    int length; /* 0x4 Created by retype action */
-    S2 s2; /* 0x8 */
+    LocaleSingle *keys; /* 0x0 */
+    int keyCount; /* 0x4 Created by retype action */
+    wchar_t *text; /* 0x8 */
+    ushort textLength; /* 0xc */
+    uint8_t _gap_0xe[0x2];
     char language; /* 0x10 Created by retype action */
 };
 
 // /auto_structs/MapBlocks  size 0x370
 struct MapBlocks {
-    int field0_0x0; /* 0x0 */
+    void *grid; /* 0x0 */
     uint8_t _gap_0x4[0x31c];
     int field797_0x320; /* 0x320 */
     uint8_t _gap_0x324[0x4];
-    undefined4 field802_0x328; /* 0x328 */
-    ushort len; /* 0x32c */
-    uint8_t _gap_0x32e[0x2];
-    void *ptrRelToMap; /* 0x330 */
-    void *probablyArray; /* 0x334 */
-    undefined4 field808_0x338; /* 0x338 */
-    undefined4 field809_0x33c; /* 0x33c */
-    undefined4 field810_0x340; /* 0x340 */
-    undefined4 field811_0x344; /* 0x344 */
-    undefined4 field812_0x348; /* 0x348 */
-    undefined4 field813_0x34c; /* 0x34c */
-    undefined4 field814_0x350; /* 0x350 */
-    undefined4 field815_0x354; /* 0x354 */
-    undefined4 field816_0x358; /* 0x358 */
-    undefined4 field817_0x35c; /* 0x35c */
-    undefined4 field818_0x360; /* 0x360 */
+    void *zoneData; /* 0x328 */
+    void *zoneIndex; /* 0x32c */
+    byte *zoneInfoSlot; /* 0x330 */
+    void *zoneInfo; /* 0x334 */
+    void *mapObjects; /* 0x338 */
+    void *lights; /* 0x33c */
+    void *tileAnims; /* 0x340 */
+    uint mapObjectCount; /* 0x344 */
+    uint lightCount; /* 0x348 */
+    uint blockCount; /* 0x34c */
+    uint blockCapacity; /* 0x350 */
+    uint blockCountCopy; /* 0x354 */
+    uint columnWordCount; /* 0x358 */
+    uint columnWordCapacity; /* 0x35c */
+    uint columnWordCountCopy; /* 0x360 */
     ushort lenOrCounter; /* 0x364 */
-    undefined2 field820_0x366; /* 0x366 */
-    byte field821_0x368; /* 0x368 */
-    byte field822_0x369; /* 0x369 */
-    byte field823_0x36a; /* 0x36a */
-    byte field824_0x36b; /* 0x36b */
-    byte field825_0x36c; /* 0x36c */
-    byte field826_0x36d; /* 0x36d */
-    byte field827_0x36e; /* 0x36e */
-    byte field828_0x36f; /* 0x36f */
+    undefined2 field818_0x366; /* 0x366 */
+    byte field819_0x368; /* 0x368 */
+    byte field820_0x369; /* 0x369 */
+    byte field821_0x36a; /* 0x36a */
+    byte field822_0x36b; /* 0x36b */
+    byte field823_0x36c; /* 0x36c */
+    byte field824_0x36d; /* 0x36d */
+    byte field825_0x36e; /* 0x36e */
+    byte field826_0x36f; /* 0x36f */
 };
 
 // /imported/seuko-mod/SCR_Vector2  size 0x8
@@ -4065,6 +4060,12 @@ struct Vec3i {
 struct S17_mission {
     int len; /* 0x0 */
     Vec3i vec3i50[50]; /* 0x4 */
+};
+
+// /auto_structs/S2  size 0x8
+struct S2 {
+    int f1; /* 0x0 */
+    int f2; /* 0x4 */
 };
 
 // /auto_structs/S22  size 0x5d598
