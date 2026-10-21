@@ -1164,11 +1164,6 @@ PLAYER_MOVEMENT_STATE.CTRL_WEAPON_NEXT equ 256
 PLAYER_MOVEMENT_STATE.CTRL_SPECIAL_1 equ 512
 PLAYER_MOVEMENT_STATE.CTRL_SPECIAL_2 equ 1024
 
-; enum /_enums/SAVE_SLOT_UNCLEAR_UI_OR_SCRIPTS_VALUE_ID  (2 bytes)
-SAVE_SLOT_UNCLEAR_UI_OR_SCRIPTS_VALUE_ID.PLAYER_LIVES equ 115
-SAVE_SLOT_UNCLEAR_UI_OR_SCRIPTS_VALUE_ID.MONEY_MULTIPLIER equ 116
-SAVE_SLOT_UNCLEAR_UI_OR_SCRIPTS_VALUE_ID.PLAYER_MONEY equ 158
-
 ; enum /_enums/VOCAL  (4 bytes)
 VOCAL.INSANE_STUNT_BONUS_ equ 1
 VOCAL.GRAND_THEFT_AUTO_ equ 2
@@ -1234,13 +1229,10 @@ struc AnimatedValue
     .value                            resb 4      ; 0x0 int
     .shownValue                       resb 4      ; 0x4 int
     .countingUp                       resb 1      ; 0x8 byte
-    resb 7
-    .accuracyCount                    resb 1      ; 0x10 byte
-    resb 3
-    .reverseCount                     resb 4      ; 0x14 int
-    resb 8
-    .ptrToSaveSlot                    resb 4      ; 0x20 Player *
-    resb 3
+    .curDigits                        resb 10     ; 0x9 char[10]
+    .digitScroll                      resb 9      ; 0x13 byte[9]
+    resb 1
+    .prevDigits                       resb 10     ; 0x1d char[10]
     .digitWidth                       resb 1      ; 0x27 byte
     .digitHeight                      resb 1      ; 0x28 byte
     resb 1
@@ -2070,16 +2062,6 @@ WEAPON_INDEX.WEAPON_VEHICLE_WEAPON_25 equ 25
 WEAPON_INDEX.WEAPON_VEHICLE_WEAPON_26 equ 26
 WEAPON_INDEX.WEAPON_VEHICLE_WEAPON_27 equ 27
 
-; /_weapon/WEAPON_PLAYER_LIST  (1930 bytes)
-struc WEAPON_PLAYER_LIST
-    resb 80
-    .bitMask                          resb 4      ; 0x50 uint
-    resb 1732
-    .weapons                          resb 88     ; 0x718 WEAPON_PLAYER_LIST *[22]
-    resb 24
-    .count                            resb 2      ; 0x788 short
-endstruc
-
 ; /_weapon/WEAPON_STRUCT  (48 bytes)
 struc WEAPON_STRUCT
     .ammo                             resb 2      ; 0x0 short
@@ -2505,14 +2487,6 @@ struc S23
     .field937_0x3c0                   resb 4      ; 0x3c0 undefined4
     .field938_0x3c4                   resb 4      ; 0x3c4 int
     .buf0x40000                       resb 4      ; 0x3c8 undefined4
-endstruc
-
-; /auto_structs/S26  (50 bytes)
-struc S26
-    resb 41
-    .field41_0x29                     resb 4      ; 0x29 undefined4
-    .field42_0x2d                     resb 4      ; 0x2d undefined4
-    .field43_0x31                     resb 1      ; 0x31 byte
 endstruc
 
 ; /auto_structs/S28  (11200 bytes)
@@ -3023,85 +2997,6 @@ struc SCR_TWO_SHORTS
     .s2                               resb 2      ; 0x2 short
 endstruc
 
-; /imported/gta2-mouse/Save  (2344 bytes)
-struc Save
-    resb 4
-    .keyboardKeys                     resb 4      ; 0x4 KEYBOARD_STATE
-    .field_0x8                        resb 2      ; 0x8 short
-    .field_0xa                        resb 2      ; 0xa short
-    .field_0xc                        resb 4      ; 0xc int
-    .playerPed3                       resb 4      ; 0x10 Ped *
-    .field_0x14                       resb 2      ; 0x14 short
-    .field_0x16                       resb 2      ; 0x16 short
-    .field_0x18                       resb 2      ; 0x18 short
-    resb 16
-    .field_0x2a                       resb 2      ; 0x2a short
-    .field_0x2c                       resb 2      ; 0x2c short
-    .saveSlotIndex                    resb 1      ; 0x2e byte
-    resb 5
-    .field_0x34                       resb 4      ; 0x34 int
-    .field_0x38                       resb 4      ; 0x38 int
-    .field_0x3c                       resb 4      ; 0x3c int
-    resb 4
-    .deathReason                      resb 4      ; 0x44 DEATH_REASON
-    resb 12
-    .lastCars                         resb 12     ; 0x54 Car *[3]
-    .field_0x60                       resb 4      ; 0x60 int
-    resb 4
-    .someState                        resb 4      ; 0x68 int
-    .field_0x6c                       resb 4      ; 0x6c int
-    resb 6
-    .debugKey1                        resb 1      ; 0x76 byte
-    .debugKey2                        resb 1      ; 0x77 byte
-    resb 24
-    .xyz                              resb 256    ; 0x90 XYZ
-    .playerPed                        resb 4      ; 0x190 Ped *
-    resb 96
-    .encodedCameraX                   resb 4      ; 0x1f4 int
-    .encodedCameraY                   resb 4      ; 0x1f8 int
-    .encodedCameraZ                   resb 4      ; 0x1fc int
-    resb 24
-    .xyz2                             resb 256    ; 0x218 XYZ
-    resb 84
-    .auxGameCameraX                   resb 4      ; 0x36c int
-    .auxGameCameraY                   resb 4      ; 0x370 int
-    .auxGameCameraZ                   resb 4      ; 0x374 int
-    resb 24
-    .playerPed2                       resb 4      ; 0x390 Ped *
-    .pedRelTo_fieldx68                resb 4      ; 0x394 Ped *
-    .field_0x2cc                      resb 4      ; 0x398 int
-    resb 4
-    .animatedValues_firstMoney        resb 840    ; 0x3a0 AnimatedValue[15]
-    resb 40
-    .field_0x644                      resb 4      ; 0x710 S26 *
-    resb 48
-    .field_0x678                      resb 4      ; 0x744 int
-    .field_0x67c                      resb 4      ; 0x748 int
-    .incToBe100                       resb 2      ; 0x74c ushort
-    .eq_1000                          resb 2      ; 0x74e short
-    .lives                            resb 56     ; 0x750 AnimatedValue
-    .moneyMultiplier                  resb 56     ; 0x788 AnimatedValue
-    resb 8
-    .field_0x6fc                      resb 2      ; 0x7c8 short
-    resb 2
-    .bonus1                           resb 2      ; 0x7cc short
-    .bonus2                           resb 2      ; 0x7ce short
-    .bonus3                           resb 2      ; 0x7d0 short
-    .bonus4                           resb 2      ; 0x7d2 short
-    resb 2
-    .bonus5                           resb 2      ; 0x7d6 short
-    resb 12
-    .iArr28                           resb 112    ; 0x7e4 int[28]
-    .field_0x788                      resb 2      ; 0x854 short
-    resb 2
-    .field_0x78c                      resb 4      ; 0x858 int
-    .field_0x790                      resb 2      ; 0x85c short
-    resb 170
-    .field_0x83c                      resb 2      ; 0x908 short
-    resb 29
-    .field_0x927                      resb 1      ; 0x927 undefined1
-endstruc
-
 ; /imported/gta2-mouse/ScriptFunctionsAddrTable  (772 bytes)
 struc ScriptFunctionsAddrTable
     resb 771
@@ -3281,106 +3176,11 @@ struc PedsManager
     .field_0x203ab                    resb 1      ; 0x203ab undefined1
 endstruc
 
-; /imported/gzf-2021/PlayerS1  (36 bytes)
-struc PlayerS1
-    .x                                resb 4      ; 0x0 int
-    .y                                resb 4      ; 0x4 int
-    .z                                resb 4      ; 0x8 int
-    .field3_0xc                       resb 4      ; 0xc int
-    .field4_0x10                      resb 4      ; 0x10 int
-    .vec                              resb 12     ; 0x14 PlayerS2
-    resb 3
-    .field_0x23                       resb 1      ; 0x23 undefined1
-endstruc
-
 ; /imported/gzf-2021/PlayerS2  (12 bytes)
 struc PlayerS2
     .x                                resb 4      ; 0x0 int
     .y                                resb 4      ; 0x4 int
     .z                                resb 4      ; 0x8 int
-endstruc
-
-; /imported/gzf-2021/PlayerWeapon  (40 bytes)
-struc PlayerWeapon
-    .ammo                             resb 2      ; 0x0 short
-    resb 2
-    .field3_0x4                       resb 4      ; 0x4 int
-    resb 12
-    .field16_0x14                     resb 4      ; 0x14 int
-    resb 4
-    .field21_0x1c                     resb 4      ; 0x1c int
-    resb 4
-    .field26_0x24                     resb 4      ; 0x24 Ped *
-endstruc
-
-; /imported/gzf-2021/Player_S4  (1938 bytes)
-struc Player_S4
-    .somethingRelToAudio              resb 1      ; 0x0 bool
-    resb 3
-    .keyState                         resb 4      ; 0x4 uint
-    resb 16
-    .field18_0x18                     resb 2      ; 0x18 short
-    resb 2
-    .field20_0x1c                     resb 4      ; 0x1c int
-    .field21_0x20                     resb 4      ; 0x20 Car *
-    .field22_0x24                     resb 4      ; 0x24 uint
-    resb 9
-    .field32_0x31                     resb 1      ; 0x31 bool
-    resb 58
-    .field79_0x6c                     resb 4      ; 0x6c int
-    resb 8
-    .forward                          resb 1      ; 0x78 bool
-    .backward                         resb 1      ; 0x79 bool
-    .rotateLeft                       resb 1      ; 0x7a bool
-    .rotateRight                      resb 1      ; 0x7b bool
-    .attack                           resb 1      ; 0x7c bool
-    .enter                            resb 1      ; 0x7d bool
-    .jump                             resb 1      ; 0x7e bool
-    .nextWeaponZ                      resb 1      ; 0x7f bool
-    .prevWeaponX                      resb 1      ; 0x80 bool
-    .tab                              resb 1      ; 0x81 bool
-    .unknownKey400                    resb 1      ; 0x82 bool
-    .unknownKey800                    resb 1      ; 0x83 bool
-    .field100_0x84                    resb 1      ; 0x84 bool
-    .field101_0x85                    resb 1      ; 0x85 bool
-    .field102_0x86                    resb 1      ; 0x86 bool
-    .field103_0x87                    resb 1      ; 0x87 bool
-    .field104_0x88                    resb 1      ; 0x88 bool
-    .field105_0x89                    resb 1      ; 0x89 bool
-    .field106_0x8a                    resb 1      ; 0x8a bool
-    .field107_0x8b                    resb 1      ; 0x8b bool
-    .field108_0x8c                    resb 1      ; 0x8c bool
-    .attackIsChanged                  resb 1      ; 0x8d bool
-    .field110_0x8e                    resb 1      ; 0x8e bool
-    resb 1
-    .ps1                              resb 36     ; 0x90 PlayerS1
-    resb 116
-    .field229_0x128                   resb 4      ; 0x128 int
-    .field230_0x12c                   resb 4      ; 0x12c int
-    .field231_0x130                   resb 4      ; 0x130 int
-    resb 176
-    .field261_0x1e4                   resb 4      ; 0x1e4 int
-    .field262_0x1e8                   resb 4      ; 0x1e8 int
-    .field263_0x1ec                   resb 4      ; 0x1ec int
-    resb 176
-    .field265_0x2a0                   resb 4      ; 0x2a0 int
-    .field266_0x2a4                   resb 4      ; 0x2a4 int
-    .field267_0x2a8                   resb 4      ; 0x2a8 int
-    resb 24
-    .ped                              resb 4      ; 0x2c4 Ped *
-    .field293_0x2c8                   resb 4      ; 0x2c8 Ped *
-    resb 8
-    .money                            resb 4      ; 0x2d4 int
-    resb 940
-    .lives                            resb 4      ; 0x684 int
-    resb 52
-    .moneyMultiplier                  resb 4      ; 0x6bc int
-    resb 88
-    .weapons                          resb 44     ; 0x718 PlayerWeapon *[11]
-    resb 68
-    .selectedWeapon                   resb 2      ; 0x788 short
-    resb 7
-    .field_0x791                      resb 1      ; 0x791 undefined1
 endstruc
 
 ; /imported/gzf-2021/Police_s5  (1973 bytes)
@@ -4884,72 +4684,6 @@ endstruc
 struc PhysicalPalette
     resb 1023
     .field_0x3ff                      resb 1      ; 0x3ff undefined1
-endstruc
-
-; /imported/seuko-mod/Player_SeukoMod  (2140 bytes)
-struc Player_SeukoMod
-    .f0                               resb 2      ; 0x0 undefined2
-    resb 2
-    .keyboardKeys                     resb 4      ; 0x4 KEYBOARD_STATE
-    .field_0x8                        resb 2      ; 0x8 short
-    .field_0xa                        resb 2      ; 0xa short
-    .field_0xc                        resb 4      ; 0xc int
-    resb 4
-    .field_0x14                       resb 2      ; 0x14 short
-    .field_0x16                       resb 2      ; 0x16 short
-    .field_0x18                       resb 2      ; 0x18 short
-    resb 16
-    .field_0x2a                       resb 2      ; 0x2a short
-    .field_0x2c                       resb 2      ; 0x2c short
-    .gangsRespectIndex                resb 1      ; 0x2e byte
-    resb 5
-    .field_0x34                       resb 4      ; 0x34 int
-    .field_0x38                       resb 4      ; 0x38 int
-    .field_0x3c                       resb 4      ; 0x3c int
-    resb 4
-    .deathReason                      resb 4      ; 0x44 DEATH_REASON
-    resb 12
-    .lastCars                         resb 12     ; 0x54 Car *[3]
-    .field_0x60                       resb 4      ; 0x60 int
-    resb 4
-    .controlState                     resb 4      ; 0x68 PLAYER_CONTROL_STATE
-    .teleportMode                     resb 4      ; 0x6c int
-    resb 596
-    .ped                              resb 4      ; 0x2c4 Ped *
-    .ped2                             resb 4      ; 0x2c8 Ped *
-    resb 8
-    .animatedMoney                    resb 56     ; 0x2d4 AnimatedValue
-    resb 824
-    .field_0x644                      resb 4      ; 0x644 S26 *
-    resb 48
-    .field_0x678                      resb 4      ; 0x678 int
-    .field_0x67c                      resb 4      ; 0x67c int
-    .incToBe100                       resb 2      ; 0x680 ushort
-    .eq_1000                          resb 2      ; 0x682 short
-    .lives                            resb 56     ; 0x684 AnimatedValue
-    .moneyMultiplier                  resb 56     ; 0x6bc AnimatedValue
-    resb 6
-    .armor                            resb 2      ; 0x6fa ushort
-    .field_0x6fc                      resb 2      ; 0x6fc short
-    resb 2
-    .bonus1                           resb 2      ; 0x700 short
-    .bonus2                           resb 2      ; 0x702 short
-    .bonus3                           resb 2      ; 0x704 short
-    .bonus4                           resb 2      ; 0x706 short
-    resb 2
-    .bonus5                           resb 2      ; 0x70a short
-    resb 12
-    .iArr28                           resb 112    ; 0x718 int[28]
-    .field_0x788                      resb 2      ; 0x788 short
-    resb 2
-    .field_0x78c                      resb 4      ; 0x78c int
-    .field_0x790                      resb 2      ; 0x790 short
-    resb 2
-    .isChatOpen                       resb 1      ; 0x794 bool
-    resb 167
-    .field_0x83c                      resb 2      ; 0x83c short
-    resb 29
-    .field_0x85b                      resb 1      ; 0x85b undefined1
 endstruc
 
 ; enum /imported/seuko-mod/REPLAY_STATUS  (4 bytes)

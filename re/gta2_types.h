@@ -12,6 +12,7 @@ typedef uint8_t byte;
 typedef uint32_t dword;
 typedef uint8_t uchar;
 typedef uint32_t uint;
+typedef uint8_t undefined;
 typedef uint8_t undefined1;
 typedef uint16_t undefined2;
 typedef uint32_t undefined4;
@@ -114,7 +115,6 @@ typedef struct SCR_PLAYER_PED SCR_PLAYER_PED;
 typedef struct SCR_STRINGS SCR_STRINGS;
 typedef struct SCR_STRING_HEADER SCR_STRING_HEADER;
 typedef struct SoundClient SoundClient;
-typedef struct WEAPON_PLAYER_LIST WEAPON_PLAYER_LIST;
 typedef struct WEAPON_STRUCT WEAPON_STRUCT;
 typedef struct WeaponPool WeaponPool;
 typedef struct CrimeEvent CrimeEvent;
@@ -145,7 +145,6 @@ typedef struct S2 S2;
 typedef struct S22 S22;
 typedef struct S22_1 S22_1;
 typedef struct S23 S23;
-typedef struct S26 S26;
 typedef struct S28 S28;
 typedef struct S30 S30;
 typedef struct S5 S5;
@@ -180,7 +179,6 @@ typedef struct S37 S37;
 typedef struct S38 S38;
 typedef struct SCR_CMD_SIX_PARAMS SCR_CMD_SIX_PARAMS;
 typedef struct SCR_TWO_SHORTS SCR_TWO_SHORTS;
-typedef struct Save Save;
 typedef struct ScriptFunctionsAddrTable ScriptFunctionsAddrTable;
 typedef union U_SCR_TWO_PARAMS U_SCR_TWO_PARAMS;
 typedef struct AllCars AllCars;
@@ -197,10 +195,7 @@ typedef struct FrontendS1S3 FrontendS1S3;
 typedef struct PedS1 PedS1;
 typedef struct PedSprite PedSprite;
 typedef struct PedsManager PedsManager;
-typedef struct PlayerS1 PlayerS1;
 typedef struct PlayerS2 PlayerS2;
-typedef struct PlayerWeapon PlayerWeapon;
-typedef struct Player_S4 Player_S4;
 typedef struct Police_s5 Police_s5;
 typedef struct S1 S1;
 typedef struct S3 S3;
@@ -257,7 +252,6 @@ typedef struct Passenger Passenger;
 typedef struct PedGameObjectManager PedGameObjectManager;
 typedef struct PedGroup PedGroup;
 typedef struct PhysicalPalette PhysicalPalette;
-typedef struct Player_SeukoMod Player_SeukoMod;
 typedef struct RenderDistanceArrayItem RenderDistanceArrayItem;
 typedef struct RoofSpritesHolder RoofSpritesHolder;
 typedef struct S10_TxtMessage S10_TxtMessage;
@@ -738,14 +732,6 @@ enum PLAYER_MOVEMENT_STATE_values {
     CTRL_WEAPON_NEXT = 256,
     CTRL_SPECIAL_1 = 512,
     CTRL_SPECIAL_2 = 1024,
-};
-
-// /_enums/SAVE_SLOT_UNCLEAR_UI_OR_SCRIPTS_VALUE_ID
-typedef uint16_t SAVE_SLOT_UNCLEAR_UI_OR_SCRIPTS_VALUE_ID;
-enum SAVE_SLOT_UNCLEAR_UI_OR_SCRIPTS_VALUE_ID_values {
-    PLAYER_LIVES = 115,
-    MONEY_MULTIPLIER = 116,
-    PLAYER_MONEY = 158,
 };
 
 // /_enums/VOCAL
@@ -2315,7 +2301,7 @@ typedef HINSTANCE__ *HINSTANCE;
 typedef HWND__ *HWND;
 typedef ushort WORD;
 typedef uchar MissionCode[3072];
-typedef uint __fastcall dt_b293fec6(WEAPON_PLAYER_LIST *p0);
+typedef uint __fastcall dt_b293fec6(undefined p0);
 typedef char INT8;
 typedef uint UINT32;
 typedef uchar UINT8;
@@ -2714,13 +2700,10 @@ struct AnimatedValue {
     int value; /* 0x0 */
     int shownValue; /* 0x4 */
     byte countingUp; /* 0x8 */
-    uint8_t _gap_0x9[0x7];
-    byte accuracyCount; /* 0x10 */
-    uint8_t _gap_0x11[0x3];
-    int reverseCount; /* 0x14 */
-    uint8_t _gap_0x18[0x8];
-    Player *ptrToSaveSlot; /* 0x20 */
-    uint8_t _gap_0x24[0x3];
+    char curDigits[10]; /* 0x9 */
+    byte digitScroll[9]; /* 0x13 */
+    uint8_t _gap_0x1c[0x1];
+    char prevDigits[10]; /* 0x1d */
     byte digitWidth; /* 0x27 */
     byte digitHeight; /* 0x28 */
     uint8_t _gap_0x29[0x1];
@@ -3708,16 +3691,6 @@ struct SoundClient {
     byte field23_0x2c; /* 0x2c */
 };
 
-// /_weapon/WEAPON_PLAYER_LIST  size 0x78a
-struct WEAPON_PLAYER_LIST {
-    uint8_t _gap_0x0[0x50];
-    uint bitMask; /* 0x50 */
-    uint8_t _gap_0x54[0x6c4];
-    WEAPON_PLAYER_LIST *weapons[22]; /* 0x718 Created by retype action */
-    uint8_t _gap_0x770[0x18];
-    short count; /* 0x788 Created by retype action */
-};
-
 // /_weapon/WEAPON_STRUCT  size 0x30
 struct WEAPON_STRUCT {
     short ammo; /* 0x0 */
@@ -4215,14 +4188,6 @@ struct S23 {
     undefined4 buf0x40000; /* 0x3c8 */
 };
 
-// /auto_structs/S26  size 0x32
-struct S26 {
-    uint8_t _gap_0x0[0x29];
-    undefined4 field41_0x29; /* 0x29 */
-    undefined4 field42_0x2d; /* 0x2d */
-    byte field43_0x31; /* 0x31 */
-};
-
 // /auto_structs/S28  size 0x2bc0
 struct S28 {
     uint8_t _gap_0x0[0x1890];
@@ -4609,105 +4574,6 @@ struct SCR_CMD_SIX_PARAMS {
     U_SCR_TWO_PARAMS params56; /* 0x12 */
 };
 
-// /imported/seuko-mod/XYZ  size 0x100
-struct XYZ {
-    SCR_Vector3 position; /* 0x0 */
-    int field_0xc; /* 0xc */
-    SCR_Vector3 position2; /* 0x10 */
-    int field_0x1c; /* 0x1c */
-    uint8_t _gap_0x20[0x1c];
-    int field_0x3c; /* 0x3c */
-    uint8_t _gap_0x40[0x28];
-    uint width; /* 0x68 */
-    uint height; /* 0x6c */
-    uint halfWidth; /* 0x70 */
-    uint halfHeight; /* 0x74 */
-    uint8_t _gap_0x78[0x20];
-    SCR_Vector3 position3; /* 0x98 */
-    int field_0xa4; /* 0xa4 */
-    uint8_t _gap_0xa8[0x57];
-    undefined1 field_0xff; /* 0xff */
-};
-
-// /imported/gta2-mouse/Save  size 0x928
-struct Save {
-    uint8_t _gap_0x0[0x4];
-    KEYBOARD_STATE keyboardKeys; /* 0x4 */
-    short field_0x8; /* 0x8 */
-    short field_0xa; /* 0xa */
-    int field_0xc; /* 0xc */
-    Ped *playerPed3; /* 0x10 */
-    short field_0x14; /* 0x14 */
-    short field_0x16; /* 0x16 */
-    short field_0x18; /* 0x18 */
-    uint8_t _gap_0x1a[0x10];
-    short field_0x2a; /* 0x2a */
-    short field_0x2c; /* 0x2c */
-    byte saveSlotIndex; /* 0x2e */
-    uint8_t _gap_0x2f[0x5];
-    int field_0x34; /* 0x34 */
-    int field_0x38; /* 0x38 */
-    int field_0x3c; /* 0x3c */
-    uint8_t _gap_0x40[0x4];
-    DEATH_REASON deathReason; /* 0x44 */
-    uint8_t _gap_0x48[0xc];
-    Car *lastCars[3]; /* 0x54 */
-    int field_0x60; /* 0x60 */
-    uint8_t _gap_0x64[0x4];
-    int someState; /* 0x68 */
-    int field_0x6c; /* 0x6c */
-    uint8_t _gap_0x70[0x6];
-    byte debugKey1; /* 0x76 */
-    byte debugKey2; /* 0x77 */
-    uint8_t _gap_0x78[0x18];
-    XYZ xyz; /* 0x90 */
-    Ped *playerPed; /* 0x190 */
-    uint8_t _gap_0x194[0x60];
-    int encodedCameraX; /* 0x1f4 */
-    int encodedCameraY; /* 0x1f8 */
-    int encodedCameraZ; /* 0x1fc */
-    uint8_t _gap_0x200[0x18];
-    XYZ xyz2; /* 0x218 */
-    uint8_t _gap_0x318[0x54];
-    int auxGameCameraX; /* 0x36c */
-    int auxGameCameraY; /* 0x370 */
-    int auxGameCameraZ; /* 0x374 */
-    uint8_t _gap_0x378[0x18];
-    Ped *playerPed2; /* 0x390 */
-    Ped *pedRelTo_fieldx68; /* 0x394 */
-    int field_0x2cc; /* 0x398 */
-    uint8_t _gap_0x39c[0x4];
-    AnimatedValue animatedValues_firstMoney[15]; /* 0x3a0 */
-    uint8_t _gap_0x6e8[0x28];
-    S26 *field_0x644; /* 0x710 */
-    uint8_t _gap_0x714[0x30];
-    int field_0x678; /* 0x744 */
-    int field_0x67c; /* 0x748 */
-    ushort incToBe100; /* 0x74c */
-    short eq_1000; /* 0x74e */
-    AnimatedValue lives; /* 0x750 */
-    AnimatedValue moneyMultiplier; /* 0x788 */
-    uint8_t _gap_0x7c0[0x8];
-    short field_0x6fc; /* 0x7c8 */
-    uint8_t _gap_0x7ca[0x2];
-    short bonus1; /* 0x7cc */
-    short bonus2; /* 0x7ce */
-    short bonus3; /* 0x7d0 */
-    short bonus4; /* 0x7d2 */
-    uint8_t _gap_0x7d4[0x2];
-    short bonus5; /* 0x7d6 */
-    uint8_t _gap_0x7d8[0xc];
-    int iArr28[28]; /* 0x7e4 */
-    short field_0x788; /* 0x854 */
-    uint8_t _gap_0x856[0x2];
-    int field_0x78c; /* 0x858 */
-    short field_0x790; /* 0x85c */
-    uint8_t _gap_0x85e[0xaa];
-    short field_0x83c; /* 0x908 */
-    uint8_t _gap_0x90a[0x1d];
-    undefined1 field_0x927; /* 0x927 */
-};
-
 // /imported/gta2-mouse/ScriptFunctionsAddrTable  size 0x304
 struct ScriptFunctionsAddrTable {
     uint8_t _gap_0x0[0x303];
@@ -4855,101 +4721,6 @@ struct PlayerS2 {
     int x; /* 0x0 */
     int y; /* 0x4 */
     int z; /* 0x8 */
-};
-
-// /imported/gzf-2021/PlayerS1  size 0x24
-struct PlayerS1 {
-    int x; /* 0x0 */
-    int y; /* 0x4 */
-    int z; /* 0x8 */
-    int field3_0xc; /* 0xc */
-    int field4_0x10; /* 0x10 */
-    PlayerS2 vec; /* 0x14 */
-    uint8_t _gap_0x20[0x3];
-    undefined1 field_0x23; /* 0x23 */
-};
-
-// /imported/gzf-2021/PlayerWeapon  size 0x28
-struct PlayerWeapon {
-    short ammo; /* 0x0 */
-    uint8_t _gap_0x2[0x2];
-    int field3_0x4; /* 0x4 */
-    uint8_t _gap_0x8[0xc];
-    int field16_0x14; /* 0x14 */
-    uint8_t _gap_0x18[0x4];
-    int field21_0x1c; /* 0x1c */
-    uint8_t _gap_0x20[0x4];
-    Ped *field26_0x24; /* 0x24 */
-};
-
-// /imported/gzf-2021/Player_S4  size 0x792
-struct Player_S4 {
-    bool_ somethingRelToAudio; /* 0x0 */
-    uint8_t _gap_0x1[0x3];
-    uint keyState; /* 0x4 */
-    uint8_t _gap_0x8[0x10];
-    short field18_0x18; /* 0x18 */
-    uint8_t _gap_0x1a[0x2];
-    int field20_0x1c; /* 0x1c */
-    Car *field21_0x20; /* 0x20 */
-    uint field22_0x24; /* 0x24 */
-    uint8_t _gap_0x28[0x9];
-    bool_ field32_0x31; /* 0x31 */
-    uint8_t _gap_0x32[0x3a];
-    int field79_0x6c; /* 0x6c */
-    uint8_t _gap_0x70[0x8];
-    bool_ forward; /* 0x78 */
-    bool_ backward; /* 0x79 */
-    bool_ rotateLeft; /* 0x7a */
-    bool_ rotateRight; /* 0x7b */
-    bool_ attack; /* 0x7c */
-    bool_ enter; /* 0x7d */
-    bool_ jump; /* 0x7e */
-    bool_ nextWeaponZ; /* 0x7f */
-    bool_ prevWeaponX; /* 0x80 */
-    bool_ tab; /* 0x81 */
-    bool_ unknownKey400; /* 0x82 */
-    bool_ unknownKey800; /* 0x83 */
-    bool_ field100_0x84; /* 0x84 */
-    bool_ field101_0x85; /* 0x85 */
-    bool_ field102_0x86; /* 0x86 */
-    bool_ field103_0x87; /* 0x87 */
-    bool_ field104_0x88; /* 0x88 */
-    bool_ field105_0x89; /* 0x89 */
-    bool_ field106_0x8a; /* 0x8a */
-    bool_ field107_0x8b; /* 0x8b */
-    bool_ field108_0x8c; /* 0x8c */
-    bool_ attackIsChanged; /* 0x8d */
-    bool_ field110_0x8e; /* 0x8e */
-    uint8_t _gap_0x8f[0x1];
-    PlayerS1 ps1; /* 0x90 */
-    uint8_t _gap_0xb4[0x74];
-    int field229_0x128; /* 0x128 */
-    int field230_0x12c; /* 0x12c */
-    int field231_0x130; /* 0x130 */
-    uint8_t _gap_0x134[0xb0];
-    int field261_0x1e4; /* 0x1e4 */
-    int field262_0x1e8; /* 0x1e8 */
-    int field263_0x1ec; /* 0x1ec */
-    uint8_t _gap_0x1f0[0xb0];
-    int field265_0x2a0; /* 0x2a0 */
-    int field266_0x2a4; /* 0x2a4 */
-    int field267_0x2a8; /* 0x2a8 */
-    uint8_t _gap_0x2ac[0x18];
-    Ped *ped; /* 0x2c4 */
-    Ped *field293_0x2c8; /* 0x2c8 */
-    uint8_t _gap_0x2cc[0x8];
-    int money; /* 0x2d4 */
-    uint8_t _gap_0x2d8[0x3ac];
-    int lives; /* 0x684 */
-    uint8_t _gap_0x688[0x34];
-    int moneyMultiplier; /* 0x6bc */
-    uint8_t _gap_0x6c0[0x58];
-    PlayerWeapon *weapons[11]; /* 0x718 */
-    uint8_t _gap_0x744[0x44];
-    short selectedWeapon; /* 0x788 */
-    uint8_t _gap_0x78a[0x7];
-    undefined1 field_0x791; /* 0x791 */
 };
 
 // /imported/gzf-2021/Police_s5  size 0x7b5
@@ -5621,72 +5392,6 @@ struct PhysicalPalette {
     undefined1 field_0x3ff; /* 0x3ff */
 };
 
-// /imported/seuko-mod/Player_SeukoMod  size 0x85c
-struct Player_SeukoMod {
-    undefined2 f0; /* 0x0 */
-    uint8_t _gap_0x2[0x2];
-    KEYBOARD_STATE keyboardKeys; /* 0x4 */
-    short field_0x8; /* 0x8 */
-    short field_0xa; /* 0xa */
-    int field_0xc; /* 0xc */
-    uint8_t _gap_0x10[0x4];
-    short field_0x14; /* 0x14 */
-    short field_0x16; /* 0x16 */
-    short field_0x18; /* 0x18 */
-    uint8_t _gap_0x1a[0x10];
-    short field_0x2a; /* 0x2a */
-    short field_0x2c; /* 0x2c */
-    byte gangsRespectIndex; /* 0x2e */
-    uint8_t _gap_0x2f[0x5];
-    int field_0x34; /* 0x34 */
-    int field_0x38; /* 0x38 */
-    int field_0x3c; /* 0x3c */
-    uint8_t _gap_0x40[0x4];
-    DEATH_REASON deathReason; /* 0x44 */
-    uint8_t _gap_0x48[0xc];
-    Car *lastCars[3]; /* 0x54 */
-    int field_0x60; /* 0x60 */
-    uint8_t _gap_0x64[0x4];
-    PLAYER_CONTROL_STATE controlState; /* 0x68 */
-    int teleportMode; /* 0x6c */
-    uint8_t _gap_0x70[0x254];
-    Ped *ped; /* 0x2c4 */
-    Ped *ped2; /* 0x2c8 */
-    uint8_t _gap_0x2cc[0x8];
-    AnimatedValue animatedMoney; /* 0x2d4 */
-    uint8_t _gap_0x30c[0x338];
-    S26 *field_0x644; /* 0x644 */
-    uint8_t _gap_0x648[0x30];
-    int field_0x678; /* 0x678 */
-    int field_0x67c; /* 0x67c */
-    ushort incToBe100; /* 0x680 */
-    short eq_1000; /* 0x682 */
-    AnimatedValue lives; /* 0x684 */
-    AnimatedValue moneyMultiplier; /* 0x6bc */
-    uint8_t _gap_0x6f4[0x6];
-    ushort armor; /* 0x6fa */
-    short field_0x6fc; /* 0x6fc */
-    uint8_t _gap_0x6fe[0x2];
-    short bonus1; /* 0x700 */
-    short bonus2; /* 0x702 */
-    short bonus3; /* 0x704 */
-    short bonus4; /* 0x706 */
-    uint8_t _gap_0x708[0x2];
-    short bonus5; /* 0x70a */
-    uint8_t _gap_0x70c[0xc];
-    int iArr28[28]; /* 0x718 */
-    short field_0x788; /* 0x788 */
-    uint8_t _gap_0x78a[0x2];
-    int field_0x78c; /* 0x78c */
-    short field_0x790; /* 0x790 */
-    uint8_t _gap_0x792[0x2];
-    bool_ isChatOpen; /* 0x794 */
-    uint8_t _gap_0x795[0xa7];
-    short field_0x83c; /* 0x83c */
-    uint8_t _gap_0x83e[0x1d];
-    undefined1 field_0x85b; /* 0x85b */
-};
-
 // /imported/seuko-mod/RoofSpritesHolder  size 0x1c24
 struct RoofSpritesHolder {
     CarAttachment *last; /* 0x0 */
@@ -5986,6 +5691,26 @@ struct Vert {
 // /imported/seuko-mod/Verts  size 0x80
 struct Verts {
     Vert mVerts[4]; /* 0x0 */
+};
+
+// /imported/seuko-mod/XYZ  size 0x100
+struct XYZ {
+    SCR_Vector3 position; /* 0x0 */
+    int field_0xc; /* 0xc */
+    SCR_Vector3 position2; /* 0x10 */
+    int field_0x1c; /* 0x1c */
+    uint8_t _gap_0x20[0x1c];
+    int field_0x3c; /* 0x3c */
+    uint8_t _gap_0x40[0x28];
+    uint width; /* 0x68 */
+    uint height; /* 0x6c */
+    uint halfWidth; /* 0x70 */
+    uint halfHeight; /* 0x74 */
+    uint8_t _gap_0x78[0x20];
+    SCR_Vector3 position3; /* 0x98 */
+    int field_0xa4; /* 0xa4 */
+    uint8_t _gap_0xa8[0x57];
+    undefined1 field_0xff; /* 0xff */
 };
 
 // /imported/seuko-mod/sprite_base  size 0xc
