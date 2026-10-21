@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import { hasPak, pak } from './helpers.ts';
-import { parseScr, MAIN_SCR_SIZE, STRING_TYPE_MISSION_FILE } from '../scr.ts';
+import { parseScr, gangInfos, gangKillReactions, MAIN_SCR_SIZE, STRING_TYPE_MISSION_FILE } from '../scr.ts';
 import { SCR_OPCODES } from '../scr-opcodes.ts';
 
 const cmd = (v: DataView, at: number, h: number[]) => h.forEach((x, i) => v.setUint16(at + i * 2, x, true));
@@ -56,4 +56,27 @@ test.skipIf(!hasPak)('wil.scr names its sub-missions and starts with the player'
   expect(s.commands[0]).toMatchObject({ index: 1, name: 'PLAYER_PED' });
   expect(s.commands.some(c => c.name === 'LEVELSTART')).toBe(true);
   expect(s.strings.filter(x => x.type === STRING_TYPE_MISSION_FILE).map(x => x.text)).toContain('wil_tra.mis');
+});
+
+test('synthetic gang declarations: SET_GANG_INFO fields and SET_GANG_KILL_REACTION names resolve through the string table', () => {
+  const b = new Uint8Array(MAIN_SCR_SIZE), v = new DataView(b.buffer);
+  v.setUint16(1 * 2, 8, true); v.setUint16(2 * 2, 40, true); v.setUint16(3 * 2, 56, true);
+  cmd(v, 12000 + 8, [1, 223, 2, 0]);
+  const a = 12000 + 16; v.setUint16(a, 7, true); b.set([13, 1, 2, 3, 4, 1], a + 2);
+  v.setInt32(a + 8, 31 * 16384, true); v.setInt32(a + 12, 157 * 16384 + 8192, true); v.setInt32(a + 16, 2 * 16384, true); v.setUint16(a + 20, 37, true); b[a + 22] = 15;
+  cmd(v, 12000 + 40, [2, 224, 3, 0]); v.setUint16(12000 + 48, 7, true); v.setUint16(12000 + 50, 1, true); v.setUint16(12000 + 52, 8, true);
+  cmd(v, 12000 + 56, [3, 60, 0xffff, 0]);
+  const names = ['yakuzagang', 'looniegang'], s = 12000 + 65536;
+  let o = s + 2; const ids = [7, 8];
+  names.forEach((n, i) => { v.setUint16(o, ids[i]!, true); v.setUint32(o + 4, 17, true); v.setUint8(o + 8, n.length); b.set(new TextEncoder().encode(n), o + 9); o += 9 + n.length; });
+  v.setUint16(s, o - s - 2, true);
+  const r = parseScr(b);
+  expect(gangInfos(r)).toEqual([{ command: 1, nameId: 7, name: 'yakuzagang', tag: 'yaku', remap: 13, basicWeapon: 1, angryWeapon: 2, hateWeapon: 3, arrowColour: 4, hasRespectMeter: 1, x: 31, y: 157.5, z: 2, carModel: 37, carRemap: 15 }]);
+  expect(gangKillReactions(r)).toEqual([{ command: 2, gang: 'yakuzagang', value: 1, other: 'looniegang' }]);
+});
+
+test.skipIf(!hasPak)('wil.scr declares the yakuza, zaibatsu and loonies with a kill-reaction ring', () => {
+  const s = parseScr(pak().read('data/wil.scr'));
+  expect(gangInfos(s).map(g => g.tag)).toEqual(['yaku', 'zaib', 'loon']);
+  expect(gangKillReactions(s).map(k => `${k.gang}>${k.other}`)).toEqual(['looniegang>zaibatsugang', 'yakuzagang>looniegang', 'zaibatsugang>yakuzagang']);
 });

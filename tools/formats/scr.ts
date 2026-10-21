@@ -62,3 +62,34 @@ function parseStrings(area: Uint8Array, total: number): ScrString[] {
 }
 
 export const hex = (b: Uint8Array) => Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
+
+export const STRING_TYPE_GANG_NAME = 17;
+export const OP_SET_GANG_INFO = 223, OP_SET_GANG_KILL_REACTION = 224;
+
+/** SET_GANG_INFO (op 223), args as read by Script_Decl_SET_GANG_INFO (0x477bd0): u16 name string id (type 17), u8 remap,
+ * u8 basic / angry / hate weapon, u8 arrow colour (gang icon id), u8 hasRespectMeter (GangRespect+0x139: HUD meter, kill penalty, gang cars), 3 x i32 Q14 position, u16 car model, u8 car remap.
+ * `tag` is the first 4 characters of the name, the key GangRespectContainer_FindByName (0x45dbb0) matches against gang zones ('yakuzagang' -> 'yaku'). */
+export type ScrGang = { command: number; nameId: number; name: string; tag: string; remap: number; basicWeapon: number; angryWeapon: number; hateWeapon: number; arrowColour: number; hasRespectMeter: number; x: number; y: number; z: number; carModel: number; carRemap: number };
+/** SET_GANG_KILL_REACTION (op 224), Script_Op_SET_GANG_KILL_REACTION (0x47aab0): gang `gang` stores `value` in its kill-reaction slot
+ * for gang `other` (GangRespect + 0x122 + other.id); the value scales how killing a member of `gang` moves `other`'s respect. */
+export type ScrGangKillReaction = { command: number; gang: string; value: number; other: string };
+
+const stringName = (s: Scr, id: number) => s.strings.find(x => x.id === id)?.text ?? `string#${id}`;
+
+export function gangInfos(s: Scr): ScrGang[] {
+  return s.commands.filter(c => c.type === OP_SET_GANG_INFO).map(c => {
+    if (c.args.length < 24) throw Error(`SET_GANG_INFO ${c.index}: ${c.args.length} argument bytes, need 24`);
+    const v = new DataView(c.args.buffer, c.args.byteOffset, c.args.byteLength), nameId = v.getUint16(0, true), name = stringName(s, nameId);
+    return { command: c.index, nameId, name, tag: name.slice(0, 4), remap: v.getUint8(2), basicWeapon: v.getUint8(3), angryWeapon: v.getUint8(4), hateWeapon: v.getUint8(5),
+      arrowColour: v.getUint8(6), hasRespectMeter: v.getUint8(7), x: v.getInt32(8, true) / 16384, y: v.getInt32(12, true) / 16384, z: v.getInt32(16, true) / 16384,
+      carModel: v.getUint16(20, true), carRemap: v.getUint8(22) };
+  });
+}
+
+export function gangKillReactions(s: Scr): ScrGangKillReaction[] {
+  return s.commands.filter(c => c.type === OP_SET_GANG_KILL_REACTION).map(c => {
+    if (c.args.length < 6) throw Error(`SET_GANG_KILL_REACTION ${c.index}: ${c.args.length} argument bytes, need 6`);
+    const v = new DataView(c.args.buffer, c.args.byteOffset, c.args.byteLength);
+    return { command: c.index, gang: stringName(s, v.getUint16(0, true)), value: v.getInt8(2), other: stringName(s, v.getUint16(4, true)) };
+  });
+}

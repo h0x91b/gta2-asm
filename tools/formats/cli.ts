@@ -15,7 +15,7 @@ import { parseGci } from './gci.ts';
 import { decodeTga } from './tga.ts';
 import { png } from './png.ts';
 import { decodeGxt, escapeText, toUnicode } from './gxt.ts';
-import { parseScr, hex, STRING_TYPE_MISSION_FILE } from './scr.ts';
+import { parseScr, hex, gangInfos, gangKillReactions, STRING_TYPE_MISSION_FILE } from './scr.ts';
 import { decompileLevel } from './scr-mis.ts';
 
 const HELP = `bun tools/formats/cli.ts [--pak data.pak] <command> ...
@@ -29,11 +29,12 @@ const HELP = `bun tools/formats/cli.ts [--pak data.pak] <command> ...
   gmp <file> --block x,y,z               block_info at that cell (faces, arrows, slope)
   gmp <file> --column x,y                block ids of the column, z=0 first
   gmp <file> --zones [--type T]          ZONE records
+  gmp <file> --gangs                     gang zones (type 14) grouped by gang tag (first 4 chars of the zone name)
   sdt <bank> [--summary|--list]          bank = data/audio/wil (reads .sdt + .raw)
   sdt <bank> --wav ID --out f.wav
   gci [file] [--model N]                 nyc.gci car handling records
   tga <file> --out f.png
-  scr <file> [--summary|--list|--strings] mission script: header, opcode counts / one line per command / strings
+  scr <file> [--summary|--list|--strings|--gangs] mission script: header, opcode counts / one line per command / strings / gang declarations
   gxt <file> [--summary|--list [--unicode]|--key KEY] text table: summary + validation / key<TAB>text, non-printables escaped (--unicode: font accent codes as letters) / one entry
   scr <main.scr> --mis [--out DIR]       decompile a level script and its sub-missions to .mis (stdout, or DIR/*.mis)
 Paths inside the pak are case-insensitive; '\\\\' or '/' both work. JSON goes to stdout.`;
@@ -96,6 +97,9 @@ function gmp(pak: Pak, file: string) {
     return json({ x, y, z, block: id, ground: GROUND[b.ground], slope: b.slope, arrows: arrows(b.arrows), faces: b.faces.map(face) });
   }
   if (column !== undefined) { const [x, y] = ints(column, 2, '--column'); return json({ x, y, blocks: m.columns[y! * 256 + x!] }); }
+  if (flag('--gangs')) { const g: Record<string, { zones: number; blocks: number; rects: unknown[] }> = {};
+    for (const z of m.zones) if (z.type === 14) { const e = (g[z.name.slice(0, 4)] ??= { zones: 0, blocks: 0, rects: [] }); e.zones++; e.blocks += z.width * z.height; e.rects.push({ x: z.x, y: z.y, width: z.width, height: z.height, name: z.name }); }
+    return json(g); }
   if (flag('--zones')) return json(m.zones.filter(z => type === undefined || z.type === int(type, '--type')).map(z => ({ ...z, typeName: ZONE_TYPES[z.type] ?? 'unknown' })));
   const zoneTypes: Record<string, number> = {}; for (const z of m.zones) { const n = ZONE_TYPES[z.type] ?? `type${z.type}`; zoneTypes[n] = (zoneTypes[n] ?? 0) + 1; }
   json({ file, decoded: m.compression, chunks: m.sourceChunks, blocks: m.blocks.length, zones: m.zones.length, zoneTypes });
@@ -123,6 +127,7 @@ function scr(pak: Pak, file: string) {
     return;
   }
   if (flag('--strings')) return json(s.strings);
+  if (flag('--gangs')) return json({ gangs: gangInfos(s), killReactions: gangKillReactions(s) });
   const opcodes: Record<string, number> = {}; for (const c of s.commands) opcodes[c.name] = (opcodes[c.name] ?? 0) + 1;
   json({ file, kind: s.kind, first: s.first, start: s.start, commands: s.commands.length, strings: s.strings.length,
     missionFiles: s.strings.filter(x => x.type === STRING_TYPE_MISSION_FILE).map(x => x.text),

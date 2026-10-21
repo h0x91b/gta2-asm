@@ -13,7 +13,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00418050,FUN_00418050,,DEFAULT,__fastcall,USER_DEFINED,167,,void __fastcall FUN_00418050(S6 * param_1)
 0x0041e540,FUN_0041e540,,DEFAULT,__fastcall,USER_DEFINED,53,,void __fastcall FUN_0041e540(undefined param_1)
 0x0041eac0,unsure_Camera_UpdateBoundaries,,DEFAULT,__fastcall,USER_DEFINED,5,unsure_Camera_UpdateBoundaries,undefined __fastcall unsure_Camera_UpdateBoundaries(Camera * param_1)
-0x00420700,FUN_00420700,,DEFAULT,__fastcall,USER_DEFINED,8,,undefined __fastcall FUN_00420700(Position * param_1)
 0x00421310,FUN_00421310,,DEFAULT,__fastcall,USER_DEFINED,23,,undefined __fastcall FUN_00421310(SRelToCars2 * param_1)
 0x00421f40,FUN_00421f40,,DEFAULT,default,USER_DEFINED,58,,"uint FUN_00421f40(Car * car, int iParm1, byte param_3)"
 0x00422020,FUN_00422020,,DEFAULT,__fastcall,USER_DEFINED,125,,undefined __fastcall FUN_00422020(Car * param_1)
@@ -73,7 +72,6 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00493710,FUN_00493710,,DEFAULT,__fastcall,USER_DEFINED,104,,void __fastcall FUN_00493710(PedS1 * param_1)
 0x00493850,FUN_00493850,,DEFAULT,__fastcall,USER_DEFINED,77,,undefined __fastcall FUN_00493850(Sprite * param_1)
 0x00496880,FUN_00496880,,DEFAULT,__fastcall,USER_DEFINED,2815,,undefined __fastcall FUN_00496880(Sprite * param_1)
-0x00497c20,FUN_00497c20,,DEFAULT,__fastcall,USER_DEFINED,457,,undefined __fastcall FUN_00497c20(Sprite * param_1)
 0x0049ff70,CarPhysics_UpdateZOnRailway,CarPhysics,DEFAULT,__thiscall,USER_DEFINED,5,CarPhysics::CarPhysics_UpdateZOnRailway,"uint __thiscall CarPhysics_UpdateZOnRailway(CarPhysics * this, int step)"
 0x004a4fe0,FUN_004a4fe0,,DEFAULT,__fastcall,USER_DEFINED,4,,undefined2 __fastcall FUN_004a4fe0(Car * param_1)
 0x004a5040,FUN_004a5040,,DEFAULT,__fastcall,USER_DEFINED,11,,bool __fastcall FUN_004a5040(Ped * param_1)

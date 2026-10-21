@@ -39,6 +39,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00403990,Ped_GetState,,USER_DEFINED,__fastcall,ANALYSIS,7,,undefined4 __fastcall Ped_GetState(int param_1)
 0x004039a0,Ped_SetHealth,,USER_DEFINED,__stdcall,USER_DEFINED,15,,"void __stdcall Ped_SetHealth(Ped * ped, short health)"
 0x004039b0,Ped_SetEnterCarAsPassenger,,USER_DEFINED,__thiscall,ANALYSIS,13,,"undefined __thiscall Ped_SetEnterCarAsPassenger(void * this, undefined4 param_1)"
+0x004039e0,Ped_GetObjectiveDone2,,USER_DEFINED,__fastcall,ANALYSIS,7,,undefined __fastcall Ped_GetObjectiveDone2(int param_1)
 0x004039f0,Ped_GetOffscreenTicks,Ped,USER_DEFINED,__thiscall,USER_DEFINED,8,,ushort __thiscall Ped_GetOffscreenTicks(Ped * this)
 0x00403a00,Ped_GetX,,USER_DEFINED,default,USER_DEFINED,15,,"void Ped_GetX(Ped * this, int * out)"
 0x00403a10,Ped_GetY,,USER_DEFINED,default,USER_DEFINED,15,,"void Ped_GetY(Ped * this, int * out)"
@@ -51,6 +52,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00403ac0,Ped_SetObjTargetPed,,USER_DEFINED,__thiscall,ANALYSIS,13,,"undefined __thiscall Ped_SetObjTargetPed(void * this, undefined4 param_1)"
 0x00403ae0,Ped_SetTarget2Ped,,USER_DEFINED,__thiscall,ANALYSIS,13,,"undefined __thiscall Ped_SetTarget2Ped(void * this, undefined4 param_1)"
 0x00403b00,Ped_SetTargetCar,,USER_DEFINED,__thiscall,ANALYSIS,13,,"undefined __thiscall Ped_SetTargetCar(void * this, undefined4 param_1)"
+0x00403b40,Ped_SetObjectiveDone,,USER_DEFINED,__thiscall,ANALYSIS,13,,"undefined __thiscall Ped_SetObjectiveDone(void * this, undefined param_1)"
 0x00403b60,Ped_IsWasted,,USER_DEFINED,__fastcall,USER_DEFINED,11,,bool __fastcall Ped_IsWasted(Ped * param_1)
 0x00403b80,Ped_IsInCar,,USER_DEFINED,__fastcall,USER_DEFINED,12,,bool __fastcall Ped_IsInCar(Ped * param_1)
 0x00403ba0,IsCarATrain,,USER_DEFINED,__fastcall,USER_DEFINED,32,,bool __fastcall IsCarATrain(Car * car)
@@ -59,6 +61,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00403d20,PedGroup_LeaderIsState3or5,,USER_DEFINED,__fastcall,ANALYSIS,36,,uint __fastcall PedGroup_LeaderIsState3or5(int param_1)
 0x00403e90,PedGroup_Disband,,USER_DEFINED,__fastcall,ANALYSIS,278,,undefined __fastcall PedGroup_Disband(undefined * param_1)
 0x00403fb0,Ped_ElvisHandling,,USER_DEFINED,__thiscall,USER_DEFINED,354,,"void __thiscall Ped_ElvisHandling(Ped * this, Ped * leader, int param_3)"
+0x00404120,unsure_PedGroup_SwapMemberWithLeader,,USER_DEFINED,__thiscall,ANALYSIS,732,,"undefined __thiscall unsure_PedGroup_SwapMemberWithLeader(void * this, byte param_1)"
 0x00404400,PedGroup_SetLeader,,USER_DEFINED,__thiscall,ANALYSIS,30,,"undefined __thiscall PedGroup_SetLeader(void * this, void * param_1)"
 0x00404420,PedGroup_SetMember,,USER_DEFINED,__thiscall,ANALYSIS,42,,"undefined __thiscall PedGroup_SetMember(void * this, void * param_1, byte param_2)"
 0x00404c40,PedGroupPool_Alloc,,USER_DEFINED,__stdcall,ANALYSIS,70,,undefined * __stdcall PedGroupPool_Alloc(void)
@@ -120,7 +123,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0040fb20,TrailerController_UpdatePhysics,,USER_DEFINED,__fastcall,ANALYSIS,75,,uint __fastcall TrailerController_UpdatePhysics(int param_1)
 0x0040fbe0,TrailerController_Update,,USER_DEFINED,__fastcall,ANALYSIS,339,,undefined4 __fastcall TrailerController_Update(int param_1)
 0x0040fe50,SoundEventQueue_Reset,,USER_DEFINED,__fastcall,USER_DEFINED,11,,void __fastcall SoundEventQueue_Reset(SoundEventQueue * this)
-0x0040fea0,unsure_Sprite_GetPedSprite,,USER_DEFINED,__fastcall,ANALYSIS,13,,undefined4 __fastcall unsure_Sprite_GetPedSprite(int param_1)
+0x0040fea0,unsure_Position_GetOwnerSpriteIfPed,,USER_DEFINED,__fastcall,ANALYSIS,13,,undefined4 __fastcall unsure_Position_GetOwnerSpriteIfPed(int param_1)
 0x0040feb0,unsure_Sprite_GetCar,,USER_DEFINED,__fastcall,ANALYSIS,13,,undefined4 __fastcall unsure_Sprite_GetCar(int param_1)
 0x0040fec0,unsure_Sprite_GetObject,,USER_DEFINED,__fastcall,ANALYSIS,21,,undefined4 __fastcall unsure_Sprite_GetObject(int param_1)
 0x004104b0,SoundEventQueue_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,73,,SoundEventQueue * __fastcall SoundEventQueue_Ctor(void)
@@ -228,6 +231,8 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004205a0,InitPositionStruct,,USER_DEFINED,__fastcall,USER_DEFINED,85,,undefined __fastcall InitPositionStruct(Position * param_1)
 0x00420600,SetPosition,,USER_DEFINED,__thiscall,USER_DEFINED,89,,"void __thiscall SetPosition(Position * position, int x, int y, int z)"
 0x00420690,SetRotation,,USER_DEFINED,__thiscall,USER_DEFINED,36,,"void __thiscall SetRotation(Position * position, short rotation)"
+0x004206c0,Position_SetFrame,,USER_DEFINED,__thiscall,ANALYSIS,23,,"undefined __thiscall Position_SetFrame(void * this, short param_1)"
+0x00420700,Position_SetNoRemapState,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall Position_SetNoRemapState(Position * param_1)
 0x00420760,getUpgradeType,,USER_DEFINED,__stdcall,USER_DEFINED,46,,CAR_UPGRADE __stdcall getUpgradeType(int param_1)
 0x004207f0,TeleportCar,,USER_DEFINED,__fastcall,USER_DEFINED,76,,"void __fastcall TeleportCar(Car * car, DWORD edx, SCR_f x, SCR_f y, SCR_f z)"
 0x00420840,Car_SetCategory,,USER_DEFINED,__thiscall,USER_DEFINED,122,,"void __thiscall Car_SetCategory(void * this, CAR_COUNTER param_1)"
@@ -474,6 +479,8 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004337d0,setBit,,USER_DEFINED,__thiscall,USER_DEFINED,19,,"void __thiscall setBit(Position * this, int iParm1, byte param_3, char param_4)"
 0x00433800,getBits,,USER_DEFINED,__fastcall,USER_DEFINED,5,,void __fastcall getBits(void * param_1)
 0x00433820,IsCarGun,,USER_DEFINED,__stdcall,USER_DEFINED,11,,bool __stdcall IsCarGun(WEAPON_INDEX id)
+0x00433880,unsure_Sprite_PlaceBody,,USER_DEFINED,__thiscall,ANALYSIS,75,,"undefined __thiscall unsure_Sprite_PlaceBody(void * this, undefined4 param_1, undefined4 param_2, undefined4 param_3)"
+0x004338e0,Sprite_SetOwnerPed,,USER_DEFINED,__thiscall,ANALYSIS,10,,"undefined __thiscall Sprite_SetOwnerPed(void * this, undefined4 param_1)"
 0x00433900,PedS1_SetCar,,USER_DEFINED,__fastcall,USER_DEFINED,13,,"void __fastcall PedS1_SetCar(PedS1 * param_1, undefined edx, Car * param_3)"
 0x00433a30,SetOnSpriteField40,,USER_DEFINED,__thiscall,USER_DEFINED,12,,"void __thiscall SetOnSpriteField40(Sprite * this, undefined2 param_2)"
 0x00433b00,unsure_Ped_IsAimingWithTarget,,USER_DEFINED,unknown,DEFAULT,41,,undefined unsure_Ped_IsAimingWithTarget()
@@ -555,6 +562,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004354f0,Ped_IsInTrain,,USER_DEFINED,unknown,DEFAULT,25,,undefined Ped_IsInTrain()
 0x00435530,PedManager_GetLastPed,,USER_DEFINED,__fastcall,USER_DEFINED,4,,undefined4 __fastcall PedManager_GetLastPed(PedManager_S25 * param_1)
 0x004355a0,GetSprite,,USER_DEFINED,__fastcall,USER_DEFINED,19,,Sprite * __fastcall GetSprite(int * * param_1)
+0x004355c0,SpritePool_Release,,USER_DEFINED,__thiscall,ANALYSIS,27,,"undefined __thiscall SpritePool_Release(void * this, int param_1)"
 0x004355e0,InitS30,,USER_DEFINED,__fastcall,USER_DEFINED,41,,S30 * __fastcall InitS30(S30 * param_1)
 0x00435660,Ped_Destruct,,USER_DEFINED,__fastcall,USER_DEFINED,184,,undefined __fastcall Ped_Destruct(Ped * param_1)
 0x00435720,Ped_Init,,USER_DEFINED,__fastcall,USER_DEFINED,1118,,void __fastcall Ped_Init(Ped * ped)
@@ -580,6 +588,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00436220,Ped_GetDamageMultiplier,,USER_DEFINED,__stdcall,ANALYSIS,42,,undefined4 __stdcall Ped_GetDamageMultiplier(int param_1)
 0x00436250,Ped_DropWeaponPickup,,USER_DEFINED,__fastcall,ANALYSIS,470,,undefined __fastcall Ped_DropWeaponPickup(Ped * param_1)
 0x00436460,Ped_UpdateDesiredRotation,,USER_DEFINED,__fastcall,ANALYSIS,937,,undefined __fastcall Ped_UpdateDesiredRotation(void * param_1)
+0x00436830,Ped_FreeSelectedWeapon,,USER_DEFINED,__fastcall,ANALYSIS,48,,undefined __fastcall Ped_FreeSelectedWeapon(int param_1)
 0x00436890,unsure_Ped_TickOnScreenCounter,,USER_DEFINED,__fastcall,ANALYSIS,133,,undefined __fastcall unsure_Ped_TickOnScreenCounter(int param_1)
 0x00436920,Ped_SetTask,,USER_DEFINED,__fastcall,USER_DEFINED,610,,"void __fastcall Ped_SetTask(Ped * ped, DWORD edx, PED_OBJECTIVE objective, uint timer)"
 0x00436bf0,unsure_Ped_UpdateAttackTargetAI,,USER_DEFINED,__fastcall,ANALYSIS,982,,undefined __fastcall unsure_Ped_UpdateAttackTargetAI(int param_1)
@@ -613,6 +622,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0043a490,Ped_Obj2_Unk48_CrossRoadWait,,USER_DEFINED,__fastcall,ANALYSIS,187,,undefined __fastcall Ped_Obj2_Unk48_CrossRoadWait(Ped * param_1)
 0x0043a990,Ped_Obj2_Unk29_EnterTrainAtStop,,USER_DEFINED,__fastcall,ANALYSIS,119,,undefined __fastcall Ped_Obj2_Unk29_EnterTrainAtStop(Ped * param_1)
 0x0043aa10,Ped_Obj2_FollowCarOnFootWithOffset,,USER_DEFINED,__fastcall,ANALYSIS,253,,undefined __fastcall Ped_Obj2_FollowCarOnFootWithOffset(void * param_1)
+0x0043ad10,Ped_SetAltWeapon,,USER_DEFINED,__thiscall,ANALYSIS,49,,"undefined __thiscall Ped_SetAltWeapon(void * this, undefined4 param_1)"
 0x0043ae10,Ped_GetById,,USER_DEFINED,__stdcall,USER_DEFINED,42,,Ped * __stdcall Ped_GetById(int id)
 0x0043ae70,InitPeds,,USER_DEFINED,__fastcall,USER_DEFINED,109,,undefined __fastcall InitPeds(undefined param_1)
 0x0043aee0,Ped_CopyFrom,,USER_DEFINED,__thiscall,ANALYSIS,1634,,"undefined __thiscall Ped_CopyFrom(void * this, int param_1)"
@@ -636,8 +646,11 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0043d830,Ped_SetWeapon,,USER_DEFINED,__fastcall,USER_DEFINED,75,,"void __fastcall Ped_SetWeapon(Ped * ped, DWORD edx, WEAPON_INDEX weapon)"
 0x0043d880,Ped_OnKilled,,USER_DEFINED,__fastcall,ANALYSIS,671,,undefined __fastcall Ped_OnKilled(Ped * param_1)
 0x0043db40,Ped_Spawn,,USER_DEFINED,__stdcall,USER_DEFINED,139,,"Ped * __stdcall Ped_Spawn(SCR_f x, SCR_f y, SCR_f z, PED_REMAP remap, short param_5)"
+0x0043dbd0,PedManager_CreateSpritelessDriver,,USER_DEFINED,__stdcall,ANALYSIS,139,,Ped * __stdcall PedManager_CreateSpritelessDriver(Car * param_1)
 0x0043dc60,Car_CreateGangDriverPed,,USER_DEFINED,__stdcall,USER_DEFINED,288,,"Ped * __stdcall Car_CreateGangDriverPed(Car * car, GangRespect * gang)"
+0x0043dd80,PedManager_CreateDummyTrafficDriver,,USER_DEFINED,__stdcall,ANALYSIS,139,,Ped * __stdcall PedManager_CreateDummyTrafficDriver(Car * param_1)
 0x0043de10,PedManager_RecycleDriver,,USER_DEFINED,__stdcall,ANALYSIS,158,,Ped * __stdcall PedManager_RecycleDriver(void)
+0x0043deb0,PedManager_CreateTrainPassenger,,USER_DEFINED,__stdcall,ANALYSIS,161,,Ped * __stdcall PedManager_CreateTrainPassenger(void)
 0x0043df60,PedManager_CreateWith100Health,,USER_DEFINED,__fastcall,USER_DEFINED,27,,Ped * __fastcall PedManager_CreateWith100Health(void)
 0x0043dfb0,unsure_PedManager_CloneNear,,USER_DEFINED,__stdcall,ANALYSIS,194,,Ped * __stdcall unsure_PedManager_CloneNear(Ped * param_1)
 0x0043e0e0,InitPedManager,,USER_DEFINED,__fastcall,USER_DEFINED,85,,undefined __fastcall InitPedManager(PedManager_S25 * param_1)
@@ -650,6 +663,8 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0043e4b0,Ped_AddWeapon,,USER_DEFINED,__fastcall,USER_DEFINED,154,,"uint __fastcall Ped_AddWeapon(Ped * ped, DWORD edx, WEAPON_INDEX weapon, uint ammo)"
 0x0043e550,Ped_PickUp,,USER_DEFINED,unknown,DEFAULT,255,,undefined Ped_PickUp(undefined4 param_1)
 0x0043e650,Ped_Remove,,USER_DEFINED,__fastcall,ANALYSIS,461,,undefined __fastcall Ped_Remove(Ped * param_1)
+0x0043e8b0,Ped_UpdateMugger,,USER_DEFINED,__fastcall,ANALYSIS,524,,"undefined __fastcall Ped_UpdateMugger(Ped * param_1, uint param_2)"
+0x0043eaf0,Ped_UpdateTrainPassenger,,USER_DEFINED,__fastcall,ANALYSIS,208,,"undefined __fastcall Ped_UpdateTrainPassenger(Ped * param_1, uint param_2)"
 0x0043ebc0,unsure_Ped_StopPutOutFire,,USER_DEFINED,__fastcall,ANALYSIS,110,,undefined __fastcall unsure_Ped_StopPutOutFire(void * param_1)
 0x0043ec30,Ped_ClearObjectivesAndFreeRoute,,USER_DEFINED,__fastcall,ANALYSIS,141,,undefined __fastcall Ped_ClearObjectivesAndFreeRoute(Ped * param_1)
 0x0043ecc0,Ped_UpdateState,,USER_DEFINED,__fastcall,USER_DEFINED,1195,,uint __fastcall Ped_UpdateState(Ped * ped)
@@ -668,7 +683,11 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004416b0,DummyPedManager_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,677,,DummyPedManager * __fastcall DummyPedManager_Ctor(void)
 0x004419e0,Ped_TakeDamage,,USER_DEFINED,__thiscall,USER_DEFINED,78,,"void __thiscall Ped_TakeDamage(Ped * this, int damage, short param_3)"
 0x00441f10,unsure_Ped_UpdateElvisGroupMember,,USER_DEFINED,__fastcall,USER_DEFINED,306,,void __fastcall unsure_Ped_UpdateElvisGroupMember(Ped * param_1)
-0x00442de0,unsure_Ped_DecideDriverBehaviour,,USER_DEFINED,__fastcall,ANALYSIS,798,,"undefined __fastcall unsure_Ped_DecideDriverBehaviour(Ped * param_1, uint param_2)"
+0x00442050,unsure_Ped_UpdateCarThief,,USER_DEFINED,__fastcall,ANALYSIS,905,,"undefined __fastcall unsure_Ped_UpdateCarThief(Ped * param_1, uint param_2)"
+0x00442420,Ped_UpdateTaxiPassenger,,USER_DEFINED,__fastcall,ANALYSIS,950,,"undefined __fastcall Ped_UpdateTaxiPassenger(Ped * param_1, uint param_2)"
+0x004427e0,unsure_Ped_UpdateBusPassenger,,USER_DEFINED,__fastcall,ANALYSIS,576,,"undefined __fastcall unsure_Ped_UpdateBusPassenger(Ped * param_1, uint param_2)"
+0x00442a40,Ped_UpdateEjectedDriver,,USER_DEFINED,__fastcall,ANALYSIS,868,,"undefined __fastcall Ped_UpdateEjectedDriver(Ped * param_1, uint param_2)"
+0x00442de0,Ped_UpdateOccupationBehaviour,,USER_DEFINED,__fastcall,ANALYSIS,798,,"undefined __fastcall Ped_UpdateOccupationBehaviour(Ped * param_1, uint param_2)"
 0x00443170,GameLogic,,USER_DEFINED,__fastcall,USER_DEFINED,1099,,void __fastcall GameLogic(Ped * param_1)
 0x004436a0,Ped_Obj2_BeatOrRobChar,,USER_DEFINED,__fastcall,ANALYSIS,1415,,undefined __fastcall Ped_Obj2_BeatOrRobChar(Ped * param_1)
 0x00443c30,Ped_Obj2_LeaveCar,,USER_DEFINED,default,USER_DEFINED,1201,,void Ped_Obj2_LeaveCar(Ped * ped)
@@ -756,6 +775,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00450c30,FireEngineSlot_Release,,USER_DEFINED,__fastcall,ANALYSIS,15,,undefined __fastcall FireEngineSlot_Release(int param_1)
 0x00450c40,FireEngineManager_FindFreeSlot,,USER_DEFINED,__fastcall,ANALYSIS,24,,int __fastcall FireEngineManager_FindFreeSlot(int param_1)
 0x00450ca0,FireEngineManager_ResetSerial,,USER_DEFINED,__fastcall,ANALYSIS,7,,undefined __fastcall FireEngineManager_ResetSerial(int param_1)
+0x00450cb0,Ped_GetObjectiveDone,,USER_DEFINED,__fastcall,ANALYSIS,7,,undefined __fastcall Ped_GetObjectiveDone(int param_1)
 0x00450cc0,unsure_FireEngineSlot_TargetHasFlames,,USER_DEFINED,__fastcall,ANALYSIS,11,,uint __fastcall unsure_FireEngineSlot_TargetHasFlames(int * * param_1)
 0x00450cd0,FireEngineSlot_UpdateWatchdog,,USER_DEFINED,__fastcall,ANALYSIS,563,,uint __fastcall FireEngineSlot_UpdateWatchdog(int param_1)
 0x00450f10,FireEngineSlot_Update,,USER_DEFINED,__fastcall,USER_DEFINED,940,,void __fastcall FireEngineSlot_Update(FireEngineSlot * this)
@@ -845,16 +865,16 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0045d3b0,HudManager_Dtor,HudManager,USER_DEFINED,__thiscall,ANALYSIS,30,,"void * __thiscall HudManager_Dtor(HudManager * this, byte param_1)"
 0x0045d3d0,Game_Dtor,Game,USER_DEFINED,__thiscall,USER_DEFINED,1208,,void __thiscall Game_Dtor(Game * this)
 0x0045d960,InitGangRespect,,USER_DEFINED,__fastcall,USER_DEFINED,113,,void __fastcall InitGangRespect(GangRespect * param_1)
-0x0045d9e0,GangRespect_IsHostileToGang,,USER_DEFINED,__thiscall,ANALYSIS,19,,"uint __thiscall GangRespect_IsHostileToGang(void * this, uint param_1)"
+0x0045d9e0,Gang_GetHostileToGang,,USER_DEFINED,__thiscall,ANALYSIS,19,,"uint __thiscall Gang_GetHostileToGang(void * this, uint param_1)"
 0x0045da20,Gang_SetRespect,,USER_DEFINED,__thiscall,USER_DEFINED,23,,"void __thiscall Gang_SetRespect(void * this, uint playerIdx, char value)"
 0x0045da40,Gang_AddRespect,,USER_DEFINED,__thiscall,USER_DEFINED,59,,"void __thiscall Gang_AddRespect(void * this, uint playerIdx, char delta)"
 0x0045da80,Gang_SubRespect,,USER_DEFINED,__thiscall,USER_DEFINED,59,,"void __thiscall Gang_SubRespect(void * this, uint playerIdx, char delta)"
 0x0045dac0,Gang_GetRespect,,USER_DEFINED,__thiscall,USER_DEFINED,19,,"uint __thiscall Gang_GetRespect(void * this, uint playerIdx)"
-0x0045dae0,GangRespect_HatesPlayer,,USER_DEFINED,__thiscall,USER_DEFINED,23,,"uint __thiscall GangRespect_HatesPlayer(void * this, uint playerIdx)"
-0x0045db20,GangRespect_SetKillReaction,,USER_DEFINED,__thiscall,ANALYSIS,23,,"undefined __thiscall GangRespect_SetKillReaction(void * this, uint param_1, undefined param_2)"
+0x0045dae0,Gang_IsHostileToPlayer,,USER_DEFINED,__thiscall,USER_DEFINED,23,,"uint __thiscall Gang_IsHostileToPlayer(void * this, uint playerIdx)"
+0x0045db20,Gang_SetKillReaction,,USER_DEFINED,__thiscall,ANALYSIS,23,,"undefined __thiscall Gang_SetKillReaction(void * this, uint param_1, undefined param_2)"
 0x0045db40,Gang_SetName,,USER_DEFINED,__thiscall,ANALYSIS,42,,"undefined __thiscall Gang_SetName(void * this, uint * param_1, uint param_2)"
-0x0045db70,GangRespect_PickSpawnWeapon,,USER_DEFINED,__fastcall,USER_DEFINED,54,,int __fastcall GangRespect_PickSpawnWeapon(GangRespect * this)
-0x0045dbb0,GangRespect_FindByTag,,USER_DEFINED,__thiscall,USER_DEFINED,98,,"GangRespect * __thiscall GangRespect_FindByTag(void * this, char * name)"
+0x0045db70,Gang_PickWeaponByRespect,,USER_DEFINED,__fastcall,USER_DEFINED,54,,int __fastcall Gang_PickWeaponByRespect(GangRespect * this)
+0x0045dbb0,GangRespectContainer_FindByName,,USER_DEFINED,__thiscall,USER_DEFINED,98,,"GangRespect * __thiscall GangRespectContainer_FindByName(void * this, char * name)"
 0x0045dc20,GangRespectContainer_AllocGang,,USER_DEFINED,__fastcall,ANALYSIS,71,,undefined * __fastcall GangRespectContainer_AllocGang(int param_1)
 0x0045dc70,GangRespectContainer_GetGang,,USER_DEFINED,__thiscall,USER_DEFINED,21,,"GangRespect * __thiscall GangRespectContainer_GetGang(void * this, uint idx)"
 0x0045dc90,GangRespectContainer_AddFromZone,,USER_DEFINED,__thiscall,ANALYSIS,47,,"undefined __thiscall GangRespectContainer_AddFromZone(void * this, int param_1)"
@@ -1306,6 +1326,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004820d0,MultiplayerTag_SetItPlayer,,USER_DEFINED,__thiscall,ANALYSIS,225,,"undefined __thiscall MultiplayerTag_SetItPlayer(void * this, Player * param_1)"
 0x004821c0,MultiplayerTag_Update,,USER_DEFINED,__thiscall,ANALYSIS,202,,undefined __thiscall MultiplayerTag_Update(void * this)
 0x004822a0,MultiplayerTag_OnPlayerDeath,,USER_DEFINED,default,USER_DEFINED,341,,"void MultiplayerTag_OnPlayerDeath(Game * game, Player * * ppSParm1, Player * param_3, int param_4)"
+0x00482540,unsure_Object_IsActiveFlame,,USER_DEFINED,unknown,DEFAULT,17,,undefined unsure_Object_IsActiveFlame()
 0x00482730,Fix16_ApplyDeadZone,,USER_DEFINED,__stdcall,ANALYSIS,56,,"undefined __stdcall Fix16_ApplyDeadZone(int * param_1, int * param_2)"
 0x004828c0,Vec2_SubAssign,,USER_DEFINED,__thiscall,ANALYSIS,33,,"void * __thiscall Vec2_SubAssign(void * this, int * param_1)"
 0x00482cc0,CarPhysics_CollideWithObjectAtPoint,,USER_DEFINED,__thiscall,ANALYSIS,50,,"undefined __thiscall CarPhysics_CollideWithObjectAtPoint(void * this, undefined4 * param_1, undefined4 * param_2, uint param_3)"
@@ -1335,6 +1356,8 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00491e00,TeleportGameObject,,USER_DEFINED,__fastcall,USER_DEFINED,41,,"void __fastcall TeleportGameObject(GameObject * gameObject, DWORD edx, SCR_f x, SCR_f y, SCR_f z)"
 0x00493520,ResetVals,,USER_DEFINED,__stdcall,ANALYSIS,18,,undefined __stdcall ResetVals(void)
 0x00497570,unsure_PedSprite_HandleCarImpact,,USER_DEFINED,__thiscall,ANALYSIS,1251,,"undefined __thiscall unsure_PedSprite_HandleCarImpact(void * this, int param_1, undefined4 param_2, int param_3, uint param_4)"
+0x00497c20,Sprite_Init,,USER_DEFINED,__fastcall,USER_DEFINED,457,,undefined __fastcall Sprite_Init(Sprite * param_1)
+0x00497df0,Sprite_UpdatePedAnimFrame,,USER_DEFINED,__fastcall,ANALYSIS,5322,,undefined __fastcall Sprite_UpdatePedAnimFrame(int param_1)
 0x0049d7a0,unsure_Map_FindSpawnRoadTile,,USER_DEFINED,unknown,DEFAULT,1334,,"undefined unsure_Map_FindSpawnRoadTile(undefined1 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined1 param_5)"
 0x0049dd10,CarPhysics_UpdateTrailerAlignment,,USER_DEFINED,__fastcall,USER_DEFINED,16,,void __fastcall CarPhysics_UpdateTrailerAlignment(CarPhysics * this)
 0x0049dd20,CarPhysics_SetSwerveState,,USER_DEFINED,__thiscall,ANALYSIS,15,,"undefined __thiscall CarPhysics_SetSwerveState(void * this, undefined4 * param_1)"
@@ -1642,10 +1665,12 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004b9960,OwnerSlotTable_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,28,,OwnerSlotTable * __fastcall OwnerSlotTable_Ctor(OwnerSlotTable * this)
 0x004b9a10,unsure_Ped_ThreatGridCandidateFilter,,USER_DEFINED,__fastcall,ANALYSIS,1418,,Ped * __fastcall unsure_Ped_ThreatGridCandidateFilter(int param_1)
 0x004b9a30,Sprite_ShouldCollideWithSprite,,USER_DEFINED,__thiscall,ANALYSIS,798,,"uint __thiscall Sprite_ShouldCollideWithSprite(void * this, short * param_1)"
+0x004b9b00,Position_SetRemap,,USER_DEFINED,__thiscall,ANALYSIS,132,,"undefined __thiscall Position_SetRemap(void * this, undefined2 param_1)"
 0x004b9cd0,initPosition,,USER_DEFINED,__fastcall,USER_DEFINED,122,,void __fastcall initPosition(Position * param_1)
 0x004ba2c0,Hud_DrawScaledTextPlain,,USER_DEFINED,__stdcall,ANALYSIS,100,,"undefined __stdcall Hud_DrawScaledTextPlain(ushort * param_1, undefined4 param_2, undefined4 param_3, uint param_4)"
 0x004bab70,unsure_Sprite_OnOverlapNotifyImpactEvent,,USER_DEFINED,__fastcall,ANALYSIS,60,,"undefined __fastcall unsure_Sprite_OnOverlapNotifyImpactEvent(int param_1, uint param_2, int param_3)"
 0x004baef0,Sprite_DrawDebugHornAndPursuitIcon,,USER_DEFINED,__thiscall,ANALYSIS,222,,"undefined __thiscall Sprite_DrawDebugHornAndPursuitIcon(void * this, undefined4 param_1, undefined4 param_2)"
+0x004bafd0,unsure_Position_ResizeToFrame,,USER_DEFINED,__fastcall,ANALYSIS,78,,undefined __fastcall unsure_Position_ResizeToFrame(int param_1)
 0x004bb3c0,unsure_Sprite_FindRectEdgeCrossings,,USER_DEFINED,__thiscall,ANALYSIS,266,,"byte * __thiscall unsure_Sprite_FindRectEdgeCrossings(void * this, int param_1, byte * param_2, byte * param_3)"
 0x004bb560,unsure_Sprite_RectCornersOverlap,,USER_DEFINED,__thiscall,ANALYSIS,768,,"uint __thiscall unsure_Sprite_RectCornersOverlap(void * this, int param_1)"
 0x004bc900,Init_S22_1,,USER_DEFINED,__fastcall,USER_DEFINED,37,,int __fastcall Init_S22_1(S22_1 * param_1)
@@ -1674,6 +1699,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004bf210,CarInfo_GetDoorInfo,,USER_DEFINED,__stdcall,USER_DEFINED,27,,"int __stdcall CarInfo_GetDoorInfo(int carId, uint param_2, StyleData * s3)"
 0x004bf280,GetSpriteEntry,,USER_DEFINED,__fastcall,USER_DEFINED,18,,"SpriteEntry * __fastcall GetSpriteEntry(StyleData * style, DWORD edx, uint spriteIndex)"
 0x004bf2a0,GetSpriteIndex,,USER_DEFINED,__fastcall,USER_DEFINED,115,,"uint __fastcall GetSpriteIndex(StyleData * style, DWORD edx, SPRITE_TYPE spriteType, uint spriteId)"
+0x004bf430,StyleData_GetPaletteIndex,,USER_DEFINED,__thiscall,ANALYSIS,143,,"uint __thiscall StyleData_GetPaletteIndex(void * this, int param_1, undefined4 param_2)"
 0x004bf4e0,return_i8_and_mask,,USER_DEFINED,__stdcall,USER_DEFINED,31,,"int __stdcall return_i8_and_mask(StyleData * s3, int iParm1, uint param_3)"
 0x004bf550,StyleData_GetFontGlyphSpriteId,,USER_DEFINED,__thiscall,ANALYSIS,25,,"uint __thiscall StyleData_GetFontGlyphSpriteId(void * this, uint param_1, short param_2)"
 0x004bf570,StyleData_GetFontGlyphWidth,,USER_DEFINED,__thiscall,ANALYSIS,93,,"uint __thiscall StyleData_GetFontGlyphWidth(void * this, ushort * param_1, ushort * param_2)"

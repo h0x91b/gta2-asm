@@ -173,6 +173,7 @@ typedef struct Vec3i Vec3i;
 typedef struct Gang Gang;
 typedef struct Gangs Gangs;
 typedef struct Object Object;
+typedef struct ObjectMotionState ObjectMotionState;
 typedef struct PedManager PedManager;
 typedef struct Pos Pos;
 typedef struct S22_2 S22_2;
@@ -180,7 +181,6 @@ typedef struct S31 S31;
 typedef struct S32 S32;
 typedef struct S34 S34;
 typedef struct S35 S35;
-typedef struct S36 S36;
 typedef struct S37 S37;
 typedef struct S38 S38;
 typedef struct SCR_CMD_SIX_PARAMS SCR_CMD_SIX_PARAMS;
@@ -467,6 +467,63 @@ typedef uint32_t ZZ_SLICE4_TEST;
 enum ZZ_SLICE4_TEST_values {
     ZZ_C = 1,
     ZZ_B = 2,
+};
+
+// /ZZ_SLICE4_UNUSED_OCUPATION_COPY
+typedef uint32_t ZZ_SLICE4_UNUSED_OCUPATION_COPY;
+enum ZZ_SLICE4_UNUSED_OCUPATION_COPY_values {
+    PLAYER = 0,
+    EMPTY = 1,
+    UNKNOWN_OCUPATION2 = 2,
+    DUMMY = 3,
+    DUMMY_CAR_DRIVER = 4,
+    DRIVER = 5,
+    UNKNOWN_OCUPATION6 = 6,
+    TAXI_PASSENGER = 7,
+    BUS_PASSENGER = 8,
+    TRAIN_PASSENGER = 9,
+    DRIVER2 = 10,
+    FLEEING_EX_DRIVER = 11,
+    DRIVER_RETAKING_CAR = 12,
+    ANGRY_DRIVER = 13,
+    PSYCHO = 14,
+    MUGGER = 15,
+    CARTHIEF = 16,
+    BANK_ROBBER = 17,
+    CRIMINAL = 18,
+    GANG_MEMBER = 19,
+    UNKNOWN_OCUPATION20 = 20,
+    UNKNOWN_OCUPATION21 = 21,
+    ELVIS = 22,
+    MEDIC = 23,
+    POLICE = 24,
+    SWAT = 25,
+    FBI = 26,
+    ARMY_IN_VEHICLE = 27,
+    GUARD = 28,
+    POLICE_ON_FOOT = 29,
+    UNKNOWN_OCUPATION30 = 30,
+    ARMY_ON_FOOT = 31,
+    GUARD_AGAINST_PLAYER = 32,
+    CRIMINAL_TYPE1 = 33,
+    CRIMINAL_TYPE2 = 34,
+    SPECIAL_GROUP_MEMBER = 35,
+    TANK_DRIVER = 36,
+    ROAD_BLOCK_GUARD = 37,
+    FIREMAN = 38,
+    ROAD_BLOCK_TANK_MAN = 39,
+    UNKNOWN_OCUPATION40 = 40,
+    DRONE = 41,
+    GANG_CAR_DRIVER = 42,
+    STAND_STILL_BLOKE = 43,
+    ELVIS_LEADER = 44,
+    REFUGEES = 45,
+    ANY_LAW_ENFORCEMENT = 46,
+    ANY_EMERGENCY_SERVICE_MAN = 47,
+    ANY_GANG_MEMBER = 48,
+    ANY_ELVIS = 49,
+    DRIVER_ABANDONING_CAR = 50,
+    NO_OCCUPATION = 51,
 };
 
 // /_STY/CarInfoFlags
@@ -878,49 +935,58 @@ enum MAIN_MENU_SOUND_values {
 // /_ped/OCUPATION
 typedef uint32_t OCUPATION;
 enum OCUPATION_values {
-    PLAYER = 0,
-    EMPTY = 1,
-    UNKNOWN_OCUPATION2 = 2,
-    DUMMY = 3,
-    UNKNOWN_OCUPATION4 = 4,
-    DRIVER = 5,
-    UNKNOWN_OCUPATION8 = 8,
-    UNKNOWN_OCUPATION9 = 9,
-    DRIVER2 = 10,
-    PSYCHO = 14,
-    MUGGER = 15,
-    CARTHIEF = 16,
-    BANK_ROBBER = 17,
-    CRIMINAL = 18,
-    UNKNOWN_OCUPATION13 = 19,
-    ELVIS = 22,
-    UNKNOWN_OCUPATION17 = 23,
-    POLICE = 24,
-    SWAT = 25,
-    FBI = 26,
-    ARMYARMY = 27,
-    GUARD = 28,
-    UNK_REL_TO_POLICE1 = 29,
-    UNK_REL_TO_POLICE2 = 30,
-    UNK_REL_TO_POLICE3 = 31,
-    GUARD_AGAINST_PLAYER = 32,
-    CRIMINAL_TYPE1 = 33,
-    CRIMINAL_TYPE2 = 34,
-    SPECIAL_GROUP_MEMBER = 35,
-    TANK_DRIVER = 36,
-    UNK_REL_TO_POLICE4 = 37,
-    FIREMAN = 38,
-    ROAD_BLOCK_TANK_MAN = 39,
-    DRONE = 41,
-    STAND_STILL_BLOKE = 43,
-    ELVIS_LEADER = 44,
-    REFUGEES = 45,
-    ANY_LAW_ENFORCEMENT = 46,
-    ANY_EMERGENCY_SERVICE_MAN = 47,
-    ANY_GANG_MEMBER = 48,
-    ANY_ELVIS = 49,
-    DRIVER3 = 50,
-    NO_OCCUPATION = 51,
+    OCUPATION__PLAYER = 0,
+    OCUPATION__EMPTY = 1,
+    OCUPATION__UNKNOWN_OCUPATION2 = 2,
+    OCUPATION__DUMMY = 3,
+    OCUPATION__DUMMY_CAR_DRIVER = 4,
+    OCUPATION__DRIVER = 5,
+    OCUPATION__UNKNOWN_OCUPATION6 = 6,
+    OCUPATION__TAXI_PASSENGER = 7,
+    OCUPATION__BUS_PASSENGER = 8,
+    OCUPATION__TRAIN_PASSENGER = 9,
+    OCUPATION__DRIVER2 = 10,
+    OCUPATION__FLEEING_EX_DRIVER = 11,
+    OCUPATION__DRIVER_RETAKING_CAR = 12,
+    OCUPATION__ANGRY_DRIVER = 13,
+    OCUPATION__PSYCHO = 14,
+    OCUPATION__MUGGER = 15,
+    OCUPATION__CARTHIEF = 16,
+    OCUPATION__BANK_ROBBER = 17,
+    OCUPATION__CRIMINAL = 18,
+    OCUPATION__GANG_MEMBER = 19,
+    OCUPATION__UNKNOWN_OCUPATION20 = 20,
+    OCUPATION__UNKNOWN_OCUPATION21 = 21,
+    OCUPATION__ELVIS = 22,
+    OCUPATION__MEDIC = 23,
+    OCUPATION__POLICE = 24,
+    OCUPATION__SWAT = 25,
+    OCUPATION__FBI = 26,
+    OCUPATION__ARMY_IN_VEHICLE = 27,
+    OCUPATION__GUARD = 28,
+    OCUPATION__POLICE_ON_FOOT = 29,
+    OCUPATION__UNKNOWN_OCUPATION30 = 30,
+    OCUPATION__ARMY_ON_FOOT = 31,
+    OCUPATION__GUARD_AGAINST_PLAYER = 32,
+    OCUPATION__CRIMINAL_TYPE1 = 33,
+    OCUPATION__CRIMINAL_TYPE2 = 34,
+    OCUPATION__SPECIAL_GROUP_MEMBER = 35,
+    OCUPATION__TANK_DRIVER = 36,
+    OCUPATION__ROAD_BLOCK_GUARD = 37,
+    OCUPATION__FIREMAN = 38,
+    OCUPATION__ROAD_BLOCK_TANK_MAN = 39,
+    OCUPATION__UNKNOWN_OCUPATION40 = 40,
+    OCUPATION__DRONE = 41,
+    OCUPATION__GANG_CAR_DRIVER = 42,
+    OCUPATION__STAND_STILL_BLOKE = 43,
+    OCUPATION__ELVIS_LEADER = 44,
+    OCUPATION__REFUGEES = 45,
+    OCUPATION__ANY_LAW_ENFORCEMENT = 46,
+    OCUPATION__ANY_EMERGENCY_SERVICE_MAN = 47,
+    OCUPATION__ANY_GANG_MEMBER = 48,
+    OCUPATION__ANY_ELVIS = 49,
+    OCUPATION__DRIVER_ABANDONING_CAR = 50,
+    OCUPATION__NO_OCCUPATION = 51,
 };
 
 // /_ped/PED_BIT_STATE
@@ -2099,15 +2165,15 @@ enum PED_OCCUPATION_values {
     PED_OCCUPATION_EMPTY = 1,
     PED_OCCUPATION_UNKNOWN_2 = 2,
     PED_OCCUPATION_DUMMY = 3,
-    PED_OCCUPATION_MISSION_DRIVER = 4,
+    PED_OCCUPATION_DUMMY_CAR_DRIVER = 4,
     PED_OCCUPATION_DRIVER = 5,
     PED_OCCUPATION_UNKNOWN_6 = 6,
-    PED_OCCUPATION_UNKNOWN_7 = 7,
+    PED_OCCUPATION_TAXI_PASSENGER = 7,
     PED_OCCUPATION_BUS_PASSENGER = 8,
     PED_OCCUPATION_TRAIN_PASSENGER = 9,
     PED_OCCUPATION_DRIVER2 = 10,
-    PED_OCCUPATION_UNKNOWN_11 = 11,
-    PED_OCCUPATION_UNKNOWN_12 = 12,
+    PED_OCCUPATION_FLEEING_EX_DRIVER = 11,
+    PED_OCCUPATION_DRIVER_RETAKING_CAR = 12,
     PED_OCCUPATION_ANGRY_DRIVER = 13,
     PED_OCCUPATION_PSYCHO = 14,
     PED_OCCUPATION_MUGGER = 15,
@@ -2122,7 +2188,7 @@ enum PED_OCCUPATION_values {
     PED_OCCUPATION_POLICE = 24,
     PED_OCCUPATION_SWAT = 25,
     PED_OCCUPATION_FBI = 26,
-    PED_OCCUPATION_ARMY_IN_JEEP = 27,
+    PED_OCCUPATION_ARMY_IN_VEHICLE = 27,
     PED_OCCUPATION_GUARD = 28,
     PED_OCCUPATION_POLICE_ON_FOOT = 29,
     PED_OCCUPATION_UNK_30 = 30,
@@ -2132,12 +2198,12 @@ enum PED_OCCUPATION_values {
     PED_OCCUPATION_CRIMINAL_TYPE2 = 34,
     PED_OCCUPATION_SPECIAL_GROUP_MEMBER = 35,
     PED_OCCUPATION_TANK_DRIVER = 36,
-    PED_OCCUPATION_ROAD_BLOCK_FBI = 37,
+    PED_OCCUPATION_ROAD_BLOCK_GUARD = 37,
     PED_OCCUPATION_FIREMAN = 38,
     PED_OCCUPATION_ROAD_BLOCK_TANK_MAN = 39,
     PED_OCCUPATION_UNKNOWN_40 = 40,
     PED_OCCUPATION_DRONE = 41,
-    PED_OCCUPATION_DRIVER_GET_OUTTA_MY_CAR = 42,
+    PED_OCCUPATION_GANG_CAR_DRIVER = 42,
     PED_OCCUPATION_STAND_STILL_BLOKE = 43,
     PED_OCCUPATION_ELVIS_LEADER = 44,
     PED_OCCUPATION_REFUGEES = 45,
@@ -2145,7 +2211,7 @@ enum PED_OCCUPATION_values {
     PED_OCCUPATION_ANY_EMERGENCY_SERVICE_MAN = 47,
     PED_OCCUPATION_ANY_GANG_MEMBER = 48,
     PED_OCCUPATION_ANY_ELVIS = 49,
-    PED_OCCUPATION_DRIVER3 = 50,
+    PED_OCCUPATION_DRIVER_ABANDONING_CAR = 50,
     PED_OCCUPATION_NO_OCCUPATION = 51,
 };
 
@@ -2568,7 +2634,7 @@ struct EmergencyVehicleSlot {
     byte inUse; /* 0x1e */
     byte unk1f[1]; /* 0x1f */
     EMERGENCY_CREW_TYPE crewType; /* 0x20 */
-    int crewStatus; /* 0x24 */
+    int phase; /* 0x24 */
     int stage; /* 0x28 */
     byte stageDone; /* 0x2c */
     uint8_t _gap_0x2d[0x3];
@@ -4611,6 +4677,27 @@ struct Object {
     Pos *field_0x58; /* 0x58 */
 };
 
+// /imported/gta2-mouse/ObjectMotionState  size 0x3c
+struct ObjectMotionState {
+    uint8_t _gap_0x0[0x4];
+    Pos *pos; /* 0x4 */
+    ObjectMotionState *ref1; /* 0x8 */
+    ObjectMotionState *ref2; /* 0xc */
+    int field_0x10; /* 0x10 */
+    uint8_t _gap_0x14[0x4];
+    ObjectMotionState *ref3; /* 0x18 */
+    int field_0x1c; /* 0x1c */
+    int field_0x20; /* 0x20 */
+    int field_0x24; /* 0x24 */
+    short field_0x28; /* 0x28 */
+    short field_0x2a; /* 0x2a */
+    short field_0x2c; /* 0x2c */
+    uint8_t _gap_0x2e[0x6];
+    int field_0x34; /* 0x34 */
+    uint8_t _gap_0x38[0x3];
+    undefined1 field_0x3b; /* 0x3b */
+};
+
 // /imported/gta2-mouse/PedManager  size 0x2053c
 struct PedManager {
     Ped *firstPedInArray; /* 0x0 */
@@ -4683,31 +4770,10 @@ struct S34 {
     undefined1 field_0x7; /* 0x7 */
 };
 
-// /imported/gta2-mouse/S36  size 0x3c
-struct S36 {
-    uint8_t _gap_0x0[0x4];
-    Pos *pos; /* 0x4 */
-    S36 *ref1; /* 0x8 */
-    S36 *ref2; /* 0xc */
-    int field_0x10; /* 0x10 */
-    uint8_t _gap_0x14[0x4];
-    S36 *ref3; /* 0x18 */
-    int field_0x1c; /* 0x1c */
-    int field_0x20; /* 0x20 */
-    int field_0x24; /* 0x24 */
-    short field_0x28; /* 0x28 */
-    short field_0x2a; /* 0x2a */
-    short field_0x2c; /* 0x2c */
-    uint8_t _gap_0x2e[0x6];
-    int field_0x34; /* 0x34 */
-    uint8_t _gap_0x38[0x3];
-    undefined1 field_0x3b; /* 0x3b */
-};
-
 // /imported/gta2-mouse/S35  size 0x5a40
 struct S35 {
-    S36 *last; /* 0x0 */
-    S36 arr[385]; /* 0x4 */
+    ObjectMotionState *last; /* 0x0 */
+    ObjectMotionState arr[385]; /* 0x4 */
 };
 
 // /imported/gta2-mouse/S38  size 0x74

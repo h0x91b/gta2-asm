@@ -31,11 +31,13 @@ bun tools/formats/cli.ts sty data/wil.sty --cars           # CARI records
 bun tools/formats/cli.ts sty data/wil.sty --sprite 0 --palette 3110 --out formats-out/car.png
 bun tools/formats/cli.ts gmp data/wil.gmp --block 40,135,3  # one block_info, decoded
 bun tools/formats/cli.ts gmp data/wil.gmp --zones --type 2
+bun tools/formats/cli.ts gmp data/wil.gmp --gangs           # gang zones (type 14) grouped by gang tag
 bun tools/formats/cli.ts sdt data/audio/wil --wav 1 --out formats-out/wil1.wav
 bun tools/formats/cli.ts gci --model 0
 bun tools/formats/cli.ts scr data/wil.scr --list           # one line per command: index, offset, opcode, next, args
 bun tools/formats/cli.ts gxt data/g.gxt --list --unicode  # key + text (non-printables escaped, accents decoded); --key 1001, --summary
 bun tools/formats/cli.ts scr data/bil.scr --mis --out formats-out/bil  # decompile bil + its 22 missions to .mis
+bun tools/formats/cli.ts scr data/wil.scr --gangs          # SET_GANG_INFO declarations + SET_GANG_KILL_REACTION pairs
 ```
 
 Extracted game data never goes into the repository: `--out` is required for anything that

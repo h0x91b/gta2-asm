@@ -11,3 +11,8 @@ test.skipIf(!hasPak)('gmp --block decodes the documented wil shop roof corner', 
   const r = JSON.parse(cli('gmp', 'DATA\\WIL.GMP', '--block', '40,135,3').out);
   expect(r.slope).toBe(49); expect(r.faces[0]).toMatchObject({ face: 'left', tile: 626 });
 });
+test.skipIf(!hasPak)('gmp --gangs groups gang zones by tag and scr --gangs lists the declarations', () => {
+  const z = JSON.parse(cli('gmp', 'data/wil.gmp', '--gangs').out);
+  expect(Object.keys(z).sort()).toEqual(['loon', 'yaku', 'zaib']); expect(z.yaku.zones).toBe(4);
+  expect(JSON.parse(cli('scr', 'data/wil.scr', '--gangs').out).gangs.map((g: { tag: string }) => g.tag)).toEqual(['yaku', 'zaib', 'loon']);
+});
