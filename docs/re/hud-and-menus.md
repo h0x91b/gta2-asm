@@ -52,7 +52,7 @@ Two clocks drive the HUD (V, disassembly + decompile):
 
 ```
 eachFrame 0x45A5A0
-  ptrToGameStats(0x5E3CC4) = &Game.localPlayer->viewCamera      // a Camera*, UI scale at +0xA8
+  g_ViewCamera(0x5E3CC4) = &Game.localPlayer->viewCamera        // a Camera*, UI scale at +0xA8
   map/sprite/draw-queue resets
   call [0x595314]  gbh_BeginScene                                 @0x45A5F4
   MapRenderer_DrawFrame 0x472110                                  @0x45A600
@@ -178,7 +178,7 @@ GXT key ─ Gxt_FindTextW_thunk 0x4C23A0(g_LocaleSettings, "key") ─► wchar_t
 ```
 
 Argument notes (V): x, y are Fix16 (`n << 14`). `Hud_DrawScaledText` multiplies them by the UI
-scale at `*(0x5E3CC4) + 0xA8` (Fix16; `ptrToGameStats` is really `&localPlayer->viewCamera`).
+scale at `*(0x5E3CC4) + 0xA8` (Fix16; `g_ViewCamera`, formerly `ptrToGameStats`, = `&localPlayer->viewCamera`).
 **`pal` is a pointer to a `PALETTE_BASE` value**, not the value: 2 = sprite palette for normal
 text, 8 = FONT_REMAP when `remap` picks a colour (pickup and kill feed use 8/5). `invisibility`
 0 = opaque, 1/2 = blended with a 5-bit `alpha`.
@@ -537,7 +537,7 @@ Verified: sum of the sections == 0x748 == the length passed to the writer (`loca
   `MOV ECX,[0x672F40]` at 0x45A619; re-checked from the bytes `8B 0D 40 2F 67 00 E8 1C FE 06 00`).
   The host already hooks this call site (`w32_hooks.asm`, used by `host/debug_menu.asm`). At that
   point the frame is between `gbh_BeginScene` and `gbh_EndScene`, the world and the score popups
-  are drawn, and `ptrToGameStats` (0x5E3CC4) points to the local camera (UI scale at +0xA8).
+  are drawn, and `g_ViewCamera` (0x5E3CC4) points to the local camera (UI scale at +0xA8).
   Call the original `DrawUI` (`__fastcall`, ECX = HudManager*) and then draw your element, or skip
   it to replace the whole HUD.
 - **Text**: `Hud_DrawScaledText` 0x4C7280, stdcall, ret 0x20:
