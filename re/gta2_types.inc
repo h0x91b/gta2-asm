@@ -44,6 +44,19 @@ struc C1
     .s5Arr1020                        resb 4080   ; 0x1488 S5 *[1020]
 endstruc
 
+; enum /CAR_CATEGORY  (4 bytes)
+CAR_CATEGORY.CAR_CAT_NONE equ 0
+CAR_CATEGORY.CAR_CAT_RECYCLED equ 1
+CAR_CATEGORY.CAR_CAT_PROT_RECYCLED equ 2
+CAR_CATEGORY.CAR_CAT_UNUSED_3 equ 3
+CAR_CATEGORY.CAR_CAT_AMBULANCE equ 4
+CAR_CATEGORY.CAR_CAT_FIRE_TRUCK equ 5
+CAR_CATEGORY.CAR_CAT_UNIT equ 6
+CAR_CATEGORY.CAR_CAT_ROADBLOCK equ 7
+CAR_CATEGORY.CAR_CAT_MISSION equ 8
+CAR_CATEGORY.CAR_CAT_PARKED equ 9
+CAR_CATEGORY.CAR_CAT_COP_CALLED equ 10
+
 ; enum /CAR_DOOR_STATE  (4 bytes)
 CAR_DOOR_STATE.CAR_DOOR_NONE equ 0
 CAR_DOOR_STATE.CAR_DOOR_OPEN_HOLD equ 1
@@ -316,11 +329,20 @@ endstruc
 
 ; /Generator  (44 bytes)
 struc Generator
-    .unk0                             resb 24     ; 0x0 byte[24]
-    .spawnTimer                       resb 4      ; 0x18 int
+    .objectType                       resb 4      ; 0x0 int
+    .x                                resb 4      ; 0x4 SCR_f
+    .y                                resb 4      ; 0x8 SCR_f
+    .z                                resb 4      ; 0xc SCR_f
+    .rot                              resb 2      ; 0x10 short
+    .minDelay                         resb 2      ; 0x12 ushort
+    .maxDelay                         resb 2      ; 0x14 ushort
     resb 2
+    .nextSpawnFrame                   resb 4      ; 0x18 uint
+    .ammo                             resb 2      ; 0x1c ushort
     .remaining                        resb 2      ; 0x1e short
-    .unk20                            resb 4      ; 0x20 byte[4]
+    .unsure_unk20                     resb 1      ; 0x20 byte
+    .unsure_mode                      resb 1      ; 0x21 byte
+    resb 2
     .spawnedObject                    resb 4      ; 0x24 void *
     .spawnedSerial                    resb 4      ; 0x28 int
 endstruc
@@ -637,33 +659,65 @@ endstruc
 ; /PublicTransportManager  (6172 bytes)
 struc PublicTransportManager
     .stops                            resb 5200   ; 0x0 TransportStop[100]
-    .actors                           resb 880    ; 0x1450 TransportActor[10]
-    resb 86
-    .unk1816                          resb 1      ; 0x1816 byte
-    resb 1
-    .unk1818                          resb 1      ; 0x1818 byte
+    .trainActors                      resb 880    ; 0x1450 TransportActor[10]
+    .busActor                         resb 88     ; 0x17c0 TransportActor
+    .busNoDismount                    resb 1      ; 0x1818 byte
     resb 3
+endstruc
+
+; /RoadJunction  (16 bytes)
+struc RoadJunction
+    .linkN                            resb 2      ; 0x0 ushort
+    .linkS                            resb 2      ; 0x2 ushort
+    .linkE                            resb 2      ; 0x4 ushort
+    .linkW                            resb 2      ; 0x6 ushort
+    .arrowKind                        resb 4      ; 0x8 uint
+    .minX                             resb 1      ; 0xc byte
+    .minY                             resb 1      ; 0xd byte
+    .maxX                             resb 1      ; 0xe byte
+    .maxY                             resb 1      ; 0xf byte
 endstruc
 
 ; /RoadNetwork  (52328 bytes)
 struc RoadNetwork
     .routeCount                       resb 2      ; 0x0 ushort
-    resb 6
-    .nodes                            resb 8720   ; 0x8 RoadNode[545]
+    .unusedByte2                      resb 1      ; 0x2 byte
+    resb 1
+    .junctionCount                    resb 2      ; 0x4 ushort
+    resb 2
+    .junctions                        resb 8720   ; 0x8 RoadJunction[545]
     .routes                           resb 25600  ; 0x2218 ushort[12800]
-    resb 18000
+    .searchStartJunction              resb 2      ; 0x8618 ushort
+    .searchGoalJunction               resb 2      ; 0x861a ushort
+    .searchPool                       resb 8720   ; 0x861c RoadSearchNode[545]
+    .openListHead                     resb 4      ; 0xa82c RoadSearchNode *
+    .hSegments                        resb 4360   ; 0xa830 RoadSegment[545]
+    .vSegments                        resb 4360   ; 0xb938 RoadSegment[545]
+    .visited                          resb 545    ; 0xca40 byte[545]
+    resb 1
+    .hSegCount                        resb 2      ; 0xcc62 ushort
+    .vSegCount                        resb 2      ; 0xcc64 ushort
+    .searchNodeCount                  resb 2      ; 0xcc66 ushort
 endstruc
 
-; /RoadNode  (16 bytes)
-struc RoadNode
-    .link0                            resb 2      ; 0x0 ushort
-    .link1                            resb 2      ; 0x2 ushort
-    .link2                            resb 2      ; 0x4 ushort
-    resb 6
-    .x1                               resb 1      ; 0xc byte
-    .y1                               resb 1      ; 0xd byte
-    .x2                               resb 1      ; 0xe byte
-    .y2                               resb 1      ; 0xf byte
+; /RoadSearchNode  (16 bytes)
+struc RoadSearchNode
+    .junctionId                       resb 2      ; 0x0 ushort
+    .cost                             resb 2      ; 0x2 ushort
+    .closed                           resb 2      ; 0x4 ushort
+    resb 2
+    .parent                           resb 4      ; 0x8 RoadSearchNode *
+    .next                             resb 4      ; 0xc RoadSearchNode *
+endstruc
+
+; /RoadSegment  (8 bytes)
+struc RoadSegment
+    .junction1                        resb 2      ; 0x0 ushort
+    .junction2                        resb 2      ; 0x2 ushort
+    .minX                             resb 1      ; 0x4 byte
+    .minY                             resb 1      ; 0x5 byte
+    .maxX                             resb 1      ; 0x6 byte
+    .maxY                             resb 1      ; 0x7 byte
 endstruc
 
 ; /ScriptTrigger  (24 bytes)
@@ -732,26 +786,69 @@ struc TileAnimPool
     resb 2
 endstruc
 
+; /TrafficJunction  (32 bytes)
+struc TrafficJunction
+    .lampN                            resb 4      ; 0x0 void *
+    .lampS                            resb 4      ; 0x4 void *
+    .lampW                            resb 4      ; 0x8 void *
+    .lampE                            resb 4      ; 0xc void *
+    .glowN                            resb 4      ; 0x10 void *
+    .glowS                            resb 4      ; 0x14 void *
+    .glowW                            resb 4      ; 0x18 void *
+    .glowE                            resb 4      ; 0x1c void *
+endstruc
+
+; /TrafficSpawner  (20 bytes)
+struc TrafficSpawner
+    .curCamera                        resb 4      ; 0x0 Camera *
+    .probeBox                         resb 4      ; 0x4 CollisionBox *
+    .scanFromFarEnd                   resb 1      ; 0x8 bool
+    .probeCarModel                    resb 1      ; 0x9 byte
+    .unusedProbeModel2                resb 1      ; 0xa byte
+    resb 1
+    .curPlayer                        resb 4      ; 0xc Player *
+    .curZoneInfo                      resb 4      ; 0x10 ushort *
+endstruc
+
 ; /TransportActor  (88 bytes)
 struc TransportActor
-    .isOccupied                       resb 1      ; 0x0 byte
-    resb 3
-    .timer                            resb 2      ; 0x4 short
-    resb 6
-    .car                              resb 4      ; 0xc void *
-    .slotPtrs                         resb 40     ; 0x10 int[10]
-    .slotIds                          resb 10     ; 0x38 byte[10]
-    resb 6
-    .state                            resb 4      ; 0x48 int
-    .stop                             resb 4      ; 0x4c void *
-    .mode                             resb 4      ; 0x50 int
+    .hasPlayerDriver                  resb 1      ; 0x0 byte
+    .unsure_wasForcedStop             resb 1      ; 0x1 byte
+    .unsure_busHijackedAndMoved       resb 1      ; 0x2 byte
+    resb 1
+    .stateTimer                       resb 2      ; 0x4 short
+    resb 2
+    .kind                             resb 4      ; 0x8 int
+    .locoCar                          resb 4      ; 0xc Car *
+    .wagons                           resb 40     ; 0x10 Car *[10]
+    .wagonBurnTimer                   resb 10     ; 0x38 char[10]
+    .locoBurnTimer                    resb 1      ; 0x42 char
+    .wagonCount                       resb 1      ; 0x43 byte
     resb 4
+    .state                            resb 4      ; 0x48 int
+    .nextStop                         resb 4      ; 0x4c TransportStop *
+    .speedMode                        resb 4      ; 0x50 int
+    .pedSpawnCooldown                 resb 1      ; 0x54 char
+    resb 1
+    .passengerCount                   resb 1      ; 0x56 char
+    .lineIndex                        resb 1      ; 0x57 byte
 endstruc
 
 ; /TransportStop  (52 bytes)
 struc TransportStop
-    .type                             resb 4      ; 0x0 int
-    .raw                              resb 48     ; 0x4 byte[48]
+    .kind                             resb 4      ; 0x0 int
+    .entryZone                        resb 4      ; 0x4 byte *
+    .exitZone                         resb 4      ; 0x8 byte *
+    .stopZone                         resb 4      ; 0xc byte *
+    .platformZone                     resb 4      ; 0x10 byte *
+    .used                             resb 4      ; 0x14 int
+    .currentActor                     resb 4      ; 0x18 TransportActor *
+    .platformPhase                    resb 4      ; 0x1c int
+    .nextStation                      resb 4      ; 0x20 TransportStop *
+    .wagonPlan                        resb 10     ; 0x24 byte[10]
+    .numWagons                        resb 1      ; 0x2e byte
+    .lineIndex                        resb 1      ; 0x2f byte
+    resb 4
 endstruc
 
 ; /TypeDescriptor  (8 bytes)
@@ -767,64 +864,6 @@ struc WeaponManager
     .weaponCount                      resb 2      ; 0x4 short
     resb 2
 endstruc
-
-; enum /ZZ_SLICE4_TEST  (4 bytes)
-ZZ_SLICE4_TEST.ZZ_C equ 1
-ZZ_SLICE4_TEST.ZZ_B equ 2
-
-; enum /ZZ_SLICE4_UNUSED_OCUPATION_COPY  (4 bytes)
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.PLAYER equ 0
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.EMPTY equ 1
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.UNKNOWN_OCUPATION2 equ 2
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.DUMMY equ 3
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.DUMMY_CAR_DRIVER equ 4
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.DRIVER equ 5
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.UNKNOWN_OCUPATION6 equ 6
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.TAXI_PASSENGER equ 7
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.BUS_PASSENGER equ 8
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.TRAIN_PASSENGER equ 9
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.DRIVER2 equ 10
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.FLEEING_EX_DRIVER equ 11
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.DRIVER_RETAKING_CAR equ 12
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.ANGRY_DRIVER equ 13
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.PSYCHO equ 14
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.MUGGER equ 15
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.CARTHIEF equ 16
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.BANK_ROBBER equ 17
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.CRIMINAL equ 18
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.GANG_MEMBER equ 19
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.UNKNOWN_OCUPATION20 equ 20
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.UNKNOWN_OCUPATION21 equ 21
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.ELVIS equ 22
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.MEDIC equ 23
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.POLICE equ 24
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.SWAT equ 25
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.FBI equ 26
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.ARMY_IN_VEHICLE equ 27
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.GUARD equ 28
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.POLICE_ON_FOOT equ 29
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.UNKNOWN_OCUPATION30 equ 30
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.ARMY_ON_FOOT equ 31
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.GUARD_AGAINST_PLAYER equ 32
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.CRIMINAL_TYPE1 equ 33
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.CRIMINAL_TYPE2 equ 34
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.SPECIAL_GROUP_MEMBER equ 35
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.TANK_DRIVER equ 36
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.ROAD_BLOCK_GUARD equ 37
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.FIREMAN equ 38
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.ROAD_BLOCK_TANK_MAN equ 39
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.UNKNOWN_OCUPATION40 equ 40
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.DRONE equ 41
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.GANG_CAR_DRIVER equ 42
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.STAND_STILL_BLOKE equ 43
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.ELVIS_LEADER equ 44
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.REFUGEES equ 45
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.ANY_LAW_ENFORCEMENT equ 46
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.ANY_EMERGENCY_SERVICE_MAN equ 47
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.ANY_GANG_MEMBER equ 48
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.ANY_ELVIS equ 49
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.DRIVER_ABANDONING_CAR equ 50
-ZZ_SLICE4_UNUSED_OCUPATION_COPY.NO_OCCUPATION equ 51
 
 ; /_STY/AllCarsInfo  (1028 bytes)
 struc AllCarsInfo
@@ -1165,7 +1204,7 @@ struc Car
     resb 2
     .lockState                        resb 4      ; 0x98 CAR_LOCK_STATE
     .engineState                      resb 4      ; 0x9c CAR_ENGINE_STATE
-    .counterCategory                  resb 4      ; 0xa0 CAR_COUNTER
+    .category                         resb 4      ; 0xa0 CAR_CATEGORY
     .lightsBitstate                   resb 1      ; 0xa4 CAR_LIGHTS_BITSTATE
     .lightPhase                       resb 1      ; 0xa5 char
     .aiFlags                          resb 1      ; 0xa6 byte
@@ -1182,42 +1221,52 @@ endstruc
 
 ; /_car/CarManager  (108 bytes)
 struc CarManager
-    resb 4
-    .field4_0x4                       resb 4      ; 0x4 undefined4
-    .field5_0x8                       resb 1      ; 0x8 byte
-    .field6_0x9                       resb 1      ; 0x9 byte
-    .field7_0xa                       resb 1      ; 0xa byte
-    .field8_0xb                       resb 1      ; 0xb byte
-    .field9_0xc                       resb 4      ; 0xc undefined4
-    .field10_0x10                     resb 2      ; 0x10 short
+    .modelShuffleIdx                  resb 2      ; 0x0 ushort
     resb 2
-    .field13_0x14                     resb 4      ; 0x14 undefined4
+    .dummyDriver                      resb 4      ; 0x4 Ped *
+    .unusedModelCursor                resb 1      ; 0x8 byte
+    .goodModelCursor                  resb 1      ; 0x9 byte
+    .badModelCursor                   resb 1      ; 0xa byte
+    .averageModelCursor               resb 1      ; 0xb byte
+    .suppressedModel                  resb 4      ; 0xc CAR_MODEL4
+    .remapShuffleIdx                  resb 2      ; 0x10 ushort
+    .unusedShuffleIdx                 resb 2      ; 0x12 ushort
+    .nextCarId                        resb 4      ; 0x14 uint
     resb 2
-    .field16_0x1a                     resb 1      ; 0x1a byte
+    .damageFireSlot                   resb 1      ; 0x1a byte
     resb 1
-    .field18_0x1c                     resb 4      ; 0x1c undefined4
-    .field19_0x20                     resb 4      ; 0x20 undefined4
-    .field20_0x24                     resb 4      ; 0x24 undefined4
-    .recycledCars                     resb 4      ; 0x28 undefined4
-    .unkCarType4Counter               resb 4      ; 0x2c undefined4
-    .unkCarType5Counter               resb 4      ; 0x30 undefined4
-    .unitCars                         resb 4      ; 0x34 undefined4
-    .unkCarType7Counter               resb 4      ; 0x38 undefined4
-    .missionCars                      resb 4      ; 0x3c undefined4
-    .protRecycledCars                 resb 4      ; 0x40 undefined4
-    .unkCarType9Counter               resb 4      ; 0x44 undefined4
-    .unkCarTypeACounter               resb 4      ; 0x48 int
-    resb 8
-    .field38_0x54                     resb 1      ; 0x54 byte
-    .inc                              resb 1      ; 0x55 byte
+    .explosionSlot                    resb 4      ; 0x1c int
+    .unsure_greenDirA                 resb 4      ; 0x20 int
+    .unsure_greenDirB                 resb 4      ; 0x24 int
+    .recycledCars                     resb 4      ; 0x28 int
+    .ambulanceCars                    resb 4      ; 0x2c int
+    .fireTruckCars                    resb 4      ; 0x30 int
+    .unitCars                         resb 4      ; 0x34 int
+    .roadblockCars                    resb 4      ; 0x38 int
+    .missionCars                      resb 4      ; 0x3c int
+    .protRecycledCars                 resb 4      ; 0x40 int
+    .parkedCars                       resb 4      ; 0x44 int
+    .copCalledCars                    resb 4      ; 0x48 int
+    .tvVanDir                         resb 8      ; 0x4c SCR_Vector2
+    .spawnLockoutTicks                resb 1      ; 0x54 byte
+    .onScreenCarCount                 resb 1      ; 0x55 byte
     resb 2
-    .field42_0x58                     resb 4      ; 0x58 undefined4
-    .field43_0x5c                     resb 1      ; 0x5c byte
+    .modelCheckModel                  resb 4      ; 0x58 CAR_MODEL4
+    .modelCheckHappened               resb 1      ; 0x5c bool
     resb 3
-    .field47_0x60                     resb 4      ; 0x60 undefined4
-    .field48_0x64                     resb 4      ; 0x64 undefined4
-    .field49_0x68                     resb 1      ; 0x68 byte
-    .do_free_shoping                  resb 1      ; 0x69 bool
+    .obstacleProbeMode                resb 4      ; 0x60 int
+    .obstacleProbeZ                   resb 4      ; 0x64 SCR_f
+    .explosionDamageLatch             resb 1      ; 0x68 bool
+    .doFreeShopping                   resb 1      ; 0x69 bool
+    resb 2
+endstruc
+
+; /_car/CarPool  (57540 bytes)
+struc CarPool
+    .freeHead                         resb 4      ; 0x0 Car *
+    .usedHead                         resb 4      ; 0x4 Car *
+    .cars                             resb 57528  ; 0x8 Car[306]
+    .activeCarCount                   resb 2      ; 0xe0c0 ushort
     resb 2
 endstruc
 
@@ -1242,14 +1291,6 @@ endstruc
 struc MaybeCarEngineHolder
     .firstElement                     resb 4      ; 0x0 MaybeCarEngine *
     .arr306                           resb 4      ; 0x4 MaybeCarEngine *
-endstruc
-
-; /_car/SRelToCars  (57540 bytes)
-struc SRelToCars
-    .field0_0x0                       resb 4      ; 0x0 void * *
-    .field1_0x4                       resb 4      ; 0x4 void *
-    .arr306                           resb 57528  ; 0x8 byte[188][306]
-    resb 4
 endstruc
 
 ; /_car/SRelToCars2  (16 bytes)
@@ -2960,8 +3001,8 @@ endstruc
 
 ; /auto_structs/TrafficLights  (404 bytes)
 struc TrafficLights
-    .lights                           resb 400    ; 0x0 void *[100]
-    .count                            resb 2      ; 0x190 ushort
+    .junctions                        resb 400    ; 0x0 TrafficJunction *[100]
+    .junctionCount                    resb 2      ; 0x190 ushort
     .phase                            resb 1      ; 0x192 byte
     .timer                            resb 1      ; 0x193 byte
 endstruc
@@ -3889,28 +3930,43 @@ endstruc
 ; /imported/seuko-mod/CarAI  (120 bytes)
 struc CarAI
     .parentCar                        resb 4      ; 0x0 Car *
-    resb 8
+    resb 4
+    .turnTimer                        resb 1      ; 0x8 byte
+    .turnTileX                        resb 1      ; 0x9 byte
+    .turnTileY                        resb 1      ; 0xa byte
+    resb 1
     .nextFree                         resb 4      ; 0xc CarAI *
     .heading                          resb 2      ; 0x10 short
     resb 2
-    .unsure_targetX                   resb 4      ; 0x14 SCR_f
-    .unsure_targetY                   resb 4      ; 0x18 SCR_f
-    .unsure_targetZ                   resb 4      ; 0x1c SCR_f
+    .unsure_trainSpeedCur             resb 4      ; 0x14 SCR_f
+    .unsure_trainSpeedGoal            resb 4      ; 0x18 SCR_f
+    .unsure_trainSpeedStep            resb 4      ; 0x1c SCR_f
     resb 4
     .flags                            resb 4      ; 0x24 uint
     .routeSlot                        resb 1      ; 0x28 char
-    resb 3
+    resb 1
+    .stillTicks                       resb 1      ; 0x2a byte
+    .unsure_ticksSinceReset           resb 1      ; 0x2b byte
     .avoidTimer                       resb 1      ; 0x2c byte
-    resb 31
+    resb 2
+    .unsure_laneTarget                resb 1      ; 0x2f byte
+    .haltTimer                        resb 1      ; 0x30 byte
+    resb 11
+    .unsure_unstickState              resb 4      ; 0x3c int
+    .unsure_laneDir                   resb 4      ; 0x40 int
+    .turnExitDir                      resb 4      ; 0x44 int
+    .unsure_leftTurnExitDir           resb 4      ; 0x48 int
     .travelDir                        resb 4      ; 0x4c int
-    resb 6
+    .offRoadTurn                      resb 4      ; 0x50 int
+    .laneFollowCooldown               resb 2      ; 0x54 ushort
     .routeStep                        resb 2      ; 0x56 ushort
     .stuckTicks                       resb 2      ; 0x58 ushort
-    resb 14
-    .unsure_nearbyCar                 resb 4      ; 0x68 Car *
+    .reverseTicks                     resb 2      ; 0x5a ushort
+    resb 12
+    .nearbyCar                        resb 4      ; 0x68 Car *
     .blockingCar                      resb 4      ; 0x6c Car *
-    .obstacleHit                      resb 4      ; 0x70 void *
-    .unsure_targetSpeed               resb 4      ; 0x74 SCR_f
+    .obstacleHit                      resb 4      ; 0x70 Sprite *
+    .targetSpeed                      resb 4      ; 0x74 SCR_f
 endstruc
 
 ; /imported/seuko-mod/CarAIPool  (36724 bytes)

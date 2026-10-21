@@ -1,6 +1,6 @@
 address,name,namespace,name_source,section,in_function,datatype,size
 0x003f1000,EXE,,USER_DEFINED,.text,,/undefined,1
-0x003f130d,relToCarRecycle,,USER_DEFINED,.text,,,
+0x003f130d,g_recycledCarBudgetByPlayerCount,,USER_DEFINED,.text,,,
 0x00434daa,prt_434daa_5c0dd4ac,Ped_GetSelectedWeapon::override,USER_DEFINED,.text,Ped_GetSelectedWeapon,,
 0x00461de0,?MainMenu,,USER_DEFINED,.text,InitGame,,
 0x00475d72,buf4k,MissionScript_ParseStrings,USER_DEFINED,.text,MissionScript_ParseStrings,,
@@ -25,6 +25,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005931f8,g_ScriptNextThreadId,,USER_DEFINED,.data.exp,,/undefined2,2
 0x00594df8,g_UpperCaseTable_GIS,,USER_DEFINED,.data.exp,,/undefined,1
 0x00594ef8,g_UpperCaseTable_F,,USER_DEFINED,.data.exp,,/undefined,1
+0x00594ff8,g_trafficLightPhaseTicks,,USER_DEFINED,.data.exp,,/byte[9],9
 0x00595004,g_BriefWrapWidth,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00595010,max_frame_rate,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00595011,isNight,,USER_DEFINED,.data.exp,,/undefined1,1
@@ -104,6 +105,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005d25f4,g_FileIsOpen,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005d31d8,g_NetDialogLocaleSettings,,USER_DEFINED,.data.exp,,/auto_structs/LocaleSettings *,4
 0x005d351c,g_RoadNetwork,,USER_DEFINED,.data.exp,,/RoadNetwork *,4
+0x005d7e58,g_TrailerPool,,USER_DEFINED,.data.exp,,/imported/seuko-mod/TrailerControllerPool *,4
 0x005d81dc,g_SoundEventQueue,,USER_DEFINED,.data.exp,,/SoundEventQueue *,4
 0x005dcb08,g_LevelStem,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005dcb58,IsGamePaused,,USER_DEFINED,.data.exp,,/undefined1,1
@@ -115,9 +117,17 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e21cc,ptrToS5,,USER_DEFINED,.data.exp,,/auto_structs/S5 *,4
 0x005e3cc4,ptrToGameStats,,USER_DEFINED,.data.exp,,/_game/GameStats *,4
 0x005e3f54,eq8192,,USER_DEFINED,.data.exp,,/undefined4,4
-0x005e4ca0,relToCars,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e4088,g_aiProbing,,USER_DEFINED,.data.exp,,/byte,1
+0x005e408c,g_trafficModelsGoodCount,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e4090,g_trafficModelsAverageCount,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e4098,g_trafficModelsAverage,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e4498,g_trafficModelsBadCount,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e44a0,g_trafficModelsGood,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e48a0,g_trafficModelsBad,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e4ca0,g_CarPool,,USER_DEFINED,.data.exp,,/_car/CarPool *,4
 0x005e4ca4,g_CarManager,,USER_DEFINED,.data.exp,,/_car/CarManager *,4
-0x005e4cac,ptrToPositionStruct,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e4ca8,g_TrafficSpawner,,USER_DEFINED,.data.exp,,/TrafficSpawner *,4
+0x005e4cac,g_unusedCarManagerPosition,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e4cbc,g_Fix16PlayerOccupationMassBonus,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e4cc4,interestingStruct,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e4d14,defaultRotation,,USER_DEFINED,.data.exp,,/undefined2,2
@@ -127,9 +137,10 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e4dd0,g_Fix16SteerAssistLimitKShortCar,,USER_DEFINED,.data.exp,,/undefined,1
 0x005e4eb0,g_Fix16SteerAssistLimitK,,USER_DEFINED,.data.exp,,/undefined,1
 0x005e4eb8,WaterCannonRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
+0x005e4f38,g_fishflapCarScale,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e500c,JeepGunRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
 0x005e5014,AntennaRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
-0x005e508c,pCarsS4,,USER_DEFINED,.data.exp,,/imported/gzf-2021/CarsS4 *,4
+0x005e508c,g_CarAIPool,,USER_DEFINED,.data.exp,,/imported/seuko-mod/CarAIPool *,4
 0x005e5448,g_CarModelTable_GciPath,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005e5488,g_CarModelTable,,USER_DEFINED,.data.exp,,/CarModelTable *,4
 0x005e54a0,g_Fix16MassBonus10Pct,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -179,6 +190,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e6874,g_CollisionKind,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e6894,g_CollisionHitSprite,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e6898,g_CollisionMoverSprite,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e6a50,g_shuffleTable,,USER_DEFINED,.data.exp,,/ushort[1000],2000
 0x005e747c,g_CraneManager,,USER_DEFINED,.data.exp,,/CraneManager *,4
 0x005e79ec,g_CrimeEventQueue,,USER_DEFINED,.data.exp,,/auto_structs/CrimeEventQueue *,4
 0x005e7ae0,UnknownPtrOrScalar,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -408,8 +420,17 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x0066b7a0,g_PoliceManager,,USER_DEFINED,.data.exp,,/auto_structs/PoliceManager *,4
 0x0066b7a4,g_policeHaveCriminals,,USER_DEFINED,.data.exp,,/byte,1
 0x0066b7a8,g_policeCrewIdCounter,,USER_DEFINED,.data.exp,,/ushort,2
+0x0066bb30,g_LineStopCount,,USER_DEFINED,.data.exp,,/byte,1
+0x0066bb34,g_LineStopsByDigit,,USER_DEFINED,.data.exp,,/TransportStop *[5],20
+0x0066bb48,g_ZoneNamePrefixLen,,USER_DEFINED,.data.exp,,/byte,1
+0x0066bb49,g_TransportStopCount,,USER_DEFINED,.data.exp,,/byte,1
+0x0066bb4a,g_busAlive,,USER_DEFINED,.data.exp,,/byte,1
+0x0066bb4c,g_busSpawnCooldown,,USER_DEFINED,.data.exp,,/short,2
 0x0066bb50,g_PublicTransportManager,,USER_DEFINED,.data.exp,,/PublicTransportManager *,4
 0x0066beec,g_soundManagerInitDone,,USER_DEFINED,.data.exp,,/undefined1,1
+0x0066c278,g_spawnLaneDice,,USER_DEFINED,.data.exp,,/undefined1,1
+0x0066c378,g_spawnTargetSpeed,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066c460,g_trafficDensityScale,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0066c6b4,g_Registry,,USER_DEFINED,.data.exp,,/undefined,1
 0x0066c950,g_MssAudioDevice,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0066f5dc,g_FloatingScoreManager,,USER_DEFINED,.data.exp,,/FloatingScoreManager *,4

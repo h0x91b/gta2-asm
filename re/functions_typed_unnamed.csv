@@ -1,6 +1,4 @@
 address,name,namespace,name_source,calling_convention,signature_source,size,thunk_to,signature
-0x003f113c,FUN_003f113c,,DEFAULT,__fastcall,USER_DEFINED,108,,int __fastcall FUN_003f113c(Game * param_1)
-0x003f11a8,FUN_003f11a8,,DEFAULT,__fastcall,USER_DEFINED,96,,undefined __fastcall FUN_003f11a8(Game * param_1)
 0x003f135c,FUN_003f135c,,DEFAULT,__fastcall,USER_DEFINED,33,,"undefined __fastcall FUN_003f135c(Game * param_1, char param_2)"
 0x00401cf0,FUN_00401cf0,,DEFAULT,__stdcall,USER_DEFINED,42,,"void __stdcall FUN_00401cf0(undefined4 param_1, undefined4 param_2, int length, undefined * param_4)"
 0x00403940,FUN_00403940,,DEFAULT,__thiscall,USER_DEFINED,13,,"void __thiscall FUN_00403940(void * this, int param_1_00, Ped * param_2)"
@@ -8,29 +6,21 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00404ef0,FUN_00404ef0,,DEFAULT,__thiscall,USER_DEFINED,838,,"void __thiscall FUN_00404ef0(void * this, Ped * param_1)"
 0x0040cf60,FUN_0040cf60,,DEFAULT,__fastcall,USER_DEFINED,89,,uint __fastcall FUN_0040cf60(void * param_1)
 0x0040f450,FUN_0040f450,,DEFAULT,__fastcall,USER_DEFINED,20,,undefined __fastcall FUN_0040f450(void * param_1)
-0x00416b40,FUN_00416b40,,DEFAULT,__fastcall,USER_DEFINED,4,,undefined4 __fastcall FUN_00416b40(Car * param_1)
 0x00416b50,FUN_00416b50,,DEFAULT,__thiscall,USER_DEFINED,15,,"void __thiscall FUN_00416b50(void * this, Ped * param_1_00, undefined4 * param_2)"
 0x00418050,FUN_00418050,,DEFAULT,__fastcall,USER_DEFINED,167,,void __fastcall FUN_00418050(S6 * param_1)
 0x0041e540,FUN_0041e540,,DEFAULT,__fastcall,USER_DEFINED,53,,void __fastcall FUN_0041e540(undefined param_1)
 0x0041eac0,unsure_Camera_UpdateBoundaries,,DEFAULT,__fastcall,USER_DEFINED,5,unsure_Camera_UpdateBoundaries,undefined __fastcall unsure_Camera_UpdateBoundaries(Camera * param_1)
 0x00421310,FUN_00421310,,DEFAULT,__fastcall,USER_DEFINED,23,,undefined __fastcall FUN_00421310(SRelToCars2 * param_1)
 0x00421f40,FUN_00421f40,,DEFAULT,default,USER_DEFINED,58,,"uint FUN_00421f40(Car * car, int iParm1, byte param_3)"
-0x00422020,FUN_00422020,,DEFAULT,__fastcall,USER_DEFINED,125,,undefined __fastcall FUN_00422020(Car * param_1)
 0x004233b0,FUN_004233b0,,DEFAULT,__fastcall,USER_DEFINED,208,,void __fastcall FUN_004233b0(Car * param_1)
 0x0042a630,FUN_0042a630,,DEFAULT,__stdcall,USER_DEFINED,33,,"undefined __stdcall FUN_0042a630(SCR_f * x, SCR_f * y)"
 0x0042a9e0,FUN_0042a9e0,,DEFAULT,__fastcall,USER_DEFINED,215,,undefined __fastcall FUN_0042a9e0(CarsS5 * param_1)
-0x0042c030,FUN_0042c030,,DEFAULT,__fastcall,USER_DEFINED,2127,,undefined __fastcall FUN_0042c030(CarAI * ai)
-0x0042d390,FUN_0042d390,,DEFAULT,__fastcall,USER_DEFINED,1155,,undefined __fastcall FUN_0042d390(CarAI * ai)
-0x0042fb80,FUN_0042fb80,,DEFAULT,__fastcall,USER_DEFINED,616,,undefined __fastcall FUN_0042fb80(CarAI * ai)
-0x00430cc0,FUN_00430cc0,,DEFAULT,__fastcall,USER_DEFINED,2692,,undefined __fastcall FUN_00430cc0(CarAI * ai)
 0x00433830,FUN_00433830,,DEFAULT,__fastcall,USER_DEFINED,13,,undefined __fastcall FUN_00433830(S3Bytes * param_1)
 0x004339c0,FUN_004339c0,,DEFAULT,__thiscall,USER_DEFINED,18,,"int __thiscall FUN_004339c0(void * sprite, int iParm1, undefined4 * param_3, Ped * ped)"
 0x004339e0,FUN_004339e0,,DEFAULT,__thiscall,USER_DEFINED,18,,"void __thiscall FUN_004339e0(void * this, int iParm1, undefined4 * param_2)"
 0x00433a80,FUN_00433a80,,DEFAULT,__fastcall,USER_DEFINED,4,,undefined4 __fastcall FUN_00433a80(PedS1 * param_1)
-0x00447cb0,FUN_00447cb0,,DEFAULT,__fastcall,USER_DEFINED,124,,undefined2 * __fastcall FUN_00447cb0(undefined * param_1)
 0x00449f10,FUN_00449f10,,DEFAULT,default,USER_DEFINED,62,,"uint FUN_00449f10(ushort * puParm1, int param_2)"
 0x0044a1e0,CrimeStats_RearmOneShots,,DEFAULT,__fastcall,USER_DEFINED,5,CrimeStats_RearmOneShots,undefined __fastcall CrimeStats_RearmOneShots(CrimeStats * param_1)
-0x0044a2c0,FUN_0044a2c0,,DEFAULT,__fastcall,USER_DEFINED,86,,"uint __fastcall FUN_0044a2c0(int param_1, undefined param_2, undefined param_3, undefined param_4, undefined param_5)"
 0x0044af70,FUN_0044af70,,DEFAULT,__fastcall,USER_DEFINED,7,,void __fastcall FUN_0044af70(void * iParm1)
 0x0044afe0,FUN_0044afe0,,DEFAULT,__stdcall,USER_DEFINED,25,,void __stdcall FUN_0044afe0(void * param_1)
 0x004524c0,FUN_004524c0,,DEFAULT,__fastcall,USER_DEFINED,56,,void __fastcall FUN_004524c0(FrontEnd * param_1)
@@ -50,12 +40,10 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0045a690,FUN_0045a690,,DEFAULT,__fastcall,USER_DEFINED,76,,void __fastcall FUN_0045a690(Game * param_1)
 0x0045a700,FUN_0045a700,,DEFAULT,__fastcall,USER_DEFINED,33,,void __fastcall FUN_0045a700(Game * param_1)
 0x0045ae40,FUN_0045ae40,,DEFAULT,__fastcall,USER_DEFINED,12,,undefined __fastcall FUN_0045ae40(GangRespect * param_1)
-0x0045aea0,FUN_0045aea0,,DEFAULT,__fastcall,USER_DEFINED,160,,"uint __fastcall FUN_0045aea0(undefined4 param_1, undefined4 _edx, CarSprite * param_3, undefined param_4)"
 0x0045b040,FUN_0045b040,,DEFAULT,__fastcall,USER_DEFINED,11,,void __fastcall FUN_0045b040(MapRenderer * param_1)
 0x0045b0b0,FUN_0045b0b0,,DEFAULT,__fastcall,USER_DEFINED,7,,undefined4 __fastcall FUN_0045b0b0(AnimatedValue * param_1)
 0x0045b130,FUN_0045b130,,DEFAULT,__fastcall,USER_DEFINED,8,,void __fastcall FUN_0045b130(S18_sub * param_1)
 0x0045b420,FUN_0045b420,,DEFAULT,__fastcall,USER_DEFINED,11,,void __fastcall FUN_0045b420(Menu * param_1)
-0x0045bba0,FUN_0045bba0,,DEFAULT,__thiscall,USER_DEFINED,98,,"bool __thiscall FUN_0045bba0(void * this, Game * pGame, CarSprite * param_2, byte playerIndex, undefined4 param_4)"
 0x0045bd00,FUN_0045bd00,,DEFAULT,__stdcall,USER_DEFINED,56,,"undefined4 __stdcall FUN_0045bd00(Game * game, undefined4 param_2)"
 0x0045c1e0,LightManager_Update,,DEFAULT,__fastcall,USER_DEFINED,5,LightManager_Update,void __fastcall LightManager_Update(LightManager * this)
 0x0045c420,FUN_0045c420,,DEFAULT,default,USER_DEFINED,79,,"uint FUN_0045c420(Game * game, uint uParm1, undefined4 param_3, undefined4 param_4)"

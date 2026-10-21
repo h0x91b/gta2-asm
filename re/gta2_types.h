@@ -72,8 +72,10 @@ typedef struct PlayerScore PlayerScore;
 typedef struct PolicePursuitTarget PolicePursuitTarget;
 typedef struct PoliceRoadblock PoliceRoadblock;
 typedef struct PublicTransportManager PublicTransportManager;
+typedef struct RoadJunction RoadJunction;
 typedef struct RoadNetwork RoadNetwork;
-typedef struct RoadNode RoadNode;
+typedef struct RoadSearchNode RoadSearchNode;
+typedef struct RoadSegment RoadSegment;
 typedef struct ScriptTrigger ScriptTrigger;
 typedef struct ScriptTriggerPool ScriptTriggerPool;
 typedef struct SoundEvent SoundEvent;
@@ -83,6 +85,8 @@ typedef struct TaxiNode TaxiNode;
 typedef struct TileAnimEntry TileAnimEntry;
 typedef struct TileAnimManager TileAnimManager;
 typedef struct TileAnimPool TileAnimPool;
+typedef struct TrafficJunction TrafficJunction;
+typedef struct TrafficSpawner TrafficSpawner;
 typedef struct TransportActor TransportActor;
 typedef struct TransportStop TransportStop;
 typedef struct TypeDescriptor TypeDescriptor;
@@ -101,9 +105,9 @@ typedef struct StyleData StyleData;
 typedef struct StyleFileHeader StyleFileHeader;
 typedef struct Car Car;
 typedef struct CarManager CarManager;
+typedef struct CarPool CarPool;
 typedef struct MaybeCarEngine MaybeCarEngine;
 typedef struct MaybeCarEngineHolder MaybeCarEngineHolder;
-typedef struct SRelToCars SRelToCars;
 typedef struct SRelToCars2 SRelToCars2;
 typedef struct SRelToCars3 SRelToCars3;
 typedef struct AnimatedValue AnimatedValue;
@@ -316,6 +320,22 @@ typedef union _union_23 _union_23;
 
 /* ---- enums (stored as fixed-size integers to keep layout) */
 
+// /CAR_CATEGORY
+typedef uint32_t CAR_CATEGORY;
+enum CAR_CATEGORY_values {
+    CAR_CAT_NONE = 0,
+    CAR_CAT_RECYCLED = 1,
+    CAR_CAT_PROT_RECYCLED = 2,
+    CAR_CAT_UNUSED_3 = 3,
+    CAR_CAT_AMBULANCE = 4,
+    CAR_CAT_FIRE_TRUCK = 5,
+    CAR_CAT_UNIT = 6,
+    CAR_CAT_ROADBLOCK = 7,
+    CAR_CAT_MISSION = 8,
+    CAR_CAT_PARKED = 9,
+    CAR_CAT_COP_CALLED = 10,
+};
+
 // /CAR_DOOR_STATE
 typedef uint32_t CAR_DOOR_STATE;
 enum CAR_DOOR_STATE_values {
@@ -460,70 +480,6 @@ enum PURSUIT_STATE_values {
     PURSUIT_ACTIVE = 3,
     PURSUIT_ENDED = 4,
     PURSUIT_SEARCHING = 5,
-};
-
-// /ZZ_SLICE4_TEST
-typedef uint32_t ZZ_SLICE4_TEST;
-enum ZZ_SLICE4_TEST_values {
-    ZZ_C = 1,
-    ZZ_B = 2,
-};
-
-// /ZZ_SLICE4_UNUSED_OCUPATION_COPY
-typedef uint32_t ZZ_SLICE4_UNUSED_OCUPATION_COPY;
-enum ZZ_SLICE4_UNUSED_OCUPATION_COPY_values {
-    PLAYER = 0,
-    EMPTY = 1,
-    UNKNOWN_OCUPATION2 = 2,
-    DUMMY = 3,
-    DUMMY_CAR_DRIVER = 4,
-    DRIVER = 5,
-    UNKNOWN_OCUPATION6 = 6,
-    TAXI_PASSENGER = 7,
-    BUS_PASSENGER = 8,
-    TRAIN_PASSENGER = 9,
-    DRIVER2 = 10,
-    FLEEING_EX_DRIVER = 11,
-    DRIVER_RETAKING_CAR = 12,
-    ANGRY_DRIVER = 13,
-    PSYCHO = 14,
-    MUGGER = 15,
-    CARTHIEF = 16,
-    BANK_ROBBER = 17,
-    CRIMINAL = 18,
-    GANG_MEMBER = 19,
-    UNKNOWN_OCUPATION20 = 20,
-    UNKNOWN_OCUPATION21 = 21,
-    ELVIS = 22,
-    MEDIC = 23,
-    POLICE = 24,
-    SWAT = 25,
-    FBI = 26,
-    ARMY_IN_VEHICLE = 27,
-    GUARD = 28,
-    POLICE_ON_FOOT = 29,
-    UNKNOWN_OCUPATION30 = 30,
-    ARMY_ON_FOOT = 31,
-    GUARD_AGAINST_PLAYER = 32,
-    CRIMINAL_TYPE1 = 33,
-    CRIMINAL_TYPE2 = 34,
-    SPECIAL_GROUP_MEMBER = 35,
-    TANK_DRIVER = 36,
-    ROAD_BLOCK_GUARD = 37,
-    FIREMAN = 38,
-    ROAD_BLOCK_TANK_MAN = 39,
-    UNKNOWN_OCUPATION40 = 40,
-    DRONE = 41,
-    GANG_CAR_DRIVER = 42,
-    STAND_STILL_BLOKE = 43,
-    ELVIS_LEADER = 44,
-    REFUGEES = 45,
-    ANY_LAW_ENFORCEMENT = 46,
-    ANY_EMERGENCY_SERVICE_MAN = 47,
-    ANY_GANG_MEMBER = 48,
-    ANY_ELVIS = 49,
-    DRIVER_ABANDONING_CAR = 50,
-    NO_OCCUPATION = 51,
 };
 
 // /_STY/CarInfoFlags
@@ -935,58 +891,58 @@ enum MAIN_MENU_SOUND_values {
 // /_ped/OCUPATION
 typedef uint32_t OCUPATION;
 enum OCUPATION_values {
-    OCUPATION__PLAYER = 0,
-    OCUPATION__EMPTY = 1,
-    OCUPATION__UNKNOWN_OCUPATION2 = 2,
-    OCUPATION__DUMMY = 3,
-    OCUPATION__DUMMY_CAR_DRIVER = 4,
-    OCUPATION__DRIVER = 5,
-    OCUPATION__UNKNOWN_OCUPATION6 = 6,
-    OCUPATION__TAXI_PASSENGER = 7,
-    OCUPATION__BUS_PASSENGER = 8,
-    OCUPATION__TRAIN_PASSENGER = 9,
-    OCUPATION__DRIVER2 = 10,
-    OCUPATION__FLEEING_EX_DRIVER = 11,
-    OCUPATION__DRIVER_RETAKING_CAR = 12,
-    OCUPATION__ANGRY_DRIVER = 13,
-    OCUPATION__PSYCHO = 14,
-    OCUPATION__MUGGER = 15,
-    OCUPATION__CARTHIEF = 16,
-    OCUPATION__BANK_ROBBER = 17,
-    OCUPATION__CRIMINAL = 18,
-    OCUPATION__GANG_MEMBER = 19,
-    OCUPATION__UNKNOWN_OCUPATION20 = 20,
-    OCUPATION__UNKNOWN_OCUPATION21 = 21,
-    OCUPATION__ELVIS = 22,
-    OCUPATION__MEDIC = 23,
-    OCUPATION__POLICE = 24,
-    OCUPATION__SWAT = 25,
-    OCUPATION__FBI = 26,
-    OCUPATION__ARMY_IN_VEHICLE = 27,
-    OCUPATION__GUARD = 28,
-    OCUPATION__POLICE_ON_FOOT = 29,
-    OCUPATION__UNKNOWN_OCUPATION30 = 30,
-    OCUPATION__ARMY_ON_FOOT = 31,
-    OCUPATION__GUARD_AGAINST_PLAYER = 32,
-    OCUPATION__CRIMINAL_TYPE1 = 33,
-    OCUPATION__CRIMINAL_TYPE2 = 34,
-    OCUPATION__SPECIAL_GROUP_MEMBER = 35,
-    OCUPATION__TANK_DRIVER = 36,
-    OCUPATION__ROAD_BLOCK_GUARD = 37,
-    OCUPATION__FIREMAN = 38,
-    OCUPATION__ROAD_BLOCK_TANK_MAN = 39,
-    OCUPATION__UNKNOWN_OCUPATION40 = 40,
-    OCUPATION__DRONE = 41,
-    OCUPATION__GANG_CAR_DRIVER = 42,
-    OCUPATION__STAND_STILL_BLOKE = 43,
-    OCUPATION__ELVIS_LEADER = 44,
-    OCUPATION__REFUGEES = 45,
-    OCUPATION__ANY_LAW_ENFORCEMENT = 46,
-    OCUPATION__ANY_EMERGENCY_SERVICE_MAN = 47,
-    OCUPATION__ANY_GANG_MEMBER = 48,
-    OCUPATION__ANY_ELVIS = 49,
-    OCUPATION__DRIVER_ABANDONING_CAR = 50,
-    OCUPATION__NO_OCCUPATION = 51,
+    PLAYER = 0,
+    EMPTY = 1,
+    UNKNOWN_OCUPATION2 = 2,
+    DUMMY = 3,
+    DUMMY_CAR_DRIVER = 4,
+    DRIVER = 5,
+    UNKNOWN_OCUPATION6 = 6,
+    TAXI_PASSENGER = 7,
+    BUS_PASSENGER = 8,
+    TRAIN_PASSENGER = 9,
+    DRIVER2 = 10,
+    FLEEING_EX_DRIVER = 11,
+    DRIVER_RETAKING_CAR = 12,
+    ANGRY_DRIVER = 13,
+    PSYCHO = 14,
+    MUGGER = 15,
+    CARTHIEF = 16,
+    BANK_ROBBER = 17,
+    CRIMINAL = 18,
+    GANG_MEMBER = 19,
+    UNKNOWN_OCUPATION20 = 20,
+    UNKNOWN_OCUPATION21 = 21,
+    ELVIS = 22,
+    MEDIC = 23,
+    POLICE = 24,
+    SWAT = 25,
+    FBI = 26,
+    ARMY_IN_VEHICLE = 27,
+    GUARD = 28,
+    POLICE_ON_FOOT = 29,
+    UNKNOWN_OCUPATION30 = 30,
+    ARMY_ON_FOOT = 31,
+    GUARD_AGAINST_PLAYER = 32,
+    CRIMINAL_TYPE1 = 33,
+    CRIMINAL_TYPE2 = 34,
+    SPECIAL_GROUP_MEMBER = 35,
+    TANK_DRIVER = 36,
+    ROAD_BLOCK_GUARD = 37,
+    FIREMAN = 38,
+    ROAD_BLOCK_TANK_MAN = 39,
+    UNKNOWN_OCUPATION40 = 40,
+    DRONE = 41,
+    GANG_CAR_DRIVER = 42,
+    STAND_STILL_BLOKE = 43,
+    ELVIS_LEADER = 44,
+    REFUGEES = 45,
+    ANY_LAW_ENFORCEMENT = 46,
+    ANY_EMERGENCY_SERVICE_MAN = 47,
+    ANY_GANG_MEMBER = 48,
+    ANY_ELVIS = 49,
+    DRIVER_ABANDONING_CAR = 50,
+    NO_OCCUPATION = 51,
 };
 
 // /_ped/PED_BIT_STATE
@@ -2726,11 +2682,20 @@ struct GTAVertex {
 
 // /Generator  size 0x2c
 struct Generator {
-    byte unk0[24]; /* 0x0 */
-    int spawnTimer; /* 0x18 */
-    uint8_t _gap_0x1c[0x2];
+    int objectType; /* 0x0 */
+    SCR_f x; /* 0x4 */
+    SCR_f y; /* 0x8 */
+    SCR_f z; /* 0xc */
+    short rot; /* 0x10 */
+    ushort minDelay; /* 0x12 */
+    ushort maxDelay; /* 0x14 */
+    uint8_t _gap_0x16[0x2];
+    uint nextSpawnFrame; /* 0x18 */
+    ushort ammo; /* 0x1c */
     short remaining; /* 0x1e */
-    byte unk20[4]; /* 0x20 */
+    byte unsure_unk20; /* 0x20 */
+    byte unsure_mode; /* 0x21 */
+    uint8_t _gap_0x22[0x2];
     void *spawnedObject; /* 0x24 */
     int spawnedSerial; /* 0x28 */
 };
@@ -3019,56 +2984,107 @@ struct PoliceRoadblock {
 
 // /TransportStop  size 0x34
 struct TransportStop {
-    int type; /* 0x0 */
-    byte raw[48]; /* 0x4 */
+    int kind; /* 0x0 */
+    byte *entryZone; /* 0x4 */
+    byte *exitZone; /* 0x8 */
+    byte *stopZone; /* 0xc */
+    byte *platformZone; /* 0x10 */
+    int used; /* 0x14 */
+    TransportActor *currentActor; /* 0x18 */
+    int platformPhase; /* 0x1c */
+    TransportStop *nextStation; /* 0x20 */
+    byte wagonPlan[10]; /* 0x24 */
+    byte numWagons; /* 0x2e */
+    byte lineIndex; /* 0x2f */
+    uint8_t _gap_0x30[0x4];
 };
 
 // /TransportActor  size 0x58
 struct TransportActor {
-    byte isOccupied; /* 0x0 */
-    uint8_t _gap_0x1[0x3];
-    short timer; /* 0x4 */
-    uint8_t _gap_0x6[0x6];
-    void *car; /* 0xc */
-    int slotPtrs[10]; /* 0x10 */
-    byte slotIds[10]; /* 0x38 */
-    uint8_t _gap_0x42[0x6];
+    byte hasPlayerDriver; /* 0x0 */
+    byte unsure_wasForcedStop; /* 0x1 */
+    byte unsure_busHijackedAndMoved; /* 0x2 */
+    uint8_t _gap_0x3[0x1];
+    short stateTimer; /* 0x4 */
+    uint8_t _gap_0x6[0x2];
+    int kind; /* 0x8 */
+    Car *locoCar; /* 0xc */
+    Car *wagons[10]; /* 0x10 */
+    char wagonBurnTimer[10]; /* 0x38 */
+    char locoBurnTimer; /* 0x42 */
+    byte wagonCount; /* 0x43 */
+    uint8_t _gap_0x44[0x4];
     int state; /* 0x48 */
-    void *stop; /* 0x4c */
-    int mode; /* 0x50 */
-    uint8_t _gap_0x54[0x4];
+    TransportStop *nextStop; /* 0x4c */
+    int speedMode; /* 0x50 */
+    char pedSpawnCooldown; /* 0x54 */
+    uint8_t _gap_0x55[0x1];
+    char passengerCount; /* 0x56 */
+    byte lineIndex; /* 0x57 */
 };
 
 // /PublicTransportManager  size 0x181c
 struct PublicTransportManager {
     TransportStop stops[100]; /* 0x0 */
-    TransportActor actors[10]; /* 0x1450 */
-    uint8_t _gap_0x17c0[0x56];
-    byte unk1816; /* 0x1816 */
-    uint8_t _gap_0x1817[0x1];
-    byte unk1818; /* 0x1818 */
+    TransportActor trainActors[10]; /* 0x1450 */
+    TransportActor busActor; /* 0x17c0 */
+    byte busNoDismount; /* 0x1818 */
     uint8_t _gap_0x1819[0x3];
 };
 
-// /RoadNode  size 0x10
-struct RoadNode {
-    ushort link0; /* 0x0 */
-    ushort link1; /* 0x2 */
-    ushort link2; /* 0x4 */
-    uint8_t _gap_0x6[0x6];
-    byte x1; /* 0xc */
-    byte y1; /* 0xd */
-    byte x2; /* 0xe */
-    byte y2; /* 0xf */
+// /RoadJunction  size 0x10
+struct RoadJunction {
+    ushort linkN; /* 0x0 */
+    ushort linkS; /* 0x2 */
+    ushort linkE; /* 0x4 */
+    ushort linkW; /* 0x6 */
+    uint arrowKind; /* 0x8 */
+    byte minX; /* 0xc */
+    byte minY; /* 0xd */
+    byte maxX; /* 0xe */
+    byte maxY; /* 0xf */
+};
+
+// /RoadSearchNode  size 0x10
+struct RoadSearchNode {
+    ushort junctionId; /* 0x0 */
+    ushort cost; /* 0x2 */
+    ushort closed; /* 0x4 */
+    uint8_t _gap_0x6[0x2];
+    RoadSearchNode *parent; /* 0x8 */
+    RoadSearchNode *next; /* 0xc */
+};
+
+// /RoadSegment  size 0x8
+struct RoadSegment {
+    ushort junction1; /* 0x0 */
+    ushort junction2; /* 0x2 */
+    byte minX; /* 0x4 */
+    byte minY; /* 0x5 */
+    byte maxX; /* 0x6 */
+    byte maxY; /* 0x7 */
 };
 
 // /RoadNetwork  size 0xcc68
 struct RoadNetwork {
     ushort routeCount; /* 0x0 */
-    uint8_t _gap_0x2[0x6];
-    RoadNode nodes[545]; /* 0x8 */
+    byte unusedByte2; /* 0x2 */
+    uint8_t _gap_0x3[0x1];
+    ushort junctionCount; /* 0x4 */
+    uint8_t _gap_0x6[0x2];
+    RoadJunction junctions[545]; /* 0x8 */
     ushort routes[12800]; /* 0x2218 */
-    uint8_t _gap_0x8618[0x4650];
+    ushort searchStartJunction; /* 0x8618 */
+    ushort searchGoalJunction; /* 0x861a */
+    RoadSearchNode searchPool[545]; /* 0x861c */
+    RoadSearchNode *openListHead; /* 0xa82c */
+    RoadSegment hSegments[545]; /* 0xa830 */
+    RoadSegment vSegments[545]; /* 0xb938 */
+    byte visited[545]; /* 0xca40 */
+    uint8_t _gap_0xcc61[0x1];
+    ushort hSegCount; /* 0xcc62 */
+    ushort vSegCount; /* 0xcc64 */
+    ushort searchNodeCount; /* 0xcc66 */
 };
 
 // /ScriptTrigger  size 0x18
@@ -3135,6 +3151,30 @@ struct TileAnimPool {
     TileAnimEntry entries[50]; /* 0x8 */
     short count; /* 0x4b8 */
     uint8_t _gap_0x4ba[0x2];
+};
+
+// /TrafficJunction  size 0x20
+struct TrafficJunction {
+    void *lampN; /* 0x0 */
+    void *lampS; /* 0x4 */
+    void *lampW; /* 0x8 */
+    void *lampE; /* 0xc */
+    void *glowN; /* 0x10 */
+    void *glowS; /* 0x14 */
+    void *glowW; /* 0x18 */
+    void *glowE; /* 0x1c */
+};
+
+// /TrafficSpawner  size 0x14
+struct TrafficSpawner {
+    Camera *curCamera; /* 0x0 */
+    CollisionBox *probeBox; /* 0x4 */
+    bool_ scanFromFarEnd; /* 0x8 */
+    byte probeCarModel; /* 0x9 */
+    byte unusedProbeModel2; /* 0xa */
+    uint8_t _gap_0xb[0x1];
+    Player *curPlayer; /* 0xc */
+    ushort *curZoneInfo; /* 0x10 */
 };
 
 // /_s_TryBlockMapEntry  size 0x14
@@ -3342,7 +3382,7 @@ struct Car {
     uint8_t _gap_0x96[0x2];
     CAR_LOCK_STATE lockState; /* 0x98 */
     CAR_ENGINE_STATE engineState; /* 0x9c */
-    CAR_COUNTER counterCategory; /* 0xa0 */
+    CAR_CATEGORY category; /* 0xa0 */
     CAR_LIGHTS_BITSTATE lightsBitstate; /* 0xa4 */
     char lightPhase; /* 0xa5 */
     byte aiFlags; /* 0xa6 */
@@ -3357,45 +3397,61 @@ struct Car {
     uint8_t _gap_0xb9[0x3];
 };
 
+// /imported/seuko-mod/SCR_Vector2  size 0x8
+struct SCR_Vector2 {
+    SCR_f x; /* 0x0 */
+    SCR_f y; /* 0x4 */
+};
+
 // /_car/CarManager  size 0x6c
 struct CarManager {
-    uint8_t _gap_0x0[0x4];
-    undefined4 field4_0x4; /* 0x4 */
-    byte field5_0x8; /* 0x8 */
-    byte field6_0x9; /* 0x9 */
-    byte field7_0xa; /* 0xa */
-    byte field8_0xb; /* 0xb */
-    undefined4 field9_0xc; /* 0xc */
-    short field10_0x10; /* 0x10 */
-    uint8_t _gap_0x12[0x2];
-    undefined4 field13_0x14; /* 0x14 */
+    ushort modelShuffleIdx; /* 0x0 */
+    uint8_t _gap_0x2[0x2];
+    Ped *dummyDriver; /* 0x4 */
+    byte unusedModelCursor; /* 0x8 */
+    byte goodModelCursor; /* 0x9 */
+    byte badModelCursor; /* 0xa */
+    byte averageModelCursor; /* 0xb */
+    CAR_MODEL4 suppressedModel; /* 0xc */
+    ushort remapShuffleIdx; /* 0x10 */
+    ushort unusedShuffleIdx; /* 0x12 */
+    uint nextCarId; /* 0x14 */
     uint8_t _gap_0x18[0x2];
-    byte field16_0x1a; /* 0x1a */
+    byte damageFireSlot; /* 0x1a */
     uint8_t _gap_0x1b[0x1];
-    undefined4 field18_0x1c; /* 0x1c */
-    undefined4 field19_0x20; /* 0x20 */
-    undefined4 field20_0x24; /* 0x24 */
-    undefined4 recycledCars; /* 0x28 */
-    undefined4 unkCarType4Counter; /* 0x2c */
-    undefined4 unkCarType5Counter; /* 0x30 */
-    undefined4 unitCars; /* 0x34 */
-    undefined4 unkCarType7Counter; /* 0x38 */
-    undefined4 missionCars; /* 0x3c */
-    undefined4 protRecycledCars; /* 0x40 */
-    undefined4 unkCarType9Counter; /* 0x44 */
-    int unkCarTypeACounter; /* 0x48 */
-    uint8_t _gap_0x4c[0x8];
-    byte field38_0x54; /* 0x54 */
-    byte inc; /* 0x55 */
+    int explosionSlot; /* 0x1c */
+    int unsure_greenDirA; /* 0x20 */
+    int unsure_greenDirB; /* 0x24 */
+    int recycledCars; /* 0x28 */
+    int ambulanceCars; /* 0x2c */
+    int fireTruckCars; /* 0x30 */
+    int unitCars; /* 0x34 */
+    int roadblockCars; /* 0x38 */
+    int missionCars; /* 0x3c */
+    int protRecycledCars; /* 0x40 */
+    int parkedCars; /* 0x44 */
+    int copCalledCars; /* 0x48 */
+    SCR_Vector2 tvVanDir; /* 0x4c */
+    byte spawnLockoutTicks; /* 0x54 */
+    byte onScreenCarCount; /* 0x55 */
     uint8_t _gap_0x56[0x2];
-    undefined4 field42_0x58; /* 0x58 */
-    byte field43_0x5c; /* 0x5c */
+    CAR_MODEL4 modelCheckModel; /* 0x58 */
+    bool_ modelCheckHappened; /* 0x5c */
     uint8_t _gap_0x5d[0x3];
-    undefined4 field47_0x60; /* 0x60 */
-    undefined4 field48_0x64; /* 0x64 */
-    byte field49_0x68; /* 0x68 */
-    bool_ do_free_shoping; /* 0x69 */
+    int obstacleProbeMode; /* 0x60 */
+    SCR_f obstacleProbeZ; /* 0x64 */
+    bool_ explosionDamageLatch; /* 0x68 */
+    bool_ doFreeShopping; /* 0x69 */
     uint8_t _gap_0x6a[0x2];
+};
+
+// /_car/CarPool  size 0xe0c4
+struct CarPool {
+    Car *freeHead; /* 0x0 */
+    Car *usedHead; /* 0x4 */
+    Car cars[306]; /* 0x8 */
+    ushort activeCarCount; /* 0xe0c0 */
+    uint8_t _gap_0xe0c2[0x2];
 };
 
 // /_car/MaybeCarEngine  size 0xb0
@@ -3416,14 +3472,6 @@ struct MaybeCarEngine {
 struct MaybeCarEngineHolder {
     MaybeCarEngine *firstElement; /* 0x0 */
     MaybeCarEngine *arr306; /* 0x4 */
-};
-
-// /_car/SRelToCars  size 0xe0c4
-struct SRelToCars {
-    void **field0_0x0; /* 0x0 */
-    void *field1_0x4; /* 0x4 */
-    byte arr306[188][306]; /* 0x8 */
-    uint8_t _gap_0xe0c0[0x4];
 };
 
 // /_car/SRelToCars2  size 0x10
@@ -3632,12 +3680,6 @@ struct WorldRect {
     SCR_f right; /* 0x4 */
     SCR_f top; /* 0x8 */
     SCR_f bottom; /* 0xc */
-};
-
-// /imported/seuko-mod/SCR_Vector2  size 0x8
-struct SCR_Vector2 {
-    SCR_f x; /* 0x0 */
-    SCR_f y; /* 0x4 */
 };
 
 // /imported/seuko-mod/Camera  size 0xbc
@@ -4622,8 +4664,8 @@ struct TextureCache {
 
 // /auto_structs/TrafficLights  size 0x194
 struct TrafficLights {
-    void *lights[100]; /* 0x0 */
-    ushort count; /* 0x190 */
+    TrafficJunction *junctions[100]; /* 0x0 */
+    ushort junctionCount; /* 0x190 */
     byte phase; /* 0x192 */
     byte timer; /* 0x193 */
 };
@@ -5140,28 +5182,43 @@ struct BusAndTrainsHolder {
 // /imported/seuko-mod/CarAI  size 0x78
 struct CarAI {
     Car *parentCar; /* 0x0 */
-    uint8_t _gap_0x4[0x8];
+    uint8_t _gap_0x4[0x4];
+    byte turnTimer; /* 0x8 */
+    byte turnTileX; /* 0x9 */
+    byte turnTileY; /* 0xa */
+    uint8_t _gap_0xb[0x1];
     CarAI *nextFree; /* 0xc */
     short heading; /* 0x10 */
     uint8_t _gap_0x12[0x2];
-    SCR_f unsure_targetX; /* 0x14 */
-    SCR_f unsure_targetY; /* 0x18 */
-    SCR_f unsure_targetZ; /* 0x1c */
+    SCR_f unsure_trainSpeedCur; /* 0x14 */
+    SCR_f unsure_trainSpeedGoal; /* 0x18 */
+    SCR_f unsure_trainSpeedStep; /* 0x1c */
     uint8_t _gap_0x20[0x4];
     uint flags; /* 0x24 */
     char routeSlot; /* 0x28 */
-    uint8_t _gap_0x29[0x3];
+    uint8_t _gap_0x29[0x1];
+    byte stillTicks; /* 0x2a */
+    byte unsure_ticksSinceReset; /* 0x2b */
     byte avoidTimer; /* 0x2c */
-    uint8_t _gap_0x2d[0x1f];
+    uint8_t _gap_0x2d[0x2];
+    byte unsure_laneTarget; /* 0x2f */
+    byte haltTimer; /* 0x30 */
+    uint8_t _gap_0x31[0xb];
+    int unsure_unstickState; /* 0x3c */
+    int unsure_laneDir; /* 0x40 */
+    int turnExitDir; /* 0x44 */
+    int unsure_leftTurnExitDir; /* 0x48 */
     int travelDir; /* 0x4c */
-    uint8_t _gap_0x50[0x6];
+    int offRoadTurn; /* 0x50 */
+    ushort laneFollowCooldown; /* 0x54 */
     ushort routeStep; /* 0x56 */
     ushort stuckTicks; /* 0x58 */
-    uint8_t _gap_0x5a[0xe];
-    Car *unsure_nearbyCar; /* 0x68 */
+    ushort reverseTicks; /* 0x5a */
+    uint8_t _gap_0x5c[0xc];
+    Car *nearbyCar; /* 0x68 */
     Car *blockingCar; /* 0x6c */
-    void *obstacleHit; /* 0x70 */
-    SCR_f unsure_targetSpeed; /* 0x74 */
+    Sprite *obstacleHit; /* 0x70 */
+    SCR_f targetSpeed; /* 0x74 */
 };
 
 // /imported/seuko-mod/CarAIPool  size 0x8f74
