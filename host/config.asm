@@ -24,12 +24,14 @@
 ;          (hk_CameraPosApply, w32_hooks.asm); smaller = more city. Vanilla 1280x960
 ;          shows the same part of the city as 640x480, only magnified (measured), so
 ;          auto = 640 / window width keeps the original 640x480 pixel scale at any size.
+;          Without the key it is ZOOM_DEFAULT (70%); `zoom: 100` is the vanilla view.
 
 CFG_LINE    equ 1024
 CFG_PATH    equ 1024
 CF_EXISTS   equ 0                   ; flag kinds: set = value exists
 CF_VALUE    equ 1                   ;             set = dword value != 0
 ZOOM_AUTO   equ -1
+ZOOM_DEFAULT equ 70                 ; no camera.zoom in the config: the user's pick (100 = vanilla)
 ZOOM_MIN    equ 25
 ZOOM_MAX    equ 400
 
@@ -432,6 +434,7 @@ section .data
 %endmacro
 
 section .data
+cam_zoom_cfg: dd ZOOM_DEFAULT       ; ZOOM_AUTO or percent (0 would mean vanilla)
 align 8
 cfg_bools:
     CBOOL "true", 1
@@ -558,7 +561,6 @@ alignb 8
 cfg_val:      resq 1
 cfg_nset:     resd 1
 cfg_end:      resq 1
-cam_zoom_cfg: resd 1                ; 0 = vanilla, ZOOM_AUTO, or percent
 cfg_dword:    resd 1
 cfg_abs:      resb CFG_PATH
 cfg_line:     resb CFG_LINE

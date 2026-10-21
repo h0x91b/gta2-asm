@@ -10,10 +10,11 @@
 # Camera. zoom: how much of the city fits on screen, as a percentage of the game's own
 # zoom; smaller = more city. Unmodified GTA2 shows the same area at 1280x960 as at
 # 640x480, only magnified; `auto` keeps the 640x480 pixel scale at any window size
-# (50% at 1280x960 = twice the city each way). 25..400; leave it out for vanilla.
+# (50% at 1280x960 = twice the city each way). 25..400; leave it out for the default
+# 70%, set 100 for the vanilla view.
 # Below about 30% the game's render queue fills up and the loader raises it by itself.
 camera:
-  zoom: auto
+  zoom: 70                       # the default; auto, or 100 for vanilla
 
 # The game's own debug flags (DMA Design developer switches), read by HiddenDebugFlags
 # (0x451930) from HKCU\SOFTWARE\DMA Design Ltd\GTA2\Debug. A flag is on when its
