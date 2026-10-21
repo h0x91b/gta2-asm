@@ -53,6 +53,7 @@ typedef struct GeneratorManager GeneratorManager;
 typedef struct IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct;
 typedef union IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion;
 typedef struct KanjiFont KanjiFont;
+typedef struct MissionCleanupEntry MissionCleanupEntry;
 typedef struct ObjectSpawner ObjectSpawner;
 typedef struct OwnerSlot OwnerSlot;
 typedef struct ParkingZone ParkingZone;
@@ -169,7 +170,6 @@ typedef struct Gang Gang;
 typedef struct Gangs Gangs;
 typedef struct Object Object;
 typedef struct PedManager PedManager;
-typedef struct Police Police;
 typedef struct Pos Pos;
 typedef struct S22_2 S22_2;
 typedef struct S31 S31;
@@ -198,7 +198,6 @@ typedef struct PedS1 PedS1;
 typedef struct PedSprite PedSprite;
 typedef struct PedsManager PedsManager;
 typedef struct PlayerS2 PlayerS2;
-typedef struct Police_s5 Police_s5;
 typedef struct S1 S1;
 typedef struct S3 S3;
 typedef struct S3Bytes S3Bytes;
@@ -2672,6 +2671,14 @@ struct KanjiFont {
     uint8_t _gap_0x26[0x2];
 };
 
+// /MissionCleanupEntry  size 0xc
+struct MissionCleanupEntry {
+    void *entity; /* 0x0 */
+    byte type; /* 0x4 */
+    byte pad_5[3]; /* 0x5 */
+    int entity_id; /* 0x8 */
+};
+
 // /ObjectSpawner  size 0x5c
 struct ObjectSpawner {
     uint8_t _gap_0x0[0x10];
@@ -3673,7 +3680,7 @@ struct Ped {
     ushort invulnerability; /* 0x208 9999 = infinity */
     short wantedPoints; /* 0x20a 600 = 1 star, 1600 = 2 */
     short field67_0x20c; /* 0x20c */
-    ushort idleTicks; /* 0x20e */
+    ushort offscreenTicks; /* 0x20e */
     ushort knockdownMeter; /* 0x210 */
     ushort knockdownThreshold; /* 0x212 */
     uint8_t _gap_0x214[0x2];
@@ -4066,17 +4073,11 @@ struct MikeDebug {
     int field2011_0xa7c; /* 0xa7c */
 };
 
-// /auto_structs/Vec3i  size 0xc
-struct Vec3i {
-    int x; /* 0x0 */
-    int y; /* 0x4 */
-    int z; /* 0x8 */
-};
-
 // /auto_structs/MissionCleanupList  size 0x25c
 struct MissionCleanupList {
-    int len; /* 0x0 */
-    Vec3i vec3i50[50]; /* 0x4 */
+    MissionCleanupEntry entries[50]; /* 0x0 */
+    byte count; /* 0x258 */
+    uint8_t _gap_0x259[0x3];
 };
 
 // /auto_structs/MissionScript  size 0xc1ea8
@@ -4478,6 +4479,13 @@ struct Vec2i {
     int y; /* 0x4 */
 };
 
+// /auto_structs/Vec3i  size 0xc
+struct Vec3i {
+    int x; /* 0x0 */
+    int y; /* 0x4 */
+    int z; /* 0x8 */
+};
+
 // /imported/gta2-mouse/Gang  size 0x144
 struct Gang {
     uint8_t _gap_0x0[0x104];
@@ -4522,20 +4530,6 @@ struct PedManager {
     short MaybePedsInUse; /* 0x20538 */
     uint8_t _gap_0x2053a[0x1];
     undefined1 field_0x2053b; /* 0x2053b */
-};
-
-// /imported/gta2-mouse/Police  size 0x7b8
-struct Police {
-    uint8_t _gap_0x0[0x4];
-    PoliceCrew arr20[20]; /* 0x4 */
-    byte arr124_4[124][4]; /* 0x464 */
-    int copLevel; /* 0x654 */
-    uint8_t _gap_0x658[0x4];
-    int field_0x65c; /* 0x65c */
-    uint8_t _gap_0x660[0x14d];
-    byte numPolicePedsInRangeScreen; /* 0x7ad */
-    uint8_t _gap_0x7ae[0x9];
-    undefined1 field_0x7b7; /* 0x7b7 */
 };
 
 // /imported/gta2-mouse/Pos  size 0x3c
@@ -4838,31 +4832,6 @@ struct PlayerS2 {
     int x; /* 0x0 */
     int y; /* 0x4 */
     int z; /* 0x8 */
-};
-
-// /imported/gzf-2021/Police_s5  size 0x7b5
-struct Police_s5 {
-    uint8_t _gap_0x0[0x20];
-    int field32_0x20; /* 0x20 */
-    uint8_t _gap_0x24[0x440];
-    Ped *targetPed; /* 0x464 */
-    Ped *field1122_0x468; /* 0x468 */
-    Ped *field1123_0x46c; /* 0x46c */
-    short field1124_0x470; /* 0x470 */
-    uint8_t _gap_0x472[0x2];
-    Ped *field1127_0x474; /* 0x474 */
-    Ped *field1128_0x478; /* 0x478 */
-    uint8_t _gap_0x47c[0x8];
-    Ped *field1137_0x484; /* 0x484 */
-    uint8_t _gap_0x488[0x56];
-    ushort field1223_0x4de; /* 0x4de */
-    uint8_t _gap_0x4e0[0x174];
-    Ped *field1596_0x654; /* 0x654 */
-    uint8_t _gap_0x658[0x1];
-    bool_ field1598_0x659; /* 0x659 */
-    uint8_t _gap_0x65a[0x156];
-    int field1941_0x7b0; /* 0x7b0 */
-    undefined1 field_0x7b4; /* 0x7b4 */
 };
 
 // /imported/gzf-2021/S1  size 0x189

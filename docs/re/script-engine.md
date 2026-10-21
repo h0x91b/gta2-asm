@@ -120,13 +120,14 @@ free list; `ScriptThreadPool_UpdateNoDeallocate` runs every active thread and mo
 sub-script directory). The rest of the struct (car/phone triggers, weapon-hit records, flags at
 `+0xC1E2C…`) is only partly typed. Not retyped in this pass.
 
-### `MissionCleanupList` (0x25C bytes; `g_MissionCleanup` `0x6644B8`; gta2_re `Miss2_25C`)
+### `MissionCleanupList` (0x25C bytes; `g_MissionCleanup` `0x6644B8`; gta2_re `Miss2_25C`) (V)
 
-50 entries of 12 bytes plus a count byte at `+0x258` (`MissionCleanup_Ctor` `0x474E50`): cars,
-peds and objects created by a mission, deleted by `MissionCleanUp` when the mission ends.
-⚠️ The Ghidra layout is still wrong: it has `int len` at 0 and `Vec3i[50]` at 4. The code puts
-the entries at 0 and the count at `+0x258`. Fixing it needs a Structure Editor clear of
-`0x0-0x25B` (the MCP cannot free defined bytes).
+`MissionCleanupEntry entries[50]` at 0 and `u8 count` at `+0x258`. Each 12-byte entry is
+`{void* entity; u8 type; u8 pad[3]; s32 entity_id}`. `type` is 1 for a car, 2 for an object and
+3 for a ped (gta2_re `push_type_*`). `MissionCleanup_PushObject` stores type 2 and takes the id
+from `obj+0x14`. The list holds what a mission created; `MissionCleanUp` deletes it when the
+mission ends. Helpers: `MissionCleanup_Ctor` `0x474E50`, `MissionCleanup_FindFreeEntry`
+`0x474E80` (the first slot with `entity == NULL`).
 
 ### Globals (V)
 
@@ -691,9 +692,10 @@ Handlers shared by several opcodes are named after the group (`Script_Op_S_OP_I`
   - manager and cleanup: `MissionScript_ExecuteScriptThreads` `0x481900` (was `relToMissions`),
     `MissionScript_RestoreAnsweredPhones` `0x481200`, `MissionScript_RemovePhoneThread`
     `0x4763B0`, `MissionScript_FindPhoneThreadByObjId` `0x4763E0`, `MissionCleanup_Ctor`
-    `0x474E50` (was `initS17_mission`), `MissionCleanup_PushObject` `0x476D50`.
+    `0x474E50` (was `initS17_mission`), `MissionCleanup_FindFreeEntry` `0x474E80`,
+    `MissionCleanup_PushObject` `0x476D50`.
 - **Types**: `S16` → `ScriptThreadPool`, `S16_sub1` → `ScriptThread` (fields named as above),
-  `S17_mission` → `MissionCleanupList`. Globals as in the table above.
+  `S17_mission` → `MissionCleanupList` (relaid out, new `MissionCleanupEntry`). Globals as in the table above.
 
 ### Handler callees (from gta2_re, by call-sequence alignment)
 
@@ -859,7 +861,6 @@ gta2_re's suffixes are 10.5 addresses, but two kinds of coincidence are real and
   keyword.
 - **`GIVE_WEAPON_1` vs `_2`** (138 / 266): one handler. What the argument variants mean is not
   confirmed.
-- **`MissionCleanupList` layout** in Ghidra needs the clear described above.
 - `SCR_CMD_TYPE` in Ghidra has only values 0..231; the remaining names (232..446) are in this
   table but not yet in the enum.
 

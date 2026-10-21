@@ -175,6 +175,7 @@ so an unsupported 3D setting is reset. Confidence: high."
 0x0044ab20,plate,unsure_ObjectType_IsHarmlessToCar,"Seq33 slice5 (hypothesis): object types 0x9a,0x9f,0xc1,0xc3,199 -> true; Car_OnDamage returns early for them (no damage, still ped-exit)."
 0x0044ab80,plate,unsure_ObjectType_GetKillWeaponCode,"Seq33 slice5 (hypothesis): object type -> kill category 0x9..0x15 (default 9); stored at Car+0x90 lastAttackerWeapon by Car_OnDamage. 10->0x15, 0x80->0x11, 0x8a->0x10, 0xc0->0x13, 0xc2->0xe, 0xc6/0xfb->0x14, 0xfe/0x109->0xb ..."
 0x0044b8f0,plate,LayerDrawQueues_Ctor,"LayerDrawQueues ctor: 7 per-map-layer draw queues (4-byte list heads over node pools DAT_00672578/DAT_0067257c). Cleared each frame in eachFrame, objects enqueued sorted by Z, each queue flushed per layer in SetupFrameLighting. Name: medium."
+0x0044c840,plate,BlockInfo_Clear,"Was ""unclear"". Zeroes one 12-byte GMP block_info: u16 faces left/right/top/bottom/lid at +0..+8, u8 arrows at +0xA, u8 slope_type at +0xB. Callers: MapBlocks_Ctor, Script_Op_ADD_NEW_BLOCK, 0x44C8A0. = gta2_re gmp_block_info::init_44C840 (same address in 10.5). Seq 34."
 0x0044d2e0,plate,DoorManager_Ctor,"DoorManager ctor (door.cpp). 22 door slots (0x38 each), ensures helper singleton DAT_005e9374 (0x2C4) exists; +0x4D0 active door count, +0x4D2 = 0xCD. Updated by DoorManager_Update from GameTick. Semantics: medium."
 0x0044d670,plate,Door_RegisterDoubleDoor,Name from gta2_re (GTA2 10.5) Door_4D4::RegisterDoubleDoor_49D1F0: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
 0x0044db00,plate,Door_RegisterDoubleDoorNoCheck,Name from gta2_re (GTA2 10.5) Door_4D4::RegisterDoubleDoorNoCheck_49CFA0: 2 script handlers align their call sequence to it. Seq 34 callee alignment.
@@ -227,6 +228,7 @@ and ends the game with GXT 'g_over'. Confidence: medium-high."
 0x00469070,plate,Light_SetFlashing,Name from gta2_re (GTA2 10.5) Light_1D4CC::SetFlashing_469070: 10.5 address equals this 11.44 address. Seq 34 callee alignment.
 0x00472640,plate,ResetRandomSeedTo1,Resets the game RNG seed (random_seed) to 1 via Crt_Srand. Called first in ConstructGame so every session starts deterministic.
 0x00474e50,plate,MissionCleanup_Ctor,"Was initS17_mission. Clears the 50 x 12-byte entries and the count at +0x258 of the mission cleanup list (gta2_re Miss2_25C, 0x25C bytes). Seq 34."
+0x00474e80,plate,MissionCleanup_FindFreeEntry,"Returns the first of the 50 MissionCleanupEntry slots with entity == NULL, or NULL when full. = gta2_re Miss2_25C::allocate_next_502F60. Seq 34."
 0x00475010,plate,ScriptThread_GetEntityTypeOfCommand,Name from gta2_re (GTA2 10.5) miss2_0x11C::GetEntityTypeOfCommand_503410: 4 script handlers align their call sequence to it. Seq 34 callee alignment.
 0x004751b0,plate,ScriptThread_AssignId,"Called by ScriptThreadPool_Allocate: in_level_start(+0x118)=0, thread_id(+0x11A)=DAT_005931F8++ . Seq 34."
 0x004751e0,plate,ScriptThread_EndCmd,= gta2_re miss2_0x11C::EndCmd_503670 (next_cmd = 0xFFFF). Called from ScriptThread_Next / JumpToCmd. Seq 34.

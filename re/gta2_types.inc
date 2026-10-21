@@ -334,6 +334,14 @@ struc KanjiFont
     resb 2
 endstruc
 
+; /MissionCleanupEntry  (12 bytes)
+struc MissionCleanupEntry
+    .entity                           resb 4      ; 0x0 void *
+    .type                             resb 1      ; 0x4 byte
+    .pad_5                            resb 3      ; 0x5 byte[3]
+    .entity_id                        resb 4      ; 0x8 int
+endstruc
+
 ; /ObjectSpawner  (92 bytes)
 struc ObjectSpawner
     resb 16
@@ -1738,7 +1746,7 @@ struc Ped
     .invulnerability                  resb 2      ; 0x208 ushort
     .wantedPoints                     resb 2      ; 0x20a short
     .field67_0x20c                    resb 2      ; 0x20c short
-    .idleTicks                        resb 2      ; 0x20e ushort
+    .offscreenTicks                   resb 2      ; 0x20e ushort
     .knockdownMeter                   resb 2      ; 0x210 ushort
     .knockdownThreshold               resb 2      ; 0x212 ushort
     resb 2
@@ -2372,8 +2380,9 @@ endstruc
 
 ; /auto_structs/MissionCleanupList  (604 bytes)
 struc MissionCleanupList
-    .len                              resb 4      ; 0x0 int
-    .vec3i50                          resb 600    ; 0x4 Vec3i[50]
+    .entries                          resb 600    ; 0x0 MissionCleanupEntry[50]
+    .count                            resb 1      ; 0x258 byte
+    resb 3
 endstruc
 
 ; /auto_structs/MissionScript  (794280 bytes)
@@ -2936,20 +2945,6 @@ struc PedManager
     .field_0x2053b                    resb 1      ; 0x2053b undefined1
 endstruc
 
-; /imported/gta2-mouse/Police  (1976 bytes)
-struc Police
-    resb 4
-    .arr20                            resb 1120   ; 0x4 PoliceCrew[20]
-    .arr124_4                         resb 496    ; 0x464 byte[124][4]
-    .copLevel                         resb 4      ; 0x654 int
-    resb 4
-    .field_0x65c                      resb 4      ; 0x65c int
-    resb 333
-    .numPolicePedsInRangeScreen       resb 1      ; 0x7ad byte
-    resb 9
-    .field_0x7b7                      resb 1      ; 0x7b7 undefined1
-endstruc
-
 ; /imported/gta2-mouse/Pos  (60 bytes)
 struc Pos
     .rotation                         resb 2      ; 0x0 short
@@ -3281,31 +3276,6 @@ struc PlayerS2
     .x                                resb 4      ; 0x0 int
     .y                                resb 4      ; 0x4 int
     .z                                resb 4      ; 0x8 int
-endstruc
-
-; /imported/gzf-2021/Police_s5  (1973 bytes)
-struc Police_s5
-    resb 32
-    .field32_0x20                     resb 4      ; 0x20 int
-    resb 1088
-    .targetPed                        resb 4      ; 0x464 Ped *
-    .field1122_0x468                  resb 4      ; 0x468 Ped *
-    .field1123_0x46c                  resb 4      ; 0x46c Ped *
-    .field1124_0x470                  resb 2      ; 0x470 short
-    resb 2
-    .field1127_0x474                  resb 4      ; 0x474 Ped *
-    .field1128_0x478                  resb 4      ; 0x478 Ped *
-    resb 8
-    .field1137_0x484                  resb 4      ; 0x484 Ped *
-    resb 86
-    .field1223_0x4de                  resb 2      ; 0x4de ushort
-    resb 372
-    .field1596_0x654                  resb 4      ; 0x654 Ped *
-    resb 1
-    .field1598_0x659                  resb 1      ; 0x659 bool
-    resb 342
-    .field1941_0x7b0                  resb 4      ; 0x7b0 int
-    .field_0x7b4                      resb 1      ; 0x7b4 undefined1
 endstruc
 
 ; /imported/gzf-2021/S1  (393 bytes)
