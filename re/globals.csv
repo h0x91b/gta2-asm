@@ -10,7 +10,8 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x004c8c20,?showDebugLabel,,USER_DEFINED,.text,Hud_DebugLabel_Show,,
 0x004d04f4,prt_4d04f4_b293fec6,Ped_UpdateWeaponFiring::override,USER_DEFINED,.text,Ped_UpdateWeaponFiring,,
 0x0056e980,floatEncodingMask,,USER_DEFINED,.rdata,,/double,8
-0x00575904,MaxAmmoArray,,USER_DEFINED,.rdata,,/byte[15],15
+0x00575904,MaxAmmoArray,,USER_DEFINED,.rdata,,/byte[28],28
+0x00575920,g_WeaponDefaultAmmo,,USER_DEFINED,.rdata,,/byte[28],28
 0x005787c8,vftable,type_info,IMPORTED,.rdata,,/pointer,4
 0x00591e7c,g_PedOffscreenTicksLimitInit,,USER_DEFINED,.data.exp,,/undefined2,2
 0x00591e84,nextPedId,,USER_DEFINED,.data.exp,,/uint,4
@@ -376,10 +377,13 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00664ff4,unk2,,USER_DEFINED,.data.exp,,/int,4
 0x00665078,unk3,,USER_DEFINED,.data.exp,,/byte,1
 0x00665704,g_MultiplayerTag,,USER_DEFINED,.data.exp,,/undefined,1
-0x00665784,BareGameObjectManager,,USER_DEFINED,.data.exp,,/imported/seuko-mod/BareGameObjectManager *,4
+0x0066577c,g_ObjectAnimStatePool,,USER_DEFINED,.data.exp,,/void *,4
+0x00665780,g_ObjectMotionStatePool,,USER_DEFINED,.data.exp,,/void *,4
+0x00665784,g_WorldObjectPool,,USER_DEFINED,.data.exp,,/imported/seuko-mod/WorldObjectPool *,4
 0x00665788,g_ObjectSpawner,,USER_DEFINED,.data.exp,,/ObjectSpawner *,4
 0x00665b40,g_ObjectPrefabsContainer,,USER_DEFINED,.data.exp,,/imported/seuko-mod/ObjectPrefabsContainer *,4
 0x00669ae4,g_ParkingZone,,USER_DEFINED,.data.exp,,/ParkingZone *,4
+0x00669e70,g_ParticlePool,,USER_DEFINED,.data.exp,,/ParticlePool *,4
 0x00669e74,g_ParticleManager,,USER_DEFINED,.data.exp,,/ParticleManager *,4
 0x00669e78,g_ParticleStatePool20,,USER_DEFINED,.data.exp,,/ParticleStatePool20 *,4
 0x00669e7c,g_ParticleStatePool40,,USER_DEFINED,.data.exp,,/ParticleStatePool40 *,4

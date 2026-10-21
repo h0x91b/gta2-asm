@@ -614,8 +614,8 @@ struc HudZoneNameLabel
     .pad1                             resb 1      ; 0x1 byte
     .text                             resb 130    ; 0x2 wchar_t[65]
     .textWidth                        resb 4      ; 0x84 int
-    .zoneSecondary                    resb 4      ; 0x88 void *
-    .zonePrimary                      resb 4      ; 0x8c void *
+    .zoneType1                        resb 4      ; 0x88 void *
+    .zoneTypeF                        resb 4      ; 0x8c void *
     .fadeBlend                        resb 4      ; 0x90 int
     .fadeAlpha                        resb 1      ; 0x94 byte
     .pad95                            resb 3      ; 0x95 byte[3]
@@ -666,12 +666,32 @@ struc MissionCleanupEntry
     .entity_id                        resb 4      ; 0x8 int
 endstruc
 
+; enum /OBJECT_KIND  (4 bytes)
+OBJECT_KIND.OBJECT_KIND_STATIC equ 0
+OBJECT_KIND.OBJECT_KIND_STATIC_NOTIFY equ 1
+OBJECT_KIND.OBJECT_KIND_ANIMATED equ 2
+OBJECT_KIND.OBJECT_KIND_PHYSICS equ 3
+OBJECT_KIND.OBJECT_KIND_PHYSICS_ANIMATED equ 4
+OBJECT_KIND.OBJECT_KIND_PARTICLE_SYSTEM equ 5
+OBJECT_KIND.OBJECT_KIND_PICKUP_STATIC equ 6
+OBJECT_KIND.OBJECT_KIND_PICKUP_PHYSICS equ 7
+OBJECT_KIND.OBJECT_KIND_PICKUP_ANIMATED equ 8
+OBJECT_KIND.OBJECT_KIND_PICKUP_PHYSICS_ANIMATED equ 9
+OBJECT_KIND.OBJECT_KIND_UNK_A equ 10
+OBJECT_KIND.OBJECT_KIND_LIGHT equ 11
+OBJECT_KIND.OBJECT_KIND_UNK_C equ 12
+
 ; /ObjectSpawner  (92 bytes)
 struc ObjectSpawner
     resb 16
     .numCategory2Objects              resb 4      ; 0x10 int
     .numCategory3Objects              resb 4      ; 0x14 int
-    resb 64
+    .nextOwnerSlot                    resb 1      ; 0x18 byte
+    resb 3
+    .category3List                    resb 4      ; 0x1c void *
+    .bonusTokenAllowed                resb 50     ; 0x20 byte[50]
+    resb 2
+    .bonusTokenCounter                resb 4      ; 0x54 int
     .position                         resb 4      ; 0x58 Position *
 endstruc
 
@@ -751,10 +771,48 @@ struc ParkingZone
     .unk44                            resb 4      ; 0x44 int
 endstruc
 
+; /Particle  (76 bytes)
+struc Particle
+    .serial                           resb 2      ; 0x0 ushort
+    ._pad2                            resb 2      ; 0x2 ushort
+    .flags                            resb 4      ; 0x4 uint
+    .velX                             resb 4      ; 0x8 Fix16
+    .velY                             resb 4      ; 0xc Fix16
+    .velZ                             resb 4      ; 0x10 Fix16
+    .driftX                           resb 4      ; 0x14 Fix16
+    .driftY                           resb 4      ; 0x18 Fix16
+    .driftZ                           resb 4      ; 0x1c Fix16
+    .speed                            resb 4      ; 0x20 Fix16
+    .heading                          resb 2      ; 0x24 Ang16
+    ._pad26                           resb 2      ; 0x26 ushort
+    .owner                            resb 4      ; 0x28 void *
+    .ttl                              resb 2      ; 0x2c ushort
+    .ttlInit                          resb 2      ; 0x2e ushort
+    .pos                              resb 4      ; 0x30 Position *
+    .flagA                            resb 4      ; 0x34 uint
+    .type                             resb 4      ; 0x38 uint
+    .next                             resb 4      ; 0x3c void * *
+    .follow                           resb 4      ; 0x40 ParticleState *
+    .followSerial                     resb 2      ; 0x44 ushort
+    .frame                            resb 1      ; 0x46 byte
+    ._pad47                           resb 1      ; 0x47 byte
+    .delay                            resb 1      ; 0x48 byte
+    ._pad49                           resb 3      ; 0x49 byte[3]
+endstruc
+
 ; /ParticleManager  (8 bytes)
 struc ParticleManager
     .object0                          resb 4      ; 0x0 void *
     .object1                          resb 4      ; 0x4 void *
+endstruc
+
+; /ParticlePool  (38012 bytes)
+struc ParticlePool
+    .freeHead                         resb 4      ; 0x0 Particle *
+    .activeHead                       resb 4      ; 0x4 Particle *
+    .nodes                            resb 38000  ; 0x8 Particle[500]
+    .iterCounter                      resb 2      ; 0x9478 ushort
+    ._pad                             resb 2      ; 0x947a ushort
 endstruc
 
 ; /ParticleState  (48 bytes)
@@ -764,10 +822,15 @@ struc ParticleState
     resb 1
     .serial                           resb 2      ; 0x6 short
     resb 8
-    .type                             resb 4      ; 0x10 int
-    .owner                            resb 4      ; 0x14 void *
-    resb 20
-    .unk2C                            resb 4      ; 0x2c int
+    .kind                             resb 4      ; 0x10 int
+    .ownerObject                      resb 4      ; 0x14 WorldObject *
+    .emitCooldown                     resb 2      ; 0x18 ushort
+    .ttl                              resb 2      ; 0x1a ushort
+    resb 6
+    .heading                          resb 2      ; 0x22 Ang16
+    .curRadius                        resb 4      ; 0x24 Fix16
+    .maxRadius                        resb 4      ; 0x28 Fix16
+    .attackerPedId                    resb 4      ; 0x2c int
 endstruc
 
 ; /ParticleStatePool20  (980 bytes)
@@ -871,7 +934,7 @@ struc PoliceRoadblock
     .lifeTimer                        resb 2      ; 0xc ushort
     .offscreenTicks                   resb 2      ; 0xe ushort
     .cars                             resb 24     ; 0x10 Car *[6]
-    .barrierObjs                      resb 48     ; 0x28 BareGameObject *[12]
+    .barrierObjs                      resb 48     ; 0x28 WorldObject *[12]
     .barrierObjIds                    resb 48     ; 0x58 int[12]
     .guards                           resb 24     ; 0x88 Ped *[6]
     .collisionRect                    resb 4      ; 0xa0 void *
@@ -2536,18 +2599,20 @@ WEAPON_INDEX.WEAPON_VEHICLE_WEAPON_27 equ 27
 
 ; /_weapon/WEAPON_STRUCT  (48 bytes)
 struc WEAPON_STRUCT
-    .ammo                             resb 2      ; 0x0 short
+    .ammo                             resb 2      ; 0x0 ushort
     .timeToReload                     resb 1      ; 0x2 byte
     resb 1
-    .field3_0x4                       resb 4      ; 0x4 int
+    .probeMode                        resb 4      ; 0x4 int
     resb 12
-    .carId                            resb 4      ; 0x14 int
+    .car                              resb 4      ; 0x14 Car *
     .nextWeapon                       resb 4      ; 0x18 WEAPON_STRUCT *
     .id                               resb 4      ; 0x1c WEAPON_INDEX
-    resb 4
+    .fireLatch                        resb 1      ; 0x20 byte
+    .justThrown                       resb 1      ; 0x21 byte
+    resb 2
     .ped                              resb 4      ; 0x24 Ped *
-    resb 4
-    .field28_0x2c                     resb 1      ; 0x2c byte
+    .audioEmitter                     resb 4      ; 0x28 void *
+    .firingFlag                       resb 1      ; 0x2c byte
     resb 3
 endstruc
 
@@ -3749,31 +3814,6 @@ struc AmbulanceSub
     .field_0x1f                       resb 1      ; 0x1f undefined1
 endstruc
 
-; /imported/seuko-mod/BareGameObject  (44 bytes)
-struc BareGameObject
-    .next                             resb 4      ; 0x0 BareGameObject *
-    .sprite2                          resb 4      ; 0x4 Sprite *
-    .state1                           resb 4      ; 0x8 void *
-    .state2                           resb 4      ; 0xc undefined4 *
-    .relToId                          resb 4      ; 0x10 uint
-    .id                               resb 4      ; 0x14 int
-    .type                             resb 4      ; 0x18 OBJECT_TYPE
-    .probablyPhysics                  resb 4      ; 0x1c void *
-    .field8_0x20                      resb 4      ; 0x20 int
-    .probablyRemap                    resb 2      ; 0x24 ushort
-    resb 5
-    .field_0x2b                       resb 1      ; 0x2b undefined1
-endstruc
-
-; /imported/seuko-mod/BareGameObjectManager  (168312 bytes)
-struc BareGameObjectManager
-    .nextFree                         resb 4      ; 0x0 BareGameObject *
-    .someObject                       resb 4      ; 0x4 BareGameObject *
-    .objects                          resb 168300 ; 0x8 BareGameObject[3825]
-    resb 3
-    .field_0x29177                    resb 1      ; 0x29177 undefined1
-endstruc
-
 ; /imported/seuko-mod/BitMap  (20 bytes)
 struc BitMap
     .field_0x0                        resb 2      ; 0x0 short
@@ -4849,24 +4889,44 @@ OBJECT_TYPE.OBJECT_TYPE_REMOTE equ 295
 
 ; /imported/seuko-mod/ObjectPrefab  (116 bytes)
 struc ObjectPrefab
-    resb 28
+    .boxX                             resb 4      ; 0x0 Fix16
+    .boxY                             resb 4      ; 0x4 Fix16
+    .boxZ                             resb 4      ; 0x8 Fix16
+    resb 4
+    .initialSpeed                     resb 4      ; 0x10 Fix16
+    .deceleration                     resb 4      ; 0x14 Fix16
+    resb 4
     .remap                            resb 2      ; 0x1c short
     .defaultSpriteId                  resb 2      ; 0x1e short
     resb 8
     .defaultSpriteType                resb 4      ; 0x28 SPRITE_TYPE
     resb 4
     .paletteBase                      resb 4      ; 0x30 PALETTE_BASE
-    resb 12
-    .showImaginary                    resb 4      ; 0x40 S32_SHOW_IMAGINARY
-    resb 44
-    .field89_0x70                     resb 4      ; 0x70 int
+    .kind                             resb 4      ; 0x34 OBJECT_KIND
+    .killTransform                    resb 4      ; 0x38 int
+    .endTransform                     resb 4      ; 0x3c int
+    .gridKind                         resb 4      ; 0x40 int
+    .impactMode                       resb 4      ; 0x44 int
+    .explosiveClass                   resb 4      ; 0x48 int
+    resb 16
+    .category                         resb 4      ; 0x5c int
+    resb 1
+    .onActiveList                     resb 1      ; 0x61 byte
+    resb 2
+    .ticksPerFrame                    resb 1      ; 0x64 byte
+    .loopsOrLifetime                  resb 1      ; 0x65 byte
+    resb 6
+    .frameCount                       resb 1      ; 0x6c byte
+    resb 3
+    .extraSpriteFlag                  resb 4      ; 0x70 int
 endstruc
 
 ; /imported/seuko-mod/ObjectPrefabsContainer  (36008 bytes)
 struc ObjectPrefabsContainer
     .length                           resb 2      ; 0x0 short
-    resb 34802
-    .objectPrefabArr                  resb 1200   ; 0x87f4 ObjectPrefab *[300]
+    resb 2
+    .prefabs                          resb 34800  ; 0x4 ObjectPrefab[300]
+    .byId                             resb 1200   ; 0x87f4 ObjectPrefab *[300]
     .eq99OnInit                       resb 4      ; 0x8ca4 uint
 endstruc
 
@@ -5495,6 +5555,35 @@ endstruc
 ; /imported/seuko-mod/Verts  (128 bytes)
 struc Verts
     .mVerts                           resb 128    ; 0x0 Vert[4]
+endstruc
+
+; /imported/seuko-mod/WorldObject  (44 bytes)
+struc WorldObject
+    .next                             resb 4      ; 0x0 WorldObject *
+    .position                         resb 4      ; 0x4 Position *
+    .prefab                           resb 4      ; 0x8 ObjectPrefab *
+    .kindState                        resb 4      ; 0xc void *
+    .motion                           resb 4      ; 0x10 ObjectMotionState *
+    .serial                           resb 4      ; 0x14 int
+    .type                             resb 4      ; 0x18 OBJECT_TYPE
+    .kindStateIsParticle              resb 1      ; 0x1c byte
+    resb 3
+    .listState                        resb 4      ; 0x20 int
+    .pendingType                      resb 1      ; 0x24 byte
+    .lifecycle                        resb 1      ; 0x25 byte
+    .ownerSlot                        resb 1      ; 0x26 byte
+    resb 4
+    .field_0x2b                       resb 1      ; 0x2b undefined1
+endstruc
+
+; /imported/seuko-mod/WorldObjectPool  (168312 bytes)
+struc WorldObjectPool
+    .nextFree                         resb 4      ; 0x0 WorldObject *
+    .activeHead                       resb 4      ; 0x4 WorldObject *
+    .objects                          resb 168300 ; 0x8 WorldObject[3825]
+    .visitCounter                     resb 2      ; 0x29174 ushort
+    resb 1
+    .field_0x29177                    resb 1      ; 0x29177 undefined1
 endstruc
 
 ; /imported/seuko-mod/WorldRect  (16 bytes)

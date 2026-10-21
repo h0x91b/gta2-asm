@@ -282,6 +282,8 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0041e2f0,unsure_Box3_Overlaps,,USER_DEFINED,__thiscall,ANALYSIS,91,,"uint __thiscall unsure_Box3_Overlaps(void * this, int * param_1)"
 0x0041e3c0,thunk_Ang16_IsRightAngle,,USER_DEFINED,__fastcall,USER_DEFINED,5,Ang16_IsRightAngle,bool __fastcall thunk_Ang16_IsRightAngle(Ang16 * self)
 0x0041e430,Car_GetSpriteX,,USER_DEFINED,default,USER_DEFINED,15,,"void Car_GetSpriteX(Car * save, undefined4 * param_2)"
+0x0041e440,Car_GetSpriteY,,USER_DEFINED,__thiscall,ANALYSIS,15,,"undefined __thiscall Car_GetSpriteY(void * this, undefined4 * param_1)"
+0x0041e450,Car_GetSpriteZ,,USER_DEFINED,__thiscall,ANALYSIS,15,,"undefined __thiscall Car_GetSpriteZ(void * this, undefined4 * param_1)"
 0x0041e460,Car_IsTruckCabWithTrailer,,USER_DEFINED,__fastcall,ANALYSIS,18,,int __fastcall Car_IsTruckCabWithTrailer(int param_1)
 0x0041e620,Camera_GetTargetHeading,,USER_DEFINED,__thiscall,ANALYSIS,235,,"short * __thiscall Camera_GetTargetHeading(void * this, short * param_1)"
 0x0041e7a0,unsure_Camera_UpdateBoundaries,,USER_DEFINED,__fastcall,USER_DEFINED,614,,undefined __fastcall unsure_Camera_UpdateBoundaries(Camera * param_1)
@@ -329,6 +331,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004206c0,Position_SetFrame,,USER_DEFINED,__thiscall,ANALYSIS,23,,"undefined __thiscall Position_SetFrame(void * this, short param_1)"
 0x00420700,Position_SetNoRemapState,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall Position_SetNoRemapState(Position * param_1)
 0x00420760,getUpgradeType,,USER_DEFINED,__stdcall,USER_DEFINED,46,,CAR_UPGRADE __stdcall getUpgradeType(int param_1)
+0x004207b0,Position_GetXY,,USER_DEFINED,__thiscall,ANALYSIS,26,,"void * __thiscall Position_GetXY(void * this, void * param_1)"
 0x004207f0,TeleportCar,,USER_DEFINED,__fastcall,USER_DEFINED,76,,"void __fastcall TeleportCar(Car * car, DWORD edx, SCR_f x, SCR_f y, SCR_f z)"
 0x00420840,Car_SetCategory,,USER_DEFINED,__thiscall,USER_DEFINED,122,,"void __thiscall Car_SetCategory(void * this, CAR_CATEGORY category)"
 0x004208f0,Car_MakeProtectedRecycled,,USER_DEFINED,__fastcall,ANALYSIS,44,,undefined __fastcall Car_MakeProtectedRecycled(int param_1)
@@ -494,7 +497,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004262b0,Car_AttachTrailer,,USER_DEFINED,__thiscall,ANALYSIS,48,,"undefined __thiscall Car_AttachTrailer(void * this, int param_1)"
 0x004262e0,unsure_Car_UpdateArticulatedCabTrailerSearch,,USER_DEFINED,__fastcall,ANALYSIS,600,,undefined __fastcall unsure_Car_UpdateArticulatedCabTrailerSearch(Car * param_1)
 0x00426540,Car_UpdateTrailerPair,,USER_DEFINED,__fastcall,ANALYSIS,52,,uint __fastcall Car_UpdateTrailerPair(int param_1)
-0x00426580,unsure_Car_ApplyExplosionKnockback,,USER_DEFINED,__thiscall,ANALYSIS,356,,"undefined __thiscall unsure_Car_ApplyExplosionKnockback(void * this, int * param_1)"
+0x00426580,Car_ApplyExplosionKnockback,,USER_DEFINED,__thiscall,ANALYSIS,356,,"undefined __thiscall Car_ApplyExplosionKnockback(void * this, int * param_1)"
 0x004266f0,Car_FreeAI,,USER_DEFINED,__fastcall,ANALYSIS,57,,undefined __fastcall Car_FreeAI(int param_1)
 0x00426730,Car_Destroy,,USER_DEFINED,__fastcall,ANALYSIS,120,,undefined __fastcall Car_Destroy(int param_1)
 0x004267b0,Car_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,268,,undefined __fastcall Car_Ctor(Car * car)
@@ -618,6 +621,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00433650,Ped_SetStatesFromObjective,,USER_DEFINED,__thiscall,ANALYSIS,282,,"undefined __thiscall Ped_SetStatesFromObjective(void * this, char param_1, int param_2)"
 0x004337d0,setBit,,USER_DEFINED,__thiscall,USER_DEFINED,19,,"void __thiscall setBit(Position * this, int iParm1, byte param_3, char param_4)"
 0x00433800,getBits,,USER_DEFINED,__fastcall,USER_DEFINED,5,,void __fastcall getBits(void * param_1)
+0x00433810,Weapon_SetProbeMode,,USER_DEFINED,__thiscall,ANALYSIS,10,,"undefined __thiscall Weapon_SetProbeMode(void * this, undefined4 param_1)"
 0x00433820,IsCarGun,,USER_DEFINED,__stdcall,USER_DEFINED,11,,bool __stdcall IsCarGun(WEAPON_INDEX id)
 0x00433880,unsure_Sprite_PlaceBody,,USER_DEFINED,__thiscall,ANALYSIS,75,,"undefined __thiscall unsure_Sprite_PlaceBody(void * this, undefined4 param_1, undefined4 param_2, undefined4 param_3)"
 0x004338e0,Sprite_SetOwnerPed,,USER_DEFINED,__thiscall,ANALYSIS,10,,"undefined __thiscall Sprite_SetOwnerPed(void * this, undefined4 param_1)"
@@ -736,6 +740,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00436250,Ped_DropWeaponPickup,,USER_DEFINED,__fastcall,ANALYSIS,470,,undefined __fastcall Ped_DropWeaponPickup(Ped * param_1)
 0x00436460,Ped_UpdateDesiredRotation,,USER_DEFINED,__fastcall,ANALYSIS,937,,undefined __fastcall Ped_UpdateDesiredRotation(void * param_1)
 0x00436830,Ped_FreeSelectedWeapon,,USER_DEFINED,__fastcall,ANALYSIS,48,,undefined __fastcall Ped_FreeSelectedWeapon(int param_1)
+0x00436860,Ped_FreeAltWeapon,,USER_DEFINED,__fastcall,ANALYSIS,48,,undefined __fastcall Ped_FreeAltWeapon(int param_1)
 0x00436890,unsure_Ped_TickOnScreenCounter,,USER_DEFINED,__fastcall,ANALYSIS,133,,undefined __fastcall unsure_Ped_TickOnScreenCounter(int param_1)
 0x00436920,Ped_SetTask,,USER_DEFINED,__fastcall,USER_DEFINED,610,,"void __fastcall Ped_SetTask(Ped * ped, DWORD edx, PED_OBJECTIVE objective, uint timer)"
 0x00436bf0,unsure_Ped_UpdateAttackTargetAI,,USER_DEFINED,__fastcall,ANALYSIS,982,,undefined __fastcall unsure_Ped_UpdateAttackTargetAI(int param_1)
@@ -1633,35 +1638,148 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004820d0,MultiplayerTag_SetItPlayer,,USER_DEFINED,__thiscall,ANALYSIS,225,,"undefined __thiscall MultiplayerTag_SetItPlayer(void * this, Player * param_1)"
 0x004821c0,MultiplayerTag_Update,,USER_DEFINED,__thiscall,ANALYSIS,202,,undefined __thiscall MultiplayerTag_Update(void * this)
 0x004822a0,MultiplayerTag_OnPlayerDeath,,USER_DEFINED,default,USER_DEFINED,341,,"void MultiplayerTag_OnPlayerDeath(Game * game, Player * * ppSParm1, Player * param_3, int param_4)"
-0x00482540,unsure_Object_IsActiveFlame,,USER_DEFINED,unknown,DEFAULT,17,,undefined unsure_Object_IsActiveFlame()
+0x00482410,ImpactSurface_ToExplosionKind,,USER_DEFINED,unknown,DEFAULT,42,,undefined ImpactSurface_ToExplosionKind()
+0x00482490,Object_InitNode,,USER_DEFINED,__fastcall,ANALYSIS,39,,undefined __fastcall Object_InitNode(int param_1)
+0x00482540,Object_IsBurningFlame,,USER_DEFINED,unknown,DEFAULT,17,,undefined Object_IsBurningFlame()
+0x004825e0,DestroyCode_ToExplosionKind,,USER_DEFINED,unknown,DEFAULT,50,,undefined DestroyCode_ToExplosionKind()
+0x00482630,Object_InsertIntoGrid,,USER_DEFINED,__fastcall,ANALYSIS,79,,undefined __fastcall Object_InsertIntoGrid(int param_1)
+0x004826a0,Object_RemoveFromGrid,,USER_DEFINED,__fastcall,ANALYSIS,79,,undefined __fastcall Object_RemoveFromGrid(int param_1)
 0x00482730,Fix16_ApplyDeadZone,,USER_DEFINED,__stdcall,USER_DEFINED,56,,"Fix16 * __stdcall Fix16_ApplyDeadZone(Fix16 * out, Fix16 * v)"
+0x004827b0,Object_MarkDead,,USER_DEFINED,__fastcall,ANALYSIS,5,,undefined __fastcall Object_MarkDead(int param_1)
 0x004828c0,Vec2_SubAssign,,USER_DEFINED,__stdcall,USER_DEFINED,33,,"Vec2 * __stdcall Vec2_SubAssign(Vec2 * a, Vec2 * b)"
+0x004829a0,WorldObjectPool_PopActive,,USER_DEFINED,__fastcall,ANALYSIS,26,,undefined4 * __fastcall WorldObjectPool_PopActive(undefined4 * param_1)
+0x004829c0,WorldObjectPool_PopStatic,,USER_DEFINED,__fastcall,ANALYSIS,24,,undefined4 * __fastcall WorldObjectPool_PopStatic(undefined4 * param_1)
+0x004829e0,WorldObjectPool_LinkActive,,USER_DEFINED,__thiscall,ANALYSIS,15,,"undefined __thiscall WorldObjectPool_LinkActive(void * this, undefined4 * param_1)"
+0x004829f0,WorldObjectPool_UnlinkActive,,USER_DEFINED,__thiscall,ANALYSIS,63,,"undefined __thiscall WorldObjectPool_UnlinkActive(void * this, undefined4 * param_1)"
+0x00482b20,ObjectMotionState_Init,,USER_DEFINED,__fastcall,ANALYSIS,92,,undefined __fastcall ObjectMotionState_Init(uint param_1)
 0x00482cc0,CarPhysics_CollideWithObjectAtPoint,,USER_DEFINED,__thiscall,ANALYSIS,50,,"undefined __thiscall CarPhysics_CollideWithObjectAtPoint(void * this, undefined4 * param_1, undefined4 * param_2, uint param_3)"
 0x00482d00,Ai_IsProbing,,USER_DEFINED,__stdcall,ANALYSIS,6,,undefined __stdcall Ai_IsProbing(void)
 0x00482d10,TrafficLights_IsPhase1,,USER_DEFINED,__fastcall,ANALYSIS,11,,undefined __fastcall TrafficLights_IsPhase1(int param_1)
 0x00482d20,TrafficLights_IsPhase4,,USER_DEFINED,__fastcall,ANALYSIS,11,,undefined __fastcall TrafficLights_IsPhase4(int param_1)
+0x00482f60,Object_PutOnActiveList,,USER_DEFINED,__fastcall,ANALYSIS,30,,undefined __fastcall Object_PutOnActiveList(undefined4 * param_1)
+0x00482f80,Object_TakeOffActiveList,,USER_DEFINED,__fastcall,ANALYSIS,30,,undefined __fastcall Object_TakeOffActiveList(undefined4 * param_1)
+0x00483500,Projectile_SetImpactSurfaceFromCollision,,USER_DEFINED,__fastcall,ANALYSIS,108,,undefined __fastcall Projectile_SetImpactSurfaceFromCollision(int param_1)
 0x00483570,CarCrossing_ShouldBlock,,USER_DEFINED,__thiscall,ANALYSIS,105,,"uint __thiscall CarCrossing_ShouldBlock(void * this, int param_1)"
 0x004835e0,unsure_Object_ShouldCollide,,USER_DEFINED,__thiscall,ANALYSIS,320,,"uint __thiscall unsure_Object_ShouldCollide(void * this, uint param_1)"
+0x004837f0,Object_ExplodeAttachedCar,,USER_DEFINED,__thiscall,ANALYSIS,130,,"undefined __thiscall Object_ExplodeAttachedCar(void * this, int param_1)"
+0x00483a20,Object_ChangeCategory,,USER_DEFINED,__thiscall,ANALYSIS,292,,"uint __thiscall Object_ChangeCategory(void * this, int param_1, int param_2)"
 0x00483c20,TrafficLightObject_SetState,,USER_DEFINED,__thiscall,ANALYSIS,28,,"undefined __thiscall TrafficLightObject_SetState(void * this, byte param_1)"
-0x00483c50,Object_PoolGiveAndMarkDone,,USER_DEFINED,__fastcall,ANALYSIS,14,,undefined __fastcall Object_PoolGiveAndMarkDone(undefined4 * param_1)
-0x00483c60,Object_PoolGiveAndSetDone,,USER_DEFINED,__thiscall,ANALYSIS,19,,"undefined __thiscall Object_PoolGiveAndSetDone(void * this, undefined param_1)"
+0x00483c40,Object_KillNow,,USER_DEFINED,__fastcall,ANALYSIS,16,,undefined __fastcall Object_KillNow(undefined4 * param_1)
+0x00483c50,Object_TakeOffListAndSetPendingType1,,USER_DEFINED,__fastcall,ANALYSIS,14,,undefined __fastcall Object_TakeOffListAndSetPendingType1(undefined4 * param_1)
+0x00483c60,Object_TakeOffListAndSetPendingType,,USER_DEFINED,__thiscall,ANALYSIS,19,,"undefined __thiscall Object_TakeOffListAndSetPendingType(void * this, undefined param_1)"
+0x00483d90,SaveGame_CollectPickups,,USER_DEFINED,__stdcall,ANALYSIS,177,,undefined __stdcall SaveGame_CollectPickups(int param_1)
+0x00483e50,Object_OnAttachedToParent,,USER_DEFINED,__thiscall,ANALYSIS,72,,"undefined __thiscall Object_OnAttachedToParent(void * this, int param_1)"
+0x00483f10,WorldObjectPool_Ctor,,USER_DEFINED,__fastcall,ANALYSIS,72,,void * * __fastcall WorldObjectPool_Ctor(void * * param_1)
+0x00483f60,ObjectAnimStatePool_Ctor,,USER_DEFINED,__fastcall,ANALYSIS,64,,void * * __fastcall ObjectAnimStatePool_Ctor(void * * param_1)
+0x00483fa0,ObjectAnimStatePool_Pop,,USER_DEFINED,__fastcall,ANALYSIS,18,,int __fastcall ObjectAnimStatePool_Pop(int * param_1)
+0x00483fc0,ObjectAnimStatePool_Push,,USER_DEFINED,__thiscall,ANALYSIS,26,,"undefined __thiscall ObjectAnimStatePool_Push(void * this, undefined4 * param_1)"
+0x00483fe0,ObjectMotionStatePool_Pop,,USER_DEFINED,__fastcall,ANALYSIS,19,,uint __fastcall ObjectMotionStatePool_Pop(uint * param_1)
+0x00484000,ObjectMotionStatePool_Push,,USER_DEFINED,__thiscall,ANALYSIS,27,,"undefined __thiscall ObjectMotionStatePool_Push(void * this, int param_1)"
+0x00484760,Object_FreeStates,,USER_DEFINED,__fastcall,ANALYSIS,100,,undefined __fastcall Object_FreeStates(int param_1)
+0x004848c0,ObjectMotionStatePool_Ctor,,USER_DEFINED,__fastcall,ANALYSIS,66,,void * * __fastcall ObjectMotionStatePool_Ctor(void * * param_1)
+0x00484910,Object_Destroy,,USER_DEFINED,__fastcall,ANALYSIS,146,,undefined __fastcall Object_Destroy(int param_1)
 0x00484af0,ObjectSpawner_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,489,,ObjectSpawner * __fastcall ObjectSpawner_Ctor(void)
-0x004852e0,SpawnObject,,USER_DEFINED,__fastcall,USER_DEFINED,52,,"BareGameObject * __fastcall SpawnObject(S33 * s33, DWORD edx, OBJECT_TYPE type, SCR_f x, SCR_f y, SCR_f z, short rot)"
+0x00484cf0,ObjectSpawner_Dtor,,USER_DEFINED,__fastcall,ANALYSIS,111,,undefined __fastcall ObjectSpawner_Dtor(undefined4 * param_1)
+0x00484d60,Object_UnlinkAndRelease,,USER_DEFINED,__thiscall,ANALYSIS,80,,"undefined __thiscall Object_UnlinkAndRelease(void * this, int * * param_1)"
+0x00484db0,Object_ReleaseToPool,,USER_DEFINED,__thiscall,ANALYSIS,26,,"undefined __thiscall Object_ReleaseToPool(void * this, undefined4 * param_1)"
+0x00484e00,ObjectSpawner_CreateObject,,USER_DEFINED,__thiscall,ANALYSIS,846,,"int * * __thiscall ObjectSpawner_CreateObject(void * this, int * param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, char param_6)"
+0x00485180,ObjectSpawner_SpawnPhysicsObject,,USER_DEFINED,__thiscall,ANALYSIS,210,,"int * * __thiscall ObjectSpawner_SpawnPhysicsObject(void * this, int * param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined2 param_5, undefined4 param_6, int param_7, int param_8, int param_9, char param_10)"
+0x00485260,Object_FreeNow,,USER_DEFINED,__stdcall,ANALYSIS,45,,undefined __stdcall Object_FreeNow(undefined4 * param_1)
+0x004852e0,SpawnObject,,USER_DEFINED,__fastcall,USER_DEFINED,52,,"WorldObject * __fastcall SpawnObject(S33 * s33, DWORD edx, OBJECT_TYPE type, SCR_f x, SCR_f y, SCR_f z, short rot)"
 0x00485320,Object_NewWithPedRefIdx,,USER_DEFINED,unknown,DEFAULT,76,,"undefined Object_NewWithPedRefIdx(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5)"
+0x00485370,ObjectSpawner_SpawnLightObject,,USER_DEFINED,unknown,DEFAULT,70,,"undefined ObjectSpawner_SpawnLightObject(undefined4 param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6)"
 0x00485480,Object_NewPhysicsObjUnlessBlocked,,USER_DEFINED,__thiscall,ANALYSIS,52,,"int * * __thiscall Object_NewPhysicsObjUnlessBlocked(void * this, int * param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5)"
+0x004854c0,ObjectSpawner_SpawnMovingObject,,USER_DEFINED,__thiscall,ANALYSIS,55,,"undefined __thiscall ObjectSpawner_SpawnMovingObject(void * this, int * param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined2 param_5, undefined4 param_6, int param_7, int param_8, int param_9)"
+0x00485500,ObjectSpawner_SpawnThrown,,USER_DEFINED,__thiscall,ANALYSIS,55,,"undefined __thiscall ObjectSpawner_SpawnThrown(void * this, int * param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined2 param_5, undefined4 param_6, int param_7, int param_8, int param_9)"
 0x00485540,Object_CreateExplosion,,USER_DEFINED,__thiscall,ANALYSIS,231,,"int * * __thiscall Object_CreateExplosion(void * this, undefined4 param_1, undefined4 param_2, undefined4 param_3, uint param_4, undefined4 param_5, int param_6)"
-0x00486410,unsure_ImpactEvent_DispatchSound,,USER_DEFINED,__fastcall,ANALYSIS,322,,"undefined __fastcall unsure_ImpactEvent_DispatchSound(undefined4 * param_1, uint param_2, int param_3)"
+0x004856e0,Object_ExplodeBarrel,,USER_DEFINED,__thiscall,ANALYSIS,115,,"undefined __thiscall Object_ExplodeBarrel(void * this, uint param_1)"
+0x00485760,Object_MorphTo,,USER_DEFINED,__thiscall,ANALYSIS,888,,"undefined __thiscall Object_MorphTo(void * this, int param_1)"
+0x00485b00,Object_ExplodeOnProjectileHit,,USER_DEFINED,__thiscall,ANALYSIS,225,,"undefined __thiscall Object_ExplodeOnProjectileHit(void * this, int param_1)"
+0x00485c90,Projectile_OnHitWorld,,USER_DEFINED,__fastcall,ANALYSIS,249,,"undefined __fastcall Projectile_OnHitWorld(int param_1, uint param_2)"
+0x00485e40,ObjectSpawner_TrimCategory3,,USER_DEFINED,__fastcall,ANALYSIS,142,,undefined __fastcall ObjectSpawner_TrimCategory3(void * param_1)
+0x00485fd0,Object_AdvanceAnimation,,USER_DEFINED,__fastcall,ANALYSIS,136,,undefined __fastcall Object_AdvanceAnimation(void * param_1)
+0x00486060,Object_ApplyPendingTransform,,USER_DEFINED,unknown,DEFAULT,175,,undefined Object_ApplyPendingTransform()
+0x00486130,Object_UpdateAttached,,USER_DEFINED,__thiscall,ANALYSIS,541,,"uint __thiscall Object_UpdateAttached(void * this, short * param_1, undefined4 param_2, undefined4 param_3)"
+0x00486360,Object_TryExplodeOnHit,,USER_DEFINED,__thiscall,ANALYSIS,36,,"uint __thiscall Object_TryExplodeOnHit(void * this, void * param_1)"
+0x00486390,Projectile_OnHitSprite,,USER_DEFINED,__thiscall,ANALYSIS,125,,"undefined __thiscall Projectile_OnHitSprite(void * this, int param_1)"
+0x00486410,ImpactEvent_Dispatch,,USER_DEFINED,__fastcall,ANALYSIS,322,,"undefined __fastcall ImpactEvent_Dispatch(undefined4 * param_1, uint param_2, int param_3)"
+0x00487a30,Object_UpdatePhysics,,USER_DEFINED,__fastcall,ANALYSIS,388,,undefined __fastcall Object_UpdatePhysics(void * param_1)
+0x00487bc0,Object_UpdatePhysicsAnimated,,USER_DEFINED,__fastcall,ANALYSIS,420,,undefined __fastcall Object_UpdatePhysicsAnimated(void * param_1)
+0x00487d70,Object_UpdateByKind,,USER_DEFINED,unknown,DEFAULT,214,,undefined Object_UpdateByKind()
+0x00487e80,Object_UpdateOne,,USER_DEFINED,unknown,DEFAULT,79,,undefined Object_UpdateOne()
+0x00487f50,ObjectSpawner_Update,,USER_DEFINED,__fastcall,ANALYSIS,144,,undefined __fastcall ObjectSpawner_Update(void * param_1)
+0x00488170,ObjectPrefabs_Get,,USER_DEFINED,__thiscall,ANALYSIS,14,,"undefined4 __thiscall ObjectPrefabs_Get(void * this, int param_1)"
+0x00488180,ObjectPrefabs_Clone,,USER_DEFINED,__thiscall,ANALYSIS,69,,"undefined __thiscall ObjectPrefabs_Clone(void * this, int param_1, int param_2)"
+0x00488450,ObjectPrefabs_InitFromStyle,,USER_DEFINED,__fastcall,ANALYSIS,88,,undefined __fastcall ObjectPrefabs_InitFromStyle(void * param_1)
+0x004884b0,ObjectPrefabs_InitTable24,,USER_DEFINED,__fastcall,ANALYSIS,181,,undefined __fastcall ObjectPrefabs_InitTable24(void * param_1)
+0x00488570,ObjectPrefabs_ApplyPatches,,USER_DEFINED,__fastcall,ANALYSIS,1939,,undefined __fastcall ObjectPrefabs_ApplyPatches(void * param_1)
+0x00488d10,ObjectPrefabs_InitTable126,,USER_DEFINED,__fastcall,ANALYSIS,319,,undefined __fastcall ObjectPrefabs_InitTable126(void * param_1)
 0x00488eb0,ObjectPrefabsContainer_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,62,,ObjectPrefabsContainer * __fastcall ObjectPrefabsContainer_Ctor(void)
+0x00488f70,ObjectPrefabs_InitPickupClones,,USER_DEFINED,__fastcall,ANALYSIS,1457,,undefined __fastcall ObjectPrefabs_InitPickupClones(void * param_1)
+0x00489530,ObjectPrefabs_InitAll,,USER_DEFINED,__fastcall,ANALYSIS,63,,undefined __fastcall ObjectPrefabs_InitAll(void * param_1)
 0x00489ac0,ParkingZone_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,79,,ParkingZone * __fastcall ParkingZone_Ctor(void)
 0x00489b10,ParkingZone_ValidateBlocks,ParkingZone,USER_DEFINED,__thiscall,ANALYSIS,169,,undefined __thiscall ParkingZone_ValidateBlocks(ParkingZone * this)
 0x00489bc0,ParkingZone_Init,ParkingZone,USER_DEFINED,__thiscall,ANALYSIS,1479,,"uint __thiscall ParkingZone_Init(ParkingZone * this, int param_1, void * param_2)"
 0x0048a1a0,Fix16_DivAssign,,USER_DEFINED,__stdcall,USER_DEFINED,43,,"Fix16 * __stdcall Fix16_DivAssign(Fix16 * a, Fix16 * b)"
+0x0048a1d0,Particle_UpdateStub2A,,USER_DEFINED,__stdcall,ANALYSIS,3,,undefined __stdcall Particle_UpdateStub2A(void)
+0x0048a1e0,Particle_UpdateStub2C,,USER_DEFINED,__stdcall,ANALYSIS,3,,undefined __stdcall Particle_UpdateStub2C(void)
+0x0048a1f0,Particle_ResetNode,,USER_DEFINED,__fastcall,ANALYSIS,76,,undefined __fastcall Particle_ResetNode(uint param_1)
 0x0048a2c0,ParticleState_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,130,,ParticleState * __fastcall ParticleState_Ctor(ParticleState * this)
+0x0048a390,ParticleState_GetMaxRadius,,USER_DEFINED,__thiscall,ANALYSIS,99,,"undefined __thiscall ParticleState_GetMaxRadius(void * this, undefined4 * param_1)"
+0x0048a420,ParticleState_GetZHalfExtent,,USER_DEFINED,__thiscall,ANALYSIS,54,,"undefined __thiscall ParticleState_GetZHalfExtent(void * this, undefined4 * param_1)"
+0x0048a4d0,ParticleState_IsFlameKind,,USER_DEFINED,__fastcall,ANALYSIS,32,,int __fastcall ParticleState_IsFlameKind(int param_1)
 0x0048a510,ParticleState_Release,,USER_DEFINED,__fastcall,USER_DEFINED,50,,void __fastcall ParticleState_Release(ParticleState * this)
+0x0048a550,ParticleState_Reset,,USER_DEFINED,__fastcall,ANALYSIS,60,,undefined __fastcall ParticleState_Reset(undefined4 * param_1)
+0x0048a5a0,ParticleStatePool40_EvictLowestPriority,,USER_DEFINED,__fastcall,ANALYSIS,207,,undefined __fastcall ParticleStatePool40_EvictLowestPriority(int param_1)
 0x0048a6c0,ParticleStatePool40_Alloc,,USER_DEFINED,__fastcall,USER_DEFINED,233,,ParticleState * __fastcall ParticleStatePool40_Alloc(ParticleStatePool40 * this)
 0x0048a7b0,ParticleStatePool40_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,62,,ParticleStatePool40 * __fastcall ParticleStatePool40_Ctor(void)
 0x0048a880,ParticleStatePool20_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,62,,ParticleStatePool20 * __fastcall ParticleStatePool20_Ctor(void)
+0x0048a8d0,PositionPool_HasFree,,USER_DEFINED,__fastcall,ANALYSIS,7,,undefined __fastcall PositionPool_HasFree(int * param_1)
+0x0048a8f0,ParticlePool_HasFree,,USER_DEFINED,__fastcall,ANALYSIS,7,,undefined __fastcall ParticlePool_HasFree(int * param_1)
+0x0048a900,ParticlePool_PopFree,,USER_DEFINED,__fastcall,ANALYSIS,28,,uint __fastcall ParticlePool_PopFree(uint * param_1)
+0x0048a920,Particle_Ctor,,USER_DEFINED,__fastcall,ANALYSIS,15,,int __fastcall Particle_Ctor(int param_1)
+0x0048a970,Particle_UpdateEmber,,USER_DEFINED,__fastcall,ANALYSIS,1278,,uint __fastcall Particle_UpdateEmber(int param_1)
+0x0048ae70,Particle_UpdateSmoke,,USER_DEFINED,__fastcall,ANALYSIS,1563,,uint __fastcall Particle_UpdateSmoke(int param_1)
+0x0048b4d0,Particle_UpdateTrailPuff,,USER_DEFINED,__fastcall,ANALYSIS,107,,uint __fastcall Particle_UpdateTrailPuff(int param_1)
+0x0048b540,Particle_UpdateSmokeRise,,USER_DEFINED,__fastcall,ANALYSIS,1188,,uint __fastcall Particle_UpdateSmokeRise(int param_1)
+0x0048b9f0,Particle_UpdateSmoke2,,USER_DEFINED,__fastcall,ANALYSIS,1129,,uint __fastcall Particle_UpdateSmoke2(int param_1)
+0x0048be60,Particle_UpdateBloodPool,,USER_DEFINED,__fastcall,ANALYSIS,117,,uint __fastcall Particle_UpdateBloodPool(int param_1)
+0x0048bee0,Particle_UpdateMuzzleFlash,,USER_DEFINED,__fastcall,ANALYSIS,907,,uint __fastcall Particle_UpdateMuzzleFlash(int param_1)
+0x0048c270,Particle_UpdateSpark,,USER_DEFINED,__fastcall,ANALYSIS,357,,uint __fastcall Particle_UpdateSpark(int param_1)
+0x0048c3e0,Particle_UpdateBurstPuff,,USER_DEFINED,__fastcall,ANALYSIS,422,,uint __fastcall Particle_UpdateBurstPuff(int param_1)
+0x0048c590,Particle_UpdateType7,,USER_DEFINED,__fastcall,ANALYSIS,480,,uint __fastcall Particle_UpdateType7(int param_1)
+0x0048c790,Particle_UpdatePuff,,USER_DEFINED,__fastcall,ANALYSIS,100,,uint __fastcall Particle_UpdatePuff(int param_1)
+0x0048c800,Particle_UpdateBlastRing,,USER_DEFINED,__fastcall,ANALYSIS,236,,uint __fastcall Particle_UpdateBlastRing(int param_1)
+0x0048c8f0,Particle_FreePosition,,USER_DEFINED,__fastcall,ANALYSIS,51,,undefined __fastcall Particle_FreePosition(int param_1)
+0x0048c930,ParticlePool_Alloc,,USER_DEFINED,__stdcall,ANALYSIS,134,,"uint * __stdcall ParticlePool_Alloc(uint param_1, uint param_2, uint param_3, uint param_4, uint param_5, uint param_6)"
+0x0048c9c0,Particle_EmitPedImpactBurst,,USER_DEFINED,__stdcall,ANALYSIS,650,,"undefined __stdcall Particle_EmitPedImpactBurst(undefined4 param_1, undefined4 param_2, undefined4 param_3)"
+0x0048cc50,Particle_EmitBloodPool,,USER_DEFINED,__thiscall,ANALYSIS,187,,"undefined __thiscall Particle_EmitBloodPool(void * this, uint param_1, uint param_2, undefined4 param_3)"
+0x0048cd10,Particle_EmitMuzzleFlash,,USER_DEFINED,__stdcall,ANALYSIS,1247,,undefined __stdcall Particle_EmitMuzzleFlash(ushort * param_1)
+0x0048d1f0,Particle_EmitBurstAt,,USER_DEFINED,__stdcall,ANALYSIS,745,,"undefined __stdcall Particle_EmitBurstAt(undefined4 param_1, undefined4 param_2, undefined4 param_3, short param_4, char param_5)"
+0x0048d4e0,Particle_EmitFlamethrowerFlame,,USER_DEFINED,__thiscall,ANALYSIS,969,,"undefined __thiscall Particle_EmitFlamethrowerFlame(void * this, short * param_1)"
+0x0048d8b0,Particle_EmitWaterGunJet,,USER_DEFINED,unknown,DEFAULT,584,,undefined Particle_EmitWaterGunJet(undefined4 param_1)
 0x0048db00,Particle_EmitImpactParticles,,USER_DEFINED,__stdcall,ANALYSIS,689,,"undefined __stdcall Particle_EmitImpactParticles(undefined4 param_1, undefined4 param_2, undefined4 param_3)"
+0x0048ddc0,Particle_EmitWeaponPuff,,USER_DEFINED,__stdcall,ANALYSIS,509,,"undefined __stdcall Particle_EmitWeaponPuff(undefined4 param_1, undefined4 param_2, undefined4 param_3, short param_4)"
+0x0048dfc0,Particle_EmitObjectTrail,,USER_DEFINED,__stdcall,ANALYSIS,159,,undefined __stdcall Particle_EmitObjectTrail(int param_1)
+0x0048e060,Particle_EmitCarLightGlow,,USER_DEFINED,__stdcall,ANALYSIS,445,,"undefined __stdcall Particle_EmitCarLightGlow(short * param_1, char param_2)"
+0x0048e480,ParticleState_EmitSmoke3,,USER_DEFINED,__thiscall,ANALYSIS,355,,"undefined __thiscall ParticleState_EmitSmoke3(void * this, undefined * param_1, uint param_2)"
+0x0048e5f0,ParticleState_EmitSmoke4,,USER_DEFINED,__thiscall,ANALYSIS,351,,"undefined __thiscall ParticleState_EmitSmoke4(void * this, undefined * param_1, uint param_2)"
+0x0048e750,ParticleState_EmitSmoke24,,USER_DEFINED,__thiscall,ANALYSIS,351,,"undefined __thiscall ParticleState_EmitSmoke24(void * this, undefined * param_1, uint param_2)"
+0x0048e8b0,ParticleState_EmitFlame5,,USER_DEFINED,__thiscall,ANALYSIS,410,,"undefined __thiscall ParticleState_EmitFlame5(void * this, undefined * param_1, uint param_2)"
+0x0048ea50,ParticleState_EmitBlastRing,,USER_DEFINED,__fastcall,ANALYSIS,166,,undefined __fastcall ParticleState_EmitBlastRing(int param_1)
+0x0048eb00,ParticleState_EmitFireballSmall,,USER_DEFINED,__fastcall,ANALYSIS,574,,undefined __fastcall ParticleState_EmitFireballSmall(int param_1)
+0x0048ed40,ParticleState_EmitFireballMedium,,USER_DEFINED,__fastcall,ANALYSIS,582,,undefined __fastcall ParticleState_EmitFireballMedium(int param_1)
+0x0048ef90,ParticleState_EmitFireballLarge,,USER_DEFINED,__fastcall,ANALYSIS,545,,undefined __fastcall ParticleState_EmitFireballLarge(int param_1)
+0x0048f1e0,ParticlePool_Ctor,,USER_DEFINED,__fastcall,ANALYSIS,69,,int * __fastcall ParticlePool_Ctor(int * param_1)
+0x0048f230,Particle_UpdateObjectTrail,,USER_DEFINED,__fastcall,ANALYSIS,1021,,uint __fastcall Particle_UpdateObjectTrail(int param_1)
+0x0048f650,Particle_UpdateFlame,,USER_DEFINED,__fastcall,ANALYSIS,2081,,uint __fastcall Particle_UpdateFlame(int param_1)
+0x0048fe90,Particle_UpdateCarLightGlow,,USER_DEFINED,__fastcall,ANALYSIS,670,,uint __fastcall Particle_UpdateCarLightGlow(int param_1)
+0x00490130,Particle_UpdateFlameWaterBullet,,USER_DEFINED,__fastcall,ANALYSIS,1576,,uint __fastcall Particle_UpdateFlameWaterBullet(int param_1)
+0x00490760,Particle_UpdateOne,,USER_DEFINED,__fastcall,ANALYSIS,1380,,uint __fastcall Particle_UpdateOne(int param_1)
+0x00490d60,ParticleState_ApplyBlastDamage,,USER_DEFINED,__thiscall,ANALYSIS,1233,,"undefined __thiscall ParticleState_ApplyBlastDamage(void * this, ushort param_1)"
+0x00491240,ParticleState_TickExplosion,,USER_DEFINED,__fastcall,ANALYSIS,702,,undefined __fastcall ParticleState_TickExplosion(void * param_1)
+0x00491550,ParticleState_TickWallBurst,,USER_DEFINED,__thiscall,ANALYSIS,1288,,"undefined __thiscall ParticleState_TickWallBurst(void * this, uint param_1)"
+0x00491a70,ParticleState_Update,,USER_DEFINED,unknown,DEFAULT,214,,"undefined ParticleState_Update(undefined4 param_1, undefined4 param_2)"
 0x00491b90,ParticleManager_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,139,,ParticleManager * __fastcall ParticleManager_Ctor(void)
 0x00491ce0,UpdateParticles,,USER_DEFINED,__stdcall,ANALYSIS,152,,undefined __stdcall UpdateParticles(void)
 0x00491d00,PedPatrolRoutePool_AllocRoute,PedPatrolRoutePool,USER_DEFINED,__thiscall,USER_DEFINED,88,,"PatrolRoute * __thiscall PedPatrolRoutePool_AllocRoute(PedPatrolRoutePool * this, byte * outSlot)"
@@ -1669,6 +1787,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00491e00,TeleportGameObject,,USER_DEFINED,__fastcall,USER_DEFINED,41,,"void __fastcall TeleportGameObject(GameObject * gameObject, DWORD edx, SCR_f x, SCR_f y, SCR_f z)"
 0x004928b0,unsure_GameObject_StepHeadingTowardTarget,,USER_DEFINED,__thiscall,ANALYSIS,863,,"short * __thiscall unsure_GameObject_StepHeadingTowardTarget(void * this, short * param_1, short param_2)"
 0x00492cc0,Ped_GetTargetRotation,,USER_DEFINED,__thiscall,ANALYSIS,17,,"undefined __thiscall Ped_GetTargetRotation(void * this, undefined2 * param_1)"
+0x004932d0,PedSprite_OnExplosiveProjectileHit,,USER_DEFINED,__thiscall,ANALYSIS,158,,"uint __thiscall PedSprite_OnExplosiveProjectileHit(void * this, int param_1)"
 0x00493520,ResetVals,,USER_DEFINED,__stdcall,ANALYSIS,18,,undefined __stdcall ResetVals(void)
 0x00494280,unsure_Ped_ReactToPedObstacle,,USER_DEFINED,__thiscall,ANALYSIS,1492,,"undefined __thiscall unsure_Ped_ReactToPedObstacle(void * this, int param_1)"
 0x004948c0,unsure_Ped_ReactToCarOrObjectObstacle,,USER_DEFINED,__thiscall,ANALYSIS,2399,,"undefined __thiscall unsure_Ped_ReactToCarOrObjectObstacle(void * this, void * param_1, void * param_2, void * param_3)"
@@ -1843,6 +1962,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004a4e60,Player_LockWeaponSelect,,USER_DEFINED,__fastcall,USER_DEFINED,5,,undefined __fastcall Player_LockWeaponSelect(Player * param_1)
 0x004a4e70,Player_UnlockWeaponSelect,,USER_DEFINED,__fastcall,USER_DEFINED,5,,undefined __fastcall Player_UnlockWeaponSelect(Player * param_1)
 0x004a4ea0,Player_ClearInput,,USER_DEFINED,__fastcall,USER_DEFINED,99,,undefined __fastcall Player_ClearInput(Player * param_1)
+0x004a4f20,WeaponPool_FreeCarWeapon,,USER_DEFINED,__thiscall,ANALYSIS,86,,"undefined __thiscall WeaponPool_FreeCarWeapon(void * this, SoundClient * param_1)"
 0x004a4f80,Weapon_HasAmmo,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall Weapon_HasAmmo(WEAPON_STRUCT * param_1)
 0x004a4f90,GiveKFWeapon,,USER_DEFINED,__fastcall,USER_DEFINED,6,,void __fastcall GiveKFWeapon(undefined param_1)
 0x004a4fa0,IsInfinityAmmoOrKillFranzy,,USER_DEFINED,__fastcall,USER_DEFINED,9,,undefined __fastcall IsInfinityAmmoOrKillFranzy(WEAPON_STRUCT * param_1)
@@ -2627,66 +2747,68 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004cc5c0,Video_ReloadSettingsAndRemode,,USER_DEFINED,__cdecl,ANALYSIS,216,,"undefined __cdecl Video_ReloadSettingsAndRemode(undefined4 param_1, undefined4 param_2)"
 0x004cc6a0,Video_ReloadSettingsIfChanged,,USER_DEFINED,__cdecl,ANALYSIS,45,,undefined __cdecl Video_ReloadSettingsIfChanged(undefined4 param_1)
 0x004cc6d0,InitVideo,,USER_DEFINED,__cdecl,ANALYSIS,241,,undefined __cdecl InitVideo(void)
-0x004cc810,Weapon_ResetFields,,USER_DEFINED,__fastcall,USER_DEFINED,75,,undefined __fastcall Weapon_ResetFields(SoundClient * param_1)
+0x004cc810,Weapon_Reset,,USER_DEFINED,__fastcall,USER_DEFINED,75,,undefined __fastcall Weapon_Reset(SoundClient * param_1)
 0x004cc860,Weapon_SetAmmo,WEAPON_STRUCT,USER_DEFINED,__thiscall,ANALYSIS,17,,"undefined __thiscall Weapon_SetAmmo(WEAPON_STRUCT * this, byte param_1)"
 0x004cc880,Weapon_IsAmmoFull,,USER_DEFINED,__fastcall,ANALYSIS,29,,uint __fastcall Weapon_IsAmmoFull(ushort * param_1)
 0x004cc8c0,unsure_Weapon_IsThreatToObservers,,USER_DEFINED,__fastcall,ANALYSIS,47,,uint __fastcall unsure_Weapon_IsThreatToObservers(int param_1)
 0x004cc910,unsure_Weapon_IsHoldToFire,,USER_DEFINED,__fastcall,ANALYSIS,32,,int __fastcall unsure_Weapon_IsHoldToFire(int param_1)
 0x004cc950,unsure_Weapon_IsExplosive,,USER_DEFINED,__fastcall,ANALYSIS,32,,int __fastcall unsure_Weapon_IsExplosive(int param_1)
-0x004cc990,MaxAmmo,,USER_DEFINED,__stdcall,USER_DEFINED,13,,byte __stdcall MaxAmmo(uint weapon)
-0x004cc9a0,unsure_Weapon_GetCategoryByte,,USER_DEFINED,__stdcall,ANALYSIS,13,,uint __stdcall unsure_Weapon_GetCategoryByte(uint param_1)
+0x004cc990,WeaponMaxAmmo,,USER_DEFINED,__stdcall,USER_DEFINED,13,,byte __stdcall WeaponMaxAmmo(uint weapon)
+0x004cc9a0,WeaponDefaultAmmo,,USER_DEFINED,__stdcall,ANALYSIS,13,,uint __stdcall WeaponDefaultAmmo(uint param_1)
 0x004cc9b0,GetFirstWeapon,,USER_DEFINED,__fastcall,USER_DEFINED,4,,WEAPON_STRUCT * __fastcall GetFirstWeapon(WeaponPool * param_1)
-0x004cc9c0,WeaponPool_AllocWeapon,,USER_DEFINED,__fastcall,ANALYSIS,28,,SoundClient * __fastcall WeaponPool_AllocWeapon(SoundClient * * param_1)
-0x004cc9e0,WeaponPool_PopHeadAndReset,,USER_DEFINED,__fastcall,USER_DEFINED,26,,int __fastcall WeaponPool_PopHeadAndReset(void * ptr)
+0x004cc9c0,WeaponPool_AllocForCar,,USER_DEFINED,__fastcall,ANALYSIS,28,,SoundClient * __fastcall WeaponPool_AllocForCar(SoundClient * * param_1)
+0x004cc9e0,WeaponPool_AllocForPed,,USER_DEFINED,__fastcall,USER_DEFINED,26,,int __fastcall WeaponPool_AllocForPed(void * ptr)
 0x004cca00,Weapon_SetId,,USER_DEFINED,__thiscall,ANALYSIS,10,,"undefined __thiscall Weapon_SetId(void * this, undefined4 param_1)"
-0x004cca10,Weapon_SetPed,,USER_DEFINED,__thiscall,ANALYSIS,10,,"undefined __thiscall Weapon_SetPed(void * this, undefined4 param_1)"
-0x004cca20,Weapon_SetCarId,,USER_DEFINED,__thiscall,ANALYSIS,10,,"undefined __thiscall Weapon_SetCarId(void * this, undefined4 param_1)"
+0x004cca10,Weapon_SetOwner,,USER_DEFINED,__thiscall,ANALYSIS,10,,"undefined __thiscall Weapon_SetOwner(void * this, undefined4 param_1)"
+0x004cca20,Weapon_SetCar,,USER_DEFINED,__thiscall,ANALYSIS,10,,"undefined __thiscall Weapon_SetCar(void * this, undefined4 param_1)"
 0x004cca30,ShotX10Ammo,,USER_DEFINED,__fastcall,USER_DEFINED,33,,void __fastcall ShotX10Ammo(WEAPON_STRUCT * pToAmmo)
 0x004cca60,DecrementAmmo,,USER_DEFINED,__fastcall,USER_DEFINED,17,,void __fastcall DecrementAmmo(ushort * param_1)
-0x004cca80,Weapon_SetField2C,,USER_DEFINED,default,USER_DEFINED,10,,"void Weapon_SetField2C(WEAPON_STRUCT * this, byte iParm1, undefined param_3)"
-0x004cca90,Ped_GetAimRotation,,USER_DEFINED,__thiscall,ANALYSIS,17,,"undefined __thiscall Ped_GetAimRotation(void * this, undefined2 * param_1)"
-0x004ccab0,Player_TickThrowCharge,,USER_DEFINED,__fastcall,ANALYSIS,27,,undefined __fastcall Player_TickThrowCharge(int param_1)
-0x004ccad0,Player_GetThrowChargeClamped60,,USER_DEFINED,__fastcall,USER_DEFINED,14,,uint __fastcall Player_GetThrowChargeClamped60(undefined param_1)
+0x004cca80,Weapon_SetFiringFlag,,USER_DEFINED,default,USER_DEFINED,10,,"void Weapon_SetFiringFlag(WEAPON_STRUCT * this, byte iParm1, undefined param_3)"
+0x004cca90,Ped_GetAimAngle16,,USER_DEFINED,__thiscall,ANALYSIS,17,,"undefined __thiscall Ped_GetAimAngle16(void * this, undefined2 * param_1)"
+0x004ccab0,Player_IncThrowCharge,,USER_DEFINED,__fastcall,ANALYSIS,27,,undefined __fastcall Player_IncThrowCharge(int param_1)
+0x004ccad0,Player_GetThrowPower,,USER_DEFINED,__fastcall,USER_DEFINED,14,,uint __fastcall Player_GetThrowPower(undefined param_1)
 0x004ccae0,Player_GetThrowCharge,,USER_DEFINED,__fastcall,USER_DEFINED,4,,undefined4 __fastcall Player_GetThrowCharge(undefined param_1)
 0x004ccaf0,Player_ResetThrowCharge,,USER_DEFINED,__fastcall,ANALYSIS,8,,undefined __fastcall Player_ResetThrowCharge(int param_1)
 0x004ccb00,Player_IsThrowCharging,,USER_DEFINED,__fastcall,USER_DEFINED,9,,uint __fastcall Player_IsThrowCharging(undefined param_1)
 0x004ccb10,Weapon_Dtor,,USER_DEFINED,__fastcall,USER_DEFINED,42,,undefined __fastcall Weapon_Dtor(Car * param_1)
-0x004ccb40,Weapon_ResetAndFreeSound,,USER_DEFINED,__fastcall,ANALYSIS,42,,undefined __fastcall Weapon_ResetAndFreeSound(SoundClient * param_1)
+0x004ccb40,Weapon_Release,,USER_DEFINED,__fastcall,ANALYSIS,42,,undefined __fastcall Weapon_Release(SoundClient * param_1)
 0x004ccb70,Weapon_AddAmmo,WEAPON_STRUCT,USER_DEFINED,__thiscall,ANALYSIS,88,,"uint __thiscall Weapon_AddAmmo(WEAPON_STRUCT * this, uint param_1)"
 0x004ccbd0,unsure_Weapon_SpawnArcLineParticles,,USER_DEFINED,__stdcall,ANALYSIS,1060,,"undefined __stdcall unsure_Weapon_SpawnArcLineParticles(int param_1, int param_2, undefined4 param_3)"
-0x004cd000,Weapon_ApplyFastReloadPowerup,,USER_DEFINED,__fastcall,ANALYSIS,32,,undefined __fastcall Weapon_ApplyFastReloadPowerup(int param_1)
-0x004cd020,unsure_Weapon_Unk7_UpdateVictimPull,,USER_DEFINED,__fastcall,ANALYSIS,984,,undefined __fastcall unsure_Weapon_Unk7_UpdateVictimPull(int param_1)
-0x004cd400,Weapon_FireVehicleBomb,,USER_DEFINED,default,USER_DEFINED,91,,"void Weapon_FireVehicleBomb(WEAPON_STRUCT * weapon, undefined4 param_2)"
-0x004cd460,Weapon_FireOilSlick,,USER_DEFINED,__fastcall,ANALYSIS,385,,undefined __fastcall Weapon_FireOilSlick(WEAPON_STRUCT * param_1)
-0x004cd5f0,Weapon_FireMine,,USER_DEFINED,__fastcall,ANALYSIS,382,,undefined __fastcall Weapon_FireMine(WEAPON_STRUCT * param_1)
+0x004cd000,Weapon_ApplyFastReload,,USER_DEFINED,__fastcall,ANALYSIS,32,,undefined __fastcall Weapon_ApplyFastReload(int param_1)
+0x004cd020,unsure_Weapon_TaserHoldTarget,,USER_DEFINED,__fastcall,ANALYSIS,984,,undefined __fastcall unsure_Weapon_TaserHoldTarget(int param_1)
+0x004cd400,CarWeapon_FireBomb,,USER_DEFINED,default,USER_DEFINED,91,,"void CarWeapon_FireBomb(WEAPON_STRUCT * weapon, undefined4 param_2)"
+0x004cd460,CarWeapon_FireOil,,USER_DEFINED,__fastcall,ANALYSIS,385,,undefined __fastcall CarWeapon_FireOil(WEAPON_STRUCT * param_1)
+0x004cd5f0,CarWeapon_FireMine,,USER_DEFINED,__fastcall,ANALYSIS,382,,undefined __fastcall CarWeapon_FireMine(WEAPON_STRUCT * param_1)
 0x004cd770,WeaponManager_CreateWeapon,WeaponManager,USER_DEFINED,__thiscall,ANALYSIS,64,,"void * __thiscall WeaponManager_CreateWeapon(WeaponManager * this, undefined4 param_1, undefined4 param_2, byte param_3)"
 0x004cd7b0,CreateCarWeaponStruct,,USER_DEFINED,__stdcall,USER_DEFINED,56,,"WEAPON_STRUCT * __stdcall CreateCarWeaponStruct(CAR_WEAPON_INDEX type, Car * car, short ammo)"
-0x004cd7f0,GetCarWeaponStruct,,USER_DEFINED,__stdcall,ANALYSIS,45,,"WEAPON_STRUCT * __stdcall GetCarWeaponStruct(int param_1, WEAPON_INDEX param_2)"
+0x004cd7f0,WeaponPool_FindCarWeapon,,USER_DEFINED,__stdcall,ANALYSIS,45,,"WEAPON_STRUCT * __stdcall WeaponPool_FindCarWeapon(int param_1, WEAPON_INDEX param_2)"
 0x004cd820,CarAddWeapon,,USER_DEFINED,__stdcall,USER_DEFINED,146,,"void __stdcall CarAddWeapon(CAR_WEAPON_INDEX type, uint ammo, Car * car)"
 0x004cd8c0,Weapon_GetOwnerPosition,,USER_DEFINED,__thiscall,ANALYSIS,148,,"undefined __thiscall Weapon_GetOwnerPosition(void * this, undefined4 * param_1, undefined4 * param_2, undefined4 * param_3)"
 0x004cd9f0,WeaponPool_Dtor,,USER_DEFINED,__fastcall,ANALYSIS,35,,undefined __fastcall WeaponPool_Dtor(undefined4 * param_1)
 0x004cda20,WeaponPool_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,74,,WeaponPool * __fastcall WeaponPool_Ctor(WeaponPool * this)
-0x004cda70,WeaponPool_FreeWeapon,,USER_DEFINED,__thiscall,ANALYSIS,27,,"undefined __thiscall WeaponPool_FreeWeapon(void * this, SoundClient * param_1)"
-0x004cda90,Weapon_SpawnProjectileObject,,USER_DEFINED,__thiscall,ANALYSIS,399,,"int * * __thiscall Weapon_SpawnProjectileObject(void * this, int * param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, int param_5, int * param_6)"
+0x004cda70,WeaponPool_Free,,USER_DEFINED,__thiscall,ANALYSIS,27,,"undefined __thiscall WeaponPool_Free(void * this, SoundClient * param_1)"
+0x004cda90,Weapon_SpawnProjectile,,USER_DEFINED,__thiscall,ANALYSIS,399,,"int * * __thiscall Weapon_SpawnProjectile(void * this, int * param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, int param_5, int * param_6)"
 0x004cdc20,Weapon_FireFlamethrower,,USER_DEFINED,__fastcall,ANALYSIS,372,,undefined __fastcall Weapon_FireFlamethrower(WEAPON_STRUCT * param_1)
-0x004cdda0,unsure_Weapon_FireShotgun,,USER_DEFINED,__fastcall,ANALYSIS,715,,undefined __fastcall unsure_Weapon_FireShotgun(WEAPON_STRUCT * param_1)
+0x004cdda0,Weapon_FireShotgun,,USER_DEFINED,__fastcall,ANALYSIS,715,,undefined __fastcall Weapon_FireShotgun(WEAPON_STRUCT * param_1)
 0x004ce070,Weapon_FirePistol,,USER_DEFINED,__fastcall,ANALYSIS,499,,undefined __fastcall Weapon_FirePistol(WEAPON_STRUCT * param_1)
 0x004ce270,Weapon_FireDualPistol,,USER_DEFINED,__fastcall,ANALYSIS,568,,undefined __fastcall Weapon_FireDualPistol(WEAPON_STRUCT * param_1)
 0x004ce4b0,Weapon_FireSmg,,USER_DEFINED,__fastcall,ANALYSIS,541,,undefined __fastcall Weapon_FireSmg(WEAPON_STRUCT * param_1)
 0x004ce6d0,Weapon_FireRocket,,USER_DEFINED,__fastcall,ANALYSIS,658,,undefined __fastcall Weapon_FireRocket(WEAPON_STRUCT * param_1)
-0x004ce970,Weapon_ThrowGrenadeOrMolotov,,USER_DEFINED,default,USER_DEFINED,1484,,"void Weapon_ThrowGrenadeOrMolotov(void * ped, ushort * puParm1, undefined * param_3, int param_4, uint param_5)"
-0x004cef40,unsure_Ped_ElectroFingersAttack,,USER_DEFINED,__stdcall,ANALYSIS,1076,,"undefined __stdcall unsure_Ped_ElectroFingersAttack(undefined2 * param_1, undefined4 param_2, int param_3, char param_4, Ped * param_5, void * param_6)"
-0x004cf380,Weapon_ShockerArc,,USER_DEFINED,__stdcall,ANALYSIS,1627,,"undefined __stdcall Weapon_ShockerArc(char param_1, undefined4 * param_2)"
-0x004cf9e0,Weapon_FireShocker,,USER_DEFINED,__fastcall,ANALYSIS,73,,undefined __fastcall Weapon_FireShocker(int param_1)
-0x004cfa30,unsure_Weapon_FireUnk7,,USER_DEFINED,__fastcall,ANALYSIS,424,,undefined __fastcall unsure_Weapon_FireUnk7(WEAPON_STRUCT * param_1)
-0x004cfbe0,Weapon_FireVehicleFlamethrower,,USER_DEFINED,__fastcall,ANALYSIS,404,,undefined __fastcall Weapon_FireVehicleFlamethrower(WEAPON_STRUCT * param_1)
-0x004cfd80,Weapon_FireFireTruckGun,,USER_DEFINED,__fastcall,ANALYSIS,319,,undefined __fastcall Weapon_FireFireTruckGun(WEAPON_STRUCT * param_1)
-0x004cfec0,Weapon_FireTankMainGun,,USER_DEFINED,__fastcall,ANALYSIS,444,,undefined __fastcall Weapon_FireTankMainGun(WEAPON_STRUCT * param_1)
-0x004d0530,FireFromGun,,USER_DEFINED,__fastcall,USER_DEFINED,333,,void __fastcall FireFromGun(WEAPON_STRUCT * gun)
+0x004ce970,Weapon_ThrowMolotovOrGrenade,,USER_DEFINED,default,USER_DEFINED,1484,,"void Weapon_ThrowMolotovOrGrenade(void * ped, ushort * puParm1, undefined * param_3, int param_4, uint param_5)"
+0x004cef40,unsure_Ped_TaserFindTarget,,USER_DEFINED,__stdcall,ANALYSIS,1076,,"undefined __stdcall unsure_Ped_TaserFindTarget(undefined2 * param_1, undefined4 param_2, int param_3, char param_4, Ped * param_5, void * param_6)"
+0x004cf380,Weapon_ElectrogunHitCars,,USER_DEFINED,__stdcall,ANALYSIS,1627,,"undefined __stdcall Weapon_ElectrogunHitCars(char param_1, undefined4 * param_2)"
+0x004cf9e0,Weapon_FireElectrogun,,USER_DEFINED,__fastcall,ANALYSIS,73,,undefined __fastcall Weapon_FireElectrogun(int param_1)
+0x004cfa30,unsure_Weapon_FireTaser,,USER_DEFINED,__fastcall,ANALYSIS,424,,undefined __fastcall unsure_Weapon_FireTaser(WEAPON_STRUCT * param_1)
+0x004cfbe0,CarWeapon_FireFlamethrower,,USER_DEFINED,__fastcall,ANALYSIS,404,,undefined __fastcall CarWeapon_FireFlamethrower(WEAPON_STRUCT * param_1)
+0x004cfd80,CarWeapon_FireWaterCannon,,USER_DEFINED,__fastcall,ANALYSIS,319,,undefined __fastcall CarWeapon_FireWaterCannon(WEAPON_STRUCT * param_1)
+0x004cfec0,CarWeapon_FireTankGun,,USER_DEFINED,__fastcall,ANALYSIS,444,,undefined __fastcall CarWeapon_FireTankGun(WEAPON_STRUCT * param_1)
+0x004d0080,CarWeapon_FireJeepGun,,USER_DEFINED,__fastcall,ANALYSIS,426,,undefined __fastcall CarWeapon_FireJeepGun(WEAPON_STRUCT * param_1)
+0x004d0230,CarWeapon_FireMachineGun,,USER_DEFINED,__fastcall,ANALYSIS,640,,undefined __fastcall CarWeapon_FireMachineGun(WEAPON_STRUCT * param_1)
+0x004d0530,Weapon_Fire,,USER_DEFINED,__fastcall,USER_DEFINED,333,,void __fastcall Weapon_Fire(WEAPON_STRUCT * gun)
 0x004d06e0,WeaponManager_FreeWeapon,WeaponManager,USER_DEFINED,__thiscall,ANALYSIS,27,,"undefined __thiscall WeaponManager_FreeWeapon(WeaponManager * this, SoundClient * param_1)"
-0x004d0700,Car_DeleteWeapons,,USER_DEFINED,__stdcall,ANALYSIS,59,,undefined __stdcall Car_DeleteWeapons(int param_1)
+0x004d0700,Car_FreeAllWeapons,,USER_DEFINED,__stdcall,ANALYSIS,59,,undefined __stdcall Car_FreeAllWeapons(int param_1)
 0x004d0740,WeaponManager_Ctor,WeaponManager,USER_DEFINED,__thiscall,USER_DEFINED,144,,WeaponManager * __thiscall WeaponManager_Ctor(WeaponManager * this)
-0x004d0820,WinMain,,USER_DEFINED,__cdecl,ANALYSIS,205,,undefined __cdecl WinMain(void)
+0x004d0820,FrontEnd_LaunchGta2Manager,,USER_DEFINED,__cdecl,ANALYSIS,205,,undefined __cdecl FrontEnd_LaunchGta2Manager(void)
 0x004d0900,AlertBox,,USER_DEFINED,__stdcall,ANALYSIS,28,,undefined __stdcall AlertBox(LPCSTR param_1)
 0x004d0920,GetGameVersion,,USER_DEFINED,__stdcall,USER_DEFINED,127,,"void __stdcall GetGameVersion(uint * major, uint * minor)"
 0x004d09c0,relToQuitGame,,USER_DEFINED,__fastcall,USER_DEFINED,4,,undefined4 __fastcall relToQuitGame(Game * param_1)

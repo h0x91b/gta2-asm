@@ -82,7 +82,9 @@ typedef struct MissionCleanupEntry MissionCleanupEntry;
 typedef struct ObjectSpawner ObjectSpawner;
 typedef struct OwnerSlot OwnerSlot;
 typedef struct ParkingZone ParkingZone;
+typedef struct Particle Particle;
 typedef struct ParticleManager ParticleManager;
+typedef struct ParticlePool ParticlePool;
 typedef struct ParticleState ParticleState;
 typedef struct ParticleStatePool20 ParticleStatePool20;
 typedef struct ParticleStatePool40 ParticleStatePool40;
@@ -234,8 +236,6 @@ typedef struct TrafficLights_Gzf2021 TrafficLights_Gzf2021;
 typedef struct FrontendImage FrontendImage;
 typedef struct Ambulance Ambulance;
 typedef struct AmbulanceSub AmbulanceSub;
-typedef struct BareGameObject BareGameObject;
-typedef struct BareGameObjectManager BareGameObjectManager;
 typedef struct BitMap BitMap;
 typedef struct BusAndTrains BusAndTrains;
 typedef struct BusAndTrains2 BusAndTrains2;
@@ -305,6 +305,8 @@ typedef struct TrailerController TrailerController;
 typedef struct TrailerControllerPool TrailerControllerPool;
 typedef struct Vert Vert;
 typedef struct Verts Verts;
+typedef struct WorldObject WorldObject;
+typedef struct WorldObjectPool WorldObjectPool;
 typedef struct WorldRect WorldRect;
 typedef struct XYZ XYZ;
 typedef struct sprite_base sprite_base;
@@ -429,6 +431,24 @@ enum HUD_DIGIT_SPRITE_values {
     HUD_DIGITS_LIVES = 115,
     HUD_DIGITS_MULTIPLIER = 116,
     HUD_DIGITS_MONEY = 158,
+};
+
+// /OBJECT_KIND
+typedef uint32_t OBJECT_KIND;
+enum OBJECT_KIND_values {
+    OBJECT_KIND_STATIC = 0,
+    OBJECT_KIND_STATIC_NOTIFY = 1,
+    OBJECT_KIND_ANIMATED = 2,
+    OBJECT_KIND_PHYSICS = 3,
+    OBJECT_KIND_PHYSICS_ANIMATED = 4,
+    OBJECT_KIND_PARTICLE_SYSTEM = 5,
+    OBJECT_KIND_PICKUP_STATIC = 6,
+    OBJECT_KIND_PICKUP_PHYSICS = 7,
+    OBJECT_KIND_PICKUP_ANIMATED = 8,
+    OBJECT_KIND_PICKUP_PHYSICS_ANIMATED = 9,
+    OBJECT_KIND_UNK_A = 10,
+    OBJECT_KIND_LIGHT = 11,
+    OBJECT_KIND_UNK_C = 12,
 };
 
 // /PED_CLASS
@@ -2958,8 +2978,8 @@ struct HudZoneNameLabel {
     byte pad1; /* 0x1 */
     wchar_t text[65]; /* 0x2 */
     int textWidth; /* 0x84 */
-    void *zoneSecondary; /* 0x88 */
-    void *zonePrimary; /* 0x8c */
+    void *zoneType1; /* 0x88 */
+    void *zoneTypeF; /* 0x8c */
     int fadeBlend; /* 0x90 */
     byte fadeAlpha; /* 0x94 */
     byte pad95[3]; /* 0x95 */
@@ -3016,7 +3036,12 @@ struct ObjectSpawner {
     uint8_t _gap_0x0[0x10];
     int numCategory2Objects; /* 0x10 */
     int numCategory3Objects; /* 0x14 */
-    uint8_t _gap_0x18[0x40];
+    byte nextOwnerSlot; /* 0x18 */
+    uint8_t _gap_0x19[0x3];
+    void *category3List; /* 0x1c */
+    byte bonusTokenAllowed[50]; /* 0x20 */
+    uint8_t _gap_0x52[0x2];
+    int bonusTokenCounter; /* 0x54 */
     Position *position; /* 0x58 */
 };
 
@@ -3044,10 +3069,48 @@ struct ParkingZone {
     int unk44; /* 0x44 */
 };
 
+// /Particle  size 0x4c
+struct Particle {
+    ushort serial; /* 0x0 */
+    ushort _pad2; /* 0x2 */
+    uint flags; /* 0x4 */
+    Fix16 velX; /* 0x8 */
+    Fix16 velY; /* 0xc */
+    Fix16 velZ; /* 0x10 */
+    Fix16 driftX; /* 0x14 */
+    Fix16 driftY; /* 0x18 */
+    Fix16 driftZ; /* 0x1c */
+    Fix16 speed; /* 0x20 */
+    Ang16 heading; /* 0x24 */
+    ushort _pad26; /* 0x26 */
+    void *owner; /* 0x28 */
+    ushort ttl; /* 0x2c */
+    ushort ttlInit; /* 0x2e */
+    Position *pos; /* 0x30 */
+    uint flagA; /* 0x34 */
+    uint type; /* 0x38 */
+    void **next; /* 0x3c */
+    ParticleState *follow; /* 0x40 */
+    ushort followSerial; /* 0x44 */
+    byte frame; /* 0x46 */
+    byte _pad47; /* 0x47 */
+    byte delay; /* 0x48 */
+    byte _pad49[3]; /* 0x49 */
+};
+
 // /ParticleManager  size 0x8
 struct ParticleManager {
     void *object0; /* 0x0 */
     void *object1; /* 0x4 */
+};
+
+// /ParticlePool  size 0x947c
+struct ParticlePool {
+    Particle *freeHead; /* 0x0 */
+    Particle *activeHead; /* 0x4 */
+    Particle nodes[500]; /* 0x8 */
+    ushort iterCounter; /* 0x9478 */
+    ushort _pad; /* 0x947a */
 };
 
 // /ParticleState  size 0x30
@@ -3057,10 +3120,15 @@ struct ParticleState {
     uint8_t _gap_0x5[0x1];
     short serial; /* 0x6 */
     uint8_t _gap_0x8[0x8];
-    int type; /* 0x10 */
-    void *owner; /* 0x14 */
-    uint8_t _gap_0x18[0x14];
-    int unk2C; /* 0x2c */
+    int kind; /* 0x10 */
+    WorldObject *ownerObject; /* 0x14 */
+    ushort emitCooldown; /* 0x18 */
+    ushort ttl; /* 0x1a */
+    uint8_t _gap_0x1c[0x6];
+    Ang16 heading; /* 0x22 */
+    Fix16 curRadius; /* 0x24 */
+    Fix16 maxRadius; /* 0x28 */
+    int attackerPedId; /* 0x2c */
 };
 
 // /ParticleStatePool20  size 0x3d4
@@ -3185,7 +3253,7 @@ struct PoliceRoadblock {
     ushort lifeTimer; /* 0xc */
     ushort offscreenTicks; /* 0xe */
     Car *cars[6]; /* 0x10 */
-    BareGameObject *barrierObjs[12]; /* 0x28 */
+    WorldObject *barrierObjs[12]; /* 0x28 */
     int barrierObjIds[12]; /* 0x58 */
     Ped *guards[6]; /* 0x88 */
     void *collisionRect; /* 0xa0 */
@@ -4204,18 +4272,20 @@ struct SoundClient {
 
 // /_weapon/WEAPON_STRUCT  size 0x30
 struct WEAPON_STRUCT {
-    short ammo; /* 0x0 */
+    ushort ammo; /* 0x0 */
     byte timeToReload; /* 0x2 */
     uint8_t _gap_0x3[0x1];
-    int field3_0x4; /* 0x4 */
+    int probeMode; /* 0x4 */
     uint8_t _gap_0x8[0xc];
-    int carId; /* 0x14 Created by retype action */
+    Car *car; /* 0x14 */
     WEAPON_STRUCT *nextWeapon; /* 0x18 */
     WEAPON_INDEX id; /* 0x1c */
-    uint8_t _gap_0x20[0x4];
+    byte fireLatch; /* 0x20 */
+    byte justThrown; /* 0x21 */
+    uint8_t _gap_0x22[0x2];
     Ped *ped; /* 0x24 */
-    uint8_t _gap_0x28[0x4];
-    byte field28_0x2c; /* 0x2c */
+    void *audioEmitter; /* 0x28 */
+    byte firingFlag; /* 0x2c */
     uint8_t _gap_0x2d[0x3];
 };
 
@@ -5297,31 +5367,6 @@ struct Ambulance {
     AmbulanceSub arr[2]; /* 0xd0 */
 };
 
-// /imported/seuko-mod/BareGameObject  size 0x2c
-struct BareGameObject {
-    BareGameObject *next; /* 0x0 */
-    Sprite *sprite2; /* 0x4 */
-    void *state1; /* 0x8 */
-    undefined4 *state2; /* 0xc */
-    uint relToId; /* 0x10 */
-    int id; /* 0x14 */
-    OBJECT_TYPE type; /* 0x18 */
-    void *probablyPhysics; /* 0x1c */
-    int field8_0x20; /* 0x20 */
-    ushort probablyRemap; /* 0x24 */
-    uint8_t _gap_0x26[0x5];
-    undefined1 field_0x2b; /* 0x2b */
-};
-
-// /imported/seuko-mod/BareGameObjectManager  size 0x29178
-struct BareGameObjectManager {
-    BareGameObject *nextFree; /* 0x0 */
-    BareGameObject *someObject; /* 0x4 */
-    BareGameObject objects[3825]; /* 0x8 */
-    uint8_t _gap_0x29174[0x3];
-    undefined1 field_0x29177; /* 0x29177 */
-};
-
 // /imported/seuko-mod/BitMap  size 0x14
 struct BitMap {
     short field_0x0; /* 0x0 */
@@ -5821,24 +5866,44 @@ struct MapBlocks_SeukoMod {
 
 // /imported/seuko-mod/ObjectPrefab  size 0x74
 struct ObjectPrefab {
-    uint8_t _gap_0x0[0x1c];
+    Fix16 boxX; /* 0x0 */
+    Fix16 boxY; /* 0x4 */
+    Fix16 boxZ; /* 0x8 */
+    uint8_t _gap_0xc[0x4];
+    Fix16 initialSpeed; /* 0x10 */
+    Fix16 deceleration; /* 0x14 */
+    uint8_t _gap_0x18[0x4];
     short remap; /* 0x1c */
     short defaultSpriteId; /* 0x1e */
     uint8_t _gap_0x20[0x8];
     SPRITE_TYPE defaultSpriteType; /* 0x28 */
     uint8_t _gap_0x2c[0x4];
     PALETTE_BASE paletteBase; /* 0x30 */
-    uint8_t _gap_0x34[0xc];
-    S32_SHOW_IMAGINARY showImaginary; /* 0x40 */
-    uint8_t _gap_0x44[0x2c];
-    int field89_0x70; /* 0x70 */
+    OBJECT_KIND kind; /* 0x34 */
+    int killTransform; /* 0x38 */
+    int endTransform; /* 0x3c */
+    int gridKind; /* 0x40 */
+    int impactMode; /* 0x44 */
+    int explosiveClass; /* 0x48 */
+    uint8_t _gap_0x4c[0x10];
+    int category; /* 0x5c */
+    uint8_t _gap_0x60[0x1];
+    byte onActiveList; /* 0x61 */
+    uint8_t _gap_0x62[0x2];
+    byte ticksPerFrame; /* 0x64 */
+    byte loopsOrLifetime; /* 0x65 */
+    uint8_t _gap_0x66[0x6];
+    byte frameCount; /* 0x6c */
+    uint8_t _gap_0x6d[0x3];
+    int extraSpriteFlag; /* 0x70 */
 };
 
 // /imported/seuko-mod/ObjectPrefabsContainer  size 0x8ca8
 struct ObjectPrefabsContainer {
     short length; /* 0x0 */
-    uint8_t _gap_0x2[0x87f2];
-    ObjectPrefab *objectPrefabArr[300]; /* 0x87f4 */
+    uint8_t _gap_0x2[0x2];
+    ObjectPrefab prefabs[300]; /* 0x4 */
+    ObjectPrefab *byId[300]; /* 0x87f4 */
     uint eq99OnInit; /* 0x8ca4 */
 };
 
@@ -6152,6 +6217,35 @@ struct Vert {
 // /imported/seuko-mod/Verts  size 0x80
 struct Verts {
     Vert mVerts[4]; /* 0x0 */
+};
+
+// /imported/seuko-mod/WorldObject  size 0x2c
+struct WorldObject {
+    WorldObject *next; /* 0x0 */
+    Position *position; /* 0x4 */
+    ObjectPrefab *prefab; /* 0x8 */
+    void *kindState; /* 0xc */
+    ObjectMotionState *motion; /* 0x10 */
+    int serial; /* 0x14 */
+    OBJECT_TYPE type; /* 0x18 */
+    byte kindStateIsParticle; /* 0x1c */
+    uint8_t _gap_0x1d[0x3];
+    int listState; /* 0x20 */
+    byte pendingType; /* 0x24 */
+    byte lifecycle; /* 0x25 */
+    byte ownerSlot; /* 0x26 */
+    uint8_t _gap_0x27[0x4];
+    undefined1 field_0x2b; /* 0x2b */
+};
+
+// /imported/seuko-mod/WorldObjectPool  size 0x29178
+struct WorldObjectPool {
+    WorldObject *nextFree; /* 0x0 */
+    WorldObject *activeHead; /* 0x4 */
+    WorldObject objects[3825]; /* 0x8 */
+    ushort visitCounter; /* 0x29174 */
+    uint8_t _gap_0x29176[0x1];
+    undefined1 field_0x29177; /* 0x29177 */
 };
 
 // /imported/seuko-mod/XYZ  size 0x100
