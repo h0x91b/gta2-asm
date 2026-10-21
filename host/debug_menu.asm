@@ -8,10 +8,11 @@
 ; opens are released, so the player stops. Key releases always reach the game.
 ; Pages: the main one (quick save, all weapons, +$100000, camera zoom, mouse turning and
 ; strafe toggles from player_move.asm, ped paths drawn by debug_paths.asm) leads to Player
-; (wanted level and its lock, skin), Vehicle (spawn a car; colour, repair, invincibility
-; and explosion of the current or last car) and Debug flags (a few of the game's own,
-; written straight into their bytes, which HiddenDebugFlags 0x451930 filled from the
-; registry at startup; the game reads them as it goes). ESC or K closes it from any page.
+; (wanted level and its lock, skin, police roadblocks from debug_roadblocks.asm), Vehicle
+; (spawn a car; colour, repair, invincibility and explosion of the current or last car)
+; and Debug flags (a few of the game's own, written straight into their bytes, which
+; HiddenDebugFlags 0x451930 filled from the registry at startup; the game reads them as
+; it goes). ESC or K closes it from any page.
 ;
 ; Layout is in 640x480 units, scaled by the main camera's uiScale like the game's HUD.
 ; Text: DrawGTAText @0x4CC100, stdcall(wchar_t* str, SCR_f x, SCR_f y, short font,
@@ -243,6 +244,7 @@ hk_DrawUI:
     mov [dm_ui_frame], eax
     mov byte [dm_ui_seen], 1
     call dm_tick
+    call rb_frame                   ; debug_roadblocks.asm
     movzx r13d, byte [dm_action_req]
     mov byte [dm_action_req], 0
     cmp r13d, DMA_SAVE
@@ -1338,6 +1340,8 @@ dmv_%1: dq dm_%1_change, dm_%1_fmt
     DMVALUE repair
     DMVALUE explode
     DMVALUE roads                   ; debug_roads.asm
+    DMVALUE rbplace
+    DMVALUE rbclear
 
 dm_page: dq dmp_main
 
@@ -1360,6 +1364,8 @@ dmp_player_items:
     DMITEM DM_VALUE,  "Lock wanted: ", dmv_wlock
     DMITEM DM_VALUE,  "Skin: ", dmv_skin
     DMITEM DM_VALUE,  "Body: ", dmv_body
+    DMITEM DM_VALUE,  "Place roadblock: ", dmv_rbplace
+    DMITEM DM_VALUE,  "Remove roadblocks: ", dmv_rbclear
     DMITEM DM_BACK,   "Back", 0
 dmp_player_end:
 

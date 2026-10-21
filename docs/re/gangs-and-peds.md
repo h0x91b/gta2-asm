@@ -420,6 +420,37 @@ Car fire itself comes from `Car_AddDamage` 0x427180: damage ≥ 16000 small fire
 Watchdog `FireEngineSlot_UpdateWatchdog` 0x450cd0: stopped 999 ticks, truck damage, target gone,
 or no flame object (type 0x71) left → finish/abort.
 
+**Police roadblocks** (Seq 40, own decompilation of the functions below, 2026-10-21) —
+`PoliceManager` has only **2** slots, `roadblocks[2]` at +0x664 (`PoliceRoadblock`, 0xA4: active,
+lifeTimer +0xC, offscreenTicks +0xE, cars[6] +0x10, barrierObjs[12] +0x28 with their ids +0x58,
+guards[6] +0x88, collisionRect +0xA0 from `PoliceRoadblock_Ctor` 0x4ac040).
+
+- Build: `PoliceManager_TryCreateRoadblockAt` 0x4aee70, thiscall(tileX, tileY, dir), ret 0xC.
+  Crew from `copLevel` +0x654: 3–4 police, 5 FBI, 6 army (`g_crewSpawnKind` 0x66b798; SWAT is
+  never chosen here). z = `FindMaxZ` at the tile. dir 1/2 → `PoliceRoadblock_Create` 0x4adb70
+  orientation 3 (scans x: road along y), else 2 (scans y). It reads nothing else of the manager,
+  only `roadblocks[0]`, then `[1]`.
+- `Create`: walks across the road on ground type (`block +0xB & 3` via 0x420420): road lanes
+  count, one pavement/field tile per side is allowed, gives up past 12. Then a collision-box
+  check (`unsure_CollisionGrid_BoxHitsObstacle`). It does **not** see cars: two calls on
+  neighbouring tiles stack up (measured). Then lane by lane: even lanes get a barrier pair
+  (`SpawnObject` OBJECT_TYPE_ROADBLOCK) + a guard (`PoliceManager_SpawnRoadblockGuard` 0x4a9b40:
+  police or FBI only, occupation ROAD_BLOCK_GUARD 37, SPECIAL_AI, GUARD_SPOT, 200 hp,
+  REACT_AS_EMERGENCY, needs `emergencyPeds < 30`). Odd lanes get a car (COPCAR / EDSELFBI / TANK
+  with a ROAD_BLOCK_TANK_MAN driver; `CarManager_SpawnCarOnGround`, driverClass 4, category
+  ROADBLOCK 7, siren on; `CarManager_HasRoomForType` gates it). Finally active = 1, lifeTimer = 100.
+- Removal: only `PoliceRoadblock_Update` 0x4ad6c0, called by `PoliceManager_Update` 0x4aef70 for
+  the 2 slots. It counts lifeTimer down. Then, while no car, barrier or guard is on screen
+  (guards: `offscreenTicks < 0x50`), offscreenTicks climbs. At **0xC9** with the player farther
+  than `DAT_0066b898` it calls `PoliceRoadblock_Remove` 0x4abd70. That function hands cars back
+  to traffic (`Car_RequestRemove` + driverClass 3), deletes barriers, removes off-screen guards
+  and makes on-screen ones AMBIENT. The cars are never recycled on their own:
+  `Car_CanBeRecycled` 0x424030 refuses driverClass 4.
+- The K menu's persistent roadblocks (`host/debug_roadblocks.asm`) use 8 slots of our own,
+  each with a fake `copLevel` 16 bytes in front. They call `TryCreateRoadblockAt` on
+  `slot − 0x664` and never `Update`. Verified in Downtown: two of them stayed through ~1300
+  frames out of view at wanted level 0.
+
 ## 8. Hooks for mods
 
 | goal | patch |
@@ -435,6 +466,7 @@ or no flame object (type 0x71) left → finish/abort.
 | despawn time | `g_PedOffscreenTicksLimit` 0x5E5D80 (40); immediates 100/200/60 in `Ped_UpdateState` 0x43ecc0 |
 | disable systems | debug flags `g_skipDummies` 0x5EAD69, `g_skipAmbulance` 0x5EAD6B, `g_skipFireEngines` 0x5EAD8B |
 | call services from a mod | `AmbulanceManager_EnqueuePed(g_AmbulanceManager, ped)` or `PedSetObjective(ped, 28)`; `FireEngineManager_RequestForCar(g_FireEngineManager, car)` |
+| roadblocks from a mod | `PoliceManager_TryCreateRoadblockAt(fake manager, x, y, dir)` on your own `PoliceRoadblock` (Ctor first) with `copLevel` at −0x10: as many as you like, never despawned because the game only updates its own 2 (`host/debug_roadblocks.asm`) |
 | emergency tuning | revive 50 (`0x32` in 0x473410), ambulance delay 300 and give-up 500, pickup range 0x664164, slot count 2, queue 25 |
 
 ## 9. Functions named in this pass

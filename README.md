@@ -43,7 +43,8 @@ the main menu, …) go in `config.yaml` in that folder; copy
 In a game, **K** opens a debug menu (game font, arrows + RETURN): quick save where you
 stand (not during a mission), all weapons, +$100000, live camera zoom (70% by default, `camera.zoom` in config.yaml; 100 = vanilla), Ped paths (each ped's next
 10 path cells, numbered 1 = next, in a colour of its own; else a tick showing where it faces); a Player page (set
-or lock the wanted level, skin and body type), a Vehicle page (spawn any car in front of
+or lock the wanted level, skin and body type; place real police, FBI or army roadblocks on the
+nearest road ahead, which stay until you remove them), a Vehicle page (spawn any car in front of
 you; colour, invincibility, repair or explode the car you are in or left last) and a
 Debug flags page (FPS / camera info / invulnerability / no police and a few other DMA
 flags, and the Road network overlay: lane arrows, the junction graph, live traffic lights,
