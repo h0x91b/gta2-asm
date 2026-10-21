@@ -163,13 +163,18 @@ their absolute addresses apply 1:1. How this was checked:
 ### Ghidra project
 
 - **Current project (user's choice): `/Users/arsenyp/ghidra/gta-2-recovered.gpr`**
-  (+ `gta-2-recovered.rep/`). Same read-only rules as below; work on a copy.
+  (+ `gta-2-recovered.rep/`). **Writable by agents**: rename functions, variables and
+  globals, fix prototypes, add comments in it through the Ghidra MCP server, which
+  talks to the user's running Ghidra GUI. Agents are expected to edit it more than
+  the user does. Never open or modify the `.gpr`/`.rep` files on disk directly (another
+  Ghidra, `analyzeHeadless`, `rm`, …) while the GUI holds them. `re/tools/export.sh` is
+  fine: it copies the project and opens only the copy — call `save_program` first, and
+  regenerate `re/` after a naming pass so the names reach the repo.
 - Older project: `/Users/arsenyp/ghidra/gta2.rep` (`gta2.gpr` next to it, ~174 MB).
   Programs inside: `gta2.segments.fixed.exe`, `gta2.segments.fixed2.exe`,
   `miss2.exe` (the mission-script compiler).
-- **READ-ONLY.** It is Ghidra's binary project database: reading it needs Ghidra
-  (GUI or `analyzeHeadless`). Do not modify it, and never open it in place with a
-  Ghidra that might upgrade or lock it. Work on a copy.
+- The older projects (`gta2.rep`, `gta-2.rep`, the zip) are **read-only**: do not modify them, and never open them
+  in place with a Ghidra that might upgrade or lock them. Work on a copy.
 - Also present, superseded by `gta-2-recovered`:
   `/Users/arsenyp/ghidra/gta-2.rep` (+ `gta-2.gpr`, recently locked) and
   `/Users/arsenyp/ghidra/gta2-ghidra-proj.zip` (42 MB, 2020).
@@ -266,7 +271,8 @@ the assembly side.
 - **Run builds, tests and programs in a visible tmux pane next to you** (`dev3 pane run "<cmd>" --label <name>`, read it with `dev3 pane logs <id>`, close it with `dev3 pane close <id>`), so the user watches the logs live. Quick read-only commands (grep, cat, git status) may stay inline.
 - Never commit game files, extracted assets, or any binary (`*.exe`, `*.dll`, `*.o`,
   built hosts), and never `data.pak`. Build output must be git-ignored.
-- Never modify the main checkout or the Ghidra projects. An unpacked `gta2/` in your
+- Never modify the main checkout or the old Ghidra projects (`gta-2-recovered` is
+  writable via MCP, see "Ghidra project"). An unpacked `gta2/` in your
   worktree is yours to change.
 - Addresses are always virtual addresses for ImageBase `0x3F0000` (11.44). Cite
   where an address came from (seuko-mod file, Ghidra, own analysis) when you add

@@ -21,11 +21,59 @@ typedef uint16_t wchar_t;
 #pragma pack(push, 1)
 
 /* ---- forward declarations */
+typedef struct AmbulanceManager AmbulanceManager;
+typedef struct AmbulanceSlot AmbulanceSlot;
 typedef struct C1 C1;
+typedef struct CLIENT_ID CLIENT_ID;
+typedef struct CarDriveOrder CarDriveOrder;
+typedef struct CarDriveOrderPool CarDriveOrderPool;
+typedef struct CarModelTable CarModelTable;
+typedef struct CollisionManager CollisionManager;
+typedef struct Crane Crane;
+typedef struct CraneManager CraneManager;
+typedef struct Crusher Crusher;
+typedef struct CrusherManager CrusherManager;
+typedef struct DoorManager DoorManager;
+typedef struct DoorSlot DoorSlot;
+typedef struct EmergencyVehiclePool EmergencyVehiclePool;
+typedef struct EmergencyVehicleSlot EmergencyVehicleSlot;
+typedef struct FireEngineManager FireEngineManager;
+typedef struct FireEngineSlot FireEngineSlot;
+typedef struct FloatingScore FloatingScore;
+typedef struct FloatingScoreManager FloatingScoreManager;
+typedef struct FrameCounter FrameCounter;
 typedef struct GTAVertex GTAVertex;
+typedef struct Generator Generator;
+typedef struct GeneratorManager GeneratorManager;
 typedef struct IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct;
 typedef union IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion;
+typedef struct KanjiFont KanjiFont;
+typedef struct ObjectSpawner ObjectSpawner;
+typedef struct OwnerSlot OwnerSlot;
+typedef struct ParkingZone ParkingZone;
+typedef struct ParticleManager ParticleManager;
+typedef struct ParticleState ParticleState;
+typedef struct ParticleStatePool20 ParticleStatePool20;
+typedef struct ParticleStatePool40 ParticleStatePool40;
+typedef struct PatrolRoute PatrolRoute;
+typedef struct PedPathfinder PedPathfinder;
+typedef struct PedPatrolRoutePool PedPatrolRoutePool;
+typedef struct PublicTransportManager PublicTransportManager;
+typedef struct RoadNetwork RoadNetwork;
+typedef struct RoadNode RoadNode;
+typedef struct ScriptTrigger ScriptTrigger;
+typedef struct ScriptTriggerPool ScriptTriggerPool;
+typedef struct SoundEvent SoundEvent;
+typedef struct SoundEventQueue SoundEventQueue;
+typedef struct TaxiList TaxiList;
+typedef struct TaxiNode TaxiNode;
+typedef struct TileAnimEntry TileAnimEntry;
+typedef struct TileAnimManager TileAnimManager;
+typedef struct TileAnimPool TileAnimPool;
+typedef struct TransportActor TransportActor;
+typedef struct TransportStop TransportStop;
 typedef struct TypeDescriptor TypeDescriptor;
+typedef struct WeaponManager WeaponManager;
 typedef struct HINSTANCE__ HINSTANCE__;
 typedef struct HWND__ HWND__;
 typedef struct AllCarsInfo AllCarsInfo;
@@ -36,8 +84,8 @@ typedef struct PaletteBase PaletteBase;
 typedef struct PaletteIndex PaletteIndex;
 typedef struct SpriteBase SpriteBase;
 typedef struct SpriteEntry SpriteEntry;
+typedef struct StyleData StyleData;
 typedef struct StyleFileHeader StyleFileHeader;
-typedef struct Style_S3 Style_S3;
 typedef struct Car Car;
 typedef struct CarManager CarManager;
 typedef struct MaybeCarEngine MaybeCarEngine;
@@ -60,55 +108,55 @@ typedef struct _s_UnwindMapEntry _s_UnwindMapEntry;
 typedef struct SCR_PLAYER_PED SCR_PLAYER_PED;
 typedef struct SCR_STRINGS SCR_STRINGS;
 typedef struct SCR_STRING_HEADER SCR_STRING_HEADER;
-typedef struct MaybeWeaponStruct MaybeWeaponStruct;
+typedef struct SoundClient SoundClient;
 typedef struct WEAPON_PLAYER_LIST WEAPON_PLAYER_LIST;
 typedef struct WEAPON_STRUCT WEAPON_STRUCT;
-typedef struct WeaponRelStruct WeaponRelStruct;
+typedef struct WeaponPool WeaponPool;
+typedef struct CrimeEvent CrimeEvent;
+typedef struct CrimeEventQueue CrimeEventQueue;
+typedef struct DummyPedManager DummyPedManager;
+typedef struct FrameTimingStats FrameTimingStats;
 typedef struct GangRespect GangRespect;
 typedef struct GangRespectContainer GangRespectContainer;
+typedef struct HudManager HudManager;
+typedef struct LayerDrawQueues LayerDrawQueues;
+typedef struct LightManager LightManager;
+typedef struct ListNodePool ListNodePool;
 typedef struct LocaleSettings LocaleSettings;
+typedef struct MapBlocks MapBlocks;
+typedef struct MapRenderer MapRenderer;
+typedef struct MikeDebug MikeDebug;
+typedef struct MissionScript MissionScript;
+typedef struct OwnerSlotTable OwnerSlotTable;
+typedef struct PoliceManager PoliceManager;
 typedef struct Position Position;
 typedef struct PositionsArray_S21 PositionsArray_S21;
-typedef struct S10 S10;
-typedef struct S11 S11;
-typedef struct S12 S12;
-typedef struct S13 S13;
-typedef struct S14 S14;
 typedef struct S14_sub1 S14_sub1;
-typedef struct S15_script S15_script;
 typedef struct S16 S16;
 typedef struct S16_sub1 S16_sub1;
 typedef struct S17_mission S17_mission;
-typedef struct S18 S18;
 typedef struct S18_sub S18_sub;
-typedef struct S19 S19;
 typedef struct S2 S2;
-typedef struct S20 S20;
 typedef struct S22 S22;
 typedef struct S22_1 S22_1;
 typedef struct S23 S23;
-typedef struct S24 S24;
 typedef struct S26 S26;
-typedef struct S27 S27;
 typedef struct S28 S28;
-typedef struct S29 S29;
-typedef struct S29_1 S29_1;
 typedef struct S30 S30;
-typedef struct S4 S4;
 typedef struct S5 S5;
 typedef struct S6 S6;
 typedef struct S7 S7;
 typedef struct SNightArray SNightArray;
-typedef struct SPolice SPolice;
 typedef struct SPoliceSub SPoliceSub;
 typedef struct SRelToBonus2 SRelToBonus2;
-typedef struct SRelateToNight SRelateToNight;
 typedef struct Script4k Script4k;
 typedef struct Sprite Sprite;
+typedef struct SpriteManager SpriteManager;
 typedef struct SubScript SubScript;
 typedef struct SubScript20k SubScript20k;
 typedef struct SubSubScript SubSubScript;
-typedef struct TrafficLigthStruct TrafficLigthStruct;
+typedef struct TextureCache TextureCache;
+typedef struct TrafficLights TrafficLights;
 typedef struct Vec2i Vec2i;
 typedef struct Vec3i Vec3i;
 typedef struct Gang Gang;
@@ -156,7 +204,7 @@ typedef struct S8 S8;
 typedef struct S9_cars S9_cars;
 typedef struct SKeyboard SKeyboard;
 typedef struct Timing Timing;
-typedef struct TrafficLights TrafficLights;
+typedef struct TrafficLights_Gzf2021 TrafficLights_Gzf2021;
 typedef struct TrafficManagerS1 TrafficManagerS1;
 typedef struct FrontendImage FrontendImage;
 typedef struct Ambulance Ambulance;
@@ -197,7 +245,7 @@ typedef struct GtaStringsHolder GtaStringsHolder;
 typedef struct Keyboard Keyboard;
 typedef struct KeyboardEvent KeyboardEvent;
 typedef struct LocaleSingle LocaleSingle;
-typedef struct MapBlocks MapBlocks;
+typedef struct MapBlocks_SeukoMod MapBlocks_SeukoMod;
 typedef struct ObjectPrefab ObjectPrefab;
 typedef struct ObjectPrefabsContainer ObjectPrefabsContainer;
 typedef struct Passenger Passenger;
@@ -263,6 +311,42 @@ typedef union _union_19 _union_19;
 typedef union _union_23 _union_23;
 
 /* ---- enums (stored as fixed-size integers to keep layout) */
+
+// /PED_CLASS
+typedef uint32_t PED_CLASS;
+enum PED_CLASS_values {
+    PED_CLASS_PLAYER = 2,
+    PED_CLASS_UNSURE_AMBIENT = 3,
+    PED_CLASS_UNSURE_SPECIAL_AI = 4,
+    PED_CLASS_UNSURE_MISSION = 5,
+    PED_CLASS_UNSURE_CAR_DRIVER = 6,
+};
+
+// /PED_FLAGS
+typedef uint32_t PED_FLAGS;
+enum PED_FLAGS_values {
+    PED_FLAG_ACTIVE = 1,
+    PED_FLAG_ENGAGED = 4,
+    PED_FLAG_UNSURE_8 = 8,
+    PED_FLAG_KNOCKDOWN_PENDING = 32,
+    PED_FLAG_UNSURE_USING_VEHICLE_GUN = 128,
+    PED_FLAG_UNSURE_UNARMED = 512,
+    PED_FLAG_UNSURE_REMOVAL_REQUESTED = 1024,
+    PED_FLAG_UNSURE_FIRING_FROM_GUN = 2048,
+    PED_FLAG_UNSURE_USES_ALT_WEAPON = 8192,
+    PED_FLAG_PATH_REQUEST_PENDING = 16384,
+    PED_FLAG_UNSURE_8000 = 32768,
+    PED_FLAG_FOLLOW_CAR_TO_GET_IN = 65536,
+    PED_FLAG_UNSURE_80000 = 524288,
+    PED_FLAG_FIRED_RECENTLY = 4194304,
+    PED_FLAG_UNSURE_PER_TICK_800000 = 8388608,
+    PED_FLAG_ON_FIRE = 16777216,
+    PED_FLAG_INVISIBLE = 33554432,
+    PED_FLAG_UNSURE_EFFECT_4000000 = 67108864,
+    PED_FLAG_GETTING_IN_OR_OUT_CAR = 134217728,
+    PED_FLAG_UNSURE_HAS_GUN_BUT_NOT_PISTOL = 268435456,
+    PED_FLAG_UNSURE_20000000 = 536870912,
+};
 
 // /_STY/CarInfoFlags
 typedef uint8_t CarInfoFlags;
@@ -1820,23 +1904,6 @@ enum PALETTE_BASE_values {
     PALETTE_BASE_FONT_REMAP = 8,
 };
 
-// /imported/seuko-mod/PED_BIT_STATE_merged
-typedef uint32_t PED_BIT_STATE_merged;
-enum PED_BIT_STATE_merged_values {
-    PED_BIT_STATE_merged__UNK_1_ALWAYS1 = 1,
-    PED_BIT_STATE_merged__TOGGLED_ON_WHEN_FIRST_TIME_ATTACK_A_PED = 4,
-    PED_BIT_STATE_merged___ARMED = 128,
-    PED_BIT_STATE_merged___UNARMED = 512,
-    PED_BIT_STATE_merged__PED_BIT_STATE_UNK_400 = 1024,
-    PED_BIT_STATE_merged__FIRING_FROM_GUN = 2048,
-    PED_BIT_STATE_merged__UNK_2000 = 8192,
-    PED_BIT_STATE_merged__ZERO_ON_START_GAME_BUT_TOGGLED_ON_FIRST_CAR_ENTER = 32768,
-    PED_BIT_STATE_merged__FOLLOW_CAR_TO_GET_IN = 65536,
-    PED_BIT_STATE_merged__PED_BIT_STATE_INVISIBLE = 33554432,
-    PED_BIT_STATE_merged__GETING_IN_OR_OUT_CAR = 134217728,
-    PED_BIT_STATE_merged__PED_BIT_STATE_HAS_GUN_BUT_NOT_PISTOL = 268435456,
-};
-
 // /imported/seuko-mod/PED_GRAPHIC_TYPE
 typedef uint32_t PED_GRAPHIC_TYPE;
 enum PED_GRAPHIC_TYPE_values {
@@ -2209,6 +2276,21 @@ typedef wchar_t WCHAR;
 
 /* ---- composites, dependency order */
 
+// /AmbulanceSlot  size 0x20
+struct AmbulanceSlot {
+    byte raw[32]; /* 0x0 */
+};
+
+// /AmbulanceManager  size 0x110
+struct AmbulanceManager {
+    byte enabled; /* 0x0 */
+    byte pendingCount; /* 0x1 */
+    uint8_t _gap_0x2[0x2];
+    int pedQueue; /* 0x4 */
+    int table[50]; /* 0x8 */
+    AmbulanceSlot slots[2]; /* 0xd0 */
+};
+
 // /C1  size 0x2478
 // PlaceHolder Class Structure
 struct C1 {
@@ -2219,6 +2301,153 @@ struct C1 {
     byte field5242_0x147d; /* 0x147d */
     uint8_t _gap_0x147e[0xa];
     S5 *s5Arr1020[1020]; /* 0x1488 */
+};
+
+// /CLIENT_ID  size 0x8
+struct CLIENT_ID {
+    void *UniqueProcess; /* 0x0 */
+    void *UniqueThread; /* 0x4 */
+};
+
+// /CarDriveOrder  size 0x40
+struct CarDriveOrder {
+    byte inUse; /* 0x0 */
+    uint8_t _gap_0x1[0x3];
+    Ped *ped; /* 0x4 */
+    int mode; /* 0x8 */
+    uint8_t _gap_0xc[0x8];
+    int targetX; /* 0x14 */
+    int targetY; /* 0x18 */
+    int targetZ; /* 0x1c */
+    byte flag20; /* 0x20 */
+    uint8_t _gap_0x21[0x1];
+    byte flag22; /* 0x22 */
+    uint8_t _gap_0x23[0xd];
+    int targetId; /* 0x30 */
+    uint8_t _gap_0x34[0xb];
+    byte end; /* 0x3f */
+};
+
+// /CarDriveOrderPool  size 0x500
+struct CarDriveOrderPool {
+    CarDriveOrder orders[20]; /* 0x0 */
+};
+
+// /CarModelTable  size 0x808
+struct CarModelTable {
+    void *modelData[256]; /* 0x0 */
+    int countA; /* 0x400 */
+    CarInfo *field2_0x404[256]; /* 0x404 */
+    int countB; /* 0x804 */
+};
+
+// /CollisionManager  size 0xc
+struct CollisionManager {
+    int visitCount; /* 0x0 */
+    int queryStamp; /* 0x4 */
+    int movingCheckActive; /* 0x8 */
+};
+
+// /Crane  size 0x15c
+struct Crane {
+    byte unk[348]; /* 0x0 */
+};
+
+// /CraneManager  size 0xd9c
+struct CraneManager {
+    Crane cranes[10]; /* 0x0 */
+    int count; /* 0xd98 */
+};
+
+// /Crusher  size 0x30
+struct Crusher {
+    byte unk0[20]; /* 0x0 */
+    void *targetCar; /* 0x14 */
+    byte unk18[20]; /* 0x18 */
+    int hasTarget; /* 0x2c */
+};
+
+// /CrusherManager  size 0x94
+struct CrusherManager {
+    Crusher crushers[3]; /* 0x0 */
+    int count; /* 0x90 */
+};
+
+// /DoorSlot  size 0x38
+struct DoorSlot {
+    byte raw[56]; /* 0x0 */
+};
+
+// /DoorManager  size 0x4d4
+struct DoorManager {
+    DoorSlot doors[22]; /* 0x0 */
+    ushort count; /* 0x4d0 */
+    ushort unk4D2; /* 0x4d2 */
+};
+
+// /EmergencyVehicleSlot  size 0x30
+struct EmergencyVehicleSlot {
+    void *car; /* 0x0 */
+    void *driver; /* 0x4 */
+    byte unk8[16]; /* 0x8 */
+    short timer; /* 0x18 */
+    byte unk1a[4]; /* 0x1a */
+    byte inUse; /* 0x1e */
+    byte unk1f[1]; /* 0x1f */
+    int state20; /* 0x20 */
+    int state24; /* 0x24 */
+    int state28; /* 0x28 */
+    byte unk2c[4]; /* 0x2c */
+};
+
+// /EmergencyVehiclePool  size 0x1e0
+struct EmergencyVehiclePool {
+    EmergencyVehicleSlot slots[10]; /* 0x0 */
+};
+
+// /FireEngineSlot  size 0x28
+struct FireEngineSlot {
+    byte raw[40]; /* 0x0 */
+};
+
+// /FireEngineManager  size 0x54
+struct FireEngineManager {
+    FireEngineSlot slots[2]; /* 0x0 */
+    ushort unk50; /* 0x50 */
+    uint8_t _gap_0x52[0x2];
+};
+
+// /FloatingScore  size 0x50
+struct FloatingScore {
+    int digitCount; /* 0x0 */
+    int digits[9]; /* 0x4 */
+    int worldX; /* 0x28 */
+    int worldY; /* 0x2c */
+    int worldZ; /* 0x30 */
+    ushort colorId; /* 0x34 */
+    byte life; /* 0x36 */
+    uint8_t _gap_0x37[0xd];
+    void *next; /* 0x44 */
+    uint8_t _gap_0x48[0x4];
+    uint amount; /* 0x4c */
+};
+
+// /FloatingScoreManager  size 0x100
+struct FloatingScoreManager {
+    ushort colorCounter; /* 0x0 */
+    short freeCount; /* 0x2 */
+    FloatingScore *freeHead; /* 0x4 */
+    FloatingScore *activeHead; /* 0x8 */
+    FloatingScore scores[3]; /* 0xc */
+    ushort activeCount; /* 0xfc */
+    uint8_t _gap_0xfe[0x1];
+    byte end; /* 0xff */
+};
+
+// /FrameCounter  size 0x8
+struct FrameCounter {
+    int frame; /* 0x0 */
+    uint frameRandom; /* 0x4 */
 };
 
 // /_s_FuncInfo  size 0x1c
@@ -2244,6 +2473,26 @@ struct GTAVertex {
     float v; /* 0x1c */
 };
 
+// /Generator  size 0x2c
+struct Generator {
+    byte unk0[24]; /* 0x0 */
+    int spawnTimer; /* 0x18 */
+    uint8_t _gap_0x1c[0x2];
+    short remaining; /* 0x1e */
+    byte unk20[4]; /* 0x20 */
+    void *spawnedObject; /* 0x24 */
+    int spawnedSerial; /* 0x28 */
+};
+
+// /GeneratorManager  size 0x14ac
+struct GeneratorManager {
+    Generator generators[120]; /* 0x0 */
+    int count; /* 0x14a0 */
+    int activeCount; /* 0x14a4 */
+    byte sliceSize; /* 0x14a8 */
+    byte pad[3]; /* 0x14a9 */
+};
+
 // /_s_HandlerType  size 0x10
 struct _s_HandlerType {
     uint adjectives; /* 0x0 */
@@ -2262,6 +2511,221 @@ struct IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct {
 union IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion {
     dword OffsetToData; /* 0x0 */
     IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct; /* 0x0 */
+};
+
+// /KanjiFont  size 0x28
+struct KanjiFont {
+    uint field0; /* 0x0 */
+    uint field4; /* 0x4 */
+    uint field8; /* 0x8 */
+    uint8_t _gap_0xc[0x18];
+    byte marker24; /* 0x24 */
+    byte marker25; /* 0x25 */
+    uint8_t _gap_0x26[0x2];
+};
+
+// /ObjectSpawner  size 0x5c
+struct ObjectSpawner {
+    uint8_t _gap_0x0[0x10];
+    int numCategory2Objects; /* 0x10 */
+    int numCategory3Objects; /* 0x14 */
+    uint8_t _gap_0x18[0x40];
+    Position *position; /* 0x58 */
+};
+
+// /OwnerSlot  size 0x8
+struct OwnerSlot {
+    int pedId; /* 0x0 */
+    byte refCount; /* 0x4 */
+    uint8_t _gap_0x5[0x3];
+};
+
+// /ParkingZone  size 0x48
+struct ParkingZone {
+    void *car; /* 0x0 */
+    uint8_t _gap_0x4[0x8];
+    int state; /* 0xc */
+    void *block; /* 0x10 */
+    uint8_t _gap_0x14[0x24];
+    int direction; /* 0x38 */
+    byte timer; /* 0x3c */
+    byte flag; /* 0x3d */
+    byte counter; /* 0x3e */
+    byte scriptFlag; /* 0x3f */
+    byte unk40; /* 0x40 */
+    uint8_t _gap_0x41[0x3];
+    int unk44; /* 0x44 */
+};
+
+// /ParticleManager  size 0x8
+struct ParticleManager {
+    void *object0; /* 0x0 */
+    void *object1; /* 0x4 */
+};
+
+// /ParticleState  size 0x30
+struct ParticleState {
+    int poolSelector; /* 0x0 */
+    byte index; /* 0x4 */
+    uint8_t _gap_0x5[0x1];
+    short serial; /* 0x6 */
+    uint8_t _gap_0x8[0x8];
+    int type; /* 0x10 */
+    void *owner; /* 0x14 */
+    uint8_t _gap_0x18[0x14];
+    int unk2C; /* 0x2c */
+};
+
+// /ParticleStatePool20  size 0x3d4
+struct ParticleStatePool20 {
+    ParticleState slots[20]; /* 0x0 */
+    byte inUse[20]; /* 0x3c0 */
+};
+
+// /ParticleStatePool40  size 0x7a8
+struct ParticleStatePool40 {
+    ParticleState slots[40]; /* 0x0 */
+    byte inUse[40]; /* 0x780 */
+};
+
+// /PatrolRoute  size 0x96
+struct PatrolRoute {
+    byte points[150]; /* 0x0 */
+};
+
+// /PedPathfinder  size 0x2fd4
+struct PedPathfinder {
+    uint8_t _gap_0x0[0x3c];
+    void *requestQueueHead; /* 0x3c */
+    uint8_t _gap_0x40[0x2f90];
+    byte ready; /* 0x2fd0 */
+    uint8_t _gap_0x2fd1[0x3];
+};
+
+// /PedPatrolRoutePool  size 0x1d7e
+struct PedPatrolRoutePool {
+    PatrolRoute routes[50]; /* 0x0 */
+    byte inUse[50]; /* 0x1d4c */
+};
+
+// /TransportStop  size 0x34
+struct TransportStop {
+    int type; /* 0x0 */
+    byte raw[48]; /* 0x4 */
+};
+
+// /TransportActor  size 0x58
+struct TransportActor {
+    byte isOccupied; /* 0x0 */
+    uint8_t _gap_0x1[0x3];
+    short timer; /* 0x4 */
+    uint8_t _gap_0x6[0x6];
+    void *car; /* 0xc */
+    int slotPtrs[10]; /* 0x10 */
+    byte slotIds[10]; /* 0x38 */
+    uint8_t _gap_0x42[0x6];
+    int state; /* 0x48 */
+    void *stop; /* 0x4c */
+    int mode; /* 0x50 */
+    uint8_t _gap_0x54[0x4];
+};
+
+// /PublicTransportManager  size 0x181c
+struct PublicTransportManager {
+    TransportStop stops[100]; /* 0x0 */
+    TransportActor actors[10]; /* 0x1450 */
+    uint8_t _gap_0x17c0[0x56];
+    byte unk1816; /* 0x1816 */
+    uint8_t _gap_0x1817[0x1];
+    byte unk1818; /* 0x1818 */
+    uint8_t _gap_0x1819[0x3];
+};
+
+// /RoadNode  size 0x10
+struct RoadNode {
+    ushort link0; /* 0x0 */
+    ushort link1; /* 0x2 */
+    ushort link2; /* 0x4 */
+    uint8_t _gap_0x6[0x6];
+    byte x1; /* 0xc */
+    byte y1; /* 0xd */
+    byte x2; /* 0xe */
+    byte y2; /* 0xf */
+};
+
+// /RoadNetwork  size 0xcc68
+struct RoadNetwork {
+    ushort routeCount; /* 0x0 */
+    uint8_t _gap_0x2[0x6];
+    RoadNode nodes[545]; /* 0x8 */
+    ushort routes[12800]; /* 0x2218 */
+    uint8_t _gap_0x8618[0x4650];
+};
+
+// /ScriptTrigger  size 0x18
+struct ScriptTrigger {
+    void *scriptCmd; /* 0x0 */
+    void *object; /* 0x4 */
+    int kind; /* 0x8 */
+    int action; /* 0xc */
+    int slotIndex; /* 0x10 */
+    int active; /* 0x14 */
+};
+
+// /ScriptTriggerPool  size 0x214
+struct ScriptTriggerPool {
+    ScriptTrigger slots[22]; /* 0x0 */
+    ushort count; /* 0x210 */
+    uint8_t _gap_0x212[0x2];
+};
+
+// /SoundEvent  size 0x28
+struct SoundEvent {
+    int type; /* 0x0 */
+    int posX; /* 0x4 */
+    int posY; /* 0x8 */
+    int posZ; /* 0xc */
+    uint8_t _gap_0x10[0x17];
+    byte end; /* 0x27 */
+};
+
+// /SoundEventQueue  size 0xc88
+struct SoundEventQueue {
+    SoundClient *client; /* 0x0 */
+    SoundEvent events[80]; /* 0x4 */
+    int count; /* 0xc84 */
+};
+
+// /TaxiList  size 0x4
+struct TaxiList {
+    TaxiNode *head; /* 0x0 */
+};
+
+// /TaxiNode  size 0x8
+struct TaxiNode {
+    void *car; /* 0x0 */
+    void *next; /* 0x4 */
+};
+
+// /TileAnimEntry  size 0x18
+struct TileAnimEntry {
+    uint8_t _gap_0x0[0x12];
+    short animId; /* 0x12 */
+    void *next; /* 0x14 */
+};
+
+// /TileAnimManager  size 0x2
+struct TileAnimManager {
+    short nextAnimId; /* 0x0 */
+};
+
+// /TileAnimPool  size 0x4bc
+struct TileAnimPool {
+    TileAnimEntry *freeHead; /* 0x0 */
+    TileAnimEntry *usedHead; /* 0x4 */
+    TileAnimEntry entries[50]; /* 0x8 */
+    short count; /* 0x4b8 */
+    uint8_t _gap_0x4ba[0x2];
 };
 
 // /_s_TryBlockMapEntry  size 0x14
@@ -2284,6 +2748,13 @@ struct TypeDescriptor {
 struct _s_UnwindMapEntry {
     __ehstate_t toState; /* 0x0 */
     action (*action); /* 0x4 */
+};
+
+// /WeaponManager  size 0x8
+struct WeaponManager {
+    void *hitCarList; /* 0x0 */
+    short weaponCount; /* 0x4 */
+    uint8_t _gap_0x6[0x2];
 };
 
 // /WinDef.h/HINSTANCE__  (dependency)  size 0x4
@@ -2371,14 +2842,8 @@ struct SpriteEntry {
     ushort pad; /* 0x6 */
 };
 
-// /_STY/StyleFileHeader  size 0x6
-struct StyleFileHeader {
-    char file_type[4]; /* 0x0 */
-    Uint16 version_code; /* 0x4 */
-};
-
-// /_STY/Style_S3  size 0x106c
-struct Style_S3 {
+// /_STY/StyleData  size 0x106c
+struct StyleData {
     short _countOfpalettes; /* 0x0 */
     short relToFontBase; /* 0x2 */
     short spriteIndexRel; /* 0x4 */
@@ -2412,6 +2877,12 @@ struct Style_S3 {
     byte b1; /* 0x6a */
     uint8_t _gap_0x6b[0x1];
     int iArr1024[1024]; /* 0x6c */
+};
+
+// /_STY/StyleFileHeader  size 0x6
+struct StyleFileHeader {
+    char file_type[4]; /* 0x0 */
+    Uint16 version_code; /* 0x4 */
 };
 
 // /imported/seuko-mod/CarDoor  size 0x10
@@ -2472,7 +2943,7 @@ struct Car {
     uint8_t _gap_0xb6[0x6];
 };
 
-// /_car/CarManager  size 0x6a
+// /_car/CarManager  size 0x6c
 struct CarManager {
     uint8_t _gap_0x0[0x4];
     undefined4 field4_0x4; /* 0x4 */
@@ -2510,6 +2981,7 @@ struct CarManager {
     undefined4 field48_0x64; /* 0x64 */
     byte field49_0x68; /* 0x68 */
     bool_ do_free_shoping; /* 0x69 */
+    uint8_t _gap_0x6a[0x2];
 };
 
 // /_car/MaybeCarEngine  size 0xb0
@@ -2876,6 +3348,13 @@ struct SaveSlot {
     uint8_t _gap_0x83e[0x1e];
 };
 
+// /imported/gzf-2021/S3Bytes  size 0x3
+struct S3Bytes {
+    undefined1 a; /* 0x0 */
+    undefined1 b; /* 0x1 */
+    undefined1 c; /* 0x2 */
+};
+
 // /imported/seuko-mod/SCR_Vector3  size 0xc
 struct SCR_Vector3 {
     SCR_f x; /* 0x0 */
@@ -2885,111 +3364,107 @@ struct SCR_Vector3 {
 
 // /_ped/Ped  size 0x294
 struct Ped {
-    byte field0_0x0; /* 0x0 */
-    byte field1_0x1; /* 0x1 */
-    uint8_t _gap_0x2[0x2a];
-    Ped *elvisSomething; /* 0x2c */
-    uint8_t _gap_0x30[0x1];
-    byte lenOfForPedsArray; /* 0x31 */
-    uint8_t _gap_0x32[0x52];
-    Car *carToEnterMaybe; /* 0x84 */
-    Car *someCar; /* 0x88 */
-    uint8_t _gap_0x8c[0xa0];
-    short field291_0x12c; /* 0x12c */
-    short field292_0x12e; /* 0x12e */
-    short field293_0x130; /* 0x130 */
-    uint8_t _gap_0x132[0x2];
-    short field296_0x134; /* 0x134 */
+    S3Bytes path[100]; /* 0x0 */
+    short rotation; /* 0x12c */
+    short aimRotation; /* 0x12e */
+    short targetRotation; /* 0x130 */
+    short followOffsetAngle; /* 0x132 */
+    short homeRotation; /* 0x134 */
     uint8_t _gap_0x136[0xa];
-    int refCar; /* 0x140 */
-    int field308_0x144; /* 0x144 */
-    int objectiveTargetPed; /* 0x148 */
-    int field310_0x14c; /* 0x14c */
-    int field311_0x150; /* 0x150 */
-    Car *field312_0x154; /* 0x154 */
-    int field313_0x158; /* 0x158 */
-    WEAPON_PLAYER_LIST *playerWeapons; /* 0x15c */
+    Car *refCar; /* 0x140 */
+    Ped *attackerPed; /* 0x144 */
+    Ped *objectiveTargetPed; /* 0x148 */
+    Ped *taskTargetPed; /* 0x14c */
+    Car *objectiveTargetCar; /* 0x150 */
+    Car *taskTargetCar; /* 0x154 */
+    Car *carToEnter; /* 0x158 */
+    SaveSlot *player; /* 0x15c */
     Ped *nextPed; /* 0x160 */
-    Ped *ElvisOrTarget; /* 0x164 Created by retype action */
-    Sprite *pedSprite; /* 0x168 */
+    PedGroup *group; /* 0x164 */
+    Sprite *sprite; /* 0x168 */
     Car *currentCar; /* 0x16c */
     WEAPON_STRUCT *selectedWeapon; /* 0x170 */
-    void *ptrToWeapon; /* 0x174 */
-    int field321_0x178; /* 0x178 */
-    int field322_0x17c; /* 0x17c */
-    int pedRef2; /* 0x180 */
-    uint8_t _gap_0x184[0x8];
-    int field332_0x18c; /* 0x18c */
-    int field333_0x190; /* 0x190 */
-    int field334_0x194; /* 0x194 */
-    uint8_t _gap_0x198[0x8];
+    WEAPON_STRUCT *altWeapon; /* 0x174 */
+    int field30_0x178; /* 0x178 */
+    GangRespect *gang; /* 0x17c */
+    Ped *carAttackerPed; /* 0x180 */
+    uint8_t _gap_0x184[0x4];
+    Ped *meleeTargetPed; /* 0x188 */
+    S3Bytes *pathCursor; /* 0x18c */
+    byte *patrolRoute; /* 0x190 */
+    byte *patrolCursor; /* 0x194 */
+    Ped *unsure_specialHitVictim; /* 0x198 */
+    GangRespect *gangAffiliation; /* 0x19c */
     void *objectiveTargetObject; /* 0x1a0 */
-    int field344_0x1a4; /* 0x1a4 */
-    Ped *elvisLeader; /* 0x1a8 */
-    int x; /* 0x1ac */
-    int y; /* 0x1b0 */
-    int z; /* 0x1b4 */
-    Ped *field349_0x1b8; /* 0x1b8 */
-    Ped *field350_0x1bc; /* 0x1bc */
-    Ped *field351_0x1c0; /* 0x1c0 */
-    Ped *field352_0x1c4; /* 0x1c4 */
-    Ped *field353_0x1c8; /* 0x1c8 */
-    Ped *field354_0x1cc; /* 0x1cc */
-    void *field355_0x1d0; /* 0x1d0 */
-    void *field356_0x1d4; /* 0x1d4 */
-    void *field357_0x1d8; /* 0x1d8 */
+    void *taskTargetObject; /* 0x1a4 */
+    Ped *killer; /* 0x1a8 */
+    SCR_Vector3 position; /* 0x1ac */
+    SCR_Vector3 goalPosition; /* 0x1b8 */
+    SCR_Vector3 moveTarget; /* 0x1c4 */
+    SCR_Vector3 taskTargetPosition; /* 0x1d0 */
     SCR_Vector3 objectiveTargetPosition; /* 0x1dc */
-    uint8_t _gap_0x1e8[0x18];
+    uint8_t _gap_0x1e8[0x8];
+    SCR_f walkSpeed; /* 0x1f0 */
+    SCR_f runSpeed; /* 0x1f4 */
+    SCR_f carSpeed; /* 0x1f8 */
+    SCR_f followOffsetDistance; /* 0x1fc */
     int id; /* 0x200 */
-    int somePedId; /* 0x204 */
-    ushort Invulnerability; /* 0x208 9999 = infinity */
-    short CopLevel; /* 0x20a 600 = 1 star, 1600 = 2 */
-    short field387_0x20c; /* 0x20c */
-    short field388_0x20e; /* 0x20e */
-    uint8_t _gap_0x210[0x2];
-    undefined2 eq_100; /* 0x212 */
+    int killerPedId; /* 0x204 */
+    ushort invulnerability; /* 0x208 9999 = infinity */
+    short wantedPoints; /* 0x20a 600 = 1 star, 1600 = 2 */
+    short field67_0x20c; /* 0x20c */
+    ushort idleTicks; /* 0x20e */
+    ushort knockdownMeter; /* 0x210 */
+    ushort knockdownThreshold; /* 0x212 */
     uint8_t _gap_0x214[0x2];
     short health; /* 0x216 */
-    short field395_0x218; /* 0x218 */
-    short field396_0x21a; /* 0x21a */
-    PED_BIT_STATE bitStateInvisOnFireEtc; /* 0x21c invisibilty, electrofingers on fire and more */
+    short objectiveTimer; /* 0x218 */
+    short taskTimer; /* 0x21a */
+    PED_FLAGS flags; /* 0x21c */
     uint8_t _gap_0x220[0x5];
-    byte relatedToTimerToAction; /* 0x225 */
-    byte field404_0x226; /* 0x226 */
-    byte field405_0x227; /* 0x227 */
-    byte field406_0x228; /* 0x228 */
+    byte objectiveDone; /* 0x225 */
+    byte unsure_carEnterExitStage; /* 0x226 */
+    byte field84_0x227; /* 0x227 */
+    byte field85_0x228; /* 0x228 */
     uint8_t _gap_0x229[0x3];
-    int field410_0x22c; /* 0x22c */
-    int field411_0x230; /* 0x230 */
-    byte eq99; /* 0x234 */
+    int unsure_attitude; /* 0x22c */
+    int unsure_hostility; /* 0x230 */
+    byte lifeState; /* 0x234 */
     uint8_t _gap_0x235[0x3];
-    uint bitState2; /* 0x238 */
-    byte field417_0x23c; /* 0x23c */
+    PED_CLASS pedClass; /* 0x238 */
+    byte groupSlot; /* 0x23c */
     uint8_t _gap_0x23d[0x3];
-    OCUPATION occupation; /* 0x240 */
-    byte field422_0x244; /* 0x244 */
+    PED_OCCUPATION occupation; /* 0x240 */
+    PED_REMAP remap; /* 0x244 */
     uint8_t _gap_0x245[0x3];
     int enterCarAsPassenger; /* 0x248 */
     byte targetCarDoor; /* 0x24c */
-    uint8_t _gap_0x24d[0xb];
-    int field439_0x258; /* 0x258 */
-    int field440_0x25c; /* 0x25c */
+    uint8_t _gap_0x24d[0x3];
+    int unsure_spriteStateRequest; /* 0x250 */
+    uint8_t _gap_0x254[0x4];
+    PED_OBJECTIVE objective; /* 0x258 */
+    PED_OBJECTIVE task; /* 0x25c */
     uint8_t _gap_0x260[0x1];
-    byte field442_0x261; /* 0x261 */
-    byte field443_0x262; /* 0x262 */
-    byte field444_0x263; /* 0x263 */
-    byte field445_0x264; /* 0x264 */
-    byte field446_0x265; /* 0x265 */
-    uint8_t _gap_0x266[0x6];
-    int graphicType; /* 0x26c */
-    int field454_0x270; /* 0x270 */
-    uint8_t _gap_0x274[0x4];
+    byte field118_0x261; /* 0x261 */
+    byte attackersThisTick; /* 0x262 */
+    byte attackersLastTick; /* 0x263 */
+    byte killerCreditTimer; /* 0x264 */
+    byte patrolRouteSlot; /* 0x265 */
+    byte pathLength; /* 0x266 */
+    byte ownerSlot; /* 0x267 */
+    byte unsure_hitCooldown; /* 0x268 */
+    uint8_t _gap_0x269[0x1];
+    byte unsure_witnessTimer; /* 0x26a */
+    uint8_t _gap_0x26b[0x1];
+    PED_GRAPHIC_TYPE graphicType; /* 0x26c */
+    int unsure_walkHeadingMode; /* 0x270 */
+    int gangCarModel; /* 0x274 */
     PED_STATE state; /* 0x278 */
     PED_STATE2 state2; /* 0x27c */
-    PED_STATE state1_2; /* 0x280 0 on start, 3 when getting to a car */
-    PED_STATE2 state2_2; /* 0x284 */
-    int field463_0x288; /* 0x288 */
-    int threatReaction; /* 0x28c */
+    PED_STATE savedState; /* 0x280 0 on start, 3 when getting to a car */
+    PED_STATE2 savedState2; /* 0x284 */
+    PED_THREAT_SEARCH threatSearch; /* 0x288 */
+    PED_THREAT_REACTION threatReaction; /* 0x28c */
     int relToMultiplayer; /* 0x290 */
 };
 
@@ -3044,13 +3519,13 @@ struct SCR_STRING_HEADER {
     char textStart; /* 0x9 */
 };
 
-// /_weapon/MaybeWeaponStruct  size 0x2d
-struct MaybeWeaponStruct {
+// /_weapon/SoundClient  size 0x2d
+struct SoundClient {
     uint unknownLowValueSomeKindOfType; /* 0x0 */
     byte f1; /* 0x4 */
     uint8_t _gap_0x5[0x3];
     undefined4 f2; /* 0x8 */
-    MaybeWeaponStruct *_prev; /* 0xc */
+    SoundClient *_prev; /* 0xc */
     uint8_t _gap_0x10[0x4];
     undefined4 field11_0x14; /* 0x14 */
     uint8_t _gap_0x18[0x4];
@@ -3090,11 +3565,56 @@ struct WEAPON_STRUCT {
     uint8_t _gap_0x2d[0x3];
 };
 
-// /_weapon/WeaponRelStruct  size 0x1000
-struct WeaponRelStruct {
-    WEAPON_STRUCT *ptr; /* 0x0 */
-    WEAPON_STRUCT weapons[22]; /* 0x4 */
-    uint8_t _gap_0x424[0xbdc];
+// /_weapon/WeaponPool  size 0x2fdc
+struct WeaponPool {
+    WEAPON_STRUCT *freeHead; /* 0x0 */
+    WEAPON_STRUCT *usedHead; /* 0x4 */
+    WEAPON_STRUCT slots[255]; /* 0x8 */
+    short usedCount; /* 0x2fd8 */
+    uint8_t _gap_0x2fda[0x2];
+};
+
+// /auto_structs/CrimeEvent  size 0x14
+struct CrimeEvent {
+    int type; /* 0x0 */
+    int field1_0x4; /* 0x4 */
+    int field2_0x8; /* 0x8 */
+    int field3_0xc; /* 0xc */
+    int field4_0x10; /* 0x10 */
+};
+
+// /auto_structs/CrimeEventQueue  size 0xcc
+struct CrimeEventQueue {
+    short field0_0x0; /* 0x0 */
+    short readIndex; /* 0x2 */
+    CrimeEvent arr10[10]; /* 0x4 */
+};
+
+// /auto_structs/DummyPedManager  size 0xc
+struct DummyPedManager {
+    short targetCount; /* 0x0 */
+    byte dummyChars; /* 0x2 */
+    byte field2_0x3; /* 0x3 */
+    byte field3_0x4; /* 0x4 */
+    byte field4_0x5; /* 0x5 */
+    byte field5_0x6; /* 0x6 */
+    byte field6_0x7; /* 0x7 */
+    Position *position; /* 0x8 */
+};
+
+// /auto_structs/FrameTimingStats  size 0x54
+struct FrameTimingStats {
+    undefined4 updateFrameCount; /* 0x0 */
+    DWORD updateWindowStart; /* 0x4 */
+    undefined4 updateFps; /* 0x8 */
+    undefined4 drawFrameCount; /* 0xc */
+    DWORD drawWindowStart; /* 0x10 */
+    undefined4 drawFps; /* 0x14 */
+    int field6_0x18[3]; /* 0x18 */
+    int field7_0x24[3]; /* 0x24 */
+    int field8_0x30[3]; /* 0x30 */
+    int field9_0x3c[3]; /* 0x3c */
+    int field10_0x48[3]; /* 0x48 */
 };
 
 // /auto_structs/GangRespect  size 0x144
@@ -3122,51 +3642,6 @@ struct GangRespectContainer {
     GangRespect gang[10]; /* 0x0 */
 };
 
-// /auto_structs/S2  size 0x8
-struct S2 {
-    int f1; /* 0x0 */
-    int f2; /* 0x4 */
-};
-
-// /auto_structs/LocaleSettings  size 0x11
-struct LocaleSettings {
-    void *ptrToLocales; /* 0x0 */
-    int length; /* 0x4 Created by retype action */
-    S2 s2; /* 0x8 */
-    char language; /* 0x10 Created by retype action */
-};
-
-// /auto_structs/Position  size 0x3c
-struct Position {
-    short rotation; /* 0x0 */
-    uint8_t _gap_0x2[0x2];
-    Position *prev_; /* 0x4 */
-    int field4_0x8; /* 0x8 */
-    Position *next_; /* 0xc */
-    int field6_0x10; /* 0x10 */
-    int x; /* 0x14 Created by retype action */
-    int y; /* 0x18 Created by retype action */
-    int z; /* 0x1c Created by retype action */
-    short incFromS20; /* 0x20 */
-    short field11_0x22; /* 0x22 */
-    short field12_0x24; /* 0x24 */
-    uint8_t _gap_0x26[0x2];
-    int field15_0x28; /* 0x28 */
-    byte field16_0x2c; /* 0x2c */
-    uint8_t _gap_0x2d[0x3];
-    int field20_0x30; /* 0x30 */
-    int field21_0x34; /* 0x34 */
-    byte field22_0x38; /* 0x38 */
-    byte field23_0x39; /* 0x39 */
-    uint8_t _gap_0x3a[0x2];
-};
-
-// /auto_structs/PositionsArray_S21  size 0x49b28
-struct PositionsArray_S21 {
-    Position *last; /* 0x0 */
-    Position arr[5031]; /* 0x4 */
-};
-
 // /imported/seuko-mod/S10_TxtMessage  size 0x704
 struct S10_TxtMessage {
     WCHAR message[640]; /* 0x0 */
@@ -3178,8 +3653,8 @@ struct S10_TxtMessage {
     char *messageCode; /* 0x700 */
 };
 
-// /auto_structs/S10  size 0x2af8
-struct S10 {
+// /auto_structs/HudManager  size 0x2af8
+struct HudManager {
     uint8_t _gap_0x0[0x2e];
     char field46_0x2e; /* 0x2e */
     uint8_t _gap_0x2f[0x1d];
@@ -3196,8 +3671,69 @@ struct S10 {
     int text_speed; /* 0x2af4 */
 };
 
-// /auto_structs/S11  size 0x370
-struct S11 {
+// /auto_structs/LayerDrawQueues  size 0x1c
+// Display.cpp
+struct LayerDrawQueues {
+    int layerQueues[7]; /* 0x0 */
+};
+
+// /auto_structs/SNightArray  size 0x28
+struct SNightArray {
+    undefined4 field0_0x0; /* 0x0 */
+    SNightArray *ptr1; /* 0x4 */
+    SNightArray *ptr2; /* 0x8 */
+    SNightArray *field3_0xc; /* 0xc */
+    undefined4 field4_0x10; /* 0x10 */
+    byte field5_0x14; /* 0x14 */
+    byte field6_0x15; /* 0x15 */
+    byte field7_0x16; /* 0x16 */
+    byte field8_0x17; /* 0x17 */
+    byte field9_0x18; /* 0x18 */
+    uint8_t _gap_0x19[0x3];
+    undefined4 field13_0x1c; /* 0x1c */
+    undefined4 field14_0x20; /* 0x20 */
+    undefined4 field15_0x24; /* 0x24 */
+};
+
+// /auto_structs/LightManager  size 0x1d4cc
+struct LightManager {
+    void *freeHead; /* 0x0 */
+    int activeHead; /* 0x4 */
+    SNightArray nightArr3000[3000]; /* 0x8 Created by retype action */
+    short activeCount; /* 0x1d4c8 */
+    uint8_t _gap_0x1d4ca[0x2];
+};
+
+// /auto_structs/S18_sub  size 0xc
+struct S18_sub {
+    undefined4 b; /* 0x0 */
+    undefined2 c; /* 0x4 */
+    uint8_t _gap_0x6[0x2];
+    undefined4 a; /* 0x8 */
+};
+
+// /auto_structs/ListNodePool  size 0x25c
+struct ListNodePool {
+    int freeListHead; /* 0x0 */
+    S18_sub s18_sub_50[50]; /* 0x4 */
+};
+
+// /auto_structs/S2  size 0x8
+struct S2 {
+    int f1; /* 0x0 */
+    int f2; /* 0x4 */
+};
+
+// /auto_structs/LocaleSettings  size 0x11
+struct LocaleSettings {
+    void *ptrToLocales; /* 0x0 */
+    int length; /* 0x4 Created by retype action */
+    S2 s2; /* 0x8 */
+    char language; /* 0x10 Created by retype action */
+};
+
+// /auto_structs/MapBlocks  size 0x370
+struct MapBlocks {
     int field0_0x0; /* 0x0 */
     uint8_t _gap_0x4[0x31c];
     int field797_0x320; /* 0x320 */
@@ -3241,11 +3777,11 @@ struct RenderDistanceArrayItem {
     SCR_Vector2 position; /* 0x0 */
 };
 
-// /auto_structs/S12  size 0x2f04
-struct S12 {
+// /auto_structs/MapRenderer  size 0x2f04
+struct MapRenderer {
     uint _bitMask; /* 0x0 */
     undefined4 field1_0x4; /* 0x4 */
-    S12 *ptrToS12; /* 0x8 */
+    MapRenderer *ptrToS12; /* 0x8 */
     byte field3_0xc; /* 0xc */
     byte field4_0xd; /* 0xd */
     byte field5_0xe; /* 0xe */
@@ -3267,12 +3803,6 @@ struct S12 {
     int tilesCount; /* 0x2f00 */
 };
 
-// /auto_structs/S13  size 0x1c
-// Display.cpp
-struct S13 {
-    int field0_0x0[7]; /* 0x0 */
-};
-
 // /auto_structs/S14_sub1  size 0x80
 struct S14_sub1 {
     int arr30i[30]; /* 0x0 */
@@ -3280,8 +3810,8 @@ struct S14_sub1 {
     int f2; /* 0x7c */
 };
 
-// /auto_structs/S14  size 0xa80
-struct S14 {
+// /auto_structs/MikeDebug  size 0xa80
+struct MikeDebug {
     int field0_0x0[2]; /* 0x0 */
     int field1_0x8[2]; /* 0x8 */
     int field2_0x10[2]; /* 0x10 */
@@ -3297,9 +3827,9 @@ struct S14 {
     int field2011_0xa7c; /* 0xa7c */
 };
 
-// /auto_structs/S15_script  size 0xc1ea8
+// /auto_structs/MissionScript  size 0xc1ea8
 // Map or something related to missions
-struct S15_script {
+struct MissionScript {
     short f0; /* 0x0 */
     uint8_t _gap_0x2[0x2];
     int arr96i[96]; /* 0x4 */
@@ -3366,6 +3896,84 @@ struct S15_script {
     uint8_t _gap_0xc1ea6[0x2];
 };
 
+// /auto_structs/OwnerSlotTable  size 0x7f8
+struct OwnerSlotTable {
+    OwnerSlot slots[255]; /* 0x0 */
+};
+
+// /auto_structs/SPoliceSub  size 0x38
+struct SPoliceSub {
+    uint8_t _gap_0x0[0x2];
+    byte field2_0x2; /* 0x2 */
+    byte field3_0x3; /* 0x3 */
+    byte field4_0x4; /* 0x4 */
+    uint8_t _gap_0x5[0x3];
+    undefined4 field8_0x8; /* 0x8 */
+    undefined4 field9_0xc; /* 0xc */
+    undefined4 field10_0x10; /* 0x10 */
+    undefined4 field11_0x14; /* 0x14 */
+    undefined2 field12_0x18; /* 0x18 */
+    byte field13_0x1a; /* 0x1a */
+    uint8_t _gap_0x1b[0x1];
+    undefined4 field15_0x1c; /* 0x1c */
+    uint8_t _gap_0x20[0x4];
+    undefined4 field20_0x24; /* 0x24 */
+    byte field21_0x28; /* 0x28 */
+    byte field22_0x29; /* 0x29 */
+    undefined2 field23_0x2a; /* 0x2a */
+    undefined2 field24_0x2c; /* 0x2c */
+    uint8_t _gap_0x2e[0x2];
+    undefined4 field27_0x30; /* 0x30 */
+    byte field28_0x34; /* 0x34 */
+    uint8_t _gap_0x35[0x3];
+};
+
+// /auto_structs/PoliceManager  size 0x7b8
+struct PoliceManager {
+    uint8_t _gap_0x0[0x4];
+    SPoliceSub arr20[20]; /* 0x4 */
+    byte arr124_4[124][4]; /* 0x464 */
+    int copLevel; /* 0x654 */
+    byte field7_0x658; /* 0x658 */
+    byte field8_0x659; /* 0x659 */
+    uint8_t _gap_0x65a[0x2];
+    int relToAi; /* 0x65c */
+    uint8_t _gap_0x660[0x14d];
+    byte numPolicePedsInRangeScreen; /* 0x7ad */
+    uint8_t _gap_0x7ae[0xa];
+};
+
+// /auto_structs/Position  size 0x3c
+struct Position {
+    short rotation; /* 0x0 */
+    uint8_t _gap_0x2[0x2];
+    Position *prev_; /* 0x4 */
+    int field4_0x8; /* 0x8 */
+    Position *next_; /* 0xc */
+    int field6_0x10; /* 0x10 */
+    int x; /* 0x14 Created by retype action */
+    int y; /* 0x18 Created by retype action */
+    int z; /* 0x1c Created by retype action */
+    short incFromS20; /* 0x20 */
+    short field11_0x22; /* 0x22 */
+    short field12_0x24; /* 0x24 */
+    uint8_t _gap_0x26[0x2];
+    int field15_0x28; /* 0x28 */
+    byte field16_0x2c; /* 0x2c */
+    uint8_t _gap_0x2d[0x3];
+    int field20_0x30; /* 0x30 */
+    int field21_0x34; /* 0x34 */
+    byte field22_0x38; /* 0x38 */
+    byte field23_0x39; /* 0x39 */
+    uint8_t _gap_0x3a[0x2];
+};
+
+// /auto_structs/PositionsArray_S21  size 0x49b28
+struct PositionsArray_S21 {
+    Position *last; /* 0x0 */
+    Position arr[5031]; /* 0x4 */
+};
+
 // /auto_structs/S16_sub1  size 0x11c
 struct S16_sub1 {
     undefined4 field0_0x0; /* 0x0 */
@@ -3406,42 +4014,6 @@ struct S17_mission {
     Vec3i vec3i50[50]; /* 0x4 */
 };
 
-// /auto_structs/S18_sub  size 0xc
-struct S18_sub {
-    undefined4 b; /* 0x0 */
-    undefined2 c; /* 0x4 */
-    uint8_t _gap_0x6[0x2];
-    undefined4 a; /* 0x8 */
-};
-
-// /auto_structs/S18  size 0x25c
-struct S18 {
-    int len; /* 0x0 */
-    S18_sub s18_sub_50[50]; /* 0x4 */
-};
-
-// /auto_structs/S19  size 0x54
-struct S19 {
-    undefined4 field0_0x0; /* 0x0 */
-    DWORD time; /* 0x4 */
-    undefined4 field2_0x8; /* 0x8 */
-    undefined4 field3_0xc; /* 0xc */
-    DWORD time2; /* 0x10 */
-    undefined4 field5_0x14; /* 0x14 */
-    int field6_0x18[3]; /* 0x18 */
-    int field7_0x24[3]; /* 0x24 */
-    int field8_0x30[3]; /* 0x30 */
-    int field9_0x3c[3]; /* 0x3c */
-    int field10_0x48[3]; /* 0x48 */
-};
-
-// /auto_structs/S20  size 0x8
-struct S20 {
-    undefined4 field0_0x0; /* 0x0 */
-    undefined2 inc; /* 0x4 */
-    uint8_t _gap_0x6[0x2];
-};
-
 // /auto_structs/S22  size 0x5d598
 struct S22 {
     int last; /* 0x0 */
@@ -3478,29 +4050,12 @@ struct S23 {
     undefined4 buf0x40000; /* 0x3c8 */
 };
 
-// /auto_structs/S24  size 0xc
-struct S24 {
-    short short0; /* 0x0 */
-    byte field1_0x2; /* 0x2 */
-    byte field2_0x3; /* 0x3 */
-    byte field3_0x4; /* 0x4 */
-    byte field4_0x5; /* 0x5 */
-    byte field5_0x6; /* 0x6 */
-    byte field6_0x7; /* 0x7 */
-    Position *position; /* 0x8 */
-};
-
 // /auto_structs/S26  size 0x32
 struct S26 {
     uint8_t _gap_0x0[0x29];
     undefined4 field41_0x29; /* 0x29 */
     undefined4 field42_0x2d; /* 0x2d */
     byte field43_0x31; /* 0x31 */
-};
-
-// /auto_structs/S27  size 0x7f8
-struct S27 {
-    uint8_t _gap_0x0[0x7f8];
 };
 
 // /auto_structs/S28  size 0x2bc0
@@ -3511,44 +4066,12 @@ struct S28 {
     byte arr8[8][164]; /* 0x26a0 */
 };
 
-// /auto_structs/S29_1  size 0x14
-struct S29_1 {
-    int field0_0x0; /* 0x0 */
-    int field1_0x4; /* 0x4 */
-    int field2_0x8; /* 0x8 */
-    int field3_0xc; /* 0xc */
-    int field4_0x10; /* 0x10 */
-};
-
-// /auto_structs/S29  size 0xcc
-struct S29 {
-    short field0_0x0; /* 0x0 */
-    short field1_0x2; /* 0x2 */
-    S29_1 arr10[10]; /* 0x4 */
-};
-
 // /auto_structs/S30  size 0x324
 struct S30 {
     int field0_0x0; /* 0x0 */
     int field1_0x4; /* 0x4 */
     byte arr[99][8]; /* 0x8 */
     int field3_0x320; /* 0x320 */
-};
-
-// /auto_structs/S4  size 0x15c2
-struct S4 {
-    int iArr1024[1024]; /* 0x0 */
-    byte field1_0x1000; /* 0x1000 */
-    byte field2_0x1001; /* 0x1001 */
-    uint8_t _gap_0x1002[0x2];
-    int iArr48[48]; /* 0x1004 */
-    uint8_t _gap_0x10c4[0x478];
-    int field1150_0x153c; /* 0x153c */
-    int field1151_0x1540; /* 0x1540 */
-    int field1152_0x1544; /* 0x1544 */
-    uint8_t _gap_0x1548[0x76];
-    short field1271_0x15be; /* 0x15be */
-    short field1272_0x15c0; /* 0x15c0 */
 };
 
 // /auto_structs/S5  size 0xc
@@ -3618,79 +4141,10 @@ struct S7 {
     undefined2 field1892_0x788; /* 0x788 */
 };
 
-// /auto_structs/SNightArray  size 0x28
-struct SNightArray {
-    undefined4 field0_0x0; /* 0x0 */
-    SNightArray *ptr1; /* 0x4 */
-    SNightArray *ptr2; /* 0x8 */
-    SNightArray *field3_0xc; /* 0xc */
-    undefined4 field4_0x10; /* 0x10 */
-    byte field5_0x14; /* 0x14 */
-    byte field6_0x15; /* 0x15 */
-    byte field7_0x16; /* 0x16 */
-    byte field8_0x17; /* 0x17 */
-    byte field9_0x18; /* 0x18 */
-    uint8_t _gap_0x19[0x3];
-    undefined4 field13_0x1c; /* 0x1c */
-    undefined4 field14_0x20; /* 0x20 */
-    undefined4 field15_0x24; /* 0x24 */
-};
-
-// /auto_structs/SPoliceSub  size 0x38
-struct SPoliceSub {
-    uint8_t _gap_0x0[0x2];
-    byte field2_0x2; /* 0x2 */
-    byte field3_0x3; /* 0x3 */
-    byte field4_0x4; /* 0x4 */
-    uint8_t _gap_0x5[0x3];
-    undefined4 field8_0x8; /* 0x8 */
-    undefined4 field9_0xc; /* 0xc */
-    undefined4 field10_0x10; /* 0x10 */
-    undefined4 field11_0x14; /* 0x14 */
-    undefined2 field12_0x18; /* 0x18 */
-    byte field13_0x1a; /* 0x1a */
-    uint8_t _gap_0x1b[0x1];
-    undefined4 field15_0x1c; /* 0x1c */
-    uint8_t _gap_0x20[0x4];
-    undefined4 field20_0x24; /* 0x24 */
-    byte field21_0x28; /* 0x28 */
-    byte field22_0x29; /* 0x29 */
-    undefined2 field23_0x2a; /* 0x2a */
-    undefined2 field24_0x2c; /* 0x2c */
-    uint8_t _gap_0x2e[0x2];
-    undefined4 field27_0x30; /* 0x30 */
-    byte field28_0x34; /* 0x34 */
-    uint8_t _gap_0x35[0x3];
-};
-
-// /auto_structs/SPolice  size 0x7b8
-struct SPolice {
-    uint8_t _gap_0x0[0x4];
-    SPoliceSub arr20[20]; /* 0x4 */
-    byte arr124_4[124][4]; /* 0x464 */
-    int copLevel; /* 0x654 */
-    byte field7_0x658; /* 0x658 */
-    byte field8_0x659; /* 0x659 */
-    uint8_t _gap_0x65a[0x2];
-    int relToAi; /* 0x65c */
-    uint8_t _gap_0x660[0x14d];
-    byte numPolicePedsInRangeScreen; /* 0x7ad */
-    uint8_t _gap_0x7ae[0xa];
-};
-
 // /auto_structs/SRelToBonus2  size 0x2d
 struct SRelToBonus2 {
     uint8_t _gap_0x0[0x2c];
     byte mask; /* 0x2c */
-};
-
-// /auto_structs/SRelateToNight  size 0x1d4cc
-struct SRelateToNight {
-    uint8_t _gap_0x0[0x4];
-    int field4_0x4; /* 0x4 */
-    SNightArray nightArr3000[3000]; /* 0x8 Created by retype action */
-    short field6_0x1d4c8; /* 0x1d4c8 */
-    uint8_t _gap_0x1d4ca[0x2];
 };
 
 // /auto_structs/Script4k  size 0xfa0
@@ -3716,6 +4170,13 @@ struct Sprite {
     uint8_t _gap_0x84[0x7c];
 };
 
+// /auto_structs/SpriteManager  size 0x8
+struct SpriteManager {
+    undefined4 drawCounter; /* 0x0 */
+    undefined2 inc; /* 0x4 */
+    uint8_t _gap_0x6[0x2];
+};
+
 // /auto_structs/SubScript  size 0x20
 struct SubScript {
     uint8_t _gap_0x0[0x2];
@@ -3737,10 +4198,31 @@ struct SubSubScript {
     uint8_t _gap_0x0[0xc00];
 };
 
-// /auto_structs/TrafficLigthStruct  size 0x193
-struct TrafficLigthStruct {
-    uint8_t _gap_0x0[0x192];
-    byte cycle; /* 0x192 */
+// /auto_structs/TextureCache  size 0x15d8
+struct TextureCache {
+    int tileTextures[1024]; /* 0x0 */
+    byte field1_0x1000; /* 0x1000 */
+    byte field2_0x1001; /* 0x1001 */
+    uint8_t _gap_0x1002[0x2];
+    int spriteTextures[48]; /* 0x1004 */
+    uint8_t _gap_0x10c4[0x478];
+    int field1150_0x153c; /* 0x153c */
+    int field1151_0x1540; /* 0x1540 */
+    int scratchTexture; /* 0x1544 */
+    uint8_t _gap_0x1548[0x76];
+    short field1271_0x15be; /* 0x15be */
+    short field1272_0x15c0; /* 0x15c0 */
+    uint8_t _gap_0x15c2[0x12];
+    ushort userTextureCount; /* 0x15d4 */
+    uint8_t _gap_0x15d6[0x2];
+};
+
+// /auto_structs/TrafficLights  size 0x194
+struct TrafficLights {
+    void *lights[100]; /* 0x0 */
+    ushort count; /* 0x190 */
+    byte phase; /* 0x192 */
+    byte timer; /* 0x193 */
 };
 
 // /auto_structs/Vec2i  size 0x8
@@ -4346,13 +4828,6 @@ struct S3 {
     S1 *s1; /* 0x14c */
 };
 
-// /imported/gzf-2021/S3Bytes  size 0x3
-struct S3Bytes {
-    undefined1 a; /* 0x0 */
-    undefined1 b; /* 0x1 */
-    undefined1 c; /* 0x2 */
-};
-
 // /imported/gzf-2021/S8  size 0xc1ea8
 struct S8 {
     uint8_t _gap_0x0[0x338];
@@ -4385,8 +4860,8 @@ struct Timing {
     undefined4 fps2; /* 0x14 */
 };
 
-// /imported/gzf-2021/TrafficLights  size 0x194
-struct TrafficLights {
+// /imported/gzf-2021/TrafficLights_Gzf2021  size 0x194
+struct TrafficLights_Gzf2021 {
     uint8_t _gap_0x0[0x190];
     ushort field400_0x190; /* 0x190 */
     byte phase; /* 0x192 */
@@ -4942,8 +5417,8 @@ struct LocaleSingle {
     char id[8]; /* 0x4 */
 };
 
-// /imported/seuko-mod/MapBlocks  size 0x370
-struct MapBlocks {
+// /imported/seuko-mod/MapBlocks_SeukoMod  size 0x370
+struct MapBlocks_SeukoMod {
     int field_0x0; /* 0x0 */
     uint8_t _gap_0x4[0x328];
     int len; /* 0x32c */

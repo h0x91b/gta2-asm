@@ -186,7 +186,9 @@ public class ExportGta2Re extends GhidraScript {
 				count("globals.exported");
 				String type = d == null ? "" : d.getDataType().getDisplayName() + " (" +
 					d.getLength() + " bytes)";
-				incLines.add(new String[] { (fn == null ? "g_" : "lbl_") + ident(s.getName(true)), hex(a),
+				// Globals already named g_* in Ghidra keep their name instead of becoming g_g_*.
+				String id = ident(s.getName(true));
+				incLines.add(new String[] { fn != null ? "lbl_" + id : id.startsWith("g_") ? id : "g_" + id, hex(a),
 					fn == null ? type : "label in " + fn.getName(true) });
 			}
 		}

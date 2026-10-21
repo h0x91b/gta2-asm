@@ -1,20 +1,108 @@
 address,kind,function,comment
+0x00409c40,plate,Network_GetLocalPlayerIndex,"Returns this->localPlayerIndex (+0x5D0): this machine's slot (0..5) in the network session player table (+0x764, 6 x 0x2C).
+Written by host/join (0x40A6EC, from AddPlayer 0x409360), on msg 7 when DPID matches ours (+0x5D4),
+decremented when a lower slot leaves (DPSYS_DELETEPLAYER 0x21, 0x40B5AE), zeroed on close (0x40BCFE).
+InitGame passes it to ConstructGame -> Game+0x24 and stores it in 0x662780. Confidence: high."
+0x00409f70,plate,Network_SetExitGameCallback,"Registers the network 'exit game' handler: slot 4 of the event table at this+0x48 (12-byte entries {cb, ctx, tag});
+writes this+0x78=cb, +0x7C=ctx, +0x80=4. Fired by FUN_004098e0 (dispatch) as cb(ctx, *arg) from the DirectPlay
+message handler 0x40B520 with reason 0/1/2, which then sets this+0x8EC=1.
+InitGame passes ExitGameCallback 0x461A50 and the new Game*. this = network session 0x674268. Confidence: high."
+0x00409f90,plate,Network_GetPlayerCount,"Returns number of occupied MP player slots (0..6): counts non-zero dwords at this+0x764 + i*0x2C, i=0..5.
+this = network session global 0x674268. Result is the Game player count (ConstructGame arg1 -> Game+0x23; SP passes 1).
+Pure, no side effects. Confidence: high (count), medium (object kind)."
+0x0040e100,plate,RoadNetwork_Ctor,"RoadNetwork ctor (0xCC68; name is a hypothesis). Road-junction graph for car AI: 545 x 16 B junction nodes at +8 (second 545x16 array at +0x861c), 50 per-car route slots of 256 u16 junction ids at +0x2218. Debug key 7 prints 'Junc: %d'."
+0x004104b0,plate,SoundEventQueue_Ctor,"SoundEventQueue: 0x50 x 0x28-byte audio event slots + count at +0xC84, reset every GameTick. Pushed by collision/movement code (0x4102a0, 0x410370, 0x410210), gated on skip_audio; registers as sound client type 6. Name is a hypothesis (impact sound events)."
+0x00410560,plate,SoundManager_InitOnce_Thunk,"ConstructGame tail (skip_audio == 0): ECX = g_SoundManager, jumps to SoundManager_InitOnce (0x4B2F20). Was named NoSkipAudio."
+0x00410680,plate,Sound_Is3DSoundActive,"Returns true if 3D (DirectSound3D/MSS) sound is active: sound-manager object 0x5DCBC8 enabled (byte+0) && +0x1D.
+Tail chunk at 0x4166D0; incoming ECX ignored (thunk loads ECX=0x5DCBC8).
+Callers write the result back to registry do_3d_sound right after RelatedToAudio(0x410670) requested it,
+so an unsupported 3D setting is reset. Confidence: high."
 0x0041dc54,eol,GiveMoney,pointer to money field
 0x0042077c,pre,getUpgradeType,oil
 0x00420782,pre,getUpgradeType,Gun on car
 0x00420788,pre,getUpgradeType,"paint, suicide"
+0x00428fa0,plate,CarManager_Ctor,"CarManager ctor (108 B). Creates the car sub-singletons (relToCars 0xe0c4, CarPhysicsPool 0xd264, CarsS4 0x8f74, PositionStruct), zeroes per-car-type counters (recycled/unit/mission cars), applies do_free_shopping. Freed in Game_Dtor."
+0x00432830,plate,CarModelTable_Ctor,"CarModelTable ctor (0x808 B). Zeroes two 256-entry tables indexed by car model id: +0x000 derived per-model data, +0x404 CarInfo*; counters at +0x400/+0x804. Filled after the STY load (FUN_00432aa0, carinfo.cpp)."
+0x004416b0,plate,DummyPedManager_Ctor,"Dummy-ped manager (char.cpp). Lazily creates PedManager (0x203ac B), sprite pool ptrTo_relSprites and S30; inits relToS24_unk* spawn globals. Object: ushort target dummy count (=0x32), byte[2]=dummy_chars. Name from skip_dummies flag + 'dummy_chars' debug label (medium)."
+0x00446710,plate,CarDriveOrderPool_Ctor,"CarDriveOrderPool: 20 x 0x40-byte slots; a car holds its slot at car+0x60. Slot: +0 in-use, +4 ped, +8 mode (1/2/4), +0x14..0x1C target xyz, +0x30 target id. Alloc 0x446200, Free 0x446290. Hypothesis: AI driving order for a ped-driven car."
+0x004471b0,plate,CollisionManager_Ctor,"CollisionManager ctor (collide.cpp). Object 0xC: [0] visit counter, [4] query stamp, [8] 'moving check active' flag. Builds 5 sub-objects into DAT_005e6684..5e6694 (0x8004 and 0x11944 grid/lists, 3 x 0x400 lists). Name: medium confidence."
+0x00449c70,plate,CraneManager_Ctor,CraneManager ctor. Array of 10 Crane records (0x15c each) plus live count at +0xD98. Cranes are declared by script (SCRCMD_CRANE_*_DEC) and ticked each frame from GameTick (CraneManager_Update).
+0x0044a1f0,plate,CrimeEventQueue_Ctor,"CrimeEventQueue (S29, 0xCC; name is a hypothesis): 10 x 0x14 ring buffer (head/tail u16 at +0/+2) of crime events (type 1..4 + position). Pushed from kill/shoot/pickup code via DoSomethingRelatedToPedOcupation, consumed by police reaction code 0x41c600."
+0x0044aa00,plate,CrusherManager_Ctor,"CrusherManager ctor. Array of 3 Crusher records (0x30 each) plus count at +0x90. Created by SCRCMD_CRUSHER_BASIC, ticked from GameTick; car contact (object case 0x8f) grabs the car. Crusher logic itself not decompiled."
+0x0044b8f0,plate,LayerDrawQueues_Ctor,"LayerDrawQueues ctor: 7 per-map-layer draw queues (4-byte list heads over node pools DAT_00672578/DAT_0067257c). Cleared each frame in eachFrame, objects enqueued sorted by Z, each queue flushed per layer in SetupFrameLighting. Name: medium."
+0x0044d2e0,plate,DoorManager_Ctor,"DoorManager ctor (door.cpp). 22 door slots (0x38 each), ensures helper singleton DAT_005e9374 (0x2C4) exists; +0x4D0 active door count, +0x4D2 = 0xCD. Updated by DoorManager_Update from GameTick. Semantics: medium."
+0x00451930,plate,Debug_LoadFlagsFromRegistry,"Loads ~90 debug/cheat byte flags at 0x5EAD50..0x5EADB3 by calling RegGet(name) for each original debug option string (do_blood, skip_trains, ...). Also sets g_replayKeyboardLive and g_replayInputEnabled = 1, g_gxtFileExists = CheckIFGXTexists(), g_showPlayerNames, and advances the 'replaynum' counter. Was HiddenDebugFlags."
+0x004590f0,plate,ApplyCheats,"Profile-name cheat handler: hashes the player name against CHEATS_CODE. GOURANGA enables cheats; other hashes toggle the g_cheat* / debug flags in 0x5EAD50..0x5EADB3 and play CHEAT_SOUND. E.g. GOREFEST=g_doBlood, EATSOUP=free shopping, ARSESTAR=keep weapons, GODOFGTA=all weapons, RSJABBER=invulnerable."
 0x004591e0,pre,ApplyCheats,"Ваш персонаж приобретёт высшую степень уважения во всех бандах.
 "
 0x00459345,pre,ApplyCheats,give 200000 money
 0x004593e3,pre,ApplyCheats,give 10 millions
+0x0045a960,plate,FrameCounter_Ctor,"FrameCounter ctor (8 bytes): [0]=frame number since session start, [1]=random32() sampled each tick by FrameCounter_Advance (called from GameTick). Freed with plain free() in Game_Dtor."
+0x0045ae60,plate,GangRespectContainer_Ctor,"GangRespectContainer (0xCA8): 10 x GangRespect (0x144 each), per-gang respect (+0x11c, clamped to 100) and gang id (+0x13c)."
+0x0045b050,plate,MapRenderer_Ctor,"Map/tile renderer state singleton (12036 bytes): visible-tile list and per-layer draw size, used by SetupFrameLighting (0x472110, really the map draw entry) and DrawMapLayer each frame. Freed in Game_Dtor with _free (no dtor). Confidence medium-high."
+0x0045b1a0,plate,EmergencyVehiclePool_Ctor,"EmergencyVehiclePool ctor (name is a hypothesis). 10 slots of 0x30 (in-use byte at +0x1E). Allocated by police/ambulance spawn code (FUN_004aa7b0, FUN_004a9ef0, FUN_00473e00), freed in EmergencyVehiclePool_Update."
+0x0045b3d0,plate,LightManager_Ctor,"LightManager (SRelateToNight, 0x1D4CC): free/active list pool of dynamic point lights. Level lights added from FUN_004692b0; expired ones recycled by night() each GameTick when isNight."
+0x0045b440,plate,FireEngineManager_Ctor,FireEngineManager ctor. 2 slots (0x28 each) via FUN_0045b430 + u16 at +0x50. Updated each frame by UpdateFireEngines. Slot semantics not verified.
+0x0045bfe0,plate,ListNodePool_Ctor,"Free-list pool of 50 x 12-byte list nodes (next at +8, head at +0). Alloc = pop head (0x476DF0), free = ListNodePool_Free. Node users not identified; generic name."
+0x0045c040,plate,MikeDebug_Ctor,"S14 debug leftover (2688 B), used only with the do_mike flag: GameTick calls a bare-ret stub, startGame resets two fields via relInitS14. 5 vec2i + 5 x 0x80 blocks. Name is a low-confidence guess."
+0x0045c0d0,plate,AmbulanceManager_Ctor,"AmbulanceManager ctor (medical.cpp). Sets enabled=1, builds the paramedic list and 2 x 0x20 ambulance records (+0xD0), calls reset FUN_00472fe0. Updated each frame by UpdateAmbulances (unless skip_ambulance)."
+0x0045c130,plate,PedPathfinder_Ctor,"PedPathfinder ctor (0x2FD4): ped on-foot pathfinding, queue of requesting peds (list head +0x3c) and search state/result buffer (+0x40..+0x2fd0, ready flag +0x2fd0). Used from ped walking logic FUN_004380d0 (FUN_0049cf70 = request path)."
+0x0045c150,plate,PoliceManager_Ctor,"PoliceManager (SPolice, 0x7B8): 20 x SPoliceSub cop-AI slots, 4 x 124 B per-player tracking records at +0x464, copLevel at +0x654. Ticked by UpdatePolice from GameTick (unless skip_police)."
+0x0045e3e0,plate,GeneratorManager_Ctor,"GeneratorManager ctor. 120 Generator records (0x2c each), count +0x14A0, active count +0x14A4, byte +0x14A8. Declared by SCRCMD_GENERATOR_DECSET*; each frame a quarter of them (frame & 3) are ticked and spawn map objects."
+0x0045e770,plate,Menu_SetPlayerName,"Stores a player's name into the session object: wcsncpy(this+0x4B4+idx*0x20, name, 16).
+Table = 6 x wchar_t[16] at Menu+0x4B4. InitGame fills it from Game->players[i]+0x83C;
+read back by Menu_GetPlayerName (0x45E7A0) for the MP results screen in FrontEnd::Intro (state 7).
+Confidence: high on mechanics, medium that Player+0x83C is the player-name field."
+0x0045f640,plate,Keyboard_InitAttractReplay,"Attract-mode demo setup: init keyboard/replay object, replayStatus(+0x38)=3 (PLAYING_EXIT_ON_KEYPRESS),
+load data\attract\attrN.rep (N cycles 1..3 via this+0x75345, FUN_0045f600), read replay header without applying
+debug flags (FUN_0045f270(0)), load events. Chosen in InitGame instead of input.cpp_PLayReplay when relToPlayReplay
+(0x662786) is set; WinMain2 sets it at 0x4D1591 when the frontend returns 4 (assumed: idle-timeout demo). Confidence: high."
+0x00460fb0,plate,KanjiFont_Ctor,"KanjiFont ctor (0x28 bytes), created only when locale is Japanese. Sets marker bytes +0x24/+0x25 (0xFE, 0xF7), then loads data\kanji.dat (magic KANJ, version 100) via KanjiFont_LoadKanjiDat."
+0x00461a50,plate,ExitGameCallback,"Network exit-game handler: sprintf '(ExitGameCallback)Called with reason - %d', writes it to the debug
+stream 0x5EA6B8 (via 0x461560), then quitGame(game,0,1). Reason codes 0/1/2 not decoded yet. Confidence: high."
+0x00461af0,plate,Cheats_DisableDebugFlagsForMultiplayer,"Zeroes ~72 cheat/debug byte flags in the Cheats block 0x5EAD51..0x5EADB3 (seuko-mod memory.h GetCheats).
+Called only from InitGame 0x461E77 on the multiplayer branch, before new Game. No args, no ECX, plain ret.
+Some flags in the range are deliberately left untouched (e.g. log_random 0x5EAD63). Confidence: high."
+0x00461dc0,plate,Menu_GetGameTimeLimit,"Returns Menu+0x444 = multiplayer game time limit in minutes (0 = none).
+Written only by Menu setter 0x45E6C0 (arg5, from [0x673F4C] via 0x4D1131).
+InitGame clamps it to 60 into 0x6626E8; timer 0x462530 counts it down (min 0x6626E8 / sec 0x6626C0 / frames 0x662738)
+and ends the game with GXT 'g_over'. Confidence: medium-high."
 0x00461de0,plate,InitGame,MainMenu
+0x00464a40,plate,MapBlocks_Ctor,"Map block store singleton (GMP data), looked up by (x,y,z). Created by ConstructGame; loaded in LoadGMP_and_STY_Files; freed in Game_Dtor via MapBlocks_Dtor."
+0x00472640,plate,ResetRandomSeedTo1,Resets the game RNG seed (random_seed) to 1 via Crt_Srand. Called first in ConstructGame so every session starts deterministic.
 0x004760ad,pre,loadSubScripts,wil_tra.mis
 0x004760b9,pre,loadSubScripts,"replase ""mis"" to ""SCR"""
 0x0047a914,pre,FUN_0047a860,save goes here
+0x00481960,plate,MissionScript_Ctor,"Mission script engine ctor (miss2.cpp). Zeroes script/string/base-pointer buffers, allocates S16 missions (2284 B) and S17_mission (0x25c B) if absent, opens test\MISS_LOG.TXT if do_miss_logging. Object ~794 KB."
+0x00482050,plate,MultiplayerTag_Reset,"Reset of the multiplayer Tag-mode state (global 0x665704, multip.cpp): zeroes it-player SaveSlot* (+0),
+6 per-player tag counters (+4..+0x1B), frame tick (+0x1C), 6 per-player left flags (+0x20..+0x25).
+Called by ctor 0x4820C0 (static init 0x535440) and InitGame 0x461E72 (MP branch).
+Evidence: FUN_004821c0/4820d0 ('yourit' label), death -> FUN_004822a0. Confidence: high."
+0x00484af0,plate,ObjectSpawner_Ctor,"ObjectSpawner ctor (object.cpp, 0x5C B). Creates BareGameObjectManager if null, plus pools DAT_0066577c (0x226c) and DAT_00665780 (0x5a40). +0x10/+0x14 counters per prefab category 2/3, +0x1c list head, +0x58 Position. 'this' of SpawnObject. Name: medium."
+0x00488eb0,plate,ObjectPrefabsContainer_Ctor,"ObjectPrefabsContainer ctor (0x8CA8 B): 300 x 0x74 prefab entries from +4, 300 pointers at +0x87F4, length=0, eq99OnInit=99. Looked up by object id via FUN_00488170."
+0x00489ac0,plate,ParkingZone_Ctor,"park.cpp object (0x48 B). [0] car ptr, [0x0C] state (3 = active), [0x18..0x37] area rectangle from a map block, [0x3C] timer (=0x1E), [0x3D] flag, [0x3E] counter. Used by script commands and ped enter-car logic. Role (parking/garage target) is LOW confidence."
+0x0048a7b0,plate,ParticleStatePool40_Ctor,"Pool of 40 slots x 0x30 B + 40 in-use flags at +0x780. Alloc ParticleStatePool40_Alloc, release ParticleState_Release. Used for OBJECT_TYPE_PARTICLE_SYSTEM objects (FUN_00485540) and type-5 objects in FUN_00484e00."
+0x0048a880,plate,ParticleStatePool20_Ctor,"Pool of 20 slots x 0x30 B + 20 in-use flags at +0x3C0. Slot ctor ParticleState_Ctor (id byte +4, serial +6). Companion of the 40-slot pool g_ParticleStatePool40. Name is a hypothesis (medium-low)."
+0x00491b90,plate,ParticleManager_Ctor,"Particle manager ctor (8 B, particle.cpp). Zeroes two object pointers [0],[1] and lazily creates the particle pool DAT_00669e70 (0x947c B, ctor 0x48F1E0). [0]/[1] are cached game objects used by the car-explosion particle FUN_00490130 (medium)."
+0x00491da0,plate,PedPatrolRoutePool_Ctor,"PedPatrolRoutePool ctor (0x1D7E): 50 route buffers of 0x96 B (up to 50 xyz byte waypoints, 0-terminated) + 50 in-use flags at +0x1d4c. Allocated by PedSetObjective for PED_OBJECTIVE_PATROL_ON_FOOT; nothing frees slots."
 0x004a49c0,plate,KeyUp,KeyDown
+0x004af780,plate,PublicTransportManager_Ctor,"PublicTransportManager ctor. 100 x 0x34 stop/track entries at +0, 10 x 0x58 train/bus actors at +0x1450, one extra 0x58 actor at +0x17C0. Loaded from map by relToTrainsAndBuses (trak0..4); updated by PublicTransportManager_Update (honours skip_trains/skip_buses)."
+0x004b2f20,plate,SoundManager_InitOnce,"One-shot (unknown_used_with_s6 guard) SoundManager init: clears 5 channel slots, queues sound 1, creates the stream at +0x5508. Hypothesis name."
 0x004b7662,eol,ChangeMoney2,current money
+0x004b9490,plate,FloatingScoreManager_Ctor,"FloatingScoreManager: floating money popups on kills/rewards. Created only when the exploding_on debug flag is 0. 3 popups x 0x50 with free/active lists. Spawn 0x4b91f0, Update 0x4b9260 (GameTick), Draw 0x4b98b0 (eachFrame)."
+0x004b9960,plate,OwnerSlotTable_Ctor,"Owner slot table, 255 x 8 bytes: [+0 ped id][+4 refcount byte]. A ped gets a 1..254 slot (ped+0x267) via OwnerSlotTable_AllocSlot; projectiles/objects keep it at obj+0x26 so damage is credited to the shooter (OwnerSlotTable_GetPedId)."
+0x004be5b0,plate,SpriteManager_Ctor,"Sprite manager root (sprite.cpp 0xca7-0xcae). Creates PositionsArray_S21, S22, S23 and the 0x1c24-B object at 0x6702bc. Object itself: {field0 = sprites drawn this frame, inc = Position id generator}. Name: medium."
+0x004c08d0,plate,StyleData_Ctor,"Style (STY file) container singleton: sprite/palette/font bases, sprite index, physical palettes, car info chunk + AllCarsInfo, map object info. Created by ConstructGame and InitFrontend; freed in Game_Dtor via StyleData_Dtor."
+0x004c09c0,plate,TaxiList_Ctor,"TaxiList: list of for-hire taxi cars (4 B = head pointer). Nodes {Car*, next} from a shared 100-node pool (DAT_005e580c, taxi.cpp:0x1d), created here if null. Taxis with a driver are added each frame by relToCar; peds wanting a taxi take the nearest (TaxiList_FindNearestCar)."
+0x004c2620,plate,LocaleSettings_Ctor,"LocaleSettings ctor. Builds two sub-structs, then reads registry value 'language'; accepts e/f/g/i/s/j (English, French, German, Italian, Spanish, Japanese), otherwise falls back to 'e'. Also created by InitFrontend."
+0x004c3190,plate,TextureCache_Ctor,"GBH texture cache (0x15D8 B): 1024 tile slots, 48 sprite slots, 96 x 12-byte user slots, 7 palette-remap sub-caches. Used by GetSpriteTexture/DrawTile/DrawSprite2D. Also created by InitFrontend; freed via TextureCache_Dtor (gbh_FreeTexture)."
+0x004c35a0,plate,TileAnimManager::TileAnimManager_Ctor,"TileAnimManager. The 2-byte object is a short counter = next tile-anim id (starts at 1). Lazily creates the tile-anim pool g_TileAnimPool (0x671C0C, 0x4BC B: 50 x 0x18 entries + free list; tileanim.cpp:0xDC). Used when map blocks change state (0x44C560, 0x44C610)."
+0x004c3700,plate,FrameTimingStats_Ctor,"Frame timing / FPS profiler (0x54). Counts update and draw frames over 100-frame windows (timeGetTime): update FPS +8, draw FPS +0x14, 5 per-subsystem time slots. Updated in drawAndLimitFrames (FrameTimingStats_EndFrame), shown by the do_show_timing overlay."
+0x004c3980,plate,TrafficLights::TrafficLights_Ctor,"Traffic light controller (0x194 B): up to 100 light pointers, ushort count +0x190, phase +0x192 (starts at 1), timer +0x193. Phases 1..8 cycle in UpdateTrafficLights; phase 7 = peds cross."
 0x004c6060,plate,ShowBigOnScreenLabel,ShowBigOnScreenLabel
 0x004c8c20,plate,showDebugLabel,showDebugLabel
+0x004cac60,plate,HudManager_Ctor,"HUD / on-screen text manager (11000 B): message queue (txtMessage +0xE4), 29 debug text labels (+0x818, showDebugLabel), 17 mission arrows (+0x1F18), displayDebugPedInfo (+0x27B5), text_speed (+0x2AF4). Name is a guess from usage (medium-high)."
+0x004d0740,plate,WeaponManager::WeaponManager_Ctor,"WeaponManager (weapon.cpp:0x97C). 8 bytes: [+0] list head of cars already hit this shot (dedupe in FUN_004cf380), [+4] short live weapon count. Lazily creates the weapon pool (0x2FDC B, 255 x 0x30 slots) in ptrToWeaponRelStruct."
 0x004d5ce1,plate,__heap_alloc,"Library Function - Single Match
 Name: __heap_alloc
 Library: Visual Studio 2003 Release"
@@ -1268,7 +1356,154 @@ Library: Visual Studio 2003 Release"
 0x005953d4,eol,,TypeDescriptor.name
 0x00595428,plate,,class type_info RTTI Type Descriptor
 0x00595430,eol,,TypeDescriptor.name
-0x005e8108,eol,,game tick
+0x005d351c,eol,,RoadNetwork singleton (0xCC68): junction nodes + per-car routes
+0x005d81dc,eol,,"SoundEventQueue (0xC88), per-frame audio events, only when skip_audio==0"
+0x005e4ca4,eol,,"CarManager singleton, 108 B, ctor CarManager_Ctor 0x428FA0"
+0x005e5488,eol,,"Car model lookup table: [id]->model data @+0, CarInfo* @+0x404, 0x808 B"
+0x005e5bc0,eol,,"Dummy ped manager singleton (S24, 0xC B); ushort[0] = target dummy count, byte[2] = dummy_chars"
+0x005e6340,eol,,"CarDriveOrderPool (0x500, 20 x 0x40)"
+0x005e6680,eol,,"CollisionManager: collide.cpp singleton, 0xC bytes (counters + flag); sub-objects at 5e6684..5e6694"
+0x005e747c,eol,,"Crane singleton: 10 x 0x15c cranes, count at +0xD98 (script CRANE_*_DEC)"
+0x005e79ec,eol,,CrimeEventQueue singleton (ring buffer of crime events; hypothesis)
+0x005e7d70,eol,,"Crusher singleton: 3 x 0x30 crushers, count at +0x90 (script CRUSHER_BASIC)"
+0x005e8108,eol,,"FrameCounter singleton {int frame; uint frameRandom;}, 8 bytes, ++ each GameTick"
+0x005e8b80,eol,,"7 per-layer sorted draw queues; cleared in eachFrame, flushed per layer in SetupFrameLighting"
+0x005e9378,eol,,"DoorManager singleton (0x4D4), created in ConstructGame"
+0x005ea9cc,eol,,FireEngineManager singleton (0x54)
+0x005ead50,eol,,"registry debug flag ""do_3d_sound"""
+0x005ead51,eol,,"reg ""do_blood""; cheat GOREFEST"
+0x005ead52,eol,,"registry debug flag ""do_show_object_ids"""
+0x005ead53,eol,,"registry debug flag ""skip_traffic_lights"""
+0x005ead54,eol,,"registry debug flag ""skip_buses"""
+0x005ead55,eol,,"registry debug flag ""do_show_instruments"""
+0x005ead56,eol,,"registry debug flag ""skip_particles"""
+0x005ead57,eol,,"registry debug flag ""skip_trains"""
+0x005ead58,eol,,"registry debug flag ""do_show_input"""
+0x005ead59,eol,,"registry debug flag ""skip_right"""
+0x005ead5a,eol,,"registry debug flag ""show_hidden_faces"""
+0x005ead5b,eol,,"registry debug flag ""skip_recycling"""
+0x005ead5c,eol,,cheat UKGAMER: unlock all levels
+0x005ead5d,eol,,cheat COCKTART (effect unclear); suppresses kill-money popups (FloatingScoreManager not created); saved in replay header. Was exploding_on
+0x005ead5e,eol,,"registry debug flag ""skip_police"""
+0x005ead5f,eol,,"registry debug flag ""skip_bottom"""
+0x005ead60,eol,,"registry debug flag ""do_police_1"""
+0x005ead61,eol,,"registry debug flag ""do_infinite_lives"""
+0x005ead62,eol,,"unused debug flag, zeroed for multiplayer"
+0x005ead63,eol,,"registry debug flag ""log_random"""
+0x005ead64,eol,,"registry debug flag ""skip_user"""
+0x005ead65,eol,,cheat SCHURULZ: start with double damage
+0x005ead66,eol,,"registry debug flag ""do_miss_logging"""
+0x005ead67,eol,,"registry debug flag ""skip_left"""
+0x005ead68,eol,,"registry debug flag ""do_corner_window"""
+0x005ead69,eol,,"registry debug flag ""skip_dummies"""
+0x005ead6a,eol,,"cheat TUMYFROG: unlock levels + save-slot unlock (2,2)"
+0x005ead6b,eol,,"registry debug flag ""skip_ambulance"""
+0x005ead6c,eol,,"registry debug flag ""skip_window_check"""
+0x005ead6d,eol,,cheat FISHFLAP: alternate car scale in SpawnCar (hypothesis)
+0x005ead6e,eol,,cheat DAVEMOON: basic weapons (flag never read)
+0x005ead6f,eol,,"registry debug flag ""do_show_imaginary"""
+0x005ead70,eol,,cheat VOLTFEST: start with electro gun
+0x005ead71,eol,,"reg ""do_invulnerable""; cheat RSJABBER: invulnerable"
+0x005ead72,eol,,"registry debug flag ""skip_audio"""
+0x005ead73,eol,,"result of CheckIFGXTexists(); when set, no kill money for police/army"
+0x005ead74,eol,,"reg ""get_all_weapons""; cheat GODOFGTA: all weapons, max ammo"
+0x005ead75,eol,,"registry debug flag ""no_annoying_chars"""
+0x005ead76,eol,,"registry debug flag ""show_player_names"""
+0x005ead77,eol,,"registry debug flag ""log_directinput"""
+0x005ead78,eol,,"registry debug flag ""skip_slopes"""
+0x005ead79,eol,,"registry debug flag ""do_show_timing"""
+0x005ead7a,eol,,"registry debug flag ""log_random_extra"""
+0x005ead7b,eol,,cheat SEGARULZ: money multiplier x10
+0x005ead7c,eol,,"registry debug flag ""skip_frontend"""
+0x005ead7d,eol,,"registry debug flag ""do_brian_test"""
+0x005ead7e,eol,,"registry debug flag ""do_load_savegame"""
+0x005ead7f,eol,,"registry debug flag ""do_show_horn"""
+0x005ead80,eol,,"registry debug flag ""do_test"""
+0x005ead81,eol,,"registry debug flag ""do_mike"""
+0x005ead82,eol,,"registry debug flag ""do_show_camera"""
+0x005ead83,eol,,cheat GAOLLOT: Get Out of Jail Free card
+0x005ead84,eol,,"reg ""do_free_shopping""; cheat EATSOUP: free shopping"
+0x005ead85,eol,,"registry debug flag ""do_show_physics"""
+0x005ead86,eol,,"registry debug flag ""ignore_replay_header"""
+0x005ead87,eol,,"registry debug flag ""do_debug_keys"""
+0x005ead88,eol,,"registry debug flag ""skip_draw"""
+0x005ead89,eol,,"registry debug flag ""do_show_junc_ids"""
+0x005ead8a,eol,,cheat MADEMAN: max respect with all gangs
+0x005ead8b,eol,,"registry debug flag ""skip_fire_engines"""
+0x005ead8c,eol,,"registry debug flag ""skip_top"""
+0x005ead8d,eol,,"registry debug flag ""do_iain_test"""
+0x005ead8e,eol,,cheat HUNSRUS: invisibility powerup
+0x005ead8f,eol,,cheat CUTIE1: 99 lives
+0x005ead90,eol,,"registry debug flag ""skip_tiles"""
+0x005ead91,eol,,"registry debug flag ""log_input"""
+0x005ead92,eol,,defaults 1; replay/input gating (hypothesis)
+0x005ead93,eol,,cheat BUCKFAST: ~half of spawned peds hostile to player (hypothesis)
+0x005ead94,eol,,"registry debug flag ""dont_get_car_back"""
+0x005ead95,eol,,"registry debug flag ""do_show_counters"""
+0x005ead96,eol,,"registry debug flag ""do_show_traffic_lights_info"""
+0x005ead97,eol,,cheat DANISGOD: 200000 start money
+0x005ead98,eol,,"secret cheat: save-slot unlock (1,0); flag never read"
+0x005ead99,eol,,"registry debug flag ""log_routefinder"""
+0x005ead9a,eol,,"registry debug flag ""do_text_id_test"""
+0x005ead9b,eol,,cheat FLAMEON: start with flamethrower
+0x005ead9c,eol,,"registry debug flag ""skip_lid"""
+0x005ead9d,eol,,"registry debug flag ""do_police_2"""
+0x005ead9e,eol,,"reg ""keep_weapons_after_death""; cheat ARSESTAR"
+0x005ead9f,eol,,cheat LASVEGAS: all spawned peds are Elvis gang
+0x005eada0,eol,,cheat NEKKID: naked peds
+0x005eada1,eol,,"registry debug flag ""do_show_ids"""
+0x005eada2,eol,,no cheat code sets it; start bonus pack (jail card + gang respect 80)
+0x005eada3,eol,,1 = live keyboard; 0 while playing a replay (hypothesis)
+0x005eada4,eol,,"registry debug flag ""skip_replay_sync_check"""
+0x005eada5,eol,,"registry debug flag ""show_brief_number"""
+0x005eada6,eol,,cheat IAMDAVEJ: 9999999 start money
+0x005eada7,eol,,"registry debug flag ""show_cycle"""
+0x005eada8,eol,,"registry debug flag ""do_sync_check"""
+0x005eada9,eol,,"registry debug flag ""do_police_3"""
+0x005eadaa,eol,,"registry debug flag ""play_replay"""
+0x005eadab,eol,,"registry debug flag ""skip_quit_confirm"""
+0x005eadac,eol,,"registry debug flag ""limit_recycling"""
+0x005eadad,eol,,"registry debug flag ""do_exit_after_replay"""
+0x005eadae,eol,,"registry debug flag ""skip_mission"""
+0x005eadaf,eol,,"registry debug flag ""skip_skidmarks"""
+0x005eadb0,eol,,"registry debug flag ""log_collisions"""
+0x005eadb1,eol,,"registry debug flag ""do_show_collision_box"""
+0x005eadb2,eol,,"registry debug flag ""show_all_arrows"""
+0x005eadb3,eol,,"registry debug flag ""do_kill_phones_on_answer"""
+0x005eb898,eol,,Gang respect singleton (10 GangRespect entries)
+0x005ebb30,eol,,"Object generator singleton: 120 x 0x2c, count +0x14A0, active +0x14A4"
+0x00661e98,eol,,"KanjiFont singleton, non-null only for Japanese locale; used by DrawGTAText"
+0x006622b8,eol,,"LightManager singleton (point-light pool, night lighting)"
+0x00662c08,eol,,"Map blocks (GMP) singleton, 880 bytes; ctor MapBlocks_Ctor"
+0x006633c8,eol,,"Map renderer singleton, 12036 bytes; ctor MapRenderer_Ctor"
+0x00663de4,eol,,"AmbulanceManager singleton (0x110), medical.cpp"
+0x00664168,eol,,Debug-only object (do_mike flag; GameTick call is a no-op stub)
+0x006644bc,eol,,"Mission script VM singleton (S15_script, ~794 KB); destroyed in Game_Dtor via 0x45a9f0"
+0x006644c4,eol,,Free-list pool of 50 x 12-byte list nodes
+0x00665788,eol,,"ObjectSpawner: object.cpp singleton, 'this' of SpawnObject (seuko-mod: S33)"
+0x00665b40,eol,,Object prefab table (300 entries); lookup FUN_00488170(id)
+0x00669ae4,eol,,"Parking-zone object (park.cpp, 0x48 B): car + area rectangle (low confidence)"
+0x00669e74,eol,,Particle manager singleton (8 B: two object ptrs); pool is DAT_00669e70
+0x00669e78,eol,,Pool of 20 particle-system state slots (0x30 each); companion of the 40-slot pool
+0x00669e7c,eol,,Pool of 40 particle-system state slots (0x30 each)
+0x0066a228,eol,,PedPatrolRoutePool singleton (0x1D7E): 50 patrol waypoint buffers
+0x0066a7e4,eol,,PedPathfinder singleton (0x2FD4): ped on-foot path search + request queue
+0x0066b7a0,eol,,"PoliceManager singleton (SPolice, 0x7B8); UpdatePolice each GameTick"
+0x0066bb50,eol,,PublicTransportManager singleton (0x181C): buses + trains
+0x0066f5dc,eol,,"FloatingScoreManager (0x100), score popups, only when exploding_on==0"
+0x0066fb0c,eol,,"OwnerSlotTable singleton: shooter slot byte -> ped id (+refcount), 255 entries"
+0x0066ff24,eol,,"Sprite manager singleton; inc = Position id counter, field0 = per-frame sprite counter"
+0x00670684,eol,,"Style (STY) data singleton, 4204 bytes; ctor StyleData_Ctor"
+0x006708e0,eol,,Taxi list head (linked list of Car*)
+0x00671550,eol,,LocaleSettings singleton (language char e/f/g/i/s/j); also created by InitFrontend
+0x00671978,eol,,GBH texture cache (tiles/sprites/remaps)
+0x00671c08,eol,,Next tile-anim id counter (short); pool is g_TileAnimPool 0x671C0C
+0x00671e9c,eol,,"Frame timing / FPS profiler; updated in drawAndLimitFrames, shown by do_show_timing"
+0x006721cc,eol,,Traffic light controller (0x194 B)
+0x0067280c,eol,,"Script trigger pool (hypothesis, medium): 22 slots x 0x18 B + u16 count @+0x210 = 0x214 B, raw operator_new in ConstructGame (no ctor); filled by script cmds 0xd6/0x1b2, fires on car/ped contact with object type 0xa1"
+0x00672b90,eol,,Pool of 10 x 0x30 emergency-vehicle slots (police/ambulance); hypothesis name
+0x00672f40,eol,,HUD / text / mission-arrow manager (11000 B)
+0x00673948,eol,,WeaponManager singleton (8 B): hit-car list head + live weapon count; pool in ptrToWeaponRelStruct
 0x006771f0,plate,,Rsrc_Icon_1_c09 Size of resource: 0x568 bytes
 0x00677758,plate,,Rsrc_Icon_2_c09 Size of resource: 0x6c8 bytes
 0x00677e20,plate,,Rsrc_Icon_3_c09 Size of resource: 0x8a8 bytes

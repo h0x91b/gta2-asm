@@ -41,7 +41,7 @@ section, no names or types) and `miss2.exe` (the official mission-script compile
 | `comments.csv` | plate/pre/eol/post/repeatable comments with the containing function |
 | `gta2_types.h` | user types as C (structs, unions, enums, typedefs, function types) plus their dependencies. Packed, gaps spelled out, offset on every member |
 | `gta2_types.inc` | same structs as NASM `struc` (`Name.field`, `Name_size`), unions as `Name.member equ 0`, enums as `Enum.VALUE equ n` |
-| `gta2_addresses.inc` | NASM `equ`s: `fn_<name>` functions, `g_<name>` globals, `lbl_<func>__<name>` code labels (`::` → `__`, other non-identifier chars → `_`) |
+| `gta2_addresses.inc` | NASM `equ`s: `fn_<name>` functions, `g_<name>` globals (a name already starting with `g_` is kept as is), `lbl_<func>__<name>` code labels (`::` → `__`, other non-identifier chars → `_`) |
 | `stats.txt` | counts from the last export |
 
 Examples: `grep -i ped re/functions.csv`, `grep -n 'struct Car ' re/gta2_types.h`,
