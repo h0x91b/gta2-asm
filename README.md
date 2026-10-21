@@ -46,7 +46,8 @@ stand (not during a mission), all weapons, +$100000, live camera zoom (70% by de
 or lock the wanted level, skin and body type), a Vehicle page (spawn any car in front of
 you; colour, invincibility, repair or explode the car you are in or left last) and a
 Debug flags page (FPS / camera info / invulnerability / no police and a few other DMA
-flags). Back returns to the main page; ESC or K closes the menu.
+flags, and the Road network overlay: lane arrows, the junction graph, live traffic lights,
+routes, the pavement peds walk on; [docs/debug-roads.md](docs/debug-roads.md)). Back returns to the main page; ESC or K closes the menu.
 Flags and internals: [host/README.md](host/README.md), [docs/](docs/).
 
 ## Inspect the game files

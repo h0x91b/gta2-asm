@@ -63,26 +63,9 @@ dm_draw_paths:
     push r14
     push r15
     sub rsp, 16
-    mov eax, [abs 0x5EB4FC]
+    call dp_setup
     test eax, eax
     jz .out
-    mov eax, [rax + 0x38]           ; Player*
-    test eax, eax
-    jz .out
-    add eax, 0x14c
-    mov [dp_cam], eax
-    mov eax, [abs UI_CAMERA]
-    test eax, eax
-    jz .out
-    mov eax, [rax + 0xa8]           ; uiScale
-    mov [dp_scale], eax
-    cmp qword [dp_low], 0
-    jne .low
-    mov edi, 16
-    mov esi, 16
-    call low_alloc
-    mov [dp_low], rax
-.low:
     xor eax, eax
     mov [dp_n], eax
     mov [dp_live], eax
@@ -296,6 +279,37 @@ dm_draw_paths:
     pop rbx
     ret
 
+; eax = dp_setup(): 1 when there is a player camera to draw for; sets dp_cam, dp_scale
+; and, once, dp_low (shared with debug_roads.asm)
+dp_setup:
+    mov eax, [abs 0x5EB4FC]
+    test eax, eax
+    jz .no
+    mov eax, [rax + 0x38]           ; Player*
+    test eax, eax
+    jz .no
+    add eax, 0x14c
+    mov [dp_cam], eax
+    mov eax, [abs UI_CAMERA]
+    test eax, eax
+    jz .no
+    mov eax, [rax + 0xa8]           ; uiScale
+    mov [dp_scale], eax
+    cmp qword [dp_low], 0
+    jne .yes
+    sub rsp, 8
+    mov edi, 16
+    mov esi, 16
+    call low_alloc
+    add rsp, 8
+    mov [dp_low], rax
+.yes:
+    mov eax, 1
+    ret
+.no:
+    xor eax, eax
+    ret
+
 ; eax, edx = dp_project(edi = x, esi = y, edx = z, SCR_f world): back-buffer pixels
 dp_project:
     sub rsp, 24
@@ -455,8 +469,11 @@ dp_box:
 ; eax = dp_ped_color(rbx = Ped*): argb of the hue (id * 2^16/phi) mod 2^16, its lowest
 ; channel at DP_LOW so even blue reads on the dark plate
 dp_ped_color:
+    mov eax, [rbx + PED_ID]
+; eax = dp_hue(eax = id): the same for any id
+dp_hue:
     sub rsp, 16
-    imul eax, [rbx + PED_ID], 40503
+    imul eax, eax, 40503
     movzx eax, ax
     imul eax, eax, 6
     mov ecx, eax
@@ -486,7 +503,7 @@ dp_ped_color:
     add rsp, 16
     ret
 
-; dp_label(edi = x, esi = y pixels, edx = number 1..99, ecx = argb): the number up and
+; dp_label(edi = x, esi = y pixels, edx = number 0..999, ecx = argb): the number up and
 ; to the right of the point, in dp_font digits of 2 x 2 units on a DP_PLATE plate
 dp_label:
     push rbx
@@ -495,7 +512,7 @@ dp_label:
     push r14
     push r15
     push rbp
-    sub rsp, 24
+    sub rsp, 40
     mov [rsp], ecx
     mov eax, [dp_scale]
     shr eax, 13                     ; cell: 2 units in pixels
@@ -503,17 +520,25 @@ dp_label:
     mov eax, 1
 .c:
     mov r12d, eax
-    mov eax, edx                    ; digits, most significant first
+    mov eax, edx                    ; digits, most significant first: [rsp + 4 .. 12]
+    xor edx, edx
+    mov ecx, 100
+    div ecx
+    mov [rsp + 4], eax
+    mov eax, edx
     xor edx, edx
     mov ecx, 10
     div ecx
-    mov [rsp + 4], eax
-    mov [rsp + 8], edx
-    mov dword [rsp + 12], 1         ; first digit index: 1 = ones only
-    test eax, eax
-    jz .one
-    mov dword [rsp + 12], 0
-.one:
+    mov [rsp + 8], eax
+    mov [rsp + 12], edx
+    mov dword [rsp + 16], 0         ; first digit index: 2 = ones only
+    cmp dword [rsp + 4], 0
+    jne .first
+    inc dword [rsp + 16]
+    cmp dword [rsp + 8], 0
+    jne .first
+    inc dword [rsp + 16]
+.first:
     mov eax, [dp_scale]
     imul eax, eax, 3
     shr eax, 14                     ; 3 units
@@ -522,8 +547,8 @@ dp_label:
     lea eax, [r12 + r12*4]
     sub esi, eax
     mov r14d, esi                   ; y0
-    mov eax, 2                      ; plate: (4k - 1) cells wide, plus a cell around
-    sub eax, [rsp + 12]
+    mov eax, 3                      ; plate: (4k - 1) cells wide, plus a cell around
+    sub eax, [rsp + 16]
     shl eax, 2
     dec eax
     imul eax, r12d
@@ -538,9 +563,9 @@ dp_label:
     mov r8d, DP_PLATE
     call dp_box
 .digit:
-    cmp dword [rsp + 12], 2
+    cmp dword [rsp + 16], 3
     jae .out
-    mov eax, [rsp + 12]
+    mov eax, [rsp + 16]
     mov eax, [rsp + 4 + rax*4]
     lea eax, [rax + rax*4]
     lea rbx, [dp_font]
@@ -550,26 +575,26 @@ dp_label:
     cmp r15d, 5
     jae .ndigit
     movzx eax, byte [rbx + r15]
-    mov [rsp + 16], eax
+    mov [rsp + 20], eax
     xor ebp, ebp                    ; column 0..2 = bit 2..0
 .col:
     cmp ebp, 3
     jae .nrow
     mov ecx, 2
     sub ecx, ebp
-    bt dword [rsp + 16], ecx
+    bt dword [rsp + 20], ecx
     jnc .ncol
-    mov [rsp + 20], ebp             ; a run of set bits: one box
+    mov [rsp + 24], ebp             ; a run of set bits: one box
 .run:
     inc ebp
     cmp ebp, 3
     jae .box
     mov ecx, 2
     sub ecx, ebp
-    bt dword [rsp + 16], ecx
+    bt dword [rsp + 20], ecx
     jc .run
 .box:
-    mov edi, [rsp + 20]
+    mov edi, [rsp + 24]
     imul edi, r12d
     add edi, r13d
     mov edx, ebp
@@ -591,10 +616,10 @@ dp_label:
 .ndigit:
     lea eax, [r12*4]
     add r13d, eax                   ; next digit: 4 cells on
-    inc dword [rsp + 12]
+    inc dword [rsp + 16]
     jmp .digit
 .out:
-    add rsp, 24
+    add rsp, 40
     pop rbp
     pop r15
     pop r14

@@ -270,8 +270,12 @@ hk_DrawUI:
     call dm_explode_car
 .paths:
     cmp byte [dm_paths], 0          ; under the HUD and the menu
-    je .draw
+    je .roads
     call dm_draw_paths
+.roads:
+    cmp byte [dr_mode], 0           ; debug_roads.asm
+    je .draw
+    call dr_draw
 .draw:
     mov edi, 0x4CA440
     mov rsi, rbx
@@ -1333,6 +1337,7 @@ dmv_%1: dq dm_%1_change, dm_%1_fmt
     DMVALUE invinc
     DMVALUE repair
     DMVALUE explode
+    DMVALUE roads                   ; debug_roads.asm
 
 dm_page: dq dmp_main
 
@@ -1380,6 +1385,7 @@ dmp_flags_items:
     DMITEM DM_FLAG,   "Keep weapons: ", 0x5EAD9E  ; keep_weapons_after_death
     DMITEM DM_FLAG,   "Free shopping: ", 0x5EAD84             ; do_free_shopping
     DMITEM DM_FLAG,   "No police: ", 0x5EAD5E                 ; skip_police
+    DMITEM DM_VALUE,  "Road network: ", dmv_roads            ; debug_roads.asm
     DMITEM DM_BACK,   "Back", 0
 dmp_flags_end:
 
