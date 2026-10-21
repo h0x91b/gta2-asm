@@ -15,6 +15,7 @@ traps: `docs/formats/`.
 | `map.ts` | `.gmp` GBMP v500: DMAP (preferred) / CMAP columns and blocks, faces, slopes, arrows, ZONE |
 | `sound.ts` | `.sdt` + `.raw` sound banks → WAV |
 | `gci.ts` | `nyc.gci` car handling (text) |
+| `scr.ts`, `scr-opcodes.ts` | `.scr` mission scripts (main and sub-script layouts, commands, strings); VM: `docs/re/script-engine.md` |
 | `tga.ts`, `png.ts` | frontend TGA decode, PNG encode |
 | `cli.ts` | the command line below |
 
@@ -30,6 +31,7 @@ bun tools/formats/cli.ts gmp data/wil.gmp --block 40,135,3  # one block_info, de
 bun tools/formats/cli.ts gmp data/wil.gmp --zones --type 2
 bun tools/formats/cli.ts sdt data/audio/wil --wav 1 --out formats-out/wil1.wav
 bun tools/formats/cli.ts gci --model 0
+bun tools/formats/cli.ts scr data/wil.scr --list           # one line per command: index, offset, opcode, next, args
 ```
 
 Extracted game data never goes into the repository: `--out` is required for anything that

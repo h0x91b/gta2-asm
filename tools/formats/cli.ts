@@ -14,6 +14,7 @@ import { parseSoundBank, soundWav } from './sound.ts';
 import { parseGci } from './gci.ts';
 import { decodeTga } from './tga.ts';
 import { png } from './png.ts';
+import { parseScr, hex, STRING_TYPE_MISSION_FILE } from './scr.ts';
 
 const HELP = `bun tools/formats/cli.ts [--pak data.pak] <command> ...
   pak [--grep RE]                        list pak entries (size, data offset)
@@ -30,6 +31,7 @@ const HELP = `bun tools/formats/cli.ts [--pak data.pak] <command> ...
   sdt <bank> --wav ID --out f.wav
   gci [file] [--model N]                 nyc.gci car handling records
   tga <file> --out f.png
+  scr <file> [--summary|--list|--strings] mission script: header, opcode counts / one line per command / strings
 Paths inside the pak are case-insensitive; '\\\\' or '/' both work. JSON goes to stdout.`;
 
 const argv = process.argv.slice(2);
@@ -105,6 +107,19 @@ function sdt(pak: Pak, bank: string) {
   json({ bank: stem, entries: sounds.length, u8: sounds.filter(s => s.bits === 8).length, looped: sounds.filter(s => s.loopEnd !== -1).length, seconds: +sounds.reduce((n, s) => n + s.duration, 0).toFixed(2), rates });
 }
 
+function scr(pak: Pak, file: string) {
+  const s = parseScr(pak.read(file));
+  if (flag('--list')) {
+    for (const c of s.commands) console.log(`${String(c.index).padStart(4)} @${c.offset.toString(16).padStart(4, '0')} ${String(c.type).padStart(3)} ${c.name.padEnd(36)} next=${c.next ?? 'end'}${c.returnValue ? ` rv=${c.returnValue}` : ''}${c.args.length ? ` ${hex(c.args)}` : ''}`);
+    return;
+  }
+  if (flag('--strings')) return json(s.strings);
+  const opcodes: Record<string, number> = {}; for (const c of s.commands) opcodes[c.name] = (opcodes[c.name] ?? 0) + 1;
+  json({ file, kind: s.kind, first: s.first, start: s.start, commands: s.commands.length, strings: s.strings.length,
+    missionFiles: s.strings.filter(x => x.type === STRING_TYPE_MISSION_FILE).map(x => x.text),
+    opcodes: Object.fromEntries(Object.entries(opcodes).sort((a, b) => b[1] - a[1])) });
+}
+
 function main() {
   const pakPath = option('--pak'), cmd = argv.shift();
   if (!cmd || cmd === 'help' || cmd === '--help') return console.log(HELP);
@@ -117,6 +132,7 @@ function main() {
     if (cmd === 'sty') sty(pak, file);
     else if (cmd === 'gmp') gmp(pak, file);
     else if (cmd === 'sdt') sdt(pak, file);
+    else if (cmd === 'scr') scr(pak, file);
     else if (cmd === 'tga') { const r = decodeTga(pak.read(file)); console.log(`${file}: ${r.width}x${r.height}`); writeOut(option('--out'), png(r.width, r.height, r.rgba)); }
     else throw Error(`unknown command ${cmd}\n\n${HELP}`);
     flag('--summary');

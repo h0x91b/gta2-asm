@@ -142,7 +142,7 @@ Option 1 is implemented for the frontend in `host/w32_renderer.asm`
 
 ## File-format decoders (`tools/formats/`)
 
-TypeScript decoders for `.sty`, `.gmp`, `.sdt`/`.raw`, `nyc.gci` and frontend `.tga`, run
+TypeScript decoders for `.sty`, `.gmp`, `.sdt`/`.raw`, `nyc.gci`, `.scr` and frontend `.tga`, run
 with Bun (`/opt/homebrew/bin/bun`, no npm deps), reading straight from `data.pak` with the
 same rules as `w32_vfs.asm`. Use them to learn what
 a loader function in `gta2.exe` is parsing: `bun tools/formats/cli.ts help`, e.g.

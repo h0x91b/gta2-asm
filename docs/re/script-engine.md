@@ -36,7 +36,8 @@ GameTick ─► MissionScript_ExecuteScriptThreads 0x481900      every frame
 
 ## `.scr` file layout (V)
 
-All little-endian. Checked against the 85 `.scr` files in `data.pak`.
+All little-endian. Checked against the 85 `.scr` files in `data.pak`. Decoder:
+`tools/formats/scr.ts` (`bun tools/formats/cli.ts scr data/wil.scr --list`).
 
 ### Main script (`data/<map>.scr`, always 82656 bytes; 18 files)
 
