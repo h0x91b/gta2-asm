@@ -22,11 +22,11 @@
 ;   lane (de_spawn_on_road). The game refuses a car without a road tile at least 2 lanes
 ;   wide near it (FireEngineManager_AllocRequest 0x451300) or with both truck slots busy.
 ;
-; Known limit (measured 2026-10-21, Downtown): the vehicle spawns, siren on, and drives a
-; drive-order route, but in every run so far it did not stop at the target: the truck's
-; route (RoadNetwork_FindRoute) kept growing behind it while it drove on north, and the
-; ambulance passed 3 blocks from the body. The crew therefore never got out in a test.
-; Open question for the car AI pass, not something this file changes.
+; Known limit, found in the Seq 43 bug hunt (2026-10-22): the game's own FollowRoute never
+; steers a service car into the target's lane nor arrives (z gate at 0x430444, see
+; hk_FollowRoute below), so without the hook the vehicle drives past the target one lane
+; over. hk_FollowRoute makes the two services arrive after a call; the cause is in the
+; game's code, not in the port.
 ;
 ; Both honour the game's own switches g_skipAmbulance 0x5EAD6B / g_skipFireEngines
 ; 0x5EAD8B. After a call the slot states are printed to stdout every DE_LOG_EVERY frames
@@ -84,11 +84,143 @@ dm_firetruck_fmt:
     mov byte [rdi], 0
     ret
 
+; hk_FollowRoute: CALLHOOK at 0x432678, the `call CarAI_FollowRoute` (0x430320, fastcall
+; ecx = CarAI*) in CarAI_Update. Why (measured, Seq 43 bug hunt, docs/re/cars-and-car-ai.md):
+; FollowRoute only steers into the target's lane and only arrives by "passed the target
+; along the segment" when floor(car z - 1.0) == floor(order z) (0x430437..0x430444), but
+; every drive order the game gives its services carries the SPRITE z of the ground (2.0:
+; FindSpawnRoadTile node z for the ambulance, the wreck's z for the fire truck, script
+; goto_area_in_car z=2.0), while a car on flat ground has z 2.0 too, so floor(z - 1) = 1
+; != 2 and the services drive past a target one lane over forever. For the car an
+; AmbulanceManager / FireEngineManager slot holds (de_is_service_car), after a K-menu
+; call, the order's z is set to car z - 1.0 for the length of the call only (CarAI_UpdateDriveOrder 0x42d390 plans with the sprite z, so the order
+; must keep it between calls).
+hk_FollowRoute:
+    HENTER
+    mov r12d, [abs G_ECX]           ; CarAI*
+    xor r13d, r13d                  ; order whose z was changed
+    cmp byte [de_assist], 0
+    je .call
+    mov edi, [r12]                  ; Car*
+    call de_is_service_car
+    test eax, eax
+    jz .call
+    mov eax, [r12]
+    mov r13d, [rax + 0x60]          ; CarDriveOrder*
+    test r13d, r13d
+    jz .call
+    mov ecx, [rax + 0x50]           ; body (Position)
+    mov r14d, [r13 + 0x1c]          ; the order's z
+    mov ecx, [rcx + 0x1c]
+    sub ecx, 0x4000
+    mov [r13 + 0x1c], ecx
+.call:
+    mov edi, 0x430320
+    xor esi, esi
+    xor edx, edx
+    xor ecx, ecx
+    mov r8d, r12d
+    xor r9d, r9d
+    call call32
+    test r13d, r13d
+    jz .out
+    mov eax, [r12]
+    cmp [rax + 0x60], r13d          ; still the same order
+    jne .out
+    mov [r13 + 0x1c], r14d
+.out:
+    HRET
+
+; eax = de_is_service_car(edi = Car*): 1 if the car is the vehicle of an active
+; AmbulanceSlot (AMBULANCE_MGR +0xD0 slots[2] x 0x20: +4 EmergencyVehicleSlot*, whose +0
+; is the car; +0x18 slot state) or the truck of an active FireEngineSlot (FIREENGINE_MGR
+; slots[2] x 0x28: +4 active, +0x1c truck); same fields as de_log_changes
+de_is_service_car:
+    xor eax, eax
+    test edi, edi
+    jz .out
+    mov ecx, [abs AMBULANCE_MGR]
+    test ecx, ecx
+    jz .fire
+    xor edx, edx
+.a:
+    mov r8d, edx
+    shl r8d, 5
+    cmp dword [rcx + 0xD0 + r8 + 0x18], 0
+    je .an
+    mov r9d, [rcx + 0xD0 + r8 + 4]
+    test r9d, r9d
+    jz .an
+    cmp [r9], edi
+    je .yes
+.an:
+    inc edx
+    cmp edx, 2
+    jb .a
+.fire:
+    mov ecx, [abs FIREENGINE_MGR]
+    test ecx, ecx
+    jz .out
+    xor edx, edx
+.f:
+    imul r8d, edx, 0x28
+    cmp dword [rcx + r8 + 4], 0
+    je .fn
+    cmp [rcx + r8 + 0x1c], edi
+    je .yes
+.fn:
+    inc edx
+    cmp edx, 2
+    jb .f
+    jmp .out
+.yes:
+    mov eax, 1
+.out:
+    ret
+
 ; de_run: once per gameplay frame from hk_DrawUI, on the game's side
 de_run:
     sub rsp, 8
+%ifdef DE_TEST_TP
+    ; test only (-DDE_TEST_TP=frame -DDE_TEST_TX=x -DDE_TEST_TY=y; the Downtown start square has
+    ; no road within the 6 rings the ambulance search needs): at frame DE_TEST_TP the player is moved to tile (DE_TEST_TX, DE_TEST_TY)
+    ; by Ped_Teleport 0x435C80 fastcall(Ped*, edx; SCR_f x, y), ret 8 (as debug_roads.asm DR_TEST)
+    cmp dword [r_frames], DE_TEST_TP
+    jne .notp
+    call dm_player_ped
+    test eax, eax
+    jz .notp
+    mov dword [de_args], (DE_TEST_TX << 14) | 0x2000
+    mov dword [de_args + 4], (DE_TEST_TY << 14) | 0x2000
+    mov r8d, eax
+    mov edi, 0x435C80
+    lea rsi, [de_args]
+    mov edx, 2
+    xor ecx, ecx
+    xor r9d, r9d
+    call call32
+.notp:
+%endif
     movzx eax, byte [de_req]
     mov byte [de_req], 0
+    test eax, eax
+    jz .nocall
+    mov byte [de_assist], 1         ; from the first call on, hk_FollowRoute helps
+%ifdef DE_TRACE
+    ; CRT static-initialiser constants the route code reads (re/static_constants.csv)
+    lea rdi, [fmt_de_consts]
+    mov esi, [abs 0x5E512C]         ; 1.0  = 0x4000
+    mov edx, [abs 0x5E50B8]         ; 5.0  = 0x14000
+    mov ecx, [abs 0x5E520C]         ; 2.0  = 0x8000
+    mov r8d, [abs 0x5E5398]         ; 0x1eb
+    push rax
+    push rax
+    xor eax, eax
+    call _printf
+    pop rax
+    pop rax
+%endif
+.nocall:
     cmp eax, 1
     jne .f
     call de_call_ambulance
@@ -384,6 +516,17 @@ de_call_ambulance:
 .toast:
     mov [dm_toast], r13
     mov dword [dm_toast_left], DM_TOAST_FRAMES
+%ifdef DE_TRACE
+    lea rdi, [fmt_de_toast]
+    mov esi, [r_frames]
+    mov rdx, r13
+    mov ecx, [r14 + PED_POS]
+    sar ecx, 14
+    mov r8d, [r14 + PED_POS + 4]
+    sar r8d, 14
+    xor eax, eax
+    call _printf
+%endif
     add rsp, 16
     pop r15
     pop r14
@@ -862,11 +1005,39 @@ de_dump_route:
     jz .out
     movsx r12d, byte [rax + 0x28]   ; slot
     movzx r13d, word [rax + 0x56]   ; step
+    mov r14d, edi                   ; car
     lea rdi, [fmt_de_route]
     mov esi, r12d
     mov edx, r13d
     xor eax, eax
     call _printf
+    ; Seq43 bug hunt: CarAI flags (+0x24), drive order mode/followRoadActive/arrived/urgent
+    ; (CarDriveOrder +8/+0x22/+0x26/+0x20) and the car's tile as the AI sees it
+    mov eax, [r14 + 0x5c]
+    mov r15d, [r14 + 0x60]
+    test r15d, r15d
+    jz .noai
+    lea rdi, [fmt_de_ai]
+    mov esi, [rax + 0x24]
+    mov edx, [r15 + 8]
+    movzx ecx, byte [r15 + 0x22]
+    movzx r8d, byte [r15 + 0x26]
+    movzx r9d, byte [r15 + 0x20]
+    xor eax, eax
+    call _printf
+    mov eax, [r14 + 0x50]           ; car sprite: +0x14 x, +0x18 y, +0x1c z (Fix16)
+    lea rdi, [fmt_de_ai2]
+    mov esi, [r15 + 0x14]
+    mov edx, [r15 + 0x18]
+    mov ecx, [r15 + 0x1c]
+    mov r8d, [rax + 0x14]
+    mov r9d, [rax + 0x18]
+    push rax
+    push qword [rax + 0x1c]
+    xor eax, eax
+    call _printf
+    add rsp, 16
+.noai:
     test r12d, r12d
     jle .nl
     mov ebx, [abs 0x5D351C]
@@ -1021,6 +1192,8 @@ de_log:
     push r10
     call _printf
     add rsp, 16
+    mov edi, r15d                   ; the ambulance's route and drive order
+    call de_dump_route
     inc r12d
     cmp r12d, 2
     jb .amb
@@ -1092,6 +1265,7 @@ de_low:      dq 0
     DMVALUE firetruck
 de_log_left: dd 0
 de_req:      db 0
+de_assist:   db 0
 align 4
 de_amb_ped:  dd 0
 de_amb_retry: dd 0
@@ -1122,6 +1296,10 @@ fmt_de_chg_amb: db "emerg: f%d ambulance slot%d stage %d (was %d)", 10, 0
 fmt_de_log_body: db "emerg   body objective %d state %d z %x, emergency pool in use %d, pathfinder busy %d", 10, 0
 fmt_de_requeue: db "emerg: f%d body dropped by the game, queued again", 10, 0
 fmt_de_route: db "emerg   route slot %d step %d:", 0
+fmt_de_ai: db "emerg   ai flags %08x order mode %d followRoad %d arrived %d urgent %d", 10, 0
+fmt_de_ai2: db "emerg   order target %x,%x,%x car pos %x,%x,%x", 10, 0
+fmt_de_toast: db "emerg: f%d call ambulance: %s (player %d,%d)", 10, 0
+fmt_de_consts: db "emerg: consts 5e512c=%x 5e50b8=%x 5e520c=%x 5e5398=%x", 10, 0
 fmt_de_junc: db " (%d,%d-%d,%d)", 0
 fmt_de_nl: db 10, 0
 fmt_de_fire:     db "emerg: fire truck for car %08x id %d slot %d at %d,%d z %x", 10, 0

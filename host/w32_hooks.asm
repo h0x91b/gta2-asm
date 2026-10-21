@@ -395,6 +395,7 @@ hooks:
     CALLHOOK 0x45A61F, "DrawUI", 0x4CA440               ; debug_menu.asm
     CALLHOOK 0x4A7901, "MoveOnFoot", 0x4A5C50           ; player_move.asm
     JMPHOOK 0x49AC76, "WalkHeading", {0x8A,0x44,0x24,0x11, 0x84,0xC0}   ; player_move.asm
+    CALLHOOK 0x432678, "CarAIFollowRoute", 0x430320     ; debug_emergency.asm
     dq 0
 
 shimtab_gta2:
@@ -406,6 +407,7 @@ shimtab_gta2:
     SHIM "DrawUI", 0, hk_DrawUI
     SHIM "MoveOnFoot", 4, hk_MoveOnFoot
     SHIM "WalkHeading", 4, hk_WalkHeading
+    SHIM "CarAIFollowRoute", 0, hk_FollowRoute
     dq 0
 
 hook_kinds: dq s_hk_entry, s_hk_call, s_hk_jmp, s_hk_patch

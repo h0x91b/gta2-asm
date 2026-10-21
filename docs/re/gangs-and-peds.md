@@ -474,9 +474,13 @@ Used by the K menu's "Call ambulance" / "Call fire truck" (`host/debug_emergency
   0x424090 removes it after 0x81 ticks off screen (`Car_CanBeRecycled` 0x424030 keeps
   `CAR_CAT_PARKED` cars until wrecked); it also reads the block's arrows without a null
   check (crash at 0x462f91 on an air tile).
-- **Open: arrival.** Even with a still target mid-lane, the truck (and the MEDICAR) drove
-  on north along x = 144 past the target; the truck's route list (`CarAI+0x28`
-  routeSlot, `routes[]`) kept growing with the junctions behind it. Not resolved here.
+- **Arrival (solved in Seq 43).** Even with a still target mid-lane, the truck (and the
+  MEDICAR) drove past the target, and the route list (`CarAI+0x28` routeSlot, `routes[]`)
+  changed with the junctions around it. Native 11.44: the route is re-planned every tick,
+  and `CarAI_FollowRoute` 0x430320 only steers into the target's lane / arrives when
+  `floor(car z - 1) == floor(order z)`, which never holds for ground-level orders, so the
+  car arrives only on the exact target tile. Full chain and the K-menu workaround
+  (`hk_FollowRoute`): [cars-and-car-ai.md](cars-and-car-ai.md) §5–6.
 
 ## 8. Hooks for mods
 
