@@ -5,7 +5,7 @@
 ;   # comment                  at the start of a line or after a blank
 ;   section:                   a top-level key without a value opens a section
 ;     key: value               an indented key belongs to the last section
-; Values are booleans: true/false, yes/no, on/off, 1/0. Indent with spaces only. Lists,
+; Values are booleans (true/false, yes/no, on/off, 1/0) unless a key says otherwise. Indent with spaces only. Lists,
 ; quotes, flow syntax and multi-line values are errors (with the line number); unknown
 ; sections and keys are reported and skipped. config.example.yaml lists every key.
 ;
@@ -19,11 +19,19 @@
 ;          show_player_names, is read by value with default 1
 ;          (GetSettingBooleanWithDefaultValue 0x4B5AE0) and is written as dword 0/1.
 ;          Applied before the game starts: a change needs a restart.
+;   camera zoom: auto | percent (25..400). The camera's target zoom (cameraPosTarget.zoom,
+;          the view scale) is multiplied by percent/100 on its way to the camera
+;          (hk_CameraPosApply, w32_hooks.asm); smaller = more city. Vanilla 1280x960
+;          shows the same part of the city as 640x480, only magnified (measured), so
+;          auto = 640 / window width keeps the original 640x480 pixel scale at any size.
 
 CFG_LINE    equ 1024
 CFG_PATH    equ 1024
 CF_EXISTS   equ 0                   ; flag kinds: set = value exists
 CF_VALUE    equ 1                   ;             set = dword value != 0
+ZOOM_AUTO   equ -1
+ZOOM_MIN    equ 25
+ZOOM_MAX    equ 400
 
 section .text
 
@@ -173,8 +181,16 @@ config_apply:
     lea rsi, [s_cfg_debug]
     call _strcmp
     test eax, eax
-    jnz .skip_section
+    jnz .not_debug
     mov r13d, 1
+    jmp .line
+.not_debug:
+    mov rdi, rbx
+    lea rsi, [s_cfg_camera]
+    call _strcmp
+    test eax, eax
+    jnz .skip_section
+    mov r13d, 2
     jmp .line
 .skip_section:
     lea rdi, [fmt_cfg_skip_section]
@@ -189,6 +205,8 @@ config_apply:
     test r13d, r13d
     js .err_nosection
     jz .line                        ; inside a skipped section
+    cmp r13d, 2
+    je .camera
     mov rdi, [cfg_val]
     call cfg_bool
     test eax, eax
@@ -210,6 +228,41 @@ config_apply:
     mov rcx, rbx
     xor eax, eax
     call _printf
+    jmp .line
+.camera:                            ; camera.zoom: auto | percent
+    mov rdi, rbx
+    lea rsi, [s_cfg_zoom]
+    call _strcmp
+    test eax, eax
+    jnz .unknown_flag
+    mov rdi, [cfg_val]
+    lea rsi, [s_cfg_auto]
+    call _strcmp
+    test eax, eax
+    jnz .zoom_pct
+    mov dword [cam_zoom_cfg], ZOOM_AUTO
+    jmp .zoom_set
+.zoom_pct:
+    mov rdi, [cfg_val]
+    lea rsi, [cfg_end]
+    mov edx, 10
+    call _strtol
+    mov rcx, [cfg_end]
+    cmp rcx, [cfg_val]
+    je .err_zoom
+    cmp byte [rcx], 0
+    jne .err_zoom
+    cmp rax, ZOOM_MIN
+    jl .err_zoom
+    cmp rax, ZOOM_MAX
+    jg .err_zoom
+    mov [cam_zoom_cfg], eax
+.zoom_set:
+    lea rdi, [fmt_cfg_zoom]
+    mov rsi, [cfg_val]
+    xor eax, eax
+    call _printf
+    inc dword [cfg_nset]
     jmp .line
 .eof:
     mov rdi, r15
@@ -240,6 +293,9 @@ config_apply:
     jmp .err
 .err_nosection:
     lea r9, [msg_cfg_nosection]
+    jmp .err
+.err_zoom:
+    lea r9, [msg_cfg_zoom]
     jmp .err
 .err_bool:
     lea r9, [msg_cfg_bool]
@@ -473,6 +529,11 @@ cfg_path:     dq 0                  ; config file; 0 = s_cfg_default in the over
 section .rodata
 s_cfg_default: db "config.yaml", 0
 s_cfg_debug:  db "debug", 0
+s_cfg_camera: db "camera", 0
+s_cfg_zoom:   db "zoom", 0
+s_cfg_auto:   db "auto", 0
+fmt_cfg_zoom: db "config: camera.zoom = %s", 10, 0
+msg_cfg_zoom: db "camera.zoom: expected auto or a percentage 25..400", 0
 s_reg_debug:  db "HKEY_CURRENT_USER\SOFTWARE\DMA Design Ltd\GTA2\Debug", 0
 s_slash:      db "/", 0
 s_cfg_on:     db "on", 0
@@ -482,7 +543,7 @@ fmt_cfg_missing: db "config: cannot open %s", 0
 fmt_cfg_loaded: db "config: %s -> %d setting(s) applied", 10, 0
 fmt_cfg_flag: db "config: debug.%s = %s", 10, 0
 fmt_cfg_skip_section: db "config: %s:%d: unknown section '%s', skipped", 10, 0
-fmt_cfg_skip_flag: db "config: %s:%d: unknown debug flag '%s', skipped", 10, 0
+fmt_cfg_skip_flag: db "config: %s:%d: unknown key '%s', skipped", 10, 0
 fmt_cfg_err:  db "config: %s:%d: %s", 0
 msg_cfg_tab:  db "tabs are not allowed in indentation, use spaces", 0
 msg_cfg_syntax: db "only 'key: value' lines are supported (no lists, quotes or {} [])", 0
@@ -496,6 +557,8 @@ cfg_explicit: resb 1                ; --config= given: a missing file is an erro
 alignb 8
 cfg_val:      resq 1
 cfg_nset:     resd 1
+cfg_end:      resq 1
+cam_zoom_cfg: resd 1                ; 0 = vanilla, ZOOM_AUTO, or percent
 cfg_dword:    resd 1
 cfg_abs:      resb CFG_PATH
 cfg_line:     resb CFG_LINE

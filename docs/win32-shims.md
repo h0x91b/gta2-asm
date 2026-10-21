@@ -144,7 +144,8 @@ match the 64-bit-inode struct layouts; the plain names are the legacy ABI.
   The one section today is `debug:` — the game's own developer flags, which
   HiddenDebugFlags (`0x451930`) reads once from `HKCU\SOFTWARE\DMA Design Ltd\GTA2\Debug`
   (a flag is on when its value exists, so `false` deletes the value; `show_player_names` is
-  value-based). Every flag with comments: `config.example.yaml`.
+  value-based). Every flag with comments: `config.example.yaml`. Section `camera:`,
+  key `zoom: auto | 25..400` (percent of the game's zoom, see "Hooks", `0x41F3E9`).
 - **Threads.** None exist; sync objects are tokens. `CreateThread` is not imported.
 - **OS identity.** Windows XP SP3 (5.1.2600, NT), code page 1252 (implemented as
   Latin-1), US-English locale, 1 CPU, DirectX 8.1.
@@ -267,8 +268,9 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
 | address | function | why |
 |---|---|---|
 | `0x4031C0` | `GetDXVersion(DWORD* ver, DWORD* platform)` — Microsoft's DirectX SDK sample (Ghidra name `LoadDirectInputFuncs`) | it creates DirectDraw objects and surfaces only to measure the DirectX version, and WinMain refuses anything below `0x601` (`0x4D11DB`, "ERROR: Incorrect version of DirectX"). The hook answers `0x801` / NT. |
-| `0x41F3E9` | `CameraPosApply` (JMPHOOK, 7 bytes) — inside the camera update, `cameraPosTarget` (camera+0x10) is copied into `cameraPosTarget2` (camera+0), which `cameraPos` then follows; `esi` = Camera* | seam for camera height/zoom (seuko-mod `camera-pos-apply.cpp`). Pass-through today. |
-| `0x4BE394` | `call ScaleScrf` (CALLHOOK) — thiscall `0x401BD0`, out = main camera `uiScale` × shadow offset | seam for the shadow offset when the view scale changes (seuko-mod `scale-shadow.cpp`). Calls the original today. |
+| `0x41F3E9` | `CameraPosApply` (JMPHOOK, 7 bytes) — inside the camera update, `cameraPosTarget` (camera+0x10) is copied into `cameraPosTarget2` (camera+0), which `cameraPos` then follows; `esi` = Camera* | multiplies the target zoom (+0x1c) by `camera.zoom` from config.yaml and skips the original copy. The view scale is `cameraPos.zoom`, not `uiScale`: forcing `uiScale` = 1.0 at 1280×960 only halved the HUD (measured). (seuko-mod `camera-pos-apply.cpp`) |
+| `0x4BE394` | `call ScaleScrf` (CALLHOOK) — thiscall `0x401BD0`, out = main camera `uiScale` × shadow offset | scales the shadow offset by the same zoom, so shadows stay under their sprites (seuko-mod `scale-shadow.cpp`). |
+| `0x472535` | `call DrawMapLayer` (CALLHOOK) — fastcall `0x4720E0(S12*)`, per map layer, after its blocks are queued: inline queue at S12+0x1c, count +0x2efc, 1500 entries, no bounds check | safety valve: above 1200 entries the zoom-out is reduced 5 points per layer (Downtown street level: 99 at 100%, 357 at 50%, 1271 at 25%). (seuko-mod `draw-map-layer.cpp`) |
 
 ## Input (`w32_dinput.asm`, `pump_sdl` in `w32_user32.asm`)
 

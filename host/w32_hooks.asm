@@ -204,49 +204,122 @@ hk_GetDXVersion:
     ret
 
 ; CameraPosApply @0x41F3E9 (JMPHOOK), inside the camera update: copies cameraPosTarget
-; (camera+0x10) into cameraPosTarget2 (camera+0), which cameraPos then follows.
-; esi = Camera*, edx = camera+0x10.
+; (camera+0x10: x, y, z, zoom) into cameraPosTarget2 (camera+0), which cameraPos then
+; follows; esi = Camera*. We do the copy with zoom * cam_zoom_pct / 100 (config.yaml
+; camera.zoom) and skip the original. The target itself is recomputed by the game, so
+; the factor never accumulates; at 100% this is the original copy.
 ; Hook site from gta2-seuko-mod by izawartka (https://github.com/izawartka/gta2-seuko-mod),
 ; src/events/camera-pos-apply.cpp @25b1985.
 hk_CameraPosApply:
     HENTER
-    mov eax, [rbx]                  ; regs*
-    inc dword [n_cam_apply]
-    cmp dword [n_cam_apply], 1
-    jne .out
-    lea rdi, [fmt_first_hit]
-    lea rsi, [s_cam_apply]
-    mov edx, [rax + R_ESI]
+    cmp dword [cam_zoom_pct], 0
+    jne .copy
+    mov eax, 100                    ; first call (gameplay): resolve the factor
+    mov ecx, [cam_zoom_cfg]
+    test ecx, ecx
+    jz .resolved
+    mov eax, ecx
+    cmp ecx, ZOOM_AUTO
+    jne .resolved
+    mov ecx, [abs 0x673578]             ; window_width as the game sees it
+    mov eax, 100
+    cmp ecx, 640
+    jbe .resolved
+    mov eax, 64000
+    xor edx, edx
+    div ecx
+    cmp eax, ZOOM_MIN
+    jae .resolved
+    mov eax, ZOOM_MIN
+.resolved:
+    mov [cam_zoom_pct], eax
+    lea rdi, [fmt_cam_zoom]
+    mov esi, eax
+    mov edx, [abs 0x673578]
+    mov ecx, [abs 0x6732e8]
     xor eax, eax
     call _printf
-.out:
-    xor eax, eax
+.copy:
+    mov eax, [rbx]                  ; regs*
+    mov esi, [rax + R_ESI]          ; Camera*
+    mov ecx, [rsi + 0x10]
+    mov [rsi], ecx
+    mov ecx, [rsi + 0x14]
+    mov [rsi + 4], ecx
+    mov ecx, [rsi + 0x18]
+    mov [rsi + 8], ecx
+    mov eax, [rsi + 0x1c]
+    imul dword [cam_zoom_pct]
+    mov ecx, 100
+    idiv ecx
+    mov [rsi + 12], eax
+    mov eax, 0x41F3FF               ; past the original copy
     HRET
 
 ; ScaleScrf @0x401BD0, thiscall(ecx = SCR_f* factor; out*, int* scalar), ret 8: out =
-; factor * scalar. At 0x4BE394 the factor is the main camera's uiScale (0x5E3CC4 +0xa8)
-; and the result a sprite shadow's offset (CALLHOOK; for now it only calls the original).
+; factor * scalar, returns out. At 0x4BE394 the factor is the main camera's uiScale
+; (0x5E3CC4 +0xa8) and the result a sprite shadow's screen offset, which has to shrink
+; with the zoom like the sprites do: out * cam_zoom_pct / 100.
 ; Hook site from gta2-seuko-mod by izawartka (https://github.com/izawartka/gta2-seuko-mod),
 ; src/events/scale-shadow.cpp @25b1985.
 hk_ScaleShadow:
     HENTER
-    mov r12d, [abs G_ECX]
-    mov r13d, [abs G_EDX]
-    inc dword [n_shadow]
-    cmp dword [n_shadow], 1
-    jne .call
-    lea rdi, [fmt_first_hit]
-    lea rsi, [s_shadow]
-    mov edx, r12d
-    xor eax, eax
-    call _printf
-.call:
     mov edi, 0x401BD0
     mov rsi, rbx
     mov edx, 2
     xor ecx, ecx
+    mov r8d, [abs G_ECX]
+    mov r9d, [abs G_EDX]
+    call call32
+    mov r12d, eax
+    mov ecx, [cam_zoom_pct]
+    test ecx, ecx
+    jz .out
+    cmp ecx, 100
+    je .out
+    mov eax, [r12]
+    imul ecx
+    mov ecx, 100
+    idiv ecx
+    mov [r12], eax
+.out:
+    mov eax, r12d
+    HRET
+
+; DrawMapLayer(S12*) @0x4720E0, fastcall, called at 0x472535 once per map layer by
+; SetupFrameLighting (0x472110), after it queued the layer's visible blocks. The queue
+; is inline in S12: 8-byte entries at +0x1c, count at +0x2efc, room for QUEUE_CAP, and
+; the adder (0x46BB90) has no bounds check, so overflowing it corrupts S12 (seuko-mod's
+; "low zoom crashes"). Its size grows with 1/zoom^2: Downtown at street level measured
+; 99 at 100%, 165 at 70%, 357 at 50% (2026-10-21). Safety valve: past QUEUE_SAFE the
+; zoom-out is reduced by 5 points per layer drawn until it fits again.
+; Hook site from gta2-seuko-mod by izawartka (https://github.com/izawartka/gta2-seuko-mod),
+; src/events/draw-map-layer.cpp @25b1985.
+QUEUE_CAP  equ (0x2efc - 0x1c) / 8
+QUEUE_SAFE equ QUEUE_CAP * 4 / 5
+hk_DrawMapLayer:
+    HENTER
+    mov r12d, [abs G_ECX]
+    mov eax, [r12 + 0x2efc]
+    cmp eax, QUEUE_SAFE
+    jle .call
+    mov ecx, [cam_zoom_pct]
+    cmp ecx, 100
+    jae .call
+    add ecx, 5
+    mov [cam_zoom_pct], ecx
+    lea rdi, [fmt_queue]
+    mov esi, eax
+    mov edx, QUEUE_CAP
+    xor eax, eax
+    call _printf
+.call:
+    mov edi, 0x4720E0
+    mov rsi, rbx
+    xor edx, edx
+    xor ecx, ecx
     mov r8d, r12d
-    mov r9d, r13d
+    xor r9d, r9d
     call call32
     HRET
 
@@ -313,6 +386,7 @@ hooks:
     HOOK 0x4031C0, "GetDXVersion", 0x8D5700000114EC81   ; sub esp,0x114; push edi; lea
     JMPHOOK 0x41F3E9, "CameraPosApply", {0x8B,0x02, 0x89,0x06, 0x8B,0x4A,0x04}
     CALLHOOK 0x4BE394, "ScaleShadow", 0x401BD0
+    CALLHOOK 0x472535, "DrawMapLayer", 0x4720E0
     dq 0
 
 shimtab_gta2:
@@ -320,6 +394,7 @@ shimtab_gta2:
     SHIM "GetDXVersion", 8, hk_GetDXVersion
     SHIM "CameraPosApply", 4, hk_CameraPosApply
     SHIM "ScaleShadow", 8, hk_ScaleShadow
+    SHIM "DrawMapLayer", 0, hk_DrawMapLayer
     dq 0
 
 hook_kinds: dq s_hk_entry, s_hk_call, s_hk_jmp, s_hk_patch
@@ -333,12 +408,10 @@ fmt_hook:     db "hook: 0x%x %s (%s)", 10, 0
 fmt_hook_bad: db "hook: 0x%x %s: original bytes differ (not vanilla 11.44 gta2.exe?)", 10, 0
 msg_hook:     db "cannot install hooks", 0
 msg_tramps:   db "too many JMPHOOK trampolines", 0
-fmt_first_hit: db "hook: %s first hit (0x%x)", 10, 0
-s_cam_apply:  db "CameraPosApply", 0
-s_shadow:     db "ScaleShadow", 0
+fmt_queue:    db "camera: render queue at %d of %d entries, zoom raised to %d%%", 10, 0
+fmt_cam_zoom: db "camera: zoom %d%% (window %dx%d)", 10, 0
 
 section .bss
 n_tramps: resd 1
-n_cam_apply: resd 1
-n_shadow: resd 1
+cam_zoom_pct: resd 1                ; resolved camera.zoom; 0 until gameplay starts
 section .text
