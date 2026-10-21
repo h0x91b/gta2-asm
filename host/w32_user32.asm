@@ -22,6 +22,9 @@ SDL_KEY_DOWN       equ 36           ; offsetof(SDL_KeyboardEvent, down)
 SDL_KEY_REPEAT     equ 37           ; offsetof(SDL_KeyboardEvent, repeat)
 SDL_EVENT_WINDOW_FOCUS_GAINED equ 0x20E
 SDL_EVENT_WINDOW_FOCUS_LOST   equ 0x20F
+SDL_WINDOW_HIDDEN      equ 0x8
+SDL_WINDOW_MINIMIZED   equ 0x40
+SDL_WINDOW_INPUT_FOCUS equ 0x200
 SDL_EVENT_MOUSE_MOTION      equ 0x400
 SDL_EVENT_MOUSE_BUTTON_DOWN equ 0x401
 SDL_EVENT_MOUSE_BUTTON_UP   equ 0x402
@@ -89,6 +92,7 @@ section .text
     SDLFN SDL_PushEvent
     SDLFN SDL_RaiseWindow
     SDLFN SDL_SetWindowRelativeMouseMode
+    SDLFN SDL_GetWindowFlags
 %endmacro
 
 setup_user32:
@@ -282,6 +286,7 @@ pump_sdl:
     push r12
     push r13
     sub rsp, 128                    ; SDL_Event (128); rsp stays 16-aligned
+    call focus_poll                 ; mute state before the first mixed sample
     call audio_pump                 ; mss32 mixer: top the audio output up
     cmp byte [sdl_inited], 0
     je .out
@@ -412,6 +417,35 @@ pump_sdl:
     pop r13
     pop r12
     pop rbx
+    ret
+
+; focus_poll: the main window's own SDL_WINDOW_INPUT_FOCUS flag drives the audio mute,
+; not only FOCUS_GAINED/LOST: a window that never gets focus (started from a terminal
+; while the user works in another app) sends neither event and would stay audible.
+; Hidden or minimised counts as unfocused. audio_focus ignores repeats; the
+; FOCUS_GAINED/LOST events above still apply a change within the same pump.
+focus_poll:
+    cmp byte [sdl_inited], 0
+    je .r
+    sub rsp, 8
+    mov edi, [main_hwnd]
+    call win_get
+    test rax, rax
+    jz .done
+    mov rdi, [rax + WN_SDL]
+    test rdi, rdi
+    jz .done
+    call [sdl_SDL_GetWindowFlags]
+    xor edi, edi
+    test eax, SDL_WINDOW_HIDDEN | SDL_WINDOW_MINIMIZED
+    jnz .set
+    test eax, SDL_WINDOW_INPUT_FOCUS
+    setnz dil
+.set:
+    call audio_focus
+.done:
+    add rsp, 8
+.r:
     ret
 
 ; hold_window: with --hold, keep pumping SDL events for 5 s so the window can be seen

@@ -563,7 +563,8 @@ aud_open_device:
     mov [aud_stream], rax
     mov rdi, rax
     call [a_SDL_ResumeAudioStreamDevice]
-    call aud_apply_gain             ; the window may have lost focus before
+    call focus_poll                 ; initial mute state before anything is mixed
+    call aud_apply_gain             ; (AIL_delay mixes without an SDL pump)
     call [a_SDL_GetCurrentAudioDriver]
     lea rdi, [fmt_aud_dev]
     mov rsi, rax
@@ -590,20 +591,30 @@ aud_open_device:
 ; running on the device clock, so samples and streams advance and end exactly as if
 ; audible and the game sees no difference. Independent of the game's own
 ; AIL_digital_handle_release (WM_KILLFOCUS, which the host never sends).
+; Called on every SDL pump with the window's polled focus flag (focus_poll), so the
+; first call sets the initial state: a window that never got focus starts muted.
 audio_focus:
     cmp byte [aud_bg_audio], 0
     jne .r
     xor eax, eax
     test edi, edi
     sete al
+    cmp byte [aud_focus_known], 0
+    je .first
     cmp [aud_muted], al
     je .r
+.first:
     mov [aud_muted], al
     sub rsp, 8
     lea rdi, [fmt_aud_unmute]
     lea rsi, [fmt_aud_mute]
     test al, al
     cmovnz rdi, rsi
+    lea rsi, [s_aud_focus_now]
+    lea rdx, [s_aud_focus_init]
+    cmp byte [aud_focus_known], 0
+    cmove rsi, rdx
+    mov byte [aud_focus_known], 1
     xor eax, eax
     call _printf
     call aud_apply_gain
@@ -1458,8 +1469,10 @@ fmt_aud_nodev:  db "  [aud] no SDL audio device (%s): mixing on the wall clock, 
 fmt_aud_start:  db "  [aud] start_sample 0x%x: data 0x%llx len %u rate %u vol %u pan %u", 10, 0
 fmt_aud_stream: db "  [aud] open_stream(%s): %u Hz fmt %u, %u ms -> 0x%x", 10, 0
 fmt_aud_nostream: db "  [aud] open_stream(%s): missing or unsupported file -> 0 (logged once while it repeats)", 10, 0
-fmt_aud_mute:   db "  [aud] window focus lost: output muted (mixer keeps running; --bg-audio keeps it audible)", 10, 0
-fmt_aud_unmute: db "  [aud] window focus gained: output unmuted", 10, 0
+fmt_aud_mute:   db "  [aud] window %s unfocused: output muted (mixer keeps running; --bg-audio keeps it audible)", 10, 0
+fmt_aud_unmute: db "  [aud] window %s focused: output unmuted", 10, 0
+s_aud_focus_init: db "initially", 0
+s_aud_focus_now:  db "now", 0
 fmt_aud_dump:   db "  [aud] --audio-dump %s: %u ms (%llu frames, 22050 Hz stereo s16), %u sample starts, %u streams opened, %u missing", 10, 0
 fmt_aud_sec:    db "  [aud]   second %3u: peak %5u (%3u%%)  rms %5u", 10, 0
 align 4
@@ -1519,5 +1532,6 @@ aud_open:       resb 1
 aud_paused:     resb 1          ; the game's AIL_digital_handle_release
 aud_muted:      resb 1          ; window unfocused (audio_focus)
 aud_bg_audio:   resb 1          ; --bg-audio: never mute
+aud_focus_known: resb 1         ; audio_focus has seen the initial focus state
 aud_dev_tried:  resb 1
 section .text

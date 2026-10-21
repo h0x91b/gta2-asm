@@ -437,11 +437,16 @@ never minimizes. Our own options screen replaces this later.
   messages also close/reopen the video mode, so the host never sends them (see
   "Input"); `WM_ACTIVATE(APP)` does not touch audio, and nothing pauses the game, which
   keeps running in the background.
-- **Mute while unfocused (host)**: `SDL_EVENT_WINDOW_FOCUS_LOST` (also Cmd-Tab, a click
-  on another app, minimise — all of them take key focus) sets the device stream's gain
-  to 0 (`SDL_SetAudioStreamGain`); `FOCUS_GAINED` sets it back to 1. Logged as
-  `[aud] window focus lost: output muted …` / `[aud] window focus gained: output
-  unmuted`. The mixer keeps running on the device clock, so samples and streams
+- **Mute while unfocused (host)**: the device stream's gain is 0
+  (`SDL_SetAudioStreamGain`) whenever the main window lacks `SDL_WINDOW_INPUT_FOCUS` or
+  is hidden/minimised, 1 otherwise. `focus_poll` reads the window flags at the start of
+  every SDL pump (before the mixer runs), and `FOCUS_GAINED`/`FOCUS_LOST` apply a change
+  within the same pump. Polling is what covers a window that **never** gets focus — the
+  game started from a terminal or a dev3 pane while the user works in another app sends
+  no focus event at all, and an event-only mute left it audible. Logged once at the
+  start (`[aud] window initially unfocused: output muted …` / `… initially focused:
+  output unmuted`) and on every change (`[aud] window now unfocused: …` / `[aud] window
+  now focused: output unmuted`). The mixer keeps running on the device clock, so samples and streams
   advance and end exactly as if audible: no game state changes, nothing restarts,
   nothing is lost, and on return you hear what is playing *now*. A pause
   (`SDL_PauseAudioStreamDevice`) was rejected: it stalls the device-clock mixer while the
