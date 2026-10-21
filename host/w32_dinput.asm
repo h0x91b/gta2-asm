@@ -179,6 +179,13 @@ input_key:
     push rbx
     push r12
     push r13
+    mov ebx, edi
+    mov r12d, esi
+    call dbgmenu_key                ; the debug menu (debug_menu.asm) may take it
+    test eax, eax
+    jnz .out
+    mov edi, ebx
+    mov esi, r12d
     and edi, 0xFF
     mov ebx, edi
     xor r12d, r12d

@@ -387,6 +387,7 @@ hooks:
     JMPHOOK 0x41F3E9, "CameraPosApply", {0x8B,0x02, 0x89,0x06, 0x8B,0x4A,0x04}
     CALLHOOK 0x4BE394, "ScaleShadow", 0x401BD0
     CALLHOOK 0x472535, "DrawMapLayer", 0x4720E0
+    CALLHOOK 0x45A61F, "DrawUI", 0x4CA440               ; debug_menu.asm
     dq 0
 
 shimtab_gta2:
@@ -395,6 +396,7 @@ shimtab_gta2:
     SHIM "CameraPosApply", 4, hk_CameraPosApply
     SHIM "ScaleShadow", 8, hk_ScaleShadow
     SHIM "DrawMapLayer", 0, hk_DrawMapLayer
+    SHIM "DrawUI", 0, hk_DrawUI
     dq 0
 
 hook_kinds: dq s_hk_entry, s_hk_call, s_hk_jmp, s_hk_patch
