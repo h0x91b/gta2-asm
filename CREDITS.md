@@ -112,7 +112,11 @@ License terms below are quoted as each source states them; this is not legal adv
 - **What we took:** function names and constants cited by `docs/formats/findings/`
   (`vehicle-data.md`, `sound-banks.md`, `collision-economy.md`, `ped-animation.md`, …) and
   `docs/formats/GTA2_REFERENCE_RU.md`. Its `_XXXXXX` name suffixes are 10.5 addresses, **not**
-  11.44 VAs (checked in `docs/formats/loader-map.md`): use them as search keys only.
+  11.44 VAs (checked in `docs/formats/loader-map.md`): use them as search keys only. For the
+  mission-script engine (`docs/re/script-engine.md`, at revision
+  `825f5498b1ae20ac39d39f9a206df2b4d1a6a34f`) we took the `SCRCMD` opcode enum, the
+  `ExecOpCode`/`PreExecOpCode` switch grouping, `SCR_*` argument struct names, and the names of
+  handler callees, each matched against the 11.44 binary before it was applied in Ghidra.
 - **License:** none stated on GitHub.
 
 ### OpenGTA2 — ikkentim

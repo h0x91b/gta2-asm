@@ -225,7 +225,7 @@ not re-traced here). The individual calls from SDT entry to `mss32` sample handl
 `0x4B6F70`, `Mss_Init3DSamples` `0x4B72B0`) were not traced; our `mss32` replacement is
 `host/w32_audio.asm`.
 
-## `.scr` — mission script (`loadScript`, `0x47F280`)
+## `.scr` — mission script (`MissionScript_Load`, `0x47F280`)
 
 On `g_MissionScript` (`0x6644BC`), skipped entirely when `g_skipMission` (`0x5EADAE`). Copies
 the path into `this+0x35C` (`pathToScriptFile[256]`), `File_Open`, then (V):
@@ -238,10 +238,11 @@ the path into `this+0x35C` (`pathToScriptFile[256]`), `File_Open`, then (V):
 | strings | rest of file, ≤ 5118 B (`File_ReadRest`) | `*(this+0x1334C)` `ptrToStrings` |
 
 Every shipped top-level `.scr` is exactly 82656 = 12000 + 65536 + 2 + 5118 bytes. Then
-`ParseStrings`, `nothing` (`0x475E00`), `loadSubScripts` (`0x476070`): it builds
-`"data\%s\" + name` (`0x573F50`) for each sub-mission and reads them with the File module into
-`this+0x13354`+… (fixed-size reads plus `File_ReadRest`); the exact sub-script layout is **H**
-(there are 10028-byte `.scr` files in the pak that do not have the 82656-byte layout).
+`MissionScript_ParseStrings`, `MissionScript_SetNameFromPath` (`0x475E00`) and
+`MissionScript_LoadSubScripts` (`0x476070`): it builds `"data\%s\" + name` (`0x573F50`) for each
+sub-mission and reads it with the File module. The sub-script layout (`u16 first`, `u16 start`,
+`u32 size`, `u16 ptr[1536]`, code) is now **V** against all 67 sub-scripts in the pak. It and the
+VM that runs the script are in [docs/re/script-engine.md](../re/script-engine.md).
 
 ## `nyc.gci` — car handling (`CarModelTable_Load`, `0x432FC0`)
 
