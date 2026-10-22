@@ -35,8 +35,8 @@ Loader gotcha: copy each section's raw data up to `align_up(VirtualSize, 0x1000)
 not just `VirtualSize` — the 11.44 patch keeps code in `.text`'s raw slack (the entry
 point jumps to `0x56DCDA`, past VirtualSize end `0x56DBC0`).
 
-- **Host**: an x86-64 Mach-O built from NASM (`-f macho64`), running under
-  **Rosetta 2** on Apple Silicon.
+- **Host**: an x86-64 Mach-O built from NASM (`-f macho64`) plus C99 host modules
+  (`host/c/*.c`, clang, `docs/host-c.md`), running under **Rosetta 2** on Apple Silicon.
 - **Image**: the host maps `gta2.exe` sections at the PE's preferred base
   (`0x3F0000`, see below) with `mmap(MAP_FIXED)`, then resolves its import table to
   our own shims.
@@ -320,5 +320,9 @@ the assembly side.
 - Addresses are always virtual addresses for ImageBase `0x3F0000` (11.44). Cite
   where an address came from (seuko-mod file, Ghidra, own analysis) when you add
   one to the code.
+- **Logic-heavy host code may be C99** (`host/c/`, how-to and ABI glue: `docs/host-c.md`);
+  hooks, thunks, Win32 shims, the loader and the renderer stay NASM. C is 64-bit host code
+  only: it reaches the game through memory accessors and `call32`, never runs in the
+  32-bit segment, and game pointers in it are `uint32_t` (`gptr`).
 - Keep the execution model above in sync with what the spike proves. If it changes,
   update this file in the same change.

@@ -32,6 +32,13 @@ controls:
   mouse_turn: false
   mouse_sensitivity: 100
 
+# Gameplay mods written in C (host/c/, docs/host-c.md). Off by default: vanilla rules.
+# car_enter_bonus: dollars the player gets every time he gets into a car as the driver
+# (an empty car or a jacked one), paid through the game's own money function so the HUD
+# counter rolls up as usual. 0 = off. Also a switch on the debug menu's (K) Mods page.
+mods:
+  car_enter_bonus: 0             # e.g. 333
+
 # The game's own debug flags (DMA Design developer switches), read by HiddenDebugFlags
 # (0x451930) from HKCU\SOFTWARE\DMA Design Ltd\GTA2\Debug. A flag is on when its
 # registry value exists, so `false` removes it. Leave a line out to keep the default

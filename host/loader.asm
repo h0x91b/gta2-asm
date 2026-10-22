@@ -1166,6 +1166,7 @@ hold:        db 0                   ; --hold: keep the SDL window up 5 s when we
 
 section .text
 %include "w32_core.asm"
+%include "c_bridge.asm"            ; symbols shared with host/c/*.c
 %include "w32_kernel32.asm"
 %include "w32_files.asm"
 %include "w32_vfs.asm"
@@ -1181,6 +1182,7 @@ section .text
 %include "debug_paths.asm"
 %include "debug_roads.asm"
 %include "player_move.asm"
+%include "mods.asm"
 %include "debug_roadblocks.asm"
 %include "debug_emergency.asm"
 %include "w32_renderer.asm"

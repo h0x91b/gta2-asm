@@ -31,6 +31,8 @@
 ;          shows the same part of the city as 640x480, only magnified (measured), so
 ;          auto = 640 / window width keeps the original 640x480 pixel scale at any size.
 ;          Without the key it is ZOOM_DEFAULT (70%); `zoom: 100` is the vanilla view.
+;   mods   gameplay mods written in C (host/c/, docs/host-c.md), parsed by c_cfg_mods
+;          (c/car_bonus.c): car_enter_bonus (dollars per car entry, 0 = off).
 
 CFG_LINE    equ 1024
 CFG_PATH    equ 1024
@@ -104,7 +106,7 @@ config_apply:
 .opened:
     mov r15, rax
     xor r14d, r14d                  ; line number
-    mov r13d, -1                    ; section: -1 none yet, 0 skipped, 1 debug, 2 camera, 3 controls
+    mov r13d, -1                    ; section: -1 none yet, 0 skipped, 1 debug, 2 camera, 3 controls, 4 mods
     mov dword [cfg_nset], 0
 .line:
     lea rdi, [cfg_line]
@@ -205,8 +207,16 @@ config_apply:
     lea rsi, [s_cfg_controls]
     call _strcmp
     test eax, eax
-    jnz .skip_section
+    jnz .not_controls
     mov r13d, 3
+    jmp .line
+.not_controls:
+    mov rdi, rbx
+    lea rsi, [s_cfg_mods]
+    call _strcmp
+    test eax, eax
+    jnz .skip_section
+    mov r13d, 4
     jmp .line
 .skip_section:
     lea rdi, [fmt_cfg_skip_section]
@@ -225,6 +235,8 @@ config_apply:
     je .camera
     cmp r13d, 3
     je .controls
+    cmp r13d, 4
+    je .mods
     mov rdi, [cfg_val]
     call cfg_bool
     test eax, eax
@@ -260,6 +272,18 @@ config_apply:
     jmp .line
 .err_controls:
     mov r9, rdx
+    jmp .err
+.mods:                              ; mods.*: host C modules (c/car_bonus.c)
+    mov rdi, rbx
+    mov rsi, [cfg_val]
+    lea rdx, [cfg_cmsg]
+    call _c_cfg_mods
+    test eax, eax
+    jz .counted
+    js .err_mods
+    jmp .unknown_flag
+.err_mods:
+    mov r9, [cfg_cmsg]
     jmp .err
 .camera:                            ; camera.zoom: auto | percent
     mov rdi, rbx
@@ -565,6 +589,7 @@ s_cfg_default: db "config.yaml", 0
 s_cfg_debug:  db "debug", 0
 s_cfg_camera: db "camera", 0
 s_cfg_controls: db "controls", 0
+s_cfg_mods:   db "mods", 0
 s_cfg_zoom:   db "zoom", 0
 s_cfg_auto:   db "auto", 0
 fmt_cfg_zoom: db "config: camera.zoom = %s", 10, 0
@@ -593,6 +618,7 @@ alignb 8
 cfg_val:      resq 1
 cfg_nset:     resd 1
 cfg_end:      resq 1
+cfg_cmsg:     resq 1                ; c_cfg_mods: why a value was refused
 cfg_dword:    resd 1
 cfg_abs:      resb CFG_PATH
 cfg_line:     resb CFG_LINE

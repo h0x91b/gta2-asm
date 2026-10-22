@@ -24,14 +24,24 @@ link() {
   [ -x "$out" ] || exit 1
 }
 
-rm -f host main.o loader loader.o
+rm -f host main.o loader loader.o c/*.o
 # K menu pages: every menu/*.asm registers itself (docs/debug-menu.md), so the list of
 # includes is generated, not kept by hand
 for f in menu/*.asm; do printf '%%include "%s"\n' "$f"; done > menu_modules.inc
 nasm -f macho64 ${NASMFLAGS:-} -o main.o main.asm
 link host main.o -L"$SDL3_PREFIX/lib" -lSDL3 -rpath "$SDL3_PREFIX/lib"
 nasm -f macho64 ${NASMFLAGS:-} -I. -o loader.o loader.asm
-link loader loader.o   # libSystem only: SDL3 is dlopen'ed after the low 4 GB is mapped
+# Host C modules (docs/host-c.md): every c/*.c is compiled and linked into the loader,
+# 64-bit host code like the NASM around it. Same target as the link (minos 26.0, SDK).
+CFLAGS="-arch x86_64 -std=c99 -O2 -Wall -Wextra -Werror -mmacosx-version-min=26.0 \
+  -isysroot $(xcrun --show-sdk-path) ${CFLAGS_EXTRA:-}"
+cobjs=
+for f in c/*.c; do
+  [ -f "$f" ] || continue
+  "$(xcrun -f clang)" $CFLAGS -c -o "${f%.c}.o" "$f"
+  cobjs="$cobjs ${f%.c}.o"
+done
+link loader loader.o $cobjs   # libSystem only: SDL3 is dlopen'ed after the low 4 GB is mapped
 
 case "$1" in
   --run)  shift; exec arch -x86_64 ./host "$@" ;;

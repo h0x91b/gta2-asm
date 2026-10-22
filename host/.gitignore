@@ -3,3 +3,4 @@ host
 loader.o
 loader
 menu_modules.inc
+c/*.o
