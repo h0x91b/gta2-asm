@@ -91,7 +91,7 @@ uint64_t c32_svc_log(const uint32_t *args)
 
 /* ---- the car bonus (c32/car_bonus.c): config key and K menu row ----------------------- */
 
-/* config.asm, `mods:` section: 0 applied, 1 unknown key, -1 bad value (*msg = why) */
+/* config.c, `mods:` section: 0 applied, 1 unknown key, -1 bad value (*msg = why) */
 int c32_cfg_mods(const char *key, const char *val, const char **msg)
 {
     if (strcmp(key, "car_enter_bonus") != 0)

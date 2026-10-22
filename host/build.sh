@@ -5,8 +5,21 @@
 #   ./build.sh --run [N]        build + run the hello window (quit after N frames)
 #   ./build.sh --load [args]    build + run the loader on ../data.pak (the game as a Stored zip)
 #                               (e.g. --load --entry: also jump to the PE entry point)
+#   ./build.sh --test           host C unit tests only (test/*_test.c), no game needed
 set -e
 cd "$(dirname "$0")"
+
+# Host C unit tests: test/<name>_test.c links against c/<name>.c and stubs the NASM it
+# calls itself (test/config_test.c); built into test/ (git-ignored), run under Rosetta.
+if [ "$1" = --test ]; then
+  for t in test/*_test.c; do
+    m=$(basename "$t" _test.c)
+    "$(xcrun -f clang)" -arch x86_64 -std=c99 -O2 -Wall -Wextra -Werror -mmacosx-version-min=26.0 \
+      -I../re -isysroot "$(xcrun --show-sdk-path)" -o "test/$m" "$t" "c/$m.c"
+    arch -x86_64 "./test/$m"
+  done
+  exit 0
+fi
 SDL3_PREFIX="${SDL3_PREFIX:-$HOME/.local/opt/sdl3-x86_64}"
 [ -f "$SDL3_PREFIX/lib/libSDL3.dylib" ] || { echo "no x86_64 SDL3 at $SDL3_PREFIX" >&2; exit 1; }
 

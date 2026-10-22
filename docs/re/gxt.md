@@ -133,7 +133,7 @@ reference in the exe (H: unused on PC).
 
 **Debug aid**: registry/ini flag `show_brief_number` (`g_showBriefNumber` 0x5EADA5) draws every
 brief as `(key)text` — the quickest way to see which key a line on screen comes from. In our host:
-`debug:` / `show_brief_number: true` in the overlay's `config.yaml` (`host/config.asm`).
+`debug:` / `show_brief_number: true` in the overlay's `config.yaml` (`host/c/config.c`).
 
 ## 4. Encoding (V)
 

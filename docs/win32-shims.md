@@ -137,17 +137,19 @@ match the 64-bit-inode struct layouts; the plain names are the legacy ABI.
   for them, and the renderer's back buffer follows (`renderer-sdl.md`, "Resolution"), so
   gameplay is rendered natively at that size. (Until 2026-10-21 they were forced to
   640×480 by `reg_force_screen` and the window was shown 1.5× bigger; both are gone.)
-- **config.yaml** (`host/config.asm`). After seeding, `config_apply` reads
+- **config.yaml** (`host/c/config.c`, 64-bit host C; every key is one line of its `keys[]`
+  table: section, name, type, storage, default, range). After seeding, `config_apply` reads
   `config.yaml` from the overlay dir (optional; `--config=PATH` names another file, which
   then must exist). A YAML subset: `section:` headers, indented `key: value`, `#` comments,
-  spaces only; a syntax error stops the loader with the line number, unknown keys only warn.
-  The one section today is `debug:` — the game's own developer flags, which
-  HiddenDebugFlags (`0x451930`) reads once from `HKCU\SOFTWARE\DMA Design Ltd\GTA2\Debug`
+  spaces only; a syntax error or a bad value stops the loader with the line number (and
+  `section.key:` for a value), unknown sections and keys only warn. Section `debug:`:
+  the game's own developer flags, which HiddenDebugFlags (`0x451930`) reads once from `HKCU\SOFTWARE\DMA Design Ltd\GTA2\Debug`
   (a flag is on when its value exists, so `false` deletes the value; `show_player_names` is
-  value-based). Every flag with comments: `config.example.yaml`. Section `camera:`,
+  value-based). Every flag with comments: `config.example.yaml`. Section `mods:` goes to
+  `c32_cfg_mods` (`host/c/c32_host.c`, C32 mods). Section `camera:`,
   key `zoom: auto | 25..400` (percent of the game's zoom, see "Hooks", `0x41F3E9`);
-  without it the camera runs at 70% (`ZOOM_DEFAULT`), `zoom: 100` is vanilla. Section
-  `controls:` (`host/player_move.asm`): `strafe` (default on), `strafe_left` / `strafe_right`
+  without it the camera runs at 70% (the table's default), `zoom: 100` is vanilla. Section
+  `controls:` (storage in `host/player_move.asm`): `strafe` (default on), `strafe_left` / `strafe_right`
   (key names as in `--keys`, default Q / E), `mouse_turn` (default off),
   `mouse_sensitivity` (percent, 10..1000, 100 = 0.5° per mouse point); the first two also
   toggle at run time from the debug menu (K); see "Hooks",

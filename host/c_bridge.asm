@@ -10,3 +10,15 @@
 global call32                       ; loader.asm: C -> 32-bit game code (game.h)
 global r_frames                     ; w32_renderer.asm: presented frames
 
+
+; host/c/config.c (config.yaml): called by loader.asm (--config=) and after the registry
+; seed (w32_advapi32.asm); it reads and writes these
+extern _cfg_set_path, _config_apply
+extern cam_zoom_cfg                 ; camera.zoom (w32_hooks.asm), C storage, NASM name
+ZOOM_AUTO   equ -1                  ; cam_zoom_cfg: auto, else percent ZOOM_MIN..ZOOM_MAX
+ZOOM_MIN    equ 25                  ;   (the same numbers as in config.c)
+ZOOM_MAX    equ 400
+global reg_key_add, reg_val_find, reg_val_set   ; w32_advapi32.asm: the in-memory registry
+global fail                         ; loader.asm
+global key_table                    ; w32_dinput.asm: key names as in --keys
+global pm_strafe_on, pm_mouse_on, pm_key_left, pm_key_right, pm_mouse_sens, pm_report

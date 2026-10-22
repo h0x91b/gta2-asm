@@ -1,7 +1,7 @@
 ; player_move.asm — two on-foot controls the original game never had: strafing (sideways
 ; steps, Q / E by default) and smooth mouse turning. Both go through the game's own walker,
 ; so walls, cars and peds stop a strafing player exactly as they stop a walking one.
-; Settings: the `controls:` section of config.yaml (config.asm, config.example.yaml).
+; Settings: the `controls:` section of config.yaml (c/config.c, config.example.yaml).
 ; Analysis: docs/re/ped-movement-collision.md §6.
 ;
 ; Strafe. All on-foot collision is inline in PedGameObject_StateWalk 0x49A560 and keyed off
@@ -198,130 +198,6 @@ pm_wrap:
     mov eax, edx
     ret
 
-; eax = pm_config(rdi = key, rsi = value) for config.asm's `controls:` section:
-; 0 applied, 1 unknown key, -1 bad value (rdx = message)
-pm_config:
-    push rbx
-    push r12
-    sub rsp, 8
-    mov rbx, rdi
-    mov r12, rsi
-    lea rsi, [s_pm_strafe]
-    call _strcmp
-    test eax, eax
-    jnz .k_mouse
-    mov rdi, r12
-    call cfg_bool
-    test eax, eax
-    js .bad_bool
-    mov [pm_strafe_on], al
-    jmp .ok
-.k_mouse:
-    mov rdi, rbx
-    lea rsi, [s_pm_mouse]
-    call _strcmp
-    test eax, eax
-    jnz .k_left
-    mov rdi, r12
-    call cfg_bool
-    test eax, eax
-    js .bad_bool
-    mov [pm_mouse_on], al
-    jmp .ok
-.k_left:
-    mov rdi, rbx
-    lea rsi, [s_pm_left]
-    call _strcmp
-    test eax, eax
-    jnz .k_right
-    mov rdi, r12
-    call pm_dik_by_name
-    test eax, eax
-    jz .bad_key
-    mov [pm_key_left], al
-    jmp .ok
-.k_right:
-    mov rdi, rbx
-    lea rsi, [s_pm_right]
-    call _strcmp
-    test eax, eax
-    jnz .k_sens
-    mov rdi, r12
-    call pm_dik_by_name
-    test eax, eax
-    jz .bad_key
-    mov [pm_key_right], al
-    jmp .ok
-.k_sens:
-    mov rdi, rbx
-    lea rsi, [s_pm_sens]
-    call _strcmp
-    test eax, eax
-    jnz .unknown
-    mov rdi, r12
-    lea rsi, [cfg_end]
-    mov edx, 10
-    call _strtol
-    mov rcx, [cfg_end]
-    cmp rcx, r12
-    je .bad_sens
-    cmp byte [rcx], 0
-    jne .bad_sens
-    cmp rax, SENS_MIN
-    jl .bad_sens
-    cmp rax, SENS_MAX
-    jg .bad_sens
-    mov [pm_mouse_sens], eax
-.ok:
-    xor eax, eax
-    jmp .out
-.unknown:
-    mov eax, 1
-    jmp .out
-.bad_bool:
-    lea rdx, [msg_cfg_bool]
-    jmp .bad
-.bad_key:
-    lea rdx, [msg_pm_key]
-    jmp .bad
-.bad_sens:
-    lea rdx, [msg_pm_sens]
-.bad:
-    mov eax, -1
-.out:
-    add rsp, 8
-    pop r12
-    pop rbx
-    ret
-
-; eax = pm_dik_by_name(rdi = key name as in --keys, e.g. Q, LSHIFT): DIK, 0 = unknown
-pm_dik_by_name:
-    push rbx
-    push r12
-    sub rsp, 8
-    mov r12, rdi
-    lea rbx, [key_table]
-.next:
-    cmp word [rbx], 0xFFFF
-    je .none
-    mov rdi, [rbx + 8]
-    mov rsi, r12
-    call _strcasecmp
-    test eax, eax
-    jz .found
-    add rbx, 16
-    jmp .next
-.found:
-    movzx eax, byte [rbx + 2]
-    jmp .out
-.none:
-    xor eax, eax
-.out:
-    add rsp, 8
-    pop r12
-    pop rbx
-    ret
-
 ; pm_report: one line after the config, so a run log says what is active
 pm_report:
     sub rsp, 8
@@ -334,11 +210,11 @@ pm_report:
     pop rdx
     mov rcx, rax
     lea rdi, [fmt_pm]
-    lea rsi, [s_cfg_off]
-    lea rax, [s_cfg_on]
+    lea rsi, [s_pm_off]
+    lea rax, [s_pm_on]
     cmp byte [pm_strafe_on], 0
     cmovne rsi, rax
-    lea r8, [s_cfg_off]
+    lea r8, [s_pm_off]
     cmp byte [pm_mouse_on], 0
     cmovne r8, rax
     mov r9d, [pm_mouse_sens]
@@ -350,24 +226,20 @@ pm_report:
 section .data
     DM_ITEM  dmp_root, 60, DM_FLAG, "Mouse turning: ", pm_mouse_on
     DM_ITEM  dmp_root, 70, DM_FLAG, "Strafe (Q/E): ", pm_strafe_on
-pm_strafe_on:   db 1                ; controls.strafe
-pm_mouse_on:    db 0                ; controls.mouse_turn
-pm_key_left:    db 0x10             ; DIK_Q, controls.strafe_left
-pm_key_right:   db 0x12             ; DIK_E, controls.strafe_right
-align 4
-pm_mouse_sens:  dd 100              ; controls.mouse_sensitivity, percent
 
 section .rodata
-s_pm_strafe:  db "strafe", 0
-s_pm_mouse:   db "mouse_turn", 0
-s_pm_left:    db "strafe_left", 0
-s_pm_right:   db "strafe_right", 0
-s_pm_sens:    db "mouse_sensitivity", 0
-msg_pm_key:   db "expected a key name as in --keys (Q, E, A, LSHIFT, ...)", 0
-msg_pm_sens:  db "controls.mouse_sensitivity: expected a percentage 10..1000", 0
+s_pm_on:      db "on", 0
+s_pm_off:     db "off", 0
 fmt_pm:       db "controls: strafe %s (%s / %s), mouse turning %s (%d%%)", 10, 0
 
 section .bss
+; the controls: section of config.yaml, parsed by host/c/config.c, which also sets the
+; defaults (strafe on, Q / E, mouse turning off, 100%) before main
+pm_strafe_on:   resb 1              ; controls.strafe
+pm_mouse_on:    resb 1              ; controls.mouse_turn
+pm_key_left:    resb 1              ; DIK, controls.strafe_left
+pm_key_right:   resb 1              ; DIK, controls.strafe_right
+pm_mouse_sens:  resd 1              ; controls.mouse_sensitivity, percent
 alignb 4
 pm_gobj:        resd 1              ; the player's PedGameObject this tick, 0 = not on foot
 pm_mouse_frame: resd 1              ; r_frames at the last MoveOnFoot call

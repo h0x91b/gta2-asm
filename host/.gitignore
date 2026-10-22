@@ -8,3 +8,5 @@ c32/*.o
 c32/c32.elf
 c32/c32.bin
 c32/c32.map
+test/*
+!test/*.c

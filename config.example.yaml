@@ -2,7 +2,7 @@
 #   ~/Library/Application Support/gta2-resurrected/config.yaml
 # (or pass --config=PATH to the loader). Read once at startup: restart after a change.
 #
-# Format: a small subset of YAML (host/config.asm) — `section:` headers, indented
+# Format: a small subset of YAML (host/c/config.c) — `section:` headers, indented
 # `key: value` lines, `#` comments, spaces only. Values: true/false (yes/no, on/off, 1/0)
 # unless a key says otherwise.
 # Anything else stops the loader with the line number; unknown keys are skipped.

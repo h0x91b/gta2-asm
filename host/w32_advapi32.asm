@@ -1,6 +1,6 @@
 ; w32_advapi32.asm — ADVAPI32 shims: the registry as an in-memory store, seeded at
 ; startup from gta2_install.reg (REGEDIT4 text, overlay or data.pak), then adjusted by
-; config.yaml (config.asm: the debug section). Nothing is ever read from or written to a
+; config.yaml (c/config.c: the debug section). Nothing is ever read from or written to a
 ; real registry or any system-wide file; writes stay in memory for the life of the
 ; process (not persisted yet).
 ;
@@ -509,7 +509,7 @@ setup_registry:
     xor eax, eax
     call _printf
     call reg_window_override
-    call config_apply
+    call _config_apply
     jmp .out
 .no_file:
     lea rdi, [fmt_reg_none]
@@ -517,7 +517,7 @@ setup_registry:
     xor eax, eax
     call _printf
     call reg_window_override
-    call config_apply
+    call _config_apply
 .out:
     pop r15
     pop r14

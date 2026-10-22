@@ -64,7 +64,7 @@ License terms below are quoted as each source states them; this is not legal adv
     (`SpawnCar` 0x426AC0, `spawn-car.cpp`), car repair / explode (`fix-car-utils.cpp`,
     `explode-last-car.cpp`), and the menu drawn with `DrawGTAText` 0x4CC100
     (`src/modules/ui/components/text.cpp`).
-  - **Native debug flags** (`host/config.asm`, `config.example.yaml`): the idea, the flag list
+  - **Native debug flags** (`host/c/config.c`, `config.example.yaml`): the idea, the flag list
     (`categorized-native-cheats-data.cpp`, `Cheats` at 0x5EAD51), and which flags are risky.
   - **Game lifecycle:** `InitGame` 0x461DE0 / `DeinitGame` 0x462060 and `ptrToGame` 0x5EB4FC
     (`host/w32_renderer.asm`); its DeinitGame call-site map (six sites) was surveyed for the

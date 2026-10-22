@@ -83,8 +83,15 @@ hk_DriverEnter:
 void c_on_driver_enter(gptr car, gptr ped, gptr site);
 ```
 
-In the tree today `_main` calls `_c32_load` (`host/c/c32_host.c`) and `config_apply` calls
-`_c32_cfg_mods` the same way.
+In the tree today `_main` calls `_c32_load` (`host/c/c32_host.c`), `loader.asm` calls
+`_cfg_set_path` and `w32_advapi32.asm` `_config_apply` (`host/c/config.c`) the same way.
+
+The other direction, C calling a NASM *function*, needs that function to be SysV-clean:
+arguments in `rdi, rsi, …`, callee-saved registers kept, and any libc call inside it aligned
+for a caller whose `call` was aligned. `config.c` calls `reg_key_add`, `reg_val_find`,
+`reg_val_set` (`w32_advapi32.asm`), `pm_report` (`player_move.asm`) and `fail`
+(`loader.asm`), all checked for that; each is `global` in `c_bridge.asm` and declared with
+`NASM()` in the C file. Check a NASM function's pushes before adding it to such a list.
 
 A C function can also *be* the handler or a table entry directly when its contract is
 SysV already: the K menu's `DM_VALUE` pair `{change(esi = dir), fmt(rdi = text end)}` is
@@ -165,6 +172,14 @@ Globals are not in the header: `game.h` keeps them (`G_GAME`) with their source,
 `rd32/wr32` accessors (volatile) for anything without a type. The struct pointers are plain
 (not volatile): fine for reading a field the game is not changing under us within one call,
 which is always the case on the host side (the game is stopped while host code runs).
+
+## Unit tests (`host/test/`)
+
+`host/build.sh --test` builds every `host/test/<name>_test.c` together with
+`host/c/<name>.c` into `host/test/<name>` (git-ignored) and runs it, without the game, the
+pak or SDL. The test stubs every NASM symbol the module uses under the same `NASM()` name
+(`test/config_test.c`: an in-memory registry, a short `key_table`, `fail` that `longjmp`s
+back with its message). It cannot cover the NASM itself; parity runs of the loader do that.
 
 ## Pitfalls
 

@@ -9,7 +9,7 @@
 ;   ./loader [data.pak] --entry   same, then jump to the real PE entry point and run the
 ;                                 game through the Win32 shims
 ;   --config=PATH                 settings file instead of config.yaml in the overlay dir
-;                                 (config.asm; see config.example.yaml)
+;                                 (c/config.c; see config.example.yaml)
 ;
 ; Exit codes: 0 ok, 1 load/setup failure, 2 a function check failed,
 ;             3 the game called an unimplemented import, 4 SIGSEGV/SIGBUS.
@@ -930,7 +930,7 @@ _main:
     jnz .not_config
     mov rdi, [rbx]
     add rdi, 9
-    call cfg_set_path
+    call _cfg_set_path
     jmp .arg
 .not_config:
     lea rdi, [arg_options]          ; flags that only set a byte
@@ -1175,7 +1175,6 @@ section .text
 %include "w32_locale.asm"
 %include "w32_user32.asm"
 %include "w32_advapi32.asm"
-%include "config.asm"
 %include "w32_misc.asm"
 %include "w32_dinput.asm"
 %include "w32_hooks.asm"
