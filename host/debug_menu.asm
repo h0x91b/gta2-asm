@@ -1574,6 +1574,61 @@ dm_spawn_car:
     pop rbx
     ret
 
+; eax = dm_spawn_point(rdi = out dd x, y, z, rotation; esi = distance, SCR_f): the point that
+; far in front of the player on foot, with the player's z and rotation, by the same math as
+; dm_spawn_car; for spawners of things other than cars. eax = 0 (and rdx = the reason, a
+; toast string) without a player, in a car or without a body sprite.
+dm_spawn_point:
+    push rbx
+    push r12
+    sub rsp, 24
+    mov r12, rdi
+    mov [rsp + 8], esi
+    lea rdx, [s_dm_noplayer2]
+    call dm_player_ped
+    test eax, eax
+    jz .fail
+    lea rdx, [s_dm_incar]
+    cmp dword [rax + PED_CAR], 0
+    jne .fail
+    lea rdx, [s_dm_nospawn]
+    mov eax, [rax + PED_GAMEOBJ]
+    test eax, eax
+    jz .fail
+    mov ebx, [rax + 0x80]           ; Sprite*
+    test ebx, ebx
+    jz .fail
+    movzx eax, word [rbx]
+    mov [rsp], eax
+    fild dword [rsp]
+    fmul qword [f_dm_rot2rad]
+    fsincos                         ; st0 = cos, st1 = sin
+    fimul dword [rsp + 8]
+    fistp dword [rsp]               ; cos * d
+    fimul dword [rsp + 8]
+    fistp dword [rsp + 4]           ; sin * d
+    mov eax, [dm_spawn_sx]
+    imul eax, [rsp + 4]
+    add eax, [rbx + 0x14]
+    mov [r12], eax
+    mov eax, [dm_spawn_sy]
+    imul eax, [rsp]
+    add eax, [rbx + 0x18]
+    mov [r12 + 4], eax
+    mov eax, [rbx + 0x1c]
+    mov [r12 + 8], eax
+    movzx eax, word [rbx]
+    mov [r12 + 12], eax
+    mov eax, 1
+    jmp .out
+.fail:
+    xor eax, eax
+.out:
+    add rsp, 24
+    pop r12
+    pop rbx
+    ret
+
 section .data
 align 8
 dm_page: dq 0                       ; the current page (dmp_root once built)

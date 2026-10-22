@@ -110,8 +110,9 @@ DM_FRAME order, fn          ; fn() once per gameplay frame, on the game's side, 
 | UP / DOWN | select (wraps) |
 | PAGE UP / PAGE DOWN | 10 rows up / down |
 | HOME / END | first / last row |
-| LEFT / RIGHT | change the value (on Spawn car: the remap) |
-| RETURN | activate (open page, run action, toggle; on Spawn car: spawn) |
+| LEFT / RIGHT | change the value (on Spawn car: the remap; on Spawn ped: the role) |
+| RETURN | activate (open page, run action, toggle; on Spawn car / ped: spawn) |
+| B | on Spawn ped: the behaviour (normal / hostile / follows you) |
 | BACKSPACE | back to the parent page |
 
 ### Pause
@@ -141,6 +142,9 @@ CALLHOOK while the pause is ours.
   content starts at `[dm_pane_x]` (set every frame from the box's measured width).
 - `dm_sprite_wh(edi = type, esi = id) -> eax = w | h << 8` — a sprite's size.
 - `dm_toast_set(rax = string)` — the message line at the bottom.
+- `dm_spawn_point(rdi = out dd x, y, z, rot; esi = distance SCR_f) -> eax = 1 / 0, rdx = toast`
+  — the point that far in front of the player on foot (same math as `dm_spawn_car`), for
+  spawners of things other than cars.
 - `dm_player_ped`, `dm_car`, `dm_spawn_car` (model = `dm_spawnable[dm_model]`, returns the
   Car*), `dm_call_car` (a fastcall on a Car*) — shared game helpers.
 - `dm_car_info(edi = model) -> eax = CarInfo*` or 0 — `g_StyleData 0x670684 +0x5C` →
@@ -197,6 +201,23 @@ the remap and RETURN as "spawn" through `dm_defer`; a `draw` callback with `dm_p
     bad; DMA's GTA2 Style Format), LEFT / RIGHT picks the remap (game's random, none, or each of the
     model's own remaps), a rotating preview with that remap at 2-3x size, size / seats /
     rating class / remap count; RETURN spawns it 1.5 blocks in front of the player with that remap.
+  - **Ped** (`menu/spawn_ped.asm`): one row per ped remap 0..52 (the look), named from the
+    PED_REMAP enum (`Remap N (civilian)` for the unnamed ones), the level's gangs tagged with
+    their gang (`Yakuza (yakuzagang)`) and sorted first, then police, emergency / special roles,
+    named looks, plain civilians. LEFT / RIGHT picks the role: auto (the look's own: gang member
+    for a level gang's remap, cop for 0..3, army for 4, Elvis 12, fireman 14, car thief 15,
+    medic 16, mugger 17, else civilian) or any of civilian, gang member, cop, SWAT, FBI, army,
+    medic, fireman, Elvis, mugger, car thief, psycho, criminal, stand-still bloke. A role is an
+    occupation, a body (graphicType: dummy / gang / emergency frame block), a ped class, threat
+    search / reaction and a weapon, copied from the game's own spawn site of that kind. B picks
+    the behaviour: normal, hostile (KILL_CHAR_ON_FOOT on the player) or follows you (joins the
+    player's group). The preview walks (frames 0..7 of the role's body) and turns, in that remap,
+    with remap / occupation / body / gang / behaviour lines. RETURN spawns it 1 block in front.
+    Layout choice: rows are the looks because that is the long, browsable axis the request
+    names ("Remap N with its gang / occupation") and it is per level only in the gang tags;
+    the role is a short cycle that applies to any look (a cop in Elvis' remap is a valid debug
+    case), and "auto" keeps the common case one key. The behaviour is orthogonal to both, so it
+    gets its own key instead of a third list.
 - **Debug flags** (`menu/flags.asm`): the game's own flags; Road network (`debug_roads.asm`).
 
 ## 7. RE facts used (sources)
@@ -214,12 +235,17 @@ the remap and RETURN as "spawn" through `dm_defer`; a `draw` callback with `dm_p
 | `GetGTATextWidth` stdcall(wchar_t*, short font) -> glyph pixels at scale 1 | `0x4CB0C0` | re/functions.csv + Ghidra comment |
 | `Game.gameStatus` +0 (1 run, 2 paused), `+0x23` pause allowed; `Game_StepByStatus`, `UnpauseGame` thiscall(Game*) | `0x5EB4FC`, `0x45BA60` | re/gta2_types.h, own decompile |
 | `Hud_PauseOverlay_Draw` stdcall(void), its call in `DrawUI` | `0x4C9FA0`, `0x4CA4F9` | re/comments.csv, Ghidra xrefs |
+| `Ped_Spawn` stdcall(x, y, z, PED_REMAP, Ang16 rot) -> Ped*, RET 0x14; sets sprite, remap, health 100, AREA / RUN_AWAY, graphicType 0 only; no empty-pool check | `0x43DB40` | Seq 27 (seq51_answer.md), CREATE_CHAR = `Script_Decl_CHAR_DATA_SET` 0x477560 |
+| `Ped_SetPedClass` / `Ped_SetOccupation` thiscall(Ped*; value), RET 4 (Ghidra's fastcall prototype is wrong) | `0x403920`, `0x403970` | Seq 27 disassembly |
+| `Ped_SetWeapon` fastcall(Ped*, edx; weapon), `Gang_PickWeaponByRespect` fastcall(GangRespect*) | `0x43D830`, `0x45DB70` | Seq 27 |
+| `PedSetObjective` thiscall(Ped*; objective, timer) RET 8 (clears the target), `Ped_SetObjTargetPed` thiscall(Ped*; Ped*) | `0x43BBC0`, `0x403AC0` | Seq 27, SET_CHAR_OBJECTIVE handler 0x47A1E0 |
+| `PedGroupCreate` fastcall(Ped* leader, edx; byte n), `PedGroupAddPed` fastcall(PedGroup*, 0; Ped*), `Ped.group` +0x164, `PedGroup.membersCount` +0x34 (max 8) | `0x440350`, `0x404C90` | Seq 27, re/gta2_types.h |
+| Ped frames: graphicType * 158 + anim, walk = 0..7; DrawSprite2D palette kind 4 takes the raw PED_REMAP | `0x497DF0`, `0x4C2AC0` | Seq 27 + style render (`bun tools/formats/cli.ts sty --sprite`) |
+| ped pool `PedManager_S25*` +0 freeListHead; Ped +0x238 class, +0x240 occupation, +0x17C gang, +0x288 / +0x28C threat search / reaction | `0x5E5BBC` | re/gta2_types.h, Seq 27 |
 | `SpawnCar`, TrafficManager, CarsScale | `0x426AC0`, `0x5E4CA4`, `0x5E4D4C` | gta2-seuko-mod `spawn-car.cpp` |
 
 ## 8. Next pages the structure makes cheap
 
-- **Ped spawner** (`menu/spawn_ped.asm`): rows = ped remaps 0..52, preview = `dm_sprite`
-  type 3 (ped), palette 4, a walking frame; spawn with `Ped_Spawn` `0x43DB40` (x, y, z, remap, …).
 - **Object spawner**: rows = code / map objects of the style, preview type 4 / 5.
 - **Skin picker with preview**: the Player page's skin row gets a `draw` callback.
 - **Car respray with preview**: the Vehicle page's colour row, same component.
