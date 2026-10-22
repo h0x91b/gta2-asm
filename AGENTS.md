@@ -314,6 +314,14 @@ blending). SDL2 is the fallback only if a specific SDL2-only library turns up.
 Calling SDL from NASM is ordinary SysV x86-64 C ABI, so the choice does not affect
 the assembly side.
 
+## Testing the game: use gta2ctl
+
+Drive a running game from bash instead of guessing `--keys` frame timings: start it with
+`--ctl=PATH` (export `GTA2_CTL=PATH`), then `tools/gta2ctl/gta2ctl state | teleport | goto |
+enter_car | spawn | wait money >= 333 | shot | quit`, each one JSON reply line, exit 0/1/2 for
+ok/error/timeout. Keep `--keys` only for the frontend. Commands, fields and a worked example
+(`tests/ctl/smoke.sh`): [docs/gta2ctl.md](docs/gta2ctl.md).
+
 ## Rules for agents
 
 - **Run builds, tests and programs in a visible tmux pane next to you** (`dev3 pane run "<cmd>" --label <name>`, read it with `dev3 pane logs <id>`, close it with `dev3 pane close <id>`), so the user watches the logs live. Quick read-only commands (grep, cat, git status) may stay inline.

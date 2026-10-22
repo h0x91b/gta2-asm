@@ -800,6 +800,10 @@ _main:
     dec r12d
     jle .args_done
     add rbx, 8
+    mov rdi, [rbx]                  ; --ctl[=PATH], --telemetry=PATH[,every=N] (host/c/ctl.c)
+    call _ctl_arg
+    test eax, eax
+    jnz .arg
     mov rdi, [rbx]
     lea rsi, [arg_entry]
     call _strcmp
@@ -971,6 +975,7 @@ _main:
     call _setup_audio               ; host/c/audio.c
     call setup_input
     call setup_registry
+    call _ctl_init                  ; gta2ctl socket, with --ctl only
     mov al, [trace]
     or [trace_input], al            ; --trace implies --trace-input
 

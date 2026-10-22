@@ -153,6 +153,9 @@ hk_MoveOnFoot:
     call pm_wrap
     mov [r12 + PL_TURNRATE], ax
 .out:
+    mov edi, r12d                   ; gta2ctl goto / face steer last (host/c/ctl_game.c)
+    mov esi, r13d
+    call _ctl_on_foot
     HRET
 
 ; JMPHOOK 0x49AC76 in PedGameObject_StateWalk (esi = PedGameObject*), before the walker saves

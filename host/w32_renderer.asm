@@ -613,6 +613,7 @@ vid_FlipBuffers:
     inc dword [r_frames]
     mov edi, [r_frames]
     call input_keys_frame           ; --keys=FRAME:KEY,...
+    call _ctl_frame                 ; gta2ctl commands and telemetry (host/c/ctl.c)
     mov eax, [r_frames]
     cmp eax, 1
     je .stats
@@ -695,6 +696,7 @@ vid_FlipBuffers:
     mov esi, [r_frames]
     xor eax, eax
     call _printf
+    call _ctl_exit                  ; _exit skips atexit: remove the gta2ctl socket
     xor edi, edi
     call _exit
 .out:

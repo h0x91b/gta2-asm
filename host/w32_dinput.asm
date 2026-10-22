@@ -981,6 +981,32 @@ parse_keys_arg:
     lea rdi, [msg_keys_bad]
     call fail
 
+; input_push_key(edi = SDL scancode, esi = 1 down / 0 up): one key event into SDL's queue,
+; the --keys path (gta2ctl key / keydown / keyup, host/c/ctl.c)
+input_push_key:
+    push rbx
+    push r12
+    sub rsp, 136                    ; SDL_Event (128), rsp 16-aligned
+    mov ebx, edi
+    mov r12d, esi
+    mov rdi, rsp
+    xor esi, esi
+    mov edx, 128
+    call _memset
+    mov dword [rsp], SDL_EVENT_KEY_DOWN
+    test r12d, r12d
+    jnz .d
+    mov dword [rsp], SDL_EVENT_KEY_UP
+.d:
+    mov [rsp + SDL_KEY_DOWN], r12b
+    mov [rsp + SDL_KEY_SCANCODE], ebx
+    mov rdi, rsp
+    call [sdl_SDL_PushEvent]
+    add rsp, 136
+    pop r12
+    pop rbx
+    ret
+
 ; input_keys_frame(edi = presented frame): push the --keys events due now
 input_keys_frame:
     push rbx

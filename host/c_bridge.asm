@@ -9,6 +9,13 @@
 
 global call32                       ; loader.asm: C -> 32-bit game code (game.h)
 global r_frames                     ; w32_renderer.asm: presented frames
+global r_save_shot                  ; w32_renderer.asm: --shot's BMP writer (gta2ctl shot)
+global r_shot_path
+global key_table                    ; w32_dinput.asm: --keys names (gta2ctl key)
+global input_push_key
+global have_focus
+
+extern _ctl_arg, _ctl_init, _ctl_frame, _ctl_exit, _ctl_on_foot   ; host/c/ctl.c (docs/gta2ctl.md)
 
 
 ; host/c/config.c (config.yaml): called by loader.asm (--config=) and after the registry

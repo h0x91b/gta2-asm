@@ -72,6 +72,9 @@ for f in c/*.c; do
   cobjs="$cobjs ${f%.c}.o"
 done
 link loader loader.o $cobjs   # libSystem only: SDL3 is dlopen'ed after the low 4 GB is mapped
+# gta2ctl (docs/gta2ctl.md): the shell client for --ctl, a native binary (no Rosetta needed)
+"$(xcrun -f clang)" -std=c99 -O2 -Wall -Wextra -Werror -isysroot "$(xcrun --show-sdk-path)" \
+  -o ../tools/gta2ctl/gta2ctl ../tools/gta2ctl/gta2ctl.c
 
 case "$1" in
   --run)  shift; exec arch -x86_64 ./host "$@" ;;

@@ -6,3 +6,4 @@ __pycache__/
 /data.pak
 /formats-out/
 /ghidra-docs/
+/tools/gta2ctl/gta2ctl
