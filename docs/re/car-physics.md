@@ -500,7 +500,7 @@ comment in Ghidra has the evidence.
 | `0x49EF20` | `CollisionResult_IsHitPed` | kind(+0) == 3 (sprite hit) && unsure_Sprite_GetPedSprite(hit sprite +0x20) != 0. Caller CarPhysics_StepAndResolveCollisions (ped hits… | verified |
 | `0x49EFC0` | `Car_AddFlag2000` |  | verified |
 | `0x49EFD0` | `Car_ClearFlag2000` |  | verified |
-| `0x49EFE0` | `unsure_Car_CanCrushCars` | IsCollideOver(car) (CARI flag) && (IsTank // !FUN_004214f0). Caller CarPhysics_CollideWithCar: vehicles that drive over / flatten other… | hypothesis |
+| `0x49EFE0` | `Car_CanCrushCars` | IsCollideOver(car) (CARI flag) && (IsTank // !FUN_004214f0). Caller CarPhysics_CollideWithCar: vehicles that drive over / flatten other… | hypothesis |
 | `0x4A0020` | `CarPhysics_TestCollision` | map + sprite test for car and trailer sprite, records mover | verified |
 | `0x4A0080` | `CarPhysics_DebugAssertCollisionKind` | dead debug assert (physics.cpp 0x7a0/0x7a9), 0 callers | verified |
 | `0x4A05C0` | `CarPhysics_ComputeCollisionImpulse` | the impulse maths, 7 callers; mass -1 = immovable | verified |
@@ -577,7 +577,7 @@ comment in Ghidra has the evidence.
 | `0x4BE950` | `CarAttachment_WreckLinkedCar` |  | verified |
 | `0x4BEA20` | `CarAttachments_ExplodeAll` | Car_Explode: for each attachment -> CarAttachment_ExplodeOrKill (0x4be920: turret/gun objects explode with code 0x13 via… | verified |
 | `0x4BEA40` | `CarAttachments_WreckAll` | Car_OnWrecked: for each attachment -> CarAttachment_WreckLinkedCar (0x4be950) which calls Car_OnWrecked on the linked car if not being… | verified |
-| `0x4BEB70` | `unsure_CarAttachments_StartBurning` | attachments state=2 at stage 4 | hypothesis |
+| `0x4BEB70` | `unsure_CarAttachments_SetFlameStateTo2` | attachments state=2 at stage 4 | hypothesis |
 
 #### 7. Math helpers (Fix16 Q14, Ang16, Vec2) (57)
 
@@ -714,7 +714,7 @@ Mostly the `Sprite` / `Position` module (bounds object, corner math, draw). "hig
 | `0x4BD610` | `Sprite_TestWallBlockedAndRecordZ` | Taser |
 | `0x4BDAD0` | `Sprite_ClearObstaclesForSpawn` | Script_Decl_PLAYER_PED / CAR_DATA_SET / CHAR_DATA_SET |
 | `0x4BDC40` | `Position_DtorBody` | |
-| `0x4BDDD0` | `unsure_Sprite_ShrinkFrameBoundsAndScaleBody` | |
+| `0x4BDDD0` | `Sprite_ShrinkFrameBoundsAndScaleBody` | |
 | `0x4BDF20` | `Sprite_CollisionCheckAgainstShortenedOther` | |
 | `0x4BE050` | `Sprite_GetBoundsBox` | 0 callers |
 | `0x4BE060` | `Sprite_Draw` | only caller LayerDrawQueue_DrawInOrder |

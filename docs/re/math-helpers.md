@@ -230,4 +230,4 @@ callee pops them (`ret 4/8/0x10`).
 | `0x472C60` | `Fix16_RoundToThousandths` | medium | floor(v*1000+0.5)/1000 |
 | `0x472CC0` | `Fix16Table256_Ctor` | medium | t[i] = i/64, 256 entries |
 | `0x472FD0` | `Ped_IsGroupLeader` | high | Ped+0x23C == 99 |
-| `0x4740F0`, `0x474410`, `0x474420`, `0x474490` | `unsure_MikeDebug_ZeroDword`, `unsure_Pair_SetFirst/SetSecond`, `unsure_MikeDebug_TimerSlot_GetMs` | unsure | tiny helpers around do_mike |
+| `0x4740F0`, `0x474410`, `0x474420`, `0x474490` | `MikeDebug_ResetMemTotal`, `MikeDebug_TimeSpan_SetStartTick/SetSecond`, `unsure_MikeDebug_TimerSlot_GetAvg` | unsure | tiny helpers around do_mike |

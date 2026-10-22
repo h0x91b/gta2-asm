@@ -4,6 +4,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00434daa,prt_434daa_5c0dd4ac,Ped_GetSelectedWeapon::override,USER_DEFINED,.text,Ped_GetSelectedWeapon,,
 0x00461de0,?MainMenu,,USER_DEFINED,.text,InitGame,,
 0x00475d72,buf4k,MissionScript_ParseStrings,USER_DEFINED,.text,MissionScript_ParseStrings,,
+0x0047e8fc,Script_Op_DO_BASIC_KF_TEMPLATE_Frag,,USER_DEFINED,.text,,,
 0x004a49c0,?KeyDown,,USER_DEFINED,.text,Player_OnKeyUp,,
 0x004b7666,aaa,PlayerScore_AddMoney,USER_DEFINED,.text,PlayerScore_AddMoney,,
 0x004c6060,?ShowBigOnScreenLabel,,USER_DEFINED,.text,ShowBigOnScreenLabel,,

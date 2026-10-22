@@ -804,7 +804,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x45ED10 | `Keyboard_SetMappedBit` | V |
 | 0x45ED30 | `Keyboard_ClearMappedBit` | V |
 | 0x45ED50 | `Keyboard_IsReservedKey` | V |
-| 0x45EDC0 | `unsure_Keyboard_IsKeySwallowedWhilePaused` | H |
+| 0x45EDC0 | `Keyboard_IsKeySwallowedWhilePaused` | H |
 | 0x45EDE0 | `Keyboard_ToggleMappedBits` | V |
 
 ### Registry / config / stdio (0x4B5000-0x4B6B3F, 77 functions)
@@ -1068,7 +1068,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4C72F0 | `ChatInput_AppendChar` | old |
 | 0x4C7320 | `ChatInput_Backspace` | old |
 | 0x4C7340 | `Player_GetArrowBlockerZone` | V |
-| 0x4C7350 | `unsure_MissionScript_HasActiveMissionPtr` | H |
+| 0x4C7350 | `MissionScript_IsOnMission` | H |
 | 0x4C7370 | `Hud_IsMpGameNotTag` | V |
 | 0x4C7380 | `MultiplayerTag_GetPlayerTimeValue` | V |
 | 0x4C73A0 | `Hud_PlayerMarker_Update` | V |

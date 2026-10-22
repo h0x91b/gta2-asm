@@ -921,21 +921,21 @@ M medium (inferred from callers / field use), U `unsure_` (see the comment in Gh
 | 0x476230, 0x476270, 0x4762C0..0x4762E0, 0x4762F0..0x476310, 0x476350 | `Car_ClearFlag2`, `Car_AddFlag10`, `Car_AddFlag80`, `Car_AddFlag200`, `Car_AddFlag1000`, `Car_ClearFlag100`, `Car_ClearFlag200`, `Car_ClearFlag400`, `Car_ClearFlag1000` | V | one-line `Car_AddFlags` / `Car_ClearFlags` wrappers, named like the existing `Car_AddFlag100`; callers SET_CAR_PROOF, JAMMED_ACCELERATOR, GIVE_CAR_ALARM, SET_CAR_NO_COLLIDE |
 | 0x476240 / 0x476280 / 0x47F340 | `MissionScript_FindCarEnterThreadEntry` / `_AddCarEnterThreadEntry` / `_StartCarEnterThread` | M | 32-entry wait table for THREAD_WAIT_FOR_CHAR_IN_CAR, started from `Car_OnDriverEnter` |
 | 0x476320 / 0x476370 / 0x47F3B0 | `MissionScript_FindPhoneThreadEntry` / `_AddPhoneThreadEntry` / `_StartPhoneAnswerThread` | M | 20-entry phone wait table at `+0x188`, started from `PedGameObject_TryAnswerPhone` |
-| 0x476360 | `unsure_Car_SetFlag8d_1` | U | `Car+0x8D \|= 1`, paired with `Car_ClearEnterScriptFlag` |
+| 0x476360 | `Car_SetEnterScriptFlag` | U | `Car+0x8D \|= 1`, paired with `Car_ClearEnterScriptFlag` |
 | 0x476400 / 4764D0 / 476530 / 4765A0 | `MissionScript_AddWeaponHitWatch` / `_RemoveWeaponHitWatch` / `_RecordWeaponHit` / `_CheckWeaponHitWatch` | M | 15-entry table at `MissionScript+0x27C` used by CHECK_WEAPON_*_HIT_*; recorded from `Car_OnDamage`, `Ped_OnProjectileHit`, ... |
 | 0x476660 / 0x476680 | `ComboList_GetEntryCount` / `ComboList_DeactivateEntry` | V | `ComboEntry.count` (+0x26) and `ComboEntry_Deactivate` |
 | 0x4766A0 / B0 / C0 | `Player_GetMoneyMultiplier` / `Player_AddMoneyMultiplier` / `Player_GetLives` | V | `AnimatedValue` at `Player+0x6BC` / `+0x684` |
 | 0x476700 / 0x476730 | `Player_IsWastedNotBusted` / `Player_IsBustedTakenAway` | M | state-2 death + objective 0x36; `ScriptThread_MissionFailOnArrest` |
 | 0x4767C0 / 810 / 830 / 880 | `HudArrowTarget_SetPosition` / `_SetObject` / `_Clear`, `HudArrow_ClearTargets` | V | HudArrowTarget kind 1 / 4 / 0 at `+0x10` |
 | 0x4768A0 / 0x4768C0 | `HudBriefQueue_HasBriefOnScreen` / `ScriptTriggerPool_SetEntryState` | V | IS_BRIEF_ONSCREEN; Enable/DisableThread |
-| 0x476900 | `unsure_Crane_SetField78` | U | `Crane+0x78`, CRANE_DATA |
+| 0x476900 | `Crane_SetHomeCrane` | U | `Crane+0x78`, CRANE_DATA |
 | 0x476950 / 0x476960 | `Generator_SetObjectType` / `Generator_GetObjectType` | M | `Generator+0`, DECIDE_POWERUP_FOR_CRANE / SWITCH_GENERATOR_* |
 | 0x4769A0 / 0x4769C0 | `Door_SetModeAndTargetCopy1` / `_Twin2` | U | byte-identical to `Door_SetModeAndTarget` |
 | 0x476AD0 | `ParkingZone_SetNoRespawn` | V | `ParkingZone+0x3F`, PARK_NO_RESPAWN (0x118) |
 | 0x476B10 | `Menu_SetBonusTokenCount` | U | save load writes `Menu+0x574` |
-| 0x476B20 / B30 / B80 / 0x47F520 | `unsure_SaveGameHeader_InitSub54` / `InitSubE4` / `InitSub5E4` / `unsure_SaveGameHeader_Ctor` | U | static-init ctor chain of a Fix16/Ang16 aggregate (probably the 0x748-byte save header) |
+| 0x476B20 / B30 / B80 / 0x47F520 | `PlayerCheckpoint_Ctor` / `InitSubE4` / `InitSub5E4` / `SaveGameHeader_Ctor` | U | static-init ctor chain of a Fix16/Ang16 aggregate (probably the 0x748-byte save header) |
 | 0x476BC0 | `MissionScript_CleanupMissionEntities` | V | MISSION_HAS_FINISHED: removes the 50 tracked cars / objects / peds |
-| 0x477D00 | `unsure_MissLogStream_Ctor` | U | `ofstream_Ctor`, no callers |
+| 0x477D00 | `MissLogStream_Ctor` | U | `ofstream_Ctor`, no callers |
 | 0x47EE70 / 0x47EF10 | `SaveGame_CollectSavedCounters` / `MissionScript_RestoreSavedCounters` | V | commands 0x113 / 0x114 (SAVED_COUNTER, SAVED_COUNTER_SET) <-> 300-slot table |
 | 0x47F4D0 | `ScriptThreadPool_LogActiveThreads` | V | `MissLogCommand` per active thread |
 | 0x4797BB | `Script_Op_GIVE_WEAPON_Frag` | V | tail after 11.44 patch JMP to 0x3F1xxx; Ghidra split of `Script_Op_GIVE_WEAPON` |

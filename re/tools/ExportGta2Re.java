@@ -126,7 +126,12 @@ public class ExportGta2Re extends GhidraScript {
 			for (Function f : currentProgram.getFunctionManager().getFunctions(true)) {
 				Symbol s = f.getSymbol();
 				boolean isNamed = isUserNamed(s);
-				count(isNamed ? "functions.named" : "functions.default_named");
+				// A thunk takes its target's name with source DEFAULT: count it apart so
+				// default_named stays the real FUN_ count.
+				boolean namedThunk = !isNamed && f.isThunk() && f.getThunkedFunction(true) != null
+					&& !f.getThunkedFunction(true).getName().startsWith("FUN_");
+				count(isNamed ? "functions.named"
+						: namedThunk ? "functions.thunk_named" : "functions.default_named");
 				boolean typed = f.getSignatureSource() == SourceType.USER_DEFINED;
 				if (!isNamed && !typed) {
 					continue;

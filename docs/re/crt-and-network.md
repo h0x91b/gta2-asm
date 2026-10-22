@@ -270,7 +270,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x406570` | `NetDlg_GetSelectedMapStr1` | medium | same entry array, offset 0x104 |
 | `0x406590` | `NetDlg_GetSelectedMapStr2` | medium | same entry array, offset 0x208 |
 | `0x4065B0` | `Network_ReportMmpFileOpenError` | high | sprintf "Unable to open file: %s in mmpfile: %s" + MessageBox; caller Network_ReadMmpMapFiles |
-| `0x406660` | `unsure_NetDlg_UpdateButtonStates` | unsure | calls 0x56dc04 with mapIndex+1 and *0x51 (like 0x406470); guarded by player count |
+| `0x406660` | `NetDlg_UpdateStartRejectButtons` | unsure | calls 0x56dc04 with mapIndex+1 and *0x51 (like 0x406470); guarded by player count |
 | `0x40667C` | `NetDlg_EnableControls3FDAnd3FCFragment` | high | mid-function tail inside 0x56dc04: EnableWindow ctrl 0x3fd/0x3fc by player count >1 |
 | `0x4066E0` | `NetDlg_SetCheckBox403` | medium | SendDlgItemMessage id 0x403 BM_SETCHECK(0xF1) 1 or 0 |
 | `0x406B80` | `NetDlg_SetNumericText40e` | medium | sprintf "%d" into SetDlgItemText id 0x40e |
@@ -369,7 +369,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x40FE80` | `Position_IsObjectKind` | low | Returns whether field +0x30 is 1, 4 or 5 |
 | `0x40FEE0` | `CollisionHit_SetKindObject` | medium | Sets this+0=3, +0x20=param |
 | `0x40FEF0` | `Object_GetModel` | medium | Returns field +0x18; caller Script_Op_CHECK_OBJ_MODEL |
-| `0x40FF00` | `unsure_Object_GetInfoByte99` | low | Returns byte at (*(this+8))+99 |
+| `0x40FF00` | `unsure_WorldObject_GetPrefabByte63` | low | Returns byte at (*(this+8))+99 |
 | `0x40FF10` | `CollisionHit_SetField24` | low | Writes this+0x24 |
 | `0x40FF20` | `CollisionHit_FillFromGlobals` | medium | Sets kind 2/3/4/5 from g_CollisionKind/g_CollisionHitSprite |
 
@@ -570,7 +570,7 @@ Evidence is in each function's Ghidra plate comment. `unsure_` = honest guess, `
 |---|---|---|---|
 | `0x449CE0` / `0x449D10` | `unsure_FrontEndItemList_Ctor` / `_Dtor` | unsure | 600 x 0x6C array at +2; InitFrontend / FrontEnd_Dtor |
 | `0x449EF0` / `0x44A020` | `CrimeEventQueue_Dtor` / `thunk_CrimeEventQueue_Dtor` | high | 10 x 0x14 at +4, called from CrimeEventQueue_ScalarDeletingDtor |
-| `0x449F50` | `unsure_Player_EmptyMemberDtor` | unsure | bare RET called from Player_Dtor |
+| `0x449F50` | `CrimeStats_Dtor` | unsure | bare RET called from Player_Dtor |
 | `0x44DBF0` / `0x4504D0` | `ofstream_Dtor` / `DebugLog_Dtor` | medium | ios_Dtor on vbase +8; DebugLog_WriteCoopHeader + ofstream_Close + free |
 | `0x45A700` | `Game_OnSetFocus` | medium | WndProc message 7 only |
 | `0x45AFD0` | `HudDebugLabel_SetColour` | medium | sets +0xB0=8, +0xB4=colour on Hud_DebugLabel_Show result |

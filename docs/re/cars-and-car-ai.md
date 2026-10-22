@@ -241,7 +241,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x410630 | Sound_GetCDVolume | V | returns CDVol |
 | 0x410640 | MssAudio_ReleaseDevice_Thunk | V | _AIL_digital_handle_release_4; WndProc only |
 | 0x410650 | SoundMgr_ReacquireDevice_Thunk | V | FUN_00416d60(g_SoundManager) = reacquire; WndProc |
-| 0x410660 | unsure_Game_GetIntroMovieSetting | H | byte global read by intro-movie funcs |
+| 0x410660 | unsure_Audio_GetCdDriveLetter | H | byte global read by intro-movie funcs |
 | 0x410690 | SoundClientPool_Dtor | V | *p=0 (only a thunk caller) |
 | 0x4106A0 | SoundClientPool_InitFreeList | V | 1000 nodes x16, link +0xc |
 | 0x4106F0 | SoundClientPool_Ctor | V | wraps 4106a0, no callers (static init) |
@@ -267,8 +267,8 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x4116F0 | SoundMgr_ComputeVoiceVolume | V | 416da0 attenuation -> +0x54, halved if muffled |
 | 0x411730 | SoundMgr_GetDistSqToListener | V | (+0x38-+0x1468)^2+(+0x3c-+0x146c)^2 |
 | 0x4117B0 | Position_GetXYZ | V | +0x14/+0x18/+0x1c; caller Hud_ArrowTarget_UpdatePosition |
-| 0x4117D0 | unsure_Ped_TakePendingSoundA | H | read-and-clear +0x13c (receiver = driver Ped from Car_GetDriver) |
-| 0x4117F0 | unsure_Ped_TakePendingSoundB | H | identical twin of 4117d0 |
+| 0x4117D0 | Ped_TakeTrainStop | H | read-and-clear +0x13c (receiver = driver Ped from Car_GetDriver) |
+| 0x4117F0 | Ped_TakeTrainStop2 | H | identical twin of 4117d0 |
 | 0x411810 | CarPhysics_IsReverseGasOn | V | CarPhysics+0x94 |
 | 0x411820 | CarPhysics_GetThrottle | V | +0x60 (receiver = Car+0x64? no: CarDriveOrder in Car+0x60; here param is CarPhysics from Car+0x58 in 413160) |
 | 0x411830 | CarPhysics_GetWheelSpinTimer | V | +0xac |
@@ -293,11 +293,11 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x411D20 | SoundMgr_UpdateCraneSource | V | type 8 case of 4163a0; owner flags +0x156..+0x159 |
 | 0x412010 | SoundMgr_UpdateCrusherSource | V | type 9; owner +0x24/+0x28 pos |
 | 0x4121F0 | SoundMgr_CalcImpactVolume | V | event type 2..5 -> normalised volume; default random 5..14 |
-| 0x4123C0 | unsure_CarSound_AddHonkReaction | H | Car_TakeHonkReason -> samples 0x101..0x10f, layer 7 |
+| 0x4123C0 | CarSound_AddDriverReaction | H | Car_TakeHonkReason -> samples 0x101..0x10f, layer 7 |
 | 0x412680 | CarSound_AddTrainCabSpeedLoopA | V | speed/maxspeed -> vol, sample 4, layer 0 |
 | 0x412830 | CarSound_AddTrainCabSpeedLoopB | V | sample 5, layer 2, vol 0x7f scale |
 | 0x4129D0 | SoundMgr_GetChannelCar | V | channel -> client owner -> Sprite_GetCar |
-| 0x412A20 | unsure_CarSound_AddDriverEvent | H | Car_GetDriver -> Ped+0x13c -> sample 0x8b/0x8c, layer 3 |
+| 0x412A20 | CarSound_AddTrainStopSound | H | Car_GetDriver -> Ped+0x13c -> sample 0x8b/0x8c, layer 3 |
 | 0x412BD0 | CarSound_AddTankSpeedLoop | V | engine on, layer 5, sample 0xc |
 | 0x412D80 | CarSound_AddTurretRotation | V | Car_IsTurretBeingRotated, layer 4, sample 0xb |
 | 0x412EB0 | CarSound_AddBombTick | V | Car_HasBomb, layer 0xf |
@@ -323,7 +323,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x4150E0 | SoundMgr_PickEventSample | V | event id (+0x18) + category 1/3/7/9 -> sample id (S6+0x44), pitch (S6+0x50) from random S6+0x1454/58 |
 | 0x415520 | SoundMgr_ResolveEventCategory9 | V | id filter then PickEventSample(..,9) |
 | 0x4156B0 | thunk → CarSound_AddDoors | V | thunk |
-| 0x4156C0 | unsure_CarSound_AddTankFlag2000Loop | H | needs Car_IsEngineOn + Car_HasFlag2000; request type 0xE, cat 0xD |
+| 0x4156C0 | unsure_CarSound_AddTankCarContactLoop | H | needs Car_IsEngineOn + Car_HasFlag2000; request type 0xE, cat 0xD |
 | 0x415880 | SoundMgr_UpdateCarHorn | V | Car_IsHonking; request type 8, cat 5; skips fire truck/tank/siren cases |
 | 0x415A90 | SoundMgr_UpdateCarSiren | V | Car_IsSirenActive + engine on; type 7, cat 4, vol 0x46 |
 | 0x415BE0 | SoundMgr_ResolveEventCategory1 | V | PickEventSample(..,1) |
@@ -374,7 +374,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x41A3C0 | SoundMgr_UpdateObjectSourceByType | V | switch on FUN_0040FEF0(obj) (5,0x71,0x80,0x8B,0xA4..,0xB9..,0xC5) |
 | 0x41B030 | SoundMgr_UpdateObjectSource | V | picks 4181E0 or 41A3C0 |
 | 0x41B060 | SoundMgr_TickPedSpeechCooldown | V | DAT_005E2B98 6->0 |
-| 0x41B090 | unsure_Sprite_GetField0C | H | returns +0xC; sole caller UpdatePedSource |
+| 0x41B090 | PedGameObject_GetState2 | H | returns +0xC; sole caller UpdatePedSource |
 | 0x41B0B0 | Ped_ConsumePendingSpeechEvent | V | read +0x250 then zero |
 | 0x41B0D0 | SoundMgr_UpdatePedSpeech | V | event 1..0x1C -> sample ranges 0xD2..0x13x |
 | 0x41B7B0 | SoundMgr_UpdatePedSource | V | callees Ped_HasWeapons, Player_GetCurrentCar, Sprite_GetSpeed, 41B0D0 |
@@ -383,7 +383,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x41C000 | PoliceRadio_PumpQueue | V | plays next phrase when ExtraSample finished |
 | 0x41C0D0 | PoliceRadio_GetFreeQueueSlots | V |  |
 | 0x41C0F0 | SoundMgr_NoOp | V | single ret |
-| 0x41C100 | unsure_PoliceRadio_QueueStandbyPhrases | H | queues 0x79,0x5F,0x5B,0x78 when >3 free |
+| 0x41C100 | unsure_PoliceRadio_QueueType8FollowUpPhrases | H | queues 0x79,0x5F,0x5B,0x78 when >3 free |
 | 0x41C150 | PoliceRadio_FindDistrictAtPos | V | zone type 3 named m## |
 | 0x41C200 | PoliceRadio_Reset | V |  |
 | 0x41C240 | PoliceRadio_QueueLocationPhrases | V | compass 0x73..0x77 + district 0x79+n |
@@ -393,8 +393,8 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x41CC80 | Weapon_ConsumeFiredFlag | V | read +0x2C then zero |
 | 0x41CC90 | Weapon_GetWeaponType | V | +0x1C |
 | 0x41CCA0 | SoundMgr_UpdateWeaponSource | V | kind 7; sample 0x137..0x13F by weapon type |
-| 0x41D010 | unsure_ObjectList_Reset | H | zeroes +0,+4,+8,+0x10; caller WorldObjectPool_Ctor |
-| 0x41D030 | unsure_ObjectList_DeletingDtor | H | 0 xrefs |
+| 0x41D010 | WorldObject_Dtor | H | zeroes +0,+4,+8,+0x10; caller WorldObjectPool_Ctor |
+| 0x41D030 | WorldObject_ScalarDeletingDtor | H | 0 xrefs |
 | 0x41D070 | EmptyBase_Ctor | V | returns this; callers PoliceRoadblock_Ctor, TrafficSpawner_Ctor |
 | 0x41D8A0 | ComboEntry_Reset | V | defaults (-1, 0x57, 0x33, ..) |
 | 0x41D8F0 | thunk → ComboEntry_Reset | V | thunk |
@@ -415,7 +415,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x41E010 | Camera_ResetSmoothing | V | 0x98 := 0x0, velocity(0xac) := 0; Player_Watch*/OnWasted/OnBusted/OnLevelStart/WARP_FROM_CAR_TO_POINT |
 | 0x41E350 | Box3_SetXYRanges | V | writes [0..3] = xmin,xmax,ymin,ymax (use in 41f180) |
 | 0x41E370 | Box3_SetZRange | V | writes [4],[5] |
-| 0x41E390 | unsure_PositionBounds_IsSquareAndSmall | H | a==b && a<=DAT_005e3e10 |
+| 0x41E390 | Bounds_IsSquareAndSmall | H | a==b && a<=DAT_005e3e10 |
 | 0x41E3D0 | Camera_SetTarget | V | target x,y, z=p3+elev(0x40), w |
 | 0x41E410 | Camera_CommitTarget | V | cameraPosTarget2 := cameraPosTarget |
 | 0x41E480 | Camera_IsTrackingSprite | V | compares with followCar(0x38) / ped(0x34)'s car |
@@ -459,8 +459,8 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x4206E0 | Position_SetField22 | V | short +0x22 |
 | 0x4206F0 | Position_SetCollisionKind | V | +0x30 + SetDefaultField28ByKind |
 | 0x420710 | Sprite_SetOwner | V | CarManager_SpawnCar: FUN(car2->body, car2) writes body+8 = car |
-| 0x420720 | unsure_Sprite_GetValue4 | H | Fix16Holder_Load(*(this+4)); Car_IsSpriteZDifferent |
-| 0x420740 | unsure_Sprite_GetValueC | H | Fix16Holder_Load(*(this+0xc)); CrusherSlot_Update, Car_IsSpriteZDifferent |
+| 0x420720 | Position_GetFrameWidth | H | Fix16Holder_Load(*(this+4)); Car_IsSpriteZDifferent |
+| 0x420740 | Position_GetBodyWidth | H | Fix16Holder_Load(*(this+0xc)); CrusherSlot_Update, Car_IsSpriteZDifferent |
 | 0x4207E0 | ListHead_Init | V | *this=0; Car_InitAttachments(&attachments), Crane_Init, WeaponManager_Ctor(&hitCarList), CarManager_Ctor(2 globals) |
 | 0x420B50 | Ped_GetOwnerSlot | V | Ped+0x267 |
 | 0x420B60 | Ped_GetId | V | Ped+0x200 |
@@ -505,7 +505,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x4217C0 | Car_IsApc | V | ==3 |
 | 0x4217D0 | Car_IsGt24640 | V | ==19 |
 | 0x4217E0 | Car_IsTvVan | V | ==67 |
-| 0x421810 | unsure_Car_SetRoofDecalDelta | H | CarDeltas_SetBit(0xf), from SpawnCar |
+| 0x421810 | Car_SetRoofDecalDelta | H | CarDeltas_SetBit(0xf), from SpawnCar |
 | 0x421870 | Car_GetDriverPlayer | V | driver+0x15c |
 | 0x421950 | Car_SetShopReaction | V | Car+0xb4 |
 | 0x4219A0 | Player_IsWeaponAmmoFull | V | this+0x718+idx*4 -> Weapon_IsAmmoFull |
@@ -523,7 +523,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x421FD0 | Car_ApplyRemap | V | Position_SetRemap on car+trailer |
 | 0x422260 | Car_UnlinkFromWorld | V | RemoveSprite x2, CarPool_UnlinkUsed, SetDetached |
 | 0x4222D0 | Car_ResumeAICruise | V | ai+0x18=DAT_5e4dc4; Car_ResumeAI; 12 callers |
-| 0x4224A0 | unsure_Car_IsDoorOffsetBeyondBody | H |  |
+| 0x4224A0 | unsure_Car_IsDoorOffCentre | H |  |
 | 0x422500 | Car_GetDoorWorldPos | V |  |
 | 0x422980 | Car_SirenRearLightsOffA | V | called by Car_SirenOff; bits 0x12/0x11, obj 0xac/0xad |
 | 0x422A40 | Car_SirenRearLightsOffB | V | called by Car_SirenOff; bits 0x12/0x11, obj 0xac/0xad |
@@ -534,8 +534,8 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x422E00 | Car_SetNumberGraphic | V | clear bits 0xb..0x14, set 0xb+idx |
 | 0x4230D0 | Car_IsDamagePosBroken | V | idx 0..4 -> bits 2,3,1,0,4 |
 | 0x4232E0 | Car_ZeroVelocity | V | linVel=zero, angVel=0 |
-| 0x423310 | unsure_Car_IsSpriteSizeChanged | H |  |
-| 0x4233B0 | unsure_Car_ResizeBoundsToSpriteSize | H |  |
+| 0x423310 | Car_IsFrameWidthChanged | H |  |
+| 0x4233B0 | Car_ShrinkFrameBounds | H |  |
 | 0x423480 | Car_GetEffectiveDriver | V | trailer -> cab driver |
 | 0x423590 | Car_ShowCarNameForLocalPlayer | V | Hud_CarName_Show |
 | 0x423630 | Car_StepTurretToward | V | attach 0x72/0x94/0xf8 |
@@ -548,7 +548,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x424360 | Car_UpdateAttachmentLightByLid | V |  |
 | 0x4243C0 | Car_GetSpriteLayerForState | V | 0xe / 0x14 / 0x11,0x16 |
 | 0x424E30 | Car_CanPedEnter | V |  |
-| 0x424F80 | unsure_Car_IsEnterCandidateForSearchPed | H |  |
+| 0x424F80 | Car_IsEnterCandidateForSearchPed | H |  |
 | 0x424FF0 | Car_TryPlaceOnRoadColumn | V | scans up to 200 tiles for arrow block, teleports car if unseen |
 | 0x4253C0 | CarAIPool_ScalarDeletingDtor | V | called from CarManager_FreePools |
 | 0x4253E0 | TrailerControllerPool_ScalarDeletingDtor | V | called from CarManager_FreePools |
@@ -562,7 +562,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x4257B0 | Car_CanBeResprayed | V | "nespray" brief otherwise |
 | 0x425A40 | Car_IsDoorExitClear | V |  |
 | 0x425B60 | Car_IsPavementBesideDoor | V |  |
-| 0x425D60 | unsure_Car_IsBlastImmune | H |  |
+| 0x425D60 | Car_IsBlastImmune | H |  |
 | 0x4268C0 | Car_TryPlaceOnArrowTileAt | V | wrapper; caller CarAI_UpdateDriveOrder |
 | 0x426D70 | CarPool_ScalarDeletingDtor | V |  |
 | 0x426D90 | CarPhysicsPool_ScalarDeletingDtor | V |  |

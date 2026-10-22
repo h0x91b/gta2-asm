@@ -258,7 +258,7 @@ world-object movement. New names there (Seq 46, details in Ghidra comments):
   `DoorManager_OnPedTouchDoorObject`, weapon pickups and 0x10A bonus tokens are picked up.
 - `PED_STATE` → handler (verified from `PedGameObject_Tick`): 0 `StateWalk` 0x49A560, 1/2
   `PedGameObject_StateWalkToTarget` 0x49B0D0, 3 `StateEnterCar` 0x49BAD0, 4 `StateGetOutOfCar`
-  0x496800, 5 `unsure_PedGameObject_StateUnknown5Car` 0x49BC20, 7 `StateStaying`, 8
+  0x496800, 5 `unsure_PedGameObject_StateEnterCarAtDoor` 0x49BC20, 7 `StateStaying`, 8
   `StateFallOnGround` 0x496880, 9 `StateWasted`.
 - `PedPathfinder_*` 0x49C680-0x49DCE0: incremental 8-neighbour path search over a 34×34 node
   grid (`g_PedPathfinder` 0x66A7E4, 0x2FD4 B, 100 iterations per call).
@@ -467,7 +467,7 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x481D10 | `Movie_InitBinkGlobals` | verified | sole caller Init; zeroes unk1/unk2/unk3 (Bink buffer/handle/state) |
 | 0x481D30 | `Movie_CloseBink` | verified | BinkBufferClose, BinkGetSummary, BinkClose; callers FrontEnd_Tick, WndProc |
 | 0x481DA0 | `Movie_ResetBinkBufferOffset` | verified | BinkBufferSetOffset(buf,0,0); caller WndProc |
-| 0x481DC0 | `unsure_Movie_IsStateEqual2` | hypothesis | returns unk3==2; WndProc only |
+| 0x481DC0 | `Movie_IsBinkBufferOpen` | hypothesis | returns unk3==2; WndProc only |
 | 0x481DD0 | `Movie_IsOpen` | verified | unk3 in {1,2}; WndProc only |
 | 0x481DF0 | `Renderer_IsKind2` | hypothesis | g_RendererKind==2 (selects Bink 2D-surface path vs BinkBuffer path; likely software/DirectDraw kind — enum not checked) |
 | 0x481E00 | `Movie_UpdateFrame` | verified | BinkWait/DoFrame/CopyToBuffer/BufferBlit/NextFrame; returns 1 when last frame hit & closes; caller FrontEnd_Tick |
@@ -512,7 +512,7 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x483030 | `Projectile_ShouldHitSprite` | verified | non-null && AllowsHit && !IsHitSpriteOwnerPed |
 | 0x483060 | `Object_TestSpriteHitAndRecord` | verified | Sprite_FindObstacleAndRecord(pos,2); sets DAT_665790 (hit sprite), DAT_665798 (hit special car 0xA6/0xA9 flag), CollisionHit_SetKindObject |
 | 0x483100 | `Position_SnapZToSlopeSurface` | verified | MapBlocks_GetSlopeSurfaceZ, Fix16 floor/frac, SetPosition |
-| 0x483460 | `unsure_Object_LandOnSpriteSurface` | hypothesis | after TestSpriteHit: if speed<=DAT_6657ac set layer 0x1D/6, speed, decel=prefab+0x14; caller Object_UpdatePhysicsAnimated-step (FUN_00486e90) |
+| 0x483460 | `Object_LandOnSpriteSurface` | hypothesis | after TestSpriteHit: if speed<=DAT_6657ac set layer 0x1D/6, speed, decel=prefab+0x14; caller Object_UpdatePhysicsAnimated-step (FUN_00486e90) |
 | 0x483880 | `Object_InheritMotionFromSprite` | verified | by Sprite_GetKind: 2 car speed/angle/layer, 3 ped speed*DAT_665a60, 4/5 object copy motion; caller Object_UpdateAttached |
 | 0x483990 | `Object_InitFromPrefab` | verified | ObjectPrefabs_Get, type+0x18, position alloc, SetPosition/Rotation; callers CreateObject, Object_MorphTo |
 | 0x483A00 | `Object_SwitchOffLight` | verified | Light_SwitchOff(kindState); callers Car siren/roof light |
@@ -591,7 +591,7 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x491F00 | `Fix16_SubOneBlock` | verified | *p -= 0x4000 |
 | 0x491F10 | `Dir_GetPerpendicular` | verified | dir 1..4 (N,S,E,W per ped-movement doc) → 3/4, 4/3, 2/1, 1/2 by flag byte; used by FUN_00495470 and PedGameObject_TurnAwayFromWallNpc |
 | 0x491F80 | `StyleData_IsTileSurfaceType5` | verified | this=g_StyleData; *(this + tile*4 + 0x6C) == 5; 0x49B0D0 then does Ped+0x210 += 3 (ground damage?) |
-| 0x491FA0 | `unsure_PedGameObject_PickWalkSubModeAndTimer` | hypothesis | only from StateWalk; if +0x46==0 switch on relToS24_unk33 → +0x10 ∈ {1,3,4,7}, +0x6C ∈ {0,1,2}, +0x46 = random(200/400) |
+| 0x491FA0 | `PedGameObject_PickWalkSubModeAndTimer` | hypothesis | only from StateWalk; if +0x46==0 switch on relToS24_unk33 → +0x10 ∈ {1,3,4,7}, +0x6C ∈ {0,1,2}, +0x46 = random(200/400) |
 | 0x4920A0 | `PedGameObject_StepTurnTowardHeading14` | verified | Ang16 compare of +0x14 vs +0x40, adds DAT_0066A62C or 52C to +0x40; caller FUN_00495700 |
 | 0x492130 | `MapBlocks_ClearSlopeStepBlockedFlag` | verified | *(byte*)(p+0x36E)=0, this beyond GameObject size → Ped |
 | 0x492140 | `MapBlocks_HasArrowsAt` | verified | GetBlock(x,y,z) != 0 && block[+10] != 0 (gmp block_info +10 = arrows byte); in 0x49B0D0 false → ped falls |
@@ -641,7 +641,7 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x49B0D0 | `PedGameObject_StateWalkToTarget` | verified | Tick dispatch state1 1/2 (UNKNOWN_1 / GOING_TO_CAR); path/heading toward target (Ped_GetTargetRotation, StepHeadingTowardTarget, ChebyshevDist) |
 | 0x49BAC0 | `thunk_PedGameObject_StateWalkToTarget` | verified | 5-byte thunk to 0x49b0d0 (Tick case 2) |
 | 0x49BAD0 | `PedGameObject_StateEnterCar` | verified | Tick state1==3 (ENTERING_INTO_CAR); state2==6 -> +0x10=0x24, Collision_FindObstacle car, Car_IsOnTrailer |
-| 0x49BC20 | `unsure_PedGameObject_StateUnknown5Car` | hypothesis | Tick state1==5 (PED_STATE_UNKNOWN_5); state2==6 puts body at Car_GetDoorWorldPos |
+| 0x49BC20 | `unsure_PedGameObject_StateEnterCarAtDoor` | hypothesis | Tick state1==5 (PED_STATE_UNKNOWN_5); state2==6 puts body at Car_GetDoorWorldPos |
 | 0x49C680 | `PedPathfinder_CanCrossEdge` | verified | MapBlocks_IsBlockEdgeCrossingBlocked on node (+0x25/+0x26/+0x27) in dir |
 | 0x49C6E0 | `PedPathfinder_ClearNodes` | verified | zeroes 0x8C4 dwords at +0x40 (34x34 nodes x 8 B) |
 | 0x49C700 | `PedPathfinder_InitFields` | verified | PedPathfinder_Ctor body: clears nodes, +0x34=1, +0x2fd0=1 |

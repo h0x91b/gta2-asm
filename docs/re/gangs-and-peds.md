@@ -559,7 +559,7 @@ pass verified them.
 | 0x472f20 / 0x472f60 / 0x472fb0 / 0x472fe0 | AmbulanceManager_EnqueuePed / _FindFreeSlot, AmbulanceSlot_EnqueuePed, AmbulanceManager_Reset | |
 | 0x473010 | AmbulanceManager_OnParamedicKilled | |
 | 0x473140 / 0x473170 / 0x473410 | AmbulanceSlot_Reset / _SpawnParamedicCrew / _UpdateParamedics | |
-| 0x473320 | unsure_AmbulanceSlot_UpdateActiveStage | |
+| 0x473320 | AmbulanceSlot_UpdateActiveStage | |
 | 0x473ce0 / 0x473e00 | AmbulanceSlot_Update / AmbulanceManager_DispatchForQueuedPed | |
 | 0x475910 / 0x475950 | Gang_SetArrowTarget / Gang_SetHasRespectMeter | |
 | 0x482540 | unsure_Object_IsActiveFlame | object type 0x71 |
@@ -608,13 +608,13 @@ missing ones added.
 | Address | Name | Conf | Evidence |
 |---|---|---|---|
 | 0x433560 | Box3_ZRangesOverlap | U | Fix16_RangesOverlap on +0x10/+0x14 of two blocks; Ped_Obj2_EnterCar |
-| 0x4337F0 | unsure_Position_SetFlag2C_Bit4 | U | `byte+0x2C \|= 4`; 27 callers (particles, Ped_ApplyInvulnerabilitySpriteFlag) |
+| 0x4337F0 | Position_SetUnlitFlag | U | `byte+0x2C \|= 4`; 27 callers (particles, Ped_ApplyInvulnerabilitySpriteFlag) |
 | 0x433830 | S3Bytes_Clear | V | zeroes a/b/c; caller InitPeds |
 | 0x433A70 | unsure_GameObject_InitAnimState | U | +0x68=0, +0x6C=arg; Ped_InitSpawnedState |
 | 0x433A90 | unsure_GameObject_GetField44 | U | returns +0x44; flee/cross-road tasks |
 | 0x433AA0 | GameObject_IsWalkingAroundObstacle | U | +0x69 != 0; Ped_Obj2_ApproachAndAttackTarget |
 | 0x4340A0 | WorldObject_GetPickupAmmo | U | +0x26; Ped_PickUp, SaveGame_CollectPickups |
-| 0x434130 | unsure_WorldObject_SetKindStateField4 | U | `*(u16*)(this->+0xC + 4) = v`; Ped_DropWeaponPickup, Weapon_ThrowMolotovOrGrenade |
+| 0x434130 | Object_SetAnimLoopsLeft | U | `*(u16*)(this->+0xC + 4) = v`; Ped_DropWeaponPickup, Weapon_ThrowMolotovOrGrenade |
 | 0x434140 | WorldObject_IsPowergenOrInvisibleDead | U | +0x18 ∈ {0x11A,0x11D}; ApproachAndAttackTarget |
 | 0x4341B0 | CarDoor_GetPedInDoor | U | returns +8; pairs with CarDoor_SetPedInDoor |
 | 0x434A10 | Menu_IncBonusTokenCount | V | ++Menu.bonusTokenCount (+0x574); only in Ped_PickUp BONUS_TOKEN branch |
