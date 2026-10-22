@@ -143,7 +143,6 @@ typedef struct MaybeCarEngineHolder MaybeCarEngineHolder;
 typedef struct AnimatedValue AnimatedValue;
 typedef struct FrontEnd FrontEnd;
 typedef struct Game Game;
-typedef struct GameStats_OLD GameStats_OLD;
 typedef struct Menu Menu;
 typedef struct Player Player;
 typedef struct Ped Ped;
@@ -196,7 +195,6 @@ typedef struct Script4k Script4k;
 typedef struct ScriptThread ScriptThread;
 typedef struct ScriptThreadPool ScriptThreadPool;
 typedef struct SpriteManager SpriteManager;
-typedef struct Sprite_OLD Sprite_OLD;
 typedef struct SubScript SubScript;
 typedef struct SubScript20k SubScript20k;
 typedef struct SubSubScript SubSubScript;
@@ -229,7 +227,6 @@ typedef struct FrontendS1 FrontendS1;
 typedef struct FrontendS1S1 FrontendS1S1;
 typedef struct FrontendS1S2 FrontendS1S2;
 typedef struct FrontendS1S3 FrontendS1S3;
-typedef struct PedS1_OLD PedS1_OLD;
 typedef struct PedSprite PedSprite;
 typedef struct PedsManager PedsManager;
 typedef struct PlayerS2 PlayerS2;
@@ -3957,25 +3954,6 @@ struct Game {
     uint8_t _gap_0x3d[0x3];
 };
 
-// /_game/GameStats_OLD  size 0x540
-struct GameStats_OLD {
-    uint8_t _gap_0x0[0x70];
-    uint field112_0x70; /* 0x70 */
-    uint field113_0x74; /* 0x74 */
-    uint8_t _gap_0x78[0x30];
-    int field162_0xa8; /* 0xa8 */
-    uint8_t _gap_0xac[0x460];
-    int vehicles_hijacked; /* 0x50c */
-    int civilians_run_down; /* 0x510 */
-    int civilians_murdered; /* 0x514 */
-    int lawmen_killed; /* 0x518 */
-    int gang_members_killed; /* 0x51c */
-    uint8_t _gap_0x520[0xc];
-    int auto_damage_cost; /* 0x52c */
-    int fugitive_factor; /* 0x530 */
-    uint8_t _gap_0x534[0xc];
-};
-
 // /_game/Menu  size 0x578
 struct Menu {
     char gmpFile[256]; /* 0x0 */
@@ -4960,22 +4938,6 @@ struct SpriteManager {
     uint8_t _gap_0x6[0x2];
 };
 
-// /auto_structs/Sprite_OLD  size 0x100
-struct Sprite_OLD {
-    uint id; /* 0x0 */
-    uint8_t _gap_0x4[0x20];
-    ushort _id; /* 0x24 */
-    uint8_t _gap_0x26[0x1a];
-    short spriteRotation; /* 0x40 */
-    uint8_t _gap_0x42[0x16];
-    uint bit1; /* 0x58 */
-    uint8_t _gap_0x5c[0x1c];
-    Sprite_OLD *next_; /* 0x78 */
-    Ped *ped; /* 0x7c */
-    Position *actualPosition; /* 0x80 */
-    uint8_t _gap_0x84[0x7c];
-};
-
 // /auto_structs/SubScript  size 0x20
 struct SubScript {
     uint8_t _gap_0x0[0x2];
@@ -5317,21 +5279,6 @@ struct FrontendS1 {
     FrontendS1S3 arr3[10]; /* 0xb8a */
     uint8_t _gap_0xbbc[0xd];
     undefined1 field_0xbc9; /* 0xbc9 */
-};
-
-// /imported/gzf-2021/PedS1_OLD  size 0x90
-struct PedS1_OLD {
-    uint8_t _gap_0x0[0x8];
-    int field8_0x8; /* 0x8 */
-    uint8_t _gap_0xc[0x34];
-    short rotation; /* 0x40 */
-    uint8_t _gap_0x42[0x2a];
-    int field98_0x6c; /* 0x6c */
-    uint8_t _gap_0x70[0x10];
-    PedSprite *sprite; /* 0x80 */
-    Car *car; /* 0x84 */
-    uint8_t _gap_0x88[0x7];
-    undefined1 field_0x8f; /* 0x8f */
 };
 
 // /imported/gzf-2021/PedSprite  size 0x20

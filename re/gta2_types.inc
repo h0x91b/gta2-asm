@@ -2113,25 +2113,6 @@ struc Game
     resb 3
 endstruc
 
-; /_game/GameStats_OLD  (1344 bytes)
-struc GameStats_OLD
-    resb 112
-    .field112_0x70                    resb 4      ; 0x70 uint
-    .field113_0x74                    resb 4      ; 0x74 uint
-    resb 48
-    .field162_0xa8                    resb 4      ; 0xa8 int
-    resb 1120
-    .vehicles_hijacked                resb 4      ; 0x50c int
-    .civilians_run_down               resb 4      ; 0x510 int
-    .civilians_murdered               resb 4      ; 0x514 int
-    .lawmen_killed                    resb 4      ; 0x518 int
-    .gang_members_killed              resb 4      ; 0x51c int
-    resb 12
-    .auto_damage_cost                 resb 4      ; 0x52c int
-    .fugitive_factor                  resb 4      ; 0x530 int
-    resb 12
-endstruc
-
 ; /_game/Menu  (1400 bytes)
 struc Menu
     .gmpFile                          resb 256    ; 0x0 char[256]
@@ -3397,22 +3378,6 @@ struc SpriteManager
     resb 2
 endstruc
 
-; /auto_structs/Sprite_OLD  (256 bytes)
-struc Sprite_OLD
-    .id                               resb 4      ; 0x0 uint
-    resb 32
-    ._id                              resb 2      ; 0x24 ushort
-    resb 26
-    .spriteRotation                   resb 2      ; 0x40 short
-    resb 22
-    .bit1                             resb 4      ; 0x58 uint
-    resb 28
-    .next_                            resb 4      ; 0x78 Sprite_OLD *
-    .ped                              resb 4      ; 0x7c Ped *
-    .actualPosition                   resb 4      ; 0x80 Position *
-    resb 124
-endstruc
-
 ; /auto_structs/SubScript  (32 bytes)
 struc SubScript
     resb 2
@@ -3816,21 +3781,6 @@ endstruc
 ; enum /imported/gzf-2021/LIGHTING  (4 bytes)
 LIGHTING.LIGHTING_DAY equ 0
 LIGHTING.LIGHTING_NIGHT equ 32768
-
-; /imported/gzf-2021/PedS1_OLD  (144 bytes)
-struc PedS1_OLD
-    resb 8
-    .field8_0x8                       resb 4      ; 0x8 int
-    resb 52
-    .rotation                         resb 2      ; 0x40 short
-    resb 42
-    .field98_0x6c                     resb 4      ; 0x6c int
-    resb 16
-    .sprite                           resb 4      ; 0x80 PedSprite *
-    .car                              resb 4      ; 0x84 Car *
-    resb 7
-    .field_0x8f                       resb 1      ; 0x8f undefined1
-endstruc
 
 ; /imported/gzf-2021/PedSprite  (32 bytes)
 struc PedSprite

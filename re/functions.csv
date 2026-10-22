@@ -1661,7 +1661,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0044b300,AnimatedValue_ApplyRemapToDigits,AnimatedValue,USER_DEFINED,__thiscall,ANALYSIS,102,,"undefined __thiscall AnimatedValue_ApplyRemapToDigits(AnimatedValue * this, int param_1, uint param_2)"
 0x0044b370,AnimatedValue_HasVisibleDigits,,USER_DEFINED,__fastcall,ANALYSIS,31,,uint __fastcall AnimatedValue_HasVisibleDigits(int param_1)
 0x0044b390,AnimatedValue_Tick,,USER_DEFINED,__fastcall,USER_DEFINED,241,,undefined __fastcall AnimatedValue_Tick(AnimatedValue * param_1)
-0x0044b490,Hud_DrawSprite2DScaled,,USER_DEFINED,__stdcall,ANALYSIS,97,,"undefined __stdcall Hud_DrawSprite2DScaled(undefined4 param_1, undefined4 param_2, undefined4 param_3, uint param_4, uint param_5, undefined4 param_6, undefined4 param_7, undefined4 param_8)"
+0x0044b490,AnimatedValue_DrawSprite2DAtScaled,,USER_DEFINED,__stdcall,ANALYSIS,97,,"undefined __stdcall AnimatedValue_DrawSprite2DAtScaled(undefined4 param_1, undefined4 param_2, undefined4 param_3, uint param_4, uint param_5, undefined4 param_6, undefined4 param_7, undefined4 param_8)"
 0x0044b500,AnimatedValue_DrawRightAligned,,USER_DEFINED,__thiscall,ANALYSIS,480,,"int __thiscall AnimatedValue_DrawRightAligned(void * this, uint param_1, uint param_2)"
 0x0044b6e0,AnimatedValue_DrawLeftAligned,,USER_DEFINED,__thiscall,ANALYSIS,417,,"int __thiscall AnimatedValue_DrawLeftAligned(void * this, uint param_1, uint param_2)"
 0x0044b890,LayerDrawQueues_ClearAll,,USER_DEFINED,__stdcall,USER_DEFINED,23,,void __stdcall LayerDrawQueues_ClearAll(LayerDrawQueues * queues)
