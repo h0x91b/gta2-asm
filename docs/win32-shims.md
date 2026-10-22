@@ -536,7 +536,7 @@ GTA2_VERSION_MINOR equ 31
 
 Bump them there and nowhere else. How the game uses them (Ghidra, read-only):
 
-- `WinMain2` calls `GetGameVersion(&major, &minor)` (`0x4D0920`, call at `0x4D11C7`).
+- `WinMain` calls `GetGameVersion(&major, &minor)` (`0x4D0920`, call at `0x4D11C7`).
 - It runs `GetFileVersionInfoSizeA("GTA2.EXE")` → `GetFileVersionInfoA` →
   `VerQueryValueA(block, "\\")` and takes `major = HIWORD(dwProductVersionMS)`
   (`VS_FIXEDFILEINFO + 0x12`), `minor = LOWORD(dwProductVersionMS)` (`+ 0x10`).

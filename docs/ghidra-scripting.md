@@ -105,3 +105,7 @@ From Seq 27 (Ghidra owner) runs, 2026-10:
 - Typing `this` in bulk: `f.setCustomVariableStorage(true)` then
   `f.getParameter(0).setDataType(new PointerDataType(struct), true, true, SourceType.USER_DEFINED)`
   keeps ECX and the name. Default-named params after it get renumbered (`param_1` -> `param_2`).
+- **Never call `runScript()` from an inline script.** If the target file is gone, Ghidra pops a modal
+  "Script does not exist" dialog in the user's GUI, and the run, with its transaction, waits on it:
+  nobody can `save_program` until the dialog is answered (measured 2026-10-22, six minutes blocked).
+  `getCurrentTransactionInfo().getOpenSubTransactions()` names the holder.

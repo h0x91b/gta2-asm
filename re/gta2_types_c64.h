@@ -193,7 +193,10 @@ typedef struct MssAudio MssAudio;
 typedef struct MssBankEntry MssBankEntry;
 typedef struct MultiplayerTag MultiplayerTag;
 typedef struct NetDlg NetDlg;
+typedef struct NetDlgControlDef NetDlgControlDef;
+typedef struct NetDlgMapEntry NetDlgMapEntry;
 typedef struct NetEventHandler NetEventHandler;
+typedef struct NetGameSettings NetGameSettings;
 typedef struct Network Network;
 typedef struct ObjectAnimState ObjectAnimState;
 typedef struct ObjectAnimStatePool ObjectAnimStatePool;
@@ -272,6 +275,19 @@ typedef struct WorldObjectPool WorldObjectPool;
 typedef struct WorldRect WorldRect;
 typedef struct ios ios;
 typedef struct Vec2 Vec2;
+typedef struct DPNAME DPNAME;
+typedef struct DPSESSIONDESC2 DPSESSIONDESC2;
+typedef struct NetConnectionEntry NetConnectionEntry;
+typedef struct NetDataRef NetDataRef;
+typedef struct NetFrameInput NetFrameInput;
+typedef struct NetMsgHeader NetMsgHeader;
+typedef struct NetPacketDesc NetPacketDesc;
+typedef struct NetPacketPing NetPacketPing;
+typedef struct NetPacketPlayerDropped NetPacketPlayerDropped;
+typedef struct NetPacketSyncInfo NetPacketSyncInfo;
+typedef struct NetPendingPacket NetPendingPacket;
+typedef struct NetPlayerSlot NetPlayerSlot;
+typedef struct NetPlayerTable NetPlayerTable;
 typedef struct SCR_CMD_HEADER SCR_CMD_HEADER;
 typedef struct SCR_XYZ_f SCR_XYZ_f;
 typedef struct streambuf streambuf;
@@ -616,6 +632,16 @@ typedef uint8_t CarInfoFlags2;
 enum CarInfoFlags2_values {
     collide_over = 1,
     popup = 2,
+};
+
+// /_car/CAR_AI_FLAGS
+typedef uint8_t CAR_AI_FLAGS;
+enum CAR_AI_FLAGS_values {
+    CAR_AI_TURN_LEFT = 1,
+    CAR_AI_TURN_RIGHT = 2,
+    CAR_AI_ROUTE_BIT2_PRE_LEFT_TURN = 4,
+    CAR_AI_ROUTE_BIT3_PRE_RIGHT_TURN = 8,
+    CAR_AI_HALTED = 32,
 };
 
 // /_car/CAR_ENGINE_STATE
@@ -2200,6 +2226,7 @@ enum S32_SHOW_IMAGINARY_values {
 typedef uint8_t SPRITE_BIT1;
 enum SPRITE_BIT1_values {
     SPRITE_BIT1_1 = 1,
+    SPRITE_BIT1_TELEPORT_PENDING = 32,
 };
 
 // /imported/seuko-mod/SPRITE_INVISIBILITY
@@ -2261,6 +2288,16 @@ enum TRAFFIC_PHASE_values {
     TRAFFIC_PHASE_PEDS_CROSSING = 7,
 };
 
+// /net/NET_STATE
+typedef uint32_t NET_STATE;
+enum NET_STATE_values {
+    NET_STATE_ENUM_SESSIONS = 1,
+    NET_STATE_IN_GAME = 2,
+    NET_STATE_HOSTING = 3,
+    NET_STATE_JOINED = 4,
+    NET_STATE_IDLE = 5,
+};
+
 /* ---- typedefs and function types */
 /* function type FuncDef5 omitted */
 /* function type FuncDef6 omitted */
@@ -2291,6 +2328,7 @@ typedef char Sint8;
 typedef uint16_t Uint16;
 typedef uint8_t Uint8;
 typedef char CHAR;
+typedef uint32_t /* void * */ HANDLE;
 typedef int32_t HRESULT;
 typedef uint16_t WCHAR;
 
@@ -2874,7 +2912,7 @@ struct HudBigLabel {
 struct HudBriefNode {
     char key[8]; /* 0x0 */
     int priority; /* 0x8 */
-    uint32_t /* void * */ next; /* 0xc */
+    uint32_t /* HudBriefNode * */ next; /* 0xc */
     uint8_t started; /* 0x10 */
     uint8_t pad11[3]; /* 0x11 */
     int arg; /* 0x14 */
@@ -3808,7 +3846,7 @@ struct Car {
     CAR_CATEGORY category; /* 0xa0 */
     CAR_LIGHTS_BITSTATE lightsBitstate; /* 0xa4 */
     char lightPhase; /* 0xa5 */
-    uint8_t aiFlags; /* 0xa6 Car AI flag byte. 0x01 turn left / 0x02 turn right (Car_Set/Clear/IsTurnLeft/Right, set by CarAI_ApplyRouteTurn from the next route junction). 0x04 (Car_SetRouteBit2) set by CarAI_ApplyRouteTurn before a left turn when the car is not in lane 0; 0x08 (Car_SetRouteBit3) set before a right turn when it is not in the last lane (likely: 'move over to the turning lane'). Car_ClearRouteBits clears 0x04|0x08. 0x20 = AI halted: Car_HaltAI 0x421540 sets, Car_ResumeAI 0x421550 clears, Car_IsAIHalted 0x42AC60 tests; CarAI_PreUpdate halts when car.isAbandoned or while ai.haltTimer runs and then skips CarAI_Update (only brake/stop); also set by scripts (STOP_CHAR_DRIVING, GIVE_DRIVER_AND_BRAKE) and ped objectives (WAIT_IN_CAR, GO_TO_AREA_IN_CAR on arrival). Zeroed by Car_Ctor/Car_Reset. */
+    CAR_AI_FLAGS aiFlags; /* 0xa6 Car AI flag byte. 0x01 turn left / 0x02 turn right (Car_Set/Clear/IsTurnLeft/Right, set by CarAI_ApplyRouteTurn from the next route junction). 0x04 (Car_SetRouteBit2) set by CarAI_ApplyRouteTurn before a left turn when the car is not in lane 0; 0x08 (Car_SetRouteBit3) set before a right turn when it is not in the last lane (likely: 'move over to the turning lane'). Car_ClearRouteBits clears 0x04|0x08. 0x20 = AI halted: Car_HaltAI 0x421540 sets, Car_ResumeAI 0x421550 clears, Car_IsAIHalted 0x42AC60 tests; CarAI_PreUpdate halts when car.isAbandoned or while ai.haltTimer runs and then skips CarAI_Update (only brake/stop); also set by scripts (STOP_CHAR_DRIVING, GIVE_DRIVER_AND_BRAKE) and ped objectives (WAIT_IN_CAR, GO_TO_AREA_IN_CAR on arrival). Zeroed by Car_Ctor/Car_Reset. Typed CAR_AI_FLAGS (Seq 27 R3). Writers (full operand scan): the 13 helpers 0x421530..0x42ACD0 plus Car_Ctor 0x42682E / Car_Reset 0x4248EA. */
     char hornState; /* 0xa7 Horn timer/state byte (treat as unsigned). 0 = silent. 1..0xF8 = honking (Car_IsHonking 0x411970: != 0 && < 0xF9). Car_TickHorn 0x420330 (Car_UpdateSystems) decrements it each tick except at 0 and 0xF8, so AI honks (Car_StartHonkIfAllowed / Car_UpdateAiHonk set 0x2D) last 45 ticks and the player horn (0xF8) lasts while the key is held. Player press (Car_ApplyHornInput 0x4260C0): 0xF8, or 0xFF on cars with emergency lights, which first counts 0xFF->0xF8 silently (7 ticks); release clears it, and a release while still > 0xF8 (a tap shorter than 7 ticks) toggles the siren (Car_ToggleSiren). */
     uint8_t hornCooldown; /* 0xa8 */
     uint8_t wreckTimer; /* 0xa9 */
@@ -3978,7 +4016,7 @@ struct Game {
     int quitReason; /* 0x2c */
     uint8_t compensationFPSTime; /* 0x30 */
     uint8_t _gap_0x31[0x3];
-    int relToSkipPoliceEnum; /* 0x34 */
+    int unsure_mpGameSpeedFrameMs; /* 0x34 MP only: Game_ApplyMultiplayerSpeedAndPolice 0x45A540 writes 50/33/20 for setting 0/1/2 (DAT_00673F38, likely game_speed). No reader found (full decompile scan, Seq27 N6): dead setting. */
     uint32_t /* Player * */ currentPlayer; /* 0x38 Created by retype action */
     uint8_t savedSkipPolice; /* 0x3c Created by retype action */
     uint8_t _gap_0x3d[0x3];
@@ -4087,9 +4125,9 @@ struct Player {
     uint8_t weaponSelectLocked; /* 0x31 */
     uint8_t _gap_0x32[0x2];
     uint32_t /* GangRespect * */ gangZone; /* 0x34 */
-    uint32_t /* void * */ localNavZone; /* 0x38 */
-    uint32_t /* void * */ navZone; /* 0x3c */
-    uint32_t /* void * */ arrowBlockerZone; /* 0x40 */
+    uint32_t /* void * */ localNavZone; /* 0x38 GMP zone of type 15 (local_navigation) under the player; read by Player_GetLocalNavZone. Written only by Player_UpdateZones (MapBlocks_FindZoneAtPos at the controlled ped's x,y), zeroed by Player_Ctor/Player_Dtor (decompile scan of 804 Player/Script/Zone/Camera/Gang functions, Seq 27 R3). */
+    uint32_t /* void * */ navZone; /* 0x3c GMP zone of type 1 (navigation) under the player; read by Player_GetNavZone 0x4766F0 (sole caller Script_Op_IS_CHAR_IN_ZONE 0x47BD1E, ECX = ped->player). Verified real (Seq 27 R3): the old claim that 0x475B60 writes it was false, that function sets Camera->followState. Written only by Player_UpdateZones (MapBlocks_FindZoneAtPos at the controlled ped's x,y), zeroed by Player_Ctor/Player_Dtor (decompile scan of 804 Player/Script/Zone/Camera/Gang functions, Seq 27 R3). */
+    uint32_t /* void * */ arrowBlockerZone; /* 0x40 GMP zone of type 5 (arrow_blocker) under the player; read by Player_GetArrowBlockerZone (Hud_Arrow_ShouldShow). Written only by Player_UpdateZones (MapBlocks_FindZoneAtPos at the controlled ped's x,y), zeroed by Player_Ctor/Player_Dtor (decompile scan of 804 Player/Script/Zone/Camera/Gang functions, Seq 27 R3). */
     DEATH_REASON deathReason; /* 0x44 */
     uint8_t dbgCamFollowPlayer; /* 0x48 */
     uint8_t _gap_0x49[0x3];
@@ -4157,8 +4195,8 @@ struct Player {
     short selectedWeapon; /* 0x788 */
     uint8_t quitConfirmPending; /* 0x78a */
     uint8_t _gap_0x78b[0x1];
-    int unsure_hudTextStyle; /* 0x78c */
-    short unsure_hudTextColour; /* 0x790 */
+    int hudTextPaletteMode; /* 0x78c 2 = default palette, 7 = PALETTE_BASE_FONT_REMAP (MP coloured text); set by Player_OnLevelStart/Player_SetMpColour */
+    short hudTextRemap; /* 0x790 font remap index for HUD/name text; 0 SP, MP = colour from ped remap (Player_SetMpColour 0x4A66F0); drawn as remap-1 */
     uint8_t _gap_0x792[0x2];
     ChatInput chat; /* 0x794 */
     uint16_t name[16]; /* 0x83c */
@@ -4798,42 +4836,179 @@ struct MultiplayerTag {
     uint8_t _gap_0x26[0x2];
 };
 
+// /auto_structs/NetGameSettings  size 0x120
+struct NetGameSettings {
+    char mmpName[260]; /* 0x0 selected .mmp file name (from NetDlgMapEntry.mmpFile) */
+    int mapIndex; /* 0x104 index into the SENDER's map table; receivers re-resolve it by mmpName (NetDlg_FindMapByName_Frag) */
+    int gameSpeed; /* 0x108 0 slow / 1 normal / 2 fast (trackbar 0x407, reg game_speed) */
+    int scoreLimit; /* 0x10c frags (type 1, reg f_limit) or points (type 2, reg s_limit) to win */
+    int gameType; /* 0x110 1 frags, 2 points, 3 tag (combo 0x40c = type-1, reg game_type) */
+    int unsure_randomSeed; /* 0x114 GetTickCount() of the host's NetDlg_Ctor; NetDlg_SetSetting case 4 has no caller */
+    int police; /* 0x118 cops on/off (checkbox 0x403, reg police) */
+    int timeLimit; /* 0x11c minutes (edit 0x40e, reg game_time_limit) */
+};
+
 // /auto_structs/NetDlg  size 0x20220
-// Win32 multiplayer lobby dialog state; stack object in Startup_ConnectMultiplayerFromRegistry 0x4D0ED0 (NetDlg_Ctor 0x407D10). Size 0x20220 = highest access (+0x2021C).
+// Network lobby dialog (resource 0x67, vtable 0x56E598), stack object in Startup_ConnectMultiplayerFromRegistry (size 0x20220 = frame gap). 3 pages of 30 Win32 controls (g_NetDlgControlTable). Seq 27 N3.
 struct NetDlg {
-    uint8_t _gap_0x0[0x1fd64];
-    int mapCount; /* 0x1fd64 NetDlg_ReadMmpMapFiles 0x407930 */
-    int exitFlag; /* 0x1fd68 NetDlg_SetExitFlag/GetExitFlag */
-    int playerCount; /* 0x1fd6c NetDlg_Inc/Dec/Get/ResetPlayerCount */
-    uint8_t _gap_0x1fd70[0x49c];
-    int currentPage; /* 0x2020c NetDlg_ShowPage 0x405AA0 / NetDlg_GetPage */
-    uint8_t _gap_0x20210[0x8];
-    uint32_t hwnd; /* 0x20218 NetDlg_SetHwnd/GetHwnd */
-    uint8_t _gap_0x2021c[0x4];
+    uint32_t /* void * */ vtable; /* 0x0 0x56E598, slot 0 NetDlg_ScalarDeletingDtor */
+    uint32_t /* NetDlgMapEntry * */ maps; /* 0x4 11.44: HeapAlloc'ed NetDlgMapEntry[mapCount+1] (Patch1144_NetSession_AllocSlotBlock, grown by HeapReAlloc in NetDlg_ReadMmpMapFiles). Vanilla kept NetDlgMapEntry[100] inline at +4..+0x1FD64, now unused */
+    uint8_t _gap_0x8[0x1fd5c];
+    int mapCount; /* 0x1fd64 valid .mmp maps (NetDlg_ReadMmpMapFiles) */
+    int exitFlag; /* 0x1fd68 set by NetDlg_OnGameStart; NetDlg_OnTimer then EndDialog(1) */
+    int playerCount; /* 0x1fd6c host page only: ++ in NetDlg_OnPlayerAdded, -- in NetDlg_OnPlayerDeleted, 0 on Cancel */
+    uint32_t /* void * */ origWndProcClientChat; /* 0x1fd70 original WNDPROC of edit 0x41D (page 2 chat input), subclassed by NetDlg_ChatEditSubclassProc */
+    uint32_t /* void * */ origWndProcHostChat; /* 0x1fd74 original WNDPROC of edit 0x401 (page 1 chat input) */
+    uint16_t playerName[260]; /* 0x1fd78 registry Network/PlayerName (NetDlg_LoadPlayerNameFromRegistry / NetDlg_SetPlayerName) */
+    int unsure_field_0x1ff80; /* 0x1ff80 zeroed by NetDlg_Ctor, no other access found */
+    NetGameSettings settings; /* 0x1ff84 game settings blob: published with SetGroupData (Network_PublishSettings), copied to 0x673E30 by Startup_ConnectMultiplayerFromRegistry */
+    HWND pageControls[90]; /* 0x200a4 HWND[3 pages][30], created from g_NetDlgControlTable by NetDlg_CreateControls; NetDlg_ShowPage hides/shows a page */
+    int currentPage; /* 0x2020c 0 session browser, 1 host lobby, 2 client lobby */
+    int previousPage; /* 0x20210 NetDlg_ShowPage; ctor 3 */
+    short unsure_field_0x20214; /* 0x20214 zeroed by NetDlg_Ctor only */
+    uint8_t _gap_0x20216[0x2];
+    HWND hwnd; /* 0x20218 dialog HWND (NetDlg_SetHwnd in WM_INITDIALOG) */
+    HINSTANCE hInstance; /* 0x2021c NetDlg_Run arg; DialogBoxParamA / CreateWindowExA instance */
+};
+
+// /auto_structs/NetDlgControlDef  size 0x74
+struct NetDlgControlDef {
+    int x; /* 0x0 */
+    int y; /* 0x4 */
+    int width; /* 0x8 */
+    int height; /* 0xc */
+    uint32_t ctrlId; /* 0x10 HMENU arg of CreateWindowExA = dialog item id */
+    uint32_t style; /* 0x14 */
+    uint32_t exStyle; /* 0x18 */
+    char className[80]; /* 0x1c */
+    char gxtKey[8]; /* 0x6c netuiNN caption key in g_NetDialogLocaleSettings, empty = no caption */
+};
+
+// /auto_structs/NetDlgMapEntry  size 0x518
+struct NetDlgMapEntry {
+    char gmpFile[260]; /* 0x0 MapFiles/GMPFile from the .mmp (NetDlg_ReadMmpMapFiles 0x407930) */
+    char styFile[260]; /* 0x104 MapFiles/STYFile */
+    char scrFile[260]; /* 0x208 MapFiles/SCRFile */
+    char description[260]; /* 0x30c MapFiles/Description: shown in map combo 0x402, sort key */
+    char mmpFile[260]; /* 0x410 .mmp file name (lowercased by Patch1144_Mmp_StrToLowerInPlace); matched against NetGameSettings.mmpName */
+    int playerCount; /* 0x514 MapFiles/PlayerCount (1 digit, buffer 2): Start enabled only when NetDlg.playerCount == this, or this == 0 */
 };
 
 // /auto_structs/NetEventHandler  size 0xc
+// Network event slot {callback, context, eventId}; Network+0x48 array indexed by event id. Seq 27 N2.
 struct NetEventHandler {
-    uint32_t callback; /* 0x0 Network_SetEventHandler1..9 store 3 dwords per slot */
-    uint32_t unsure_context; /* 0x4 */
-    uint32_t unsure_param; /* 0x8 */
+    uint32_t /* void * */ callback; /* 0x0 cb(context[, arg]) - arg shape per event id, see Network_DispatchEvent 0x4098E0 */
+    uint32_t /* void * */ context; /* 0x4 NetDlg* for 1-3,5-9; Game* for 4 */
+    int eventId; /* 0x8 copy of the slot index written by the setter */
+};
+
+// /net/DPSESSIONDESC2  size 0x50
+// DirectPlay DPSESSIONDESC2 (wide), dplay.h. 0x50 bytes. Seq 27 N2.
+struct DPSESSIONDESC2 {
+    uint32_t dwSize; /* 0x0 always 0x50 */
+    uint32_t dwFlags; /* 0x4 DPSESSION_*: host sets 0x8000 OPTIMIZELATENCY, |0x20 JOINDISABLED at game start */
+    g2_GUID guidInstance; /* 0x8 */
+    g2_GUID guidApplication; /* 0x18 GTA2 app GUID {561E8920-5C70-11D2-AD00-00A0C9B61398} at 0x56E720 */
+    uint32_t dwMaxPlayers; /* 0x28 host sets 6 */
+    uint32_t dwCurrentPlayers; /* 0x2c */
+    uint32_t /* wchar16 * */ lpszSessionName; /* 0x30 */
+    uint32_t /* wchar16 * */ lpszPassword; /* 0x34 */
+    uint32_t dwReserved1; /* 0x38 */
+    uint32_t dwReserved2; /* 0x3c */
+    uint32_t dwUser1; /* 0x40 */
+    uint32_t dwUser2; /* 0x44 */
+    uint32_t dwUser3; /* 0x48 */
+    uint32_t dwUser4; /* 0x4c */
+};
+
+// /net/NetDataRef  size 0x8
+// {pointer,length} pair: frame/settings payload references (Network_BroadcastFrameData, PublishSettings, ReceiveFrameData out). Seq 27 N4.
+struct NetDataRef {
+    uint32_t /* void * */ data; /* 0x0 */
+    uint32_t len; /* 0x4 */
+};
+
+// /net/NetPlayerSlot  size 0x2c
+// One player in a NetPlayerTable (stride 0x2C, 6 per table). Seq 27 N2.
+struct NetPlayerSlot {
+    int inUse; /* 0x0 1 = occupied */
+    uint32_t pingCount; /* 0x4 pongs received (Network_UpdatePlayerPing 0x409B10) */
+    uint32_t avgPingMs; /* 0x8 pingSumMs / pingCount */
+    uint32_t pingSumMs; /* 0xc */
+    uint32_t dpid; /* 0x10 DirectPlay player id */
+    uint32_t unused_nameSize; /* 0x14 DPNAME-shaped, written 0 by NetPlayerTable_AddPlayer */
+    uint32_t unused_nameFlags; /* 0x18 written 0 */
+    uint32_t /* wchar16 * */ name; /* 0x1c operator_new copy of the short name, truncated to 15 wchars */
+    uint32_t /* wchar16 * */ unused_longName; /* 0x20 written 0 */
+    NetDataRef playerData; /* 0x24 copy of the DirectPlay player data (GetPlayerData / DPMSG_CREATEPLAYERORGROUP) */
+};
+
+// /net/NetPlayerTable  size 0x170
+// Player table, 0x170 bytes. Network has two: +0x5E4 pendingPlayers (created in the session, not yet in the group) and +0x754 players (in the group; slot index = game player index). Seq 27 N2.
+struct NetPlayerTable {
+    uint32_t groupId; /* 0x0 DPID of the 'GBH Group' (only set in the active table: Network_SetGroupId 0x409A30 / CreateGroup in Network_HostSession) */
+    uint32_t count; /* 0x4 occupied-slot counter; holes possible after NetPlayerTable_FreeSlot without compaction */
+    uint8_t frameSeq[6]; /* 0x8 active table: per-slot lockstep frame seq byte (Network_BroadcastFrameData 0x40AD70, Network_ReceiveFrameData 0x40C120) */
+    uint8_t pad[2]; /* 0xe */
+    NetPlayerSlot slots[6]; /* 0x10 */
+    NetDataRef groupData; /* 0x118 active table: game-settings blob (CreateGroup / GetGroupData / DPSYS_SETPLAYERORGROUPDATA / Network_PublishSettings) */
+    DPSESSIONDESC2 sessionDesc; /* 0x120 active table: the open session's DPSESSIONDESC2 (Open / SetSessionDesc); lpszSessionName freed by NetPlayerTable_Clear */
+};
+
+// /net/NetFrameInput  size 0x8
+// Per-player lockstep frame payload (4 bytes, 8 with g_doSyncCheck). Arrays of 6 at 0x6626F8 (current), 0x662B4C, 0x662B1C, 0x662750. Seq 27 N4.
+struct NetFrameInput {
+    uint32_t input; /* 0x0 control-status word (Keyboard_PollControlStatus); 0xFFFFFFFF = repeat-last marker on the wire */
+    uint32_t syncValue; /* 0x4 Random_S16(100) when g_doSyncCheck, else not sent */
+};
+
+// /net/NetPendingPacket  size 0x14
+// Out-of-order frame buffer entry; Network+0x8F4, 0x30 entries (Network_ClearPendingPackets 0x409CE0, Queue 0x40A0F0, PopOldest 0x40A190, Free 0x40A2A0). Seq 27 N4.
+struct NetPendingPacket {
+    NetFrameInput frame; /* 0x0 first 8 payload bytes only (QueuePendingPacket copies 2 dwords whatever len is) */
+    uint32_t playerIndex; /* 0x8 sender slot */
+    uint32_t len; /* 0xc original payload length */
+    uint8_t used; /* 0x10 1 = slot occupied */
+    uint8_t seq; /* 0x11 frame seq */
+    uint8_t pad[2]; /* 0x12 */
 };
 
 // /auto_structs/Network  size 0xcb8
-// DirectPlay multiplayer session, static instance g_NetworkSession 0x674268 (ctor 0x40A2C0 from static init 0x56C775). Size 0xCB8 = highest access (+0xCB4); the gap to the next symbol is 0xDA0.
+// DirectPlay 3 session object, static instance g_NetworkSession 0x674268 (Network_Ctor 0x40A2C0 from static init 0x56C775, Dtor via atexit 0x56DB75). Size 0xCB8 (last field +0xCB4; Ctor zero ranges match). Full layout Seq 27 N2.
 struct Network {
-    uint8_t _gap_0x0[0x54];
-    NetEventHandler eventHandlers[9]; /* 0x54 slots 1,2,3, exit-game (0x78), 5,6,7,8,9 (Network_SetEventHandler*, Network_SetExitGameCallback 0x409F70) */
-    uint8_t _gap_0xc0[0x510];
-    int localPlayerIndex; /* 0x5d0 Network_GetLocalPlayerIndex 0x409C40 */
-    uint32_t unsure_localDpid; /* 0x5d4 passed with directPlay to every send */
-    uint8_t _gap_0x5d8[0x4];
-    uint32_t unsure_dpLobby; /* 0x5dc released with directPlay in Network_ReleaseDirectPlay 0x408C40 */
-    uint32_t directPlay; /* 0x5e0 IDirectPlay interface used by Network_SendTo 0x409650 */
-    uint8_t _gap_0x5e4[0x170];
-    uint32_t groupId; /* 0x754 Network_SetGroupId 0x409A30 */
-    uint8_t _gap_0x758[0x55c];
-    int pendingPacketCount; /* 0xcb4 Network_QueuePendingPacket 0x40A0F0 / Network_FreePendingPacketSlot 0x40A2A0 */
+    uint32_t /* void * */ vtable; /* 0x0 0x56E740: only entry Network_ScalarDeletingDtor 0x40B120 */
+    g2_GUID spGuid; /* 0x4 service provider to use: registry UseProtocol (Network_Connect 0x40BD20) or DPSPGUID_IPX 0x5769F4 by default */
+    uint8_t _gap_0x14[0x18];
+    uint32_t /* NetConnectionEntry * */ connections; /* 0x2c operator_new(0xE0) = 8 entries, filled by EnumConnections callback 0x408B90 or the registry connection */
+    uint32_t /* wchar16 ** */ modemNames; /* 0x30 operator_new(0x20) = 8 wide names from DPAID_Modem (Network_EnumModems 0x40B140) */
+    uint32_t connectionCount; /* 0x34 */
+    uint32_t modemCount; /* 0x38 */
+    int connectionsReady; /* 0x3c 1 after EnumConnections / registry connection */
+    int modemsEnumerated; /* 0x40 1 after Network_EnumModems succeeded */
+    NET_STATE state; /* 0x44 NET_STATE; switch key of Network_UpdateLobby 0x40C380 and Network_HandleSystemMessage 0x40B520 */
+    NetEventHandler eventHandlers[10]; /* 0x48 indexed by event id 1..9 (slot 0 unused): 1 session closed, 2 player added, 3 player removed, 4 exit game, 5 session list, 6 ping, 7 chat, 8 group data, 9 game start */
+    DPSESSIONDESC2 sessions[16]; /* 0xc0 EnumSessions results (Network_AddSessionDesc 0x409460), rebuilt every 100 ms in state 1 */
+    uint32_t sessionCount; /* 0x5c0 */
+    int inSession; /* 0x5c4 1 after host/join succeeded; write-only */
+    int isHost; /* 0x5c8 1 = this machine created the session (Network_HostSession); Dtor/CloseSession destroy the group only then */
+    int unsure_hostLocalIndex; /* 0x5cc copy of localPlayerIndex at host time; write-only */
+    int localPlayerIndex; /* 0x5d0 slot of the local player in players (updated on DPSYS_ADDPLAYERTOGROUP / DELETEPLAYERFROMGROUP) */
+    uint32_t localDpid; /* 0x5d4 DPID from CreatePlayer; idFrom of every Send */
+    HANDLE hReceiveEvent; /* 0x5d8 CreateEventA auto-reset, passed to CreatePlayer, never waited on */
+    uint32_t /* void * */ lobby; /* 0x5dc IDirectPlayLobby2 (W) {0194C220-A303-11D0-9C4F-00A0C905425E} */
+    uint32_t /* void * */ directPlay; /* 0x5e0 IDirectPlay3 (W) {133EFE40-32DC-11D0-9CFB-00A0C90A43CB} from CoCreateInstance(CLSID_DirectPlay) */
+    NetPlayerTable pendingPlayers; /* 0x5e4 players created in the session (DPSYS_CREATEPLAYERORGROUP / own player) but not yet added to the group */
+    NetPlayerTable players; /* 0x754 players in the GBH group; slot index = game player index */
+    uint32_t /* void * */ unused_buffers[6]; /* 0x8c4 6 x operator_new(0x800) in Ctor, freed in Dtor, never used */
+    uint32_t /* byte * */ sendBuffer; /* 0x8dc operator_new(0x1800); Network_EncodePacket output */
+    uint32_t /* byte * */ recvBuffer; /* 0x8e0 operator_new(0x1800); IDirectPlay::Receive target (Network_ReceiveMessage 0x40BEC0) */
+    uint32_t lastPollTime; /* 0x8e4 timeGetTime of the last EnumSessions refresh (state 1) or ping (states 3/4) */
+    uint32_t unused_8e8; /* 0x8e8 zeroed in Ctor only */
+    uint8_t sessionEnded; /* 0x8ec set to 1 after event 4 (exit game) in state 2; makes Receive loops stop */
+    uint8_t _gap_0x8ed[0x3];
+    uint32_t lastFrameWaitMs; /* 0x8f0 ms spent in the last Network_ReceiveFrameData; read by Multiplayer_ExchangeLockstepInputs */
+    NetPendingPacket pendingPackets[48]; /* 0x8f4 out-of-order frame buffer (Seq 27 N4) */
+    int pendingPacketCount; /* 0xcb4 */
 };
 
 // /auto_structs/ObjectAnimState  size 0x8
@@ -5372,7 +5547,7 @@ struct CarAI {
     SCR_f railSpeedGoal; /* 0x18 Rail target speed: written by PublicTransportManager_GetTrainSpeedForCar (via CarAI_FollowRoad), read by CarAI_UpdateSpeedRamp. Car_ResumeAICruise 0x4222D0 also writes DAT_005E4DC4 here for road cars (crews, taxi/bus passengers, thieves), but no road-car path reads it (dead write unless the car is a train). Was: unsure_trainSpeedGoal. */
     SCR_f railSpeedStep; /* 0x1c Rail acceleration per tick added to railSpeedCur by CarAI_UpdateSpeedRamp (decel uses a constant DAT_005E53B8*DAT_005E50C4). Init DAT_005E5304. Was: unsure_trainSpeedStep. */
     uint8_t _gap_0x20[0x4];
-    uint32_t flags; /* 0x24 CarAI flag word. Bit 0x10 (meaning not settled; looks like 'stopped for an obstacle / may follow route'): SET by CarAI_OnHitObject 0x42A8F0 (no drive order active, obstacle owner type 0x15 or 0x7A: brake hard), by CarAI_Update 0x432370 when no drive order steers this tick and obstacleHit is a kind-1 sprite of owner type 0x7A (then obstacleHit = NULL), and in several CarAI_FollowLane 0x430CC0 branches; CLEARED by CarAI_Update in the same no-order case otherwise, by CarAI_DriveStep 0x431C10 when car.driverClass == PLAYER, and by Car_Update after the AI tick (0x429EFE: AND CH,0xEF clears 0x1000, see below). READ by CarAI_Update (routeSlot > 0 && 0x10 && driveOrder.followRoadActive == 1 -> CarAI_FollowRoute) and CarAI_FollowLane. Other bits seen: 0x40/0x80 off-road turn, 0x100 lane change, 0x800 route exit, 0x1000 car-collision this tick (CarPhysics_CollideWithCar sets, cleared each tick), 0x2000 lane-follow, 0x10000, 0x100000 police chase (brake to full stop when halted), 0x200000 copied from driver flags / free drive. */
+    uint32_t flags; /* 0x24 CarAI flag word. Bit 0x10 (meaning not settled; looks like 'stopped for an obstacle / may follow route'): SET by CarAI_OnHitObject 0x42A8F0 (no drive order active, obstacle owner type 0x15 or 0x7A: brake hard), by CarAI_Update 0x432370 when no drive order steers this tick and obstacleHit is a kind-1 sprite of owner type 0x7A (then obstacleHit = NULL), and in several CarAI_FollowLane 0x430CC0 branches; CLEARED by CarAI_Update in the same no-order case otherwise, by CarAI_DriveStep 0x431C10 when car.driverClass == PLAYER, and by Car_Update after the AI tick (0x429EFE: AND CH,0xEF clears 0x1000, see below). READ by CarAI_Update (routeSlot > 0 && 0x10 && driveOrder.followRoadActive == 1 -> CarAI_FollowRoute) and CarAI_FollowLane. Other bits seen: 0x40/0x80 off-road turn, 0x100 lane change, 0x800 route exit, 0x1000 car-collision this tick (CarPhysics_CollideWithCar sets, cleared each tick), 0x2000 lane-follow, 0x10000, 0x100000 police chase (brake to full stop when halted), 0x200000 copied from driver flags / free drive. Bit 0x01: CarAI_ApplyRouteTurn 0x430146 (TEST BL=1 on the low byte) skips the whole turn decode when set; no OR-with-1 writer found in an operand scan (Seq 27 R3). */
     char routeSlot; /* 0x28 */
     uint8_t _gap_0x29[0x1];
     uint8_t stillTicks; /* 0x2a */
@@ -5381,7 +5556,8 @@ struct CarAI {
     uint8_t _gap_0x2d[0x2];
     uint8_t unsure_laneTarget; /* 0x2f */
     uint8_t haltTimer; /* 0x30 */
-    uint8_t _gap_0x31[0x7];
+    uint8_t _gap_0x31[0x3];
+    int unsure_initOnly34; /* 0x34 Zeroed. Only written by CarAI_Ctor / CarAI_Reinit 0x42AAC0; no reader in a decompile scan of every Car* / CarAI* / CarDriveOrder* function (Seq 27 R3). */
     int routeExitCode; /* 0x38 */
     int unsure_unstickState; /* 0x3c */
     int unsure_laneDir; /* 0x40 */
@@ -5393,7 +5569,9 @@ struct CarAI {
     uint16_t routeStep; /* 0x56 */
     uint16_t stuckTicks; /* 0x58 */
     uint16_t reverseTicks; /* 0x5a */
-    uint8_t _gap_0x5c[0xc];
+    SCR_f unsure_initOnly5C; /* 0x5c Init DAT_005E5194 (Fix16 0). Only written by CarAI_Ctor / CarAI_Reinit 0x42AAC0; no reader in a decompile scan of every Car* / CarAI* / CarDriveOrder* function (Seq 27 R3). */
+    SCR_f unsure_initOnly60; /* 0x60 Init DAT_005E5194 (Fix16 0). Only written by CarAI_Ctor / CarAI_Reinit 0x42AAC0; no reader in a decompile scan of every Car* / CarAI* / CarDriveOrder* function (Seq 27 R3). */
+    SCR_f unsure_initOnly64; /* 0x64 Init DAT_005E5194 (Fix16 0). Only written by CarAI_Ctor / CarAI_Reinit 0x42AAC0; no reader in a decompile scan of every Car* / CarAI* / CarDriveOrder* function (Seq 27 R3). */
     uint32_t /* Car * */ nearbyCar; /* 0x68 */
     uint32_t /* Car * */ blockingCar; /* 0x6c */
     uint32_t /* Sprite * */ obstacleHit; /* 0x70 */
@@ -5656,7 +5834,7 @@ struct PedGameObject {
     uint8_t jumpTick; /* 0x54 */
     uint8_t detourTimer; /* 0x55 */
     uint8_t _gap_0x56[0x2];
-    SPRITE_BIT1 bit1; /* 0x58 */
+    SPRITE_BIT1 bit1; /* 0x58 Bit 0x20 = SPRITE_BIT1_TELEPORT_PENDING (TeleportGameObject 0x491E00 -> PedGameObject_Tick 0x49C505). */
     uint8_t _gap_0x59[0x3];
     uint8_t objectBumpCooldown; /* 0x5c */
     uint8_t _gap_0x5d[0x3];
@@ -5685,9 +5863,9 @@ struct PedGameObject {
     SCR_f deltaY; /* 0x9c */
     uint8_t onTopOfCarLayer; /* 0xa0 */
     uint8_t _gap_0xa1[0x3];
-    uint32_t teleportX; /* 0xa4 */
-    uint32_t teleportY; /* 0xa8 */
-    uint32_t teleportZ; /* 0xac */
+    SCR_f teleportX; /* 0xa4 */
+    SCR_f teleportY; /* 0xa8 */
+    SCR_f teleportZ; /* 0xac */
     int unk_0xb0; /* 0xb0 */
 };
 
@@ -5866,6 +6044,75 @@ struct ios {
     char x_fill; /* 0x2c ' ' */
     uint8_t _gap_0x2d[0x3];
     int x_width; /* 0x30 */
+};
+
+// /net/DPNAME  size 0x10
+// DirectPlay DPNAME (wide), dplay.h. 0x10 bytes. Seq 27 N2.
+struct DPNAME {
+    uint32_t dwSize; /* 0x0 */
+    uint32_t dwFlags; /* 0x4 */
+    uint32_t /* wchar16 * */ lpszShortName; /* 0x8 */
+    uint32_t /* wchar16 * */ lpszLongName; /* 0xc */
+};
+
+// /net/NetConnectionEntry  size 0x1c
+// One DirectPlay connection (service provider + address); Network+0x2C array of 8 (operator_new 0xE0). Filled by Network_AddConnectionEntry 0x408A90. Seq 27 N2.
+struct NetConnectionEntry {
+    g2_GUID spGuid; /* 0x0 service provider GUID (DPSPGUID_*) */
+    uint32_t /* wchar16 * */ name; /* 0x10 operator_new copy of DPNAME.lpszShortName, or L"dummy prot" for the registry connection */
+    uint32_t /* void * */ connection; /* 0x14 DirectPlay address blob for InitializeConnection */
+    uint32_t connectionSize; /* 0x18 */
+};
+
+// /net/NetMsgHeader  size 0x5
+// Internal form a received wire message is rewritten into, in place, by Network_DecodeReceivedMessage 0x409680; payload follows at +5. Seq 27 N4.
+struct NetMsgHeader {
+    uint8_t kind; /* 0x0 1 = data, 2 = ready marker (decoded wire 4) */
+    uint8_t seq; /* 0x1 wire byte 1 (frame seq for subtype 3) */
+    uint8_t lenPlus2; /* 0x2 payloadLen + 2 (unused by readers) */
+    uint8_t subtype; /* 0x3 1 ping, 2 control, 3 frame, 4 start */
+    uint8_t payloadLen; /* 0x4 bytes after this header (8-bit!) */
+};
+
+// /net/NetPacketDesc  size 0x15
+// Unaligned (packed) send descriptor handed to Network_EncodePacket 0x40A7F0 (built on the stack by every sender). Seq 27 N4.
+struct NetPacketDesc {
+    int kind; /* 0x0 1 = data message (subtype below), 2 = ready marker (wire 4, no payload) */
+    int subtype; /* 0x4 kind 1: 1 ping, 2 control (first payload byte = tag), 3 frame input, 4 start game */
+    uint8_t seq; /* 0x8 frame sequence (subtype 3 only) */
+    int hasData; /* 0x9 0 = EncodePacket emits nothing (len 0) */
+    uint32_t /* void * */ data; /* 0xd payload */
+    uint32_t len; /* 0x11 payload bytes */
+};
+
+// /net/NetPacketPing  size 0xc
+// Wire type 2 payload (13 bytes on wire). Request: Network_SendPingRequest 0x40B380 to the group, guaranteed, every 1 s in lobby. Reply: Network_HandleReceivedPacket 0x40BF80 echoes it to the originator, flags 0. Seq 27 N4.
+struct NetPacketPing {
+    uint32_t originDpid; /* 0x0 pinging player's dpid */
+    uint32_t responderDpid; /* 0x4 0 in request; responder writes its dpid before echoing */
+    uint32_t sendTime; /* 0x8 timeGetTime() of the originator */
+};
+
+// /net/NetPacketPlayerDropped  size 0x5
+// Wire type 6 payload (control tag 1), 6 bytes on wire. Sent by Network_BroadcastPlayerDropped 0x40B000 when lockstep gives up on a player. Seq 27 N4.
+struct NetPacketPlayerDropped {
+    uint8_t tag; /* 0x0 1 */
+    uint32_t playerIndex; /* 0x1 dropped slot 0..5 (unchecked by receiver) */
+};
+
+// /net/NetPacketSyncInfo  size 0x1f
+// Wire type 3 payload (control tag 5), 32 bytes on wire. Built by Network_BuildSyncPacket 0x461C60 into g_netLocalSyncInfo 0x6626C4, sent by Network_BroadcastSyncInfo 0x40B090, compared by Multiplayer_VerifySyncInfo 0x462850 (fatal on mismatch). Seq 27 N4.
+struct NetPacketSyncInfo {
+    uint8_t tag; /* 0x0 5 */
+    uint32_t debugFlags; /* 0x1 bit0 g_logRandomExtra, bit1 g_doSyncCheck, bit2 g_logRandom */
+    uint32_t gmpFileSize; /* 0x5 _stat st_size of the .gmp */
+    uint32_t styFileSize; /* 0x9 _stat st_size of the .sty */
+    uint32_t scrByteSum; /* 0xd File_SumBytes of the .scr */
+    uint32_t versionMajor; /* 0x11 VERSION_MAJOR 0x673F54 */
+    uint32_t versionMinor; /* 0x15 VERSION_MINOR 0x673F58 */
+    uint32_t gciByteSum; /* 0x19 File_SumBytes of nyc.gci */
+    uint8_t gxtMissing; /* 0x1d g_gxtAllFilesMissing (language check) */
+    uint8_t playerIndex; /* 0x1e sender's g_localPlayerIndex (unchecked by receiver) */
 };
 
 #pragma pack(pop)

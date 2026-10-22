@@ -912,7 +912,7 @@ M medium (inferred from callers / field use), U `unsure_` (see the comment in Gh
 | 0x475AA0 | `Object_IsGangPhoneType` | M | object types 0xB0..0xB5, only caller OBJ_DATA_SET registers a gang phone arrow |
 | 0x475AE0 / 0x475AF0 | `PedGroup_SetMinMembersBeforeSplit` / `Ped_GetGroup` | V | opcode 237; `Ped+0x164` |
 | 0x475B10 / 0x475B20 | `Ped_GetLastCharPunched` / `Ped_IsGroupInCar` | V | `Ped+0x188`; opcode 254 |
-| 0x475B60 | `Player_InvalidateNavZone` | M | `Player+0x3C := 1` on wasted/busted/teleport/warp |
+| 0x475B60 | `Camera_SetFollowStateFollow` (was `Player_InvalidateNavZone`) | V | `Camera->followState = 1` on the player camera (Player+0x90) on wasted/busted/teleport/warp; it does not touch Player+0x3C |
 | 0x475C10 / C30 / C40 / C60 / C80 | `Car_SetLocked` / `Car_SetLockedPermanently` / `Car_SetLockoutThief` / `Car_SetLockoutPlayer` / `Car_SetUnlocked` | V | `Car+0x98` := 1 / 4 / 2 / 5 / 3 = `CAR_LOCK_STATE`; CHANGE_CAR_LOCK cases 1,4,2,5,3 |
 | 0x475CA0 | `SaveGame_CopyMenuPathsToHeader` | V | copies gmp/sty/scr paths into the save header, caller `SaveGame` |
 | 0x475E60 | `Car_IsTrailerAttachedTo` | M | `car+0x64` link `+0xC == other`; IS_TRAILER_ATTACHED |

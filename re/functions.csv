@@ -96,8 +96,8 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004039d0,Ped_GetTaskStatus,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall Ped_GetTaskStatus(Ped * param_1)
 0x004039e0,Ped_GetObjectiveDone2,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall Ped_GetObjectiveDone2(Ped * param_1)
 0x004039f0,Ped_GetOffscreenTicks,Ped,USER_DEFINED,__thiscall,USER_DEFINED,8,,ushort __thiscall Ped_GetOffscreenTicks(Ped * this)
-0x00403a00,Ped_GetX,,USER_DEFINED,default,USER_DEFINED,15,,"void Ped_GetX(Ped * this, int * out)"
-0x00403a10,Ped_GetY,,USER_DEFINED,default,USER_DEFINED,15,,"void Ped_GetY(Ped * this, int * out)"
+0x00403a00,Ped_GetX,,USER_DEFINED,__thiscall,USER_DEFINED,15,,"int * __thiscall Ped_GetX(Ped * this, int * out)"
+0x00403a10,Ped_GetY,,USER_DEFINED,__thiscall,USER_DEFINED,15,,"int * __thiscall Ped_GetY(Ped * this, int * out)"
 0x00403a20,Ped_ClearMeleeHitCount,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall Ped_ClearMeleeHitCount(Ped * param_1)
 0x00403a30,Ped_ClearGroup,,USER_DEFINED,__fastcall,USER_DEFINED,15,,undefined __fastcall Ped_ClearGroup(Ped * param_1)
 0x00403a40,Ped_ClearFiring,,USER_DEFINED,__fastcall,USER_DEFINED,16,,undefined __fastcall Ped_ClearFiring(Ped * param_1)
@@ -160,7 +160,9 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00405a80,LocaleSettings_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"void * * __thiscall LocaleSettings_ScalarDeletingDtor(LocaleSettings * this, byte param_2)"
 0x00405aa0,NetDlg_ShowPage,,USER_DEFINED,__thiscall,USER_DEFINED,111,,"undefined __thiscall NetDlg_ShowPage(NetDlg * this, int param_2)"
 0x00405b10,NetDlg_GetPage,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined4 __fastcall NetDlg_GetPage(NetDlg * param_1)
-0x00405b20,NetDlg_ClearListControl,,USER_DEFINED,__thiscall,USER_DEFINED,34,,"undefined __thiscall NetDlg_ClearListControl(NetDlg * this, int param_2)"
+0x00405b20,NetDlg_ClearListView,,USER_DEFINED,__thiscall,USER_DEFINED,34,,"undefined __thiscall NetDlg_ClearListView(NetDlg * this, int param_2)"
+0x00405b50,NetDlg_OnPlayerPingUpdate,,USER_DEFINED,__stdcall,USER_DEFINED,325,,"void __stdcall NetDlg_OnPlayerPingUpdate(NetDlg * dlg, void * pingEvent)"
+0x00405ca0,NetDlg_OnChatReceived,,USER_DEFINED,__stdcall,USER_DEFINED,131,,"void __stdcall NetDlg_OnChatReceived(NetDlg * dlg, void * chatEvent)"
 0x00405ec0,NetDlg_AppendChatLine,,USER_DEFINED,__thiscall,USER_DEFINED,314,,"undefined __thiscall NetDlg_AppendChatLine(NetDlg * this, undefined4 param_2, undefined4 param_3)"
 0x004061c0,NetDlg_ShowPlayerName,,USER_DEFINED,__fastcall,USER_DEFINED,73,,undefined __fastcall NetDlg_ShowPlayerName(NetDlg * param_1)
 0x00406210,NetDlg_IncPlayerCount,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall NetDlg_IncPlayerCount(NetDlg * param_1)
@@ -172,35 +174,41 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00406270,NetDlg_LoadPlayerNameFromRegistry,,USER_DEFINED,__fastcall,USER_DEFINED,172,,undefined __fastcall NetDlg_LoadPlayerNameFromRegistry(NetDlg * param_1)
 0x00406320,NetDlg_SetPlayerName,,USER_DEFINED,__thiscall,USER_DEFINED,159,,"undefined __thiscall NetDlg_SetPlayerName(NetDlg * this, short * param_2)"
 0x004063c0,NetDlg_SendChatFromEdit,,USER_DEFINED,__thiscall,USER_DEFINED,138,,"undefined __thiscall NetDlg_SendChatFromEdit(NetDlg * this, int param_2, undefined4 param_3)"
-0x00406450,NetDlg_CopyMapInfo,,USER_DEFINED,__thiscall,USER_DEFINED,28,,"undefined __thiscall NetDlg_CopyMapInfo(NetDlg * this, undefined4 * param_2)"
+0x00406450,NetDlg_CopySettings,,USER_DEFINED,__thiscall,USER_DEFINED,28,,"undefined __thiscall NetDlg_CopySettings(NetDlg * this, undefined4 * param_2)"
 0x00406470,NetDlg_LoadSettingsFromRegistry,,USER_DEFINED,__fastcall,USER_DEFINED,204,,undefined __fastcall NetDlg_LoadSettingsFromRegistry(NetDlg * param_1)
 0x0040653e,NetDlg_CopyMapNameFragment,,USER_DEFINED,__fastcall,ANALYSIS,18,,undefined __fastcall NetDlg_CopyMapNameFragment(char * param_1)
-0x00406550,NetDlg_GetSelectedMapStr0,,USER_DEFINED,__fastcall,USER_DEFINED,24,,int __fastcall NetDlg_GetSelectedMapStr0(NetDlg * param_1)
-0x00406570,NetDlg_GetSelectedMapStr1,,USER_DEFINED,__fastcall,USER_DEFINED,28,,int __fastcall NetDlg_GetSelectedMapStr1(NetDlg * param_1)
-0x00406590,NetDlg_GetSelectedMapStr2,,USER_DEFINED,__fastcall,USER_DEFINED,28,,int __fastcall NetDlg_GetSelectedMapStr2(NetDlg * param_1)
-0x004065b0,Network_ReportMmpFileOpenError,,USER_DEFINED,__stdcall,ANALYSIS,63,,"undefined __stdcall Network_ReportMmpFileOpenError(undefined4 param_1, undefined4 param_2)"
+0x00406550,NetDlg_GetSelectedGmpFile,,USER_DEFINED,__fastcall,USER_DEFINED,24,,int __fastcall NetDlg_GetSelectedGmpFile(NetDlg * param_1)
+0x00406570,NetDlg_GetSelectedStyFile,,USER_DEFINED,__fastcall,USER_DEFINED,28,,int __fastcall NetDlg_GetSelectedStyFile(NetDlg * param_1)
+0x00406590,NetDlg_GetSelectedScrFile,,USER_DEFINED,__fastcall,USER_DEFINED,28,,int __fastcall NetDlg_GetSelectedScrFile(NetDlg * param_1)
+0x004065b0,NetDlg_ReportMmpFileOpenError,,USER_DEFINED,__stdcall,ANALYSIS,63,,"undefined __stdcall NetDlg_ReportMmpFileOpenError(undefined4 param_1, undefined4 param_2)"
 0x004065f0,NetDlg_SetPlayersRequiredText,,USER_DEFINED,__stdcall,ANALYSIS,111,,"undefined __stdcall NetDlg_SetPlayersRequiredText(int param_1, HWND param_2)"
 0x00406660,NetDlg_UpdateStartRejectButtons,,USER_DEFINED,__fastcall,USER_DEFINED,28,,undefined __fastcall NetDlg_UpdateStartRejectButtons(NetDlg * param_1)
-0x0040667c,NetDlg_EnableControls3FDAnd3FCFragment,,USER_DEFINED,__fastcall,ANALYSIS,100,,"undefined __fastcall NetDlg_EnableControls3FDAnd3FCFragment(undefined4 param_1, int param_2)"
-0x004066e0,NetDlg_SetCheckBox403,,USER_DEFINED,__stdcall,ANALYSIS,62,,"undefined __stdcall NetDlg_SetCheckBox403(int param_1, HWND param_2)"
+0x0040667c,NetDlg_EnableStartReject_Frag,,USER_DEFINED,__fastcall,ANALYSIS,100,,"undefined __fastcall NetDlg_EnableStartReject_Frag(undefined4 param_1, int param_2)"
+0x004066e0,NetDlg_SetCopsCheckBox,,USER_DEFINED,__stdcall,ANALYSIS,62,,"undefined __stdcall NetDlg_SetCopsCheckBox(int param_1, HWND param_2)"
 0x00406720,NetDlg_SetCopsText,,USER_DEFINED,__stdcall,ANALYSIS,75,,"undefined __stdcall NetDlg_SetCopsText(int param_1, HWND param_2)"
 0x00406770,NetDlg_SetScoreLimitText,,USER_DEFINED,__thiscall,USER_DEFINED,323,,"undefined __thiscall NetDlg_SetScoreLimitText(NetDlg * this, int param_2, undefined4 param_3, HWND param_4)"
 0x004068c0,NetDlg_SetGameSpeedText,,USER_DEFINED,__stdcall,ANALYSIS,177,,"undefined __stdcall NetDlg_SetGameSpeedText(int param_1, HWND param_2)"
 0x00406980,NetDlg_SetGameTypeText,,USER_DEFINED,__stdcall,ANALYSIS,398,,"undefined __stdcall NetDlg_SetGameTypeText(int param_1, undefined4 param_2, HWND param_3)"
 0x00406b10,NetDlg_SetTimeLimitText,,USER_DEFINED,__stdcall,ANALYSIS,106,,"undefined __stdcall NetDlg_SetTimeLimitText(undefined4 param_1, HWND param_2)"
-0x00406b80,NetDlg_SetNumericText40e,,USER_DEFINED,__stdcall,ANALYSIS,62,,"undefined __stdcall NetDlg_SetNumericText40e(undefined4 param_1, HWND param_2)"
+0x00406b80,NetDlg_SetTimeLimitEditText,,USER_DEFINED,__stdcall,ANALYSIS,62,,"undefined __stdcall NetDlg_SetTimeLimitEditText(undefined4 param_1, HWND param_2)"
 0x00406bc0,NetDlg_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"undefined4 * __thiscall NetDlg_ScalarDeletingDtor(NetDlg * this, byte param_2)"
-0x00406c92,NetDlg_EnableControlFragment,,USER_DEFINED,__thiscall,USER_DEFINED,32,,"undefined __thiscall NetDlg_EnableControlFragment(NetDlg * this, BOOL param_2)"
+0x00406be0,NetDlg_OnSessionListUpdated,,USER_DEFINED,__stdcall,USER_DEFINED,178,,"void __stdcall NetDlg_OnSessionListUpdated(NetDlg * dlg, void * sessionList)"
+0x00406c92,NetDlg_EnableJoinButton_Frag,,USER_DEFINED,__thiscall,USER_DEFINED,32,,"undefined __thiscall NetDlg_EnableJoinButton_Frag(NetDlg * this, BOOL param_2)"
+0x00406cc0,NetDlg_OnPlayerAdded,,USER_DEFINED,__stdcall,USER_DEFINED,375,,"void __stdcall NetDlg_OnPlayerAdded(NetDlg * dlg, wchar_t * playerName, int unused)"
 0x00406e40,NetDlg_OnTimer,,USER_DEFINED,__stdcall,ANALYSIS,211,,undefined __stdcall NetDlg_OnTimer(HWND param_1)
-0x00407070,NetDlg_InitListColumns,,USER_DEFINED,__fastcall,USER_DEFINED,412,,undefined __fastcall NetDlg_InitListColumns(NetDlg * param_1)
+0x00406f20,NetDlg_OnPlayerDeleted,,USER_DEFINED,__stdcall,USER_DEFINED,266,,"void __stdcall NetDlg_OnPlayerDeleted(NetDlg * dlg, wchar_t * playerName)"
+0x00407030,NetDlg_OnSessionClosed,,USER_DEFINED,__stdcall,USER_DEFINED,52,,void __stdcall NetDlg_OnSessionClosed(NetDlg * dlg)
+0x00407070,NetDlg_InitControls,,USER_DEFINED,__fastcall,USER_DEFINED,412,,undefined __fastcall NetDlg_InitControls(NetDlg * param_1)
 0x0040720d,NetDlg_InitControls_Frag,,USER_DEFINED,__stdcall,ANALYSIS,341,,undefined __stdcall NetDlg_InitControls_Frag(void)
 0x00407362,NetDlg_UpdateSettingTexts_Frag,,USER_DEFINED,__stdcall,ANALYSIS,105,,undefined __stdcall NetDlg_UpdateSettingTexts_Frag(void)
-0x004073d0,NetDlg_SetSessionDesc,,USER_DEFINED,__thiscall,USER_DEFINED,49,,"undefined __thiscall NetDlg_SetSessionDesc(NetDlg * this, undefined4 * param_2)"
+0x004073d0,NetDlg_ApplyRemoteSettings,,USER_DEFINED,__thiscall,USER_DEFINED,49,,"undefined __thiscall NetDlg_ApplyRemoteSettings(NetDlg * this, undefined4 * param_2)"
 0x00407402,NetDlg_FindMapByName_Frag,,USER_DEFINED,__fastcall,ANALYSIS,119,,"undefined __fastcall NetDlg_FindMapByName_Frag(undefined4 param_1, uint param_2)"
-0x00407476,NetDlg_UpdateGameSpeedText_Frag,,USER_DEFINED,__fastcall,ANALYSIS,15,,"undefined __fastcall NetDlg_UpdateGameSpeedText_Frag(undefined4 param_1, LPCSTR param_2)"
+0x00407476,NetDlg_UpdateClientSettingTexts_Frag,,USER_DEFINED,__fastcall,ANALYSIS,15,,"undefined __fastcall NetDlg_UpdateClientSettingTexts_Frag(undefined4 param_1, LPCSTR param_2)"
 0x0040748d,NetDlg_ShowMissingMapError_Frag,,USER_DEFINED,__fastcall,ANALYSIS,304,,undefined __fastcall NetDlg_ShowMissingMapError_Frag(char * param_1)
 0x004075c0,NetDlg_SetSetting,,USER_DEFINED,__thiscall,USER_DEFINED,65,,"undefined __thiscall NetDlg_SetSetting(NetDlg * this, undefined4 param_2, int param_3)"
 0x00407605,NetDlg_SelectMap_Frag,,USER_DEFINED,__fastcall,ANALYSIS,99,,"undefined __fastcall NetDlg_SelectMap_Frag(undefined4 param_1, int param_2, undefined4 param_3, undefined4 param_4, int param_5, undefined4 param_6)"
+0x00407800,NetDlg_OnGameStart,,USER_DEFINED,__stdcall,USER_DEFINED,107,,void __stdcall NetDlg_OnGameStart(NetDlg * dlg)
+0x00407870,NetDlg_ChatEditSubclassProc,,USER_DEFINED,__stdcall,USER_DEFINED,187,,"LRESULT __stdcall NetDlg_ChatEditSubclassProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)"
 0x00407930,NetDlg_ReadMmpMapFiles,,USER_DEFINED,__fastcall,USER_DEFINED,664,,undefined __fastcall NetDlg_ReadMmpMapFiles(NetDlg * param_1)
 0x00407c90,NetDlg_OnHScroll,,USER_DEFINED,__stdcall,ANALYSIS,87,,"undefined __stdcall NetDlg_OnHScroll(HWND param_1, HWND param_2, undefined4 param_3)"
 0x00407d10,NetDlg_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,123,,undefined4 * __fastcall NetDlg_Ctor(NetDlg * param_1)
@@ -208,72 +216,93 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00407db0,NetDlg_OnCommand,,USER_DEFINED,__stdcall,ANALYSIS,2251,,"undefined __stdcall NetDlg_OnCommand(HWND param_1, int param_2, undefined4 param_3, int param_4)"
 0x004086a0,NetDlg_CreateControls,,USER_DEFINED,__thiscall,USER_DEFINED,404,,"undefined __thiscall NetDlg_CreateControls(NetDlg * this, HWND param_2)"
 0x00408840,NetDlg_OnInitDialog,,USER_DEFINED,__stdcall,ANALYSIS,178,,"undefined4 __stdcall NetDlg_OnInitDialog(HWND param_1, undefined4 param_2, void * param_3)"
+0x00408900,NetDlg_OnSettingsReceived,,USER_DEFINED,__stdcall,USER_DEFINED,29,,"void __stdcall NetDlg_OnSettingsReceived(NetDlg * dlg, void * * settingsBlobPtr)"
 0x00408920,NetDlg_DialogProc,,USER_DEFINED,__stdcall,ANALYSIS,121,,"undefined4 __stdcall NetDlg_DialogProc(HWND param_1, uint param_2, uint param_3, HWND param_4)"
 0x00408954,NetDlg_CommandThunk,,USER_DEFINED,__stdcall,ANALYSIS,36,,"undefined4 __stdcall NetDlg_CommandThunk(HWND param_1, undefined4 param_2, uint param_3, undefined4 param_4)"
 0x004089c0,NetDlg_Run,,USER_DEFINED,__thiscall,USER_DEFINED,174,,"uint __thiscall NetDlg_Run(NetDlg * this, undefined4 param_2)"
-0x00408a90,Network_AddConnectionEntry,,USER_DEFINED,__thiscall,USER_DEFINED,242,,"undefined __thiscall Network_AddConnectionEntry(Network * this, undefined4 * param_2)"
-0x00408c40,Network_ReleaseDirectPlay,,USER_DEFINED,__fastcall,USER_DEFINED,57,,undefined __fastcall Network_ReleaseDirectPlay(Network * param_1)
-0x00408c80,Network_CreateLobbyInterface,,USER_DEFINED,__fastcall,USER_DEFINED,106,,undefined4 __fastcall Network_CreateLobbyInterface(Network * param_1)
-0x00408cf0,Network_CopyConnectionNames,,USER_DEFINED,__thiscall,USER_DEFINED,120,,"undefined4 __thiscall Network_CopyConnectionNames(Network * this, int param_2, undefined4 * param_3)"
-0x00408e80,Network_AddNameString,,USER_DEFINED,__thiscall,USER_DEFINED,81,,"undefined4 __thiscall Network_AddNameString(Network * this, short * param_2)"
-0x00409360,Network_AddPlayerRecord,,USER_DEFINED,__stdcall,ANALYSIS,247,,"uint __stdcall Network_AddPlayerRecord(undefined4 * param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, wchar_t * param_5, undefined4 param_6, int param_7)"
-0x00409460,Network_AddSessionDesc,,USER_DEFINED,__thiscall,USER_DEFINED,445,,"undefined4 __thiscall Network_AddSessionDesc(Network * this, int param_2)"
-0x00409620,Network_SetEventHandler5,,USER_DEFINED,__thiscall,USER_DEFINED,33,,"undefined __thiscall Network_SetEventHandler5(Network * this, undefined4 param_2, undefined4 param_3)"
-0x00409650,Network_SendTo,,USER_DEFINED,__thiscall,USER_DEFINED,44,,"undefined __thiscall Network_SendTo(Network * this, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5)"
-0x00409680,Network_PackMessage,,USER_DEFINED,__stdcall,ANALYSIS,462,,"int __stdcall Network_PackMessage(undefined4 * param_1, uint param_2)"
-0x00409890,Network_FreePlayerSlot,,USER_DEFINED,__stdcall,ANALYSIS,71,,"undefined __stdcall Network_FreePlayerSlot(int param_1, int param_2)"
-0x004098e0,Network_DispatchEvent,,USER_DEFINED,__thiscall,USER_DEFINED,168,,"undefined __thiscall Network_DispatchEvent(Network * this, int param_2, undefined4 * param_3)"
-0x004099b0,Network_SetEventHandler2,,USER_DEFINED,__thiscall,USER_DEFINED,24,,"undefined __thiscall Network_SetEventHandler2(Network * this, undefined4 param_2, undefined4 param_3)"
-0x004099d0,Network_AddPlayerFromEvent,,USER_DEFINED,__thiscall,USER_DEFINED,86,,"uint __thiscall Network_AddPlayerFromEvent(Network * this, undefined4 param_2, undefined4 * param_3)"
-0x00409a30,Network_SetGroupId,,USER_DEFINED,__thiscall,USER_DEFINED,13,,"undefined __thiscall Network_SetGroupId(Network * this, undefined4 param_2)"
-0x00409a40,Network_FreeAllPlayerSlots,,USER_DEFINED,__stdcall,ANALYSIS,74,,undefined __stdcall Network_FreeAllPlayerSlots(int param_1)
-0x00409a90,Network_FindPlayerIndexByDpid,,USER_DEFINED,__stdcall,ANALYSIS,36,,"uint __stdcall Network_FindPlayerIndexByDpid(int param_1, int param_2)"
-0x00409ac0,Network_SetEventHandler3,,USER_DEFINED,__thiscall,USER_DEFINED,24,,"undefined __thiscall Network_SetEventHandler3(Network * this, undefined4 param_2, undefined4 param_3)"
-0x00409ae0,Network_SetEventHandler1,,USER_DEFINED,__thiscall,USER_DEFINED,24,,"undefined __thiscall Network_SetEventHandler1(Network * this, undefined4 param_2, undefined4 param_3)"
-0x00409b10,Network_UpdatePlayerPing,,USER_DEFINED,__thiscall,USER_DEFINED,128,,"undefined __thiscall Network_UpdatePlayerPing(Network * this, int param_2, int param_3, int param_4)"
-0x00409b90,Network_SetEventHandler6,,USER_DEFINED,__thiscall,USER_DEFINED,33,,"undefined __thiscall Network_SetEventHandler6(Network * this, undefined4 param_2, undefined4 param_3)"
-0x00409bc0,Network_DeletePlayerFromGroupByName,,USER_DEFINED,__thiscall,USER_DEFINED,113,,"undefined4 __thiscall Network_DeletePlayerFromGroupByName(Network * this, wchar_t * param_2)"
+0x00408a90,Network_AddConnectionEntry,,USER_DEFINED,__thiscall,USER_DEFINED,242,,"void __thiscall Network_AddConnectionEntry(Network * this, NetConnectionEntry * entry)"
+0x00408b90,Network_EnumConnectionsCallback,,USER_DEFINED,__stdcall,USER_DEFINED,166,,"int __stdcall Network_EnumConnectionsCallback(GUID * spGuid, void * connection, uint connectionSize, DPNAME * name, uint flags, Network * ctx)"
+0x00408c40,Network_ReleaseDirectPlay,,USER_DEFINED,__fastcall,USER_DEFINED,57,,void __fastcall Network_ReleaseDirectPlay(Network * this)
+0x00408c80,Network_CreateInterfaces,,USER_DEFINED,__fastcall,USER_DEFINED,106,,int __fastcall Network_CreateInterfaces(Network * this)
+0x00408cf0,Network_CopyConnectionNames,,USER_DEFINED,__thiscall,USER_DEFINED,120,,"int __thiscall Network_CopyConnectionNames(Network * this, wchar16 * * outNames, uint * outCount)"
+0x00408d70,Network_GetConnectionKind,,USER_DEFINED,__thiscall,USER_DEFINED,145,,"int __thiscall Network_GetConnectionKind(Network * this, uint index)"
+0x00408e10,Network_CopyModemNames,,USER_DEFINED,__thiscall,USER_DEFINED,110,,"int __thiscall Network_CopyModemNames(Network * this, wchar16 * * outNames, uint * outCount)"
+0x00408e80,Network_AddModemName,,USER_DEFINED,__thiscall,USER_DEFINED,81,,"int __thiscall Network_AddModemName(Network * this, wchar16 * name)"
+0x00408ee0,Network_CreateTcpIpAddress,,USER_DEFINED,__thiscall,USER_DEFINED,330,,"int __thiscall Network_CreateTcpIpAddress(Network * this, wchar16 * host, void * * outAddress, uint * outSize)"
+0x00409030,Network_CreateModemAddress,,USER_DEFINED,__thiscall,USER_DEFINED,474,,"int __thiscall Network_CreateModemAddress(Network * this, wchar16 * modem, wchar16 * phone, void * * outAddress, uint * outSize)"
+0x00409210,Network_CreateSerialAddress,,USER_DEFINED,__thiscall,USER_DEFINED,326,,"int __thiscall Network_CreateSerialAddress(Network * this, void * comPortAddress, void * * outAddress, uint * outSize)"
+0x00409360,NetPlayerTable_AddPlayer,,USER_DEFINED,__stdcall,USER_DEFINED,247,,"uint __stdcall NetPlayerTable_AddPlayer(NetDataRef * playerData, uint dpid, DPNAME name, NetPlayerTable * table)"
+0x00409460,Network_AddSessionDesc,,USER_DEFINED,__thiscall,USER_DEFINED,445,,"int __thiscall Network_AddSessionDesc(Network * this, DPSESSIONDESC2 * desc)"
+0x00409620,Network_SetSessionListHandler,,USER_DEFINED,__thiscall,USER_DEFINED,33,,"void __thiscall Network_SetSessionListHandler(Network * this, void * callback, void * context)"
+0x00409650,Network_SendTo,,USER_DEFINED,__thiscall,USER_DEFINED,44,,"void __thiscall Network_SendTo(Network * this, void * data, uint size, uint idTo, uint flags)"
+0x00409680,Network_DecodeReceivedMessage,,USER_DEFINED,__stdcall,USER_DEFINED,462,,"int __stdcall Network_DecodeReceivedMessage(byte * msg, uint wireLen)"
+0x00409890,NetPlayerTable_FreeSlot,,USER_DEFINED,__stdcall,USER_DEFINED,71,,"void __stdcall NetPlayerTable_FreeSlot(uint index, NetPlayerTable * table)"
+0x004098e0,Network_DispatchEvent,,USER_DEFINED,__thiscall,USER_DEFINED,168,,"void __thiscall Network_DispatchEvent(Network * this, int eventId, void * arg)"
+0x004099b0,Network_SetPlayerAddedHandler,,USER_DEFINED,__thiscall,USER_DEFINED,24,,"void __thiscall Network_SetPlayerAddedHandler(Network * this, void * callback, void * context)"
+0x004099d0,Network_AddEnumeratedPlayer,,USER_DEFINED,__thiscall,USER_DEFINED,86,,"int __thiscall Network_AddEnumeratedPlayer(Network * this, uint dpid, DPNAME * name)"
+0x00409a30,Network_SetGroupId,,USER_DEFINED,__thiscall,USER_DEFINED,13,,"void __thiscall Network_SetGroupId(Network * this, uint groupId)"
+0x00409a40,NetPlayerTable_Clear,,USER_DEFINED,__stdcall,USER_DEFINED,74,,void __stdcall NetPlayerTable_Clear(NetPlayerTable * table)
+0x00409a90,NetPlayerTable_FindByDpid,,USER_DEFINED,__stdcall,USER_DEFINED,36,,"uint __stdcall NetPlayerTable_FindByDpid(uint dpid, NetPlayerTable * table)"
+0x00409ac0,Network_SetPlayerRemovedHandler,,USER_DEFINED,__thiscall,USER_DEFINED,24,,"void __thiscall Network_SetPlayerRemovedHandler(Network * this, void * callback, void * context)"
+0x00409ae0,Network_SetSessionClosedHandler,,USER_DEFINED,__thiscall,USER_DEFINED,24,,"void __thiscall Network_SetSessionClosedHandler(Network * this, void * callback, void * context)"
+0x00409b10,Network_UpdatePlayerPing,,USER_DEFINED,__thiscall,USER_DEFINED,128,,"void __thiscall Network_UpdatePlayerPing(Network * this, uint responderDpid, uint rttMs, void * playerTable)"
+0x00409b90,Network_SetPingHandler,,USER_DEFINED,__thiscall,USER_DEFINED,33,,"void __thiscall Network_SetPingHandler(Network * this, void * callback, void * context)"
+0x00409bc0,Network_DeletePlayerFromGroupByName,,USER_DEFINED,__thiscall,USER_DEFINED,113,,"int __thiscall Network_DeletePlayerFromGroupByName(Network * this, wchar16 * name)"
 0x00409c40,Network_GetLocalPlayerIndex,,USER_DEFINED,__thiscall,USER_DEFINED,7,,uint __thiscall Network_GetLocalPlayerIndex(Network * this)
-0x00409c50,Network_SeqDelta,,USER_DEFINED,__stdcall,ANALYSIS,37,,"uint __stdcall Network_SeqDelta(char param_1, char param_2)"
-0x00409c80,Network_DeletePlayerFromGroupByIndex,,USER_DEFINED,__thiscall,USER_DEFINED,92,,"undefined4 __thiscall Network_DeletePlayerFromGroupByIndex(Network * this, uint param_2)"
+0x00409c50,Network_SeqDelta,,USER_DEFINED,__stdcall,USER_DEFINED,37,,"int __stdcall Network_SeqDelta(char seq, char reference)"
+0x00409c80,Network_DeletePlayerFromGroupByIndex,,USER_DEFINED,__thiscall,USER_DEFINED,92,,"int __thiscall Network_DeletePlayerFromGroupByIndex(Network * this, uint index)"
 0x00409ce0,Network_ClearPendingPackets,,USER_DEFINED,__fastcall,USER_DEFINED,31,,undefined __fastcall Network_ClearPendingPackets(Network * param_1)
-0x00409d00,Network_SendChatMessage,,USER_DEFINED,__thiscall,USER_DEFINED,102,,"undefined __thiscall Network_SendChatMessage(Network * this, undefined4 param_2, int param_3)"
-0x00409d70,Network_SetEventHandler7,,USER_DEFINED,__thiscall,USER_DEFINED,33,,"undefined __thiscall Network_SetEventHandler7(Network * this, undefined4 param_2, undefined4 param_3)"
-0x00409da0,Network_GetPlayerName,,USER_DEFINED,__thiscall,USER_DEFINED,55,,"undefined __thiscall Network_GetPlayerName(Network * this, short * param_2, uint param_3)"
-0x00409de0,Network_SetEventHandler8,,USER_DEFINED,__thiscall,USER_DEFINED,33,,"undefined __thiscall Network_SetEventHandler8(Network * this, undefined4 param_2, undefined4 param_3)"
-0x00409e10,Network_PublishSettings,,USER_DEFINED,__thiscall,USER_DEFINED,127,,"undefined __thiscall Network_PublishSettings(Network * this, undefined4 * param_2)"
-0x00409e90,Network_SetEventHandler9,,USER_DEFINED,__thiscall,USER_DEFINED,33,,"undefined __thiscall Network_SetEventHandler9(Network * this, undefined4 param_2, undefined4 param_3)"
+0x00409d00,Network_SendChatMessage,,USER_DEFINED,__thiscall,USER_DEFINED,102,,"void __thiscall Network_SendChatMessage(Network * this, wchar16 * text, int playerIndex)"
+0x00409d70,Network_SetChatHandler,,USER_DEFINED,__thiscall,USER_DEFINED,33,,"void __thiscall Network_SetChatHandler(Network * this, void * callback, void * context)"
+0x00409da0,Network_GetPlayerName,,USER_DEFINED,__thiscall,USER_DEFINED,55,,"void __thiscall Network_GetPlayerName(Network * this, wchar16 * out, uint index)"
+0x00409de0,Network_SetGroupDataHandler,,USER_DEFINED,__thiscall,USER_DEFINED,33,,"void __thiscall Network_SetGroupDataHandler(Network * this, void * callback, void * context)"
+0x00409e10,Network_PublishSettings,,USER_DEFINED,__thiscall,USER_DEFINED,127,,"void __thiscall Network_PublishSettings(Network * this, NetDataRef * blob)"
+0x00409e90,Network_SetGameStartHandler,,USER_DEFINED,__thiscall,USER_DEFINED,33,,"void __thiscall Network_SetGameStartHandler(Network * this, void * callback, void * context)"
+0x00409ec0,NetMsg_SetSeq,,USER_DEFINED,__stdcall,USER_DEFINED,14,,"void __stdcall NetMsg_SetSeq(byte * msg, byte seq)"
+0x00409ed0,NetMsg_GetSeq,,USER_DEFINED,__stdcall,USER_DEFINED,10,,byte __stdcall NetMsg_GetSeq(byte * msg)
+0x00409ee0,NetMsg_GetByte3,,USER_DEFINED,__stdcall,USER_DEFINED,12,,byte __stdcall NetMsg_GetByte3(byte * msg)
+0x00409ef0,Network_IncrementSeqByte,,USER_DEFINED,__stdcall,USER_DEFINED,38,,"void __stdcall Network_IncrementSeqByte(byte * base, int index)"
+0x00409f20,Network_IsHost,,USER_DEFINED,__fastcall,USER_DEFINED,7,,int __fastcall Network_IsHost(Network * this)
+0x00409f30,NetMsg_GetPayload,,USER_DEFINED,__stdcall,USER_DEFINED,64,,"void __stdcall NetMsg_GetPayload(byte * msg, int unused, NetDataRef * out, int copy)"
 0x00409f70,Network_SetExitGameCallback,,USER_DEFINED,__thiscall,USER_DEFINED,27,,"void __thiscall Network_SetExitGameCallback(Network * this, void * callback, void * context)"
 0x00409f90,Network_GetPlayerCount,,USER_DEFINED,__thiscall,USER_DEFINED,73,,uint __thiscall Network_GetPlayerCount(Network * this)
-0x0040a0f0,Network_QueuePendingPacket,,USER_DEFINED,__thiscall,USER_DEFINED,157,,"undefined __thiscall Network_QueuePendingPacket(Network * this, int * param_2, int param_3, char param_4)"
-0x0040a190,Network_PopOldestPendingPacket,,USER_DEFINED,__thiscall,USER_DEFINED,179,,"int * __thiscall Network_PopOldestPendingPacket(Network * this, int * param_2, char * param_3, undefined4 * param_4)"
-0x0040a250,Network_StoreLastSeqInfo,,USER_DEFINED,__thiscall,USER_DEFINED,68,,"undefined __thiscall Network_StoreLastSeqInfo(Network * this, int * * param_2, int param_3)"
-0x0040a2a0,Network_FreePendingPacketSlot,,USER_DEFINED,__thiscall,USER_DEFINED,31,,"undefined __thiscall Network_FreePendingPacketSlot(Network * this, int param_2)"
-0x0040a2c0,Network_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,221,,undefined4 * __fastcall Network_Ctor(Network * param_1)
-0x0040a3a0,Network_Dtor,,USER_DEFINED,__fastcall,USER_DEFINED,342,,undefined __fastcall Network_Dtor(Network * param_1)
-0x0040a5b0,Network_StartSession,,USER_DEFINED,__thiscall,USER_DEFINED,535,,"undefined4 __thiscall Network_StartSession(Network * this, undefined4 * param_2)"
-0x0040a7f0,Network_EncodePacket,,USER_DEFINED,__thiscall,USER_DEFINED,644,,"undefined __thiscall Network_EncodePacket(Network * this, int * param_2, undefined4 * param_3, int * param_4)"
-0x0040aaa0,Network_PromotePendingPlayer,,USER_DEFINED,__stdcall,ANALYSIS,156,,"undefined4 __stdcall Network_PromotePendingPlayer(int param_1, int param_2, int param_3, uint * param_4)"
-0x0040ab90,Network_SendStartAndLockSession,,USER_DEFINED,__fastcall,USER_DEFINED,179,,undefined __fastcall Network_SendStartAndLockSession(Network * param_1)
-0x0040ac50,Network_SendSyncPacket,,USER_DEFINED,__fastcall,USER_DEFINED,104,,undefined __fastcall Network_SendSyncPacket(Network * param_1)
-0x0040acc0,Network_SendFrameDataToPlayer,,USER_DEFINED,__thiscall,USER_DEFINED,173,,"undefined __thiscall Network_SendFrameDataToPlayer(Network * this, int * param_2, int param_3, char param_4)"
-0x0040ad70,Network_BroadcastFrameData,,USER_DEFINED,__thiscall,USER_DEFINED,191,,"undefined __thiscall Network_BroadcastFrameData(Network * this, int * param_2)"
-0x0040af70,Network_SendDisconnectNotice,,USER_DEFINED,__fastcall,USER_DEFINED,130,,undefined __fastcall Network_SendDisconnectNotice(Network * param_1)
-0x0040b000,Network_BroadcastCommand5,,USER_DEFINED,__thiscall,USER_DEFINED,143,,"undefined __thiscall Network_BroadcastCommand5(Network * this, int param_2)"
-0x0040b090,Network_BroadcastCommand1F,,USER_DEFINED,__thiscall,USER_DEFINED,131,,"undefined __thiscall Network_BroadcastCommand1F(Network * this, int param_2)"
-0x0040b120,Network_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"undefined4 * __thiscall Network_ScalarDeletingDtor(Network * this, byte param_2)"
-0x0040b140,Network_InitDirectPlay,,USER_DEFINED,__fastcall,USER_DEFINED,324,,undefined4 __fastcall Network_InitDirectPlay(Network * param_1)
-0x0040b290,Network_SelectConnectionAndEnumSessions,,USER_DEFINED,__fastcall,USER_DEFINED,232,,undefined4 __fastcall Network_SelectConnectionAndEnumSessions(Network * param_1)
-0x0040b380,Network_SendPingRequest,,USER_DEFINED,__fastcall,USER_DEFINED,169,,undefined __fastcall Network_SendPingRequest(Network * param_1)
-0x0040b520,Network_HandleSystemMessage,,USER_DEFINED,__thiscall,USER_DEFINED,1022,,"uint * __thiscall Network_HandleSystemMessage(Network * this, uint * param_2)"
-0x0040b8f0,Network_JoinSession,,USER_DEFINED,__thiscall,USER_DEFINED,851,,"undefined4 __thiscall Network_JoinSession(Network * this, int param_2, int param_3, undefined4 param_4, int param_5)"
-0x0040bc50,Network_CloseSession,,USER_DEFINED,__fastcall,USER_DEFINED,202,,undefined4 __fastcall Network_CloseSession(Network * param_1)
-0x0040bd20,Network_Connect,,USER_DEFINED,__thiscall,USER_DEFINED,414,,"undefined4 __thiscall Network_Connect(Network * this, undefined4 * param_2, undefined4 * param_3)"
-0x0040bec0,Network_ReceiveMessage,,USER_DEFINED,__thiscall,USER_DEFINED,188,,"uint __thiscall Network_ReceiveMessage(Network * this, undefined4 param_2, undefined4 param_3, undefined4 param_4, int * param_5)"
-0x0040bf80,Network_HandleReceivedPacket,,USER_DEFINED,__thiscall,USER_DEFINED,255,,"undefined __thiscall Network_HandleReceivedPacket(Network * this, uint * param_2, undefined4 param_3, undefined4 param_4, int param_5)"
-0x0040bfa0,Network_WaitForAllPlayersSync,,USER_DEFINED,__fastcall,USER_DEFINED,373,,uint __fastcall Network_WaitForAllPlayersSync(Network * param_1)
-0x0040c120,Network_ReceiveFrameData,,USER_DEFINED,__thiscall,USER_DEFINED,605,,"uint __thiscall Network_ReceiveFrameData(Network * this, int * * param_2, uint * param_3, uint * param_4)"
-0x0040c380,Network_UpdateLobby,,USER_DEFINED,__fastcall,USER_DEFINED,582,,undefined __fastcall Network_UpdateLobby(Network * param_1)
+0x00409fe0,Network_GetConnectionGuid,,USER_DEFINED,__thiscall,USER_DEFINED,84,,"int __thiscall Network_GetConnectionGuid(Network * this, uint index, GUID * out)"
+0x0040a040,NetMsg_GetSeqChecked,,USER_DEFINED,__stdcall,USER_DEFINED,39,,"byte __stdcall NetMsg_GetSeqChecked(byte * msg, uint len)"
+0x0040a070,Network_CopyConnectionAddress,,USER_DEFINED,__thiscall,USER_DEFINED,119,,"int __thiscall Network_CopyConnectionAddress(Network * this, uint index, void * * outAddress, uint * outSize)"
+0x0040a0f0,Network_QueuePendingPacket,,USER_DEFINED,__thiscall,USER_DEFINED,157,,"void __thiscall Network_QueuePendingPacket(Network * this, NetDataRef * frame, uint playerIndex, char seq)"
+0x0040a190,Network_PopOldestPendingPacket,,USER_DEFINED,__thiscall,USER_DEFINED,179,,"int __thiscall Network_PopOldestPendingPacket(Network * this, NetDataRef * outFrame, char * outSeq, uint * outPlayerIndex)"
+0x0040a250,Network_ApplyRepeatFrameInput,,USER_DEFINED,__thiscall,USER_DEFINED,68,,"void __thiscall Network_ApplyRepeatFrameInput(Network * this, NetDataRef * frame, uint playerIndex)"
+0x0040a2a0,Network_FreePendingPacketSlot,,USER_DEFINED,__thiscall,USER_DEFINED,31,,"void __thiscall Network_FreePendingPacketSlot(Network * this, int slot)"
+0x0040a2c0,Network_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,221,,Network * __fastcall Network_Ctor(Network * this)
+0x0040a3a0,Network_Dtor,,USER_DEFINED,__fastcall,USER_DEFINED,342,,void __fastcall Network_Dtor(Network * this)
+0x0040a500,Network_EnumModemAddressCallback,,USER_DEFINED,__stdcall,USER_DEFINED,167,,"int __stdcall Network_EnumModemAddressCallback(GUID * dataType, uint dataSize, char * data, Network * ctx)"
+0x0040a5b0,Network_HostSession,,USER_DEFINED,__thiscall,USER_DEFINED,535,,"int __thiscall Network_HostSession(Network * this, wchar16 * sessionName, wchar16 * playerName, NetDataRef * groupData, NetDataRef * playerData)"
+0x0040a7d0,Network_EnumSessionsCallback,,USER_DEFINED,__stdcall,USER_DEFINED,29,,"int __stdcall Network_EnumSessionsCallback(DPSESSIONDESC2 * desc, uint * timeout, uint flags, Network * ctx)"
+0x0040a7f0,Network_EncodePacket,,USER_DEFINED,__thiscall,USER_DEFINED,644,,"void __thiscall Network_EncodePacket(Network * this, NetPacketDesc * desc, byte * * outBuf, uint * outLen)"
+0x0040aaa0,NetPlayerTable_PromotePlayer,,USER_DEFINED,__stdcall,USER_DEFINED,156,,"int __stdcall NetPlayerTable_PromotePlayer(uint dpid, NetPlayerTable * from, NetPlayerTable * to, uint * outIndex)"
+0x0040ab40,Network_EnumGroupMembersCallback,,USER_DEFINED,__stdcall,USER_DEFINED,69,,"int __stdcall Network_EnumGroupMembersCallback(uint dpid, uint playerType, DPNAME * name, uint flags, Network * ctx)"
+0x0040ab90,Network_SendStartAndLockSession,,USER_DEFINED,__fastcall,USER_DEFINED,179,,void __fastcall Network_SendStartAndLockSession(Network * this)
+0x0040ac50,Network_BroadcastSyncReady,,USER_DEFINED,__fastcall,USER_DEFINED,104,,void __fastcall Network_BroadcastSyncReady(Network * param_1)
+0x0040acc0,Network_SendFrameDataToPlayer,,USER_DEFINED,__thiscall,USER_DEFINED,173,,"void __thiscall Network_SendFrameDataToPlayer(Network * this, NetDataRef * frame, int playerIndex, char seqBack)"
+0x0040ad70,Network_BroadcastFrameData,,USER_DEFINED,__thiscall,USER_DEFINED,191,,"void __thiscall Network_BroadcastFrameData(Network * this, NetDataRef * frame)"
+0x0040ae30,Network_BroadcastFrameDataSeqBack,,USER_DEFINED,__thiscall,USER_DEFINED,157,,"void __thiscall Network_BroadcastFrameDataSeqBack(Network * this, NetDataRef * frame, byte seqBack)"
+0x0040aed0,Network_BroadcastControlTag0E,,USER_DEFINED,__thiscall,USER_DEFINED,150,,"void __thiscall Network_BroadcastControlTag0E(Network * this, int value)"
+0x0040af70,Network_SendDisconnectNotice,,USER_DEFINED,__fastcall,USER_DEFINED,130,,void __fastcall Network_SendDisconnectNotice(Network * param_1)
+0x0040b000,Network_BroadcastPlayerDropped,,USER_DEFINED,__thiscall,USER_DEFINED,143,,"void __thiscall Network_BroadcastPlayerDropped(Network * this, int playerIndex)"
+0x0040b090,Network_BroadcastSyncInfo,,USER_DEFINED,__thiscall,USER_DEFINED,131,,"void __thiscall Network_BroadcastSyncInfo(Network * this, NetPacketSyncInfo * info)"
+0x0040b120,Network_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"Network * __thiscall Network_ScalarDeletingDtor(Network * this, byte flags)"
+0x0040b140,Network_EnumModems,,USER_DEFINED,__fastcall,USER_DEFINED,324,,int __fastcall Network_EnumModems(Network * this)
+0x0040b290,Network_SelectConnectionAndEnumSessions,,USER_DEFINED,__fastcall,USER_DEFINED,232,,int __fastcall Network_SelectConnectionAndEnumSessions(Network * this)
+0x0040b380,Network_SendPingRequest,,USER_DEFINED,__fastcall,USER_DEFINED,169,,void __fastcall Network_SendPingRequest(Network * param_1)
+0x0040b520,Network_HandleSystemMessage,,USER_DEFINED,__thiscall,USER_DEFINED,1022,,"void __thiscall Network_HandleSystemMessage(Network * this, uint * msg, uint size, uint idTo, uint idFrom)"
+0x0040b8f0,Network_JoinSession,,USER_DEFINED,__thiscall,USER_DEFINED,851,,"int __thiscall Network_JoinSession(Network * this, uint sessionIndex, wchar16 * playerName, NetDataRef * playerData, NetDataRef * outGroupData)"
+0x0040bc50,Network_CloseSession,,USER_DEFINED,__fastcall,USER_DEFINED,202,,uint __fastcall Network_CloseSession(Network * this)
+0x0040bd20,Network_Connect,,USER_DEFINED,__thiscall,USER_DEFINED,414,,"int __thiscall Network_Connect(Network * this, GUID * spGuid, NetDataRef * connection)"
+0x0040bec0,Network_ReceiveMessage,,USER_DEFINED,__thiscall,USER_DEFINED,188,,"bool __thiscall Network_ReceiveMessage(Network * this, byte * * outMsg, uint * outLen, uint * outIdTo, uint * outIdFrom)"
+0x0040bf80,Network_HandleLobbyMessage,,USER_DEFINED,__thiscall,USER_DEFINED,255,,"void __thiscall Network_HandleLobbyMessage(Network * this, byte * msg, uint len, uint toDpid, uint fromDpid)"
+0x0040bfa0,Network_WaitForAllPlayersSync,,USER_DEFINED,__fastcall,USER_DEFINED,373,,bool __fastcall Network_WaitForAllPlayersSync(Network * param_1)
+0x0040c120,Network_ReceiveGameMessage,,USER_DEFINED,__thiscall,USER_DEFINED,605,,"bool __thiscall Network_ReceiveGameMessage(Network * this, NetDataRef * outPayload, uint * outPlayerIndex, uint * outMsgType)"
+0x0040c380,Network_UpdateLobby,,USER_DEFINED,__fastcall,USER_DEFINED,582,,void __fastcall Network_UpdateLobby(Network * this)
 0x0040c5d0,RoadJunction_MatchesKind,,USER_DEFINED,__thiscall,USER_DEFINED,46,,"int __thiscall RoadJunction_MatchesKind(RoadJunction * this, int param_2)"
 0x0040c600,RoadNetwork_IsTileInJunctionPairBounds,,USER_DEFINED,__thiscall,USER_DEFINED,132,,"int __thiscall RoadNetwork_IsTileInJunctionPairBounds(RoadNetwork * this, byte param_2, byte param_3, uint param_4, uint param_5)"
 0x0040c690,RoadNetwork_ResetSearchAndRoutes,,USER_DEFINED,__fastcall,USER_DEFINED,49,,undefined __fastcall RoadNetwork_ResetSearchAndRoutes(RoadNetwork * param_1)
@@ -303,11 +332,11 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0040cf20,RoadSegment_ContainsTile,,USER_DEFINED,__thiscall,USER_DEFINED,59,,"int __thiscall RoadSegment_ContainsTile(RoadSegment * this, short param_2, short param_3)"
 0x0040cf60,Camera_BoundsContainPoint,,USER_DEFINED,__fastcall,USER_DEFINED,89,,uint __fastcall Camera_BoundsContainPoint(Camera * param_1)
 0x0040cfc0,WorldPointToScreen,,USER_DEFINED,__fastcall,USER_DEFINED,245,,"void __fastcall WorldPointToScreen(Camera * camera, DWORD edx, SCR_f x, SCR_f y, SCR_f z, SCR_f * * outX, SCR_f * * outY)"
-0x0040d0c0,RoadJunction_GetLinkDirTo,,USER_DEFINED,__thiscall,USER_DEFINED,94,,"uint __thiscall RoadJunction_GetLinkDirTo(RoadJunction * this, short param_2)"
+0x0040d0c0,RoadJunction_GetLinkDirTo,,USER_DEFINED,__thiscall,USER_DEFINED,94,,"uint __thiscall RoadJunction_GetLinkDirTo(RoadJunction * this, short targetJunctionId)"
 0x0040d120,RoadNetwork_ShowJunctionIds,,USER_DEFINED,unknown,DEFAULT,292,,undefined RoadNetwork_ShowJunctionIds()
-0x0040d390,RoadNetwork_FindHSegmentJunction,,USER_DEFINED,__thiscall,USER_DEFINED,192,,"uint __thiscall RoadNetwork_FindHSegmentJunction(RoadNetwork * this, uint param_2, uint param_3, uint param_4, char param_5, int param_6)"
-0x0040d450,RoadNetwork_FindVSegmentJunction,,USER_DEFINED,__thiscall,USER_DEFINED,189,,"uint __thiscall RoadNetwork_FindVSegmentJunction(RoadNetwork * this, uint param_2, uint param_3, uint param_4, char param_5, int param_6)"
-0x0040d510,RoadNetwork_FindSegmentJunctionAtTile,,USER_DEFINED,__thiscall,USER_DEFINED,193,,"uint __thiscall RoadNetwork_FindSegmentJunctionAtTile(RoadNetwork * this, uint param_2, uint param_3, uint param_4, char param_5, int param_6)"
+0x0040d390,RoadNetwork_FindHSegmentJunction,,USER_DEFINED,__thiscall,USER_DEFINED,192,,"uint __thiscall RoadNetwork_FindHSegmentJunction(RoadNetwork * this, uint tileX, uint tileY, uint tileZ, char kind, int arrowLayer)"
+0x0040d450,RoadNetwork_FindVSegmentJunction,,USER_DEFINED,__thiscall,USER_DEFINED,189,,"uint __thiscall RoadNetwork_FindVSegmentJunction(RoadNetwork * this, uint tileX, uint tileY, uint tileZ, char kind, int arrowLayer)"
+0x0040d510,RoadNetwork_FindSegmentJunctionAtTile,,USER_DEFINED,__thiscall,USER_DEFINED,193,,"uint __thiscall RoadNetwork_FindSegmentJunctionAtTile(RoadNetwork * this, uint tileX, uint tileY, uint tileZ, char kind, int arrowLayer)"
 0x0040d690,RoadNetwork_InitSearch,,USER_DEFINED,__thiscall,USER_DEFINED,320,,"uint __thiscall RoadNetwork_InitSearch(RoadNetwork * this, uint param_2, uint param_3, uint param_4, uint param_5, uint param_6, uint param_7, int param_8)"
 0x0040d7d0,RoadNetwork_InitSearchOffscreen,,USER_DEFINED,__thiscall,USER_DEFINED,912,,"uint __thiscall RoadNetwork_InitSearchOffscreen(RoadNetwork * this, uint param_2, uint param_3, uint param_4, int param_5, int param_6)"
 0x0040db70,RoadNetwork_ExpandNode,,USER_DEFINED,__thiscall,USER_DEFINED,470,,"uint __thiscall RoadNetwork_ExpandNode(RoadNetwork * this, ushort * param_2, int param_3)"
@@ -805,6 +834,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004211e0,CarPhysics_GetVelocityAngle,,USER_DEFINED,__thiscall,USER_DEFINED,20,,"undefined2 * __thiscall CarPhysics_GetVelocityAngle(CarPhysics * this, undefined2 * param_2)"
 0x00421200,CarPhysics_ClearSteering,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall CarPhysics_ClearSteering(CarPhysics * param_1)
 0x00421210,CarPhysics_SetGasForward,,USER_DEFINED,__fastcall,USER_DEFINED,28,,undefined __fastcall CarPhysics_SetGasForward(CarPhysics * param_1)
+0x00421230,CarPhysics_SetBrake,,USER_DEFINED,__fastcall,USER_DEFINED,28,,void __fastcall CarPhysics_SetBrake(CarPhysics * physics)
 0x00421250,CarPhysics_SetHandbrake,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall CarPhysics_SetHandbrake(CarPhysics * param_1)
 0x00421260,CarPhysics_ReleaseHandbrake,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall CarPhysics_ReleaseHandbrake(CarPhysics * param_1)
 0x00421270,CarPhysics_IsHandbrakeOn,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall CarPhysics_IsHandbrakeOn(CarPhysics * param_1)
@@ -873,13 +903,13 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00421990,ChangeMoney,,USER_DEFINED,__thiscall,USER_DEFINED,11,,"void __thiscall ChangeMoney(Player * this, int amount)"
 0x004219a0,Player_IsWeaponAmmoFull,,USER_DEFINED,__thiscall,USER_DEFINED,34,,"uint __thiscall Player_IsWeaponAmmoFull(Player * this, uint weaponSlot)"
 0x004219d0,Player_GetIndex,,USER_DEFINED,__fastcall,USER_DEFINED,4,,undefined __fastcall Player_GetIndex(Player * param_1)
-0x004219e0,Game_GetPlayer,,USER_DEFINED,default,USER_DEFINED,16,,"undefined4 Game_GetPlayer(Game * game, int iParm1, uint param_3)"
+0x004219e0,Game_GetPlayer,,USER_DEFINED,__thiscall,USER_DEFINED,16,,"Player * __thiscall Game_GetPlayer(Game * this, int idx)"
 0x004219f0,Hud_CarName_Hide,,USER_DEFINED,__fastcall,USER_DEFINED,4,,undefined __fastcall Hud_CarName_Hide(HudCarNameLabel * param_1)
 0x00421a00,CarDoor_UpdateOpening,,USER_DEFINED,__thiscall,USER_DEFINED,116,,"undefined __thiscall CarDoor_UpdateOpening(CarDoor * this, void * param_2)"
 0x00421a80,CarDoor_UpdateClosing,,USER_DEFINED,__thiscall,USER_DEFINED,102,,"undefined __thiscall CarDoor_UpdateClosing(CarDoor * this, void * param_2)"
 0x00421af0,CarDoor_Update,,USER_DEFINED,__thiscall,USER_DEFINED,129,,"undefined __thiscall CarDoor_Update(CarDoor * this, void * param_2)"
 0x00421b90,Car_GetDamageFactorOnSpeed,,USER_DEFINED,__thiscall,USER_DEFINED,98,,"undefined4 * __thiscall Car_GetDamageFactorOnSpeed(Car * this, undefined4 * param_2)"
-0x00421c00,Car_GetMaxSpeed,,USER_DEFINED,unknown,DEFAULT,59,,undefined Car_GetMaxSpeed(undefined4 param_1)
+0x00421c00,Car_GetMaxSpeed,,USER_DEFINED,__thiscall,USER_DEFINED,59,,"Fix16 * __thiscall Car_GetMaxSpeed(Car * this, Fix16 * out)"
 0x00421c40,Car_GetHitchWorldPos,,USER_DEFINED,__thiscall,USER_DEFINED,104,,"Vec2 * __thiscall Car_GetHitchWorldPos(Car * this, Vec2 * out)"
 0x00421cb0,Car_GetRearWheelOffsetVec,,USER_DEFINED,__thiscall,USER_DEFINED,60,,"Vec2 * __thiscall Car_GetRearWheelOffsetVec(Car * this, Vec2 * out)"
 0x00421cf0,Car_GetMass,,USER_DEFINED,unknown,DEFAULT,119,,undefined Car_GetMass(undefined4 param_1)
@@ -895,7 +925,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00421fd0,Car_ApplyRemap,,USER_DEFINED,__thiscall,USER_DEFINED,75,,"undefined __thiscall Car_ApplyRemap(Car * this, int param_2)"
 0x00422020,Car_PickRandomRemap,,USER_DEFINED,__fastcall,USER_DEFINED,125,,undefined __fastcall Car_PickRandomRemap(Car * param_1)
 0x004220a0,Car_GetPhysicsModel,,USER_DEFINED,__fastcall,USER_DEFINED,163,,uint __fastcall Car_GetPhysicsModel(Car * car)
-0x004221a0,Car_FullStop,,USER_DEFINED,__fastcall,USER_DEFINED,36,,undefined __fastcall Car_FullStop(Car * param_1)
+0x004221a0,Car_FullStop,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall Car_FullStop(Car * param_1)
 0x004221b0,Car_BrakeHard,,USER_DEFINED,__fastcall,USER_DEFINED,20,,undefined __fastcall Car_BrakeHard(Car * param_1)
 0x004221d0,Car_SetDriver,,USER_DEFINED,__thiscall,USER_DEFINED,84,,"undefined __thiscall Car_SetDriver(Car * this, int param_2)"
 0x00422230,Car_OnDriverExit,,USER_DEFINED,__fastcall,USER_DEFINED,36,,undefined __fastcall Car_OnDriverExit(Car * param_1)
@@ -1100,6 +1130,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0042aca0,Car_ClearTurnLeft,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall Car_ClearTurnLeft(Car * param_1)
 0x0042acb0,Car_ClearTurnRight,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall Car_ClearTurnRight(Car * param_1)
 0x0042acc0,Car_ClearRouteBit2,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall Car_ClearRouteBit2(Car * param_1)
+0x0042acd0,Car_ClearRouteBit3,,USER_DEFINED,__fastcall,USER_DEFINED,8,,void __fastcall Car_ClearRouteBit3(Car * car)
 0x0042ace0,Ai_SetProbing,,USER_DEFINED,__stdcall,ANALYSIS,12,,undefined __stdcall Ai_SetProbing(undefined1 param_1)
 0x0042acf0,CarAI_SetRouteTarget,,USER_DEFINED,__thiscall,USER_DEFINED,173,,"uint __thiscall CarAI_SetRouteTarget(CarAI * this, uint param_2, uint param_3, uint param_4, int param_5)"
 0x0042ada0,CarAI_TryStartTurn,,USER_DEFINED,__thiscall,USER_DEFINED,1427,,"uint __thiscall CarAI_TryStartTurn(CarAI * this, int param_2)"
@@ -1112,7 +1143,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0042fb80,CarAI_ReactToNearbyCar,,USER_DEFINED,__fastcall,USER_DEFINED,616,,undefined __fastcall CarAI_ReactToNearbyCar(CarAI * ai)
 0x0042fdf0,CarAI_PickRandomTurn,,USER_DEFINED,__fastcall,USER_DEFINED,77,,undefined __fastcall CarAI_PickRandomTurn(CarAI * param_1)
 0x0042fe40,CarAI_ClearTurnBits,,USER_DEFINED,__fastcall,USER_DEFINED,27,,undefined __fastcall CarAI_ClearTurnBits(CarAI * param_1)
-0x0042fe60,CarAI_ClearCarRouteBits,,USER_DEFINED,__fastcall,USER_DEFINED,26,,void __fastcall CarAI_ClearCarRouteBits(CarAI * ai)
+0x0042fe60,CarAI_ClearCarRouteBits,,USER_DEFINED,__fastcall,USER_DEFINED,18,,void __fastcall CarAI_ClearCarRouteBits(CarAI * ai)
 0x0042fe80,CarAI_UpdateSpeedRamp,,USER_DEFINED,__fastcall,USER_DEFINED,145,,undefined __fastcall CarAI_UpdateSpeedRamp(CarAI * param_1)
 0x0042ff20,CarAI_FollowRoad,,USER_DEFINED,__fastcall,USER_DEFINED,347,,undefined __fastcall CarAI_FollowRoad(CarAI * ai)
 0x00430090,CarAI_ReverseOrCoast,,USER_DEFINED,__fastcall,USER_DEFINED,72,,void __fastcall CarAI_ReverseOrCoast(CarAI * ai)
@@ -1271,10 +1302,10 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00434a10,Menu_IncBonusTokenCount,,USER_DEFINED,__fastcall,USER_DEFINED,7,,void __fastcall Menu_IncBonusTokenCount(Menu * menu)
 0x00434a30,Ped_Obj2_DriveAttackTarget,,USER_DEFINED,__fastcall,USER_DEFINED,185,,undefined __fastcall Ped_Obj2_DriveAttackTarget(Ped * param_1)
 0x00434af0,ParkingZone_IsCarFlagged,,USER_DEFINED,__thiscall,USER_DEFINED,27,,"uint __thiscall ParkingZone_IsCarFlagged(ParkingZone * this, Car * car)"
-0x00434b10,IsMultiplayer,,USER_DEFINED,__stdcall,ANALYSIS,6,,undefined __stdcall IsMultiplayer(void)
-0x00434b20,IsGameModeTag,,USER_DEFINED,__stdcall,ANALYSIS,16,,undefined __stdcall IsGameModeTag(void)
+0x00434b10,IsMultiplayer,,USER_DEFINED,__stdcall,USER_DEFINED,6,,bool __stdcall IsMultiplayer(void)
+0x00434b20,IsGameModeTag,,USER_DEFINED,__stdcall,USER_DEFINED,16,,bool __stdcall IsGameModeTag(void)
 0x00434b40,Ped_Task_PauseAfterCrossing,,USER_DEFINED,__fastcall,USER_DEFINED,18,,undefined __fastcall Ped_Task_PauseAfterCrossing(Ped * param_1)
-0x00434b60,MultiplayerTag_IsPedIt,,USER_DEFINED,unknown,DEFAULT,27,,undefined MultiplayerTag_IsPedIt(undefined4 param_1)
+0x00434b60,MultiplayerTag_IsPedIt,,USER_DEFINED,__thiscall,USER_DEFINED,27,,"bool __thiscall MultiplayerTag_IsPedIt(MultiplayerTag * this, Ped * ped)"
 0x00434b80,Ped_GetPositionPtr,,USER_DEFINED,__fastcall,USER_DEFINED,27,,undefined4 __fastcall Ped_GetPositionPtr(Ped * param_1)
 0x00434ba0,Ped_IsGroupmateOrCopOfGroup,,USER_DEFINED,__thiscall,USER_DEFINED,84,,"uint __thiscall Ped_IsGroupmateOrCopOfGroup(Ped * this, undefined1 param_2)"
 0x00434c00,Ped_GetCopStars,,USER_DEFINED,__fastcall,USER_DEFINED,60,,byte __fastcall Ped_GetCopStars(Ped * param_1)
@@ -1801,8 +1832,8 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00453a40,FrontEnd_PackLevelId,,USER_DEFINED,__stdcall,ANALYSIS,21,,"uint __stdcall FrontEnd_PackLevelId(uint param_1, byte param_2)"
 0x00453a60,FrontEnd_UnpackLevelId,,USER_DEFINED,__stdcall,ANALYSIS,26,,"undefined __stdcall FrontEnd_UnpackLevelId(byte param_1, byte * param_2, byte * param_3)"
 0x00453a80,Menu_GetBonusTokenCount,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined4 __fastcall Menu_GetBonusTokenCount(Menu * param_1)
-0x00453a90,MultiplayerTag_HasPlayerQuit,,USER_DEFINED,__thiscall,USER_DEFINED,11,,"uint __thiscall MultiplayerTag_HasPlayerQuit(MultiplayerTag * this, uint param_2)"
-0x00453aa0,MultiplayerTag_GetPlayerTagTime,,USER_DEFINED,__thiscall,USER_DEFINED,11,,"undefined4 __thiscall MultiplayerTag_GetPlayerTagTime(MultiplayerTag * this, int param_2)"
+0x00453a90,MultiplayerTag_HasPlayerQuit,,USER_DEFINED,__thiscall,USER_DEFINED,11,,"bool __thiscall MultiplayerTag_HasPlayerQuit(MultiplayerTag * this, uint playerIndex)"
+0x00453aa0,MultiplayerTag_GetPlayerTagTime,,USER_DEFINED,__thiscall,USER_DEFINED,11,,"int __thiscall MultiplayerTag_GetPlayerTagTime(MultiplayerTag * this, int playerIndex)"
 0x00453ab0,MultiplayerTag_GetWinnerIndex,,USER_DEFINED,__fastcall,USER_DEFINED,169,,uint __fastcall MultiplayerTag_GetWinnerIndex(MultiplayerTag * param_1)
 0x00453b60,FrontEnd_DrawLoadingScreen,,USER_DEFINED,__fastcall,USER_DEFINED,105,,undefined __fastcall FrontEnd_DrawLoadingScreen(FrontEnd * param_1)
 0x00453bd0,FrontEnd_DrawDeleteProfileConfirm,,USER_DEFINED,__fastcall,USER_DEFINED,353,,undefined __fastcall FrontEnd_DrawDeleteProfileConfirm(FrontEnd * param_1)
@@ -1857,7 +1888,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0045a4b0,quitGame,,USER_DEFINED,__thiscall,USER_DEFINED,20,,"undefined __thiscall quitGame(Game * this, int param_2, int param_3)"
 0x0045a4d0,Game_TickExitCountdown,,USER_DEFINED,__fastcall,USER_DEFINED,19,,uint __fastcall Game_TickExitCountdown(Game * param_1)
 0x0045a4f0,Game_InitPlayerCameraDims,Game,USER_DEFINED,__thiscall,ANALYSIS,78,,"undefined __thiscall Game_InitPlayerCameraDims(Game * this, uint param_1, uint param_2)"
-0x0045a540,Game_ApplyMultiplayerPoliceSetting,,USER_DEFINED,__fastcall,USER_DEFINED,85,,void __fastcall Game_ApplyMultiplayerPoliceSetting(Game * param_1)
+0x0045a540,Game_ApplyMultiplayerSpeedAndPolice,,USER_DEFINED,__fastcall,USER_DEFINED,85,,void __fastcall Game_ApplyMultiplayerSpeedAndPolice(Game * param_1)
 0x0045a5a0,eachFrame,,USER_DEFINED,__fastcall,USER_DEFINED,163,,void __fastcall eachFrame(Game * param_1)
 0x0045a650,processPlayerKeys,,USER_DEFINED,__fastcall,USER_DEFINED,51,,void __fastcall processPlayerKeys(Game * param_1)
 0x0045a690,Game_TickPaused,,USER_DEFINED,__fastcall,USER_DEFINED,76,,void __fastcall Game_TickPaused(Game * param_1)
@@ -2054,7 +2085,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0045e610,Menu_SetBonusLevelSelected,,USER_DEFINED,__thiscall,USER_DEFINED,13,,"undefined __thiscall Menu_SetBonusLevelSelected(Menu * this, undefined1 param_2)"
 0x0045e620,Menu_GetBonusLevelSelected,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall Menu_GetBonusLevelSelected(Menu * param_1)
 0x0045e630,Menu_ResetMultiplayerPlayerStats,,USER_DEFINED,__fastcall,USER_DEFINED,135,,void __fastcall Menu_ResetMultiplayerPlayerStats(Menu * param_1)
-0x0045e6c0,Menu_SetMultiplayerGameSettings,,USER_DEFINED,__thiscall,USER_DEFINED,53,,"undefined __thiscall Menu_SetMultiplayerGameSettings(Menu * this, undefined1 param_2, undefined4 param_3, undefined1 param_4, undefined1 param_5, undefined4 param_6)"
+0x0045e6c0,Menu_SetMultiplayerGameSettings,,USER_DEFINED,__thiscall,USER_DEFINED,53,,"undefined __thiscall Menu_SetMultiplayerGameSettings(Menu * this, undefined1 gameType, undefined4 scoreLimit, undefined1 localIndex, undefined1 playerCount, undefined4 timeLimit)"
 0x0045e700,Menu_GetMultiplayerGameType,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall Menu_GetMultiplayerGameType(Menu * param_1)
 0x0045e710,Menu_GetFragLimit,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined4 __fastcall Menu_GetFragLimit(Menu * param_1)
 0x0045e720,Menu_GetMultiplayerLocalPlayerIndex,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall Menu_GetMultiplayerLocalPlayerIndex(Menu * param_1)
@@ -2063,14 +2094,14 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0045e760,Menu_GetMultiplayerWinner,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall Menu_GetMultiplayerWinner(Menu * param_1)
 0x0045e770,Menu_SetPlayerName,,USER_DEFINED,__thiscall,USER_DEFINED,39,,"void __thiscall Menu_SetPlayerName(Menu * this, ushort playerIdx, wchar_t * name)"
 0x0045e7a0,Menu_GetPlayerName,,USER_DEFINED,__thiscall,USER_DEFINED,22,,"int __thiscall Menu_GetPlayerName(Menu * this, uint param_2)"
-0x0045e7c0,Menu_AddMultiplayerPlayerPoints,,USER_DEFINED,default,USER_DEFINED,34,,"void Menu_AddMultiplayerPlayerPoints(Menu * this, uint param_2, int param_3)"
+0x0045e7c0,Menu_AddMultiplayerPlayerPoints,,USER_DEFINED,__thiscall,USER_DEFINED,34,,"void __thiscall Menu_AddMultiplayerPlayerPoints(Menu * this, byte playerIndex, int points)"
 0x0045e7f0,Menu_GetMultiplayerPlayerPoints,,USER_DEFINED,__thiscall,USER_DEFINED,19,,"undefined4 __thiscall Menu_GetMultiplayerPlayerPoints(Menu * this, uint param_2)"
 0x0045e810,Menu_GetMultiplayerPlayerFrags,,USER_DEFINED,__thiscall,USER_DEFINED,20,,"uint __thiscall Menu_GetMultiplayerPlayerFrags(Menu * this, uint param_2)"
 0x0045e830,Menu_GetMultiplayerKillMatrix,,USER_DEFINED,__thiscall,USER_DEFINED,36,,"uint __thiscall Menu_GetMultiplayerKillMatrix(Menu * this, uint param_2, uint param_3)"
 0x0045e860,Menu_Ctor,,USER_DEFINED,__fastcall,ANALYSIS,108,,Menu * __fastcall Menu_Ctor(Menu * param_1)
 0x0045e8d0,Menu_LoadDebugLevelFromRegistry,,USER_DEFINED,__fastcall,ANALYSIS,837,,undefined __fastcall Menu_LoadDebugLevelFromRegistry(Menu * param_1)
 0x0045ec20,Menu_CopyPlayerCrimeStats,,USER_DEFINED,__stdcall,USER_DEFINED,93,,undefined __stdcall Menu_CopyPlayerCrimeStats(Player * param_1)
-0x0045ec70,Menu_RecordMultiplayerKill,,USER_DEFINED,__thiscall,USER_DEFINED,134,,"undefined __thiscall Menu_RecordMultiplayerKill(Menu * this, uint param_2, byte param_3)"
+0x0045ec70,Menu_RecordMultiplayerKill,,USER_DEFINED,__thiscall,USER_DEFINED,134,,"void __thiscall Menu_RecordMultiplayerKill(Menu * this, byte killerIndex, byte victimIndex)"
 0x0045ed00,Keyboard_MaskLow12Bits,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall Keyboard_MaskLow12Bits(Keyboard * param_1)
 0x0045ed10,Keyboard_SetMappedBit,,USER_DEFINED,__thiscall,USER_DEFINED,19,,"undefined __thiscall Keyboard_SetMappedBit(Keyboard * this, int param_2)"
 0x0045ed30,Keyboard_ClearMappedBit,,USER_DEFINED,__thiscall,USER_DEFINED,21,,"undefined __thiscall Keyboard_ClearMappedBit(Keyboard * this, int param_2)"
@@ -2133,33 +2164,33 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00461700,DebugLog_Ctor,,USER_DEFINED,__thiscall,ANALYSIS,81,,"void * __thiscall DebugLog_Ctor(void * this, LPCSTR param_1, int param_2)"
 0x00461760,CmdLine_CountArguments,,USER_DEFINED,__fastcall,ANALYSIS,87,,"int __fastcall CmdLine_CountArguments(undefined4 param_1, char * param_2)"
 0x004617c0,String_SkipTokenAndSpaces,,USER_DEFINED,unknown,DEFAULT,70,,undefined String_SkipTokenAndSpaces()
-0x00461810,parseArguments,,USER_DEFINED,__thiscall,ANALYSIS,282,,"undefined __thiscall parseArguments(void * this, char * param_1)"
+0x00461810,CmdLine_ParseArguments,,USER_DEFINED,__stdcall,USER_DEFINED,282,,void __stdcall CmdLine_ParseArguments(char * cmdLine)
 0x00461880,InitInputAndAudio,,USER_DEFINED,__cdecl,ANALYSIS,138,,"undefined __cdecl InitInputAndAudio(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6)"
 0x00461910,Game_ScalarDeletingDtor,Game,USER_DEFINED,__thiscall,USER_DEFINED,30,,"Game * __thiscall Game_ScalarDeletingDtor(Game * this, byte flags)"
 0x00461930,Game_RunLogicStep,,USER_DEFINED,__stdcall,ANALYSIS,35,,uint __stdcall Game_RunLogicStep(void)
 0x00461960,draw,,USER_DEFINED,__stdcall,ANALYSIS,99,,undefined __stdcall draw(void)
 0x004619d0,Game_RequestForcedLogicStep,,USER_DEFINED,__stdcall,ANALYSIS,8,,undefined __stdcall Game_RequestForcedLogicStep(void)
-0x004619e0,getTime,,USER_DEFINED,__stdcall,ANALYSIS,19,,undefined __stdcall getTime(void)
-0x00461a00,Network_SendFramePacket,,USER_DEFINED,__stdcall,ANALYSIS,68,,"undefined __stdcall Network_SendFramePacket(undefined4 param_1, char param_2, uint param_3)"
+0x004619e0,Game_ResetFrameClock,,USER_DEFINED,__cdecl,USER_DEFINED,19,,void __cdecl Game_ResetFrameClock(void)
+0x00461a00,Network_ResendFrameToPlayer,,USER_DEFINED,__stdcall,USER_DEFINED,68,,"void __stdcall Network_ResendFrameToPlayer(NetFrameInput * frame, char seqBack, uint playerIndex)"
 0x00461a50,ExitGameCallback,,USER_DEFINED,__stdcall,USER_DEFINED,69,,"void __stdcall ExitGameCallback(Game * game, int reason)"
 0x00461aa0,File_SumBytes,,USER_DEFINED,__stdcall,ANALYSIS,71,,int __stdcall File_SumBytes(FILE * param_1)
 0x00461af0,Cheats_DisableDebugFlagsForMultiplayer,,USER_DEFINED,__cdecl,USER_DEFINED,363,,void __cdecl Cheats_DisableDebugFlagsForMultiplayer(void)
-0x00461c60,Network_BuildSyncPacket,,USER_DEFINED,__stdcall,ANALYSIS,308,,undefined __stdcall Network_BuildSyncPacket(undefined4 * param_1)
-0x00461da0,Network_GetPlayerCount,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined4 __fastcall Network_GetPlayerCount(Network * param_1)
+0x00461c60,Network_BuildSyncInfo,,USER_DEFINED,__stdcall,USER_DEFINED,308,,void __stdcall Network_BuildSyncInfo(NetPacketSyncInfo * out)
+0x00461da0,Network_GetPlayerTableCount,,USER_DEFINED,__fastcall,USER_DEFINED,7,,uint __fastcall Network_GetPlayerTableCount(Network * this)
 0x00461db0,Player_IsActive,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall Player_IsActive(Player * param_1)
 0x00461dc0,Menu_GetGameTimeLimit,,USER_DEFINED,__thiscall,USER_DEFINED,7,,int __thiscall Menu_GetGameTimeLimit(Menu * this)
-0x00461dd0,MultiplayerTag_MarkPlayerLeft,,USER_DEFINED,__thiscall,USER_DEFINED,12,,"undefined __thiscall MultiplayerTag_MarkPlayerLeft(MultiplayerTag * this, int param_2)"
+0x00461dd0,MultiplayerTag_MarkPlayerLeft,,USER_DEFINED,__thiscall,USER_DEFINED,12,,"void __thiscall MultiplayerTag_MarkPlayerLeft(MultiplayerTag * this, int playerIndex)"
 0x00461de0,InitGame,,USER_DEFINED,__stdcall,USER_DEFINED,635,,void __stdcall InitGame(void)
 0x00462060,DeinitGame,,USER_DEFINED,__stdcall,USER_DEFINED,50,,void __stdcall DeinitGame(void)
 0x004620a0,Game_ShutdownOnce,,USER_DEFINED,__stdcall,ANALYSIS,66,,undefined __stdcall Game_ShutdownOnce(void)
-0x004620e0,Multiplayer_ShowPlayerLeftMessage,,USER_DEFINED,__stdcall,ANALYSIS,83,,undefined __stdcall Multiplayer_ShowPlayerLeftMessage(void)
-0x00462140,Multiplayer_ExchangeLockstepInputs,,USER_DEFINED,__stdcall,ANALYSIS,754,,undefined __stdcall Multiplayer_ExchangeLockstepInputs(void)
-0x00462440,Multiplayer_BroadcastLocalInput,,USER_DEFINED,__stdcall,ANALYSIS,156,,undefined __stdcall Multiplayer_BroadcastLocalInput(void)
-0x004624e0,Multiplayer_ApplyBufferedInputs,,USER_DEFINED,__stdcall,ANALYSIS,68,,undefined __stdcall Multiplayer_ApplyBufferedInputs(void)
-0x00462530,UpdateMultiplayerTimeLimit,,USER_DEFINED,__stdcall,ANALYSIS,407,,undefined __stdcall UpdateMultiplayerTimeLimit(void)
-0x004626d0,Game_UpdateLockstepInputFrame,,USER_DEFINED,__cdecl,ANALYSIS,328,,"undefined __cdecl Game_UpdateLockstepInputFrame(undefined4 param_1, undefined4 param_2, undefined4 param_3)"
+0x004620e0,Multiplayer_RemoveLeftPlayer,,USER_DEFINED,__cdecl,USER_DEFINED,83,,void __cdecl Multiplayer_RemoveLeftPlayer(int playerIndex)
+0x00462140,Multiplayer_ExchangeLockstepInputs,,USER_DEFINED,__cdecl,USER_DEFINED,754,,void __cdecl Multiplayer_ExchangeLockstepInputs(void)
+0x00462440,Multiplayer_BroadcastLocalInput,,USER_DEFINED,__cdecl,USER_DEFINED,156,,void __cdecl Multiplayer_BroadcastLocalInput(void)
+0x004624e0,Multiplayer_ApplyBufferedInputs,,USER_DEFINED,__cdecl,USER_DEFINED,68,,void __cdecl Multiplayer_ApplyBufferedInputs(void)
+0x00462530,MultiplayerTimeLimit_Update,,USER_DEFINED,__stdcall,USER_DEFINED,407,,void __stdcall MultiplayerTimeLimit_Update(void)
+0x004626d0,Game_UpdateLockstepInputFrame,,USER_DEFINED,__cdecl,USER_DEFINED,328,,void __cdecl Game_UpdateLockstepInputFrame(void)
 0x00462820,Game_FatalExitWithAlert,,USER_DEFINED,__stdcall,ANALYSIS,40,,undefined __stdcall Game_FatalExitWithAlert(LPCSTR param_1)
-0x00462850,Network_VerifyPlayerSyncInfo,,USER_DEFINED,__stdcall,ANALYSIS,470,,"undefined __stdcall Network_VerifyPlayerSyncInfo(int param_1, int param_2)"
+0x00462850,Multiplayer_VerifySyncInfo,,USER_DEFINED,__stdcall,USER_DEFINED,470,,"void __stdcall Multiplayer_VerifySyncInfo(NetPacketSyncInfo * local, NetPacketSyncInfo * remote)"
 0x00462a30,drawAndLimitFrames,,USER_DEFINED,__stdcall,ANALYSIS,346,,uint __stdcall drawAndLimitFrames(void)
 0x00462b90,HeadingClass_Opposite,,USER_DEFINED,__stdcall,ANALYSIS,54,,undefined4 __stdcall HeadingClass_Opposite(undefined4 param_1)
 0x00462be0,Zone_GetDisplayName,,USER_DEFINED,__fastcall,ANALYSIS,69,,undefined __fastcall Zone_GetDisplayName(int param_1)
@@ -2434,7 +2465,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00475b20,Ped_IsGroupInCar,,USER_DEFINED,__fastcall,USER_DEFINED,29,,uint __fastcall Ped_IsGroupInCar(Ped * param_1)
 0x00475b40,Ped_ClearLastCharPunched,,USER_DEFINED,__fastcall,USER_DEFINED,11,,undefined __fastcall Ped_ClearLastCharPunched(Ped * param_1)
 0x00475b50,Ped_IsOnFire,,USER_DEFINED,__fastcall,USER_DEFINED,10,,uint __fastcall Ped_IsOnFire(Ped * param_1)
-0x00475b60,Player_InvalidateNavZone,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall Player_InvalidateNavZone(Player * param_1)
+0x00475b60,Camera_SetFollowStateFollow,,USER_DEFINED,__fastcall,USER_DEFINED,8,,void __fastcall Camera_SetFollowStateFollow(Camera * camera)
 0x00475b70,ScriptThread_Init,,USER_DEFINED,__thiscall,USER_DEFINED,38,,"undefined __thiscall ScriptThread_Init(ScriptThread * this, undefined1 param_2, undefined2 param_3)"
 0x00475ba0,ScriptThread_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,98,,undefined __fastcall ScriptThread_Ctor(ScriptThread * param_1)
 0x00475c10,Car_SetLocked,,USER_DEFINED,__fastcall,USER_DEFINED,20,,undefined __fastcall Car_SetLocked(Car * param_1)
@@ -2817,12 +2848,12 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00481f20,PlayMovie,,USER_DEFINED,__stdcall,USER_DEFINED,291,,"undefined __stdcall PlayMovie(char * moviePath, undefined4 flags)"
 0x00482050,MultiplayerTag_Reset,,USER_DEFINED,__thiscall,USER_DEFINED,39,,void __thiscall MultiplayerTag_Reset(MultiplayerTag * this)
 0x00482080,Ped_ClearElectrofingers,,USER_DEFINED,__fastcall,USER_DEFINED,11,,void __fastcall Ped_ClearElectrofingers(Ped * param_1)
-0x00482090,MultiplayerTag_GetGameType,,USER_DEFINED,__stdcall,ANALYSIS,10,,undefined __stdcall MultiplayerTag_GetGameType(void)
+0x00482090,MultiplayerTag_GetGameType,,USER_DEFINED,__stdcall,USER_DEFINED,10,,byte __stdcall MultiplayerTag_GetGameType(void)
 0x004820a0,HudArrowTarget_SetPlayer,,USER_DEFINED,__thiscall,USER_DEFINED,17,,"void __thiscall HudArrowTarget_SetPlayer(HudArrowTarget * this, Player * player)"
 0x004820c0,MultiplayerTag_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,12,,undefined4 * __fastcall MultiplayerTag_Ctor(MultiplayerTag * param_1)
 0x004820d0,MultiplayerTag_SetItPlayer,,USER_DEFINED,__thiscall,USER_DEFINED,225,,"undefined __thiscall MultiplayerTag_SetItPlayer(MultiplayerTag * this, Player * param_2)"
 0x004821c0,MultiplayerTag_Update,,USER_DEFINED,__thiscall,USER_DEFINED,202,,undefined __thiscall MultiplayerTag_Update(MultiplayerTag * this)
-0x004822a0,MultiplayerTag_OnPlayerDeath,,USER_DEFINED,default,USER_DEFINED,341,,"void MultiplayerTag_OnPlayerDeath(Game * game, Player * * ppSParm1, Player * param_3, int param_4)"
+0x004822a0,MultiplayerTag_OnPlayerDeath,,USER_DEFINED,__thiscall,USER_DEFINED,341,,"void __thiscall MultiplayerTag_OnPlayerDeath(MultiplayerTag * this, Player * deadPlayer, Player * killer)"
 0x00482400,DestroyCode_IsExplosion,,USER_DEFINED,unknown,DEFAULT,16,,undefined DestroyCode_IsExplosion()
 0x00482410,ImpactSurface_ToExplosionKind,,USER_DEFINED,unknown,DEFAULT,42,,undefined ImpactSurface_ToExplosionKind()
 0x00482490,Object_InitNode,,USER_DEFINED,__fastcall,USER_DEFINED,39,,undefined __fastcall Object_InitNode(WorldObject * param_1)
@@ -3090,7 +3121,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00491d00,PedPatrolRoutePool_AllocRoute,PedPatrolRoutePool,USER_DEFINED,__thiscall,USER_DEFINED,88,,"PatrolRoute * __thiscall PedPatrolRoutePool_AllocRoute(PedPatrolRoutePool * this, byte * outSlot)"
 0x00491da0,PedPatrolRoutePool_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,49,,PedPatrolRoutePool * __fastcall PedPatrolRoutePool_Ctor(void)
 0x00491de0,PedFlames_Clear,,USER_DEFINED,__fastcall,USER_DEFINED,21,,undefined __fastcall PedFlames_Clear(PedGameObject * param_1)
-0x00491e00,TeleportGameObject,,USER_DEFINED,__fastcall,USER_DEFINED,41,,"void __fastcall TeleportGameObject(PedGameObject * gameObject, DWORD edx, SCR_f x, SCR_f y, SCR_f z)"
+0x00491e00,TeleportGameObject,,USER_DEFINED,__thiscall,USER_DEFINED,41,,"void __thiscall TeleportGameObject(PedGameObject * gameObject, SCR_f x, SCR_f y, SCR_f z)"
 0x00491e40,PedGameObject_IsOnWaterTile,,USER_DEFINED,__fastcall,USER_DEFINED,11,,byte __fastcall PedGameObject_IsOnWaterTile(PedGameObject * go)
 0x00491e60,PedGameObject_ResetWalkAroundState,,USER_DEFINED,__fastcall,USER_DEFINED,60,,void __fastcall PedGameObject_ResetWalkAroundState(PedGameObject * go)
 0x00491ea0,PedGameObject_IsOnAnyPlayerScreen,,USER_DEFINED,__fastcall,USER_DEFINED,30,,uint __fastcall PedGameObject_IsOnAnyPlayerScreen(PedGameObject * param_1)
@@ -3584,15 +3615,15 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004b5660,Reg_Screen_GetDwordOrInit,,USER_DEFINED,__stdcall,ANALYSIS,151,,"undefined4 __stdcall Reg_Screen_GetDwordOrInit(LPCSTR param_1, undefined4 param_2)"
 0x004b5700,Reg_Screen_SetDword,,USER_DEFINED,__thiscall,USER_DEFINED,95,,"void __thiscall Reg_Screen_SetDword(void * this, LPCSTR valueName, DWORD value)"
 0x004b5770,Reg_Screen_GetStringOrInit,,USER_DEFINED,__stdcall,ANALYSIS,157,,"undefined __stdcall Reg_Screen_GetStringOrInit(LPCSTR param_1, LPBYTE param_2, uint param_3)"
-0x004b58e0,Reg_OpenNetworkKey,,USER_DEFINED,__stdcall,ANALYSIS,150,,undefined4 __stdcall Reg_OpenNetworkKey(PHKEY param_1)
+0x004b58e0,Reg_OpenNetworkKey,,USER_DEFINED,__stdcall,USER_DEFINED,150,,int __stdcall Reg_OpenNetworkKey(PHKEY outKey)
 0x004b5980,Reg_QueryDwordValue,,USER_DEFINED,__stdcall,ANALYSIS,60,,"LPCSTR __stdcall Reg_QueryDwordValue(HKEY param_1, LPCSTR param_2)"
 0x004b5ae0,Reg_Network_GetDwordOrInit,,USER_DEFINED,__stdcall,ANALYSIS,151,,"undefined4 __stdcall Reg_Network_GetDwordOrInit(LPCSTR param_1, undefined4 param_2)"
 0x004b5b80,Reg_Network_SetDword,,USER_DEFINED,__stdcall,ANALYSIS,99,,undefined __stdcall Reg_Network_SetDword(LPCSTR param_1)
 0x004b5bf0,Reg_OpenPlayerKey,,USER_DEFINED,__stdcall,ANALYSIS,104,,undefined4 __stdcall Reg_OpenPlayerKey(PHKEY param_1)
 0x004b5c60,Reg_Player_GetDwordOrZero,,USER_DEFINED,__stdcall,ANALYSIS,159,,undefined4 __stdcall Reg_Player_GetDwordOrZero(LPCSTR param_1)
 0x004b5d10,Reg_Player_SetDword,,USER_DEFINED,__thiscall,USER_DEFINED,99,,"void __thiscall Reg_Player_SetDword(void * this, LPCSTR valueName, DWORD value)"
-0x004b5d80,Reg_ReadSizedBlob,,USER_DEFINED,__stdcall,ANALYSIS,156,,"uint __stdcall Reg_ReadSizedBlob(HKEY param_1, undefined4 param_2, LPCSTR param_3, LPBYTE param_4)"
-0x004b5e20,Reg_GetBlobSize,,USER_DEFINED,__stdcall,ANALYSIS,62,,"undefined __stdcall Reg_GetBlobSize(HKEY param_1, undefined4 param_2)"
+0x004b5d80,Reg_ReadSizedBlob,,USER_DEFINED,__stdcall,USER_DEFINED,156,,"bool __stdcall Reg_ReadSizedBlob(HKEY hKey, LPCSTR name, DWORD expectedSize, LPBYTE out)"
+0x004b5e20,Reg_GetBlobSize,,USER_DEFINED,__stdcall,USER_DEFINED,62,,"DWORD __stdcall Reg_GetBlobSize(HKEY hKey, LPCSTR name)"
 0x004b5ed0,Mss_A3D_DisableSplash,,USER_DEFINED,__stdcall,ANALYSIS,159,,uint __stdcall Mss_A3D_DisableSplash(void)
 0x004b5f70,MssAudio_ExtraSample_Alloc,,USER_DEFINED,__fastcall,USER_DEFINED,54,,undefined __fastcall MssAudio_ExtraSample_Alloc(MssAudio * param_1)
 0x004b5fb0,MssAudio_ExtraSample_Release,,USER_DEFINED,__fastcall,USER_DEFINED,32,,undefined __fastcall MssAudio_ExtraSample_Release(MssAudio * param_1)
@@ -3658,8 +3689,8 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004b7490,PlayerScore_Init,PlayerScore,USER_DEFINED,__thiscall,USER_DEFINED,64,,"void __thiscall PlayerScore_Init(PlayerScore * this, Player * owner, short min, int moneyMax, ushort id, uint fragsMax)"
 0x004b74d0,PlayerScore_GetMoney,,USER_DEFINED,__fastcall,USER_DEFINED,3,,undefined4 __fastcall PlayerScore_GetMoney(PlayerScore * param_1)
 0x004b7500,PlayerScore_GetCarValue,,USER_DEFINED,__stdcall,ANALYSIS,60,,"uint __stdcall PlayerScore_GetCarValue(uint param_1, char param_2)"
-0x004b7570,PlayerScore_GetFrags,,USER_DEFINED,__fastcall,USER_DEFINED,4,,int __fastcall PlayerScore_GetFrags(PlayerScore * param_1)
-0x004b7580,PlayerScore_AddFrags,,USER_DEFINED,default,USER_DEFINED,8,,"void PlayerScore_AddFrags(PlayerScore * pMoney, int iParm1, int iParm2, int iParm3)"
+0x004b7570,PlayerScore_GetFrags,,USER_DEFINED,__fastcall,USER_DEFINED,4,,AnimatedValue * __fastcall PlayerScore_GetFrags(PlayerScore * this)
+0x004b7580,PlayerScore_AddFrags,,USER_DEFINED,__thiscall,USER_DEFINED,8,,"void __thiscall PlayerScore_AddFrags(PlayerScore * this, int delta)"
 0x004b7590,Game_IsExitScheduled,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall Game_IsExitScheduled(Game * param_1)
 0x004b75b0,PlayerScore_RecomputeCarModelFlags,PlayerScore,USER_DEFINED,__thiscall,ANALYSIS,167,,"undefined __thiscall PlayerScore_RecomputeCarModelFlags(PlayerScore * this, byte param_1)"
 0x004b7660,PlayerScore_AddMoney,,USER_DEFINED,default,USER_DEFINED,51,,"void PlayerScore_AddMoney(PlayerScore * pMoney, int howMuchToAdd)"
@@ -4065,15 +4096,15 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004c62f0,Hud_Brief_RecycleHeadNode,,USER_DEFINED,__fastcall,USER_DEFINED,31,,undefined __fastcall Hud_Brief_RecycleHeadNode(HudBriefQueue * param_1)
 0x004c6310,Hud_Brief_MoveHeadToHistoryFront,,USER_DEFINED,__fastcall,USER_DEFINED,38,,undefined __fastcall Hud_Brief_MoveHeadToHistoryFront(HudBriefQueue * param_1)
 0x004c6340,Hud_Brief_MoveHeadToHistoryTail,,USER_DEFINED,__fastcall,USER_DEFINED,63,,undefined __fastcall Hud_Brief_MoveHeadToHistoryTail(HudBriefQueue * param_1)
-0x004c6380,Hud_Brief_AllocNode,,USER_DEFINED,__fastcall,USER_DEFINED,109,,undefined __fastcall Hud_Brief_AllocNode(HudBriefQueue * param_1)
-0x004c63f0,Hud_Brief_SpeakerIconFromChar,,USER_DEFINED,unknown,DEFAULT,52,,undefined Hud_Brief_SpeakerIconFromChar()
-0x004c6470,Hud_Brief_PrepareCurrentText,,USER_DEFINED,__fastcall,USER_DEFINED,451,,short * __fastcall Hud_Brief_PrepareCurrentText(HudBriefQueue * param_1)
+0x004c6380,Hud_Brief_AllocNode,,USER_DEFINED,__fastcall,USER_DEFINED,109,,HudBriefNode * __fastcall Hud_Brief_AllocNode(HudBriefQueue * param_1)
+0x004c63f0,Hud_Brief_SpeakerIconFromChar,,USER_DEFINED,unknown,USER_DEFINED,52,,byte Hud_Brief_SpeakerIconFromChar(wchar_t firstChar)
+0x004c6470,Hud_Brief_PrepareCurrentText,,USER_DEFINED,__fastcall,USER_DEFINED,451,,int __fastcall Hud_Brief_PrepareCurrentText(HudBriefQueue * param_1)
 0x004c6640,Hud_Brief_StartHead,,USER_DEFINED,__fastcall,USER_DEFINED,66,,undefined __fastcall Hud_Brief_StartHead(HudBriefQueue * param_1)
-0x004c6690,Hud_Brief_Enqueue,,USER_DEFINED,__stdcall,USER_DEFINED,178,,"void __stdcall Hud_Brief_Enqueue(int param_1, char * messageCode, undefined4 param_3)"
-0x004c6750,Hud_Brief_EnqueueNoArg,,USER_DEFINED,__stdcall,ANALYSIS,20,,"undefined __stdcall Hud_Brief_EnqueueNoArg(int param_1, char * param_2)"
+0x004c6690,Hud_Brief_Enqueue,,USER_DEFINED,__thiscall,USER_DEFINED,178,,"void __thiscall Hud_Brief_Enqueue(HudBriefQueue * this, int priority, char * messageCode, int arg)"
+0x004c6750,Hud_Brief_EnqueueNoArg,,USER_DEFINED,__thiscall,USER_DEFINED,20,,"void __thiscall Hud_Brief_EnqueueNoArg(HudBriefQueue * this, int priority, char * messageCode)"
 0x004c6770,Hud_Brief_Tick,,USER_DEFINED,__fastcall,USER_DEFINED,181,,undefined __fastcall Hud_Brief_Tick(HudBriefQueue * param_1)
 0x004c6830,Hud_Brief_RecallPending,,USER_DEFINED,__fastcall,USER_DEFINED,43,,undefined __fastcall Hud_Brief_RecallPending(HudBriefQueue * param_1)
-0x004c6860,Hud_Brief_ClearAllBriefsWithPriority,,USER_DEFINED,__thiscall,USER_DEFINED,119,,"undefined __thiscall Hud_Brief_ClearAllBriefsWithPriority(HudBriefQueue * this, int param_2)"
+0x004c6860,Hud_Brief_ClearAllBriefsWithPriority,,USER_DEFINED,__thiscall,USER_DEFINED,119,,"undefined __thiscall Hud_Brief_ClearAllBriefsWithPriority(HudBriefQueue * this, int priority)"
 0x004c68e0,Hud_Brief_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,86,,undefined __fastcall Hud_Brief_Ctor(HudBriefQueue * param_1)
 0x004c6940,Hud_CarName_Measure,,USER_DEFINED,__fastcall,USER_DEFINED,29,,undefined __fastcall Hud_CarName_Measure(HudCarNameLabel * param_1)
 0x004c6960,Hud_CarName_Show,,USER_DEFINED,__thiscall,USER_DEFINED,55,,"undefined __thiscall Hud_CarName_Show(HudCarNameLabel * this, short * param_2)"
@@ -4315,13 +4346,13 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004d0900,AlertBox,,USER_DEFINED,__stdcall,ANALYSIS,28,,undefined __stdcall AlertBox(LPCSTR param_1)
 0x004d0920,GetGameVersion,,USER_DEFINED,__stdcall,USER_DEFINED,127,,"void __stdcall GetGameVersion(uint * major, uint * minor)"
 0x004d09b0,Keyboard_SetActiveFlag,,USER_DEFINED,__thiscall,USER_DEFINED,13,,"undefined __thiscall Keyboard_SetActiveFlag(Keyboard * this, undefined1 param_2)"
-0x004d09c0,relToQuitGame,,USER_DEFINED,__fastcall,USER_DEFINED,4,,undefined4 __fastcall relToQuitGame(Game * param_1)
+0x004d09c0,Game_GetQuitReason,,USER_DEFINED,__fastcall,USER_DEFINED,4,,int __fastcall Game_GetQuitReason(Game * game)
 0x004d09d0,WndProc_ForwardKeyboardActive,,USER_DEFINED,__stdcall,USER_DEFINED,41,,void __stdcall WndProc_ForwardKeyboardActive(byte * param_1)
 0x004d0a00,WndProc,,USER_DEFINED,__stdcall,USER_DEFINED,922,,"LRESULT __stdcall WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)"
 0x004d0c39,caseD_2,switchD_004d0a32,ANALYSIS,__stdcall,ANALYSIS,117,,undefined __stdcall caseD_2(void)
-0x004d0ed0,Startup_ConnectMultiplayerFromRegistry,,USER_DEFINED,__stdcall,ANALYSIS,664,,uint __stdcall Startup_ConnectMultiplayerFromRegistry(undefined4 param_1)
+0x004d0ed0,Startup_ConnectMultiplayerFromRegistry,,USER_DEFINED,__stdcall,USER_DEFINED,664,,bool __stdcall Startup_ConnectMultiplayerFromRegistry(HINSTANCE hInstance)
 0x004d1170,WinMain,,USER_DEFINED,__stdcall,USER_DEFINED,62,,"int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)"
-0x004d11b8,WinMain2,,USER_DEFINED,__stdcall,USER_DEFINED,1488,,"WPARAM __stdcall WinMain2(undefined4 param_1, undefined4 param_2, int param_3, int param_4, int param_5, int param_6, int param_7, int param_8, int param_9, int param_10, undefined4 lpMsg, UINT param_12, WPARAM param_13)"
+0x004d11b8,WinMain_AfterNoppedMutexCheck_Frag,,USER_DEFINED,__stdcall,USER_DEFINED,1488,,"WPARAM __stdcall WinMain_AfterNoppedMutexCheck_Frag(undefined4 param_1, undefined4 param_2, int param_3, int param_4, int param_5, int param_6, int param_7, int param_8, int param_9, int param_10, undefined4 lpMsg, UINT param_12, WPARAM param_13)"
 0x004d2cf0,VidNotLoadedError,,USER_DEFINED,__stdcall,ANALYSIS,21,,undefined __stdcall VidNotLoadedError(void)
 0x004d2da0,UnloadDmaVideo,,USER_DEFINED,__stdcall,USER_DEFINED,171,,void __stdcall UnloadDmaVideo(SVideo * vidCtx)
 0x004d2e50,InitVideoDll,,USER_DEFINED,__stdcall,USER_DEFINED,1784,,undefined4 __stdcall InitVideoDll(LPCSTR param_1)
@@ -4838,12 +4869,12 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0056dc28,Patch1144_NetLobby_SlotTableBase410Hook,,USER_DEFINED,__fastcall,ANALYSIS,16,,"undefined __fastcall Patch1144_NetLobby_SlotTableBase410Hook(undefined4 param_1, uint param_2)"
 0x0056dc3a,Patch1144_NetLobby_SlotEntryAddr30CHook,,USER_DEFINED,__fastcall,ANALYSIS,17,,undefined __fastcall Patch1144_NetLobby_SlotEntryAddr30CHook(int param_1)
 0x0056dc4c,Patch1144_NetLobby_SlotEntryAddr414Hook,,USER_DEFINED,__fastcall,ANALYSIS,19,,"undefined __fastcall Patch1144_NetLobby_SlotEntryAddr414Hook(undefined4 param_1, int param_2, undefined4 param_3, undefined4 param_4, int param_5, undefined4 param_6)"
-0x0056dcab,Patch1144_NetSession_AllocSlotBlock,,USER_DEFINED,__stdcall,ANALYSIS,32,,undefined __stdcall Patch1144_NetSession_AllocSlotBlock(void)
+0x0056dcab,Patch1144_NetDlg_AllocMapTable,,USER_DEFINED,__stdcall,ANALYSIS,32,,undefined __stdcall Patch1144_NetDlg_AllocMapTable(void)
 0x0056dcda,Patch1144_EntryStub,,USER_DEFINED,__stdcall,ANALYSIS,42,,int __stdcall Patch1144_EntryStub(void)
 0x0056dd18,Patch1144_Mmp_StrToLowerInPlace,,USER_DEFINED,__stdcall,ANALYSIS,26,,undefined __stdcall Patch1144_Mmp_StrToLowerInPlace(byte * param_1)
 0x0056dd67,Patch1144_OnKeyDown_LaunchManagerHook,,USER_DEFINED,__stdcall,ANALYSIS,23,,undefined __stdcall Patch1144_OnKeyDown_LaunchManagerHook(void)
 0x0056de0c,Patch1144_NetDlg_SetMapNameNAText,,USER_DEFINED,__stdcall,ANALYSIS,60,,undefined __stdcall Patch1144_NetDlg_SetMapNameNAText(void)
-0x0056de95,Patch1144_NetDlg_ChatFlagResetHook,,USER_DEFINED,__stdcall,ANALYSIS,41,,"undefined __stdcall Patch1144_NetDlg_ChatFlagResetHook(HWND param_1, undefined4 param_2)"
-0x0056dec0,Patch1144_NetDlg_StoreChatFlagHook,,USER_DEFINED,__fastcall,ANALYSIS,18,,undefined __fastcall Patch1144_NetDlg_StoreChatFlagHook(void * param_1)
-0x0056ded4,Patch1144_NetDlg_ChatFocusHook,,USER_DEFINED,__stdcall,ANALYSIS,50,,"undefined4 __stdcall Patch1144_NetDlg_ChatFocusHook(undefined4 param_1, undefined4 param_2, HWND param_3, undefined4 param_4)"
+0x0056de95,Patch1144_NetDlg_AutoCreateHook,,USER_DEFINED,__stdcall,ANALYSIS,41,,"undefined __stdcall Patch1144_NetDlg_AutoCreateHook(HWND param_1, undefined4 param_2)"
+0x0056dec0,Patch1144_NetDlg_StoreSessionsAvailableHook,,USER_DEFINED,__fastcall,ANALYSIS,18,,undefined __fastcall Patch1144_NetDlg_StoreSessionsAvailableHook(void * param_1)
+0x0056ded4,Patch1144_NetDlg_AutoJoinHook,,USER_DEFINED,__stdcall,ANALYSIS,50,,"undefined4 __stdcall Patch1144_NetDlg_AutoJoinHook(undefined4 param_1, undefined4 param_2, HWND param_3, undefined4 param_4)"
 0x0056df08,Patch1144_LoadGXT_MmpOverrides,,USER_DEFINED,__stdcall,ANALYSIS,222,,"undefined __stdcall Patch1144_LoadGXT_MmpOverrides(FILE * param_1, char * param_2, int param_3, char * param_4)"

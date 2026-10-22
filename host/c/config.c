@@ -23,7 +23,7 @@
  *
  * Sections:
  *   debug  the game's own debug flags. HiddenDebugFlags (0x451930, called once from
- *          WinMain2 at 0x4D121A) reads them from HKCU\SOFTWARE\DMA Design Ltd\GTA2\Debug
+ *          WinMain at 0x4D121A) reads them from HKCU\SOFTWARE\DMA Design Ltd\GTA2\Debug
  *          through RegGet (0x4B53B0), which reports a flag as set when the value merely
  *          EXISTS (MOV BL,1 on RegQueryValueExA == 0; the data is never looked at). So
  *          `true` creates the value and `false` deletes it from our in-memory registry

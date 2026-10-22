@@ -298,7 +298,7 @@ The frontend is a data-driven page engine (V). `InitFrontend` 0x456A60 calls
 **`FrontEnd_GotoPage` 0x4587B0 (was `?Intro`) is the only page switch**: per-page set-up, then
 `selected = defaultSelected`, and `DisplayError(0xA5)` if nothing on the page is selectable.
 
-Per-iteration driver, called by `WinMain2` 0x4D11B8 while in the frontend:
+Per-iteration driver, called by `WinMain` 0x4D1170 while in the frontend:
 `FrontEnd_Tick` 0x45A320 (movie pages, a 60 s idle timeout → attract demo, logic every 33 ms,
 otherwise `DrawFrontendFrame`) → `FrontEnd_UpdateMode` 0x45A250 → a switch on `FrontEnd.mode`.
 
@@ -311,7 +311,7 @@ otherwise `DrawFrontendFrame`) → `FrontEnd_UpdateMode` 0x45A250 → a switch o
 | 5 | parental code entry (page 0xE) | `FrontEnd_UpdateCodeEntryMode` 0x45A010 |
 
 `FrontEnd.resultCode` (+0x108), returned by `FrontEnd_Tick`: 2 running, 1 quit the application,
-3 start the game (`WinMain2` → `InitGame` 0x461DE0), 4 attract replay.
+3 start the game (`WinMain` → `InitGame` 0x461DE0), 4 attract replay.
 
 Item dispatch (`FrontEnd_UpdateMenuMode`): an item `action` (+0x80) below 0x100 is a page id
 (→ `FrontEnd_GotoPage`); 0x101..0x10C go through the **jump table at 0x459DE0**. ESC uses the
@@ -346,16 +346,16 @@ jump table 0x459E10 with a per-page index byte table at **0x459E20**.
 |---|---|---|---|
 | 0 | Main menu (version "GTA2 V%d.%d" drawn at page 0) | `play` PLAY → page 1; `options` OPTIONS → 0x101 (launch gta2manager); `quit` QUIT → 9 | No CD (`FrontEnd_IsGameCdPresent`==0): texts become `no_cd1/2/3`, all actions 9. ESC → 9. |
 | 1 | Player / level select | 0 `charctr` PLAYER, selector kind 2, choice 0..7 = profile slot; 1 `savepos` RESUME SAVED STATUS → 0x104; 2 `hi_scre` VIEW HIGH SCORES → 5; 3 `strtlev` START PLAY IN AREA → 0x108, LEFT/RIGHT = area (`FrontEnd_AreaSelectorLeft/Right`); 4 `bonslev` BONUS STAGE → 0x109, LEFT/RIGHT = bonus level | Default selected = 3. Entry: reads registry `plyrslot`. ENTER on item 0 → mode 3 (name). DEL on item 0 → mode 4. LEFT/RIGHT on item 0 → `Reg_Player_SetDword(plyrslot)`. 10 decor (sprites: arrows; texts: area number, bonus letter). Items 1/3/4 are greyed when locked/absent (`enabled`). |
-| 2 | Player dead ("plr_ded" YOU ARE DEAD!) | `savepos` → 0x104; `replay` REPLAY PREVIOUS AREA → 0x103; `mainmen` BACK TO MAIN MENU → 0 | Shown after `relToQuitGame` code 3 (non-bonus). |
-| 3 | Area complete ("cmpltd" AREA COMPLETE!) | `nxt_lvl` PLAY NEXT AREA → 0x105; `savepos` → 0x104; `replay` → 0x103; `contnue` CONTINUE → 0x10a; `mainmen` → 0 | `relToQuitGame` code 4 (non-bonus). Stats panel. |
+| 2 | Player dead ("plr_ded" YOU ARE DEAD!) | `savepos` → 0x104; `replay` REPLAY PREVIOUS AREA → 0x103; `mainmen` BACK TO MAIN MENU → 0 | Shown after `Game_GetQuitReason` code 3 (non-bonus). |
+| 3 | Area complete ("cmpltd" AREA COMPLETE!) | `nxt_lvl` PLAY NEXT AREA → 0x105; `savepos` → 0x104; `replay` → 0x103; `contnue` CONTINUE → 0x10a; `mainmen` → 0 | `Game_GetQuitReason` code 4 (non-bonus). Stats panel. |
 | 4 | Game complete ("gam_cmp" GAME COMPLETE!) | `mainmen` → 0 | From `OnContinueAction` when all levels unlocked. |
 | 5 | High scores | one selector (kind 2, 12 choices = 3 areas × (1 main + 3 bonus)) → `hiScoreTableIndex` | `hi_for` HIGH SCORES FOR AREA. ESC → 1. |
 | 6 | Bonus stage complete (title `bonslev`, `score`) | `repbons` REPLAY BONUS STAGE → 0x103; `nxt_lvl` → 0x105; `mainmen` → 0 | Bonus variants of codes 2/3/4 land here. |
-| 7 | Multiplayer results (`mult_w`/`mult_l`/`mult_d`/`mult_q`, rows per player, frags/points/times) | `quit` QUIT → 0x102 | `relToQuitGame` code 5; ESC → quit. |
+| 7 | Multiplayer results (`mult_w`/`mult_l`/`mult_d`/`mult_q`, rows per player, frags/points/times) | `quit` QUIT → 0x102 | `Game_GetQuitReason` code 5; ESC → quit. |
 | 8 | Intro movie page (plays `IntroMovieBik()`) | `mainmen` (unused) | Tick: movie done or any key → page 0. |
 | 9 | Credits | none | Any key → quit (resultCode 1). Reached by QUIT and ESC from pages 0/0xe. |
 | 10 | "Nice try" (`nicetry` NICE TRY!) | `mainmen` → 0 | `OnContinueAction` on the last area when not all levels done. |
-| 11 (0xb) | Player quit ("plr_qut" PLAYER QUIT!) | `savepos` → 0x104; `replay` → 0x103; `mainmen` → 0 | `relToQuitGame` code 2 (non-bonus). |
+| 11 (0xb) | Player quit ("plr_qut" PLAYER QUIT!) | `savepos` → 0x104; `replay` → 0x103; `mainmen` → 0 | `Game_GetQuitReason` code 2 (non-bonus). |
 | 12, 13, 16 | unused (empty pages) | | ESC → quit (jump-table default). |
 | 14 (0xe) | Parental lock code (`fr_ent1`/`fr_ent2`/`fr_pmpt`; error `fr_rnt1..3`) | `item 0` → 0x10c (nop) | Mode 5. Correct code is `L"WFUSDFCF"`. |
 | 15 (0xf) | Pre-intro movie (`data\movie\preintro.bik`) | `mainmen` | Then page 8. |
@@ -396,9 +396,9 @@ Background images (`g_FrontendImages` @ 0x591F68, 25 × 0x88, all `data\frontend
    - `Menu.profileSlot`, set earlier by the profile selector.
    `FrontEnd_LoadSeq` fills that table from `data\*.seq` ("MAIN"/"BONUS" blocks, 3 file names each; max 3 areas × 4 levels).
 3. `FE.backgroundId=0x10`, `FE.mode=2` → the next tick `FrontEnd_RequestGameStart` (0x451F60) sets `resultCode=3`.
-4. `WinMain2` (0x4D11B8) gets 3 from `FUN_0045A320` → `isExit=0` → `InitGame` (0x461DE0) → `LoadGMP_and_STY_Files` (reads `Menu_GetGmpPath/StyPath/ScrPath/SavePath`) → `startGame`.
+4. `WinMain` 0x4D1170 gets 3 from `FUN_0045A320` → `isExit=0` → `InitGame` (0x461DE0) → `LoadGMP_and_STY_Files` (reads `Menu_GetGmpPath/StyPath/ScrPath/SavePath`) → `startGame`.
 5. `InitGame` also reads `Menu_GetGameTimeLimit` and `Menu_SetPlayerName` (MP).
-6. Return to the frontend: `WinMain2` after `relToQuitGame(game)` → `DeinitGame`, `isExit=1`, `doPlayMovies`/page id = 2 (player quit): page 0xb (6 if bonus); 3 (dead): page 2 (6); 4 (level done): page 3 (6); 5: page 7 (MP results); 6: page 0. Then `FrontEnd_GotoPage(page)` after `Init()`. `FUN_0045A480` (called from `Script_Op_FINISH_LEVEL`, `quitGame`) writes `Game.field11_0x28/relatedToQuitGame` and `Menu.levelEndReason`.
+6. Return to the frontend: `WinMain` after `Game_GetQuitReason(game)` → `DeinitGame`, `isExit=1`, `doPlayMovies`/page id = 2 (player quit): page 0xb (6 if bonus); 3 (dead): page 2 (6); 4 (level done): page 3 (6); 5: page 7 (MP results); 6: page 0. Then `FrontEnd_GotoPage(page)` after `Init()`. `FUN_0045A480` (called from `Script_Op_FINISH_LEVEL`, `quitGame`) writes `Game.field11_0x28/relatedToQuitGame` and `Menu.levelEndReason`.
 7. Between levels `Menu_CopyPlayerCrimeStats` fills `Menu.crimeStats/totalEarned/wantedStarSeconds` for the stats panel.
 
 
@@ -408,8 +408,8 @@ Background images (`g_FrontendImages` @ 0x591F68, 25 × 0x88, all `data\frontend
 |---|---|---|
 | Page 1 item 0 LEFT/RIGHT (profile slot) | `Reg_Player_SetDword` 0x4B5D10, `ECX=0x66C6B4`, key at 0x57367C | `"plyrslot"` |
 | `FrontEnd_GotoPage(1)` | `Reg_Player_GetDwordOrZero` 0x4B5C60 | `"plyrslot"` |
-| `FrontEnd_OnCodeEntered`, `WinMain2` | `Reg_Screen_GetDwordOrInit` 0x4B5660 | `"do_play_movie"` (default 1) |
-| `WinMain2` start | `Reg_Sound_HasFlag` 0x4B5000, `Reg_Sound_SetFlag` 0x4B5180 | `"do_3d_sound"` |
+| `FrontEnd_OnCodeEntered`, `WinMain` | `Reg_Screen_GetDwordOrInit` 0x4B5660 | `"do_play_movie"` (default 1) |
+| `WinMain` start | `Reg_Sound_HasFlag` 0x4B5000, `Reg_Sound_SetFlag` 0x4B5180 | `"do_3d_sound"` |
 | `Menu_LoadDebugLevelFromRegistry` 0x45E8D0 | `Reg_Debug_GetString` 0x4B5420 | `"mapname"`, `"stylename"`, `"scriptname"`, `"savename"` (only the debug-skip-frontend path) |
 
   The frontend does not read the sound/video/key options itself; those live in gta2manager.
@@ -442,7 +442,7 @@ gta2manager (`gta2manager.ebin`): its strings contain the key paths Debug, Scree
 | lighting | DWORD | 1 | 1 | same | GM | `lighting` 0x67358C (=0x8000 if on, else 0); `isNight` 0x595011 | dynamic lighting |
 | exploding_on | DWORD | 1 | 0 | same | GM | `g_cheatCocktart` = (value != 1) | name suggests "exploding pedestrians" cheat flag (hypothesis); seed 0 → flag on |
 | gamma | DWORD | 10 | 10 (0x0A) | Gamma_ApplyFromRegistry 0x4CB990, Gamma_RetryTick 0x4CB9C0 | GM | `SetGamma` 0x4CB930: value × 0.1f → `Vid_SetGamma(r,g,b)`; `relatedToGamma` 0x673594 | gamma ×10 |
-| do_play_movie | DWORD | 1 | 0 | WinMain2 (only if `FrontEnd_IntroMovieExists`), FUN_00459660 | the game's own option writer FUN_00459660 (sets `regSet("do_play_movie",1)`) | selects start page of the frontend | play intro movies |
+| do_play_movie | DWORD | 1 | 0 | WinMain (only if `FrontEnd_IntroMovieExists`), FUN_00459660 | the game's own option writer FUN_00459660 (sets `regSet("do_play_movie",1)`) | selects start page of the frontend | play intro movies |
 | curr_dll_id | DWORD | – | 1 | **not read by gta2.exe** (string absent from the exe, checked with strings) | GM | – | legacy renderer index |
 | special_recognition | DWORD | – | 1 | **not read by gta2.exe** | GM | – | legacy |
 
@@ -455,7 +455,7 @@ Value *names* are decimal action indexes "0".."11" (12 actions). Value = `scanco
 |---|---|---|---|---|---|---|
 | CDVol | DWORD | 0x7F | 0x7F | FUN_00461880 (`Reg_Sound_GetDwordOrInit`) | `Reg_Sound_SetDword` 0x4B5110 from Player_OnKeyDown (debug key), GM | `SetCDVolume((byte)v)` |
 | SFXVol | DWORD | 0x7F | **0x0B** | FUN_00461880 | GM | `FUN_004105c0((byte)v)` (SFX master volume) |
-| do_3d_sound | presence flag (value 0 = on, absent = off) | absent | absent | `Reg_Sound_HasFlag` 0x4B5000 in FUN_00461880, WinMain2, WndProc, InitGame, Debug_LoadFlagsFromRegistry | `Reg_Sound_SetFlag` 0x4B5180 (WinMain2/InitGame/WndProc/FUN_00461880 write back the actually active state) | `Sound_Set3DSoundEnabled(&DAT_005d85a0, v)` |
+| do_3d_sound | presence flag (value 0 = on, absent = off) | absent | absent | `Reg_Sound_HasFlag` 0x4B5000 in FUN_00461880, WinMain, WndProc, InitGame, Debug_LoadFlagsFromRegistry | `Reg_Sound_SetFlag` 0x4B5180 (WinMain/InitGame/WndProc/FUN_00461880 write back the actually active state) | `Sound_Set3DSoundEnabled(&DAT_005d85a0, v)` |
 
 SFXVol seed 0x0B is much lower than the 0x7F default — probably the installer's own choice; if audio sounds quiet, this is why (hypothesis, not verified in a run).
 
@@ -473,10 +473,10 @@ SFXVol seed 0x0B is much lower than the 0x7F default — probably the installer'
 
 ### 7.2 When settings are read and written
 
-1. **WinMain2 0x4D11B8**: `GetGameVersion` → `Debug_LoadFlagsFromRegistry` (Debug flags, Network `show_player_names`, Sound `do_3d_sound`) → `Menu_LoadDebugLevelFromRegistry` (Debug mapname/stylename/scriptname/savename) → `RegisterClass` → **`ReadRendererSettings`** (Screen: renderdevice, videodevice, rendername, videoname, then LoadFrameRateLighting + LoadWindowMode) → parse args → `FUN_004D0ED0` (multiplayer connect, Network UseProtocol/UseConnection) → create window sized from `window_width/height` → `diutil` (DirectInput; **controls loaded in `DInput_InitDevices` → 0x44BF30**) → **`InitVideo`** (`Video_ReloadSettingsAndRemode` re-reads Screen settings and applies mode/gamma; then InitRenderer, `Gamma_ApplyFromRegistry`) → `InitRendererDevice` → **`FUN_00461880`** (keybrd, plydat = profile .dat files, then Sound CDVol/SFXVol/do_3d_sound) → intro-movie check (`do_play_movie`).
+1. **`WinMain` 0x4D1170**: `GetGameVersion` → `Debug_LoadFlagsFromRegistry` (Debug flags, Network `show_player_names`, Sound `do_3d_sound`) → `Menu_LoadDebugLevelFromRegistry` (Debug mapname/stylename/scriptname/savename) → `RegisterClass` → **`ReadRendererSettings`** (Screen: renderdevice, videodevice, rendername, videoname, then LoadFrameRateLighting + LoadWindowMode) → parse args → `FUN_004D0ED0` (multiplayer connect, Network UseProtocol/UseConnection) → create window sized from `window_width/height` → `diutil` (DirectInput; **controls loaded in `DInput_InitDevices` → 0x44BF30**) → **`InitVideo`** (`Video_ReloadSettingsAndRemode` re-reads Screen settings and applies mode/gamma; then InitRenderer, `Gamma_ApplyFromRegistry`) → `InitRendererDevice` → **`FUN_00461880`** (keybrd, plydat = profile .dat files, then Sound CDVol/SFXVol/do_3d_sound) → intro-movie check (`do_play_movie`).
 2. **Frontend** (isExit): `?Intro`/`FrontEnd_GotoPage` read Player\plyrslot; `LocaleSettings_Ctor` reads Option\language; `get_text_speed` reads Option\text_speed on demand. Options screens write through the same getters/setters (none found in the exe).
 3. **InitGame 0x461DE0**: re-checks Sound\do_3d_sound and writes the active state back (`Reg_Sound_SetFlag`).
-4. **Per frame**: `Gamma_RetryTick` (GameTick) retries `SetGamma` while `relatedToGamma` counts down from 0x1E; `Video_ReloadSettingsIfChanged` is called after each InitGame/Init (WinMain2) and compares newly read values with the old globals.
+4. **Per frame**: `Gamma_RetryTick` (GameTick) retries `SetGamma` while `relatedToGamma` counts down from 0x1E; `Video_ReloadSettingsIfChanged` is called after each InitGame/Init (WinMain) and compares newly read values with the old globals.
 5. **WndProc 0x4D0A00**: Alt+Enter style handling → `Screen_ToggleStartMode`/`Screen_SetStartMode` (writes start_mode) then `Video_ReloadSettingsAndRemode`; `Gamma_ApplyFromRegistry`, `MouseExclusive_Acquire`; Sound items via `SetSetting`-style init.
 6. **Writes at exit/save**: nothing special; registry writes are immediate (RegSetValueEx). The host keeps them **in memory only** (docs in `w32_advapi32.asm`: "not persisted yet").
 
@@ -500,7 +500,7 @@ SFXVol seed 0x0B is much lower than the 0x7F default — probably the installer'
 * **Savegame file:** `player\plyslot<N>.svg`, N = `Menu_GetProfileSlot` (0..7). Built in SaveGame (0x47EF40) with `sprintf("player\\plyslot%d.svg")` when the caller passes an empty name; `FrontEnd_BuildSaveSlotPath` does the same for the frontend. When a caller gives a path (`Menu_GetSavePath` = `Menu.unk2`/savePath, set by `Menu_SetSavePath`) that is used instead. Writes through `FUN_00402CF0` (create "wb") + `FUN_00402DA0` ("ab"), reads through `File_Open/File_Read`; the host serves the first from its overlay (`~/Library/Application Support/gta2-resurrected/player/`).
 * **Format:** `[0x748-byte SaveGameHeader]` then three sections `[u32 size][size bytes]`, each possibly size 0 (the data block is skipped when size==0): (1) `g_MapBlocks` delta A = `*(MapBlocks+0x40008) + *(MapBlocks+0x40000)*4`, size `(this+0x360 - off)*4`; (2) delta B = `*(+0x4000C)+*(+0x40004)*0xC`, size `(this+0x354-off)*0xC`; (3) `this+4`, size `*(this+0x324) << 3`. These are the *dynamic tail* of the map's block/column tables (blocks added at runtime, i.e. modified map). Extracted by `FUN_004642A0`, re-applied by `FUN_00464250`. Layout semantics = hypothesis (Seq 37/map owner can confirm). No checksum, no version.
 * **Functions:** save: `SaveGame` 0x47EF40 ← `Script_Op_SAVE_GAME` 0x47FE50 (opcode 277, unused in bil.scr), `Script_Op_PERFORM_SAVE_GAME` 0x47FE80 (opcode 438: the church/save point; costs $50000, "svmiss"/"svscore"/"svdone" HUD messages via `Hud_Brief_EnqueueNoArg`, refuses when a mission is active), `SomeSwitch` 0x41D0B0 case 9 (debug key via Player_OnKeyDown); helpers FUN_0047EE70 (collect patched script commands), FUN_00475CA0 (fill the three path strings + area/bonus bytes), FUN_00483D90 (collect weapon pickups), `Player::Player_SaveCheckpoint`. Load: `FrontEnd_LoadSavedGameSlot` 0x455850 (reads the first 0x52 header bytes, validates that each path starts with `data\`, calls `Menu_SetSavePath/GmpPath/StyPath/ScrPath/StartArea/BonusLevelId/IsBonusLevel`; DisplayError codes 0xA6/0xA7/0xA8 on a bad path) → game start → `InitGame` → `LoadGMP_and_STY_Files` 0x45B469 → `MissionScript_LoadSaveGame` 0x47F0B0 when `Menu_GetSavePath` is non-empty. Other callers of `Menu_SetSavePath`: `FrontEnd_SelectLevel`/`FrontEnd_UpdateMenuMode` clear it (`DAT_0056E5B4` = ""), `Replay_ReadHeader`, `Menu_LoadDebugLevelFromRegistry` (Debug\savename).
-* **Other persistent files**: `player\plyslot<N>.dat` — profile/unlock data, 0x7E bytes, written by `FUN_004A89E0` (callers FrontEnd_CommitProfileName, FrontEnd_DeleteCurrentProfile, UnlockAllLevels, WinMain2-via-FUN_004A8F90 on level end, PlayerData_Ctor); `player\hiscores.hsc` — 0xF0 + 3×0x3F0 bytes of high scores, `FUN_004A8D80` (`FUN_004A8B60` builds the name). Both go through `FUN_00402CF0`. Owner: whoever takes `plydat`/`PlayerData_Ctor` (0x4A8xxx).
+* **Other persistent files**: `player\plyslot<N>.dat` — profile/unlock data, 0x7E bytes, written by `FUN_004A89E0` (callers FrontEnd_CommitProfileName, FrontEnd_DeleteCurrentProfile, UnlockAllLevels, WinMain-via-FUN_004A8F90 on level end, PlayerData_Ctor); `player\hiscores.hsc` — 0xF0 + 3×0x3F0 bytes of high scores, `FUN_004A8D80` (`FUN_004A8B60` builds the name). Both go through `FUN_00402CF0`. Owner: whoever takes `plydat`/`PlayerData_Ctor` (0x4A8xxx).
 * **K menu quick save** (`host/c/menu/root.c`) calls `SaveGame` 0x47EF40 directly (credit seuko-mod `save-game.cpp`); that is the full "save here" entry point for mods.
 
 
@@ -1200,7 +1200,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x47F0B0 | `MissionScript_LoadSaveGame` | old |
 | 0x4B90E0 | `Camera_WorldToScreen` | V |
 | 0x4D0820 | `FrontEnd_LaunchGta2Manager` | V |
-| 0x4D11B8 | `WinMain2` | old |
+| 0x4D11B8 | `WinMain_AfterNoppedMutexCheck_Frag` (was `WinMain2`): a false split of `WinMain` 0x4D1170 | old |
 
 ### Names added by Seq 47 (slice 4: 0x4A4770-0x4AF880)
 
@@ -1234,9 +1234,9 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4A8ED0 | `PlayerData_ResetHiScoresToDefaults` | med | clears + inserts built-in default entries |
 | 0x4A8F50 | `PlayerData_ScalarDeletingDtor` | high | DtorMembers + _free(flag&1) |
 | 0x4A8F70 | `HiScoreTable_Ctor` | high | Clear(this); return this |
-| 0x4A8F90 | `PlayerData_UpdateProfileLevelScore` | med | level end: best/last score of current level, save slot; WinMain2 |
+| 0x4A8F90 | `PlayerData_UpdateProfileLevelScore` | med | level end: best/last score of current level, save slot; WinMain |
 | 0x4A9050 | `HiScores_FileExists` | high | _findfirst hiscores.hsc |
-| 0x4A90A0 | `PlayerData_UpdateHiScoresAfterLevel` | med | inserts into tables, crime bests, saves; WinMain2 |
+| 0x4A90A0 | `PlayerData_UpdateHiScoresAfterLevel` | med | inserts into tables, crime bests, saves; WinMain |
 | 0x4A9210 | `PlayerData_ApplyMuchCashCheat` | high | profile name == "MUCHCASH" -> GiveMoney 500000 |
 | 0x4A9270 | `PlayerData_DestroyGlobalInstance` | high | delete g_PlayerData |
 | 0x4A9AC0 | `PoliceManager_FreeBuffer` | high | _free(this+0xa0); callers include 3 unwinds so maybe member dtor |

@@ -626,7 +626,7 @@ endstruc
 struc HudBriefNode
     .key                              resb 8      ; 0x0 char[8]
     .priority                         resb 4      ; 0x8 int
-    .next                             resb 4      ; 0xc void *
+    .next                             resb 4      ; 0xc HudBriefNode *
     .started                          resb 1      ; 0x10 byte
     .pad11                            resb 3      ; 0x11 byte[3]
     .arg                              resb 4      ; 0x14 int
@@ -1664,6 +1664,13 @@ struc StyleFileHeader
     .version_code                     resb 2      ; 0x4 Uint16
 endstruc
 
+; enum /_car/CAR_AI_FLAGS  (1 bytes)
+CAR_AI_FLAGS.CAR_AI_TURN_LEFT equ 1
+CAR_AI_FLAGS.CAR_AI_TURN_RIGHT equ 2
+CAR_AI_FLAGS.CAR_AI_ROUTE_BIT2_PRE_LEFT_TURN equ 4
+CAR_AI_FLAGS.CAR_AI_ROUTE_BIT3_PRE_RIGHT_TURN equ 8
+CAR_AI_FLAGS.CAR_AI_HALTED equ 32
+
 ; enum /_car/CAR_ENGINE_STATE  (4 bytes)
 CAR_ENGINE_STATE.BROKEN_DOESNT_WORK equ 0
 CAR_ENGINE_STATE.ENGINE_OFF equ 1
@@ -1850,7 +1857,7 @@ struc Car
     .category                         resb 4      ; 0xa0 CAR_CATEGORY
     .lightsBitstate                   resb 1      ; 0xa4 CAR_LIGHTS_BITSTATE
     .lightPhase                       resb 1      ; 0xa5 char
-    .aiFlags                          resb 1      ; 0xa6 byte
+    .aiFlags                          resb 1      ; 0xa6 CAR_AI_FLAGS
     .hornState                        resb 1      ; 0xa7 char
     .hornCooldown                     resb 1      ; 0xa8 byte
     .wreckTimer                       resb 1      ; 0xa9 byte
@@ -2194,7 +2201,7 @@ struc Game
     .quitReason                       resb 4      ; 0x2c int
     .compensationFPSTime              resb 1      ; 0x30 byte
     resb 3
-    .relToSkipPoliceEnum              resb 4      ; 0x34 int
+    .unsure_mpGameSpeedFrameMs        resb 4      ; 0x34 int
     .currentPlayer                    resb 4      ; 0x38 Player *
     .savedSkipPolice                  resb 1      ; 0x3c bool
     resb 3
@@ -2327,8 +2334,8 @@ struc Player
     .selectedWeapon                   resb 2      ; 0x788 short
     .quitConfirmPending               resb 1      ; 0x78a byte
     resb 1
-    .unsure_hudTextStyle              resb 4      ; 0x78c int
-    .unsure_hudTextColour             resb 2      ; 0x790 short
+    .hudTextPaletteMode               resb 4      ; 0x78c int
+    .hudTextRemap                     resb 2      ; 0x790 short
     resb 2
     .chat                             resb 168    ; 0x794 ChatInput
     .name                             resb 32     ; 0x83c wchar_t[16]
@@ -3281,37 +3288,102 @@ endstruc
 
 ; /auto_structs/NetDlg  (131616 bytes)
 struc NetDlg
-    resb 130404
+    .vtable                           resb 4      ; 0x0 void *
+    .maps                             resb 4      ; 0x4 NetDlgMapEntry *
+    resb 130396
     .mapCount                         resb 4      ; 0x1fd64 int
     .exitFlag                         resb 4      ; 0x1fd68 int
     .playerCount                      resb 4      ; 0x1fd6c int
-    resb 1180
+    .origWndProcClientChat            resb 4      ; 0x1fd70 void *
+    .origWndProcHostChat              resb 4      ; 0x1fd74 void *
+    .playerName                       resb 520    ; 0x1fd78 wchar_t[260]
+    .unsure_field_0x1ff80             resb 4      ; 0x1ff80 int
+    .settings                         resb 288    ; 0x1ff84 NetGameSettings
+    .pageControls                     resb 360    ; 0x200a4 HWND[90]
     .currentPage                      resb 4      ; 0x2020c int
-    resb 8
-    .hwnd                             resb 4      ; 0x20218 undefined4
-    resb 4
+    .previousPage                     resb 4      ; 0x20210 int
+    .unsure_field_0x20214             resb 2      ; 0x20214 short
+    resb 2
+    .hwnd                             resb 4      ; 0x20218 HWND
+    .hInstance                        resb 4      ; 0x2021c HINSTANCE
+endstruc
+
+; /auto_structs/NetDlgControlDef  (116 bytes)
+struc NetDlgControlDef
+    .x                                resb 4      ; 0x0 int
+    .y                                resb 4      ; 0x4 int
+    .width                            resb 4      ; 0x8 int
+    .height                           resb 4      ; 0xc int
+    .ctrlId                           resb 4      ; 0x10 dword
+    .style                            resb 4      ; 0x14 dword
+    .exStyle                          resb 4      ; 0x18 dword
+    .className                        resb 80     ; 0x1c char[80]
+    .gxtKey                           resb 8      ; 0x6c char[8]
+endstruc
+
+; /auto_structs/NetDlgMapEntry  (1304 bytes)
+struc NetDlgMapEntry
+    .gmpFile                          resb 260    ; 0x0 char[260]
+    .styFile                          resb 260    ; 0x104 char[260]
+    .scrFile                          resb 260    ; 0x208 char[260]
+    .description                      resb 260    ; 0x30c char[260]
+    .mmpFile                          resb 260    ; 0x410 char[260]
+    .playerCount                      resb 4      ; 0x514 int
 endstruc
 
 ; /auto_structs/NetEventHandler  (12 bytes)
 struc NetEventHandler
-    .callback                         resb 4      ; 0x0 undefined4
-    .unsure_context                   resb 4      ; 0x4 undefined4
-    .unsure_param                     resb 4      ; 0x8 undefined4
+    .callback                         resb 4      ; 0x0 void *
+    .context                          resb 4      ; 0x4 void *
+    .eventId                          resb 4      ; 0x8 int
+endstruc
+
+; /auto_structs/NetGameSettings  (288 bytes)
+struc NetGameSettings
+    .mmpName                          resb 260    ; 0x0 char[260]
+    .mapIndex                         resb 4      ; 0x104 int
+    .gameSpeed                        resb 4      ; 0x108 int
+    .scoreLimit                       resb 4      ; 0x10c int
+    .gameType                         resb 4      ; 0x110 int
+    .unsure_randomSeed                resb 4      ; 0x114 int
+    .police                           resb 4      ; 0x118 int
+    .timeLimit                        resb 4      ; 0x11c int
 endstruc
 
 ; /auto_structs/Network  (3256 bytes)
 struc Network
-    resb 84
-    .eventHandlers                    resb 108    ; 0x54 NetEventHandler[9]
-    resb 1296
+    .vtable                           resb 4      ; 0x0 void *
+    .spGuid                           resb 16     ; 0x4 GUID
+    resb 24
+    .connections                      resb 4      ; 0x2c NetConnectionEntry *
+    .modemNames                       resb 4      ; 0x30 wchar16 * *
+    .connectionCount                  resb 4      ; 0x34 uint
+    .modemCount                       resb 4      ; 0x38 uint
+    .connectionsReady                 resb 4      ; 0x3c int
+    .modemsEnumerated                 resb 4      ; 0x40 int
+    .state                            resb 4      ; 0x44 NET_STATE
+    .eventHandlers                    resb 120    ; 0x48 NetEventHandler[10]
+    .sessions                         resb 1280   ; 0xc0 DPSESSIONDESC2[16]
+    .sessionCount                     resb 4      ; 0x5c0 uint
+    .inSession                        resb 4      ; 0x5c4 int
+    .isHost                           resb 4      ; 0x5c8 int
+    .unsure_hostLocalIndex            resb 4      ; 0x5cc int
     .localPlayerIndex                 resb 4      ; 0x5d0 int
-    .unsure_localDpid                 resb 4      ; 0x5d4 undefined4
-    resb 4
-    .unsure_dpLobby                   resb 4      ; 0x5dc undefined4
-    .directPlay                       resb 4      ; 0x5e0 undefined4
-    resb 368
-    .groupId                          resb 4      ; 0x754 undefined4
-    resb 1372
+    .localDpid                        resb 4      ; 0x5d4 uint
+    .hReceiveEvent                    resb 4      ; 0x5d8 HANDLE
+    .lobby                            resb 4      ; 0x5dc void *
+    .directPlay                       resb 4      ; 0x5e0 void *
+    .pendingPlayers                   resb 368    ; 0x5e4 NetPlayerTable
+    .players                          resb 368    ; 0x754 NetPlayerTable
+    .unused_buffers                   resb 24     ; 0x8c4 void *[6]
+    .sendBuffer                       resb 4      ; 0x8dc byte *
+    .recvBuffer                       resb 4      ; 0x8e0 byte *
+    .lastPollTime                     resb 4      ; 0x8e4 uint
+    .unused_8e8                       resb 4      ; 0x8e8 uint
+    .sessionEnded                     resb 1      ; 0x8ec byte
+    resb 3
+    .lastFrameWaitMs                  resb 4      ; 0x8f0 uint
+    .pendingPackets                   resb 960    ; 0x8f4 NetPendingPacket[48]
     .pendingPacketCount               resb 4      ; 0xcb4 int
 endstruc
 
@@ -4193,7 +4265,8 @@ struc CarAI
     resb 2
     .unsure_laneTarget                resb 1      ; 0x2f byte
     .haltTimer                        resb 1      ; 0x30 byte
-    resb 7
+    resb 3
+    .unsure_initOnly34                resb 4      ; 0x34 int
     .routeExitCode                    resb 4      ; 0x38 int
     .unsure_unstickState              resb 4      ; 0x3c int
     .unsure_laneDir                   resb 4      ; 0x40 int
@@ -4205,7 +4278,9 @@ struc CarAI
     .routeStep                        resb 2      ; 0x56 ushort
     .stuckTicks                       resb 2      ; 0x58 ushort
     .reverseTicks                     resb 2      ; 0x5a ushort
-    resb 12
+    .unsure_initOnly5C                resb 4      ; 0x5c SCR_f
+    .unsure_initOnly60                resb 4      ; 0x60 SCR_f
+    .unsure_initOnly64                resb 4      ; 0x64 SCR_f
     .nearbyCar                        resb 4      ; 0x68 Car *
     .blockingCar                      resb 4      ; 0x6c Car *
     .obstacleHit                      resb 4      ; 0x70 Sprite *
@@ -4966,9 +5041,9 @@ struc PedGameObject
     .deltaY                           resb 4      ; 0x9c SCR_f
     .onTopOfCarLayer                  resb 1      ; 0xa0 bool
     resb 3
-    .teleportX                        resb 4      ; 0xa4 undefined4
-    .teleportY                        resb 4      ; 0xa8 undefined4
-    .teleportZ                        resb 4      ; 0xac undefined4
+    .teleportX                        resb 4      ; 0xa4 SCR_f
+    .teleportY                        resb 4      ; 0xa8 SCR_f
+    .teleportZ                        resb 4      ; 0xac SCR_f
     .unk_0xb0                         resb 4      ; 0xb0 int
 endstruc
 
@@ -5073,6 +5148,7 @@ endstruc
 
 ; enum /imported/seuko-mod/SPRITE_BIT1  (1 bytes)
 SPRITE_BIT1.SPRITE_BIT1_1 equ 1
+SPRITE_BIT1.SPRITE_BIT1_TELEPORT_PENDING equ 32
 
 ; enum /imported/seuko-mod/SPRITE_INVISIBILITY  (1 bytes)
 SPRITE_INVISIBILITY.SPRITE_INVISIBILITY_VISIBLE equ 0
@@ -5237,6 +5313,140 @@ endstruc
 struc Vec2
     .x                                resb 4      ; 0x0 Fix16
     .y                                resb 4      ; 0x4 Fix16
+endstruc
+
+; /net/DPNAME  (16 bytes)
+struc DPNAME
+    .dwSize                           resb 4      ; 0x0 uint
+    .dwFlags                          resb 4      ; 0x4 uint
+    .lpszShortName                    resb 4      ; 0x8 wchar16 *
+    .lpszLongName                     resb 4      ; 0xc wchar16 *
+endstruc
+
+; /net/DPSESSIONDESC2  (80 bytes)
+struc DPSESSIONDESC2
+    .dwSize                           resb 4      ; 0x0 uint
+    .dwFlags                          resb 4      ; 0x4 uint
+    .guidInstance                     resb 16     ; 0x8 GUID
+    .guidApplication                  resb 16     ; 0x18 GUID
+    .dwMaxPlayers                     resb 4      ; 0x28 uint
+    .dwCurrentPlayers                 resb 4      ; 0x2c uint
+    .lpszSessionName                  resb 4      ; 0x30 wchar16 *
+    .lpszPassword                     resb 4      ; 0x34 wchar16 *
+    .dwReserved1                      resb 4      ; 0x38 uint
+    .dwReserved2                      resb 4      ; 0x3c uint
+    .dwUser1                          resb 4      ; 0x40 uint
+    .dwUser2                          resb 4      ; 0x44 uint
+    .dwUser3                          resb 4      ; 0x48 uint
+    .dwUser4                          resb 4      ; 0x4c uint
+endstruc
+
+; enum /net/NET_STATE  (4 bytes)
+NET_STATE.NET_STATE_ENUM_SESSIONS equ 1
+NET_STATE.NET_STATE_IN_GAME equ 2
+NET_STATE.NET_STATE_HOSTING equ 3
+NET_STATE.NET_STATE_JOINED equ 4
+NET_STATE.NET_STATE_IDLE equ 5
+
+; /net/NetConnectionEntry  (28 bytes)
+struc NetConnectionEntry
+    .spGuid                           resb 16     ; 0x0 GUID
+    .name                             resb 4      ; 0x10 wchar16 *
+    .connection                       resb 4      ; 0x14 void *
+    .connectionSize                   resb 4      ; 0x18 uint
+endstruc
+
+; /net/NetDataRef  (8 bytes)
+struc NetDataRef
+    .data                             resb 4      ; 0x0 void *
+    .len                              resb 4      ; 0x4 uint
+endstruc
+
+; /net/NetFrameInput  (8 bytes)
+struc NetFrameInput
+    .input                            resb 4      ; 0x0 dword
+    .syncValue                        resb 4      ; 0x4 dword
+endstruc
+
+; /net/NetMsgHeader  (5 bytes)
+struc NetMsgHeader
+    .kind                             resb 1      ; 0x0 byte
+    .seq                              resb 1      ; 0x1 byte
+    .lenPlus2                         resb 1      ; 0x2 byte
+    .subtype                          resb 1      ; 0x3 byte
+    .payloadLen                       resb 1      ; 0x4 byte
+endstruc
+
+; /net/NetPacketDesc  (21 bytes)
+struc NetPacketDesc
+    .kind                             resb 4      ; 0x0 int
+    .subtype                          resb 4      ; 0x4 int
+    .seq                              resb 1      ; 0x8 byte
+    .hasData                          resb 4      ; 0x9 int
+    .data                             resb 4      ; 0xd void *
+    .len                              resb 4      ; 0x11 uint
+endstruc
+
+; /net/NetPacketPing  (12 bytes)
+struc NetPacketPing
+    .originDpid                       resb 4      ; 0x0 dword
+    .responderDpid                    resb 4      ; 0x4 dword
+    .sendTime                         resb 4      ; 0x8 dword
+endstruc
+
+; /net/NetPacketPlayerDropped  (5 bytes)
+struc NetPacketPlayerDropped
+    .tag                              resb 1      ; 0x0 byte
+    .playerIndex                      resb 4      ; 0x1 dword
+endstruc
+
+; /net/NetPacketSyncInfo  (31 bytes)
+struc NetPacketSyncInfo
+    .tag                              resb 1      ; 0x0 byte
+    .debugFlags                       resb 4      ; 0x1 dword
+    .gmpFileSize                      resb 4      ; 0x5 dword
+    .styFileSize                      resb 4      ; 0x9 dword
+    .scrByteSum                       resb 4      ; 0xd dword
+    .versionMajor                     resb 4      ; 0x11 dword
+    .versionMinor                     resb 4      ; 0x15 dword
+    .gciByteSum                       resb 4      ; 0x19 dword
+    .gxtMissing                       resb 1      ; 0x1d byte
+    .playerIndex                      resb 1      ; 0x1e byte
+endstruc
+
+; /net/NetPendingPacket  (20 bytes)
+struc NetPendingPacket
+    .frame                            resb 8      ; 0x0 NetFrameInput
+    .playerIndex                      resb 4      ; 0x8 dword
+    .len                              resb 4      ; 0xc uint
+    .used                             resb 1      ; 0x10 byte
+    .seq                              resb 1      ; 0x11 byte
+    .pad                              resb 2      ; 0x12 byte[2]
+endstruc
+
+; /net/NetPlayerSlot  (44 bytes)
+struc NetPlayerSlot
+    .inUse                            resb 4      ; 0x0 int
+    .pingCount                        resb 4      ; 0x4 uint
+    .avgPingMs                        resb 4      ; 0x8 uint
+    .pingSumMs                        resb 4      ; 0xc uint
+    .dpid                             resb 4      ; 0x10 uint
+    .unused_nameSize                  resb 4      ; 0x14 uint
+    .unused_nameFlags                 resb 4      ; 0x18 uint
+    .name                             resb 4      ; 0x1c wchar16 *
+    .unused_longName                  resb 4      ; 0x20 wchar16 *
+    .playerData                       resb 8      ; 0x24 NetDataRef
+endstruc
+
+; /net/NetPlayerTable  (368 bytes)
+struc NetPlayerTable
+    .groupId                          resb 4      ; 0x0 uint
+    .count                            resb 4      ; 0x4 uint
+    .frameSeq                         resb 6      ; 0x8 byte[6]
+    .pad                              resb 2      ; 0xe byte[2]
+    .slots                            resb 264    ; 0x10 NetPlayerSlot[6]
+    .groupData                        resb 8      ; 0x118 NetDataRef
+    .sessionDesc                      resb 80     ; 0x120 DPSESSIONDESC2
 endstruc
 
 ; /scr_structs.h/SCR_CMD_HEADER  (8 bytes)

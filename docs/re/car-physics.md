@@ -40,7 +40,7 @@ from the disassembly where that mattered.
 * One physics step = **one logic tick = 33 ms** (`nextFrameDeltaTime` 0x45A460:
   `33 − (Game+0x30 ? 22 : 0)` in single player, always 33 in multiplayer). With
   `Game.compensationFPSTime` set the tick is 11 ms (writer not found).
-* `drawAndLimitFrames` 0x462A30 (called from `WinMain2`'s idle loop) uses `timeGetTime()` only.
+* `drawAndLimitFrames` 0x462A30 (called from `WinMain`'s idle loop) uses `timeGetTime()` only.
   Default registry `max_frame_rate=1`, `min_frame_rate=0` (`loadRenderSettings1` 0x4CB1D0): at most
   one tick per drawn frame and the deadline is re-based to "now" before each tick, so a slow machine
   runs the game slower instead of dropping ticks. `min_frame_rate=1` allows up to 8 catch-up ticks.
@@ -51,7 +51,7 @@ from the disassembly where that mattered.
 ## 3. Subsystem map (per tick)
 
 ```
-WinMain2 0x4D11B8 ─ drawAndLimitFrames 0x462A30 ─ Game_RunLogicStep 0x461930 ─ Game_StepByStatus 0x45C3B0
+`WinMain` 0x4D1170 ─ drawAndLimitFrames 0x462A30 ─ Game_RunLogicStep 0x461930 ─ Game_StepByStatus 0x45C3B0
  └ GameTick 0x45C1F0
     ├ Player_Update… → Player_HandleControls 0x4A76D0 → Player_DriveCar 0x4A4C40
     │     → Car_ApplyDriverControls 0x429810 → CarPhysics_SetControls 0x49FB00   (input bytes +0x91..+0x95, +0xAD)
@@ -308,7 +308,7 @@ comment in Ghidra has the evidence.
 | `0x462A30` | `drawAndLimitFrames` | the 33 ms fixed-step scheduler + draw | verified |
 | `0x4A4570` | `CarPhysics_Update` | per-car tick state machine (section 2) | verified |
 | `0x4CB1D0` | `loadRenderSettings1` | reads registry max_frame_rate (default 1) / min_frame_rate (default 0) used by the scheduler | verified |
-| `0x4D11B8` | `WinMain2` | main loop; idle -> drawAndLimitFrames | verified |
+| `0x4D1170` | `WinMain` | main loop; idle -> drawAndLimitFrames (`0x4D11B8` is the false split `WinMain_AfterNoppedMutexCheck_Frag`) | verified |
 
 #### 2. Integration, pose, Z and trailers (69)
 

@@ -39,7 +39,7 @@ The PE timestamp says 2004-04-27, while the original 1999 release was built with
 
 | Range | What it is |
 |---|---|
-| `0x4D0000-0x4D47xx` | Game code: weapons tail, `WndProc`, `WinMain`/`WinMain2`, `Startup_ConnectMultiplayerFromRegistry`, video/renderer DLL loading (`LoadRenderDll`, `InitVideoDll`). |
+| `0x4D0000-0x4D47xx` | Game code: weapons tail, `WndProc`, `WinMain` (+ the false split `WinMain_AfterNoppedMutexCheck_Frag`, was `WinMain2`), `Startup_ConnectMultiplayerFromRegistry`, video/renderer DLL loading (`LoadRenderDll`, `InitVideoDll`). |
 | `0x4D48D0-0x4D5CC5` | Old MSVC iostream (about 50 functions). The game uses it only for logs: `do_miss_logging` → `ofstream_Open`, and `DebugLog_WriteLine` → `ostream_OperatorShiftString`. |
 | `0x4D5CE1-0x4E3Fxx` | MSVC 7.0 CRT in library link order: heap (`malloc`, `sbheap.c`), C++ EH (`frame.cpp`, `Unwind@` funclets), stdio, lowio, `output.c`/`input.c`, float conversion (`cvt.c`, `intrncvt.c`, `strgtold`, `x10fout`), mbctype, time/tz, environment, signals. |
 | `0x51C730`, `0x52E0A0` | Two static-initialiser functions reached only through data pointers (`0x584498`, `0x586D48`, presumably the `__xc` initialiser table): `StaticInit_DebugFlagsDefaults` and `StaticInit_RandomDebugLog`. They are game code, not CRT. |
@@ -87,16 +87,18 @@ that, Ghidra split some original functions into a head plus a detached tail. Tho
 named `*_Frag`/`*Fragment` (for example `0x40653E`, `0x40667C`, `0x406C92`, `0x40720D`).
 
 - `Patch1144_EntryStub` `0x56DCDA`: caches the process heap, see §2.
-- `Patch1144_NetSession_AllocSlotBlock` `0x56DCAB`: `HeapAlloc(…, 0x518)` into `NetDlg+4`. It moves
+- `Patch1144_NetDlg_AllocMapTable` `0x56DCAB` (was `Patch1144_NetSession_AllocSlotBlock`): `HeapAlloc(…, 0x518)` into `NetDlg+4`. It moves
   the per-map lobby slot table out of the dialog object into a heap block. The seven
   `Patch1144_NetLobby_*Hook` stubs (`0x56DBE0-0x56DC4C`) redirect the old `this+0x30C`/`+0x410`
   table accesses to that block. Plausibly this raised the map-count limit (medium confidence).
 - `Patch1144_Mmp_StrToLowerInPlace` `0x56DD18`: lowercases `.mmp` map file names
-  (`Network_ReadMmpMapFiles`).
+  (`NetDlg_ReadMmpMapFiles`).
 - `Patch1144_NetDlg_SetMapNameNAText` `0x56DE0C`: shows `N/A: %s` for a map the player does not
   have (lobby item `0x41E`).
-- `Patch1144_NetDlg_ChatFlagResetHook`/`StoreChatFlagHook`/`ChatFocusHook` `0x56DE95-0x56DED4`:
-  lobby chat/focus flags at `0x676FF0..2`.
+- `Patch1144_NetDlg_AutoCreateHook`/`StoreSessionsAvailableHook`/`AutoJoinHook` `0x56DE95-0x56DED4`
+  (were `ChatFlagResetHook`/`StoreChatFlagHook`/`ChatFocusHook`): the `-c`/`-j` command-line
+  auto-create and auto-join, flags `g_NetDlgAutoCreate`/`g_NetDlgAutoJoin`/`g_NetDlgSessionsAvailable`
+  at `0x676FF0..2` (network.md §2).
 - `Patch1144_OnKeyDown_LaunchManagerHook` `0x56DD67`: in `Player_OnKeyDown`, launches the GTA2 Manager
   unless flag `0x673E2C` is set.
 - Seq 47: ten more stubs live in the code cave at the start of `.text` (`0x3F1000-0x3F1Cxx`, next to
@@ -121,50 +123,24 @@ named `*_Frag`/`*Fragment` (for example `0x40653E`, `0x40667C`, `0x406C92`, `0x4
 
 ## 5. Network architecture
 
-GTA2 multiplayer is a thin layer over **DirectPlay 4** (`DPLAYX`, wide-char interfaces), written
-by DMA in `NetworkX.cpp` (the file name appears in `DisplayError` calls). It has three parts:
+The full reference is now [network.md](network.md) (Seq 27 networking pass): startup, the `Network`
+object, the `NetDlg` lobby, the byte-exact wire format, the lockstep, MP game logic, 74 merged bugs
+and the DirectPlay surface our host must provide. In short:
 
-1. **Startup** (`Startup_ConnectMultiplayerFromRegistry` `0x4D0ED0`, called from `WinMain2` when
-   the game runs multiplayer). It reads `UseProtocol` (a 16-byte service-provider GUID) and
-   `UseConnection` (a DirectPlay address blob) from `HKCU\Software\DMA Design Ltd\GTA2\Network`.
-   It then calls `Network_Connect` on `g_NetworkSession` and runs the lobby dialog `NetDlg`.
-   When the dialog closes, it copies the chosen map (`gmp`/`sty`/`scr` paths, from the `.mmp`
-   files read by `Network_ReadMmpMapFiles`) and the game settings into the frontend `Menu`.
-2. **The Network object** (`g_NetworkSession`, `Network_Ctor` `0x40A2C0`, vtable `0x56E740`):
-   - **Interfaces**: `+0x5E0` IDirectPlay4 and `+0x5DC` the lobby interface (`Network_CreateLobbyInterface`:
-     `CoCreateInstance` + `DirectPlayLobbyCreateW`). `+0x5D4` is the local player id and `+0x754`
-     a group id (`unsure_`).
-   - **Tables**: `+0x2C` connection list (stride 0x1C, max 8), `+0xC0` session descriptions (max 16).
-     Player slots are 6 of stride 0x2C, with the dpid at `+0x20` and the name at `+0x780`.
-     `+0x8F4` holds pending out-of-order packets (0x30 slots).
-   - **State** at `+0x44`: 1 = enumerating sessions, 2 = idle/hosting, 3/4 = in game.
-   - **Events**: callback slots at `+0x54..` (id 1/2/3/5/6/7/8/9 = …/player added/…/session list
-     updated/ping/…/session joined/game start). `NetDlg_Run` registers 8 of them.
-   - **COM calls** (IDirectPlay4 vtable offsets checked against `dplay.h` order):
-     `EnumSessions` +0x34 (`Network_SelectConnectionAndEnumSessions`), `Open` +0x60
-     (`Network_JoinSession`), `Receive` +0x64 (`Network_ReceiveMessage` → `Network_HandleSystemMessage`
-     / `Network_HandleReceivedPacket`), `Send` +0x68 (`Network_SendTo`, broadcasts), `SetGroupData` +0x6C
-     (`Network_PublishSettings`), `SetSessionDesc` +0x7C (`Network_SendStartAndLockSession` sets
-     `DPSESSION_JOINDISABLED`), `InitializeConnection` +0x98, `SendChatMessage` +0xA0,
-     `DeletePlayerFromGroup` +0x1C.
-3. **In-game sync** is lockstep. `Network_BroadcastFrameData`/`Network_SendFrameDataToPlayer` send
-   type-3 frame packets carrying a byte sequence number (`Network_SeqDelta`).
-   `Network_ReceiveFrameData` waits up to 500 ms per player for the next in-order packet and
-   buffers early ones (`Network_QueuePendingPacket`/`PopOldestPendingPacket`).
-   `Network_WaitForAllPlayersSync` gates the start of the game. Ping requests (`timeGetTime`
-   stamp) keep a running average per player (`Network_UpdatePlayerPing`). The wire format is packed by
-   `Network_PackMessage`/`Network_EncodePacket` (types 1..9).
+- DMA's source file is `NetworkX.cpp` (it appears in the `DisplayError` calls).
 
-**Lobby dialog** `NetDlg` (dialog resource `0x67`, object larger than 0x20220 bytes, vtable `0x56E598`):
-
-- **Message handling**: `NetDlg_DialogProc` `0x408920` dispatches `WM_INITDIALOG` → `NetDlg_OnInitDialog`,
-  `WM_COMMAND` → `NetDlg_OnCommand` (create/join/start/chat), `WM_TIMER` and `WM_HSCROLL` (game-speed
-  trackbar).
-- **Pages**: `NetDlg_ShowPage` swaps 30 controls per page.
-- **Settings**: `NetDlg_SetSetting` stores map, score limit, game type, speed, police and time
-  limit in the registry (`Reg_Network_SetDword`) and pushes them to the session. The
-  `NetDlg_Set*Text` functions refresh the labels.
-- **Player name**: kept in the registry value `PlayerName`.
+- The game uses **IDirectPlay3 (wide)** at `Network+0x5E0` and **IDirectPlayLobby2** at `+0x5DC`
+  (`Network_CreateInterfaces` `0x408C80`), not IDirectPlay4. The vtable offsets (network.md §9.2) are the same.
+- `Network.state` (`+0x44`): 1 = enumerating sessions, 2 = in game, 3 = hosting in the lobby,
+  4 = joined in the lobby, 5 = idle (ctor). The earlier "2 = idle/hosting, 3/4 = in game" was wrong.
+- Player tables: `pendingPlayers` `+0x5E4` and `players` `+0x754` (`NetPlayerTable`, 0x170; group
+  id, count, `frameSeq[6]` `+0x75C`, six 0x2C slots from `+0x764`, settings blob, session desc).
+- Wire messages are types 1..9; `0x409680` decodes them in place and is now
+  `Network_DecodeReceivedMessage` (was `Network_PackMessage`). Lockstep frames go through
+  `Network_ReceiveGameMessage` `0x40C120` (was `Network_ReceiveFrameData`).
+- Startup is `Startup_ConnectMultiplayerFromRegistry` `0x4D0ED0`, called from `WinMain` after
+  `CmdLine_ParseArguments` `0x461810` sets `isMultiplayer` (`-n`/`-c`/`-j`). The `.mmp` scan is
+  `NetDlg_ReadMmpMapFiles` `0x407930`; the settings land in `g_NetGameSettings` `0x673E30`.
 
 Struct facts for the layouts were sent to their owners: PedGroup/Ped → Seq 27,
 TrailerController/Car → Seq 43 (which identified the `0x40F7C0-0x40F830` accessors as `CarPhysics_Get/Set{CenterPos,ZPos,Heading}`), PedGameObject/Object/collision record → Seq 46.
@@ -256,7 +232,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x405A60` | `NetDlg_GetHwnd` | high | returns this+0x20218, used as hDlg in SendDlgItemMessage/GetDlgItem |
 | `0x405AA0` | `NetDlg_ShowPage` | high | ShowWindow(HIDE) 30 controls of current page, show 30 of new page (0x78 stride), stores prev/cur page |
 | `0x405B10` | `NetDlg_GetPage` | high | returns this+0x2020c current page |
-| `0x405B20` | `NetDlg_ClearListControl` | medium | SendDlgItemMessage msg 0x1009 (LVM_DELETEALLITEMS) on hDlg; no direct callers |
+| `0x405B20` | `NetDlg_ClearListView` (was `NetDlg_ClearListControl`, Seq 27 net pass) | medium | SendDlgItemMessage msg 0x1009 (LVM_DELETEALLITEMS) on hDlg; no direct callers |
 | `0x405EC0` | `NetDlg_AppendChatLine` | high | formats "name : text" with Network_GetPlayerName, appends to edit 0x3fe/0x41b via EM_SETSEL/EM_REPLACESEL |
 | `0x4061C0` | `NetDlg_ShowPlayerName` | high | WideCharToMultiByte of name at +0x1fd78, SetDlgItemText id 0x3ec |
 | `0x406210` | `NetDlg_IncPlayerCount` | medium | increments dword this+0x1fd6c (count compared >1 to enable start button) |
@@ -268,87 +244,87 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x406270` | `NetDlg_LoadPlayerNameFromRegistry` | high | reads HKCU Software\DMA Design Ltd\GTA2\Network "PlayerName" into wchar +0x1fd78 |
 | `0x406320` | `NetDlg_SetPlayerName` | high | copies wstring to +0x1fd78 and writes "PlayerName" registry value |
 | `0x4063C0` | `NetDlg_SendChatFromEdit` | medium | GetDlgItemText, converts to wide, sends via session 0x409d00, clears edit, echoes AppendChatLine |
-| `0x406450` | `NetDlg_CopyMapInfo` | medium | copies 0x48 dwords from this+0x1ff84 into out buffer |
+| `0x406450` | `NetDlg_CopySettings` (was `NetDlg_CopyMapInfo`, Seq 27 net pass) | medium | copies 0x48 dwords from this+0x1ff84 into out buffer |
 | `0x406470` | `NetDlg_LoadSettingsFromRegistry` | high | Reg_Network_GetDwordOrInit map_index/game_time_limit/game_speed/game_type/police/f_limit |
 | `0x40653E` | `NetDlg_CopyMapNameFragment` | high | mid-function tail inside 0x56dbe0: strcpy param into ESI+0x1ff84 |
-| `0x406550` | `NetDlg_GetSelectedMapStr0` | medium | session+4 array entry stride 0x518 indexed by +0x20088; offset 0 |
-| `0x406570` | `NetDlg_GetSelectedMapStr1` | medium | same entry array, offset 0x104 |
-| `0x406590` | `NetDlg_GetSelectedMapStr2` | medium | same entry array, offset 0x208 |
-| `0x4065B0` | `Network_ReportMmpFileOpenError` | high | sprintf "Unable to open file: %s in mmpfile: %s" + MessageBox; caller Network_ReadMmpMapFiles |
-| `0x406660` | `NetDlg_UpdateStartRejectButtons` | unsure | calls 0x56dc04 with mapIndex+1 and *0x51 (like 0x406470); guarded by player count |
-| `0x40667C` | `NetDlg_EnableControls3FDAnd3FCFragment` | high | mid-function tail inside 0x56dc04: EnableWindow ctrl 0x3fd/0x3fc by player count >1 |
-| `0x4066E0` | `NetDlg_SetCheckBox403` | medium | SendDlgItemMessage id 0x403 BM_SETCHECK(0xF1) 1 or 0 |
-| `0x406B80` | `NetDlg_SetNumericText40e` | medium | sprintf "%d" into SetDlgItemText id 0x40e |
+| `0x406550` | `NetDlg_GetSelectedGmpFile` (was `NetDlg_GetSelectedMapStr0`, Seq 27 net pass) | medium | session+4 array entry stride 0x518 indexed by +0x20088; offset 0 |
+| `0x406570` | `NetDlg_GetSelectedStyFile` (was `NetDlg_GetSelectedMapStr1`, Seq 27 net pass) | medium | same entry array, offset 0x104 |
+| `0x406590` | `NetDlg_GetSelectedScrFile` (was `NetDlg_GetSelectedMapStr2`, Seq 27 net pass) | medium | same entry array, offset 0x208 |
+| `0x4065B0` | `NetDlg_ReportMmpFileOpenError` (was `Network_ReportMmpFileOpenError`) | high | sprintf "Unable to open file: %s in mmpfile: %s" + MessageBox; caller NetDlg_ReadMmpMapFiles |
+| `0x406660` | `NetDlg_UpdateStartRejectButtons` | high (Seq 27) | Start 0x3FD enabled iff playerCount == map PlayerCount (or 0); Reject 0x3FC iff playerCount > 1 |
+| `0x40667C` | `NetDlg_EnableStartReject_Frag` (was `NetDlg_EnableControls3FDAnd3FCFragment`, Seq 27 net pass) | high | mid-function tail inside 0x56dc04: EnableWindow ctrl 0x3fd/0x3fc by player count >1 |
+| `0x4066E0` | `NetDlg_SetCopsCheckBox` (was `NetDlg_SetCheckBox403`, Seq 27 net pass) | medium | SendDlgItemMessage id 0x403 BM_SETCHECK(0xF1) 1 or 0 |
+| `0x406B80` | `NetDlg_SetTimeLimitEditText` (was `NetDlg_SetNumericText40e`, Seq 27 net pass) | medium | sprintf "%d" into SetDlgItemText id 0x40e |
 | `0x406BC0` | `NetDlg_ScalarDeletingDtor` | high | calls 0x405a40 vtable reset, _free if flag&1 |
-| `0x406C92` | `NetDlg_EnableControlFragment` | high | mid-function tail in 0x56dec0: EnableWindow(GetDlgItem(hDlg,id),flag) |
+| `0x406C92` | `NetDlg_EnableJoinButton_Frag` (was `NetDlg_EnableControlFragment`, Seq 27 net pass) | high | mid-function tail in 0x56dec0: EnableWindow(GetDlgItem(hDlg,id),flag) |
 | `0x406E40` | `NetDlg_OnTimer` | high | if exit flag EndDialog(1) and frees locale; else listbox 1000 get sel text, Network refresh 0x40c380, reselect |
-| `0x407070` | `NetDlg_InitListColumns` | high | Adds "Player Name"/"Ping" columns to list controls 0x400/0x41a (LVM_INSERTCOLUMN), then combo init; called by NetDlg_OnInitDialog |
+| `0x407070` | `NetDlg_InitControls` (was `NetDlg_InitListColumns`, Seq 27 net pass) | high | Adds "Player Name"/"Ping" columns to list controls 0x400/0x41a (LVM_INSERTCOLUMN), then combo init; called by NetDlg_OnInitDialog |
 | `0x40720D` | `NetDlg_InitControls_Frag` | medium | Detached tail of NetDlg_InitListColumns: fills map list 0x402 (stride 0x518) and combo 0x40c with netui19/20/22 |
 | `0x407362` | `NetDlg_UpdateSettingTexts_Frag` | medium | Detached fragment calling NetDlg_Set{PlayersRequired,ScoreLimit,GameSpeed}Text on dialog state |
-| `0x4073D0` | `NetDlg_SetSessionDesc` | medium | Copies 0x120-byte game-settings blob into dialog+0x1ff84 |
+| `0x4073D0` | `NetDlg_ApplyRemoteSettings` (was `NetDlg_SetSessionDesc`, Seq 27 net pass) | medium | Copies 0x120-byte game-settings blob into dialog+0x1ff84 |
 | `0x407402` | `NetDlg_FindMapByName_Frag` | medium | Detached loop: wcscmp over map table stride 0x518, copies match to +0x1ff84, sets selected index +0x20088 |
-| `0x407476` | `NetDlg_UpdateGameSpeedText_Frag` | medium | Detached fragment: netui10/11/12 text into control 0x41f, then Cops/GameType/TimeLimit texts |
+| `0x407476` | `NetDlg_UpdateClientSettingTexts_Frag` (was `NetDlg_UpdateGameSpeedText_Frag`, Seq 27 net pass) | medium | Detached fragment: netui10/11/12 text into control 0x41f, then Cops/GameType/TimeLimit texts |
 | `0x40748D` | `NetDlg_ShowMissingMapError_Frag` | high | sprintf "### ERROR ### Do Not Have Map %s", posts as chat text then refreshes texts |
 | `0x4075C0` | `NetDlg_SetSetting` | high | switch(1..7): map, score limit, game type, speed, police, time limit; saves to registry (Reg_Network_SetDword) and syncs |
 | `0x407605` | `NetDlg_SelectMap_Frag` | medium | Detached tail: copies map name, players-required text, Reg "map_index", pushes 0x120 settings blob |
 | `0x407C90` | `NetDlg_OnHScroll` | high | WM_HSCROLL handler (0x114): trackbar 0x407 -> NetDlg_SetSetting(5=game speed) |
 | `0x407D10` | `NetDlg_Ctor` | high | Sets vtable 0x56e598, zeroes dialog state, GetTickCount; called by FUN_004d0ed0 init |
-| `0x407D8B` | `NetDlg_Ctor_Frag` | medium | Detached ctor tail: zero loop, FUN_00406270 + Network_ReadMmpMapFiles |
-| `0x407DB0` | `NetDlg_OnCommand` | high | WM_COMMAND big switch: create/join/start/chat buttons, StartSession, CloseSession, EndDialog |
+| `0x407D8B` | `NetDlg_Ctor_Frag` | medium | Detached ctor tail: zero loop, NetDlg_LoadPlayerNameFromRegistry + NetDlg_ReadMmpMapFiles |
+| `0x407DB0` | `NetDlg_OnCommand` | high | WM_COMMAND big switch: create/join/start/chat buttons, Network_HostSession, CloseSession, EndDialog |
 | `0x408920` | `NetDlg_DialogProc` | high | DLGPROC: WM_INITDIALOG(0x110), WM_COMMAND(0x111), WM_TIMER(0x113), WM_HSCROLL(0x114) |
 | `0x408954` | `NetDlg_CommandThunk` | medium | Splits wParam and forwards to NetDlg_OnCommand; callers are detached fragments |
 | `0x4089C0` | `NetDlg_Run` | high | Registers 8 network event handlers then DialogBoxParamA(resource 0x67, NetDlg_DialogProc) |
 | `0x408A90` | `Network_AddConnectionEntry` | medium | Appends 0x1c-byte entry (GUID, wide name copy, connection blob copy) to list +0x2c, max 8; called from Network_Connect |
-| `0x408C40` | `Network_ReleaseDirectPlay` | high | Release (vtbl+8) on COM ptrs +0x5e0 (IDirectPlay4) and +0x5dc, nulls them |
-| `0x408C80` | `Network_CreateLobbyInterface` | high | CoCreateInstance + DirectPlayLobbyCreateW + QueryInterface into +0x5dc/+0x5e0 |
+| `0x408C40` | `Network_ReleaseDirectPlay` | high | Release (vtbl+8) on COM ptrs +0x5e0 (IDirectPlay3) and +0x5dc (IDirectPlayLobby2), nulls them |
+| `0x408C80` | `Network_CreateInterfaces` (was `Network_CreateLobbyInterface`, Seq 27 net pass) | high | CoCreateInstance + DirectPlayLobbyCreateW + QueryInterface into +0x5dc/+0x5e0 |
 | `0x408CF0` | `Network_CopyConnectionNames` | medium | Unused: duplicates wide names of connection entries into caller array, returns count |
-| `0x408E80` | `Network_AddNameString` | medium | Unused: appends wcsdup of string to list +0x30 (max 8) |
+| `0x408E80` | `Network_AddModemName` (was `Network_AddNameString`, Seq 27 net pass) | medium | Unused: appends wcsdup of string to list +0x30 (max 8) |
 | `0x409460` | `Network_AddSessionDesc` | medium | Copies DPSESSIONDESC2 (0x50) + wide name into session table at +0xc0 (max 16), count +0x5c0 |
-| `0x409620` | `Network_SetEventHandler5` | high | Stores callback+ctx in slot 5 (+0x84); event 5 = session list updated (dispatched by Network_Update) |
-| `0x409650` | `Network_SendTo` | high | IDirectPlay4::Send (vtbl+0x68) from local player to given dpid |
-| `0x409680` | `Network_PackMessage` | medium | Wraps payload into header-framed message by type 1..9; DisplayError "NetworkX.cpp" |
-| `0x409890` | `Network_FreePlayerSlot` | high | _free two buffers of 0x2c player slot, zero it, decrement player count |
-| `0x4099B0` | `Network_SetEventHandler2` | high | Stores callback+ctx in slot 2 (+0x60); event 2 = player added |
-| `0x4099D0` | `Network_AddPlayerFromEvent` | medium | Unused: calls Network_AddPlayerRecord on args, returns success |
+| `0x409620` | `Network_SetSessionListHandler` (was `Network_SetEventHandler5`, Seq 27 net pass) | high | Stores callback+ctx in slot 5 (+0x84); event 5 = session list updated (dispatched by Network_Update) |
+| `0x409650` | `Network_SendTo` | high | IDirectPlay3::Send (vtbl+0x68) from local player to given dpid |
+| `0x409680` | `Network_DecodeReceivedMessage` (was `Network_PackMessage`, Seq 27 net pass) | high | Rewrites a received wire message (types 1..9) in place into the 5-byte internal header form; DisplayError "NetworkX.cpp" |
+| `0x409890` | `NetPlayerTable_FreeSlot` (was `Network_FreePlayerSlot`, Seq 27 net pass) | high | _free two buffers of 0x2c player slot, zero it, decrement player count |
+| `0x4099B0` | `Network_SetPlayerAddedHandler` (was `Network_SetEventHandler2`, Seq 27 net pass) | high | Stores callback+ctx in slot 2 (+0x60); event 2 = player added |
+| `0x4099D0` | `Network_AddEnumeratedPlayer` (was `Network_AddPlayerFromEvent`, Seq 27 net pass) | medium | Unused: calls Network_AddPlayerRecord on args, returns success |
 | `0x409A30` | `Network_SetGroupId` | high | this+0x754 is the idGroup of DeletePlayerFromGroup/SetGroupData |
-| `0x409A40` | `Network_FreeAllPlayerSlots` | high | Loops Network_FreePlayerSlot, frees +0x150 buffer, zeroes block |
-| `0x409A90` | `Network_FindPlayerIndexByDpid` | high | Scans 6 slots stride 0x2c comparing +0x20; returns 0xEEEEEEEE if none |
-| `0x409AC0` | `Network_SetEventHandler3` | high | Stores callback+ctx in slot 3 (+0x6c) |
-| `0x409AE0` | `Network_SetEventHandler1` | high | Stores callback+ctx in slot 1 (+0x54) |
+| `0x409A40` | `NetPlayerTable_Clear` (was `Network_FreeAllPlayerSlots`, Seq 27 net pass) | high | Loops Network_FreePlayerSlot, frees +0x150 buffer, zeroes block |
+| `0x409A90` | `NetPlayerTable_FindByDpid` (was `Network_FindPlayerIndexByDpid`, Seq 27 net pass) | high | Scans 6 slots stride 0x2c comparing +0x20; returns 0xEEEEEEEE if none |
+| `0x409AC0` | `Network_SetPlayerRemovedHandler` (was `Network_SetEventHandler3`, Seq 27 net pass) | high | Stores callback+ctx in slot 3 (+0x6c) |
+| `0x409AE0` | `Network_SetSessionClosedHandler` (was `Network_SetEventHandler1`, Seq 27 net pass) | high | Stores callback+ctx in slot 1 (+0x54) |
 | `0x409B10` | `Network_UpdatePlayerPing` | high | Running average ping per player, dispatches event 6 with name+ping |
-| `0x409B90` | `Network_SetEventHandler6` | high | Stores callback+ctx in slot 6 (+0x90); event 6 = ping update |
-| `0x409BC0` | `Network_DeletePlayerFromGroupByName` | coordinator | DeletePlayerFromGroup = IDirectPlay4 vtbl+0x1C (dplay.h order) |
+| `0x409B90` | `Network_SetPingHandler` (was `Network_SetEventHandler6`, Seq 27 net pass) | high | Stores callback+ctx in slot 6 (+0x90); event 6 = ping update |
+| `0x409BC0` | `Network_DeletePlayerFromGroupByName` | coordinator | DeletePlayerFromGroup = IDirectPlay3 vtbl+0x1C (dplay.h order) |
 | `0x409C50` | `Network_SeqDelta` | high | Signed byte difference of two sequence counters |
 | `0x409C80` | `Network_DeletePlayerFromGroupByIndex` | coordinator | same, by player index |
 | `0x409CE0` | `Network_ClearPendingPackets` | high | Zeroes 0x30 pending-packet flags (stride 0x14 at +0x8f4) and count +0xcb4 |
 | `0x409D00` | `Network_SendChatMessage` | high | IDirectPlay3::SendChatMessage (vtbl+0xa0) with 0xC-byte DPCHAT |
-| `0x409D70` | `Network_SetEventHandler7` | high | Stores callback+ctx in slot 7 (+0x9c) |
-| `0x409DE0` | `Network_SetEventHandler8` | high | Stores callback+ctx in slot 8 (+0xa8); event 8 = session joined |
+| `0x409D70` | `Network_SetChatHandler` (was `Network_SetEventHandler7`, Seq 27 net pass) | high | Stores callback+ctx in slot 7 (+0x9c) |
+| `0x409DE0` | `Network_SetGroupDataHandler` (was `Network_SetEventHandler8`, Seq 27 net pass) | high | Stores callback+ctx in slot 8 (+0xa8); event 8 = group data (settings) received |
 | `0x409E10` | `Network_PublishSettings` | medium | Copies settings blob to +0x86c and calls COM vtbl+0x6c (SetGroupData) with it |
-| `0x409E90` | `Network_SetEventHandler9` | high | Stores callback+ctx in slot 9 (+0xb4); event 9 = game start |
+| `0x409E90` | `Network_SetGameStartHandler` (was `Network_SetEventHandler9`, Seq 27 net pass) | high | Stores callback+ctx in slot 9 (+0xb4); event 9 = game start |
 | `0x40A0F0` | `Network_QueuePendingPacket` | medium | Finds/inserts out-of-order packet in 0x30-entry table stride 0x14 |
 | `0x40A190` | `Network_PopOldestPendingPacket` | medium | Scans pending table for lowest seq via Network_SeqDelta, returns slot |
-| `0x40A250` | `Network_StoreLastSeqInfo` | low | Writes per-player last seq/ids into globals 0x5d3370/0x5d3378 |
+| `0x40A250` | `Network_ApplyRepeatFrameInput` (was `Network_StoreLastSeqInfo`, Seq 27 net pass) | high (Seq 27) | Resolves the wire-9 FFFFFFFF repeat against g_netLastFrameInput 0x5d3378, else stores the new input |
 | `0x40A2A0` | `Network_FreePendingPacketSlot` | high | Clears slot in-use flag, decrements count |
 | `0x40A2C0` | `Network_Ctor` | high | Sets vtable 0x56e740, CreateEvent, allocs 0x1800/0x800 buffers, inits tables |
 | `0x40A3A0` | `Network_Dtor` | high | Releases DirectPlay via vtbl 0x24/0x20/0x10, frees lists and buffers, CloseHandle |
 | `0x40A7F0` | `Network_EncodePacket` | medium | Converts internal packet (types 1..4 / subtypes) into wire bytes 1..9; DisplayError NetworkX.cpp 0x8df |
-| `0x40AAA0` | `Network_PromotePendingPlayer` | medium | Matches pending slot by dpid, Network_AddPlayerRecord, frees slot |
+| `0x40AAA0` | `NetPlayerTable_PromotePlayer` (was `Network_PromotePendingPlayer`, Seq 27 net pass) | medium | Matches pending slot by dpid, Network_AddPlayerRecord, frees slot |
 | `0x40AB90` | `Network_SendStartAndLockSession` | high | Sends start packet, sets session flags |
-| `0x40AC50` | `Network_SendSyncPacket` | medium | Encodes type-2 packet and Sends broadcast; used by WaitForAllPlayersSync |
+| `0x40AC50` | `Network_BroadcastSyncReady` (was `Network_SendSyncPacket`, Seq 27 net pass) | medium | Encodes type-2 packet and Sends broadcast; used by WaitForAllPlayersSync |
 | `0x40ACC0` | `Network_SendFrameDataToPlayer` | medium | Encodes type-3 frame packet with seq, sends to one player; called from game loop |
 | `0x40AD70` | `Network_BroadcastFrameData` | medium | Encodes type-3 packet with seq, broadcasts, increments local seq |
 | `0x40AF70` | `Network_SendDisconnectNotice` | medium | Broadcasts 1-byte payload 2; called from Network_CloseSession |
-| `0x40B000` | `Network_BroadcastCommand5` | low | Broadcasts 2-byte payload {1,param}; code 5 on wire |
-| `0x40B090` | `Network_BroadcastCommand1F` | low | Broadcasts payload byte 0x1f; used by WaitForAllPlayersSync |
+| `0x40B000` | `Network_BroadcastPlayerDropped` (was `Network_BroadcastCommand5`, Seq 27 net pass) | high (Seq 27) | Broadcasts wire 6 {1, int playerIndex} "player dropped" (5 = payload length) |
+| `0x40B090` | `Network_BroadcastSyncInfo` (was `Network_BroadcastCommand1F`, Seq 27 net pass) | high (Seq 27) | Broadcasts wire 3 NetPacketSyncInfo (0x1F = payload length); used by WaitForAllPlayersSync |
 | `0x40B120` | `Network_ScalarDeletingDtor` | high | Calls Network_Dtor, frees this if flag&1 |
-| `0x40B140` | `Network_InitDirectPlay` | medium | DirectPlayCreate, QI to IDirectPlay4, enumerates connections into list +0x30; called by Network_Connect |
+| `0x40B140` | `Network_EnumModems` (was `Network_InitDirectPlay`, Seq 27 net pass) | medium | DirectPlayCreate(DPSPGUID_MODEM), QI to IDirectPlay3, lobby EnumAddress collects modem names into list +0x30 (never read); called by Network_Connect |
 | `0x40B290` | `Network_SelectConnectionAndEnumSessions` | medium | Finds GUID in list, InitializeConnection (vtbl+0x98), EnumSessions (vtbl+0x34), state=1 |
 | `0x40B380` | `Network_SendPingRequest` | high | Sends packet with timeGetTime stamp for RTT; called from Network_Update |
 | `0x40B8F0` | `Network_JoinSession` | high | Open session (vtbl+0x60), CreatePlayer, enum players, GetPlayerData, dispatches events 2 and 8 |
-| `0x40BEC0` | `Network_ReceiveMessage` | high | IDirectPlay4::Receive (vtbl+0x64) loop; system messages go to Network_HandleSystemMessage |
-| `0x40BF80` | `Network_HandleReceivedPacket` | medium | Dispatches ping/pong (RTT -> Network_UpdatePlayerPing) and start-game (event 9) |
-| `0x40C120` | `Network_ReceiveFrameData` | medium | Waits up to 500ms for next in-order frame packet from player, uses pending table |
+| `0x40BEC0` | `Network_ReceiveMessage` | high | IDirectPlay3::Receive (vtbl+0x64) loop; system messages go to Network_HandleSystemMessage |
+| `0x40BF80` | `Network_HandleLobbyMessage` (was `Network_HandleReceivedPacket`, Seq 27 net pass) | medium | Dispatches ping/pong (RTT -> Network_UpdatePlayerPing) and start-game (event 9) |
+| `0x40C120` | `Network_ReceiveGameMessage` (was `Network_ReceiveFrameData`, Seq 27 net pass) | medium | Waits up to 500ms for next in-order frame packet from player, uses pending table |
 | `0x40C380` | `Network_UpdateLobby` | high | Per-state poll: state1 EnumSessions refresh (event 5), state 3/4 pings and packet receive |
 | `0x40CF60` | `Camera_BoundsContainPoint` | high | Four Fix16 compares of two stack args against bounds at +0x78..+0x84 |
 | `0x40E490` | `Ang16_SnapToCardinal` | low | Clamps *short into 0, 0x168 or 0x438 buckets; used by PedGameObject_StateWalk |
@@ -386,7 +362,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x4D0800` | `WeaponPool_Destroy` | high | deletes g_WeaponPool via scalar deleting dtor, nulls global |
 | `0x4D09B0` | `Keyboard_SetActiveFlag` | medium | writes byte at this+0x75344 of _keyboard; called only from WndProc helper |
 | `0x4D09D0` | `WndProc_ForwardKeyboardActive` | medium | WndProc helper: if !isExit set _keyboard flag else FrontEnd_SetKeyboardActive |
-| `0x4D0ED0` | `Startup_ConnectMultiplayerFromRegistry` | medium | reads UseProtocol/UseConnection registry blobs, Network_Connect, sets menu gmp/sty/scr paths; called from WinMain2 |
+| `0x4D0ED0` | `Startup_ConnectMultiplayerFromRegistry` | medium | reads UseProtocol/UseConnection registry blobs, Network_Connect, sets menu gmp/sty/scr paths; called from WinMain (`0x4D11B8` `WinMain2` is now `WinMain_AfterNoppedMutexCheck_Frag`, a false split) |
 | `0x4D48D0` | `ios_Ctor` | high | old MSVC iostream ios init: vptr, bp=0, state=4(badbit), fill=' ' at +0x2c, width at +0x30 |
 | `0x4D4940` | `ios_Dtor` | high | ios dtor: deletes bp if delbuf(+0x1c), clears bp, state=badbit |
 | `0x4D4969` | `ios_Init` | high | ios::init(streambuf*): frees old delbuf bp, sets bp, state=badbit if null |
@@ -558,14 +534,14 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x56DC28` | `Patch1144_NetLobby_SlotTableBase410Hook` | medium | EDI=[this+4]+0x410, jmp 0x407402; hooks 0x4073d0 |
 | `0x56DC3A` | `Patch1144_NetLobby_SlotEntryAddr30CHook` | medium | EDX=blk+ECX*8+0x30c, jmp 0x407476; hooks 0x407402 |
 | `0x56DC4C` | `Patch1144_NetLobby_SlotEntryAddr414Hook` | medium | EAX=blk+ECX*8+0x410, jmp 0x407605; hooks 0x4075c0 (case 1 map_index) |
-| `0x56DCAB` | `Patch1144_NetSession_AllocSlotBlock` | high | HeapAlloc(heap@0x676cd4,flags 9,0x518) into [this+4], then back to ctor tail 0x407d8b |
+| `0x56DCAB` | `Patch1144_NetDlg_AllocMapTable` (was `Patch1144_NetSession_AllocSlotBlock`, Seq 27 net pass) | high | HeapAlloc(heap@0x676cd4,flags 9,0x518) into [this+4], then back to ctor tail 0x407d8b |
 | `0x56DCDA` | `Patch1144_EntryStub` | high | GetModuleHandle KERNEL32/GetProcAddress GetProcessHeap -> 0x676cd4, then jumps to original entry body 0x4d8500 |
-| `0x56DD18` | `Patch1144_Mmp_StrToLowerInPlace` | high | lowercases A-Z in a C string in place; called from Network_ReadMmpMapFiles |
+| `0x56DD18` | `Patch1144_Mmp_StrToLowerInPlace` | high | lowercases A-Z in a C string in place; called from NetDlg_ReadMmpMapFiles |
 | `0x56DD67` | `Patch1144_OnKeyDown_LaunchManagerHook` | medium | in Player_OnKeyDown: if [0x673e2c] flag set go on, else FrontEnd_LaunchGta2Manager |
 | `0x56DE0C` | `Patch1144_NetDlg_SetMapNameNAText` | medium | sprintf 'N/A: %s' + SetDlgItemTextA(dlg item 0x41e); hooks 0x407476 call |
-| `0x56DE95` | `Patch1144_NetDlg_ChatFlagResetHook` | medium | if byte 0x676ff0==1 clears it and posts message 0x3ea; hooks lobby dlg proc 0x3f158c call |
-| `0x56DEC0` | `Patch1144_NetDlg_StoreChatFlagHook` | medium | stores byte 0x676ff2 from stack, pushes 0x3e9, jmp 0x406c92 |
-| `0x56DED4` | `Patch1144_NetDlg_ChatFocusHook` | medium | if (0x676ff1 & 0x676ff2) clears 0x676ff1 and posts 0x3e9 (0xf000000); hooks dlg proc 0x408920 |
+| `0x56DE95` | `Patch1144_NetDlg_AutoCreateHook` (was `Patch1144_NetDlg_ChatFlagResetHook`, Seq 27 net pass) | medium | if byte 0x676ff0==1 clears it and posts message 0x3ea; hooks lobby dlg proc 0x3f158c call |
+| `0x56DEC0` | `Patch1144_NetDlg_StoreSessionsAvailableHook` (was `Patch1144_NetDlg_StoreChatFlagHook`, Seq 27 net pass) | medium | stores byte 0x676ff2 from stack, pushes 0x3e9, jmp 0x406c92 |
+| `0x56DED4` | `Patch1144_NetDlg_AutoJoinHook` (was `Patch1144_NetDlg_ChatFocusHook`, Seq 27 net pass) | medium | if (0x676ff1 & 0x676ff2) clears 0x676ff1 and posts 0x3e9 (0xf000000); hooks dlg proc 0x408920 |
 
 ### Names added by Seq 47 (slice 2: 0x449000-0x4759FF)
 
@@ -582,11 +558,11 @@ Evidence is in each function's Ghidra plate comment. `unsure_` = honest guess, `
 | `0x45B0B0` | `PlayerScore_GetReverseCount` | high | printed as "reverse_count" by ShowCounters |
 | `0x45F970`, `0x45FB10`, `0x45FBA0` | `Keyboard_IsReplayPlayback`, `_FlushReplayLog`, `_ResetReplayBufferOnMarker` | unsure | replay buffer (40000 x 12) around Keyboard +0x38 mode |
 | `0x45F269`, `0x45FAFF`, `0x45FB59` | `Debug_WriteSessionInfoDump_Frag`, `Keyboard_RecordInputEvent_Tail`, `Keyboard_FlushReplayLog_Epilogue` | high | epilogues reached by JMP from 11.44 patch stubs |
-| `0x461760` | `CmdLine_CountArguments` | high | whitespace token count, caller parseArguments |
+| `0x461760` | `CmdLine_CountArguments` | high | whitespace token count, caller CmdLine_ParseArguments (was parseArguments) |
 | `0x4619D0` | `Game_RequestForcedLogicStep` | medium | sets DAT_0066274C read by drawAndLimitFrames |
-| `0x461DA0` | `Network_GetPlayerCount` | medium | +0x758 of g_NetworkSession, tested >1 |
+| `0x461DA0` | `Network_GetPlayerTableCount` (was a second `Network_GetPlayerCount`) | medium | +0x758 of g_NetworkSession (= players.count), tested >1 |
 | `0x4620A0` | `Game_ShutdownOnce` | high | guarded by DAT_00662785, calls DeinitGame + SoundMgr_Shutdown |
-| `0x4620E0` | `Multiplayer_ShowPlayerLeftMessage` | high | GXT "comms1" to kill feed |
+| `0x4620E0` | `Multiplayer_RemoveLeftPlayer` (was `Multiplayer_ShowPlayerLeftMessage`, Seq 27 net pass) | high | GXT "comms1" to kill feed |
 | `0x462140`, `0x462440`, `0x4624E0`, `0x4626D0` | `Multiplayer_ExchangeLockstepInputs`, `_BroadcastLocalInput`, `_ApplyBufferedInputs`, `Game_UpdateLockstepInputFrame` | medium | Main.cpp lockstep input exchange, caller drawAndLimitFrames |
-| `0x462820` / `0x462850` | `Game_FatalExitWithAlert` / `Network_VerifyPlayerSyncInfo` | high | "Player %s: ... is different" strings |
+| `0x462820` / `0x462850` | `Game_FatalExitWithAlert` / `Multiplayer_VerifySyncInfo` (was `Network_VerifyPlayerSyncInfo`) | high | "Player %s: ... is different" strings |
 | `0x472620` | `RandomDebugLog_Ctor` | high | Crt_Srand(1), StaticInit_RandomDebugLog |

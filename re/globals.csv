@@ -15,6 +15,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00575920,g_WeaponDefaultAmmo,,USER_DEFINED,.rdata,,/byte[28],28
 0x005787c8,vftable,type_info,IMPORTED,.rdata,,/pointer,4
 0x0058f512,g_PedGroupDoorCursor,,USER_DEFINED,.data.exp,,/byte,1
+0x0058f518,g_NetDlgControlTable,,USER_DEFINED,.data.exp,,/auto_structs/NetDlgControlDef[90],10440
 0x00591e7c,g_PedOffscreenTicksLimitInit,,USER_DEFINED,.data.exp,,/undefined2,2
 0x00591e84,nextPedId,,USER_DEFINED,.data.exp,,/uint,4
 0x00591e88,relToS24_unk17,,USER_DEFINED,.data.exp,,/undefined1,1
@@ -108,6 +109,10 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005d25f4,g_FileIsOpen,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005d28c8,g_PedGroups,,USER_DEFINED,.data.exp,,/imported/seuko-mod/PedGroup[20],1360
 0x005d31d8,g_NetDialogLocaleSettings,,USER_DEFINED,.data.exp,,/auto_structs/LocaleSettings *,4
+0x005d31dc,g_NetDlgTimerId,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005d336c,g_NetDlgChatLineCount,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005d3370,g_netLastFrameSeq,,USER_DEFINED,.data.exp,,/byte[8],8
+0x005d3378,g_netLastFrameInput,,USER_DEFINED,.data.exp,,/uint[6],24
 0x005d351c,g_RoadNetwork,,USER_DEFINED,.data.exp,,/RoadNetwork *,4
 0x005d3900,g_Ang16_0,,USER_DEFINED,.data.exp,,/math/Ang16,2
 0x005d3938,g_Fix16SinTable,,USER_DEFINED,.data.exp,,/math/Fix16[1440],5760
@@ -131,6 +136,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e202c,ptrToPlayAVocal,,USER_DEFINED,.data.exp,,,
 0x005e21cc,ptrToS5,,USER_DEFINED,.data.exp,,/auto_structs/S5 *,4
 0x005e3cc4,g_ViewCamera,,USER_DEFINED,.data.exp,,/imported/seuko-mod/Camera *,4
+0x005e3dcc,g_Camera_maxSpeedZFactor,,USER_DEFINED,.data.exp,,/math/Fix16,4
 0x005e3f54,eq8192,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e4088,g_aiProbing,,USER_DEFINED,.data.exp,,/byte,1
 0x005e408c,g_trafficModelsGoodCount,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -158,7 +164,10 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e507c,g_CarAI_onRampBlock,,USER_DEFINED,.data.exp,,/bool,1
 0x005e507e,g_CarAI_driveOrderActive,,USER_DEFINED,.data.exp,,/bool,1
 0x005e507f,g_CarAI_followLaneAllowed,,USER_DEFINED,.data.exp,,/bool,1
+0x005e5080,g_CarAI_gasAllowed,,USER_DEFINED,.data.exp,,/bool,1
+0x005e5083,g_CarAI_forwardAllowed,,USER_DEFINED,.data.exp,,/bool,1
 0x005e508c,g_CarAIPool,,USER_DEFINED,.data.exp,,/imported/seuko-mod/CarAIPool *,4
+0x005e5090,g_CarAI_junctionReserveCooldown,,USER_DEFINED,.data.exp,,/short,2
 0x005e5338,g_CarAI_targetSpeed,,USER_DEFINED,.data.exp,,/scr_structs.h/SCR_f,4
 0x005e5430,g_CarAI_curSpeed,,USER_DEFINED,.data.exp,,/scr_structs.h/SCR_f,4
 0x005e5448,g_CarModelTable_GciPath,,USER_DEFINED,.data.exp,,/undefined1,1
@@ -232,8 +241,8 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e9378,g_DoorManager,,USER_DEFINED,.data.exp,,/DoorManager *,4
 0x005e9708,pTextGameResource,,USER_DEFINED,.data.exp,,/undefined,1
 0x005e9808,generalCharBuf,,USER_DEFINED,.data.exp,,/undefined4,4
-0x005e9a08,g_BriefDebugTextBuf,,USER_DEFINED,.data.exp,,/undefined,1
-0x005e9f08,wcharBuf,,USER_DEFINED,.data.exp,,/wchar_t *,4
+0x005e9a08,g_BriefDebugTextBuf,,USER_DEFINED,.data.exp,,/wchar_t[640],1280
+0x005e9f08,wcharBuf,,USER_DEFINED,.data.exp,,/wchar_t[640],1280
 0x005ea408,fileNameBuffer,,USER_DEFINED,.data.exp,,/char[100],100
 0x005ea6b8,g_debugLog,,USER_DEFINED,.data.exp,,/undefined,1
 0x005ea9cc,g_FireEngineManager,,USER_DEFINED,.data.exp,,/FireEngineManager *,4
@@ -359,14 +368,31 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x006622b4,buf16384,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006622b8,g_LightManager,,USER_DEFINED,.data.exp,,/auto_structs/LightManager *,4
 0x006626a0,g_mpTimeAnnounced,,USER_DEFINED,.data.exp,,/undefined1,1
+0x006626a4,g_mpLockstepFrame,,USER_DEFINED,.data.exp,,/uint,4
+0x006626a8,g_mpTimeLeftTotalSeconds,,USER_DEFINED,.data.exp,,/undefined,1
+0x006626ac,g_mpQuitRequested,,USER_DEFINED,.data.exp,,/uint,4
+0x006626b0,g_mpSendPayload,,USER_DEFINED,.data.exp,,/net/NetDataRef,8
+0x006626bc,g_mpTotalRecvWaitMs,,USER_DEFINED,.data.exp,,/uint,4
 0x006626c0,g_mpTimeLeftSeconds,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006626c4,g_netLocalSyncInfo,,USER_DEFINED,.data.exp,,/net/NetPacketSyncInfo,31
+0x006626e3,g_spInputPollPending,,USER_DEFINED,.data.exp,,/bool,1
 0x006626e4,g_mpTimeLimitActive,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006626e8,g_mpTimeLeftMinutes,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006626f0,g_mpRecvPayload,,USER_DEFINED,.data.exp,,/net/NetDataRef,8
+0x006626f8,g_mpFrameInputs,,USER_DEFINED,.data.exp,,/net/NetFrameInput[6],48
+0x00662736,g_mpPlayersLeftMask,,USER_DEFINED,.data.exp,,/byte,1
 0x00662738,g_mpTimerFrameCounter,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066273c,g_mpTimerPagerSlot,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00662740,relatedToTime,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00662748,lastFrameTime,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066274c,g_forceLogicStepPending,,USER_DEFINED,.data.exp,,/bool,1
+0x00662750,g_mpAppliedInputs,,USER_DEFINED,.data.exp,,/net/NetFrameInput[6],48
 0x00662780,g_localPlayerIndex,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00662784,g_mpFirstLockstepFrame,,USER_DEFINED,.data.exp,,/bool,1
 0x00662786,g_startAttractReplay,,USER_DEFINED,.data.exp,,/undefined1,1
+0x00662b1c,g_mpPrevSentInputs,,USER_DEFINED,.data.exp,,/net/NetFrameInput[6],48
+0x00662b4c,g_mpLastSentInputs,,USER_DEFINED,.data.exp,,/net/NetFrameInput[6],48
+0x00662b7c,g_mpTimeBlinkCounter,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00662b80,g_spiralX,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00662b90,g_pLastBlockInfo,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00662b94,g_DummyWallBlockInfo,,USER_DEFINED,.data.exp,,/undefined,1
@@ -533,6 +559,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x0067280c,g_ScriptTriggerPool,,USER_DEFINED,.data.exp,,/ScriptTriggerPool *,4
 0x00672b90,g_EmergencyVehiclePool,,USER_DEFINED,.data.exp,,/EmergencyVehiclePool *,4
 0x00672f24,DefaultFontId,,USER_DEFINED,.data.exp,,/short,2
+0x00672f3c,g_HudFont_Brief,,USER_DEFINED,.data.exp,,/ushort,2
 0x00672f40,g_HudManager,,USER_DEFINED,.data.exp,,/auto_structs/HudManager *,4
 0x006732e0,full_height,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006732e4,full_width,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -560,6 +587,8 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00673d28,cwd,,USER_DEFINED,.data.exp,,/undefined,1
 0x00673e28,hInstance,,USER_DEFINED,.data.exp,,/WinDef.h/HINSTANCE,4
 0x00673e2c,isMultiplayer,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00673e30,g_NetGameSettings,,USER_DEFINED,.data.exp,,/auto_structs/NetGameSettings,288
+0x00673f50,g_windowMinimizedState,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00673f54,VERSION_MAJOR,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00673f58,VERSION_MINOR,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00674268,g_NetworkSession,,USER_DEFINED,.data.exp,,/auto_structs/Network,3256
@@ -575,6 +604,9 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00676cd8,strPathToGXT,,USER_DEFINED,.data.exp,,/undefined,1
 0x00676ddc,g_MmpPath,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00676eec,g_GciPath,,USER_DEFINED,.data.exp,,/undefined1,1
+0x00676ff0,g_NetDlgAutoCreate,,USER_DEFINED,.data.exp,,/undefined1,1
+0x00676ff1,g_NetDlgAutoJoin,,USER_DEFINED,.data.exp,,/undefined1,1
+0x00676ff2,g_NetDlgSessionsAvailable,,USER_DEFINED,.data.exp,,/byte,1
 0x006771f0,Rsrc_Icon_1_c09,,IMPORTED,.rsrc,,/IconResource,1384
 0x00677758,Rsrc_Icon_2_c09,,IMPORTED,.rsrc,,/IconResource,1736
 0x00677e20,Rsrc_Icon_3_c09,,IMPORTED,.rsrc,,/IconResource,2216

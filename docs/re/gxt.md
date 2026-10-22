@@ -60,7 +60,7 @@ tool (H: the launcher). Do not apply the font code page to them.
 ## 2. Loading and language selection (V)
 
 ```
-WinMain2 → Debug_LoadFlagsFromRegistry → Gxt_AreAllFilesMissing 0x451800   (start-up probe only)
+WinMain → Debug_LoadFlagsFromRegistry → Gxt_AreAllFilesMissing 0x451800   (start-up probe only)
 InitFrontend 0x456A60 ─┐
 Game_Ctor 0x45C4D0 ────┼→ operator_new(0x14) → LocaleSettings_Ctor 0x4C2620 (reads registry language)
 NetDlg_OnInitDialog ───┘    (lobby: own instance g_NetDialogLocaleSettings 0x5D31D8)
@@ -91,7 +91,7 @@ InitFrontend / LoadGMP_and_STY_Files 0x45B469 (sets g_Patch1144 flag 0x676204 = 
   It also resets the GCI path to `data\nyc.gci`. Shipped `.mmp` files have no `GXTFile`.
 - `Gxt_AreAllFilesMissing` (was `CheckIFGXTexists`, the old name was inverted) returns TRUE only
   if none of `data\{e,f,g,i,j,s}.gxt` opens; the result `g_gxtAllFilesMissing` 0x5EAD73 makes
-  `WinMain2` take the "no text" movie path (`doPlayMovies = 0xE`).
+  `WinMain` take the "no text" movie path (`doPlayMovies = 0xE`).
 - **Japanese** (`j`, `LocaleSettings_IsJapanese` 0x452E60): `Game_Ctor` also creates a
   `KanjiFont` (0x28 B) from `data\kanji.dat` = header `KANJ` + u16 100, chunks `KIDX` (u16 code →
   glyph index table) and `KBIT` (16×16 1-bpp bitmaps, 32 B each) (`KanjiFont_LoadKanjiDat`
