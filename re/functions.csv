@@ -1297,11 +1297,11 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004354f0,Ped_IsInTrain,,USER_DEFINED,__fastcall,USER_DEFINED,25,,bool __fastcall Ped_IsInTrain(Ped * ped)
 0x00435510,PedGameObjectPool_Dtor,,USER_DEFINED,__fastcall,USER_DEFINED,31,,undefined __fastcall PedGameObjectPool_Dtor(PedGameObjectManager * param_1)
 0x00435530,PedManager_GetLastPed,,USER_DEFINED,__fastcall,USER_DEFINED,4,,undefined4 __fastcall PedManager_GetLastPed(PedManager_S25 * param_1)
-0x00435540,S30_Dtor,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall S30_Dtor(S30 * param_1)
+0x00435540,PedListNodePool_Dtor,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall PedListNodePool_Dtor(PedListNodePool * param_1)
 0x00435550,PedGameObjectPool_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,71,,void * * __fastcall PedGameObjectPool_Ctor(PedGameObjectManager * param_1)
 0x004355a0,PedGameObjectPool_Pop,,USER_DEFINED,__fastcall,USER_DEFINED,19,,PedGameObject * __fastcall PedGameObjectPool_Pop(PedGameObject * * freeHead)
 0x004355c0,PedGameObjectPool_Release,,USER_DEFINED,__thiscall,ANALYSIS,27,,"undefined __thiscall PedGameObjectPool_Release(void * this, int param_1)"
-0x004355e0,InitS30,,USER_DEFINED,__fastcall,USER_DEFINED,41,,S30 * __fastcall InitS30(S30 * param_1)
+0x004355e0,PedListNodePool_Init,,USER_DEFINED,__fastcall,USER_DEFINED,41,,PedListNodePool * __fastcall PedListNodePool_Init(PedListNodePool * param_1)
 0x00435610,Fix16_IsNear,,USER_DEFINED,__fastcall,ANALYSIS,76,,uint __fastcall Fix16_IsNear(int * param_1)
 0x00435660,Ped_Destruct,,USER_DEFINED,__fastcall,USER_DEFINED,184,,undefined __fastcall Ped_Destruct(Ped * param_1)
 0x00435720,Ped_Init,,USER_DEFINED,__fastcall,USER_DEFINED,1118,,void __fastcall Ped_Init(Ped * ped)
@@ -1373,7 +1373,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0043ad10,Ped_SetAltWeapon,,USER_DEFINED,__thiscall,USER_DEFINED,49,,"undefined __thiscall Ped_SetAltWeapon(Ped * this, undefined4 param_2)"
 0x0043ad50,Ped_PlaceInWorldOnFoot,,USER_DEFINED,__thiscall,USER_DEFINED,126,,"undefined __thiscall Ped_PlaceInWorldOnFoot(Ped * this, undefined4 param_2, undefined4 param_3, undefined4 param_4)"
 0x0043add0,PedGameObjectPool_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"undefined4 * __thiscall PedGameObjectPool_ScalarDeletingDtor(PedGameObjectManager * this, byte param_2)"
-0x0043adf0,S30_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"undefined4 * __thiscall S30_ScalarDeletingDtor(S30 * this, byte param_2)"
+0x0043adf0,PedListNodePool_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"undefined4 * __thiscall PedListNodePool_ScalarDeletingDtor(PedListNodePool * this, byte param_2)"
 0x0043ae10,Ped_GetById,,USER_DEFINED,__stdcall,USER_DEFINED,42,,Ped * __stdcall Ped_GetById(int id)
 0x0043ae40,PedManager_Dtor,,USER_DEFINED,__fastcall,USER_DEFINED,38,,undefined __fastcall PedManager_Dtor(PedManager * param_1)
 0x0043ae70,InitPeds,,USER_DEFINED,__fastcall,USER_DEFINED,109,,undefined __fastcall InitPeds(Ped * param_1)
@@ -1472,8 +1472,8 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00445e40,PedList_OrderBusPassengersAbandonCar,,USER_DEFINED,__fastcall,USER_DEFINED,74,,undefined __fastcall PedList_OrderBusPassengersAbandonCar(Passenger * * param_1)
 0x00445e90,Passengers_ForceTaxiPassengersToExit,,USER_DEFINED,__fastcall,ANALYSIS,42,,undefined __fastcall Passengers_ForceTaxiPassengersToExit(Ped * * param_1)
 0x00445ec0,PedList_HasMissionPed,,USER_DEFINED,unknown,DEFAULT,34,,undefined PedList_HasMissionPed()
-0x00445ef0,PedListNodePool_Alloc,,USER_DEFINED,__fastcall,ANALYSIS,8,,undefined __fastcall PedListNodePool_Alloc(int * param_1)
-0x00445f00,PedListNodePool_Free,,USER_DEFINED,__thiscall,ANALYSIS,14,,"undefined __thiscall PedListNodePool_Free(void * this, int param_1)"
+0x00445ef0,PedListNodePool_Alloc,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall PedListNodePool_Alloc(PedListNodePool * param_1)
+0x00445f00,PedListNodePool_Free,,USER_DEFINED,__thiscall,USER_DEFINED,14,,"undefined __thiscall PedListNodePool_Free(PedListNodePool * this, PedListNode * param_2)"
 0x00445f10,PedQueue_Push,,USER_DEFINED,__thiscall,USER_DEFINED,31,,"undefined __thiscall PedQueue_Push(Passenger * * this, undefined4 param_2)"
 0x00445f30,PedList_AddUniqueAtTail,,USER_DEFINED,__thiscall,USER_DEFINED,78,,"undefined __thiscall PedList_AddUniqueAtTail(Passenger * * this, int param_2)"
 0x00445f80,PedList_AddUniqueAtHead,,USER_DEFINED,__thiscall,USER_DEFINED,50,,"undefined __thiscall PedList_AddUniqueAtHead(Passenger * * this, int param_2)"
@@ -3916,10 +3916,10 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004c05b0,StyleData_ReadChunk,,USER_DEFINED,__stdcall,USER_DEFINED,610,,"void __stdcall StyleData_ReadChunk(ChunkHeader * header, void * chunk_size)"
 0x004c0820,LoadSty,,USER_DEFINED,__stdcall,USER_DEFINED,166,,undefined __stdcall LoadSty(char * styFileName)
 0x004c08d0,StyleData_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,112,,StyleData * __fastcall StyleData_Ctor(void)
-0x004c0940,TaxiNodePool_Dtor,,USER_DEFINED,__fastcall,ANALYSIS,7,,undefined __fastcall TaxiNodePool_Dtor(undefined4 * param_1)
-0x004c0950,TaxiNodePool_Init,,USER_DEFINED,__fastcall,ANALYSIS,41,,undefined __fastcall TaxiNodePool_Init(int * param_1)
+0x004c0940,TaxiNodePool_Dtor,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall TaxiNodePool_Dtor(TaxiNodePool * param_1)
+0x004c0950,TaxiNodePool_Init,,USER_DEFINED,__fastcall,USER_DEFINED,41,,undefined __fastcall TaxiNodePool_Init(TaxiNodePool * param_1)
 0x004c0980,TaxiList_ClearHead,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall TaxiList_ClearHead(TaxiList * param_1)
-0x004c0990,TaxiNodePool_ScalarDtor,,USER_DEFINED,__thiscall,ANALYSIS,30,,"undefined4 * __thiscall TaxiNodePool_ScalarDtor(void * this, byte param_1)"
+0x004c0990,TaxiNodePool_ScalarDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"undefined4 * __thiscall TaxiNodePool_ScalarDtor(TaxiNodePool * this, byte param_2)"
 0x004c09b0,TaxiList_Init,,USER_DEFINED,__fastcall,USER_DEFINED,12,,undefined4 * __fastcall TaxiList_Init(TaxiList * param_1)
 0x004c09c0,TaxiList_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,72,,TaxiList * __fastcall TaxiList_Ctor(void)
 0x004c0a10,TaxiNodePool_FreeGlobal,,USER_DEFINED,__stdcall,ANALYSIS,28,,undefined __stdcall TaxiNodePool_FreeGlobal(void)

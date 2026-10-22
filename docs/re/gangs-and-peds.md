@@ -623,7 +623,7 @@ missing ones added.
 | 0x435220 | Ped_OnProjectileMissed | V | PlayerScore_TrackAccuracy(0), probe 0; Object_UpdatePhysics |
 | 0x435510 / 0x435550 | PedGameObjectPool_Dtor / _Ctor | V | 400 x 0xB4 PedGameObject (ptrTo_relSprites); DummyPedManager_Ctor/Dtor |
 | 0x43ADD0 | PedGameObjectPool_ScalarDeletingDtor | V | calls 0x435510, free if flag&1 |
-| 0x435540 / 0x43ADF0 | S30_Dtor / S30_ScalarDeletingDtor | V | ptrToS30_relToChar (InitS30); DummyPedManager_Dtor |
+| 0x435540 / 0x43ADF0 | PedListNodePool_Dtor / _ScalarDeletingDtor | V | g_PedListNodePool 0x5E5FBC: free list of 100 {Ped*, next} nodes for PedQueue_*/PedList_* (PedListNodePool_Init 0x4355E0, _Alloc 0x445EF0, _Free 0x445F00); DummyPedManager_Ctor/Dtor. Same 0x324 template as TaxiNodePool (g_TaxiNodePool 0x5E580C) |
 | 0x43AE40 / 0x43DB20 | PedManager_Dtor / PedManager_ScalarDeletingDtor | V | 200 x Ped (0x294) in ptrToPedManager; callers DummyPedManager_Dtor, Game_Dtor |
 | 0x3F154C / 0x3F1574 | Replay_CreateEmptyFile / Replay_TruncateReplayFiles | V | fopen "wb" of "test\replay.rep", "test\replay0.rep" |
 

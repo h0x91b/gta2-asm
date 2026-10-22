@@ -1104,6 +1104,18 @@ struc PatrolRoute
     .points                           resb 150    ; 0x0 byte[150]
 endstruc
 
+; /PedListNode  (8 bytes)
+struc PedListNode
+    .ped                              resb 4      ; 0x0 Ped *
+    .next                             resb 4      ; 0x4 PedListNode *
+endstruc
+
+; /PedListNodePool  (804 bytes)
+struc PedListNodePool
+    .freeHead                         resb 4      ; 0x0 PedListNode *
+    .nodes                            resb 800    ; 0x4 PedListNode[100]
+endstruc
+
 ; /PedPathfinder  (12244 bytes)
 struc PedPathfinder
     resb 60
@@ -1324,6 +1336,12 @@ endstruc
 struc TaxiNode
     .car                              resb 4      ; 0x0 void *
     .next                             resb 4      ; 0x4 void *
+endstruc
+
+; /TaxiNodePool  (804 bytes)
+struc TaxiNodePool
+    .freeHead                         resb 4      ; 0x0 TaxiNode *
+    .nodes                            resb 800    ; 0x4 TaxiNode[100]
 endstruc
 
 ; /TileAnimEntry  (24 bytes)
@@ -3359,14 +3377,6 @@ endstruc
 struc S2
     .f1                               resb 4      ; 0x0 int
     .f2                               resb 4      ; 0x4 int
-endstruc
-
-; /auto_structs/S30  (804 bytes)
-struc S30
-    .field0_0x0                       resb 4      ; 0x0 int
-    .field1_0x4                       resb 4      ; 0x4 int
-    .arr                              resb 792    ; 0x8 byte[99][8]
-    .field3_0x320                     resb 4      ; 0x320 int
 endstruc
 
 ; /auto_structs/S5  (12 bytes)

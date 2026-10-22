@@ -95,6 +95,8 @@ typedef struct ParticleState ParticleState;
 typedef struct ParticleStatePool20 ParticleStatePool20;
 typedef struct ParticleStatePool40 ParticleStatePool40;
 typedef struct PatrolRoute PatrolRoute;
+typedef struct PedListNode PedListNode;
+typedef struct PedListNodePool PedListNodePool;
 typedef struct PedPathfinder PedPathfinder;
 typedef struct PedPatrolRoutePool PedPatrolRoutePool;
 typedef struct PlayerScore PlayerScore;
@@ -112,6 +114,7 @@ typedef struct SoundEvent SoundEvent;
 typedef struct SoundEventQueue SoundEventQueue;
 typedef struct TaxiList TaxiList;
 typedef struct TaxiNode TaxiNode;
+typedef struct TaxiNodePool TaxiNodePool;
 typedef struct TileAnimEntry TileAnimEntry;
 typedef struct TileAnimManager TileAnimManager;
 typedef struct TileAnimPool TileAnimPool;
@@ -199,7 +202,6 @@ typedef struct ProfileLevelRecord ProfileLevelRecord;
 typedef struct RadioStationSlot RadioStationSlot;
 typedef struct S14_sub1 S14_sub1;
 typedef struct S2 S2;
-typedef struct S30 S30;
 typedef struct S5 S5;
 typedef struct SRelToBonus2 SRelToBonus2;
 typedef struct Script4k Script4k;
@@ -3210,6 +3212,19 @@ struct PatrolRoute {
     uint8_t points[150]; /* 0x0 */
 };
 
+// /PedListNode  size 0x8
+struct PedListNode {
+    uint32_t /* Ped * */ ped; /* 0x0 */
+    uint32_t /* PedListNode * */ next; /* 0x4 */
+};
+
+// /PedListNodePool  size 0x324
+// Free-list pool of 100 PedListNode, owned by DummyPedManager (char.cpp). Same template as TaxiNodePool.
+struct PedListNodePool {
+    uint32_t /* PedListNode * */ freeHead; /* 0x0 free-list head; nodes[99].next is the terminator (0) */
+    PedListNode nodes[100]; /* 0x4 */
+};
+
 // /PedPathfinder  size 0x2fd4
 struct PedPathfinder {
     uint8_t _gap_0x0[0x3c];
@@ -3492,6 +3507,13 @@ struct TaxiList {
 struct TaxiNode {
     uint32_t /* void * */ car; /* 0x0 */
     uint32_t /* void * */ next; /* 0x4 */
+};
+
+// /TaxiNodePool  size 0x324
+// Free-list pool of 100 TaxiNode, owned by TaxiList. Same template as PedListNodePool.
+struct TaxiNodePool {
+    uint32_t /* TaxiNode * */ freeHead; /* 0x0 free-list head; nodes[99].next is the terminator (0) */
+    TaxiNode nodes[100]; /* 0x4 */
 };
 
 // /TileAnimEntry  size 0x18
@@ -4957,14 +4979,6 @@ struct RadioStationSlot {
 struct S2 {
     int f1; /* 0x0 */
     int f2; /* 0x4 */
-};
-
-// /auto_structs/S30  size 0x324
-struct S30 {
-    int field0_0x0; /* 0x0 */
-    int field1_0x4; /* 0x4 */
-    uint8_t arr[99][8]; /* 0x8 */
-    int field3_0x320; /* 0x320 */
 };
 
 // /auto_structs/S5  size 0xc

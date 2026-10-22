@@ -158,6 +158,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e54a0,g_Fix16MassBonus10Pct,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e5514,g_Fix16OneCarModelTable,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e56e0,g_Fix16InertiaQuarter,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e580c,g_TaxiNodePool,,USER_DEFINED,.data.exp,,/TaxiNodePool *,4
 0x005e5bbc,ptrToPedManager,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e5bc0,g_DummyPedManager,,USER_DEFINED,.data.exp,,/auto_structs/DummyPedManager *,4
 0x005e5bc4,ptrToPed,,USER_DEFINED,.data.exp,,/_ped/Ped *,4
@@ -193,7 +194,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e5e58,relToS24_unk23,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e5ee0,relToS24_unk35,,USER_DEFINED,.data.exp,,/int,4
 0x005e5f40,g_PedSpawnCameraHeading,,USER_DEFINED,.data.exp,,/short,2
-0x005e5fbc,ptrToS30_relToChar,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e5fbc,g_PedListNodePool,,USER_DEFINED,.data.exp,,/PedListNodePool *,4
 0x005e6340,g_CarDriveOrderPool,,USER_DEFINED,.data.exp,,/CarDriveOrderPool *,4
 0x005e6680,g_CollisionManager,,USER_DEFINED,.data.exp,,/CollisionManager *,4
 0x005e6684,g_CollisionEntryPool,,USER_DEFINED,.data.exp,,/auto_structs/CollisionEntryPool *,4
