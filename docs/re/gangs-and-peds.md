@@ -225,7 +225,7 @@ travel; still camera → round robin), walking along it (`g_PedSpawnEdgeStep`), 
 1. `DummyPedManager.onScreenPeds < zone.pedDensity / 25` (default 500 → **20**; 0 → never);
 2. `MapBlocks_FindPavementTopBlock` 0x466910: top block of the column is pavement (ground type 2);
 3. the point is in **no** player's camera rect (exact rect, no margin);
-4. not a slope 45..52 block (`unsure_MapBlocks_IsSlope45to52At` 0x433430);
+4. not a slope 45..52 block (`MapBlocks_IsSlope45to52At` 0x433430);
 5. bounds 1.0 < x, y < 254.0.
 
 There is no minimum distance to the player beyond "off screen" and no maximum radius beyond the
@@ -239,7 +239,7 @@ camera rect + ~1 block.
 | `+ carThief` (40) | 2 car thief | `g_CarThiefPedCount == 0` | occ 16, class 6, remap 15, carSpeed 4.0 |
 | `+ elvis` (10) | 3 Elvis | `random(50) == 25` and `g_ElvisGroupCount == 0` | `PedManager_SpawnElvisGroup` 0x43d640: leader occ 44 + 5 × occ 22, remap 12 |
 | `+ gangPed` (200) | 4 gang | `g_ArmedGangPedCount < 8`, type-14 zone at the tile | see below |
-| `+ policePed` (40) | 5 foot cop | `g_FootCopPedCount == 0`, police on, crew not ARMY | `unsure_PoliceManager_SetupFootCop`: occ 29 (31 at ARMY), LOS / REACT_AS_EMERGENCY; copLevel 0..1: no primary weapon, 50 hp, walk ×0.8 |
+| `+ policePed` (40) | 5 foot cop | `g_FootCopPedCount == 0`, police on, crew not ARMY | `PoliceManager_SetupFootCop`: occ 29 (31 at ARMY), LOS / REACT_AS_EMERGENCY; copLevel 0..1: no primary weapon, 50 hp, walk ×0.8 |
 | rest | 0 dummy | | occ 3, class 3, AREA / RUN_AWAY, remap `random(25)` → {18..21, 31..51} (naked cheat 26); if the crew type is ARMY: SMG soldier instead |
 
 Gang band: no gang zone → plain dummy (remap 18..21). Gang zone, gang = `FindByName(zone name)`:
@@ -261,7 +261,7 @@ ped or its car is in any camera). There is **no distance-based despawn**:
 | 2 PLAYER | never |
 | 3 AMBIENT on foot | `offscreenTicks >= g_PedOffscreenTicksLimit` (0x5E5D80, **40** ≈ 1.3 s); state 1 peds at 200 |
 | 3 AMBIENT in car | when its car is removed / wasted |
-| 4 SPECIAL_AI, 6 CAR_DRIVER on foot | `> 100` ticks, except ELVIS_LEADER (> 500, group), group members and police-like (cops: `unsure_PoliceCrew_TryDespawnOffscreen`) |
+| 4 SPECIAL_AI, 6 CAR_DRIVER on foot | `> 100` ticks, except ELVIS_LEADER (> 500, group), group members and police-like (cops: `PoliceCrew_TryDespawnOffscreen`) |
 | car thief in car | hands the car to traffic after 60 offscreen ticks |
 | 5 MISSION | never |
 | dead peds | `> 200` offscreen ticks, except MEDIC / MISSION |
@@ -386,7 +386,7 @@ not player); `PedSetObjective` case 28 (0x43bde1) → `AmbulanceManager_EnqueueP
 `g_skipAmbulance` 0x5EAD6B; the queue still fills):
 
 1. `AmbulanceManager_DispatchForQueuedPed` 0x473e00, one corpse per tick: road tile near the
-   corpse (`unsure_Map_FindSpawnRoadTile`); an active slot within **8.0 blocks**
+   corpse (`PedPathfinder_FindSpawnTile`); an active slot within **8.0 blocks**
    (`g_AmbulancePickupRange` 0x664164, Chebyshev) with `< 10` queued takes it; else a new
    ambulance (max **2** slots, a slot of the shared 10-slot `EmergencyVehiclePool`): crewType 1,
    stage 3, timer **300** ticks. No road / no slot → objective 50 (body removed).
@@ -432,7 +432,7 @@ guards[6] +0x88, collisionRect +0xA0 from `PoliceRoadblock_Ctor` 0x4ac040).
   only `roadblocks[0]`, then `[1]`.
 - `Create`: walks across the road on ground type (`block +0xB & 3` via 0x420420): road lanes
   count, one pavement/field tile per side is allowed, gives up past 12. Then a collision-box
-  check (`unsure_CollisionGrid_BoxHitsObstacle`). It does **not** see cars: two calls on
+  check (`CollisionGrid_BoxHitsObstacle`). It does **not** see cars: two calls on
   neighbouring tiles stack up (measured). Then lane by lane: even lanes get a barrier pair
   (`SpawnObject` OBJECT_TYPE_ROADBLOCK) + a guard (`PoliceManager_SpawnRoadblockGuard` 0x4a9b40:
   police or FBI only, occupation ROAD_BLOCK_GUARD 37, SPECIAL_AI, GUARD_SPOT, 200 hp,
@@ -455,7 +455,7 @@ guards[6] +0x88, collisionRect +0xA0 from `PoliceRoadblock_Ctor` 0x4ac040).
 
 Used by the K menu's "Call ambulance" / "Call fire truck" (`host/debug_emergency.asm`).
 
-- **Bodies get dropped.** `unsure_Map_FindSpawnRoadTile` 0x49d7a0 (thiscall on
+- **Bodies get dropped.** `PedPathfinder_FindSpawnTile` 0x49d7a0 (thiscall on
   `g_PedPathfinder` 0x66A7E4; `(char kind, u8* x, u8* y, u8* z, char wide)`) returns 0 at
   once while `PedPathfinder+0x38` is set and `wide == 0`; the flag flips every frame
   (1, 0, 1, …). `AmbulanceManager_DispatchForQueuedPed` passes `wide = 0`, so a body
@@ -510,9 +510,9 @@ pass verified them.
 | 0x403920 | Ped_SetBitState2 (really SetPedClass, reported) | writes `pedClass` |
 | 0x403b40 / 0x450cb0 | Ped_SetObjectiveDone / Ped_GetObjectiveDone | `Ped+0x225` |
 | 0x404120 | unsure_PedGroup_SwapMemberWithLeader | dead leader/medic replacement |
-| 0x40fea0 | unsure_Position_GetOwnerSpriteIfPed | body kind 3 → owner |
+| 0x40fea0 | Position_GetOwnerSpriteIfPed | body kind 3 → owner |
 | 0x41f9f0 | Car_RequestFireTruckAndSpawnFlames | wreck → fire truck |
-| 0x433430 | unsure_MapBlocks_IsSlope45to52At | spawn test |
+| 0x433430 | MapBlocks_IsSlope45to52At | spawn test |
 | 0x433b30 | Gang_GetKillAffectsRespect | +0x111 |
 | 0x433e90 | Camera_HasFollowTarget | |
 | 0x4350a0 | Ped_RegisterAsThreat | threat list push |
@@ -535,7 +535,7 @@ pass verified them.
 | 0x4460d0 | unsure_PedList_FreeAll | |
 | 0x41dfc0 / 0x41e620 | unsure_Camera_GetTargetSpeed / unsure_Camera_GetTargetHeading | |
 | 0x450bc0 / 0x450c10 / 0x450c30 / 0x450c40 / 0x450ca0 | FireEngineSlot_Abort / _Reset / _Release, FireEngineManager_FindFreeSlot / _ResetSerial | |
-| 0x450cc0 | unsure_FireEngineSlot_TargetHasFlames | |
+| 0x450cc0 | FireEngineSlot_TargetHasFlames | |
 | 0x450cd0 | FireEngineSlot_UpdateWatchdog | |
 | 0x450f10 | FireEngineSlot_Update | state machine |
 | 0x451300 / 0x451510 | FireEngineManager_AllocRequest / FireEngineManager_RequestForCar | |
@@ -559,14 +559,14 @@ pass verified them.
 | 0x472f20 / 0x472f60 / 0x472fb0 / 0x472fe0 | AmbulanceManager_EnqueuePed / _FindFreeSlot, AmbulanceSlot_EnqueuePed, AmbulanceManager_Reset | |
 | 0x473010 | AmbulanceManager_OnParamedicKilled | |
 | 0x473140 / 0x473170 / 0x473410 | AmbulanceSlot_Reset / _SpawnParamedicCrew / _UpdateParamedics | |
-| 0x473320 | unsure_AmbulanceSlot_UpdateEnRoute | |
+| 0x473320 | unsure_AmbulanceSlot_UpdateActiveStage | |
 | 0x473ce0 / 0x473e00 | AmbulanceSlot_Update / AmbulanceManager_DispatchForQueuedPed | |
 | 0x475910 / 0x475950 | Gang_SetArrowTarget / Gang_SetHasRespectMeter | |
 | 0x482540 | unsure_Object_IsActiveFlame | object type 0x71 |
 | 0x497df0 | Sprite_UpdatePedAnimFrame | frame = graphicType base (0/158/316) + anim, remap re-applied |
-| 0x497c20 / 0x4338e0 / 0x433880 / 0x4355c0 | Sprite_Init / Sprite_SetOwnerPed / unsure_Sprite_PlaceBody / SpritePool_Release | |
+| 0x497c20 / 0x4338e0 / 0x433880 / 0x4355c0 | Sprite_Init / Sprite_SetOwnerPed / GameObject_PlaceBody / SpritePool_Release | |
 | 0x4b9a10 | unsure_Ped_ThreatGridCandidateFilter | |
-| 0x4b9b00 / 0x420700 / 0x4206c0 / 0x4bafd0 | Position_SetRemap / _SetNoRemapState / _SetFrame / unsure_Position_ResizeToFrame | |
+| 0x4b9b00 / 0x420700 / 0x4206c0 / 0x4bafd0 | Position_SetRemap / _SetNoRemapState / _SetFrame / Position_ResizeToFrame | |
 | 0x4bf430 | StyleData_GetPaletteIndex | ped remap → palette |
 | 0x4c5480 / 0x4c54c0 / 0x4c54f0 / 0x4c5a00 | EmergencyVehicleSlot_Reset / _RemoveDriverFromGroup / _IsDriverNotWasted / _UpdateLeaving | |
 
@@ -607,18 +607,18 @@ missing ones added.
 
 | Address | Name | Conf | Evidence |
 |---|---|---|---|
-| 0x433560 | unsure_Bounds_RangesOverlap | U | Fix16_RangesOverlap on +0x10/+0x14 of two blocks; Ped_Obj2_EnterCar |
-| 0x4337F0 | unsure_Sprite_SetFlag2C_Bit4 | U | `byte+0x2C \|= 4`; 27 callers (particles, Ped_ApplyInvulnerabilitySpriteFlag) |
+| 0x433560 | Box3_ZRangesOverlap | U | Fix16_RangesOverlap on +0x10/+0x14 of two blocks; Ped_Obj2_EnterCar |
+| 0x4337F0 | unsure_Position_SetFlag2C_Bit4 | U | `byte+0x2C \|= 4`; 27 callers (particles, Ped_ApplyInvulnerabilitySpriteFlag) |
 | 0x433830 | S3Bytes_Clear | V | zeroes a/b/c; caller InitPeds |
-| 0x433A70 | unsure_PedSprite_InitSubState | U | +0x68=0, +0x6C=arg; Ped_InitSpawnedState |
-| 0x433A90 | unsure_PedSprite_GetField44 | U | returns +0x44; flee/cross-road tasks |
-| 0x433AA0 | unsure_PedSprite_IsField69Set | U | +0x69 != 0; Ped_Obj2_ApproachAndAttackTarget |
-| 0x4340A0 | unsure_Pickup_GetField26 | U | +0x26; Ped_PickUp, SaveGame_CollectPickups |
-| 0x434130 | unsure_Pickup_SetLinkedField4 | U | `*(u16*)(this->+0xC + 4) = v`; Ped_DropWeaponPickup, Weapon_ThrowMolotovOrGrenade |
-| 0x434140 | unsure_IsField18_11A_Or_11D | U | +0x18 ∈ {0x11A,0x11D}; ApproachAndAttackTarget |
-| 0x4341B0 | unsure_CarDoor_GetPed | U | returns +8; pairs with unsure_CarDoor_SetPed |
-| 0x434A10 | unsure_Player_IncField574 | U | ++ +0x574 (`unsure_field574`); Ped_PickUp |
-| 0x434AF0 | unsure_ParkingZone_IsCarFlagged | U | this=g_ParkingZone; car==*this && byte+0x3D; Ped_Obj2_EnterCar |
+| 0x433A70 | unsure_GameObject_InitAnimState | U | +0x68=0, +0x6C=arg; Ped_InitSpawnedState |
+| 0x433A90 | unsure_GameObject_GetField44 | U | returns +0x44; flee/cross-road tasks |
+| 0x433AA0 | GameObject_IsWalkingAroundObstacle | U | +0x69 != 0; Ped_Obj2_ApproachAndAttackTarget |
+| 0x4340A0 | WorldObject_GetPickupAmmo | U | +0x26; Ped_PickUp, SaveGame_CollectPickups |
+| 0x434130 | unsure_WorldObject_SetKindStateField4 | U | `*(u16*)(this->+0xC + 4) = v`; Ped_DropWeaponPickup, Weapon_ThrowMolotovOrGrenade |
+| 0x434140 | WorldObject_IsPowergenOrInvisibleDead | U | +0x18 ∈ {0x11A,0x11D}; ApproachAndAttackTarget |
+| 0x4341B0 | CarDoor_GetPedInDoor | U | returns +8; pairs with CarDoor_SetPedInDoor |
+| 0x434A10 | Menu_IncBonusTokenCount | V | ++Menu.bonusTokenCount (+0x574); only in Ped_PickUp BONUS_TOKEN branch |
+| 0x434AF0 | ParkingZone_IsCarFlagged | U | this=g_ParkingZone; car==*this && byte+0x3D; Ped_Obj2_EnterCar |
 | 0x4350C0 | Ped_UpdateWeaponProbeModeOnHitSprite | V | Weapon_SetProbeMode by Chebyshev dist; Projectile_OnHitSprite |
 | 0x435180 | Ped_UpdateWeaponProbeModeOnHitWorld | V | + PlayerScore_TrackAccuracy(1); Projectile_OnHitWorld, Object_ExplodeOnProjectileHit |
 | 0x435220 | Ped_OnProjectileMissed | V | PlayerScore_TrackAccuracy(0), probe 0; Object_UpdatePhysics |

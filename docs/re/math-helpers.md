@@ -179,7 +179,7 @@ parameter in `ECX`).
   (Euler-angle nodes, a 3×4 float matrix stack at 0x599EC0, vertex transform): `Mat34f_Mul`
   0x401180 plus `unsure_Mat34f_*` / `unsure_Node3D_*`. No outside callers (dead code); several of
   its chunks are not even functions in Ghidra.
-- 0x41E2F0 `unsure_Box3_Overlaps` — three `Fix16_RangesOverlap` tests; collision owns the struct.
+- 0x41E2F0 `Box3_Overlaps` — three `Fix16_RangesOverlap` tests; collision owns the struct.
 - Census candidates that turned out to belong to other owners (facts sent, not renamed):
   0x416B50 (Ped field +0x1B4 getter), 0x4207B0 (`(x, y)` at +0x14/+0x18, probably a sprite),
   0x41E440/0x41E450 (`Car_GetSpriteY/Z`, siblings of `Car_GetSpriteX` 0x41E430), 0x41BF90 (police
@@ -229,5 +229,5 @@ callee pops them (`ret 4/8/0x10`).
 | `0x472950` / `0x472AE0` | `Segment_IntersectHorizontalLine` / `_VerticalLine` | medium | interpolates x (resp. y), stores DAT_005E6888 / DAT_005E688C |
 | `0x472C60` | `Fix16_RoundToThousandths` | medium | floor(v*1000+0.5)/1000 |
 | `0x472CC0` | `Fix16Table256_Ctor` | medium | t[i] = i/64, 256 entries |
-| `0x472FD0` | `unsure_Ped_IsGroupSlotNone` | unsure | Ped+0x23C == 99 |
+| `0x472FD0` | `Ped_IsGroupLeader` | high | Ped+0x23C == 99 |
 | `0x4740F0`, `0x474410`, `0x474420`, `0x474490` | `unsure_MikeDebug_ZeroDword`, `unsure_Pair_SetFirst/SetSecond`, `unsure_MikeDebug_TimerSlot_GetMs` | unsure | tiny helpers around do_mike |

@@ -2129,7 +2129,7 @@ struc Menu
     .mpFrags                          resb 12     ; 0x490 ushort[6]
     .mpPoints                         resb 24     ; 0x49c int[6]
     .mpPlayerNames                    resb 192    ; 0x4b4 wchar_t[96]
-    .unsure_field574                  resb 4      ; 0x574 int
+    .bonusTokenCount                  resb 4      ; 0x574 int
 endstruc
 
 ; /_game/Player  (2140 bytes)
@@ -2305,7 +2305,7 @@ struc Ped
     .homeRotation                     resb 2      ; 0x134 short
     resb 2
     .bumpPartnerObject                resb 4      ; 0x138 GameObject *
-    resb 4
+    .unsure_trainStop                 resb 4      ; 0x13c void *
     .refCar                           resb 4      ; 0x140 Car *
     .attackerPed                      resb 4      ; 0x144 Ped *
     .objectiveTargetPed               resb 4      ; 0x148 Ped *
@@ -3151,10 +3151,10 @@ endstruc
 struc Position
     .rotation                         resb 2      ; 0x0 short
     resb 2
-    .prev_                            resb 4      ; 0x4 Position *
-    .field4_0x8                       resb 4      ; 0x8 int
+    .frameBounds                      resb 4      ; 0x4 void *
+    .owner                            resb 4      ; 0x8 void *
     .bounds                           resb 4      ; 0xc void *
-    .field6_0x10                      resb 4      ; 0x10 int
+    .soundClient                      resb 4      ; 0x10 void *
     .x                                resb 4      ; 0x14 int
     .y                                resb 4      ; 0x18 int
     .z                                resb 4      ; 0x1c int
@@ -3162,13 +3162,13 @@ struc Position
     .field11_0x22                     resb 2      ; 0x22 short
     .field12_0x24                     resb 2      ; 0x24 short
     resb 2
-    .field15_0x28                     resb 4      ; 0x28 int
+    .layer                            resb 4      ; 0x28 int
     .field16_0x2c                     resb 1      ; 0x2c byte
     resb 3
     .collisionKind                    resb 4      ; 0x30 int
     .field21_0x34                     resb 4      ; 0x34 int
     .field22_0x38                     resb 1      ; 0x38 byte
-    .boundsDirty                      resb 1      ; 0x39 byte
+    .cachedZLayer                     resb 1      ; 0x39 byte
     resb 2
 endstruc
 
@@ -4208,7 +4208,7 @@ struc Camera
     .cameraPosTarget2                 resb 16     ; 0x0 CameraPos
     .cameraPosTarget                  resb 16     ; 0x10 CameraPos
     .cameraBoundaries                 resb 16     ; 0x20 WorldRect
-    .movementBitmask                  resb 4      ; 0x30 CAMERA_MOVEMENT
+    .shakeOffset                      resb 4      ; 0x30 Fix16
     .ped                              resb 4      ; 0x34 Ped *
     .followCar                        resb 4      ; 0x38 Car *
     .followState                      resb 4      ; 0x3c CAMERA_FOLLOW_STATE
@@ -5007,7 +5007,7 @@ struc ObjectPrefab
     .boxRadius                        resb 4      ; 0xc Fix16
     .initialSpeed                     resb 4      ; 0x10 Fix16
     .deceleration                     resb 4      ; 0x14 Fix16
-    .unsure_initialZ                  resb 4      ; 0x18 Fix16
+    .mass                             resb 4      ; 0x18 Fix16
     .remap                            resb 2      ; 0x1c short
     .defaultSpriteId                  resb 2      ; 0x1e short
     .spriteFlag                       resb 1      ; 0x20 byte

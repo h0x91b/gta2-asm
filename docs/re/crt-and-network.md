@@ -168,7 +168,7 @@ TrailerController/Car → Seq 43 (which identified the `0x40F7C0-0x40F830` acces
 
 - `0x409BC0`/`0x409C80` were proposed as `Network_KickPlayer*`. vtbl+0x1C is
   `DeletePlayerFromGroup`, so they are now `Network_DeletePlayerFromGroupByName/ByIndex`, and
-  `0x409A30` is `unsure_Network_SetGroupId` rather than "SetLocalDpid".
+  `0x409A30` is `Network_SetGroupId` rather than "SetLocalDpid".
 - `0x4D8770` was proposed as `__SEH_prolog`, which already exists at `0x4DC5E4`. Its body is
   `__EH_prolog`.
 - `0x4D8500` was proposed as `__tmainCRTStartup`, a name that only exists from VC8. It is now
@@ -194,17 +194,17 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x401050` | `unsure_Node3DSubPart_RelocatePointers` | unsure | if type==0 adds base delta to nonzero pointers at +0x10,+0x18; called per 32-byte entry from mesh relocator |
 | `0x401080` | `unsure_Node3DMesh_RelocatePointers` | unsure | adds delta to pointers of mesh header (+0xc, entries array, +0x10/+0x18), loops count entries calling SubPart relocator |
 | `0x4010E0` | `unsure_Node3D_RelocatePointers` | unsure | recursive: adds delta to child/sibling/data pointers (+0x10..+0x24), per-mesh relocate, stores param at +0x3c; file-load fixup |
-| `0x4023E0` | `unsure_Node3D_ProjectVerticesToScreen` | medium | projects float vertex list by matrix to screen via g_ViewCamera center and Fix16 scale, tracks min/max bounds; no xrefs |
+| `0x4023E0` | `Node3D_ProjectVerticesToScreen` | medium | projects float vertex list by matrix to screen via g_ViewCamera center and Fix16 scale, tracks min/max bounds; no xrefs |
 | `0x4029A0` | `File_Write` | high | fastcall wrapper over fwrite(buf,size,count,FILE); mirror of fread at 0x402980 |
 | `0x4029C0` | `File_GetSize` | high | ftell/fseek END/ftell/fseek back with DisplayError File.cpp lines 0x38-0x3e; used by ReadWholeFile |
 | `0x402CF0` | `File_WriteWhole` | high | copyScriptNameToBuffer, fopen "wb", write once, fclose, DisplayError File.cpp |
 | `0x402DA0` | `File_AppendWhole` | high | same as File_WriteWhole but fopen "ab"; only SaveGame calls it |
 | `0x402F00` | `File_CloseGlobal` | medium | fcloses g_File if g_FileIsOpen then clears flag; called from error() |
 | `0x403130` | `File_GetCharSkipBlanks` | medium | getc loop skipping space/CR/tab; returns 0 on newline/EOF; caller Seq_ReadLabelLine |
-| `0x4035A0` | `unsure_PedGroup_ResetDoorCursor` | unsure | sets DAT_0058f512=1; that byte is the seat/door cursor used in PedGroup enter-car update 0x405240 |
+| `0x4035A0` | `PedGroup_ResetDoorCursor` | high | sets DAT_0058f512=1; that byte is the seat/door cursor used in PedGroup enter-car update 0x405240 |
 | `0x4035B0` | `PedGroup_Init` | high | fastcall zeroes PedGroup fields (leader 0x2c,count 0x34, mode 0x38=2); called by PedGroupPool_Alloc |
 | `0x4035E0` | `PedGroup_ClearAllObjectives` | high | PedSetObjective+Ped_SetTask NO_OBJ for leader and every member |
-| `0x403650` | `unsure_PedGroup_RemoveMembersInCarAndCompact` | unsure | Ped_OnDeath on members with currentCar, nulls slots, compacts member array; returns bool |
+| `0x403650` | `PedGroup_KillMembersInCarAndCompact` | high | Ped_OnDeath on members with currentCar, nulls slots, compacts member array; returns bool |
 | `0x4037A0` | `PedGroup_AllMembersOnFoot` | medium | returns 0 if any member's currentCar(+0x16c) nonzero, else 1 |
 | `0x403870` | `PedGroupPool_Init` | high | startGame; calls 0x4035a0, then PedGroup_Init for 20 groups at 0x5D28C8 stride 0x44 |
 | `0x4038E0` | `PedGroup_SetActive` | high | sets byte +0x40=1; paired with PedGroupPool_Alloc |
@@ -230,23 +230,23 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x403B90` | `Ped_IsEngaged` | high | returns (flags>>2)&1 = PED_FLAG_ENGAGED |
 | `0x403BC0` | `Car_IsBankVanOrSwatVan` | medium | Car+0x84 carModel is 4 (BANKVAN) or 0x34 (SWATVAN) |
 | `0x403D10` | `PedGroup_LeaderIsInCar` | high | Ped_IsInCar(group+0x2c leader) |
-| `0x403D50` | `unsure_PedGroup_ReleaseAllMembers` | unsure | Ped_ClearGroup+Ped_OnDeath for leader and members, active=0; no xrefs |
+| `0x403D50` | `PedGroup_ClearAndKillAllMembers` | high | Ped_ClearGroup+Ped_OnDeath for leader and members, active=0; no xrefs |
 | `0x403DA0` | `PedGroup_DisbandToAmbient` | medium | if active: members clear group/objectives, class ambient, flag 0x400 removal request, then PedGroup_Reset |
 | `0x404450` | `PedGroup_FindMemberNotEngaged` | medium | scans members from last to first, returns first with Ped_IsEngaged false else 0 |
 | `0x404480` | `PedGroup_LeaderIsEngaged` | high | Ped_IsEngaged(group+0x2c leader) |
 | `0x404490` | `PedGroup_FindFarthestMember` | medium | max Chebyshev Fix16 distance of members to leader; returns ped, out distance |
 | `0x4045D0` | `unsure_PedGroup_MakeMembersFollowLeader` | unsure | if leader on foot: sets members task 9 and Ped_SetTarget2Ped leader/neighbour, clears bit 11 |
-| `0x4046F0` | `unsure_PedGroup_UpdateMemberNearLeader` | unsure | member idx: if leader has gameObject and dist<DAT_005d304c sets task 9 follow, else resets task |
+| `0x4046F0` | `PedGroup_UpdateMemberFollowLeader` | high | member idx: if leader has gameObject and dist<DAT_005d304c sets task 9 follow, else resets task |
 | `0x404840` | `PedGroup_AllMembersInCar` | medium | no members: leader in car; else all members Ped_GetState==10 |
 | `0x4048A0` | `PedGroup_AllMembersInCarOrDead` | medium | all members have state 10 or 9 |
 | `0x404900` | `PedGroup_IsMemberFarFromLeader` | medium | Chebyshev Fix16 distance member idx to leader > DAT_005d2814 |
-| `0x4049F0` | `unsure_PedGroup_IsLeaderNearTarget` | unsure | leader XY vs target(+0x50 sprite pos) Chebyshev dist not greater than DAT_005d2814 |
-| `0x404AD0` | `unsure_PedGroup_FindNearestAimingMember` | unsure | nearest member to idx within limit for which unsure_Ped_IsAimingWithTarget true; returns ped |
+| `0x4049F0` | `PedGroup_IsLeaderNearTargetCar` | high | leader XY vs target(+0x50 sprite pos) Chebyshev dist not greater than DAT_005d2814 |
+| `0x404AD0` | `PedGroup_FindNearestAttackingMember` | high | nearest member to idx within limit that is engaged in an attack task (Ped_IsEngagedInAttackTask); returns ped (Seq 48: was 'Aiming') |
 | `0x404CE0` | `PedGroup_PromoteLeader` | medium | adds old leader as member, sets new leader slot 99, resets all member tasks; caller PedGroupSetLeader |
 | `0x404EF0` | `PedGroup_ReactToAttacker` | medium | sets members/leader to kill attacker (KILL_CHAR_ON_FOOT, Ped_SetTarget2Ped); caller Ped_ReactToAttacker |
 | `0x405240` | `PedGroup_UpdateEnterCar` | medium | leader state 3/10/5: sends members to enter car (ENTER_CAR task, door cursor 0x58f512); caller Ped_UpdateAI |
 | `0x405760` | `unsure_PedGroup_UpdateMember` | unsure | per-member AI: Ped_SetEngaged, follow/attack by task, uses 0x4045d0 and 0x404ad0; caller Ped_UpdateAI |
-| `0x405A40` | `unsure_NetDlg_Dtor` | unsure | sets vtable PTR_0056e598 only; called by 0x406bc0 scalar-deleting dtor |
+| `0x405A40` | `NetDlg_Dtor` | high | sets vtable PTR_0056e598 only; called by 0x406bc0 scalar-deleting dtor |
 | `0x405A50` | `NetDlg_SetHwnd` | high | stores HWND at this+0x20218; called from NetDlg_OnInitDialog |
 | `0x405A60` | `NetDlg_GetHwnd` | high | returns this+0x20218, used as hDlg in SendDlgItemMessage/GetDlgItem |
 | `0x405AA0` | `NetDlg_ShowPage` | high | ShowWindow(HIDE) 30 controls of current page, show 30 of new page (0x78 stride), stores prev/cur page |
@@ -258,25 +258,25 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x406220` | `NetDlg_GetPlayerCount` | medium | returns this+0x1fd6c |
 | `0x406230` | `NetDlg_DecPlayerCount` | medium | decrements this+0x1fd6c |
 | `0x406240` | `NetDlg_ResetPlayerCount` | medium | zeroes this+0x1fd6c |
-| `0x406250` | `unsure_NetDlg_SetExitFlag` | unsure | writes this+0x1fd68; getter 0x406260 decides EndDialog in 0x406e40 |
-| `0x406260` | `unsure_NetDlg_GetExitFlag` | unsure | returns this+0x1fd68; nonzero makes 0x406e40 EndDialog(1) |
+| `0x406250` | `NetDlg_SetExitFlag` | high | writes this+0x1fd68; getter 0x406260 decides EndDialog in 0x406e40 |
+| `0x406260` | `NetDlg_GetExitFlag` | high | returns this+0x1fd68; nonzero makes 0x406e40 EndDialog(1) |
 | `0x406270` | `NetDlg_LoadPlayerNameFromRegistry` | high | reads HKCU Software\DMA Design Ltd\GTA2\Network "PlayerName" into wchar +0x1fd78 |
 | `0x406320` | `NetDlg_SetPlayerName` | high | copies wstring to +0x1fd78 and writes "PlayerName" registry value |
 | `0x4063C0` | `NetDlg_SendChatFromEdit` | medium | GetDlgItemText, converts to wide, sends via session 0x409d00, clears edit, echoes AppendChatLine |
 | `0x406450` | `NetDlg_CopyMapInfo` | medium | copies 0x48 dwords from this+0x1ff84 into out buffer |
 | `0x406470` | `NetDlg_LoadSettingsFromRegistry` | high | Reg_Network_GetDwordOrInit map_index/game_time_limit/game_speed/game_type/police/f_limit |
-| `0x40653E` | `unsure_NetDlg_CopyMapNameFragment` | unsure | mid-function tail inside 0x56dbe0: strcpy param into ESI+0x1ff84 |
+| `0x40653E` | `NetDlg_CopyMapNameFragment` | high | mid-function tail inside 0x56dbe0: strcpy param into ESI+0x1ff84 |
 | `0x406550` | `NetDlg_GetSelectedMapStr0` | medium | session+4 array entry stride 0x518 indexed by +0x20088; offset 0 |
 | `0x406570` | `NetDlg_GetSelectedMapStr1` | medium | same entry array, offset 0x104 |
 | `0x406590` | `NetDlg_GetSelectedMapStr2` | medium | same entry array, offset 0x208 |
 | `0x4065B0` | `Network_ReportMmpFileOpenError` | high | sprintf "Unable to open file: %s in mmpfile: %s" + MessageBox; caller Network_ReadMmpMapFiles |
-| `0x406660` | `unsure_NetDlg_UpdateNextMapText` | unsure | calls 0x56dc04 with mapIndex+1 and *0x51 (like 0x406470); guarded by player count |
-| `0x40667C` | `unsure_NetDlg_EnableStartButtonsFragment` | unsure | mid-function tail inside 0x56dc04: EnableWindow ctrl 0x3fd/0x3fc by player count >1 |
+| `0x406660` | `unsure_NetDlg_UpdateButtonStates` | unsure | calls 0x56dc04 with mapIndex+1 and *0x51 (like 0x406470); guarded by player count |
+| `0x40667C` | `NetDlg_EnableControls3FDAnd3FCFragment` | high | mid-function tail inside 0x56dc04: EnableWindow ctrl 0x3fd/0x3fc by player count >1 |
 | `0x4066E0` | `NetDlg_SetCheckBox403` | medium | SendDlgItemMessage id 0x403 BM_SETCHECK(0xF1) 1 or 0 |
 | `0x406B80` | `NetDlg_SetNumericText40e` | medium | sprintf "%d" into SetDlgItemText id 0x40e |
-| `0x406BC0` | `unsure_NetDlg_ScalarDeletingDtor` | unsure | calls 0x405a40 vtable reset, _free if flag&1 |
-| `0x406C92` | `unsure_NetDlg_EnableControlFragment` | unsure | mid-function tail in 0x56dec0: EnableWindow(GetDlgItem(hDlg,id),flag) |
-| `0x406E40` | `unsure_NetDlg_OnJoinOrRefresh` | unsure | if exit flag EndDialog(1) and frees locale; else listbox 1000 get sel text, Network refresh 0x40c380, reselect |
+| `0x406BC0` | `NetDlg_ScalarDeletingDtor` | high | calls 0x405a40 vtable reset, _free if flag&1 |
+| `0x406C92` | `NetDlg_EnableControlFragment` | high | mid-function tail in 0x56dec0: EnableWindow(GetDlgItem(hDlg,id),flag) |
+| `0x406E40` | `NetDlg_OnTimer` | high | if exit flag EndDialog(1) and frees locale; else listbox 1000 get sel text, Network refresh 0x40c380, reselect |
 | `0x407070` | `NetDlg_InitListColumns` | high | Adds "Player Name"/"Ping" columns to list controls 0x400/0x41a (LVM_INSERTCOLUMN), then combo init; called by NetDlg_OnInitDialog |
 | `0x40720D` | `NetDlg_InitControls_Frag` | medium | Detached tail of NetDlg_InitListColumns: fills map list 0x402 (stride 0x518) and combo 0x40c with netui19/20/22 |
 | `0x407362` | `NetDlg_UpdateSettingTexts_Frag` | medium | Detached fragment calling NetDlg_Set{PlayersRequired,ScoreLimit,GameSpeed}Text on dialog state |
@@ -305,7 +305,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x409890` | `Network_FreePlayerSlot` | high | _free two buffers of 0x2c player slot, zero it, decrement player count |
 | `0x4099B0` | `Network_SetEventHandler2` | high | Stores callback+ctx in slot 2 (+0x60); event 2 = player added |
 | `0x4099D0` | `Network_AddPlayerFromEvent` | medium | Unused: calls Network_AddPlayerRecord on args, returns success |
-| `0x409A30` | `unsure_Network_SetGroupId` | unsure | this+0x754 is the idGroup of DeletePlayerFromGroup/SetGroupData |
+| `0x409A30` | `Network_SetGroupId` | high | this+0x754 is the idGroup of DeletePlayerFromGroup/SetGroupData |
 | `0x409A40` | `Network_FreeAllPlayerSlots` | high | Loops Network_FreePlayerSlot, frees +0x150 buffer, zeroes block |
 | `0x409A90` | `Network_FindPlayerIndexByDpid` | high | Scans 6 slots stride 0x2c comparing +0x20; returns 0xEEEEEEEE if none |
 | `0x409AC0` | `Network_SetEventHandler3` | high | Stores callback+ctx in slot 3 (+0x6c) |
@@ -346,7 +346,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x40C120` | `Network_ReceiveFrameData` | medium | Waits up to 500ms for next in-order frame packet from player, uses pending table |
 | `0x40C380` | `Network_UpdateLobby` | high | Per-state poll: state1 EnumSessions refresh (event 5), state 3/4 pings and packet receive |
 | `0x40CF60` | `Fix16Rect_ContainsPoint` | high | Four Fix16 compares of two stack args against bounds at +0x78..+0x84 |
-| `0x40E490` | `unsure_Ang16_QuantizeWalkDir` | low | Clamps *short into 0, 0x168 or 0x438 buckets; used by PedGameObject_StateWalk |
+| `0x40E490` | `Ang16_SnapToCardinal` | low | Clamps *short into 0, 0x168 or 0x438 buckets; used by PedGameObject_StateWalk |
 | `0x40ECB0` | `Fix16_SteerAngleToward` | medium | Wraps delta to +-pi, ramps rate toward target with limits, WrapRadians; used by Car_UpdateSystems |
 | `0x40EE60` | `TrailerController_ClampAngleDelta` | medium | Same wrap/clamp pattern, returns wrapped angle; sole caller TrailerController_UpdateAlignment |
 | `0x40EF80` | `TrailerController_IsAngleNearTarget` | medium | Checks angle within window of target also +-2pi; called by ClampAngleToLimits |
@@ -365,11 +365,11 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x40FB70` | `TrailerController_ExplodeIfEitherWrecked` | high | If one of cab/trailer is wrecked, set other's hp 32000 and Car_Explode |
 | `0x40FD40` | `TrailerController_ComputeHitchPosition` | medium | Vec2 rotate/add of hitch offsets by cab and trailer angles; sole caller CarManager_SpawnArticulated |
 | `0x40FE30` | `CollisionHit_SetPosition` | medium | Stores 3 dwords at this+4..0xc; callers are collision-record fillers |
-| `0x40FE60` | `unsure_List_PushFront` | medium | Unlinks node then makes it head (next at +0xc); used by Weapon_Release/Player_Dtor |
-| `0x40FE80` | `unsure_Sprite_IsKind1or4or5` | low | Returns whether field +0x30 is 1, 4 or 5 |
+| `0x40FE60` | `SoundClientPool_Release` | medium | Unlinks node then makes it head (next at +0xc); used by Weapon_Release/Player_Dtor |
+| `0x40FE80` | `Position_IsObjectKind` | low | Returns whether field +0x30 is 1, 4 or 5 |
 | `0x40FEE0` | `CollisionHit_SetKindObject` | medium | Sets this+0=3, +0x20=param |
 | `0x40FEF0` | `Object_GetModel` | medium | Returns field +0x18; caller Script_Op_CHECK_OBJ_MODEL |
-| `0x40FF00` | `unsure_GetByte_Ptr8_Plus99` | low | Returns byte at (*(this+8))+99 |
+| `0x40FF00` | `unsure_Object_GetInfoByte99` | low | Returns byte at (*(this+8))+99 |
 | `0x40FF10` | `CollisionHit_SetField24` | low | Writes this+0x24 |
 | `0x40FF20` | `CollisionHit_FillFromGlobals` | medium | Sets kind 2/3/4/5 from g_CollisionKind/g_CollisionHitSprite |
 
@@ -436,7 +436,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x4D5DAE` | `__fpmath` | high | __cfltcvt_init + __ms_p5_mp_test_fdiv + setdefaultprecision (VC7 fpinit.c) |
 | `0x4D5EE3` | `CatchGuardHandler` | medium | EH frame.cpp: calls ___InternalCxxFrameHandler with FuncInfo from frame, UnwindNestedFrames |
 | `0x4D5FE7` | `__IsExceptionObjectToBeDestroyed` | medium | walks global list for exception object pointer (EH ehstate) |
-| `0x4D603B` | `unsure_CallCatchBlock_CallSettingFrameGuarded` | unsure | Builds FS:[0] SEH frame (handler 4d5ebf) around __CallSettingFrame@12; only caller CallCatchBlock |
+| `0x4D603B` | `CallCatchBlock_CallSettingFrameGuarded` | high | Builds FS:[0] SEH frame (handler 4d5ebf) around __CallSettingFrame@12; only caller CallCatchBlock |
 | `0x4D608C` | `_CallSETranslator` | medium | Calls __pSETranslator (DAT_0067503c) with SEH frame; only caller FindHandlerForForeignException |
 | `0x4D682D` | `__scprintf` | high | FILE{cnt=INT_MAX,flag=0x42,base=0} then __output over varargs: counts chars without storing |
 | `0x4D696F` | `Unwind@004d696f` | high | Unwind funclet of eh_vector_constructor_iterator: __ArrayUnwind |
@@ -495,12 +495,12 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x4DC638` | `_tolower` | high | locale-aware tolower; callers __stricmp/__strnicmp; A-Z +0x20, LCMapString |
 | `0x4DC9B6` | `__input` | high | scanf engine; sscanf caller; %d/%s/%[ parsing, _ungetc, _inc |
 | `0x4DD5EC` | `__woutput` | high | wide printf engine; swprintf caller; same structure as __output; write_char/_multi_char/_string |
-| `0x4DDDBC` | `unsure_CRT_RunInitTable_Empty` | unsure | loops over empty function-pointer table (start==end) from startup; _initterm-like |
+| `0x4DDDBC` | `CRT_RunInitTable_Empty` | high | loops over empty function-pointer table (start==end) from startup; _initterm-like |
 | `0x4DE0F8` | `__mbstowcs_lk` | medium | MultiByteToWideChar(cp,9,-1); ANSI copy fallback when locale C |
 | `0x4DE277` | `_asctime_FormatBuf` | medium | formats 'Sun Mon dd hh:mm:ss yyyy' into static buffer (asctime body) |
 | `0x4DE558` | `__resetstkoflw` | high | VirtualQuery/GetSystemInfo/VirtualProtect PAGE_GUARD on stack page |
 | `0x4DEA01` | `__mbsicmp` | high | mbcs case-insensitive compare via _mbctype, LCMapString, falls back to _stricmp |
-| `0x4DEC3C` | `unsure_CRT_InitCurrentDriveCase` | unsure | GetCurrentDirectoryA, if 'X:' calls toupper on drive letter |
+| `0x4DEC3C` | `_getdrive` | high | CRT `_getdrive`: GetCurrentDirectoryA, returns toupper(letter)-0x40 (1 = A:) if 'X:', else 0; caller `__stat` |
 | `0x4DEC95` | `__chdrive` | high | SetCurrentDirectoryA("X:"), errno=EACCES, doserrno=ERROR_INVALID_DRIVE for bad drive |
 | `0x4DEDDD` | `__NMSG_WRITE` | high | callers __FF_MSGBANNER/__amsg_exit; builds runtime-error text, WriteFile or MessageBox |
 | `0x4DF15F` | `__wincmdln` | high | skips program name (quoted or not) in lpCmdLine, uses _ismbblead |
@@ -516,7 +516,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x4E00E7` | `__fptostr` | high | digit copy with round-half-up on >'4' (coordinator) |
 | `0x4E0218` | `__fltout` | high | ___dtold then $I10_OUTPUT into static STRFLT; used by float formatting |
 | `0x4E02A0` | `_memset` | high | word-aligned fill loop; 8 callers |
-| `0x4E0300` | `unsure__amsg_exit_2_Stub` | unsure | single call __amsg_exit(2); invalid-format/parameter abort from scanf/printf |
+| `0x4E0300` | `CRT_AmsgExit_FloatNotLoaded` | high | single call __amsg_exit(2); invalid-format/parameter abort from scanf/printf |
 | `0x4E04F9` | `__CxxUnhandledExceptionFilter` | medium | checks 0xE06D7363 + 0x19930520 C++ EH magic, else calls registered filter after _ValidateExecute |
 | `0x4E0816` | `_setSBUpLow` | high | GetCPInfo + LCMapString/GetStringType fills _mbctype upper/lower tables |
 | `0x4E09A8` | `__setmbcp` | high | mbctype.c: GetACP/OEMCP, GetCPInfo lead bytes, _CPtoLCID, _setSBCS fallback |
@@ -575,8 +575,8 @@ Evidence is in each function's Ghidra plate comment. `unsure_` = honest guess, `
 | `0x45A700` | `Game_OnSetFocus` | medium | WndProc message 7 only |
 | `0x45AFD0` | `HudDebugLabel_SetColour` | medium | sets +0xB0=8, +0xB4=colour on Hud_DebugLabel_Show result |
 | `0x45B0B0` | `PlayerScore_GetReverseCount` | high | printed as "reverse_count" by ShowCounters |
-| `0x45F970`, `0x45FB10`, `0x45FBA0` | `unsure_Keyboard_IsRecordOrPlayMode`, `_FlushReplayLog`, `_ResetReplayBufferOnMarker` | unsure | replay buffer (40000 x 12) around Keyboard +0x38 mode |
-| `0x45F269`, `0x45FAFF`, `0x45FB59` | `Debug_WriteSessionInfoDump_Frag`, `unsure_Keyboard_RecordInputEvent_Frag`, `unsure_Keyboard_FlushReplayLog_Frag` | high | epilogues reached by JMP from 11.44 patch stubs |
+| `0x45F970`, `0x45FB10`, `0x45FBA0` | `Keyboard_IsReplayPlayback`, `_FlushReplayLog`, `_ResetReplayBufferOnMarker` | unsure | replay buffer (40000 x 12) around Keyboard +0x38 mode |
+| `0x45F269`, `0x45FAFF`, `0x45FB59` | `Debug_WriteSessionInfoDump_Frag`, `Keyboard_RecordInputEvent_Tail`, `Keyboard_FlushReplayLog_Epilogue` | high | epilogues reached by JMP from 11.44 patch stubs |
 | `0x461760` | `CmdLine_CountArguments` | high | whitespace token count, caller parseArguments |
 | `0x4619D0` | `Game_RequestForcedLogicStep` | medium | sets DAT_0066274C read by drawAndLimitFrames |
 | `0x461DA0` | `Network_GetPlayerCount` | medium | +0x758 of g_NetworkSession, tested >1 |

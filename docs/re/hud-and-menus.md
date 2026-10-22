@@ -72,7 +72,7 @@ The whole body is skipped when `g_skipUser` (0x5EAD64) is set. In order (V, disa
 |---|---|---|
 | 1 | `Hud_SetFullAmbientAtNight` 0x4C6DA0 | `gbh_SetAmbient(1.0)` at night so the HUD is not darkened |
 | 2 | `Hud_DrawPlayerPanel` 0x4C9C20 | money (sprite 158, right-aligned at x 0x27F, y 4), lives + multiplier (SP), frags / tag time (MP); `Hud_Weapon_Draw` 0x4C9A40 (icon USER 0x55+weapon, ammo text, "K.F." when the ammo byte is 0xFF, H), `Hud_PowerupIcon_Draw` 0x4C9B40 per powerup (icon USER 0x8D+type; armour = ARMOR icon + number, no bar) |
-| 3 | `unsure_Hud_PlayerMarker_Draw` 0x4C74A0 | USER sprite 0 at the player when a block column is above the ped (H: "player under a roof" marker) |
+| 3 | `Hud_PlayerMarker_Draw` 0x4C74A0 | USER sprite 0 at the player when a block column is above the ped (H: "player under a roof" marker) |
 | 4 | `Hud_DrawPlayerNames` 0x4C78A0 | MP only, `g_showPlayerNames`; names over remote players' peds |
 | 5 | `Hud_WantedStars_Draw` 0x4C7A30 | 0..6 stars, USER 0x0E (+lit) |
 | 6 | `Hud_GangRespectBars_Draw` 0x4C74F0 | gang respect meters, icon USER 0x3F + gang arrowColour |
@@ -95,7 +95,7 @@ The whole body is skipped when `g_skipUser` (0x5EAD64) is set. In order (V, disa
 ### 1.2 `DrawGUI` 0x4CAB50: the HUD tick
 
 ECX-relative to HudManager: `Hud_TickAnimatedValues` (money/lives/multiplier/frags rolling digits),
-`unsure_Hud_PlayerMarker_Update` (+0x2844), `Hud_DebugPedInfo_Update` (+0x27B5, only if on),
+`Hud_PlayerMarker_Update` (+0x2844), `Hud_DebugPedInfo_Update` (+0x27B5, only if on),
 `Hud_WantedStars_Update` (+0x2760), `Hud_CarName_Tick` (+0), `Hud_Pickup_Tick` (+0x27B8),
 `Hud_ZoneName_Update` (+0x4C), `Hud_Brief_Tick` (+0xE4), `Hud_Pager_C_Array_TickTimers` (+0x7E8),
 `Hud_DebugLabel_ExpireFinished` (+0x818), `Hud_ArrowPool_Tick` (+0x1F18), `Hud_BigLabel_Tick`
@@ -117,7 +117,7 @@ Built by `HudManager_Ctor` 0x4CAC60 in this order; every offset below is now typ
 | 0x2760 | 0x54 | `HudWantedStars wantedStars` | `Hud_WantedStars_Init` 0x4C6EE0 | 0x4C7A30 / 0x4C79D0 |
 | 0x27B5 | 1 | `displayDebugPedInfo` | 0x4C6E70 | – / 0x4CA680 |
 | 0x27B8 | 0x88 | `HudPickupLabel pickupLabel` | `Hud_Pickup_Ctor` | 0x4C9690 / `Hud_Pickup_Tick` |
-| 0x2844 | 0x10 | `HudPlayerMarker playerMarker` (H) | `unsure_Hud_PlayerPointer_Init` 0x4C6E50 | 0x4C74A0 / 0x4C73A0 |
+| 0x2844 | 0x10 | `HudPlayerMarker playerMarker` (H) | `Hud_PlayerMarker_Init` 0x4C6E50 | 0x4C74A0 / 0x4C73A0 |
 | 0x2854 | 0x1C8 | `HudBigLabel bigLabel` | `Hud_BigLabel_Ctor` | 0x4C8A40 / `Hud_BigLabel_Tick` |
 | 0x2A1C | 4 | `HudPausePage pausePage` (page byte, countdown byte) | `Hud_PauseOverlay_Init` 0x4C71A0 | 0x4C9FA0 / 0x4C6D00 |
 | 0x2A20 | 0xD0 | `HudKillFeedLine killFeedLine` | `Hud_KillFeed_Ctor` | 0x4C96F0 / byte timer in DrawGUI |
@@ -278,7 +278,7 @@ HUD font roles (`Font_AssignRolesByLocale` 0x4CA520; Japanese switches to kanji 
   popup never leaves the screen.
 - `FloatingScore` fields added: `delayTicks` @0x38, `growX` @0x3C, `growY` @0x40.
 - 0x4B9D50-0x4BA2C0 is not HUD: sprite bounds/position helpers and
-  `unsure_Sprite_AttachChildToParent` 0x4B9D50 (re-checked: attaches roof guns, antennas, flames
+  `Sprite_AttachChildToParent` 0x4B9D50 (re-checked: attaches roof guns, antennas, flames
   to a car/ped/object; 17 callers).
 
 ### 5.1 How a HUD sprite gets drawn
@@ -338,7 +338,7 @@ jump table 0x459E10 with a per-page index byte table at **0x459E20**.
   profileSlot @0x403, levelEndReason @0x404 (H), crimeStats[10] @0x408, totalEarned @0x430,
   wantedStarSeconds @0x434, mpGameType @0x43B (1 frags, 2 points, 3 tag), fragLimit @0x43C, MP
   player count/index/winner, mpTimeLimitMinutes @0x444, kill matrix, frags, points, player names
-  (6 × 16 wchar) @0x4B4, `unsure_field574` @0x574.
+  (6 × 16 wchar) @0x4B4, `bonusTokenCount` @0x574 (bonus tokens collected: Menu_Inc/Get/SetBonusTokenCount; FrontEnd_GotoPage compares with 50; saved in the savegame).
 
 ### 6.2 Pages
 
@@ -399,7 +399,7 @@ Background images (`g_FrontendImages` @ 0x591F68, 25 × 0x88, all `data\frontend
 4. `WinMain2` (0x4D11B8) gets 3 from `FUN_0045A320` → `isExit=0` → `InitGame` (0x461DE0) → `LoadGMP_and_STY_Files` (reads `Menu_GetGmpPath/StyPath/ScrPath/SavePath`) → `startGame`.
 5. `InitGame` also reads `Menu_GetGameTimeLimit` and `Menu_SetPlayerName` (MP).
 6. Return to the frontend: `WinMain2` after `relToQuitGame(game)` → `DeinitGame`, `isExit=1`, `doPlayMovies`/page id = 2 (player quit): page 0xb (6 if bonus); 3 (dead): page 2 (6); 4 (level done): page 3 (6); 5: page 7 (MP results); 6: page 0. Then `FrontEnd_GotoPage(page)` after `Init()`. `FUN_0045A480` (called from `Script_Op_FINISH_LEVEL`, `quitGame`) writes `Game.field11_0x28/relatedToQuitGame` and `Menu.levelEndReason`.
-7. Between levels `unsure_Menu_CopyPlayerCrimeStats` fills `Menu.crimeStats/totalEarned/wantedStarSeconds` for the stats panel.
+7. Between levels `Menu_CopyPlayerCrimeStats` fills `Menu.crimeStats/totalEarned/wantedStarSeconds` for the stats panel.
 
 
 ### 6.5 Settings the frontend itself reads and writes
@@ -524,7 +524,7 @@ SFXVol seed 0x0B is much lower than the 0x7F default — probably the installer'
 | 0x6D4 | ushort[20] | pickupType | +0xF0 (`object+0x18`) |
 | 0x6FC | byte[20] | pickupAmmo | +0x118 (FUN_004340a0); FUN_00485640 respawns them with SpawnObject + Pickup_SetAmmo on load |
 | 0x710 | byte[50] | spawnerState | 12 dwords + 1 word copied from `g_ObjectSpawner+0x20` (→ `DAT_00664ca0`) |
-| 0x744 | uint | menuField574 | `DAT_00664cd4` = `Menu+0x574` (`unsure_Menu_GetField574`); restored by FUN_00476b10 |
+| 0x744 | uint | menuField574 | `DAT_00664cd4` = `Menu+0x574` (`Menu_GetBonusTokenCount`); restored by FUN_00476b10 |
 
 Verified: sum of the sections == 0x748 == the length passed to the writer (`local_10 = 0x748` in SaveGame, `iParm1 = 0x748` in MissionScript_LoadSaveGame) and the read of the first 0x52 bytes in FrontEnd_LoadSavedGameSlot lines up with +0x00/+0x19/+0x32/+0x4B..+0x4D.
 
@@ -622,7 +622,7 @@ Recommendation: 1. What the screen has to write and how each setting is re-appli
   - `SaveGameHeader` (§8) is created but not applied to `buf466` 0x664590, because the buffer
     interior carries its own `DAT_` labels.
 - Hypotheses: the player marker at HudManager+0x2844; the arrow respect thresholds; "K.F." in the
-  ammo text; `unsure_Hud_IsMpGameTypeNot3`; `MissionScript+0x344`; `Menu+0x574` and
+  ammo text; `Hud_IsMpGameNotTag`; `MissionScript+0x344`; `Menu+0x574` and
   `levelEndReason`; the kill-frenzy payout path; the 30 Hz tick rate (taken from `CreateTimer`'s
   × 30, not measured).
 - Unnamed callees on the edges: `FUN_004105C0` (SFX master volume), `FUN_00463850` (block-column
@@ -690,7 +690,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x453A30 | `FrontEnd_SetKeyboardActive` | V |
 | 0x453A40 | `FrontEnd_PackLevelId` | V |
 | 0x453A60 | `FrontEnd_UnpackLevelId` | V |
-| 0x453A80 | `unsure_Menu_GetField574` | H |
+| 0x453A80 | `Menu_GetBonusTokenCount` | V |
 | 0x453A90 | `MultiplayerTag_HasPlayerQuit` | V |
 | 0x453AA0 | `MultiplayerTag_GetPlayerTagTime` | V |
 | 0x453AB0 | `MultiplayerTag_GetWinnerIndex` | V |
@@ -752,7 +752,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 
 | Address | Name | |
 |---|---|---|
-| 0x45E390 | `unsure_GeneratorManager_ZeroAngle` | H |
+| 0x45E390 | `Generator_Ctor` | V |
 | 0x45E3A0 | `Generator_TurnOn` | old |
 | 0x45E3E0 | `GeneratorManager_Ctor` | old |
 | 0x45E410 | `Menu_SetGmpPath` | old |
@@ -798,13 +798,13 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x45E830 | `Menu_GetMultiplayerKillMatrix` | V |
 | 0x45E860 | `Menu_Ctor` | V |
 | 0x45E8D0 | `Menu_LoadDebugLevelFromRegistry` | old |
-| 0x45EC20 | `unsure_Menu_CopyPlayerCrimeStats` | H |
-| 0x45EC70 | `unsure_MpResults_OnKill` | H |
+| 0x45EC20 | `Menu_CopyPlayerCrimeStats` | V |
+| 0x45EC70 | `MpResults_OnKill` | V |
 | 0x45ED00 | `Keyboard_MaskLow12Bits` | V |
 | 0x45ED10 | `Keyboard_SetMappedBit` | V |
 | 0x45ED30 | `Keyboard_ClearMappedBit` | V |
-| 0x45ED50 | `unsure_Keyboard_IsReservedKey` | H |
-| 0x45EDC0 | `unsure_Keyboard_IsPassThroughKey` | H |
+| 0x45ED50 | `Keyboard_IsReservedKey` | V |
+| 0x45EDC0 | `unsure_Keyboard_IsKeySwallowedWhilePaused` | H |
 | 0x45EDE0 | `Keyboard_ToggleMappedBits` | V |
 
 ### Registry / config / stdio (0x4B5000-0x4B6B3F, 77 functions)
@@ -989,7 +989,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4C6060 | `ShowBigOnScreenLabel` | old |
 | 0x4C60B0 | `Hud_BigLabel_Tick` | old |
 | 0x4C60C0 | `Hud_BigLabel_Ctor` | old |
-| 0x4C60D0 | `unsure_Hud_MulIntByFix16` | H |
+| 0x4C60D0 | `Hud_MulIntByFix16` | V |
 | 0x4C60F0 | `Hud_DebugLabel_TickIsExpired` | V |
 | 0x4C6110 | `Hud_DebugLabel_IsDuplicateOf` | V |
 | 0x4C6170 | `Hud_DebugLabel_ExpireFinished` | V |
@@ -1034,10 +1034,10 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4C6DC0 | `get_text_speed` | old |
 | 0x4C6DE0 | `Hud_IsKeyConsumedByOverlay` | V |
 | 0x4C6E20 | `Hud_QuitConfirm_ConsumesKey_Thunk` | V |
-| 0x4C6E30 | `unsure_ObjectPrefabs_GetPrefabSpriteId` | H |
-| 0x4C6E50 | `unsure_Hud_PlayerPointer_Init` | H |
+| 0x4C6E30 | `ObjectPrefabs_GetDefaultSpriteId` | V |
+| 0x4C6E50 | `Hud_PlayerMarker_Init` | V |
 | 0x4C6E70 | `Hud_DebugPedInfo_Init` | V |
-| 0x4C6EA0 | `unsure_Hud_WantedStar_SetBlinkPeriod` | H |
+| 0x4C6EA0 | `Hud_WantedStar_SetBlinkPeriod` | V |
 | 0x4C6EE0 | `Hud_WantedStars_Init` | V |
 | 0x4C6F00 | `Hud_ArrowTarget_Clear` | V |
 | 0x4C6F20 | `Hud_ArrowTarget_IsEmpty` | V |
@@ -1046,7 +1046,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4C6F80 | `Hud_Arrow_HasNoTargets` | V |
 | 0x4C6FB0 | `Hud_Arrow_HasBothTargets` | V |
 | 0x4C6FE0 | `Hud_Arrow_SetGangIcon` | V |
-| 0x4C6FF0 | `unsure_Hud_Arrow_InitRadiusFromIndex` | H |
+| 0x4C6FF0 | `Hud_Arrow_InitOrbitRadiusBase` | V |
 | 0x4C7030 | `Hud_Arrow_SetGang` | V |
 | 0x4C7040 | `Hud_Arrow_SetMinRespect` | V |
 | 0x4C7050 | `Hud_Arrow_IsVisible` | V |
@@ -1069,10 +1069,10 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4C7320 | `ChatInput_Backspace` | old |
 | 0x4C7340 | `Player_GetArrowBlockerZone` | V |
 | 0x4C7350 | `unsure_MissionScript_HasActiveMissionPtr` | H |
-| 0x4C7370 | `unsure_Hud_IsMpGameTypeNot3` | H |
-| 0x4C7380 | `unsure_MultiplayerTag_GetPlayerTimeValue` | H |
-| 0x4C73A0 | `unsure_Hud_PlayerMarker_Update` | H |
-| 0x4C74A0 | `unsure_Hud_PlayerMarker_Draw` | H |
+| 0x4C7370 | `Hud_IsMpGameNotTag` | V |
+| 0x4C7380 | `MultiplayerTag_GetPlayerTimeValue` | V |
+| 0x4C73A0 | `Hud_PlayerMarker_Update` | V |
+| 0x4C74A0 | `Hud_PlayerMarker_Draw` | V |
 | 0x4C74F0 | `Hud_GangRespectBars_Draw` | V |
 | 0x4C78A0 | `Hud_DrawPlayerNames` | old |
 | 0x4C79D0 | `Hud_WantedStars_Update` | V |
@@ -1094,7 +1094,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4C8690 | `Player_HandleQuitConfirmKey` | old |
 | 0x4C8880 | `ChatInput_HandleKey` | old |
 | 0x4C8910 | `Hud_DrawChatInput` | old |
-| 0x4C8990 | `unsure_Hud_ChatInput_DrawLine` | H |
+| 0x4C8990 | `Hud_ChatInput_DrawLine` | V |
 | 0x4C8A20 | `ChatInput_Open` | old |
 | 0x4C8A40 | `Hud_BigLabel_Draw` | V |
 | 0x4C8AA0 | `Hud_DebugLabel_Init` | old |
@@ -1165,7 +1165,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4CB530 | `HideMouseCursor` | old |
 | 0x4CB550 | `ShowMouseCursor` | old |
 | 0x4CB570 | `SetFullscreenMode` | old |
-| 0x4CB6C0 | `unsure_Video_GetDesktopColourDepth` | H |
+| 0x4CB6C0 | `Video_GetDesktopColourDepthStub16` | V |
 | 0x4CB6F0 | `CanRenderWindowed` | old |
 | 0x4CB720 | `Video_GetWindowedAllowed` | V |
 | 0x4CB730 | `SetWindowedMode` | old |
@@ -1206,7 +1206,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 
 | Address | Name | Confidence | Evidence |
 |---|---|---|---|
-| 0x4A4770 | `unsure_Player_ClearKeyChangedFlags` | unsure | zeroes Player+0x88/+0x8c dwords (key*Changed flags, but also isActive); only caller Player_OnKeyDown |
+| 0x4A4770 | `Hud_ZoneName_ClearZoneTypes` | high | zeroes HudZoneNameLabel +0x88/+0x8C (zone types; caller passes &g_HudManager->zoneName, not a Player - Seq 48); only caller Player_OnKeyDown |
 | 0x4A4F10 | `Player_DtorMembers` | med | +0x360=0 and vector dtor of 10x0x2c at +0x1a8; callers Player_Dtor + Unwinds |
 | 0x4A4FE0 | `Weapon_GetAmmo` | high | returns WEAPON_STRUCT.ammo; Player_BeginKfCarWeapon stores as kfSavedAmmo |
 | 0x4A4FF0 | `Weapon_SetAmmoRaw` | high | writes ammo short without *10; Player_EndKfWeapon restores kfSavedAmmo |
@@ -1239,12 +1239,12 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4A90A0 | `S28_UpdateHiScoresAfterLevel` | med | inserts into tables, crime bests, saves; WinMain2 |
 | 0x4A9210 | `S28_ApplyMuchCashCheat` | high | profile name == "MUCHCASH" -> GiveMoney 500000 |
 | 0x4A9270 | `S28_DestroyGlobalInstance` | high | delete ptrToS28PlayerData |
-| 0x4A9AC0 | `unsure_PoliceManager_FreeBuffer` | unsure | _free(this+0xa0); callers include 3 unwinds so maybe member dtor |
-| 0x4AB9D0 | `unsure_PoliceCrew_HandleState23` | unsure | case 0x23 of PoliceCrew_Update switch |
-| 0x4ABA30 | `unsure_PoliceCrew_HandleState24` | unsure | case 0x24 of PoliceCrew_Update switch |
-| 0x4ABA90 | `unsure_PoliceCrew_HandleState0E` | unsure | case 0xe of PoliceCrew_Update switch |
+| 0x4A9AC0 | `PoliceManager_FreeBuffer` | high | _free(this+0xa0); callers include 3 unwinds so maybe member dtor |
+| 0x4AB9D0 | `PoliceCrew_HandleObjEnterCar` | high | case 0x23 of PoliceCrew_Update switch |
+| 0x4ABA30 | `PoliceCrew_HandleObjLeaveCar` | high | case 0x24 of PoliceCrew_Update switch |
+| 0x4ABA90 | `PoliceCrew_HandleObjGoToAreaInCar` | high | case 0xe of PoliceCrew_Update switch |
 | 0x4AF570 | `PublicTransportManager_IsBusCarId` | med | carId == bus car (this+0x17cc), !g_skipBuses |
-| 0x4AF5A0 | `unsure_PublicTransportManager_GetBoardableBusCar` | unsure | bus car if actor state(+0x1808)==0xd |
+| 0x4AF5A0 | `PublicTransportManager_GetBoardableBusCar` | high | bus car if actor state(+0x1808)==0xd |
 | 0x4AF5E0 | `PublicTransportManager_IncBusPassengerCount` | med | ++byte +0x1816 |
 | 0x4AF5F0 | `PublicTransportManager_KillAllBusPassengers` | high | count=0 + PedList_KillAndFreeAll; Script_Op_KILL_ALL_PASSENGERS |
 | 0x4AF7F0 | `PublicTransportManager_Dtor` | high | only caller is its ScalarDeletingDtor |

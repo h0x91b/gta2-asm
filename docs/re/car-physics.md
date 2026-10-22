@@ -83,7 +83,7 @@ WinMain2 0x4D11B8 ─ drawAndLimitFrames 0x462A30 ─ Game_RunLogicStep 0x461930
         │         BinarySearchCollisionTime 0x4A30A0 (3 bisections)
         │         OnCollision 0x4A4270 → DispatchCollision 0x4A4170 → §5
         │         UpdateSurfaceAndEmitLanding 0x4A2980 → UpdateSurface 0x4A26C0
-        │       still stuck + gas: unsure_CarPhysics_NudgeOutOfCollision 0x4A2D70
+        │       still stuck + gas: CarPhysics_NudgeOutOfCollision 0x4A2D70
         │     CarPhysics_CheckPendingCollision 0x4A2DB0
         │     CarPhysics_DoSkidmarks 0x4A0560 → UpdateSkidmarks 0x4A0290 → SpawnSkidSegment 0x4A0120
         │     CarPhysics_SubExternalVelocity 0x49F4F0 ; CarPhysics_SubExternalAngVel 0x49EA60
@@ -150,7 +150,7 @@ human driver with no steering input, throttle ≥ 2.0 (player), velocity aligned
 swerve, on a road block (`blk+0xB & 3 == 1`) whose arrows (`blk+0xA`) point along an axis within
 25° of the heading (0x33 → 90°/270°, 0xCC → 0°/180°/360°). Correction = `target − heading`,
 clamped to `|v|·0.13` (`·0.26` for short sprites, `Car_GetSteerAssistLimit` 0x4234A0).
-The same external-velocity trick carries object pushes (`unsure_CarPhysics_ApplyObjectPush` 0x49F460).
+The same external-velocity trick carries object pushes (`CarPhysics_ApplyConveyorPush` 0x49F460).
 
 ### 4.5 Collisions and response (slice 4 + orchestrator)
 * Pipeline: broad phase on the collision grid rows (`Collision_FindObstacle` 0x447740,
@@ -322,7 +322,7 @@ comment in Ghidra has the evidence.
 | `0x425D90` | `Car_CreatePhysics` | if car has no physics: Car_AllocPhysicsIfNeeded -> CarPhysics_AttachCar -> CarPhysics_InitFromSprite(sprite); if it exists and car is a… | verified |
 | `0x425DD0` | `Car_EnsurePhysics` | physics on demand: trailer rig -> FUN_0040F450(trailerController) (creates physics for both), else Car_CreatePhysics. 12 callers (driver… | verified |
 | `0x426120` | `Car_FreePhysics` | return car->physics to the pool (FUN_004254F0(ptrToCarPhysicsPool, physics)) and set car->physics=NULL. Called from Car_Destroy,… | verified |
-| `0x4262E0` | `unsure_Car_UpdateArticulatedCabTrailerSearch` |  | hypothesis |
+| `0x4262E0` | `Car_UpdateArticulatedCabTrailerSearch` |  | verified |
 | `0x49DD10` | `CarPhysics_UpdateTrailerAlignment` | -> TrailerController_UpdateAlignment | verified |
 | `0x49DE40` | `CarPhysics_RestoreStartPose` | inverse of SaveStartPose: restores car+trailer fields +30,+34,+6c,+58,+38,+3c,+70,+68 from DAT_0066acd0.. block. | verified |
 | `0x49DEF0` | `CarPhysics_SaveStartPose` | copies car (+0x30/34 vel? pos, +0x6c z, +0x58 rot, +0x38/3c, +0x70, +0x68) and trailer fields into scratch globals DAT_0066acd0..… | verified |
@@ -345,7 +345,7 @@ comment in Ghidra has the evidence.
 | `0x49F4E0` | `CarPhysics_AddExternalVelocity` | linVel += g_CarExternalLinVel | verified |
 | `0x49F4F0` | `CarPhysics_SubExternalVelocity` | linVel -= g_CarExternalLinVel | verified |
 | `0x49F500` | `CarPhysics_ResetExternalVelocity` | g_CarExternalLinVel = 0 | verified |
-| `0x49F510` | `unsure_CarPhysics_GetLookAheadZ` | zStep(+0x70) > 0 ? min(zPos + 1.0, DAT_0066AD1C = 7.984) : zPos. Only caller 0x420270. Purpose unconfirmed. | hypothesis |
+| `0x49F510` | `CarPhysics_GetLookAheadZ` | zStep(+0x70) > 0 ? min(zPos + 1.0, DAT_0066AD1C = 7.984) : zPos. Only caller 0x420270. Purpose unconfirmed. | verified |
 | `0x49F570` | `CarPhysics_GetCombinedCm` | centre of mass of the rig (mass weighted) | verified |
 | `0x49F660` | `CarPhysics_GetMass` | Car_GetMass, or cab+trailer when towing | verified |
 | `0x49F6C0` | `CarPhysics_GetInertia` | physicsData.inertia, or cab+trailer sum | verified |
@@ -369,10 +369,10 @@ comment in Ghidra has the evidence.
 | `0x4A2240` | `CarPhysics_UpdateGroundZ` | per-step Z following (air / water / ground / slope); prototype fixed `(CarPhysics*, int step)` | verified |
 | `0x4A2640` | `CarPhysics_UpdateZWithTrailer` | UpdateGroundZ for cab + trailer, both get the higher z/zStep | verified |
 | `0x4A2980` | `CarPhysics_UpdateSurfaceAndEmitLanding` | surface update + landing particles | verified |
-| `0x4A2A30` | `unsure_CarPhysics_NudgeOutOfWallY` | Y twin of NudgeOutOfWallX (uses contact rel-cm x). | hypothesis |
-| `0x4A2B40` | `unsure_CarPhysics_NudgeOutOfWallX` | wall-X stuck fix: from heading (+0x58, half-turn flip if +0x94), compares contact rel-cm y (g_CollisionContactRelCm+4) sign with heading… | hypothesis |
-| `0x4A2C70` | `unsure_CarPhysics_NudgeOutOfSprite` | stuck-vs-sprite nudge: kick strength chosen by hit sprite (obj type 0xA6 weak DAT_0066aea8, player driver DAT_0066af80, AI… | hypothesis |
-| `0x4A2D70` | `unsure_CarPhysics_NudgeOutOfCollision` | called by MoveAndCollide after a hit when engine accelerates: switch g_CollisionKind 1 -> NudgeOutOfWallX, 2 -> WallY, 3 ->… | hypothesis |
+| `0x4A2A30` | `CarPhysics_NudgeOutOfWallY` | Y twin of NudgeOutOfWallX (uses contact rel-cm x). | verified |
+| `0x4A2B40` | `CarPhysics_NudgeOutOfWallX` | wall-X stuck fix: from heading (+0x58, half-turn flip if +0x94), compares contact rel-cm y (g_CollisionContactRelCm+4) sign with heading… | verified |
+| `0x4A2C70` | `CarPhysics_NudgeOutOfSprite` | stuck-vs-sprite nudge: kick strength chosen by hit sprite (obj type 0xA6 weak DAT_0066aea8, player driver DAT_0066af80, AI… | verified |
+| `0x4A2D70` | `CarPhysics_NudgeOutOfCollision` | called by MoveAndCollide after a hit when engine accelerates: switch g_CollisionKind 1 -> NudgeOutOfWallX, 2 -> WallY, 3 ->… | verified |
 | `0x4A2DB0` | `CarPhysics_CheckPendingCollision` | if Car flag 0x2000: overlap check vs sprites (mask 2), else clear flag | verified |
 | `0x4A2E00` | `CarPhysics_ApplyImpulseAndIntegrate` | ApplyForceAtPoint(mode 0)+ForcesToAccel+IntegrateVelocity | verified |
 | `0x4A2E30` | `CarPhysics_StepIntegrate` | move by `step` of remaining movement; prototype fixed to `(CarPhysics*, int step)` | verified |
@@ -504,9 +504,9 @@ comment in Ghidra has the evidence.
 | `0x4A0020` | `CarPhysics_TestCollision` | map + sprite test for car and trailer sprite, records mover | verified |
 | `0x4A0080` | `CarPhysics_DebugAssertCollisionKind` | dead debug assert (physics.cpp 0x7a0/0x7a9), 0 callers | verified |
 | `0x4A05C0` | `CarPhysics_ComputeCollisionImpulse` | the impulse maths, 7 callers; mass -1 = immovable | verified |
-| `0x4A0900` | `unsure_CarPhysics_ApplyKickFromGlobalTable` | velocity(+0x48) += vector from table at DAT_0066ab70+4 (FUN_0041e1a0 = unary op, probably neg/scale). Only caller 0x4A0960. | hypothesis |
-| `0x4A0960` | `unsure_CarPhysics_ApplyKickWithTrailerRedirect` | wrapper of 0x4A0900 with trailer redirect (FUN_00421720 => apply to linked CarPhysics). Callers: UpdateSurface, NudgeAndWake. | hypothesis |
-| `0x4A09B0` | `unsure_CarPhysics_NudgeAndWake` | post-contact kick + KeepActiveFor + release handbrake (not for trains) | hypothesis |
+| `0x4A0900` | `CarPhysics_ApplyAccelerationAsForce` | forceAccum(+0x48) += accel * g_CurCarEngineData->mass (+4): turns an acceleration into a force (Seq 48; not a table kick). Only caller 0x4A0960. | verified |
+| `0x4A0960` | `CarPhysics_ApplyAccelerationWithTrailerRedirect` | wrapper of 0x4A0900 with trailer redirect (FUN_00421720 => apply to linked CarPhysics). Callers: UpdateSurface, NudgeAndWake. | verified |
+| `0x4A09B0` | `CarPhysics_NudgeAndWake` | post-contact kick + KeepActiveFor + release handbrake (not for trains) | verified |
 | `0x4A0A30` | `CarPhysics_CollideWithSprite` | car-ped: impulse, sets ped fields, calls ped handler | verified |
 | `0x4A3140` | `CarPhysics_ApplyImpulseWithTrailerRedirect` | redirect to linked trailer/cab physics | verified |
 | `0x4A32D0` | `CarPhysics_ApplyWallImpulse` | wall response: impulse vs infinite mass, ApplyImpact(0xF), damage | verified |
@@ -518,21 +518,21 @@ comment in Ghidra has the evidence.
 | `0x4A4270` | `CarPhysics_OnCollision` | replays pose at hit fraction, dispatches | verified |
 | `0x4B9A30` | `Sprite_ShouldCollideWithSprite` | collision filter by entry type 1..5 | verified |
 | `0x4BCAC0` | `Sprite_CollisionCheck` | narrow phase: z overlap + rect corners both ways | verified |
-| `0x4BCB40` | `unsure_Sprite_UpdateBoundsIfDirty` | if sprite bounds (+0xc obj) not yet current (flag +0x48==0) recompute corners via FUN_004bbd40. 17 callers, called before every… | hypothesis |
-| `0x4BD8A0` | `unsure_Sprite_ComputeCollisionContactPoint` | contact point of two sprites (1 corner or midpoint of 2) | hypothesis |
+| `0x4BCB40` | `Sprite_UpdateBoundsIfDirty` | if sprite bounds (+0xc obj) not yet current (flag +0x48==0) recompute corners via FUN_004bbd40. 17 callers, called before every… | verified |
+| `0x4BD8A0` | `Sprite_ComputeCollisionContactPoint` | contact point of two sprites (1 corner or midpoint of 2) | verified |
 
 #### 6. Damage, deformation, wreck, skids, surface (53)
 
 | address | name | role | confidence |
 |---|---|---|---|
 | `0x414F60` | `Car_HasFlag100` | Car_HasFlags(Car+0x78, 0x100). In Car_OnDamage gates default (bullet) damage and 0x109 -> likely bullet-proof. Pair Car_HasFlag200… | verified |
-| `0x41F940` | `unsure_Car_IsOnScreenForAnyPlayer` | gates skids | hypothesis |
+| `0x41F940` | `Car_IsOnScreenForAnyPlayer` | gates skids | verified |
 | `0x420950` | `Car_AttachRoofLightObject` | spawn object type + attach to car sprite | verified |
 | `0x4209F0` | `Car_TickLastDamageTimer` | --lastAttackerTimer(+0x94); at 0 clear attacker ped (+0x70) and kill code (+0x90) | verified |
 | `0x420DC0` | `CarDeltas_SetBit` | `*this \ | verified |
 | `0x420DE0` | `CarDeltas_ClearBit` | `&= ~(1<<n)` | verified |
 | `0x420E20` | `CarDeltas_IsBitSet` | test bit | verified |
-| `0x421100` | `unsure_CarPhysics_IsSunkAndSlow` | surfaceType==8 and \ | hypothesis |
+| `0x421100` | `CarPhysics_IsSunkAndSlow` | surfaceType==8 and \ | verified |
 | `0x421570` | `FixCarBrokenEngine` | engine states 2/TURN_OFF -> OFF | verified |
 | `0x421590` | `Car_BreakEngine` | engineState(+0x9c)=5 unless 6 | verified |
 | `0x4217F0` | `Car_IsTaxiModel` | model 0x38 TAXI or 0x33 STYPECAB | verified |
@@ -554,29 +554,29 @@ comment in Ghidra has the evidence.
 | `0x427B60` | `Car_BecomeWreck` | switch sprite to CarInfo[wreck+0x48], reset deltas/lights/horn | verified |
 | `0x4292F0` | `Car_ApplyImpactDamage` | impulse (Q14) x 200 -> Car_AddDamage; skipped if Car flag 0x8; taxi + impulse > 2.0 -> passengers flee | verified |
 | `0x429370` | `Car_TriggerExplosion` | anti_strength != 0 && !wrecked -> Car_Explode else Car_EmitExplosion only | verified |
-| `0x4293D0` | `unsure_Car_OnTouchObject` | car touches object: 8/9 oil spin, shop, crane, crusher... | hypothesis |
+| `0x4293D0` | `Car_OnTouchObject` | car touches object: 8/9 oil spin, shop, crane, crusher... | verified |
 | `0x429660` | `Car_TickWreckTimer` | --wreckTimer; at 0 Car_BecomeWreck | verified |
 | `0x436220` | `Ped_GetDamageMultiplier` | 2 with powerup 7 else 1 | verified |
 | `0x445E90` | `Passengers_ForceTaxiPassengersToExit` | flag 0x20000000 on taxi passengers | verified |
-| `0x44AB20` | `unsure_ObjectType_IsHarmlessToCar` | object types 0x9a,0x9f,0xc1,0xc3,199 | hypothesis |
-| `0x44AB80` | `unsure_ObjectType_GetKillWeaponCode` | object type -> kill code 9..0x15 stored at Car+0x90 | hypothesis |
-| `0x466AF0` | `unsure_MapBlocks_GetSkidTileKind` | 7 water / 0 lid / 5 none | hypothesis |
+| `0x44AB20` | `unsure_ObjectType_IsProbeBulletClone` | object types 0x9a,0x9f,0xc1,0xc3,199 | hypothesis |
+| `0x44AB80` | `ObjectType_GetKillWeaponCode` | object type -> kill code 9..0x15 stored at Car+0x90 | verified |
+| `0x466AF0` | `MapBlocks_GetSkidTileKind` | 7 water / 0 lid / 5 none | verified |
 | `0x48DB00` | `Particle_EmitImpactParticles` | 6 random sparks at x,y,z | verified |
 | `0x49E100` | `CarPhysics_GetSkidObjectType` | (surface type, length) -> object id | verified |
 | `0x49EA30` | `Sprite_GetBoundingBoxCorner` | corner idx -> world xy | verified |
-| `0x49EBE0` | `unsure_MapBlocks_GetCarSurfaceTypeAt` | tile -> CAR_SURFACE (7/9/5/slope) | hypothesis |
-| `0x49F460` | `unsure_CarPhysics_ApplyObjectPush` | direction bytes of a touched object (FUN_00493090) * DAT_0066AC10 added to g_CarExternalLinVel (x) and 0x66B008 (y), KeepActiveFor(15).… | hypothesis |
+| `0x49EBE0` | `MapBlocks_GetCarSurfaceTypeAt` | tile -> CAR_SURFACE (7/9/5/slope) | verified |
+| `0x49F460` | `CarPhysics_ApplyConveyorPush` | direction bytes of a touched object (FUN_00493090) * DAT_0066AC10 added to g_CarExternalLinVel (x) and 0x66B008 (y), KeepActiveFor(15).… | verified |
 | `0x49FF80` | `CarPhysics_EmitImpactParticles` | landing puffs at corners | verified |
 | `0x4A0120` | `CarPhysics_SpawnSkidSegment` | anchor to new point -> skid object | verified |
 | `0x4A0290` | `CarPhysics_UpdateSkidmarks` | skid emission rule (section 5) | verified |
 | `0x4A26C0` | `CarPhysics_UpdateSurface` | ground contact, surfaceType/groundMaterial | verified |
 | `0x4BD350` | `Sprite_CheckCornerZCollisions` | corner mask + count | verified |
-| `0x4BD490` | `unsure_Sprite_IsAnyCornerBlockedNearZ` | any corner blocked at z or z-1 | hypothesis |
-| `0x4BDD40` | `unsure_Sprite_GetCornersOverWaterMask` | corner mask over water | hypothesis |
-| `0x4BE920` | `unsure_CarAttachment_Explode` |  | hypothesis |
-| `0x4BE950` | `unsure_CarAttachment_WreckCar` |  | hypothesis |
-| `0x4BEA20` | `unsure_CarAttachments_ExplodeAll` | Car_Explode: for each attachment -> unsure_CarAttachment_Explode (0x4be920: turret/gun objects explode with code 0x13 via… | hypothesis |
-| `0x4BEA40` | `unsure_CarAttachments_WreckAll` | Car_OnWrecked: for each attachment -> unsure_CarAttachment_WreckCar (0x4be950) which calls Car_OnWrecked on the linked car if not being… | hypothesis |
+| `0x4BD490` | `Sprite_IsAnyCornerOnSlopeNearZ` | any body corner on a slope block (MapBlocks_IsSlope1to44At) at z or z-1; caller CarPhysics_UpdateSurface | verified |
+| `0x4BDD40` | `Sprite_GetCornersOverWaterMask` | corner mask over water | verified |
+| `0x4BE920` | `CarAttachment_ExplodeOrKill` |  | verified |
+| `0x4BE950` | `CarAttachment_WreckLinkedCar` |  | verified |
+| `0x4BEA20` | `CarAttachments_ExplodeAll` | Car_Explode: for each attachment -> CarAttachment_ExplodeOrKill (0x4be920: turret/gun objects explode with code 0x13 via… | verified |
+| `0x4BEA40` | `CarAttachments_WreckAll` | Car_OnWrecked: for each attachment -> CarAttachment_WreckLinkedCar (0x4be950) which calls Car_OnWrecked on the linked car if not being… | verified |
 | `0x4BEB70` | `unsure_CarAttachments_StartBurning` | attachments state=2 at stage 4 | hypothesis |
 
 #### 7. Math helpers (Fix16 Q14, Ang16, Vec2) (57)
@@ -675,7 +675,7 @@ Mostly the `Sprite` / `Position` module (bounds object, corner math, draw). "hig
 | `0x4B9E60` | `Fix16_MinMaxOf4` | out min/max of 4 |
 | `0x4BA330` / `0x4BA340` | `CarDeltas_AndLightMask` / `CarDeltas_ClearLightMask` | `deltasBitstate` &= / &= ~ `DAT_005E85BC` (Sprite_Draw, lighting on) |
 | `0x4BA350` / `0x4BA360` / `0x4BA370` | `CarDeltas_SelectLightMaskDefault` / `…RoofDecal` / `…FBI` | `DAT_005E85BC` = `DAT_00591E90` / `98` / `94`; meaning of the mask is a hypothesis |
-| `0x4BA390` | `unsure_Car_IsTrailerControllerLinkedTo` | `car+0x64`→`+8 == arg` |
+| `0x4BA390` | `Car_IsTrailerAttachedToCab` | `car+0x64`→`+8 == arg` |
 | `0x4BA3C0` | `Camera_ProjectPointToScreen` | Fix16 world xyz → screen xy |
 | `0x4BA4D0` | `QuadVertex_ProjectWorldPoint` | regs EAX/ESI; sets xyz, rhw, sx, sy |
 | `0x4BA620` | `Box3_UnionWith` | 0 callers; last max uses the wrong field (original bug) |
@@ -685,7 +685,7 @@ Mostly the `Sprite` / `Position` module (bounds object, corner math, draw). "hig
 | `0x4BAA70` | `Position_GetPed` | |
 | `0x4BAA90` | `Position_IsOverWaterTile` | |
 | `0x4BAB10` | `Position_AddSpriteShrinkClamped` | byte `+0x38` |
-| `0x4BABB0` | `unsure_Sprite_IsObjectWithOwnerField18` | |
+| `0x4BABB0` | `Sprite_IsObjectOfModel` | |
 | `0x4BABE0` | `Sprite_GetPaletteIndex` | |
 | `0x4BAC10` | `Sprite_ShouldDrawShadow` | |
 | `0x4BAC60` | `Sprite_GetDrawQuadFlags` | |
@@ -694,7 +694,7 @@ Mostly the `Sprite` / `Position` module (bounds object, corner math, draw). "hig
 | `0x4BB4D0` | `Sprite_FindCornersInsideRect` | ParkingZone_Update |
 | `0x4BB860` / `0x4BB910` | `Sprite_FindEdgeCrossingWallAlongX` / `…AlongY` | |
 | `0x4BB9C0` | `Sprite_IsSegmentTouchingBox` | |
-| `0x4BBBE0` | `unsure_Sprite_IsTouchingSlopeAtMidZ` | |
+| `0x4BBBE0` | `Sprite_IsTouchingGroundSurfaceOverBodyZ` | |
 | `0x4BBC80` | `Sprite_GetMinChebyshevDistToSprite` | |
 | `0x4BBD10` / `0x4BBD30` | `Position_ReleaseSoundClient` / `thunk_…` | `Position+0x10` back to pool `DAT_005D85A0` |
 | `0x4BBD40` | `SpriteBounds_RecomputeCorners` | 4 corners + AABB, sets `+0x48` |
@@ -704,7 +704,7 @@ Mostly the `Sprite` / `Position` module (bounds object, corner math, draw). "hig
 | `0x4BC950` / `0x4BDCB0` | `SpriteBoundsPool_Dtor` / `…ScalarDeletingDtor` | 0x13A7 × 0x4C pool (S22) |
 | `0x4BC970` / `0x4BDC90` | `PositionsArray_S21_Dtor` / `…ScalarDeletingDtor` | 0x13A7 × 0x3C |
 | `0x4BC9F0` / `0x4BCA10` | `SpriteBoundsPool_Alloc` / `…Free` | free list through `+0x2C` |
-| `0x4BCA70` | `unsure_SpritePool300_InitElement` | |
+| `0x4BCA70` | `SpriteNode_Init` | |
 | `0x4BCA80` | `Sprite_IsControlledByRemotePlayer` | network: has Player and not `Player_IsLocal` |
 | `0x4BCB90` | `Position_SetBoundsSize` | 18 callers |
 | `0x4BCBD0` | `Position_EnsureSpriteBounds` | |
@@ -714,8 +714,8 @@ Mostly the `Sprite` / `Position` module (bounds object, corner math, draw). "hig
 | `0x4BD610` | `Sprite_TestWallBlockedAndRecordZ` | Taser |
 | `0x4BDAD0` | `Sprite_ClearObstaclesForSpawn` | Script_Decl_PLAYER_PED / CAR_DATA_SET / CHAR_DATA_SET |
 | `0x4BDC40` | `Position_DtorBody` | |
-| `0x4BDDD0` | `unsure_Sprite_ShrinkBoundsAndScaleOffset` | |
-| `0x4BDF20` | `unsure_Sprite_CollisionCheckAtPolarOffset` | |
+| `0x4BDDD0` | `unsure_Sprite_ShrinkFrameBoundsAndScaleBody` | |
+| `0x4BDF20` | `Sprite_CollisionCheckAgainstShortenedOther` | |
 | `0x4BE050` | `Sprite_GetBoundsBox` | 0 callers |
 | `0x4BE060` | `Sprite_Draw` | only caller LayerDrawQueue_DrawInOrder |
-| `0x4BE570` | `unsure_Sprite_RaiseZLayerByte39ToMax` | |
+| `0x4BE570` | `Sprite_SyncZLayerPairToMax` | |

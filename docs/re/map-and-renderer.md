@@ -343,8 +343,9 @@ H: the exact meaning of the queue index vs. the sprite's z-level was not checked
 
 A door is two map faces, not a sprite. `DECLARE_DOOR_INFO` → `g_DoorInfoTable` 0x5E9340 (5 × 10 B:
 tile range, two tile-remap slots, speed). `DOOR_DATA_*` (Script_Decl 0x477D20/0x477EE0) →
-`Door_RegisterDoubleDoor` / `…NoCheck` (10.5 names from gta2_re; the opcode is the single-door
-one, 375) → Door slot (0x38 B, 22 slots, `g_DoorManager`) with two `DoorFace` (16 B, pool
+`DoorManager_RegisterSingleDoor` / `…NoCheck` (opcode 375 DOOR_DATA_SINGLE_1, one `Door_AddFace`; gta2_re 10.5
+calls them RegisterDoubleDoor, swapped — Seq 48) or `DoorManager_RegisterRotatedDoubleDoor` / `…NoCheck`
+(opcode 378, two faces: tile + side neighbour) → Door slot (0x38 B, 22 slots, `g_DoorManager`) with one or two `DoorFace` (16 B, pool
 `g_pDoorFacePool` 0x5E9374: `state` 1 closed / 2 open, block `x, y, z`, `doorInfoIdx`, `side`
 1-4); `Door_SpawnObjects` spawns object 0xA9 (visible door) and 0xA7 (trigger).
 
@@ -356,7 +357,7 @@ one, 375) → Door slot (0x38 B, 22 slots, `g_DoorManager`) with two `DoorFace` 
 - Collision follows the face word's wall bits, so there is no separate door collision for ground
   units; object 0xA7 decides who may pass (`DoorManager_ShouldDoorBlock`).
 - Triggers: car touches 0xA7 → `DoorManager_OnCarTouchDoorObject` → `Door_OnCarTouch` (if
-  automatic `+0x29`, `unsure_Door_CarMayOpen`, enabled); ped touch → `Door_OnPedTouch`; script
+  automatic `+0x29`, `Door_CarMayOpen`, enabled); ped touch → `Door_OnPedTouch`; script
   `DOOR_CONTROL` 177/178 open/close, 179/180 automatic/manual. Auto-close: `Door_UpdateAutoClose`
   counts `+0x1E` down from `+0x1C` (animation length + 0x28). `Door_GetState` 0x476A90 returns
   `+0x20` (mode 1-6; meanings H).
@@ -370,9 +371,9 @@ parts, hook 136, **trigger 137** at base z − 1). The only tie to the map is he
 the base (cannot sit under a lid) and for each target's drop height. Per tick `CraneManager_Update`
 0x449C40 → `Crane_Update` 0x449BA0.
 
-Pick-up chain (V): car touches object 137 → `unsure_Car_OnTouchObject` 0x4293D0 case 0x89 →
+Pick-up chain (V): car touches object 137 → `Car_OnTouchObject` 0x4293D0 case 0x89 →
 `CraneManager_OnCarTouchedTrigger` 0x4497E0 → `Crane_OnCarTouched` 0x448A80 (empty, liftable:
-`unsure_Car_CanBeLiftedByCrane` 0x447F00, not in the cooldown list) → candidate snapshot; if the
+`Car_CanBeLiftedByCrane` 0x447F00, not in the cooldown list) → candidate snapshot; if the
 car moves the candidate is dropped (`Crane_UpdateCandidatesAndTargets` 0x449880). States
 `Crane.state` (+0x150) 0 idle … 4 carrying to target (names H). `kind` (+0x144): 0 basic, 1 FIRST,
 2 both, 3 SECOND. `phase` (+0x155) links to the crusher: the SECOND target receives dead
@@ -418,8 +419,8 @@ tiles: §2.6.
 | Sprite draw cull / order | `LayerDrawQueues_Enqueue` 0x44B990 (z cull `DAT_005E8C10`), `LayerDrawQueue_InsertSorted` 0x4C4BF0, layer function 0x4BD2E0 | |
 | Collision pool crash | enlarge: loop count 0xFFF in `CollisionEntryPool_Ctor` 0x4468C0 + `operator_new(0x8004)` in `CollisionManager_Ctor` 0x4471B0 (strip pool 5999 / 0x11944) | a NULL guard needs a code cave in both callers |
 | Doors always open | call `DoorFace_Open` 0x44C560 on both faces of every slot and `ret` `DoorFace_Close` 0x44C610 | not tested |
-| Doors never open for cars | return 0 from `unsure_Door_CarMayOpen` 0x44CA70 | |
-| Crane lifts anything | `unsure_Car_CanBeLiftedByCrane` 0x447F00; `Crane_SetDisabled` 0x447F60 | |
+| Doors never open for cars | return 0 from `Door_CarMayOpen` 0x44CA70 | |
+| Crane lifts anything | `Car_CanBeLiftedByCrane` 0x447F00; `Crane_SetDisabled` 0x447F60 | |
 
 ## 10. Open questions
 

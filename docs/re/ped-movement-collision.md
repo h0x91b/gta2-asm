@@ -109,8 +109,8 @@ if PedGameObject_IsInTileCenter 0x497410 (sub-tile 20..44 px both axes): no tile
 else player: PedGameObject_CanMovePlayer 0x495BF0(go, probeTileX, probeTileY)
      npc:    PedGameObject_CanMoveNpc    0x495540(go, probeTileX, probeTileY)
 free    → pos += Ang16_PolarToXY(heading, speed) + push; SetPosition   0x49AE96–0x49AEFA
-blocked → player: unsure_PedGameObject_SlideAlongWallPlayer 0x4995A0 (re-test at octant
-          headings, half step); npc: unsure_PedGameObject_TurnAwayFromWallNpc 0x4994D0
+blocked → player: PedGameObject_SlideAlongWallPlayer 0x4995A0 (re-test at octant
+          headings, half step); npc: PedGameObject_TurnAwayFromWallNpc 0x4994D0
 push := 0                                                              0x49AF09
 z follow FUN_00494180; Ped_ResolveSpriteObstacle 0x499F00 (cars/peds/objects, §4)
 0x49B0A5: if the heading was changed for this move, restore it
@@ -125,7 +125,7 @@ would cross:
 - `PedGameObject_CanCrossTileEdgePlayer` 0x495980 `thiscall(go, dir)` ret 4, dir 1 N (y−1), 2 S,
   3 E, 4 W → `MapBlocks_IsBlockEdgeCrossingBlocked` 0x4656D0 (wall bit of this face and of the
   neighbour's opposite face, slopes one level up/down) + ground type of the neighbour block, and
-  under `DAT_0066A3C7` a tentative `SetPosition` + `unsure_Sprite_TestMapCollisionAndRecord`
+  under `DAT_0066A3C7` a tentative `SetPosition` + `Sprite_TestMapCollisionAndRecord`
   0x4BD670, restored afterwards. A blocked direction goes to `DAT_00593228` (1..4) for the slide.
 - `PedGameObject_CanCrossTileEdge` 0x495220 is the npc version without the body test.
 
@@ -148,12 +148,12 @@ Z: `FUN_00494180` snaps z to the level or to the slope surface (`MapBlocks_GetSl
 
 | address | name | prototype | what | |
 |---|---|---|---|---|
-| 0x4BD670 | `unsure_Sprite_TestMapCollisionAndRecord` | `bool __fastcall(Position*)` | body rectangle vs walls at its current pose, writes `g_CollisionKind` | verified |
+| 0x4BD670 | `Sprite_TestMapCollisionAndRecord` | `bool __fastcall(Position*)` | body rectangle vs walls at its current pose, writes `g_CollisionKind` | verified |
 | 0x46B440 | `MapBlocks_IsBodyBlockedByWalls` | `bool __thiscall(MapBlocks*, xBlk, yBlk, zBlk, Position* mover, u16 mask)` ret 0x14 | the wall test; needs the block-bounds globals 0x662BD4/BF8/BAC/BFC (`CollisionBox_LoadBlockBoundsToGlobals` 0x4BA5E0) | verified |
 | 0x46A570 | `MapBlocks_ScanBoxFacesForWalls` | thiscall, 7 stack ints | face scan of the box strips | verified structure |
 | 0x4656D0 | `MapBlocks_IsBlockEdgeCrossingBlocked` | `thiscall(MapBlocks*, x, y, z, dir, byte* out, char flag)` ret 0x18 | ped edge crossing; nonzero = blocked; writes only `MapBlocks+0x36E` | verified |
-| 0x4BA720 | `unsure_CollisionBox_HitsMapSolid` | `bool __fastcall(SCR_f box[6])` | map-only test for an arbitrary box, no sprite (faces only, no sub-block refinement) | verified |
-| 0x469F90 | `unsure_MapBlocks_SweepBodyIsClear` | stdcall, 9 args, ret 0x24 | steps a temporary body from A to B; **call-site argument order unresolved, do not call** | hypothesis |
+| 0x4BA720 | `CollisionBox_HitsMapSolid` | `bool __fastcall(SCR_f box[6])` | map-only test for an arbitrary box, no sprite (faces only, no sub-block refinement) | verified |
+| 0x469F90 | `MapBlocks_SweepBodyIsClear` | stdcall, 9 args, ret 0x24 | steps a temporary body from A to B; **call-site argument order unresolved, do not call** | verified |
 
 `g_CollisionKind` 0x5E6874 record (setters 0x4BA250 / 0x4BA280, verified): kind 1 stores a segment
 in +4/+8 and its line in +0x18; kind 2 a segment in +0xC/+0x10 and its line in +0x14; kind 3 = a
@@ -175,7 +175,7 @@ step and inserts it after. A host move outside the tick must do the same, one-to
 without a remove leaks nodes until the pool empties.
 
 After the map step, `Ped_ResolveSpriteObstacle` 0x499F00 `thiscall(go, char flag)` →
-`unsure_Sprite_FindObstacleAndRecord` 0x4BDFE0 → `Collision_FindObstacle` 0x447740
+`Sprite_FindObstacleAndRecord` 0x4BDFE0 → `Collision_FindObstacle` 0x447740
 **`thiscall(grid, Position* body, int preferredKind)` ret 8** (preferredKind is a kind value, not
 a mask) → `Sprite_ShouldCollideWithSprite` 0x4B9A30 (filter) → `Sprite_CollisionCheck` 0x4BCAC0
 (z overlap + rectangle corners). Responses (verified flow, names hypothesis):
@@ -193,7 +193,7 @@ Filter: peds entering/leaving/driving a car, falling, wasted (states 6, 7, 9, 10
 Side-effect-free "what blocks a body at pose P": remove the body from the grid, `SetPosition` to P,
 `Collision_FindObstacle(g_CollisionGridObstacles, body, kind)`, restore the pose, insert. It writes
 only query stamps and bounds-cell globals. Avoid `Collision_CheckAndNotifyAllForSprite` 0x447480
-and `unsure_Sprite_OnOverlapNotifyImpactEvent` 0x4BAB70 (sounds, object notifications).
+and `Sprite_OnOverlapNotifyImpactEvent` 0x4BAB70 (sounds, object notifications).
 
 ### Line of sight
 
@@ -222,10 +222,10 @@ objects (`FireFromGun` 0x4D0530) moving and colliding per tick, no hitscan.
 | 0x495980 | `PedGameObject_CanCrossTileEdgePlayer` | `bool __thiscall(GameObject*, int dir)` ret 4 | edge + neighbour + tentative body test | verified |
 | 0x495220 | `PedGameObject_CanCrossTileEdge` | same | edge + neighbour | verified |
 | 0x497410 | `PedGameObject_IsInTileCenter` | `bool(void)`, reads the pose globals | sub-tile 20..44 px → skip tests | verified |
-| 0x4995A0 | `unsure_PedGameObject_SlideAlongWallPlayer` | `void __fastcall(GameObject*)` | octant re-tests, half step | hypothesis |
-| 0x4994D0 | `unsure_PedGameObject_TurnAwayFromWallNpc` | `void __fastcall(GameObject*)` | | hypothesis |
+| 0x4995A0 | `PedGameObject_SlideAlongWallPlayer` | `void __fastcall(GameObject*)` | octant re-tests, half step | verified |
+| 0x4994D0 | `PedGameObject_TurnAwayFromWallNpc` | `void __fastcall(GameObject*)` | | verified |
 | 0x499F00 | `Ped_ResolveSpriteObstacle` | `void __thiscall(GameObject*, char)` | sprite obstacles + response | verified |
-| 0x494280 / 0x4948C0 / 0x4993B0 | `unsure_Ped_ReactToPedObstacle` / `…ToCarOrObjectObstacle` / `…ToObjectObstacle` | thiscall | responses (§4) | verified flow |
+| 0x494280 / 0x4948C0 / 0x4993B0 | `Ped_ReactToPedObstacle` / `…ToCarOrObjectObstacle` / `…ToObjectObstacle` | thiscall | responses (§4) | verified flow |
 | 0x447740 | `Collision_FindObstacle` | `int __thiscall(grid, Position*, int kind)` ret 8 | first obstacle overlapping the body | verified |
 | 0x447C00 / 0x447C40 | `CollisionGrid_InsertSprite` / `CollisionGrid_RemoveSprite` | `thiscall(grid, Position*)` | bbox insert / remove | verified |
 | 0x41FC20 | `Ang16_PolarToXY` | `void __stdcall(short* ang, SCR_f* len, SCR_f* outX, SCR_f* outY)` ret 0x10 | x = sin·len, y = cos·len | verified |
@@ -313,7 +313,7 @@ state machine honest.
 - Shooting direction is believed to be the heading (`Ped_UpdateWeaponFiring` runs before the move
   in the same tick, so the temporary offset does not affect it) — the weapon code was not read to
   the end.
-- `unsure_MapBlocks_SweepBodyIsClear` 0x469F90: argument order at the call sites.
+- `MapBlocks_SweepBodyIsClear` 0x469F90: argument order at the call sites.
 - GameObject+0x10 sub-mode values, `DAT_0066A3C6` and `DAT_005E6664` writers.
 - `PedGameObject_Tick` has a second caller, 0x4BE870 (probably remote players), not read.
 

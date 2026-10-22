@@ -3972,7 +3972,7 @@ struct Menu {
     ushort mpFrags[6]; /* 0x490 */
     int mpPoints[6]; /* 0x49c */
     wchar_t mpPlayerNames[96]; /* 0x4b4 */
-    int unsure_field574; /* 0x574 */
+    int bonusTokenCount; /* 0x574 */
 };
 
 // /imported/seuko-mod/CameraPos  size 0x10
@@ -3996,7 +3996,7 @@ struct Camera {
     CameraPos cameraPosTarget2; /* 0x0 */
     CameraPos cameraPosTarget; /* 0x10 */
     WorldRect cameraBoundaries; /* 0x20 */
-    CAMERA_MOVEMENT movementBitmask; /* 0x30 */
+    Fix16 shakeOffset; /* 0x30 */
     Ped *ped; /* 0x34 */
     Car *followCar; /* 0x38 */
     CAMERA_FOLLOW_STATE followState; /* 0x3c */
@@ -4148,7 +4148,7 @@ struct Ped {
     short homeRotation; /* 0x134 */
     uint8_t _gap_0x136[0x2];
     GameObject *bumpPartnerObject; /* 0x138 */
-    uint8_t _gap_0x13c[0x4];
+    void *unsure_trainStop; /* 0x13c */
     Car *refCar; /* 0x140 */
     Ped *attackerPed; /* 0x144 */
     Ped *objectiveTargetPed; /* 0x148 */
@@ -4728,10 +4728,10 @@ struct PoliceManager {
 struct Position {
     short rotation; /* 0x0 */
     uint8_t _gap_0x2[0x2];
-    Position *prev_; /* 0x4 */
-    int field4_0x8; /* 0x8 */
+    void *frameBounds; /* 0x4 */
+    void *owner; /* 0x8 */
     void *bounds; /* 0xc */
-    int field6_0x10; /* 0x10 */
+    void *soundClient; /* 0x10 */
     int x; /* 0x14 Created by retype action */
     int y; /* 0x18 Created by retype action */
     int z; /* 0x1c Created by retype action */
@@ -4739,13 +4739,13 @@ struct Position {
     short field11_0x22; /* 0x22 */
     short field12_0x24; /* 0x24 */
     uint8_t _gap_0x26[0x2];
-    int field15_0x28; /* 0x28 */
+    int layer; /* 0x28 */
     byte field16_0x2c; /* 0x2c */
     uint8_t _gap_0x2d[0x3];
     int collisionKind; /* 0x30 */
     int field21_0x34; /* 0x34 */
     byte field22_0x38; /* 0x38 */
-    byte boundsDirty; /* 0x39 */
+    byte cachedZLayer; /* 0x39 */
     uint8_t _gap_0x3a[0x2];
 };
 
@@ -5912,7 +5912,7 @@ struct ObjectPrefab {
     Fix16 boxRadius; /* 0xc */
     Fix16 initialSpeed; /* 0x10 */
     Fix16 deceleration; /* 0x14 */
-    Fix16 unsure_initialZ; /* 0x18 */
+    Fix16 mass; /* 0x18 */
     short remap; /* 0x1c */
     short defaultSpriteId; /* 0x1e */
     byte spriteFlag; /* 0x20 */

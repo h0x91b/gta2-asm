@@ -719,8 +719,8 @@ getter), so those were **not** applied; they are listed further down.
 | `0x421720` | Car_IsOnTrailer | Car_BC::IsOnTrailer_421720 | 10.5 address = 11.44 address |
 | `0x421980` | Player_GetScore | Player::GetScore_421980 | 10.5 address = 11.44 address |
 | `0x421d80` | Car_HasSpriteZoom | Car_BC::HasSpriteZoom_43A230 | 2 handlers agree |
-| `0x44d670` | Door_RegisterDoubleDoor | Door_4D4::RegisterDoubleDoor_49D1F0 | 2 handlers agree |
-| `0x44db00` | Door_RegisterDoubleDoorNoCheck | Door_4D4::RegisterDoubleDoorNoCheck_49CFA0 | 2 handlers agree |
+| `0x44d670` | DoorManager_RegisterSingleDoor | Door_4D4::RegisterDoubleDoor_49D1F0 | 2 handlers agree |
+| `0x44db00` | DoorManager_RegisterSingleDoorNoCheck | Door_4D4::RegisterDoubleDoorNoCheck_49CFA0 | 2 handlers agree |
 | `0x463f10` | LightIntensityRadius_SetRadius | LightIntensityRadius::SetRadius_463F10 | 10.5 address = 11.44 address |
 | `0x469010` | Light_Init | Light_1D4CC::Init_469010 | 10.5 address = 11.44 address |
 | `0x469070` | Light_SetFlashing | Light_1D4CC::SetFlashing_469070 | 10.5 address = 11.44 address |
@@ -772,13 +772,13 @@ getter), so those were **not** applied; they are listed further down.
 | `0x40e2f0` | FUN_0040e2f0 | RouteFinder::RoadOn_588950 |
 | `0x410580` | FUN_00410580 | root_sound::DeclareRadioStation_40F030 |
 | `0x4119b0` | FUN_004119b0 | gtx_0x106C::get_car_info_5AA3B0 |
-| `0x411a00` | FUN_00411a00 | Game_0x40::IsSpriteInAnyPlayerView_4B9890 |
+| `0x411a00` | Crane_GetBasePosition | Game_0x40::IsSpriteInAnyPlayerView_4B9890 |
 | `0x414f80` | FUN_00414f80 | SpriteList_4::GetSpriteForModel_5A6A50 |
-| `0x41de40` | FUN_0041de40 | BonusTracker_1C0::AllocRule_431FE0 |
+| `0x41de40` | ComboList_AddBonusCheck | BonusTracker_1C0::AllocRule_431FE0 |
 | `0x421c00` | FUN_00421c00 | CarPhysics_B0::get_car_velocity_4211C0 |
 | `0x421df0` | FUN_00421df0 | Car_BC::IsBeingCrushed_43DD50 |
-| `0x422e00` | FUN_00422e00 | Car_BC::SetCarGraphic_43CDF0 |
-| `0x4230d0` | FUN_004230d0 | Car_BC::IsAreaDamaged_43D1C0 |
+| `0x422e00` | Car_SetNumberGraphic | Car_BC::SetCarGraphic_43CDF0 |
+| `0x4230d0` | Car_IsDamagePosBroken | Car_BC::IsAreaDamaged_43D1C0 |
 | `0x4340f0` | FUN_004340f0 | Map_0x370::FindGroundZForCoord_4E5B60 |
 | `0x445bb0` | FUN_00445bb0 | Ped_List_4::GetPedsCount_4716B0 |
 | `0x446120` | FUN_00446120 | Ped_List_4::KillAndClearAllPeds_4715A0 |
@@ -786,7 +786,7 @@ getter), so those were **not** applied; they are listed further down.
 | `0x44a3e0` | FUN_0044a3e0 | Car_BC::AddFlags_421890 |
 | `0x44c760` | FUN_0044c760 | Door_4D4::RegisterDoorInfo_49D2D0 |
 | `0x45a480` | FUN_0045a480 | Game_0x40::ExitGame_4B8BD0 |
-| `0x45bb50` | FUN_0045bb50 | Crane_15C::GetRotorSprite_411A00 |
+| `0x45bb50` | Game_AnyPlayerCameraSeesPosition | Crane_15C::GetRotorSprite_411A00 |
 | `0x45da20` | FUN_0045da20 | Gang_144::SetRespect_4BEE30 |
 | `0x45db20` | FUN_0045db20 | Gang_144::SetGangKillReaction_4BEF50 |
 | `0x45e5f0` | FUN_0045e5f0 | GameSession_578::SetBonusRatingTextIdx_4C5AB0 |
@@ -803,7 +803,7 @@ getter), so those were **not** applied; they are listed further down.
 | `0x464210` | FUN_00464210 | Map_0x370::LowerLevel_4E8B70 |
 | `0x465280` | FUN_00465280 | Map_0x370::SetZoneInfo_4DF8C0 |
 | `0x46c140` | FUN_0046c140 | MapRenderer::SetAmbientLevel_4E9D50 |
-| `0x474ed0` | FUN_00474ed0 | Miss2_25C::push_type_2_503050 |
+| `0x474ed0` | MissionCleanup_AddObject | Miss2_25C::push_type_2_503050 |
 | `0x474fb0` | FUN_00474fb0 | miss2_8::add_503160 |
 | `0x4751d0` | FUN_004751d0 | miss2_0x11C::StopThread_503610 |
 | `0x475910` | FUN_00475910 | Gang_144::SetKillRespectChange_475950 |
@@ -825,8 +825,8 @@ getter), so those were **not** applied; they are listed further down.
 | `0x485290` | FUN_00485290 | Object_2C::SetConveyorSpeed_529030 |
 | `0x4af460` | FUN_004af460 | TrainStation_34::CalculateWagonCount_578820 |
 | `0x4af5f0` | FUN_004af5f0 | PublicTransport_181C::KillAllPassengers_579B20 |
-| `0x4b9d50` | FUN_004b9d50 | Sprite::ResolveCollisionWithCarPedOrObject_5A2A30 |
-| `0x4bea90` | FUN_004bea90 | SpriteList_4::FirstSpriteOfType_5A6CA0 |
+| `0x4b9d50` | Sprite_AttachChildToParent | Sprite::ResolveCollisionWithCarPedOrObject_5A2A30 |
+| `0x4bea90` | SpriteList_FindSpriteOfKind | SpriteList_4::FirstSpriteOfType_5A6CA0 |
 | `0x4c93b0` | FUN_004c93b0 | Hud_Pager_C_Array::ClearPager_5D3280 |
 | `0x4c93f0` | FUN_004c93f0 | Hud_Pager_C_Array::AddTime_5D32F0 |
 
@@ -921,7 +921,7 @@ M medium (inferred from callers / field use), U `unsure_` (see the comment in Gh
 | 0x476230, 0x476270, 0x4762C0..0x4762E0, 0x4762F0..0x476310, 0x476350 | `Car_ClearFlag2`, `Car_AddFlag10`, `Car_AddFlag80`, `Car_AddFlag200`, `Car_AddFlag1000`, `Car_ClearFlag100`, `Car_ClearFlag200`, `Car_ClearFlag400`, `Car_ClearFlag1000` | V | one-line `Car_AddFlags` / `Car_ClearFlags` wrappers, named like the existing `Car_AddFlag100`; callers SET_CAR_PROOF, JAMMED_ACCELERATOR, GIVE_CAR_ALARM, SET_CAR_NO_COLLIDE |
 | 0x476240 / 0x476280 / 0x47F340 | `MissionScript_FindCarEnterThreadEntry` / `_AddCarEnterThreadEntry` / `_StartCarEnterThread` | M | 32-entry wait table for THREAD_WAIT_FOR_CHAR_IN_CAR, started from `Car_OnDriverEnter` |
 | 0x476320 / 0x476370 / 0x47F3B0 | `MissionScript_FindPhoneThreadEntry` / `_AddPhoneThreadEntry` / `_StartPhoneAnswerThread` | M | 20-entry phone wait table at `+0x188`, started from `PedGameObject_TryAnswerPhone` |
-| 0x476360 | `unsure_Car_SetFlag8d_1` | U | `Car+0x8D \|= 1`, paired with `unsure_Car_ClearFlag8d_1` |
+| 0x476360 | `unsure_Car_SetFlag8d_1` | U | `Car+0x8D \|= 1`, paired with `Car_ClearEnterScriptFlag` |
 | 0x476400 / 4764D0 / 476530 / 4765A0 | `MissionScript_AddWeaponHitWatch` / `_RemoveWeaponHitWatch` / `_RecordWeaponHit` / `_CheckWeaponHitWatch` | M | 15-entry table at `MissionScript+0x27C` used by CHECK_WEAPON_*_HIT_*; recorded from `Car_OnDamage`, `Ped_OnProjectileHit`, ... |
 | 0x476660 / 0x476680 | `ComboList_GetEntryCount` / `ComboList_DeactivateEntry` | V | `ComboEntry.count` (+0x26) and `ComboEntry_Deactivate` |
 | 0x4766A0 / B0 / C0 | `Player_GetMoneyMultiplier` / `Player_AddMoneyMultiplier` / `Player_GetLives` | V | `AnimatedValue` at `Player+0x6BC` / `+0x684` |
@@ -930,9 +930,9 @@ M medium (inferred from callers / field use), U `unsure_` (see the comment in Gh
 | 0x4768A0 / 0x4768C0 | `HudBriefQueue_HasBriefOnScreen` / `ScriptTriggerPool_SetEntryState` | V | IS_BRIEF_ONSCREEN; Enable/DisableThread |
 | 0x476900 | `unsure_Crane_SetField78` | U | `Crane+0x78`, CRANE_DATA |
 | 0x476950 / 0x476960 | `Generator_SetObjectType` / `Generator_GetObjectType` | M | `Generator+0`, DECIDE_POWERUP_FOR_CRANE / SWITCH_GENERATOR_* |
-| 0x4769A0 / 0x4769C0 | `unsure_Door_SetStateAndTargetB_Twin1` / `_Twin2` | U | byte-identical to `unsure_Door_SetStateAndTargetB` |
+| 0x4769A0 / 0x4769C0 | `Door_SetModeAndTargetCopy1` / `_Twin2` | U | byte-identical to `Door_SetModeAndTarget` |
 | 0x476AD0 | `ParkingZone_SetNoRespawn` | V | `ParkingZone+0x3F`, PARK_NO_RESPAWN (0x118) |
-| 0x476B10 | `unsure_Menu_SetField574` | U | save load writes `Menu+0x574` |
+| 0x476B10 | `Menu_SetBonusTokenCount` | U | save load writes `Menu+0x574` |
 | 0x476B20 / B30 / B80 / 0x47F520 | `unsure_SaveGameHeader_InitSub54` / `InitSubE4` / `InitSub5E4` / `unsure_SaveGameHeader_Ctor` | U | static-init ctor chain of a Fix16/Ang16 aggregate (probably the 0x748-byte save header) |
 | 0x476BC0 | `MissionScript_CleanupMissionEntities` | V | MISSION_HAS_FINISHED: removes the 50 tracked cars / objects / peds |
 | 0x477D00 | `unsure_MissLogStream_Ctor` | U | `ofstream_Ctor`, no callers |

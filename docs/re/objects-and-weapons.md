@@ -37,7 +37,7 @@ The struct named `Object` (0x5C) in `re/gta2_types.h` is a duplicate of `ObjectS
 `OwnerSlotTable` index (`WorldObject_SetOwnerSlotAddRef` 0x482790 stores it and increments the
 slot's refcount); for conveyor belts it holds the packed push offsets `(dx+7)<<4 | (dy+7)`
 (`Object_SetConveyorOffsets` 0x483C00, called by `Script_Decl_CONVEYOR_SET`; unpacked by
-`unsure_UnpackNibbleOffsetsMinus7` 0x482770); for projectiles it records the tile face hit.
+`UnpackNibbleOffsetsMinus7` 0x482770); for projectiles it records the tile face hit.
 
 **Refcount balance (verified, answers the Seq 27 open question).** `OwnerSlotTable_DecRef`
 0x4B9940 has three callers: `Object_Destroy` 0x484910 (call at 0x484977) and the two
@@ -257,7 +257,7 @@ world-object movement. New names there (Seq 46, details in Ghidra comments):
   script trigger, phones 0xA4/0xB1/0xB3/0xB5 are answered, door objects 0xA7 go to
   `DoorManager_OnPedTouchDoorObject`, weapon pickups and 0x10A bonus tokens are picked up.
 - `PED_STATE` → handler (verified from `PedGameObject_Tick`): 0 `StateWalk` 0x49A560, 1/2
-  `unsure_PedGameObject_StateGoToCar` 0x49B0D0, 3 `StateEnterCar` 0x49BAD0, 4 `StateGetOutOfCar`
+  `PedGameObject_StateWalkToTarget` 0x49B0D0, 3 `StateEnterCar` 0x49BAD0, 4 `StateGetOutOfCar`
   0x496800, 5 `unsure_PedGameObject_StateUnknown5Car` 0x49BC20, 7 `StateStaying`, 8
   `StateFallOnGround` 0x496880, 9 `StateWasted`.
 - `PedPathfinder_*` 0x49C680-0x49DCE0: incremental 8-neighbour path search over a 34×34 node
@@ -274,7 +274,7 @@ StateWalk and the walker documented in ped-movement-collision.md were left as th
 Unnamed functions in 0x480000-0x49FFFF: **209 before** (live DB, 2026-10-21), **0 after**
 (119 verified, 80 hypothesis among the 199 with a comment; the rest are trivial getters named by
 what they return). `ObjectPrefab` gained its gap fields (`boxRadius`, `objectType`, `spriteFlag`,
-`spriteLayer`, `usesGravity`, `unsure_solidityVsCar/Ped`, `unsure_initialZ`,
+`spriteLayer`, `usesGravity`, `unsure_solidityVsCar/Ped`, `mass` (+0x18, was `unsure_initialZ`; Object_GetPrefabMass, Seq 48),
 `unsure_killOnOverlap`).
 
 Open:
@@ -468,59 +468,59 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x481D30 | `Movie_CloseBink` | verified | BinkBufferClose, BinkGetSummary, BinkClose; callers FrontEnd_Tick, WndProc |
 | 0x481DA0 | `Movie_ResetBinkBufferOffset` | verified | BinkBufferSetOffset(buf,0,0); caller WndProc |
 | 0x481DC0 | `unsure_Movie_IsStateEqual2` | hypothesis | returns unk3==2; WndProc only |
-| 0x481DD0 | `unsure_Movie_IsStateOpen` | hypothesis | unk3 in {1,2}; WndProc only |
+| 0x481DD0 | `Movie_IsOpen` | verified | unk3 in {1,2}; WndProc only |
 | 0x481DF0 | `Renderer_IsKind2` | hypothesis | g_RendererKind==2 (selects Bink 2D-surface path vs BinkBuffer path; likely software/DirectDraw kind — enum not checked) |
 | 0x481E00 | `Movie_UpdateFrame` | verified | BinkWait/DoFrame/CopyToBuffer/BufferBlit/NextFrame; returns 1 when last frame hit & closes; caller FrontEnd_Tick |
 | 0x482080 | `Ped_ClearUnsureEffectFlag4000000` | hypothesis | clears PED_FLAG_UNSURE_EFFECT_4000000; callers MultiplayerTag_SetItPlayer, Player_ClearPowerupsKeepJailCard, Player_TickPowerups (powerup/"it" visual effect ... |
 | 0x482090 | `MultiplayerTag_GetGameType` | verified | wrapper Menu_GetMultiplayerGameType(&ptrToMenu); caller MultiplayerTag_Update |
-| 0x4820A0 | `unsure_MultiplayerTag_SetItPlayerAndState6` | hypothesis | this+0xC=param, this+0x10=6; callers MultiplayerTag_SetItPlayer and Hud_OnGameStart (2nd caller means "this" may not be only MultiplayerTag) |
-| 0x482400 | `unsure_ObjectType_IsInRange27To2A` | hypothesis | eax in 0x27..0x2a; callers ExplodeBarrel/ExplodeAttachedCar/MorphTo (OBJECT_TYPE 39-42 unnamed in enum) |
-| 0x4824C0 | `unsure_WorldObject_GetCollisionExtent400Or800` | hypothesis | 0x400 + (prefab+0x68!=0 ? 0x400:0); caller Sprite_TestMapCollisionAndRecord |
+| 0x4820A0 | `HudArrowTarget_SetPlayer` | verified | this+0xC=param, this+0x10=6; callers MultiplayerTag_SetItPlayer and Hud_OnGameStart (2nd caller means "this" may not be only MultiplayerTag) |
+| 0x482400 | `DestroyCode_IsExplosion` | verified | eax in 0x27..0x2a; callers ExplodeBarrel/ExplodeAttachedCar/MorphTo (OBJECT_TYPE 39-42 unnamed in enum) |
+| 0x4824C0 | `WorldObject_GetCollisionFaceMask` | verified | 0x400 + (prefab+0x68!=0 ? 0x400:0); caller Sprite_TestMapCollisionAndRecord |
 | 0x482560 | `Object_NotifyCollisionGridsIfConveyor` | verified | type 0x8B/0x8D = CONVEYOR_BELT/_END -> Collision_CheckAndNotifyAllForSprite on Obstacles+Notify grids; caller Object_UpdateByKind |
-| 0x4825A0 | `Object_RemoveFinishedFromMotionSpriteList` | hypothesis | motion(+0x10) list -> unsure_SpriteList_RemoveFinished(list, position); caller Object_UpdateByKind |
+| 0x4825A0 | `Object_RemoveFinishedFromMotionSpriteList` | hypothesis | motion(+0x10) list -> SpriteList_TickAndRemoveFinished(list, position); caller Object_UpdateByKind |
 | 0x4825C0 | `Object_EmitRocketTrail` | verified | type 0x80 = OBJECT_TYPE_ROCKET -> Particle_EmitObjectTrail; caller Object_UpdatePhysics |
-| 0x4827D0 | `unsure_WorldObject_GetMotionSpeedFix16` | hypothesis | reads Fix16 from motion+0xC/+0x10 vs const DAT_00665894 (zero?), fallback DAT_0066582c; callers all Particle_Update*/EmitFlame (particle drift/speed lookup) |
+| 0x4827D0 | `Object_GetMotionSpeed` | verified | reads Fix16 from motion+0xC/+0x10 vs const DAT_00665894 (zero?), fallback DAT_0066582c; callers all Particle_Update*/EmitFlame (particle drift/speed lookup) |
 | 0x4828B0 | `Object_IsNotPhoneDead` | verified | type != 0xAE (OBJECT_TYPE_PHONE_DEAD); caller Hud_ArrowTarget_UpdatePosition |
-| 0x4828F0 | `unsure_Vec4_GetComponentByCode` | hypothesis | switch 0xB4/C4->[0], B8/C8->[2], BC/CC->[3], C0/D0->[1]; caller MapBlocks_FindDiagonalCollisionDummy |
-| 0x482960 | `unsure_SpawnParams_SetByte18` | hypothesis | this+0x18=byte; caller Weapon_ThrowMolotovOrGrenade |
-| 0x482970 | `unsure_GetFieldAddrOffset8` | hypothesis | returns this+8; caller SaveGame_CollectPickups |
+| 0x4828F0 | `ObjectSpawner_GetDiagonalDummy` | verified | switch 0xB4/C4->[0], B8/C8->[2], BC/CC->[3], C0/D0->[1]; caller MapBlocks_FindDiagonalCollisionDummy |
+| 0x482960 | `unsure_ObjectSpawner_SetPendingOwnerSlot` | hypothesis | this+0x18=byte; caller Weapon_ThrowMolotovOrGrenade |
+| 0x482970 | `WorldObjectPool_GetFirstObject` | verified | returns this+8; caller SaveGame_CollectPickups |
 | 0x482980 | `Vec3_Set` | verified | stores 3 dwords at +0/+4/+8 |
-| 0x482A30 | `unsure_SetField8` | hypothesis | this+8=param; callers object-init, Weapon_SpawnProjectile |
+| 0x482A30 | `Position_SetOwner` | verified | this+8=param; callers object-init, Weapon_SpawnProjectile |
 | 0x482A40 | `Position_SetVec3AtOffsetCAndMarkDirty` | verified | Vec3_Set(*(this+0xC)) + Position_MarkBoundsDirty(this) |
 | 0x482A70 | `Collision_SetKind4ClearField8` | verified | operates on g_CollisionKind: [0]=4,[8]=0; caller FUN_00486d70 |
 | 0x482A80 | `Collision_SetKind5ClearField8` | verified | same, kind 5 |
 | 0x482A90 | `WorldObject_SetMotionState` | verified | this+0x10=param (WorldObject+0x10 = motion per objects_A); caller Object_CreateExplosion |
 | 0x482AD0 | `ObjectAnimState_Init` | verified | ++DAT_00665764 (alloc counter), clears +4..+7; sole caller ObjectAnimStatePool_Pop |
 | 0x482AF0 | `ObjectAnimState_UpdateFreeCounters` | verified | --DAT_00665764, ++DAT_0066576c; sole caller ObjectAnimStatePool_Push |
-| 0x482B80 | `unsure_ObjectMotionStatePool_UpdateCountsOnPush` | hypothesis | only caller ObjectMotionStatePool_Push; DAT_00665770--, DAT_00665778++ |
+| 0x482B80 | `ObjectMotionState_UpdateFreeCounters` | verified | only caller ObjectMotionStatePool_Push; DAT_00665770--, DAT_00665778++ |
 | 0x482BA0 | `ObjectMotionState_GetVelocityVec2` | verified | Vec2_FromPolar(speed@+0xC, angle@+4) |
 | 0x482BD0 | `ObjectMotionState_ClearPushOffsets` | verified | writes 0 to +0x38 (packed nibbles, see ResolvePushedVelocity) |
-| 0x482BE0 | `unsure_Object_SetSpriteLayerFromPrefab` | hypothesis | Sprite_SetLayer(position, prefab+0x2C) |
+| 0x482BE0 | `Object_SetSpriteLayerFromPrefab` | verified | Sprite_SetLayer(position, prefab+0x2C) |
 | 0x482BF0 | `Object_SetSpriteLayer0x1D` | verified | Sprite_SetLayer(pos, 0x1D) |
 | 0x482C00 | `Object_SetOwnerSlot` | verified | writes +0x26; only caller Object_NewWithPedRefIdx |
-| 0x482C10 | `unsure_Object_IsAnimStateAtStart` | hypothesis | kindState->+4 short==0 && +7 byte==0; callers AdvanceAnimation, ExplodeAttachedCar |
+| 0x482C10 | `Object_IsAnimationFinished` | verified | kindState->+4 short==0 && +7 byte==0; callers AdvanceAnimation, ExplodeAttachedCar |
 | 0x482C30 | `Object_GetPositionXY` | verified | Position_GetXY(this+4) |
 | 0x482C50 | `Object_GetVelocityVec2` | verified | motion? GetVelocityVec2 : zero vec DAT_006657d4 |
-| 0x482C80 | `unsure_Object_GetPrefabMass` | hypothesis | returns prefab+0x18; callers car/ped collision with object |
-| 0x482C90 | `unsure_Object_IsSolidObstacle` | hypothesis | prefab.kind (+0x34) in {3,4} or kind 0..2 with impactMode(+0x44)==2 |
+| 0x482C80 | `Object_GetPrefabMass` | verified | returns prefab+0x18; callers car/ped collision with object |
+| 0x482C90 | `Object_IsMovable` | verified | prefab.kind (+0x34) in {3,4} or kind 0..2 with impactMode(+0x44)==2 |
 | 0x482D30 | `Light_SetPositionRelink` | verified | Light_UnlinkFromGrid; set x/y/z(+4/8/C); Light_LinkToGrid; caller Object_UpdateAttached |
 | 0x482D60 | `Light_SetRadiusAndIntensity` | verified | +0x10 radius, SetRadius, SetIntensityByte, +0x18 byte |
 | 0x482D90 | `ObjectMotionState_ResolvePushedVelocity` | verified | +0x38 nibbles (unpack-7 *DAT_006657fc) added to velocity vec -> length+angle; clears +0x38; callers Object_UpdatePhysics(+Animated) |
-| 0x482E80 | `unsure_Projectile_IsHitSpriteOwnerPed` | hypothesis | hit sprite is ped whose owner slot == projectile +0x26 |
+| 0x482E80 | `Projectile_IsHitSpriteOwnerPed` | verified | hit sprite is ped whose owner slot == projectile +0x26 |
 | 0x482ED0 | `Object_IntegrateGravityAndFriction` | verified | motion+0x2A==1 (airborne): vz(+0x1C)+=gravity(DAT_665948), z-vel(+0x10)+=vz; else speed(+0xC)+=decel(+0x18), clamp >=0 |
 | 0x482FA0 | `Projectile_PrefabAllowsHitSprite` | verified | switch prefab+0x54 vs Sprite_GetKind (1 ped? 2 car 3 ped/4,5 obj kinds) |
 | 0x483030 | `Projectile_ShouldHitSprite` | verified | non-null && AllowsHit && !IsHitSpriteOwnerPed |
-| 0x483060 | `Object_TestSpriteHitAndRecord` | verified | unsure_Sprite_FindObstacleAndRecord(pos,2); sets DAT_665790 (hit sprite), DAT_665798 (hit special car 0xA6/0xA9 flag), CollisionHit_SetKindObject |
+| 0x483060 | `Object_TestSpriteHitAndRecord` | verified | Sprite_FindObstacleAndRecord(pos,2); sets DAT_665790 (hit sprite), DAT_665798 (hit special car 0xA6/0xA9 flag), CollisionHit_SetKindObject |
 | 0x483100 | `Position_SnapZToSlopeSurface` | verified | MapBlocks_GetSlopeSurfaceZ, Fix16 floor/frac, SetPosition |
 | 0x483460 | `unsure_Object_LandOnSpriteSurface` | hypothesis | after TestSpriteHit: if speed<=DAT_6657ac set layer 0x1D/6, speed, decel=prefab+0x14; caller Object_UpdatePhysicsAnimated-step (FUN_00486e90) |
 | 0x483880 | `Object_InheritMotionFromSprite` | verified | by Sprite_GetKind: 2 car speed/angle/layer, 3 ped speed*DAT_665a60, 4/5 object copy motion; caller Object_UpdateAttached |
 | 0x483990 | `Object_InitFromPrefab` | verified | ObjectPrefabs_Get, type+0x18, position alloc, SetPosition/Rotation; callers CreateObject, Object_MorphTo |
 | 0x483A00 | `Object_SwitchOffLight` | verified | Light_SwitchOff(kindState); callers Car siren/roof light |
-| 0x483A10 | `unsure_Object_SwitchOnLightToBase` | hypothesis | wrapper Light_SwitchOnToBase() (no args); callers Car siren |
-| 0x483B50 | `Object_NotifyTouchedBySprite` | verified | ped -> FUN_004930f0, car -> unsure_Car_OnTouchObject; caller ImpactEvent_Dispatch |
-| 0x483BA0 | `unsure_Object_DriftAndSinkInWater` | hypothesis | motion+0x30=1; every 4th frame FUN_004bab10 (push byte += , clamp to half sprite size) then FUN_004bddd0 -> z=0 + Object_MarkDead |
+| 0x483A10 | `Object_SwitchOnLightToBase` | verified | wrapper Light_SwitchOnToBase() (no args); callers Car siren |
+| 0x483B50 | `Object_NotifyTouchedBySprite` | verified | ped -> FUN_004930f0, car -> Car_OnTouchObject; caller ImpactEvent_Dispatch |
+| 0x483BA0 | `Object_SinkAndDieInWater` | verified | motion+0x30=1; every 4th frame FUN_004bab10 (push byte += , clamp to half sprite size) then FUN_004bddd0 -> z=0 + Object_MarkDead |
 | 0x483C00 | `Object_SetConveyorOffsets` | verified | byte26 = ((x+7)<<4) |
-| 0x483C80 | `unsure_Object_GetExplosionKindBySurfaceCode` | hypothesis | byte+0x26 of hit projectile in {0x2E,0x30} -> 0x16 else 0x17; caller ExplodeOnProjectileHit (type 0xA6) |
+| 0x483C80 | `Object_GetDiagonalDummyExplosionKind` | verified | byte+0x26 of hit projectile in {0x2E,0x30} -> 0x16 else 0x17; caller ExplodeOnProjectileHit (type 0xA6) |
 | 0x483CC0 | `Collision_GetHitTileSurfaceType` | verified | byte+0x26 in {2D,2F}->tile lid surface, {2E,30}->tile side; StyleData_GetTileSurfaceTypeMerged |
 | 0x483D50 | `Pickup_InitDefaultAmmo` | verified | type-0x40 (or -200) <0x1C -> WeaponDefaultAmmo; Pickup_SetAmmo |
 | 0x483EA0 | `WorldObjectPool_Dtor` | verified | eh_vector_destructor_iterator counts 0xEF1x0x2C, 0x44Dx8, 0x181x0x3C |
@@ -528,19 +528,19 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x484090 | `Object_StepCollisionGrounded` | verified | called when vz==0 (FUN_00486e90); ground type, slope snap, map/sprite collision |
 | 0x484260 | `Object_StepCollisionRising` | verified | vz>0; clamps z to DAT_6658bc, +0x2A=1 |
 | 0x4843A0 | `Object_StepCollisionFalling` | verified | vz<0; bounce vz=-vz*DAT_665a24 unless prefab+0x50==1/4 |
-| 0x484740 | `unsure_Object_SinkIfOnWaterTile` | hypothesis | FUN_004baa90 = tile flag test below z; then 483ba0 |
+| 0x484740 | `Object_SinkIfOnWaterTile` | verified | FUN_004baa90 = tile flag test below z; then 483ba0 |
 | 0x4847D0 | `Object_AllocMotionStateFromVelocity` | verified | ObjectMotionStatePool_Pop; +0x20=serial; length+angle from vec |
 | 0x484820 | `WorldObjectPool_ScalarDeletingDtor` | verified | dtor + free; all from ObjectSpawner_Dtor |
 | 0x484880 | `Object_EnsureMotionStateAndPutOnActiveList` | verified | pops motion state if none, speed/vz=0, Object_PutOnActiveList; caller Sprite_AttachChildToParent |
 | 0x4849B0 | `Object_AddVelocityImpulse` | verified | existing velocity + vec -> length/angle, decel=prefab+0x14; else alloc; callers Weapon_SpawnProjectile, Weapon_ThrowMolotovOrGrenade, car/ped hits |
 | 0x484A40 | `Object_AddVelocityImpulseRandomizeState` | verified | prefab+0x4C==3 and motion+0x34==2: random(9) <3 ->1, <6 ->0 |
 | 0x484AA0 | `Object_SetPushOffsetsByte` | verified | allocs motion (zero vel) if missing, +0x38=byte |
-| 0x484AD0 | `unsure_Object_SetPushOffsetsFromSpriteByte` | hypothesis | byte+0x26 of sprite object -> SetPushOffsetsByte |
-| 0x484DD0 | `unsure_Object_OnSpriteOverlap` | hypothesis | type 0x8B -> push from byte; type 0x8D && prefab+0x60 -> Object_KillNow; caller Sprite_OnOverlapNotifyImpactEvent |
+| 0x484AD0 | `Object_SetPushOffsetsFromBelt` | verified | byte+0x26 of sprite object -> SetPushOffsetsByte |
+| 0x484DD0 | `Object_OnOverlapConveyorBelt` | verified | type 0x8B -> push from byte; type 0x8D && prefab+0x60 -> Object_KillNow; caller Sprite_OnOverlapNotifyImpactEvent |
 | 0x485290 | `ObjectSpawner_SpawnAtXYZAndInsertIntoGrid` | verified | CreateObject + FUN_00482a40(position,xyz) + Object_InsertIntoGrid; callers Door_SpawnObjects, CONVEYOR/DESTRUCTOR_SET |
 | 0x4853C0 | `ObjectSpawner_SpawnCarLightObject` | verified | CreateObject + Light_SetRadiusAndIntensity; only caller Car_AttachRoofLightObject |
 | 0x485640 | `SaveGame_RestorePickups` | verified | loops 20 slots, SpawnObject + Pickup_SetAmmo, zeros 0x12C bytes; caller MissionScript_LoadSaveGame (inverse of SaveGame_CollectPickups) |
-| 0x485ED0 | `unsure_Game_SpawnFourUnk166Objects` | hypothesis | 4×SpawnObject(OBJECT_TYPE_UNK_166) stored in param[0..3], called from startGame |
+| 0x485ED0 | `ObjectSpawner_SpawnDiagonalCollisionDummies` | verified | 4×SpawnObject(OBJECT_TYPE_UNK_166) stored in param[0..3], called from startGame |
 | 0x486580 | `Object_ResolveCollisionWithObject` | verified | impulse via CarPhysics_ComputeCollisionImpulse between two objects, ImpactEvent_Dispatch for both |
 | 0x4867E0 | `Object_ResolveCollisionWithPed` | verified | uses Ped_GetX/Y, ped sprite (param_1+0x7c), HandleCarImpact |
 | 0x486950 | `Object_ApplyWallBounceImpulse` | verified | impulse vs wall mass DAT_0066583c, ImpactEvent_Dispatch(this,0) |
@@ -567,14 +567,14 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x4895D0 | `CarPhysics_ClearParkingMotion` | hypothesis | +0x74=DAT zero, Vec2 +0x40 zero |
 | 0x4895E0 | `Car_ClearFlag8` | verified | Car_ClearFlags(8) |
 | 0x4895F0 | `Door_ClearByte2C` | hypothesis | block->+0x2C=0 after Door_CloseBothFaces |
-| 0x489600 | `unsure_Pair_BothNonNull` | hypothesis | p[0]&&p[1]; only caller ParkingZone_Init |
+| 0x489600 | `Pair_BothNonNull` | verified | p[0]&&p[1]; only caller ParkingZone_Init |
 | 0x489620 | `ParkingZone_GetBlockByte4` | hypothesis | byte at [*p+4/5/6]; only caller ParkingZone_ValidateBlocks |
 | 0x489650 | `ParkingZone_ResetState` | verified | zero +0xC,+0x10 and 4 Vec2 |
 | 0x489680 | `ParkingZone_Update` | verified | called from GameTick; state (+0xC) 1/2/3 machine: car drives in, ped exits (Ped_SetSpriteField40), car removed (Car_RequestRemoveNow) |
 | 0x48A250 | `Vec2_DivAssignFix16` | verified | 2× Fix16_DivAssign |
 | 0x48A270 | `Vec2_GetMaxAbsComponent` | verified | max( |
-| 0x48A350 | `unsure_MapBlocks_IsBlockFlagLow2Set` | hypothesis | block+0xB & 3 |
-| 0x48A4C0 | `unsure_ParticleState_GetField8` | hypothesis | returns this+8, compared with 8/9; this type uncertain (callers ApplyBlastDamage, Ped_ReactToPedObstacle) |
+| 0x48A350 | `MapBlocks_HasGroundAt` | verified | block+0xB & 3 |
+| 0x48A4C0 | `PedGameObject_GetState` | verified | returns this+8, compared with 8/9; this type uncertain (callers ApplyBlastDamage, Ped_ReactToPedObstacle) |
 | 0x48A590 | `ParticleState_SetOwnerObject` | verified | +0x14 = ownerObject (struct), caller Object_CreateExplosion |
 | 0x48A7F0 | `ParticleStatePool40_VectorDtor` | verified | eh_vector_destructor 0x28 / 0x14 elements of 0x30; callers ScalarDeletingDtor |
 | 0x48A8E0 | `ParticlePool_Dtor` | verified | zero freeHead/activeHead |
@@ -582,66 +582,66 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x48F1C0 | `ParticlePool_ScalarDeletingDtor` | verified | Dtor + free if flag&1 |
 | 0x491C20 | `ParticleManager_Dtor` | verified | deletes g_ParticlePool, zeroes object0/1; caller ParticleManager_ScalarDeletingDtor |
 | 0x491DE0 | `PedFlames_Clear` | hypothesis | +0xB0=-1, Car_RemoveFlames(+0x88); caller Ped_ExtinguishFire |
-| 0x491E40 | `unsure_PedGameObject_IsOnWaterTile` | hypothesis | calls FUN_004baa90 (block under sprite, StyleData tile flag); true → Ped_ExtinguishFire + FUN_004938a0 in 0x49B0D0 |
-| 0x491E60 | `unsure_PedGameObject_ResetWalkAroundState` | hypothesis | zeroes +0x18..+0x24, +0x28/2A/2C=Ang16 0, +0x69=0 (the "walking around obstacle" flag from unsure_Ped_ReactToCarOrObjectObstacle); caller PedGroup_UpdateEnte... |
+| 0x491E40 | `PedGameObject_IsOnWaterTile` | verified | calls FUN_004baa90 (block under sprite, StyleData tile flag); true → Ped_ExtinguishFire + FUN_004938a0 in 0x49B0D0 |
+| 0x491E60 | `PedGameObject_ResetWalkAroundState` | verified | zeroes +0x18..+0x24, +0x28/2A/2C=Ang16 0, +0x69=0 (the "walking around obstacle" flag from Ped_ReactToCarOrObjectObstacle); caller PedGroup_UpdateEnte... |
 | 0x491EA0 | `PedGameObject_IsOnAnyPlayerScreen` | verified | Game_AnyPlayerCameraSeesSprite(game, go+0x80) == 1; used by unsure_Ped_TickOnScreenCounter (g_OnScreenPedCountThisTick++) |
 | 0x491EC0 | `PedGameObject_CheckSpriteCollisions` | verified | DAT_0066a3c9=0; Collision_CheckAndNotifyAllForSprite(g_CollisionGridNotify, go+0x80) |
 | 0x491EE0 | `Fix16_ToIntD` | verified | *p >> 14, a 4th copy of Fix16_ToInt (siblings ToIntB/ToIntC) |
 | 0x491EF0 | `Fix16_AddOneBlock` | verified | *p += 0x4000 |
 | 0x491F00 | `Fix16_SubOneBlock` | verified | *p -= 0x4000 |
-| 0x491F10 | `unsure_Dir_GetPerpendicular` | hypothesis | dir 1..4 (N,S,E,W per ped-movement doc) → 3/4, 4/3, 2/1, 1/2 by flag byte; used by FUN_00495470 and unsure_PedGameObject_TurnAwayFromWallNpc |
-| 0x491F80 | `unsure_StyleData_IsTileKind5` | hypothesis | this=g_StyleData; *(this + tile*4 + 0x6C) == 5; 0x49B0D0 then does Ped+0x210 += 3 (ground damage?) |
-| 0x491FA0 | `unsure_PedGameObject_PickNextStateTimer` | hypothesis | only from StateWalk; if +0x46==0 switch on relToS24_unk33 → +0x10 ∈ {1,3,4,7}, +0x6C ∈ {0,1,2}, +0x46 = random(200/400) |
-| 0x4920A0 | `unsure_PedGameObject_StepTurnTowardHeading14` | hypothesis | Ang16 compare of +0x14 vs +0x40, adds DAT_0066A62C or 52C to +0x40; caller FUN_00495700 |
-| 0x492130 | `unsure_Ped_ClearField36E` | hypothesis | *(byte*)(p+0x36E)=0, this beyond GameObject size → Ped |
-| 0x492140 | `unsure_MapBlocks_IsBlockByte10NonZero` | hypothesis | GetBlock(x,y,z) != 0 && block[+10] != 0 (gmp block_info +10 = arrows byte); in 0x49B0D0 false → ped falls |
+| 0x491F10 | `Dir_GetPerpendicular` | verified | dir 1..4 (N,S,E,W per ped-movement doc) → 3/4, 4/3, 2/1, 1/2 by flag byte; used by FUN_00495470 and PedGameObject_TurnAwayFromWallNpc |
+| 0x491F80 | `StyleData_IsTileSurfaceType5` | verified | this=g_StyleData; *(this + tile*4 + 0x6C) == 5; 0x49B0D0 then does Ped+0x210 += 3 (ground damage?) |
+| 0x491FA0 | `unsure_PedGameObject_PickWalkSubModeAndTimer` | hypothesis | only from StateWalk; if +0x46==0 switch on relToS24_unk33 → +0x10 ∈ {1,3,4,7}, +0x6C ∈ {0,1,2}, +0x46 = random(200/400) |
+| 0x4920A0 | `PedGameObject_StepTurnTowardHeading14` | verified | Ang16 compare of +0x14 vs +0x40, adds DAT_0066A62C or 52C to +0x40; caller FUN_00495700 |
+| 0x492130 | `MapBlocks_ClearSlopeStepBlockedFlag` | verified | *(byte*)(p+0x36E)=0, this beyond GameObject size → Ped |
+| 0x492140 | `MapBlocks_HasArrowsAt` | verified | GetBlock(x,y,z) != 0 && block[+10] != 0 (gmp block_info +10 = arrows byte); in 0x49B0D0 false → ped falls |
 | 0x492170 | `CollisionBox_GetZSize` | hypothesis | *out = this[+8]; CarWeapon_FireOil does /2 right after CollisionBox_GetYSize; ReactToCarOrObject compares > 0.5 |
-| 0x492180 | `unsure_Position_SetOwnerSprite` | hypothesis | this[+8] = param; only caller FUN_00493850 (new Position, SetCollisionKind(3), setter(pos, sprite)) |
+| 0x492180 | `Position_SetOwnerSprite` | verified | this[+8] = param; only caller FUN_00493850 (new Position, SetCollisionKind(3), setter(pos, sprite)) |
 | 0x492190 | `PedGameObject_IsTileEdgeOpen` | verified | thiscall(go, dir): MapBlocks_IsBlockEdgeCrossingBlocked + neighbour GetGroundTypeAt (0 air → false, ≤4 ok), slope retry via bit 0x58&1; callers CanCrossTileE... |
-| 0x4923A0 | `unsure_PedGameObject_StartTurnState8` | hypothesis | QuantizeWalkDir(+0x40), += DAT_0066A738, +0x10=8, +0x46=10 (StateWalk only) |
-| 0x4923D0 | `unsure_PedGameObject_StartTurnState9` | hypothesis | same with DAT_0066A4A4, state 9 (left/right pair, which is which unknown — angle consts are Ang16 not in static_constants.csv) |
+| 0x4923A0 | `PedGameObject_StartTurnState8` | verified | QuantizeWalkDir(+0x40), += DAT_0066A738, +0x10=8, +0x46=10 (StateWalk only) |
+| 0x4923D0 | `PedGameObject_StartTurnState9` | verified | same with DAT_0066A4A4, state 9 (left/right pair, which is which unknown — angle consts are Ang16 not in static_constants.csv) |
 | 0x492400 | `PedGameObject_BeginTurnToHeading` | verified | +0x10=0x19, +0x14=angle, +0x46=0xFF; FUN_00491FA0 treats 0x19/0xFF specially; caller FUN_00495470 (turn away when edge blocked) |
 | 0x492420 | `PedGameObject_CanMoveToTile` | verified | thiscall(go, tileX, tileY) → bool. Compares target tile with current (Fix16_ToIntD): straight → IsTileEdgeOpen, diagonal → recursive tests of both axes + cor... |
 | 0x4928A0 | `PedGameObject_AddHeading` | verified | Ang16_AddAssign(go+0x40, stack arg) (ret 4); caller FUN_004955F0 (random wobble) |
 | 0x492C20 | `Ped_GetHostility` | verified | Ped+0x230 = struct unsure_hostility |
 | 0x492C30 | `PedGameObject_CanStepAlongHeading` | verified | pos + PolarToXY(heading, DAT_0066A6A8 if state2==3 else 4FC) → ToIntB → CanMoveToTile; used in 0x49B0D0 after StepHeadingToward |
-| 0x492CB0 | `unsure_Ped_SetRefCar` | hypothesis | Ped+0x140 = arg (struct refCar); caller Sprite_UpdatePedAnimFrame |
+| 0x492CB0 | `Ped_SetRefCar` | verified | Ped+0x140 = arg (struct refCar); caller Sprite_UpdatePedAnimFrame |
 | 0x492CE0 | `Ped_GetMoveTargetX` | verified | Ped+0x1C4 = moveTarget.x |
 | 0x492CF0 | `Ped_GetMoveTargetY` | verified | Ped+0x1C8 |
-| 0x492D00 | `unsure_PedGameObject_PickDetourTile` | hypothesis | on DAT_00593228 (blocked dir) compares Ped moveTarget with player pose, tries neighbour tiles via CanMoveToTile, writes goal tile bytes go+0x72/+0x73. 0x4965... |
+| 0x492D00 | `PedGameObject_PickDetourTile` | verified | on DAT_00593228 (blocked dir) compares Ped moveTarget with player pose, tries neighbour tiles via CanMoveToTile, writes goal tile bytes go+0x72/+0x73. 0x4965... |
 | 0x492FD0 | `Ped_IsEnterCarObjectiveOrTask` | verified | Ped+0x258 == 0x23 \ |
-| 0x493000 | `unsure_Ped_LinkObstaclePedSetFlag4` | hypothesis | this+0x138 = other go; +0x224 \ |
-| 0x493040 | `unsure_Ped_LinkObstaclePedClearFlag4` | hypothesis | same, +0x224 &= ~4, then unsure_Ped_SetField250(0x16, arg) |
+| 0x493000 | `Ped_LinkBumpPartnerSetBit4` | verified | this+0x138 = other go; +0x224 \ |
+| 0x493040 | `Ped_LinkBumpPartnerClearBit4AndSpeak` | verified | same, +0x224 &= ~4, then unsure_Ped_SetField250(0x16, arg) |
 | 0x493090 | `WorldObject_GetConveyorOffsets` | hypothesis | unpack nibbles-7 of obj byte +0x26 → (dx,dy) chars; used for conveyor belt (type 0x8B) in OnTouchWorldObject and by CarPhysics_ApplyObjectPush |
 | 0x4930C0 | `PedGameObject_TryAnswerPhone` | hypothesis | if Ped+0x15C (Player) ≠ 0 → FUN_0047F3B0(g_MissionScript, pedId, obj+0x14); only for types 164/177/179/181 = *_PHONE_RINGING |
 | 0x4930F0 | `PedGameObject_OnTouchWorldObject` | verified | thiscall(go, WorldObject*), switch on obj+0x18 OBJECT_TYPE: 139 CONVEYOR_BELT (push +0x4C/+0x50 = DAT_0066A438 × offsets), 141 CONVEYOR_BELT_END → Ped_OnDeat... |
-| 0x493390 | `unsure_PedGameObject_KnockDown` | hypothesis | go+0x16=1; ObjectSpawner_SpawnMovingObject(…0x6E…) stored in Ped+0x184, owner slot in Ped+0x267; Ped_SetState FALL_ON_GROUND, Ped_SetState2 0x18/0x19/SMOKING... |
+| 0x493390 | `PedGameObject_KnockDown` | verified | go+0x16=1; ObjectSpawner_SpawnMovingObject(…0x6E…) stored in Ped+0x184, owner slot in Ped+0x267; Ped_SetState FALL_ON_GROUND, Ped_SetState2 0x18/0x19/SMOKING... |
 | 0x493520 | `PedGameObject_ResetTickCountersAndSpriteIds` | verified | body: relToS24_unk33=0; relToS24_unk34=0; nextSpriteId=0; unk33 is the 0..20 counter bumped in PedGameObject_Tick; sole caller DummyPedManager_Ctor |
-| 0x493540 | `unsure_Struct_FirstDwordEquals` | hypothesis | return param == *(uint*)this; caller unsure_Ped_ReactToCarOrObjectObstacle |
+| 0x493540 | `ParkingZone_IsCar` | verified | return param == *(uint*)this; caller Ped_ReactToCarOrObjectObstacle |
 | 0x493550 | `PedGameObject_ResetMoveScratch` | verified | first call in PedGameObject_Tick; sets DAT_00593228/0059322c=1, DAT_0066a3c1..c8=0, copies Fix16 zero (DAT_0066a4d8) into the pose globals playerPedX_/0066a7... |
 | 0x493640 | `Sprite_Deinit` | verified | pairs with Sprite_Init; CollisionGrid_RemoveSprite + PositionPool_Free(+0x80), Car_FreeAttachments(+0x88), +0xb0=-1; caller SpritePool_Release |
 | 0x493710 | `PedGameObject_EnterJumpMode` | verified | called from Ped_Jump 0x433C40; sets sub-mode +0x10=0xF, anim +0x6c=5, +0x38 = jump speed, +0x8c = Z byte |
-| 0x493780 | `unsure_Sprite_GetBackwardPolarOffset` | hypothesis | Vec2_FromPolar(-DAT_0066a504, angle at this+0x80); caller FUN_004867e0 |
+| 0x493780 | `PedGameObject_GetBackwardPolarOffset` | verified | Vec2_FromPolar(-DAT_0066a504, angle at this+0x80); caller FUN_004867e0 |
 | 0x4937D0 | `Fix16_ToSubTilePixelX` | verified | frac(x)*64 -> int16; used by PedGameObject_IsInTileCenter (sub-tile 20..44 px) |
 | 0x493810 | `Fix16_ToSubTilePixelY` | verified | identical body, used for y |
 | 0x493850 | `Sprite_AllocPosition` | verified | GetNewFreePositionStruct, Position_SetCollisionKind(3), SoundClient_EnsureSource; only caller Sprite_Init |
-| 0x4938A0 | `unsure_PedGameObject_StartFallOnGroundBurst` | hypothesis | Ped_SetState(FALL_ON_GROUND), SetState2(0x14), Particle_EmitBurstAt; callers Walk/Staying/GetOutOfCar/FallOnGround... |
-| 0x493940 | `unsure_PedGameObject_ComputeCarDoorPos` | hypothesis | CarInfo_GetDoorInfo + relToSpiteOfCar table, switch on door/anim step 0..0xC,99, Ang16_RotateXY; callers GameLogic, Sprite_UpdatePedAnimFrame, Ped_RunTask |
+| 0x4938A0 | `PedGameObject_StartDrowning` | verified | Ped_SetState(FALL_ON_GROUND), SetState2(0x14), Particle_EmitBurstAt; callers Walk/Staying/GetOutOfCar/FallOnGround... |
+| 0x493940 | `Car_ComputePedDoorStepPos` | verified | CarInfo_GetDoorInfo + relToSpiteOfCar table, switch on door/anim step 0..0xC,99, Ang16_RotateXY; callers GameLogic, Sprite_UpdatePedAnimFrame, Ped_RunTask |
 | 0x494180 | `PedGameObject_UpdateGroundZ` | verified | MapBlocks_GetSlopeSurfaceZ -> +0x45 slope byte, bit0 of +0x58, SetPosition(x,y,z) |
-| 0x495470 | `unsure_PedGameObject_SteerAroundBlockedEdge` | hypothesis | CanCrossTileEdge on heading class and both neighbours, then FUN_00492400 |
-| 0x4955F0 | `unsure_PedGameObject_JitterHeading` | hypothesis | random() > 0x16 -> heading +- random Fix16 -> Ang16, sign fix-up |
-| 0x495700 | `unsure_PedGameObject_ApplyWalkSubModeSpeed` | hypothesis | switch(+0x10 sub-mode 1,3,4,7,8,9,0x19,0x24) writes speed +0x38 from DAT_0066a798/574/428/634 |
-| 0x4958E0 | `unsure_PedGameObject_UpdateWalkAnimAndMelee` | hypothesis | anim +0x6c from speed (0/1/2); melee branch: nearest ped, Ped_TakeDamage 10/20, mugger GiveMoney(-10) |
-| 0x496500 | `unsure_PedGameObject_ProbeSideTilesWhenBlocked` | hypothesis | DAT_00593228 1..4 switch, FUN_00492420 probes (y±1), writes +0x72/+0x73,+0x55=0x28 |
+| 0x495470 | `PedGameObject_SteerAroundBlockedEdge` | verified | CanCrossTileEdge on heading class and both neighbours, then FUN_00492400 |
+| 0x4955F0 | `PedGameObject_JitterHeading` | verified | random() > 0x16 -> heading +- random Fix16 -> Ang16, sign fix-up |
+| 0x495700 | `PedGameObject_ApplyWalkSubModeSpeed` | verified | switch(+0x10 sub-mode 1,3,4,7,8,9,0x19,0x24) writes speed +0x38 from DAT_0066a798/574/428/634 |
+| 0x4958E0 | `PedGameObject_UpdateWalkAnimAndMelee` | verified | anim +0x6c from speed (0/1/2); melee branch: nearest ped, Ped_TakeDamage 10/20, mugger GiveMoney(-10) |
+| 0x496500 | `PedGameObject_PickDetourTileWithTimer` | verified | DAT_00593228 1..4 switch, FUN_00492420 probes (y±1), writes +0x72/+0x73,+0x55=0x28 |
 | 0x496800 | `PedGameObject_StateGetOutOfCar` | verified | Tick dispatch state1==4 = GETTING_OUT_FROM_CAR (PED_STATE enum); sets door anim 7, Ped_GetTargetCarDoor |
 | 0x496880 | `PedGameObject_StateFallOnGround` | verified | Tick dispatch state1==8 = FALL_ON_GROUND; switch state2 0x11/0x13/0x14/0x16/0x18-0x1a/0x1b (thrown, burning, lying, run-over); Ped_OnDeath, SpawnMovingObject... |
-| 0x4973E0 | `unsure_Position_IsCollidableWithTypeEqual` | hypothesis | unsure_Sprite_IsOwnerTypeCollidable && byte+0x26 == arg; caller Sprite_ShouldCollideWithSprite |
+| 0x4973E0 | `WorldObject_IsOwnerSlotEqual` | verified | unsure_WorldObject_KindHasOwnerSlot && byte+0x26 == arg; caller Sprite_ShouldCollideWithSprite |
 | 0x497A60 | `PedGameObject_Ctor` | verified | eh_vector_constructor_iterator 400 x 0xB4 in 0x435550; 0xB4 = sizeof(GameObject) |
-| 0x49A080 | `unsure_PedGameObject_WalkAroundObstacle` | hypothesis | doc ped-movement-collision §4 "walk around along a tangent (+0x69, FUN_0049A080)"; uses +0x28 heading, Ped_ResolveSpriteObstacle |
-| 0x49B0D0 | `unsure_PedGameObject_StateGoToCar` | hypothesis | Tick dispatch state1 1/2 (UNKNOWN_1 / GOING_TO_CAR); path/heading toward target (Ped_GetTargetRotation, StepHeadingTowardTarget, ChebyshevDist) |
-| 0x49BAC0 | `thunk_unsure_PedGameObject_StateGoToCar` | verified | 5-byte thunk to 0x49b0d0 (Tick case 2) |
+| 0x49A080 | `PedGameObject_WalkAroundObstacle` | verified | doc ped-movement-collision §4 "walk around along a tangent (+0x69, FUN_0049A080)"; uses +0x28 heading, Ped_ResolveSpriteObstacle |
+| 0x49B0D0 | `PedGameObject_StateWalkToTarget` | verified | Tick dispatch state1 1/2 (UNKNOWN_1 / GOING_TO_CAR); path/heading toward target (Ped_GetTargetRotation, StepHeadingTowardTarget, ChebyshevDist) |
+| 0x49BAC0 | `thunk_PedGameObject_StateWalkToTarget` | verified | 5-byte thunk to 0x49b0d0 (Tick case 2) |
 | 0x49BAD0 | `PedGameObject_StateEnterCar` | verified | Tick state1==3 (ENTERING_INTO_CAR); state2==6 -> +0x10=0x24, Collision_FindObstacle car, Car_IsOnTrailer |
-| 0x49BC20 | `unsure_PedGameObject_StateUnknown5Car` | hypothesis | Tick state1==5 (PED_STATE_UNKNOWN_5); state2==6 puts body at unsure_Car_GetDoorWorldPos |
+| 0x49BC20 | `unsure_PedGameObject_StateUnknown5Car` | hypothesis | Tick state1==5 (PED_STATE_UNKNOWN_5); state2==6 puts body at Car_GetDoorWorldPos |
 | 0x49C680 | `PedPathfinder_CanCrossEdge` | verified | MapBlocks_IsBlockEdgeCrossingBlocked on node (+0x25/+0x26/+0x27) in dir |
 | 0x49C6E0 | `PedPathfinder_ClearNodes` | verified | zeroes 0x8C4 dwords at +0x40 (34x34 nodes x 8 B) |
 | 0x49C700 | `PedPathfinder_InitFields` | verified | PedPathfinder_Ctor body: clears nodes, +0x34=1, +0x2fd0=1 |
@@ -653,8 +653,8 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x49CB60 | `PedPathfinder_CanStepToTile` | verified | cardinal + diagonal step test (slope check MapBlocks_IsSlope1to44At + edge crossing) |
 | 0x49CF10 | `PedPathfinder_TryExpandNeighbor` | hypothesis | ClassifyNode -> CanStepToTile -> PushOpenNode |
 | 0x49CF70 | `PedPathfinder_FindPath` | verified | 8-neighbour search per call (budget +0x2e=100, +0x2fd1 >200 = abort), result: 3-byte (x,y,z) steps into caller buffer, length byte out; caller Ped_MoveToward... |
-| 0x49DCE0 | `PedPathfinder_CanStepFromTile` | verified | sets +0x25..27 then CanStepToTile; caller unsure_Car_IsDoorExitClear |
-| 0x49E540 | `unsure_StyleData_IsRemappedKind4Tile` | hypothesis | table +0x6c[tile]==4 && StyleData_IsTileRemapped |
-| 0x49E570 | `unsure_StyleData_IsPlainKind4Tile` | hypothesis | same but !Remapped |
+| 0x49DCE0 | `PedPathfinder_CanStepFromTile` | verified | sets +0x25..27 then CanStepToTile; caller Car_IsDoorExitClear |
+| 0x49E540 | `StyleData_IsRemappedWaterTile` | verified | table +0x6c[tile]==4 && StyleData_IsTileRemapped |
+| 0x49E570 | `StyleData_IsPlainWaterTile` | verified | same but !Remapped |
 | 0x49EF40 | `Ped_GetRefCar` | verified | returns this+0x140 = Ped.refCar (gta2_types.h) |
-| 0x49EFB0 | `unsure_Trailer_GetFlagByte` | hypothesis | returns first byte of Car+0x64 link; CarPhysics_EnforceTrailerControlLimits |
+| 0x49EFB0 | `TrailerController_GetFlagByte` | verified | returns first byte of Car+0x64 link; CarPhysics_EnforceTrailerControlLimits |
