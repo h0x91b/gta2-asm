@@ -662,3 +662,60 @@ is rewritten at run time is not detected — check for writers before calling on
   `ProcessCollisionAndClampVelocity` corresponds to `MoveAndCollide`, which only zeroes the velocity
   when the car could not move at all).
 * Grip on grass/ice: no surface term found in the tyre model.
+
+### Names added by Seq 47 (slice 5, 0x4B9C20–0x4BE570: sprite bounds, draw, FixRect helpers)
+
+Mostly the `Sprite` / `Position` module (bounds object, corner math, draw). "high" = verified in the decompiler plus callers; "unsure_" = best guess.
+
+| Address | Name | Notes |
+|---|---|---|
+| `0x4B9C20` | `Fix16_Sign` | sret Fix16 = ±1/0 |
+| `0x4B9C70` | `Fix16_RoundToWhole` | `(raw+0x80)&~0xFF` |
+| `0x4B9E10` | `Fix16_IsInRangeInclusive` | lo, hi, val |
+| `0x4B9E60` | `Fix16_MinMaxOf4` | out min/max of 4 |
+| `0x4BA330` / `0x4BA340` | `CarDeltas_AndLightMask` / `CarDeltas_ClearLightMask` | `deltasBitstate` &= / &= ~ `DAT_005E85BC` (Sprite_Draw, lighting on) |
+| `0x4BA350` / `0x4BA360` / `0x4BA370` | `CarDeltas_SelectLightMaskDefault` / `…RoofDecal` / `…FBI` | `DAT_005E85BC` = `DAT_00591E90` / `98` / `94`; meaning of the mask is a hypothesis |
+| `0x4BA390` | `unsure_Car_IsTrailerControllerLinkedTo` | `car+0x64`→`+8 == arg` |
+| `0x4BA3C0` | `Camera_ProjectPointToScreen` | Fix16 world xyz → screen xy |
+| `0x4BA4D0` | `QuadVertex_ProjectWorldPoint` | regs EAX/ESI; sets xyz, rhw, sx, sy |
+| `0x4BA620` | `Box3_UnionWith` | 0 callers; last max uses the wrong field (original bug) |
+| `0x4BA6C0` | `FixRect_ContainsAnySpriteCorner` | |
+| `0x4BA7E0` | `FixRect_ExpandToIncludePoint` | |
+| `0x4BAA20` | `FixRect_SetFromPoints4` | 0 callers |
+| `0x4BAA70` | `Position_GetPed` | |
+| `0x4BAA90` | `Position_IsOverWaterTile` | |
+| `0x4BAB10` | `Position_AddSpriteShrinkClamped` | byte `+0x38` |
+| `0x4BABB0` | `unsure_Sprite_IsObjectWithOwnerField18` | |
+| `0x4BABE0` | `Sprite_GetPaletteIndex` | |
+| `0x4BAC10` | `Sprite_ShouldDrawShadow` | |
+| `0x4BAC60` | `Sprite_GetDrawQuadFlags` | |
+| `0x4BACF0` | `Sprite_DrawDebugIds` | `g_doShowIds` / `g_doShowObjectIds` |
+| `0x4BB020` | `Sprite_ContainsAnyWorldRectPoint` | |
+| `0x4BB4D0` | `Sprite_FindCornersInsideRect` | ParkingZone_Update |
+| `0x4BB860` / `0x4BB910` | `Sprite_FindEdgeCrossingWallAlongX` / `…AlongY` | |
+| `0x4BB9C0` | `Sprite_IsSegmentTouchingBox` | |
+| `0x4BBBE0` | `unsure_Sprite_IsTouchingSlopeAtMidZ` | |
+| `0x4BBC80` | `Sprite_GetMinChebyshevDistToSprite` | |
+| `0x4BBD10` / `0x4BBD30` | `Position_ReleaseSoundClient` / `thunk_…` | `Position+0x10` back to pool `DAT_005D85A0` |
+| `0x4BBD40` | `SpriteBounds_RecomputeCorners` | 4 corners + AABB, sets `+0x48` |
+| `0x4BC580` | `Sprite_LoadBlockBoundsToGlobals` | |
+| `0x4BC590` | `Sprite_DrawDebugCollisionBox` | `g_doShowCollisionBox` |
+| `0x4BC8F0` | `SpriteBounds_Reset` | |
+| `0x4BC950` / `0x4BDCB0` | `SpriteBoundsPool_Dtor` / `…ScalarDeletingDtor` | 0x13A7 × 0x4C pool (S22) |
+| `0x4BC970` / `0x4BDC90` | `PositionsArray_S21_Dtor` / `…ScalarDeletingDtor` | 0x13A7 × 0x3C |
+| `0x4BC9F0` / `0x4BCA10` | `SpriteBoundsPool_Alloc` / `…Free` | free list through `+0x2C` |
+| `0x4BCA70` | `unsure_SpritePool300_InitElement` | |
+| `0x4BCA80` | `Sprite_IsControlledByRemotePlayer` | network: has Player and not `Player_IsLocal` |
+| `0x4BCB90` | `Position_SetBoundsSize` | 18 callers |
+| `0x4BCBD0` | `Position_EnsureSpriteBounds` | |
+| `0x4BCCA0` / `0x4BCCC0` | `Position_FreeBoundsC` / `Position_FreeBoundsObjects` | |
+| `0x4BD250` / `0x4BD290` | `Sprite_IsBoxOverGroundEdge` / `Sprite_ClassifySlopeOverlap` | |
+| `0x4BD2E0` | `Sprite_GetCachedZLayer` | byte `+0x39`, used by LayerDrawQueues_Enqueue |
+| `0x4BD610` | `Sprite_TestWallBlockedAndRecordZ` | Taser |
+| `0x4BDAD0` | `Sprite_ClearObstaclesForSpawn` | Script_Decl_PLAYER_PED / CAR_DATA_SET / CHAR_DATA_SET |
+| `0x4BDC40` | `Position_DtorBody` | |
+| `0x4BDDD0` | `unsure_Sprite_ShrinkBoundsAndScaleOffset` | |
+| `0x4BDF20` | `unsure_Sprite_CollisionCheckAtPolarOffset` | |
+| `0x4BE050` | `Sprite_GetBoundsBox` | 0 callers |
+| `0x4BE060` | `Sprite_Draw` | only caller LayerDrawQueue_DrawInOrder |
+| `0x4BE570` | `unsure_Sprite_RaiseZLayerByte39ToMax` | |

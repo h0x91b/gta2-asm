@@ -218,3 +218,16 @@ smaller. Before this pass the same body read `FUN_0041e260(param_1 + 0x40, &loca
 The prototypes are also exact at the binary level, which matters for host code that calls these
 helpers from NASM: put the object in `ECX`, push the stack arguments right to left, and the
 callee pops them (`ret 4/8/0x10`).
+
+### Names added by Seq 47 (slice 2: 0x4725B0-0x472FD0, 0x4740F0-0x4759C0)
+
+| Address | Name | Confidence | Evidence |
+|---|---|---|---|
+| `0x4725B0` | `Ang16_FromCardinalDirection` | medium | direction code 1/3/4/else -> Ang16 constant; feeds SetRotation in car placement |
+| `0x472660` | `Fix16_MulAssignInt` | medium | `*this *= *param`, used by Fix16_RoundToThousandths |
+| `0x472670` / `0x4727E0` | `Motion_StepVelocityToTarget` / `_Asym` | medium | acceleration-limited chase; Camera_Tick, Crane_StepMotion |
+| `0x472950` / `0x472AE0` | `Segment_IntersectHorizontalLine` / `_VerticalLine` | medium | interpolates x (resp. y), stores DAT_005E6888 / DAT_005E688C |
+| `0x472C60` | `Fix16_RoundToThousandths` | medium | floor(v*1000+0.5)/1000 |
+| `0x472CC0` | `Fix16Table256_Ctor` | medium | t[i] = i/64, 256 entries |
+| `0x472FD0` | `unsure_Ped_IsGroupSlotNone` | unsure | Ped+0x23C == 99 |
+| `0x4740F0`, `0x474410`, `0x474420`, `0x474490` | `unsure_MikeDebug_ZeroDword`, `unsure_Pair_SetFirst/SetSecond`, `unsure_MikeDebug_TimerSlot_GetMs` | unsure | tiny helpers around do_mike |

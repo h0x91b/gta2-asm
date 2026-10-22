@@ -94,6 +94,23 @@ named `*_Frag`/`*Fragment` (for example `0x40653E`, `0x40667C`, `0x406C92`, `0x4
   lobby chat/focus flags at `0x676FF0..2`.
 - `Patch1144_OnKeyDown_LaunchManagerHook` `0x56DD67`: in `Player_OnKeyDown`, launches the GTA2 Manager
   unless flag `0x673E2C` is set.
+- Seq 47: ten more stubs live in the code cave at the start of `.text` (`0x3F1000-0x3F1Cxx`, next to
+  `appendToFile`/`RegGet`/`Game_FirstActiveCamera`, also patch code). Their jump-back targets are the
+  `*_Frag` tails `0x4797BB`, `0x47AB91`, `0x47D615`, `0x45F269`, `0x45FAFF`, `0x45FB59`, `0x4A71F2`.
+
+  | Address | Name | Hooked into / evidence |
+  |---|---|---|
+  | `0x3F10B0` | `Patch1144_Script_GetCharPlayer` | CALLed 4x from `Script_Op_SET_CONTROL_STATUS`; char → `Ped->player` (+0x15C) or 0 on a null ped |
+  | `0x3F135C` | `Patch1144_Game_FirstActiveCamera_RandomHelper` | DL 0/1 → 0, else `Random_U8`; caller `Game_FirstActiveCamera` |
+  | `0x3F1490` | `Patch1144_Debug_WriteSessionInfoDump_LogHook` | 2x `appendToFile(0x5738E4)`, back to `0x45F269` |
+  | `0x3F14A8` | `Patch1144_Keyboard_RecordInputEvent_LogHook` | same, back to `0x45FAFF` |
+  | `0x3F14C0` | `Patch1144_Keyboard_FlushReplayLog_LogHook` | same, back to `0x45FB59` |
+  | `0x3F158C` | `Patch1144_NetDlg_SetIconHook` | `NetDlg_DialogProc`: LoadIcon(0x65) + WM_SETICON, then `0x56DE95` |
+  | `0x3F15BC` | `Patch1144_Hud_DrawChatInput_LowercaseHook` | lowercases chat text at `0x5E9F08` (A-Z, '/'→'?'), back to `0x4C8990` |
+  | `0x3F163C` | `Patch1144_Script_Op_GIVE_WEAPON_NullCheckHook` | skips on a null char/ped, back to `0x4797BB`/`0x4797E6` |
+  | `0x3F1674` | `Patch1144_Script_Op_PUT_CAR_ON_TRAILER_NullCheckHook` | null check, back to `0x47D615`/`0x47D636` |
+  | `0x3F1AFA` | `Patch1144_Script_Op_CHANGE_GANG_CHAR_RESPECT_ExtHook` | opcode 0x106 sub-types 0x65-0x68/0x6F-0x72/0x78-0x79 copy script variables (medium), else back to `0x47AB91` |
+
 - Already named earlier: `Patch1144_LoadGXT_MmpOverrides` `0x56DF08` and
   `Patch1144_LoadGXT_ClearFlagAndContinue` `0x3F1664`.
 
@@ -544,3 +561,27 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x56DE95` | `Patch1144_NetDlg_ChatFlagResetHook` | medium | if byte 0x676ff0==1 clears it and posts message 0x3ea; hooks lobby dlg proc 0x3f158c call |
 | `0x56DEC0` | `Patch1144_NetDlg_StoreChatFlagHook` | medium | stores byte 0x676ff2 from stack, pushes 0x3e9, jmp 0x406c92 |
 | `0x56DED4` | `Patch1144_NetDlg_ChatFocusHook` | medium | if (0x676ff1 & 0x676ff2) clears 0x676ff1 and posts 0x3e9 (0xf000000); hooks dlg proc 0x408920 |
+
+### Names added by Seq 47 (slice 2: 0x449000-0x4759FF)
+
+Evidence is in each function's Ghidra plate comment. `unsure_` = honest guess, `_Frag` = tail Ghidra split off a function patched by 11.44 (see section 4).
+
+| Address | Name | Confidence | Evidence |
+|---|---|---|---|
+| `0x449CE0` / `0x449D10` | `unsure_FrontEndItemList_Ctor` / `_Dtor` | unsure | 600 x 0x6C array at +2; InitFrontend / FrontEnd_Dtor |
+| `0x449EF0` / `0x44A020` | `CrimeEventQueue_Dtor` / `thunk_CrimeEventQueue_Dtor` | high | 10 x 0x14 at +4, called from CrimeEventQueue_ScalarDeletingDtor |
+| `0x449F50` | `unsure_Player_EmptyMemberDtor` | unsure | bare RET called from Player_Dtor |
+| `0x44DBF0` / `0x4504D0` | `ofstream_Dtor` / `DebugLog_Dtor` | medium | ios_Dtor on vbase +8; DebugLog_WriteCoopHeader + ofstream_Close + free |
+| `0x45A700` | `Game_OnSetFocus` | medium | WndProc message 7 only |
+| `0x45AFD0` | `HudDebugLabel_SetColour` | medium | sets +0xB0=8, +0xB4=colour on Hud_DebugLabel_Show result |
+| `0x45B0B0` | `PlayerScore_GetReverseCount` | high | printed as "reverse_count" by ShowCounters |
+| `0x45F970`, `0x45FB10`, `0x45FBA0` | `unsure_Keyboard_IsRecordOrPlayMode`, `_FlushReplayLog`, `_ResetReplayBufferOnMarker` | unsure | replay buffer (40000 x 12) around Keyboard +0x38 mode |
+| `0x45F269`, `0x45FAFF`, `0x45FB59` | `Debug_WriteSessionInfoDump_Frag`, `unsure_Keyboard_RecordInputEvent_Frag`, `unsure_Keyboard_FlushReplayLog_Frag` | high | epilogues reached by JMP from 11.44 patch stubs |
+| `0x461760` | `CmdLine_CountArguments` | high | whitespace token count, caller parseArguments |
+| `0x4619D0` | `Game_RequestForcedLogicStep` | medium | sets DAT_0066274C read by drawAndLimitFrames |
+| `0x461DA0` | `Network_GetPlayerCount` | medium | +0x758 of g_NetworkSession, tested >1 |
+| `0x4620A0` | `Game_ShutdownOnce` | high | guarded by DAT_00662785, calls DeinitGame + SoundMgr_Shutdown |
+| `0x4620E0` | `Multiplayer_ShowPlayerLeftMessage` | high | GXT "comms1" to kill feed |
+| `0x462140`, `0x462440`, `0x4624E0`, `0x4626D0` | `Multiplayer_ExchangeLockstepInputs`, `_BroadcastLocalInput`, `_ApplyBufferedInputs`, `Game_UpdateLockstepInputFrame` | medium | Main.cpp lockstep input exchange, caller drawAndLimitFrames |
+| `0x462820` / `0x462850` | `Game_FatalExitWithAlert` / `Network_VerifyPlayerSyncInfo` | high | "Player %s: ... is different" strings |
+| `0x472620` | `RandomGen_Ctor` | high | Crt_Srand(1), StaticInit_RandomGen_eq_0 |

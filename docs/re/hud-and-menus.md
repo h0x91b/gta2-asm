@@ -1201,3 +1201,52 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4B90E0 | `Camera_WorldToScreen` | V |
 | 0x4D0820 | `FrontEnd_LaunchGta2Manager` | V |
 | 0x4D11B8 | `WinMain2` | old |
+
+### Names added by Seq 47 (slice 4: 0x4A4770-0x4AF880)
+
+| Address | Name | Confidence | Evidence |
+|---|---|---|---|
+| 0x4A4770 | `unsure_Player_ClearKeyChangedFlags` | unsure | zeroes Player+0x88/+0x8c dwords (key*Changed flags, but also isActive); only caller Player_OnKeyDown |
+| 0x4A4F10 | `Player_DtorMembers` | med | +0x360=0 and vector dtor of 10x0x2c at +0x1a8; callers Player_Dtor + Unwinds |
+| 0x4A4FE0 | `Weapon_GetAmmo` | high | returns WEAPON_STRUCT.ammo; Player_BeginKfCarWeapon stores as kfSavedAmmo |
+| 0x4A4FF0 | `Weapon_SetAmmoRaw` | high | writes ammo short without *10; Player_EndKfWeapon restores kfSavedAmmo |
+| 0x4A5090 | `Camera_GetPosZPlusTwo` | med | Fix16_Add(camera+0xa0, 2.0 const DAT_0066b1d0); Player_GetPos/GetBlockPos |
+| 0x4A5190 | `CarDeltas_GetBits` | med | returns *this of Car.deltasBitstate; sprite draw FUN_004be060 |
+| 0x4A51A0 | `CarDeltas_SetBits` | med | *this=*p; sprite draw + Player_RestoreSavedCars |
+| 0x4A51B0 | `Car_SetDamage` | high | writes Car+0x74 (damage short); Player_RestoreSavedCars |
+| 0x4A52B0 | `Player_BeginKfWeapon` | high | on-foot twin of BeginKfCarWeapon; callers SET_KF_WEAPON / START_BASIC_KF_TEMPLATE |
+| 0x4A61C0 | `Player_ResetPedsAndDeactivate` | med | Ped_ResetToDummy(ped, auxPed) + SetActive(0); caller prints "comms1" |
+| 0x4A71F2 | `Player_OnKeyDown_Frag` | high | tail POP/POP/POP/RET 4 of Player_OnKeyDown, reached by JMP from Patch1144_OnKeyDown_LaunchManagerHook 0x56DD79 (section 4 of crt-and-network.md) |
+| 0x4A8600 | `HiScoreTable_Clear` | high | 10x0x18 table cleared with default name |
+| 0x4A8630 | `HiScoreTable_Insert` | high | sorted insert (name,score) into 10-entry table, returns inserted |
+| 0x4A8700 | `ProfileSlot_Reset` | med | zeroes 0xa4 slot, unlocks first level; FrontEnd_DeleteCurrentProfile |
+| 0x4A8780 | `ProfileSlot_GetTotalScore` | med | sums ints of 12 level records |
+| 0x4A87B0 | `S28_DtorMembers` | high | vector dtors for arr8/arr12; caller scalar deleting dtor |
+| 0x4A8820 | `Profile_BuildDatPath` | high | builds "player\plyslot<N>.dat" |
+| 0x4A88C0 | `Profile_DatFileExists` | high | _findfirst on that path |
+| 0x4A8910 | `S28_LoadProfileSlot` | high | reads plyslot<N>.dat into slot N |
+| 0x4A89E0 | `S28_SaveProfileSlot` | high | packs 0x7E-byte image, File_WriteWhole |
+| 0x4A8A90 | `S28_UnlockLevel` | med | sets unlock byte of level (area*4+stage), saves slot |
+| 0x4A8B60 | `HiScores_BuildPath` | high | copies "player\hiscores.hsc" |
+| 0x4A8B80 | `S28_InitDefaultHiScores` | med | default names ALAN..JACKSON / scores into S28+0x24c0 |
+| 0x4A8CB0 | `S28_LoadHiScores` | high | reads hiscores.hsc |
+| 0x4A8D80 | `S28_SaveHiScores` | high | writes hiscores.hsc |
+| 0x4A8ED0 | `S28_ResetHiScoresToDefaults` | med | clears + inserts built-in default entries |
+| 0x4A8F50 | `S28_ScalarDeletingDtor` | high | DtorMembers + _free(flag&1) |
+| 0x4A8F70 | `HiScoreTable_Ctor` | high | Clear(this); return this |
+| 0x4A8F90 | `S28_UpdateProfileLevelScore` | med | level end: best/last score of current level, save slot; WinMain2 |
+| 0x4A9050 | `HiScores_FileExists` | high | _findfirst hiscores.hsc |
+| 0x4A90A0 | `S28_UpdateHiScoresAfterLevel` | med | inserts into tables, crime bests, saves; WinMain2 |
+| 0x4A9210 | `S28_ApplyMuchCashCheat` | high | profile name == "MUCHCASH" -> GiveMoney 500000 |
+| 0x4A9270 | `S28_DestroyGlobalInstance` | high | delete ptrToS28PlayerData |
+| 0x4A9AC0 | `unsure_PoliceManager_FreeBuffer` | unsure | _free(this+0xa0); callers include 3 unwinds so maybe member dtor |
+| 0x4AB9D0 | `unsure_PoliceCrew_HandleState23` | unsure | case 0x23 of PoliceCrew_Update switch |
+| 0x4ABA30 | `unsure_PoliceCrew_HandleState24` | unsure | case 0x24 of PoliceCrew_Update switch |
+| 0x4ABA90 | `unsure_PoliceCrew_HandleState0E` | unsure | case 0xe of PoliceCrew_Update switch |
+| 0x4AF570 | `PublicTransportManager_IsBusCarId` | med | carId == bus car (this+0x17cc), !g_skipBuses |
+| 0x4AF5A0 | `unsure_PublicTransportManager_GetBoardableBusCar` | unsure | bus car if actor state(+0x1808)==0xd |
+| 0x4AF5E0 | `PublicTransportManager_IncBusPassengerCount` | med | ++byte +0x1816 |
+| 0x4AF5F0 | `PublicTransportManager_KillAllBusPassengers` | high | count=0 + PedList_KillAndFreeAll; Script_Op_KILL_ALL_PASSENGERS |
+| 0x4AF7F0 | `PublicTransportManager_Dtor` | high | only caller is its ScalarDeletingDtor |
+| 0x4AF860 | `Ped_SetTrainDriverStopOnArrive` | med | Ped+0x13c = stop; at train arrival in Manager_Update |
+| 0x4AF880 | `Ped_SetTrainDriverStopOnDepart` | med | same body, at pre-departure timer |

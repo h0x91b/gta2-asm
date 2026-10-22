@@ -588,3 +588,23 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x42AAC0 | CarAI_Reinit | V | same without Ang16 ctor |
 | 0x42ABE0 | unsure_Car_ResetAIScratchBytes | H | writes +0x91/93/94/95 |
 | 0x42FE80 | CarAI_UpdateSpeedRamp | V | cur->goal by step(+0x1c), then ReleaseControls; caller CarAI_FollowRoad (rail) |
+
+### Names added by Seq 47 (slice 1): drive-order pool helpers, taxi list
+
+All "HasAlliedManeuver…" scan the 20-entry `CarDriveOrderPool` for an in-use order whose driver (+4) is allied (`Ped_AreAllied`) with the given ped and whose maneuver (+0xC) is in the set; only caller `CarDriveOrder_Drive` (maneuver meanings still open).
+
+| Address | Name | Conf | Evidence |
+|---|---|---|---|
+| 0x433120 | TaxiList_PopFront | V | `*head = head->next(+4)`; caller TaxiList_Add |
+| 0x433130 | TaxiList_PushFront | V | `node->next = *head; *head = node`; caller TaxiList_Clear |
+| 0x4462E0 | CarDriveOrderPool_DtorBody | V | eh vector dtor 20 x 0x40; caller CarDriveOrderPool_Dtor |
+| 0x446340 | CarDriveOrderPool_FindAlliedDriverByManeuverTargetingPed | V | targetPed(+0x30)==ped, allied, maneuver==arg → driver |
+| 0x4463C0 | CarDriveOrderPool_CountAlliedDriversTargetingPed | V | counts orders with targetPed==arg1, driver allied with arg2 |
+| 0x446410 | CarDriveOrderPool_HasAlliedManeuver0D0F | V | maneuver 0xD/0xF |
+| 0x446480 | CarDriveOrderPool_HasAlliedManeuver08 | V | maneuver 8 |
+| 0x4464E0 | CarDriveOrderPool_HasAlliedManeuver060810 | V | maneuver 6/8/0xA |
+| 0x446550 | CarDriveOrderPool_HasAlliedManeuver09 | V | maneuver 9 |
+| 0x4465B0 | CarDriveOrderPool_HasAlliedManeuver07090B | V | maneuver 7/9/0xB |
+| 0x446620 | CarDriveOrderPool_HasAlliedManeuver06To09Or0D | V | maneuver 6..9 or 0xD |
+| 0x446690 | CarDriveOrderPool_HasAlliedManeuver04To05 | V | maneuver 4..5 |
+| 0x446AA0 | unsure_CollisionHit_IsSpriteObjectKind3 | U | hit kind==3 and obj->+8->+0x4C==3; caller CarPhysics_StepAndResolveCollisions |

@@ -602,3 +602,30 @@ missing ones added.
 - Duplicate types kept in the DB: `PedSprite` (= `Position`), `S31`/`S32` (= `BareGameObject*`),
   `Ambulance`/`AmbulanceSub` (= `AmbulanceManager`/`AmbulanceSlot`), `Gang`/`Gangs`
   (= `GangRespect`).
+
+### Names added by Seq 47 (slice 1): ped pools, weapon probe, small getters
+
+| Address | Name | Conf | Evidence |
+|---|---|---|---|
+| 0x433560 | unsure_Bounds_RangesOverlap | U | Fix16_RangesOverlap on +0x10/+0x14 of two blocks; Ped_Obj2_EnterCar |
+| 0x4337F0 | unsure_Sprite_SetFlag2C_Bit4 | U | `byte+0x2C \|= 4`; 27 callers (particles, Ped_ApplyInvulnerabilitySpriteFlag) |
+| 0x433830 | S3Bytes_Clear | V | zeroes a/b/c; caller InitPeds |
+| 0x433A70 | unsure_PedSprite_InitSubState | U | +0x68=0, +0x6C=arg; Ped_InitSpawnedState |
+| 0x433A90 | unsure_PedSprite_GetField44 | U | returns +0x44; flee/cross-road tasks |
+| 0x433AA0 | unsure_PedSprite_IsField69Set | U | +0x69 != 0; Ped_Obj2_ApproachAndAttackTarget |
+| 0x4340A0 | unsure_Pickup_GetField26 | U | +0x26; Ped_PickUp, SaveGame_CollectPickups |
+| 0x434130 | unsure_Pickup_SetLinkedField4 | U | `*(u16*)(this->+0xC + 4) = v`; Ped_DropWeaponPickup, Weapon_ThrowMolotovOrGrenade |
+| 0x434140 | unsure_IsField18_11A_Or_11D | U | +0x18 ∈ {0x11A,0x11D}; ApproachAndAttackTarget |
+| 0x4341B0 | unsure_CarDoor_GetPed | U | returns +8; pairs with unsure_CarDoor_SetPed |
+| 0x434A10 | unsure_Player_IncField574 | U | ++ +0x574 (`unsure_field574`); Ped_PickUp |
+| 0x434AF0 | unsure_ParkingZone_IsCarFlagged | U | this=g_ParkingZone; car==*this && byte+0x3D; Ped_Obj2_EnterCar |
+| 0x4350C0 | Ped_UpdateWeaponProbeModeOnHitSprite | V | Weapon_SetProbeMode by Chebyshev dist; Projectile_OnHitSprite |
+| 0x435180 | Ped_UpdateWeaponProbeModeOnHitWorld | V | + PlayerScore_TrackAccuracy(1); Projectile_OnHitWorld, Object_ExplodeOnProjectileHit |
+| 0x435220 | Ped_OnProjectileMissed | V | PlayerScore_TrackAccuracy(0), probe 0; Object_UpdatePhysics |
+| 0x435510 / 0x435550 | PedGameObjectPool_Dtor / _Ctor | V | 400 x 0xB4 PedGameObject (ptrTo_relSprites); DummyPedManager_Ctor/Dtor |
+| 0x43ADD0 | PedGameObjectPool_ScalarDeletingDtor | V | calls 0x435510, free if flag&1 |
+| 0x435540 / 0x43ADF0 | S30_Dtor / S30_ScalarDeletingDtor | V | ptrToS30_relToChar (InitS30); DummyPedManager_Dtor |
+| 0x43AE40 / 0x43DB20 | PedManager_Dtor / PedManager_ScalarDeletingDtor | V | 200 x Ped (0x294) in ptrToPedManager; callers DummyPedManager_Dtor, Game_Dtor |
+| 0x3F154C / 0x3F1574 | Replay_CreateEmptyFile / Replay_TruncateReplayFiles | V | fopen "wb" of "test\replay.rep", "test\replay0.rep" |
+
+The ten 0x3F10B0–0x3F1AFA stubs first named `*_Chunk` are 11.44 patch code-cave hooks; they are now `Patch1144_*` and listed in crt-and-network.md section 4.

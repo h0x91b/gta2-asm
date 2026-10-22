@@ -898,6 +898,51 @@ GXT side (Seq 35, `docs/re/gxt.md`): `DISPLAY_MESSAGE` reads the text id at arg 
 byte at +2 (1 = JOB COMPLETE, 2 = JOB FAILED); 117 shows a big label, 118 / 321 / 279 queue a brief
 at priority 1 / 2 / 3.
 
+## Names added by Seq 47 (slice 3, 0x475A00-0x47FFFF)
+
+Former `FUN_` helpers of the script engine. Confidence: V verified in the decompile with callers,
+M medium (inferred from callers / field use), U `unsure_` (see the comment in Ghidra).
+
+| Address | Name | Conf | Evidence |
+|---|---|---|---|
+| `0x475980`, `0x4759A0`, `0x4759C0` | `WeaponHitRec_HasHit`, `_IsCarWatch`, `_IsPedWatch` | high | flag bits 1/2/4 at +6 of the 8-byte weapon-hit records at MissionScript+0x27C (slice 2) |
+| 0x475A30 / 0x475A40 | `MissionScript_GetKillFrenzyActive` / `_SetKillFrenzyActive` | V | byte `MissionScript+0xC1E2D`; START/DO_BASIC_KF_TEMPLATE |
+| 0x475A50 | `Object_SetExtraByte26Twin` | V | same body as `Object_SetExtraByte26`, kind-10 branch of OBJ_DATA_SET_EXTRA |
+| 0x475A60 / 0x475A70 / 0x475A80 | `Object_IsPrefabKind10` / `Object_IsPrefabKind1` / `Object_IsPrefabKindAnimated` | V | prefab `+0x34` kind tests (kinds {2,4,8,9} for the last) |
+| 0x475AA0 | `Object_IsGangPhoneType` | M | object types 0xB0..0xB5, only caller OBJ_DATA_SET registers a gang phone arrow |
+| 0x475AE0 / 0x475AF0 | `PedGroup_SetMinMembersBeforeSplit` / `Ped_GetGroup` | V | opcode 237; `Ped+0x164` |
+| 0x475B10 / 0x475B20 | `Ped_GetLastCharPunched` / `Ped_IsGroupInCar` | V | `Ped+0x188`; opcode 254 |
+| 0x475B60 | `Player_InvalidateNavZone` | M | `Player+0x3C := 1` on wasted/busted/teleport/warp |
+| 0x475C10 / C30 / C40 / C60 / C80 | `Car_SetLocked` / `Car_SetLockedPermanently` / `Car_SetLockoutThief` / `Car_SetLockoutPlayer` / `Car_SetUnlocked` | V | `Car+0x98` := 1 / 4 / 2 / 5 / 3 = `CAR_LOCK_STATE`; CHANGE_CAR_LOCK cases 1,4,2,5,3 |
+| 0x475CA0 | `SaveGame_CopyMenuPathsToHeader` | V | copies gmp/sty/scr paths into the save header, caller `SaveGame` |
+| 0x475E60 | `Car_IsTrailerAttachedTo` | M | `car+0x64` link `+0xC == other`; IS_TRAILER_ATTACHED |
+| 0x475E90 | `MissionScript_LoadMissionScriptByName` | V | reads the sub-script file or copies the preloaded slot |
+| 0x47ECE0 | `ScriptThread_LaunchMissionByName` | V | loads it, copies name to thread `+0x14`, pushes subroutine call |
+| 0x476230, 0x476270, 0x4762C0..0x4762E0, 0x4762F0..0x476310, 0x476350 | `Car_ClearFlag2`, `Car_AddFlag10`, `Car_AddFlag80`, `Car_AddFlag200`, `Car_AddFlag1000`, `Car_ClearFlag100`, `Car_ClearFlag200`, `Car_ClearFlag400`, `Car_ClearFlag1000` | V | one-line `Car_AddFlags` / `Car_ClearFlags` wrappers, named like the existing `Car_AddFlag100`; callers SET_CAR_PROOF, JAMMED_ACCELERATOR, GIVE_CAR_ALARM, SET_CAR_NO_COLLIDE |
+| 0x476240 / 0x476280 / 0x47F340 | `MissionScript_FindCarEnterThreadEntry` / `_AddCarEnterThreadEntry` / `_StartCarEnterThread` | M | 32-entry wait table for THREAD_WAIT_FOR_CHAR_IN_CAR, started from `Car_OnDriverEnter` |
+| 0x476320 / 0x476370 / 0x47F3B0 | `MissionScript_FindPhoneThreadEntry` / `_AddPhoneThreadEntry` / `_StartPhoneAnswerThread` | M | 20-entry phone wait table at `+0x188`, started from `PedGameObject_TryAnswerPhone` |
+| 0x476360 | `unsure_Car_SetFlag8d_1` | U | `Car+0x8D \|= 1`, paired with `unsure_Car_ClearFlag8d_1` |
+| 0x476400 / 4764D0 / 476530 / 4765A0 | `MissionScript_AddWeaponHitWatch` / `_RemoveWeaponHitWatch` / `_RecordWeaponHit` / `_CheckWeaponHitWatch` | M | 15-entry table at `MissionScript+0x27C` used by CHECK_WEAPON_*_HIT_*; recorded from `Car_OnDamage`, `Ped_OnProjectileHit`, ... |
+| 0x476660 / 0x476680 | `ComboList_GetEntryCount` / `ComboList_DeactivateEntry` | V | `ComboEntry.count` (+0x26) and `ComboEntry_Deactivate` |
+| 0x4766A0 / B0 / C0 | `Player_GetMoneyMultiplier` / `Player_AddMoneyMultiplier` / `Player_GetLives` | V | `AnimatedValue` at `Player+0x6BC` / `+0x684` |
+| 0x476700 / 0x476730 | `Player_IsWastedNotBusted` / `Player_IsBustedTakenAway` | M | state-2 death + objective 0x36; `ScriptThread_MissionFailOnArrest` |
+| 0x4767C0 / 810 / 830 / 880 | `HudArrowTarget_SetPosition` / `_SetObject` / `_Clear`, `HudArrow_ClearTargets` | V | HudArrowTarget kind 1 / 4 / 0 at `+0x10` |
+| 0x4768A0 / 0x4768C0 | `HudBriefQueue_HasBriefOnScreen` / `ScriptTriggerPool_SetEntryState` | V | IS_BRIEF_ONSCREEN; Enable/DisableThread |
+| 0x476900 | `unsure_Crane_SetField78` | U | `Crane+0x78`, CRANE_DATA |
+| 0x476950 / 0x476960 | `Generator_SetObjectType` / `Generator_GetObjectType` | M | `Generator+0`, DECIDE_POWERUP_FOR_CRANE / SWITCH_GENERATOR_* |
+| 0x4769A0 / 0x4769C0 | `unsure_Door_SetStateAndTargetB_Twin1` / `_Twin2` | U | byte-identical to `unsure_Door_SetStateAndTargetB` |
+| 0x476AD0 | `ParkingZone_SetNoRespawn` | V | `ParkingZone+0x3F`, PARK_NO_RESPAWN (0x118) |
+| 0x476B10 | `unsure_Menu_SetField574` | U | save load writes `Menu+0x574` |
+| 0x476B20 / B30 / B80 / 0x47F520 | `unsure_SaveGameHeader_InitSub54` / `InitSubE4` / `InitSub5E4` / `unsure_SaveGameHeader_Ctor` | U | static-init ctor chain of a Fix16/Ang16 aggregate (probably the 0x748-byte save header) |
+| 0x476BC0 | `MissionScript_CleanupMissionEntities` | V | MISSION_HAS_FINISHED: removes the 50 tracked cars / objects / peds |
+| 0x477D00 | `unsure_MissLogStream_Ctor` | U | `ofstream_Ctor`, no callers |
+| 0x47EE70 / 0x47EF10 | `SaveGame_CollectSavedCounters` / `MissionScript_RestoreSavedCounters` | V | commands 0x113 / 0x114 (SAVED_COUNTER, SAVED_COUNTER_SET) <-> 300-slot table |
+| 0x47F4D0 | `ScriptThreadPool_LogActiveThreads` | V | `MissLogCommand` per active thread |
+| 0x4797BB | `Script_Op_GIVE_WEAPON_Frag` | V | tail after 11.44 patch JMP to 0x3F1xxx; Ghidra split of `Script_Op_GIVE_WEAPON` |
+| 0x47AB91 | `Script_Op_CHANGE_GANG_CHAR_RESPECT_Frag` | V | tail after 11.44 patch JMP to 0x3F1xxx; Ghidra split (opcodes 0xE1 / 0x106 / 0x189) |
+| 0x47D615 | `Script_Op_PUT_CAR_ON_TRAILER_Frag` | V | tail after 11.44 patch JMP to 0x3F1xxx; Ghidra split |
+| 0x47E8FC | `Script_Op_DO_BASIC_KF_TEMPLATE_Frag` | V | not a real function: inner block of the handler reached only by its conditional jump at 0x47E8ED (no patch); the handler's decompile already contains it. Boundary fix pending (delete this function in the GUI) |
+
 ## Open questions
 
 - **217 / 219 (lights, variant 1)**: never used in a shipped script. 217 goes to
