@@ -234,6 +234,7 @@ typedef struct SubScript SubScript;
 typedef struct SubScript20k SubScript20k;
 typedef struct SubSubScript SubSubScript;
 typedef struct TextureCache TextureCache;
+typedef struct TextureCacheUserSlot TextureCacheUserSlot;
 typedef struct TextureTable TextureTable;
 typedef struct TrafficLights TrafficLights;
 typedef struct Vec2i Vec2i;
@@ -296,12 +297,7 @@ typedef struct PedGroup PedGroup;
 typedef struct PhysicalPalette PhysicalPalette;
 typedef struct RenderDistanceArrayItem RenderDistanceArrayItem;
 typedef struct RoofSpritesHolder RoofSpritesHolder;
-typedef struct S21 S21;
-typedef struct S24_char S24_char;
-typedef struct S33 S33;
-typedef struct S4_1 S4_1;
 typedef struct S4_2 S4_2;
-typedef struct S4_SUBS1 S4_SUBS1;
 typedef struct SCR_Vector2 SCR_Vector2;
 typedef struct SCR_Vector3 SCR_Vector3;
 typedef struct SDevice SDevice;
@@ -5224,23 +5220,13 @@ struct SubSubScript {
     uint8_t _gap_0x0[0xc00];
 };
 
-// /auto_structs/TextureCache  size 0x15d8
-struct TextureCache {
-    int tileTextures[1024]; /* 0x0 */
-    byte field1_0x1000; /* 0x1000 */
-    byte field2_0x1001; /* 0x1001 */
-    uint8_t _gap_0x1002[0x2];
-    int spriteTextures[48]; /* 0x1004 */
-    uint8_t _gap_0x10c4[0x478];
-    int field1150_0x153c; /* 0x153c */
-    int field1151_0x1540; /* 0x1540 */
-    int scratchTexture; /* 0x1544 */
-    uint8_t _gap_0x1548[0x76];
-    short field1271_0x15be; /* 0x15be */
-    short field1272_0x15c0; /* 0x15c0 */
-    uint8_t _gap_0x15c2[0x12];
-    uint16_t userTextureCount; /* 0x15d4 */
-    uint8_t _gap_0x15d6[0x2];
+// /auto_structs/TextureCacheUserSlot  size 0xc
+// GBH user-sprite texture slot, 96 at TextureCache+0x10C4 (ctor vector_constructor_iterator(+0x10C4, 0xC, 0x60, TextureCacheUserSlot_Init 0x4C2F70) in TextureCache_Ctor 0x4C3190). Was seuko S4_1.
+struct TextureCacheUserSlot {
+    void *pixels; /* 0x0 sprite pixel base (TextureCache_RegisterUserSpriteSlots 0x4C2A00 stores SpriteEntry.ptr); +row*0x100 = gbh texture data ptr (0x4C2BC0) */
+    int texture; /* 0x4 gbh texture handle (gbh_RegisterTexture in 0x4C2A00; gbh_FreeTexture in TextureCache_FreeAll 0x4C2D60) */
+    short unsure_width; /* 0x8 cached value written to texture+0x10 (width field per 0x4C2C80/0x4C2CE0) by TextureCache_SetUserTextureRowAndHeight 0x4C2BC0 */
+    uint16_t row; /* 0xa cached row: texture+0x14 = pixels + row*0x100 (0x4C2BC0) */
 };
 
 // /auto_structs/TextureTable  size 0x14
@@ -5253,6 +5239,21 @@ struct TextureTable {
     int paletteType; /* 0xc */
     byte allocated; /* 0x10 */
     uint8_t _gap_0x11[0x3];
+};
+
+// /auto_structs/TextureCache  size 0x15d8
+// GBH texture cache, global g_TextureCache 0x671978 (seuko S4, memory.h GetS4). 0x15D8 B: 1024 tile textures, 48 car sprite textures, 96 user slots (TextureCacheUserSlot), scratch texture, 7 TextureTables (seuko S4_SUBS1 subs1arr[7]).
+struct TextureCache {
+    int tileTextures[1024]; /* 0x0 */
+    byte carTexturesRegistered; /* 0x1000 set by TextureCache_RegisterSpriteSlotTextures 0x4C2F90; gates freeing spriteTextures in 0x4C2D60 */
+    byte tileTexturesRegistered; /* 0x1001 set by TextureCache_RegisterTileTextures 0x4C3040; gates freeing tileTextures in 0x4C2D60 */
+    uint8_t _gap_0x1002[0x2];
+    int spriteTextures[48]; /* 0x1004 48 car sprite textures (first 32 64x64, rest 128x128) from g_CarSpriteCache, TextureCache_RegisterSpriteSlotTextures 0x4C2F90 */
+    TextureCacheUserSlot userSlots[96]; /* 0x10c4 96 user-sprite slots (HUD digit glyphs etc.), TextureCache_RegisterUserSpriteSlots 0x4C2A00; count in userTextureCount */
+    int scratchTexture; /* 0x1544 */
+    TextureTable textureTables[7]; /* 0x1548 per palette base (TextureCache_GetSpriteTexture 0x4C2AC0, built in 0x4C30A0): [0] SPRITE (all sprites, pal type 2) [1] CAR_REMAP (2,3) [2] PED_REMAP (3,4) [3] CODE_OBJ_REMAP (4,5) [4] MAP_OBJ_REMAP (5,6) [5] FONT_REMAP (7,8) [6] USER_REMAP (6,7) */
+    uint16_t userTextureCount; /* 0x15d4 */
+    uint16_t paletteCount; /* 0x15d6 gbh palettes registered: RegisterStylePalettes 0x4C2970 / FreeStylePalettes 0x4C29C0 */
 };
 
 // /auto_structs/TrafficLights  size 0x194
@@ -6011,46 +6012,10 @@ struct RoofSpritesHolder {
     CarAttachment arr[300]; /* 0x4 */
 };
 
-// /imported/seuko-mod/S21  size 0x59aa3
-struct S21 {
-    Sprite *last; /* 0x0 */
-    uint8_t _gap_0x4[0x59a9e];
-    undefined1 field_0x59aa2; /* 0x59aa2 */
-};
-
-// /imported/seuko-mod/S24_char  size 0xc
-struct S24_char {
-    short PedCapacity; /* 0x0 */
-    byte dummy_chars; /* 0x2 */
-    uint8_t _gap_0x3[0x5];
-    Sprite *position; /* 0x8 */
-};
-
-// /imported/seuko-mod/S33  size 0xd5
-struct S33 {
-    uint8_t _gap_0x0[0xd4];
-    undefined1 field_0xd4; /* 0xd4 */
-};
-
-// /imported/seuko-mod/S4_1  size 0xc
-struct S4_1 {
-    uint8_t _gap_0x0[0xb];
-    undefined1 field_0xb; /* 0xb */
-};
-
 // /imported/seuko-mod/S4_2  size 0x8
 struct S4_2 {
     uint8_t _gap_0x0[0x6];
     short field_0x6; /* 0x6 */
-};
-
-// /imported/seuko-mod/S4_SUBS1  size 0x14
-struct S4_SUBS1 {
-    int field_0x0; /* 0x0 */
-    uint8_t _gap_0x4[0x2];
-    short field_0x6; /* 0x6 */
-    uint8_t _gap_0x8[0xb];
-    undefined1 field_0x13; /* 0x13 */
 };
 
 // /imported/seuko-mod/SDevice  size 0x30

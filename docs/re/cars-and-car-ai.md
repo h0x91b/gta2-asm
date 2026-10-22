@@ -440,7 +440,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x41FA60 | Car_IsInCrusherList | V | wrapper of FUN_0044a3a0 (crusher array, count +0x90, stride 0x30, car at +0x14) |
 | 0x41FAB0 | Car_GetTrailerCabOrSelf | V | Car+0x64 ? (*+0x64)+8 : this |
 | 0x41FAC0 | Car_GetCornerAngle | V | atan2(h/2,w/2) of CarInfo |
-| 0x41FBD0 | Car_AttachGangDecal | V | SpawnObject(KILL_FRENZY+p), attach to sprite(0x50) |
+| 0x41FBD0 | Car_AttachGangDecal | V | ObjectSpawner_SpawnObject(KILL_FRENZY+p), attach to sprite(0x50) |
 | 0x41FC70 | Car_GetTrailerOrSelfBody | V | ctrl ? ctrl->[0xc]->+0x50 : +0x50 |
 | 0x41FC90 | Ang16_RotateXY | V | x'=x cos + y sin, y'=y cos - x sin |
 | 0x41FE40 | Fix16_SwapXYIfDir3or4 | V | swap when 2<p<5 |

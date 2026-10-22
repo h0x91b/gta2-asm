@@ -100,7 +100,7 @@ The actual load sequence is **`LoadGMP_and_STY_Files` (`0x45B469`)**, called fro
    district **sound bank** named after the style (`wil.sty` → `data\audio\wil.sdt/.raw`).
 3. `LoadSty(g_StyleData, GetStyFilePath())`.
 4. `LoadMAP_GMPFile(g_MapBlocks, getGmpPath())`.
-5. `0x489530` on `g_ObjectPrefabsContainer`, `relToGBHGraphic` (`0x4C30A0`) on
+5. `0x489530` on `g_ObjectPrefabsContainer`, `TextureCache_RegisterAllTextures` (`0x4C30A0`) on
    `g_TextureCache` (post-load passes, not traced).
 6. `loadScript(g_MissionScript, GetStyPath2())` — `.scr`.
 7. if the save slot is non-empty: `FUN_0047F0B0(g_MissionScript, save path)` — the save file.
@@ -151,7 +151,7 @@ PALB CARI SPEC (SPEC is always last); `fstyle.sty` = PPAL SPRB FONB PALX SPRG SP
 
 `StyleData` fields not written by any chunk reader: `+0x6A` (byte), `+0x0A` gap — unknown.
 Consumers of the sprite tables (`GetSpriteEntry` `0x4BF280`, `GetSpriteIndex` `0x4BF2A0`,
-`GetCarInfoById` `0x4BF1F0`, `RegisterStylePalettes` `0x4C2970`, `GetSpriteTexture`
+`GetCarInfoById` `0x4BF1F0`, `TextureCache_RegisterStylePalettes` `0x4C2970`, `TextureCache_GetSpriteTexture`
 `0x4C2AC0`) are named in `re/` but were not traced for this map.
 
 ## `.gmp` — map (`LoadMAP_GMPFile`, `0x464990`)
@@ -170,7 +170,7 @@ no UMAP/THSR in any shipped map).
 | DMAP | `0x4646A0` `DMAP_section` | `this+0x000` → new(0x40010) grid object (ctor `0x4630B0` zeroes the tail): `+0x00000` u32 base[256×256] (read 0x40000 B), `+0x40000` u32 column-word count, `+0x40008` → column words, `+0x40004` u32 block count, `+0x4000C` → 12-byte `block_info` array. `MapBlocks+0x358`/`+0x360` = column-word count, `+0x35C` = its capacity (count + 0x400); `+0x34C`/`+0x354` = block count, `+0x350` = capacity (count + 200) | V | limits: count+0x400 ≤ 0x20000 (error `0x467`), count+200 ≤ 0x20000 (`0x469`); asserts chunk size == 0x40008 + 4·columns + 12·blocks (`0x409`). The slack lets the game add blocks/columns at runtime (save games, `FUN_0047F0B0`). Base values stay word offsets, not pointers |
 | ZONE | `0x464640` `ZONE_section` | `this+0x328` = malloc'd raw chunk; `FUN_004644E0` builds `this+0x32C` = `{u16 count, pad, u32 ptr[count]}` pointing at each record | V | record stride = 6 + byte[5] (name length) — matches `{u8 type, x, y, w, h, u8 name_len, name}`. Typed `ushort len` at `+0x32C`, really a pointer |
 | (ZONE post) | `0x464980` `processS11` | `this+0x330` = u8[count] zone → info-slot index; `this+0x334` = (slots+1) × 22-byte records | V (code) / H (meaning) | only zones of type 1, 10, 15 get a slot (same name ⇒ same slot, by `strncmp` of names); each slot initialised to 11 u16 `{500,300,300,100,0,500,50,40,10,200,40}`. **H**: per-navigation-zone car/ped density info that `SET_ZONE_*_INFO` script commands edit (types 1 nav, 10 info, 15 local nav per DMA spec) |
-| MOBJ | `0x464590` `FUN_00464590` | `this+0x338` = malloc'd chunk, `this+0x344` = size/6 | V | asserts size % 6 == 0 (error `0x28`). Consumer `FUN_0046A4D0` (from `startGame` `0x45B5F0`): per record u16 x, u16 y (→ fixed via `0x462ED0`), u8 rotation (`0x462EF0`), u8 object type; `FindMaxZ` for z; `SpawnObject(g_ObjectSpawner, …)`. V |
+| MOBJ | `0x464590` `FUN_00464590` | `this+0x338` = malloc'd chunk, `this+0x344` = size/6 | V | asserts size % 6 == 0 (error `0x28`). Consumer `FUN_0046A4D0` (from `startGame` `0x45B5F0`): per record u16 x, u16 y (→ fixed via `0x462ED0`), u8 rotation (`0x462EF0`), u8 object type; `FindMaxZ` for z; `ObjectSpawner_SpawnObject(g_ObjectSpawner, …)`. V |
 | ANIM | `0x464670` `ANIM_section` | `this+0x340` = malloc'd chunk; `FUN_00464550` walks it | V | stride = 6 + 2·byte[4] ⇒ `{u16 base, u8 frame_rate, u8 repeat, u8 anim_length, u8 pad, u16 tiles[anim_length]}`. Each record → `FUN_004C3470`: allocate from `g_TileAnimPool` (`0x671C0C`, 50 × 0x18 entries) and initialise from the record (`0x4C32A0`, `0x4C32E0`) |
 | LGHT | `0x4645F0` `FUN_004645f0` | `this+0x33C` = malloc'd chunk, `this+0x348` = size/16 | V | asserts size % 16 == 0 (error `0x33`). Consumer `FUN_004692B0` (from `startGame`): per record `+0` u32 colour, `+4/+6/+8` u16 x, y, z, `+0xA` u16 radius, `+0xC` u8 intensity, `+0xD` u8 shape, `+0xE` u8 on-time, `+0xF` u8 off-time → `FUN_00469010(g_LightManager, …)`, and `FUN_00469070` (flicker) when on-time ≠ 0. Field roles from argument order + DMA spec: **H** for the exact names |
 | RGEN | `0x464880` `FUN_00464880` | `g_RoadNetwork` (`0x5D351C`, `RoadNetwork`, 0xCC68 B) via `FUN_0040D250` | V | **ignores the chunk size and reads fixed sizes**: 0x2210 B → `+0x8` (`nodes[545]`, 16 B each), 0x1108 B → `+0xA830`, 0x1108 B → `+0xB938` (545 × 8 B each), u16 → `+0x4`, u16 → `+0xCC62`, u16 → `+0xCC64`; then zeroes `+0x0` (`routeCount`); debug flag `0x5EAD99` dumps the junctions. Total 0x4426 = 17446 = the RGEN size in every shipped map. What the two 545×8 arrays and three u16 are: unknown |

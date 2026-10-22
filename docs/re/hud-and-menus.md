@@ -173,7 +173,7 @@ GXT key ─ Gxt_FindTextW_thunk 0x4C23A0(g_LocaleSettings, "key") ─► wchar_t
  DrawGTAText 0x4CC100(str, x, y, fontId, scale, PALETTE_BASE* pal, remap, invisibility, alpha)  stdcall, ret 0x24
      per u16: '\n' new line, ' ' advance, '#' toggles (pal, remap) ↔ (8, 0);
      else sprite = StyleData_GetFontGlyphSpriteId(font, code − 0x21) → GetSpriteIndex(FONT)
-          → GetSpriteEntry → GetSpriteTexture(g_TextureCache, …) → gbh_DrawQuad
+          → GetSpriteEntry → TextureCache_GetSpriteTexture(g_TextureCache, …) → gbh_DrawQuad
      Kanji fonts take a separate path: KanjiFont_UploadGlyphSmall/Large per code
 ```
 
@@ -284,10 +284,10 @@ HUD font roles (`Font_AssignRolesByLocale` 0x4CA520; Japanese switches to kanji 
 ### 5.1 How a HUD sprite gets drawn
 
 `GetSpriteIndex(style, type, id)` = `spriteBases[type] + id` (type 6 = USER, 7 = FONT) →
-`GetSpriteEntry` (8-byte {ptr, w, h}) → `GetSpriteTexture(g_TextureCache, type, id, pal, remap)`
+`GetSpriteEntry` (8-byte {ptr, w, h}) → `TextureCache_GetSpriteTexture(g_TextureCache, type, id, pal, remap)`
 → `gbh_DrawQuad`. `DrawSprite2D` 0x4CBA50 builds the rotated quad. HUD digits, weapon icons, stars,
 hearts and popup digits are all USER sprites of the style file, so replacing a HUD image means
-patching USER sprite data or overriding `GetSpriteTexture` for type 6.
+patching USER sprite data or overriding `TextureCache_GetSpriteTexture` for type 6.
 
 ## 6. Frontend menu engine (0x452000-0x45A000)
 
@@ -522,7 +522,7 @@ SFXVol seed 0x0B is much lower than the 0x7F default — probably the installer'
 | 0x634 | int[20] | pickupY | +0x50 |
 | 0x684 | int[20] | pickupZ | +0xA0 |
 | 0x6D4 | ushort[20] | pickupType | +0xF0 (`object+0x18`) |
-| 0x6FC | byte[20] | pickupAmmo | +0x118 (FUN_004340a0); FUN_00485640 respawns them with SpawnObject + Pickup_SetAmmo on load |
+| 0x6FC | byte[20] | pickupAmmo | +0x118 (FUN_004340a0); FUN_00485640 respawns them with ObjectSpawner_SpawnObject + Pickup_SetAmmo on load |
 | 0x710 | byte[50] | spawnerState | 12 dwords + 1 word copied from `g_ObjectSpawner+0x20` (→ `DAT_00664ca0`) |
 | 0x744 | uint | menuField574 | `DAT_00664cd4` = `Menu+0x574` (`Menu_GetBonusTokenCount`); restored by FUN_00476b10 |
 

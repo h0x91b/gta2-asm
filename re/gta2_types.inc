@@ -3606,20 +3606,23 @@ endstruc
 ; /auto_structs/TextureCache  (5592 bytes)
 struc TextureCache
     .tileTextures                     resb 4096   ; 0x0 int[1024]
-    .field1_0x1000                    resb 1      ; 0x1000 byte
-    .field2_0x1001                    resb 1      ; 0x1001 byte
+    .carTexturesRegistered            resb 1      ; 0x1000 byte
+    .tileTexturesRegistered           resb 1      ; 0x1001 byte
     resb 2
     .spriteTextures                   resb 192    ; 0x1004 int[48]
-    resb 1144
-    .field1150_0x153c                 resb 4      ; 0x153c int
-    .field1151_0x1540                 resb 4      ; 0x1540 int
+    .userSlots                        resb 1152   ; 0x10c4 TextureCacheUserSlot[96]
     .scratchTexture                   resb 4      ; 0x1544 int
-    resb 118
-    .field1271_0x15be                 resb 2      ; 0x15be short
-    .field1272_0x15c0                 resb 2      ; 0x15c0 short
-    resb 18
+    .textureTables                    resb 140    ; 0x1548 TextureTable[7]
     .userTextureCount                 resb 2      ; 0x15d4 ushort
-    resb 2
+    .paletteCount                     resb 2      ; 0x15d6 ushort
+endstruc
+
+; /auto_structs/TextureCacheUserSlot  (12 bytes)
+struc TextureCacheUserSlot
+    .pixels                           resb 4      ; 0x0 void *
+    .texture                          resb 4      ; 0x4 int
+    .unsure_width                     resb 2      ; 0x8 short
+    .row                              resb 2      ; 0xa ushort
 endstruc
 
 ; /auto_structs/TextureTable  (20 bytes)
@@ -5260,52 +5263,16 @@ struc RoofSpritesHolder
     .arr                              resb 7200   ; 0x4 CarAttachment[300]
 endstruc
 
-; /imported/seuko-mod/S21  (367267 bytes)
-struc S21
-    .last                             resb 4      ; 0x0 Sprite *
-    resb 367262
-    .field_0x59aa2                    resb 1      ; 0x59aa2 undefined1
-endstruc
-
-; /imported/seuko-mod/S24_char  (12 bytes)
-struc S24_char
-    .PedCapacity                      resb 2      ; 0x0 short
-    .dummy_chars                      resb 1      ; 0x2 byte
-    resb 5
-    .position                         resb 4      ; 0x8 Sprite *
-endstruc
-
 ; enum /imported/seuko-mod/S32_SHOW_IMAGINARY  (4 bytes)
 S32_SHOW_IMAGINARY.UNK_0 equ 0
 S32_SHOW_IMAGINARY.SHOW equ 1
 S32_SHOW_IMAGINARY.DONT_SHOW equ 2
 S32_SHOW_IMAGINARY.UNK_3 equ 3
 
-; /imported/seuko-mod/S33  (213 bytes)
-struc S33
-    resb 212
-    .field_0xd4                       resb 1      ; 0xd4 undefined1
-endstruc
-
-; /imported/seuko-mod/S4_1  (12 bytes)
-struc S4_1
-    resb 11
-    .field_0xb                        resb 1      ; 0xb undefined1
-endstruc
-
 ; /imported/seuko-mod/S4_2  (8 bytes)
 struc S4_2
     resb 6
     .field_0x6                        resb 2      ; 0x6 short
-endstruc
-
-; /imported/seuko-mod/S4_SUBS1  (20 bytes)
-struc S4_SUBS1
-    .field_0x0                        resb 4      ; 0x0 int
-    resb 2
-    .field_0x6                        resb 2      ; 0x6 short
-    resb 11
-    .field_0x13                       resb 1      ; 0x13 undefined1
 endstruc
 
 ; /imported/seuko-mod/SCR_Vector2  (8 bytes)

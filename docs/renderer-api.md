@@ -403,7 +403,7 @@ slots `d3ddll_<export>` / `dmavideo_<export>` (not `pgbh_*` / `pVid_*`), `SVideo
 `rendername` / `dmavideo.dll` (now `char[256]`), `GBHGraphicsError`, `InitVideoDll` (=
 LoadDmaVideo), `ApplyGammaAndWindowSize` (= SetVideoMode), `SetFullscreenMode`,
 `SetWindowedMode`, `d3ddll_ConvertColourBank` (function at 0x4caeb0), `d3d` (= BeginFrame2D),
-`SetGamma` / `gamma`, `DrawGTAText` (seuko name, = DrawText2D), `relToGBHGraphic`,
+`SetGamma` / `gamma`, `DrawGTAText` (seuko name, = DrawText2D), `TextureCache_RegisterAllTextures`,
 `eachFrame`, `draw`. `g_GbhStats` is typed `void *` (GbhGlobals is not modelled yet).
 
 | address | kind | proposed name / type |
@@ -444,6 +444,6 @@ LoadDmaVideo), `ApplyGammaAndWindowSize` (= SetVideoMode), `SetFullscreenMode`,
 | `0x4cba50` / `0x4cbdb0` / `0x4cc100` | func | `DrawSprite2D` / `DrawSprite2DAt` / `DrawText2D` (all → `gbh_DrawQuad`) |
 | `0x474110` | func | `DrawFlatRect2D` |
 | `0x4c30a0` | func | `RegisterStyleTextures` |
-| `0x4c2970` / `0x4c29c0` | func | `RegisterStylePalettes` / `FreeStylePalettes` |
+| `0x4c2970` / `0x4c29c0` | func | `TextureCache_RegisterStylePalettes` / `TextureCache_FreeStylePalettes` |
 | `0x45a5a0` / `0x461960` | func | `DrawGameFrame` / `DrawGameFrameAndFlip` |
 | `0x472110` | func | `SetupFrameLighting` |

@@ -433,7 +433,7 @@ guards[6] +0x88, collisionRect +0xA0 from `PoliceRoadblock_Ctor` 0x4ac040).
   count, one pavement/field tile per side is allowed, gives up past 12. Then a collision-box
   check (`CollisionGrid_BoxHitsObstacle`). It does **not** see cars: two calls on
   neighbouring tiles stack up (measured). Then lane by lane: even lanes get a barrier pair
-  (`SpawnObject` OBJECT_TYPE_ROADBLOCK) + a guard (`PoliceManager_SpawnRoadblockGuard` 0x4a9b40:
+  (`ObjectSpawner_SpawnObject` OBJECT_TYPE_ROADBLOCK) + a guard (`PoliceManager_SpawnRoadblockGuard` 0x4a9b40:
   police or FBI only, occupation ROAD_BLOCK_GUARD 37, SPECIAL_AI, GUARD_SPOT, 200 hp,
   REACT_AS_EMERGENCY, needs `emergencyPeds < 30`). Odd lanes get a car (COPCAR / EDSELFBI / TANK
   with a ROAD_BLOCK_TANK_MAN driver; `CarManager_SpawnCarOnGround`, driverClass 4, category

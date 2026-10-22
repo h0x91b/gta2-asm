@@ -189,7 +189,7 @@ in the lobby `netui*` mnemonics.
 remap, int invisibility, byte alpha)`, stdcall, `RET 0x24`. x/y/scale are Fix16 (0x4000 = 1.0),
 in 640×480 virtual units. Per unit: LF/space/`#` as in §5, otherwise sprite id
 `StyleData_GetFontGlyphSpriteId(font, code − 0x21)` = `fontBases[font] + code − 0x21`
-(`SPRITE_TYPE_FONT`), texture via `GetSpriteTexture(…, pal, remap)`, quad of sprite w×h × scale
+(`SPRITE_TYPE_FONT`), texture via `TextureCache_GetSpriteTexture(…, pal, remap)`, quad of sprite w×h × scale
 through `gbh_DrawQuad`; advance = sprite width × scale. **No bounds check, no kerning, no
 clipping, no alignment**: callers centre with `(0x280 − GetGTATextWidth) / 2` (`Text_GetCenteredX`
 0x4521B0). Space width = width of glyph `n` (`StyleData_GetFontSpaceWidth` 0x4BF5D0), line height

@@ -487,7 +487,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x0066c950,g_MssAudioDevice,,USER_DEFINED,.data.exp,,/auto_structs/MssAudio,10008
 0x0066f5dc,g_FloatingScoreManager,,USER_DEFINED,.data.exp,,/FloatingScoreManager *,4
 0x0066fb0c,g_OwnerSlotTable,,USER_DEFINED,.data.exp,,/auto_structs/OwnerSlotTable *,4
-0x0066ff1c,g_SpritePool,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066ff1c,g_SpritePool,,USER_DEFINED,.data.exp,,/auto_structs/SpritePool *,4
 0x0066ff20,g_SpriteBoundsPool,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0066ff24,g_SpriteManager,,USER_DEFINED,.data.exp,,/auto_structs/SpriteManager *,4
 0x0066ff7c,relToSpriteRotation,,USER_DEFINED,.data.exp,,/undefined2,2

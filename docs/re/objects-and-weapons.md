@@ -113,7 +113,7 @@ BIN_LID, …): static, obstacles grid, and a transform into the physics variant 
 ## 3. Lifecycle: spawn, tick, free
 
 **Spawn (verified).** Every creation funnels into `ObjectSpawner_CreateObject` 0x484E00 —
-`SpawnObject` 0x4852E0, `ObjectSpawner_SpawnPhysicsObject`, `_SpawnLightObject`, `_SpawnMovingObject`,
+`ObjectSpawner_SpawnObject` 0x4852E0, `ObjectSpawner_SpawnPhysicsObject`, `_SpawnLightObject`, `_SpawnMovingObject`,
 `_SpawnThrown` 0x485500, `Object_NewWithPedRefIdx`, `Object_NewPhysicsObjUnlessBlocked` (script
 pickups), `SaveGame_RestorePickups` 0x485640 (inverse of `SaveGame_CollectPickups`), and
 `Weapon_SpawnProjectile` 0x4CDA90. It pops a `WorldObject` and a `Sprite`, then by prefab kind
@@ -539,8 +539,8 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x484DD0 | `Object_OnOverlapConveyorBelt` | verified | type 0x8B -> push from byte; type 0x8D && prefab+0x60 -> Object_KillNow; caller Sprite_OnOverlapNotifyImpactEvent |
 | 0x485290 | `ObjectSpawner_SpawnAtXYZAndInsertIntoGrid` | verified | CreateObject + FUN_00482a40(position,xyz) + Object_InsertIntoGrid; callers Door_SpawnObjects, CONVEYOR/DESTRUCTOR_SET |
 | 0x4853C0 | `ObjectSpawner_SpawnCarLightObject` | verified | CreateObject + Light_SetRadiusAndIntensity; only caller Car_AttachRoofLightObject |
-| 0x485640 | `SaveGame_RestorePickups` | verified | loops 20 slots, SpawnObject + Pickup_SetAmmo, zeros 0x12C bytes; caller MissionScript_LoadSaveGame (inverse of SaveGame_CollectPickups) |
-| 0x485ED0 | `ObjectSpawner_SpawnDiagonalCollisionDummies` | verified | 4×SpawnObject(OBJECT_TYPE_UNK_166) stored in param[0..3], called from startGame |
+| 0x485640 | `SaveGame_RestorePickups` | verified | loops 20 slots, ObjectSpawner_SpawnObject + Pickup_SetAmmo, zeros 0x12C bytes; caller MissionScript_LoadSaveGame (inverse of SaveGame_CollectPickups) |
+| 0x485ED0 | `ObjectSpawner_SpawnDiagonalCollisionDummies` | verified | 4×ObjectSpawner_SpawnObject(OBJECT_TYPE_UNK_166) stored in param[0..3], called from startGame |
 | 0x486580 | `Object_ResolveCollisionWithObject` | verified | impulse via CarPhysics_ComputeCollisionImpulse between two objects, ImpactEvent_Dispatch for both |
 | 0x4867E0 | `Object_ResolveCollisionWithPed` | verified | uses Ped_GetX/Y, ped sprite (param_1+0x7c), HandleCarImpact |
 | 0x486950 | `Object_ApplyWallBounceImpulse` | verified | impulse vs wall mass DAT_0066583c, ImpactEvent_Dispatch(this,0) |
