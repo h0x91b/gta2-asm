@@ -41,7 +41,12 @@ int ctl_order_enter(gptr car, int passenger, const char **why);
 int ctl_order_exit(const char **why);
 void ctl_cancel_objective(void);
 int ctl_order_walk(int32_t x, int32_t y, int32_t z, const char **why);   /* experimental */
-void ctl_clear_objective(void);               /* a pending ENTER_CAR, before the door */
+void ctl_clear_objective(void);
+void ctl_autopilot_off(void);
+void ctl_drive_debug(void);
+int ctl_sms(const char *text);
+uint32_t ctl_brief_text(gptr key);
+int ctl_order_drive(int32_t x, int32_t y, int32_t z, const char **why);  /* experimental */               /* a pending ENTER_CAR, before the door */
 
 /* steering: applied by ctl_on_foot after Player_MoveOnFoot every tick */
 enum { STEER_NONE, STEER_GOTO, STEER_FACE };

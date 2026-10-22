@@ -357,6 +357,145 @@ int ctl_order_enter(gptr car, int passenger, const char **why)
 /* Experimental (phase 2): the game's own GO_TO_AREA_ON_FOOT (12) objective toward a point,
  * the way scripts give it: target position (+0x1DC), then PedSetObjective(12, 9999). The ped
  * AI routes there itself (Ped_MoveTowardTarget, docs/re/ped-ai.md). */
+/* Experimental: GO_TO_AREA_IN_CAR (14), what the fire engines and ambulances get:
+ * Ped_Obj1_GoToAreaInCar @0x438C40 gives the car a GO_TO_POINT drive order (follow roads)
+ * and resumes its AI; passed when the drive order arrives (own decompile). */
+uint32_t ctl_autopilot_ticks;           /* hk_CarDriverClass: AI ticks given (debug) */
+uint32_t ctl_autopilot_ped;             /* player_move.asm: hk_CarDriverClass, hk_DriveCar */
+static gptr autopilot_car;
+static uint32_t autopilot_class;
+
+/* Undo drive_to: the drive order freed (CarDriveOrderPool_Free @0x446290, thiscall pool
+ * [0x5E6340]), the AI halted (Car_HaltAI @0x421540), the player's class and controls back. */
+void ctl_autopilot_off(void)
+{
+    if (!autopilot_car)
+        return;
+    Car *car = GP(Car, autopilot_car);
+    if (car->driveOrder && rd32(0x5E6340)) {
+        game_thiscall(0x446290, rd32(0x5E6340), 1, car->driveOrder);
+        car->driveOrder = 0;
+    }
+    if (car->ai) {
+        game_fastcall(0x421540, autopilot_car, 0, 0);     /* Car_HaltAI */
+        game_fastcall(0x4266F0, autopilot_car, 0, 0);     /* Car_FreeAI, as for a player */
+    }
+    car->driverClass = autopilot_class;
+    if (car->physics)
+        GP(CarPhysics, car->physics)->mode = 2;           /* CarPhysics_SetModePlayer */
+    ctl_autopilot_ped = 0;
+    autopilot_car = 0;
+}
+
+/* sms: our own text as a mission brief (the "SMS" with the speaker icon). Hud_Brief_Enqueue
+ * @0x4C6690 (stdcall, ECX = g_HudManager [0x672F40] + 0xE4 briefQueue; priority, key, arg -1)
+ * with the key "ctlsms" and a private priority 4: higher than the game's, so it shows at once,
+ * and ClearAllBriefsWithPriority @0x4C6860 (thiscall, RET 4) drops our previous one.
+ * Hud_Brief_PrepareCurrentText asks Gxt_FindTextW_thunk for the key's text, and hk_BriefText
+ * (player_move.asm) answers it with ctl_brief_text. Text and key live in the low arena: the game reads them.
+ * docs/re/hud-and-menus.md §3.1 */
+#define SMS_MAX 120
+uint32_t heap_alloc(uint32_t size, uint32_t flags) NASM(heap_alloc);   /* w32_core.asm */
+static gptr sms_key, sms_text;
+
+uint32_t ctl_brief_text(gptr key)
+{
+    if (!sms_key || !key || strcmp((const char *)(uintptr_t)key, "ctlsms"))
+        return 0;
+    return sms_text;
+}
+
+int ctl_sms(const char *text)
+{
+    gptr hud = rd32(0x672F40);
+    if (!hud)
+        return 0;
+    if (!sms_key) {
+        sms_key = heap_alloc(8, 0);
+        sms_text = heap_alloc(2 * (SMS_MAX + 1), 0);
+        if (!sms_key || !sms_text)
+            return sms_key = 0, 0;
+        memcpy((char *)(uintptr_t)sms_key, "ctlsms", 7);
+    }
+    /* u16 font codes, not UTF-16: printable ASCII (Seq 27). '#' toggles the highlight colour and
+     * '_' is a blank glyph (gta2ctl's command names): both become '-' */
+    uint16_t *w = (uint16_t *)(uintptr_t)sms_text;
+    int n = 0;
+    for (const unsigned char *t = (const unsigned char *)text; *t && n < SMS_MAX; t++)
+        w[n++] = *t == '#' || *t == '_' ? '-' : *t >= 0x20 && *t < 0x7F ? *t : '?';
+    w[n] = 0;
+    gptr q = hud + 0xE4;
+    game_thiscall(0x4C6860, q, 1, 4u);                    /* ClearAllBriefsWithPriority(4) */
+    game_thiscall(0x4C6690, q, 3, 4u, sms_key, 0xFFFFFFFFu);   /* Enqueue, private priority 4 */
+    return 1;
+}
+
+/* drive_to debug: the AI's state, one line to the game log */
+void ctl_drive_debug(void)
+{
+    if (!autopilot_car)
+        return;
+    Car *car = GP(Car, autopilot_car);
+    CarAI *ai = GP(CarAI, car->ai);
+    CarDriveOrder *o = GP(CarDriveOrder, car->driveOrder);
+    CarPhysics *ph = GP(CarPhysics, car->physics);
+    Sprite *s = GP(Sprite, car->body);
+    printf("ctl: drv f%u pos %.2f,%.2f rot %d | ai fl %06x slot %d step %u unstick %d offr %d stuck %u still %u rev %u obst %x blk %x"
+           " | ord mode %d road %u urg %u arr %u retry %u tgt %.2f,%.2f,%.2f | ph gas %u brk %u st %d spd %d | cls %d aif %02x\n",
+           r_frames, s ? s->x / 16384.0 : 0, s ? s->y / 16384.0 : 0, s ? s->rotation : 0,
+           ai ? ai->flags : 0, ai ? ai->routeSlot : 0, ai ? ai->routeStep : 0,
+           ai ? ai->unsure_unstickState : 0, ai ? ai->offRoadTurn : 0, ai ? ai->stuckTicks : 0,
+           ai ? ai->stillTicks : 0, ai ? ai->reverseTicks : 0, ai ? ai->obstacleHit : 0,
+           ai ? ai->blockingCar : 0, o ? (int)o->mode : -1, o ? o->followRoadActive : 0,
+           o ? o->isUrgent : 0, o ? o->arrived : 0, o ? o->retryCooldown : 0,
+           o ? o->targetX / 16384.0 : 0, o ? o->targetY / 16384.0 : 0, o ? o->targetZ / 16384.0 : 0,
+           ph ? ph->isForwardGasOn : 0, ph ? ph->isBrakeOn : 0, ph ? ph->steering : 0,
+           ai ? ai->targetSpeed : 0, (int)car->driverClass, car->aiFlags);
+}
+
+int ctl_order_drive(int32_t x, int32_t y, int32_t z, const char **why)
+{
+    Ped *ped = ctl_ped();
+    *why = "no player";
+    if (!ped)
+        return 0;
+    *why = "not driving a car";
+    if (!ped->currentCar || GP(Car, ped->currentCar)->driver != (gptr)(uintptr_t)ped)
+        return 0;
+    gptr p = (gptr)(uintptr_t)ped;
+    Car *car = GP(Car, ped->currentCar);
+    /* the AI a player-driven car lost in Car_OnDriverEnter: Car_AllocAI @0x421510
+     * (fastcall car), CarAI_SetParentCar @0x42A9D0 (fastcall ai, edx; car) — Seq 27 */
+    if (!car->ai)
+        game_fastcall(0x421510, ped->currentCar, 0, 0);
+    *why = "no free car AI";
+    if (!car->ai)
+        return 0;
+    game_fastcall(0x42A9D0, car->ai, 0, 1, ped->currentCar);
+    /* CarAI_DriveStep clears the route flag of a PLAYER-class (2) car: MISSION (5) meanwhile */
+    if (car->engineState != 3)                            /* ENGINE_ON: the keys start it, */
+        game_fastcall(0x426E00, ped->currentCar, 0, 0);   /* we skip them: Car_EngineOn */
+    autopilot_car = ped->currentCar;
+    autopilot_class = car->driverClass;
+    car->driverClass = 5;
+    car->aiFlags &= ~3;           /* stale TurnLeft/TurnRight bits from traffic (Seq 27) */
+    /* PLAYER physics mode (2) takes gears from Player_DriveCar, which we skip: AI mode (1),
+     * CarPhysics_SetModeAI @0x4212A0 */
+    if (car->physics)
+        GP(CarPhysics, car->physics)->mode = 1;
+    ctl_autopilot_ped = p;
+    game_fastcall(0x436920, p, 0, 2, 0u, 9999u);          /* Ped_SetTask NO_OBJ */
+    ped->objectiveTargetPosition.x = x;
+    ped->objectiveTargetPosition.y = y;
+    ped->objectiveTargetPosition.z = z;
+    game_fastcall(0x43BBC0, p, 0, 2, 14u, 9999u);         /* PedSetObjective GO_TO_AREA_IN_CAR */
+    ped->objectiveTargetPosition.x = x;
+    ped->objectiveTargetPosition.y = y;
+    ped->objectiveTargetPosition.z = z;
+    *why = "";
+    return 1;
+}
+
 int ctl_order_walk(int32_t x, int32_t y, int32_t z, const char **why)
 {
     Ped *ped = ctl_ped();

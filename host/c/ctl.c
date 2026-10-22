@@ -28,6 +28,8 @@
 #include "ctl.h"
 #include "spawn.h"
 
+extern uint32_t ctl_autopilot_ticks;
+
 /* NASM side (host/c_bridge.asm) */
 struct key_entry { uint16_t scancode; uint8_t dik, vk; uint32_t pad; const char *name; };
 extern const struct key_entry key_table[] NASM(key_table);   /* w32_dinput.asm */
@@ -44,9 +46,13 @@ extern char *r_shot_path NASM(r_shot_path);
 #define STUCK_FRAMES  90
 #define STUCK_GAIN    (int32_t)(0.05 * SCR_ONE)
 #define ENTER_TRIES   3
-#define ENTER_WALK    300               /* frames to reach a door after the order */
+/* drive_to: close enough. The game's own test is the exact tile, and its route ends at a junction
+ * past the goal, so a car often goes by the target in the other carriageway (~3.6 blocks off) */
+#define DRIVE_RADIUS  (int32_t)(4.0 * SCR_ONE)
+#define DRIVE_STUCK_MOVE (int32_t)(0.5 * SCR_ONE)    /* drive_to: moved, so not stuck */
+#define ENTER_WALK    900               /* frames to reach a door after the order */
 
-enum { K_NONE, K_WALK, K_GOTO, K_FACE, K_ENTER, K_EXIT, K_KEY, K_WAIT, K_WAIT_FRAMES };
+enum { K_NONE, K_DRIVE, K_WALK, K_GOTO, K_FACE, K_ENTER, K_EXIT, K_KEY, K_WAIT, K_WAIT_FRAMES };
 enum { PH_APPROACH, PH_ORDER, PH_WAIT };
 enum { OP_EQ, OP_NE, OP_LT, OP_LE, OP_GT, OP_GE };
 
@@ -59,7 +65,8 @@ typedef struct {
     /* goto / enter_car */
     int32_t best;
     uint32_t progress_frame;
-    int phase, tries, by_key, passenger;
+    int32_t moved_x, moved_y;        /* drive_to: where the car was at progress_frame */
+    int phase, tries, by_key, passenger, straight;
     gptr car;
     uint32_t car_id, order_frame;
     /* key */
@@ -305,13 +312,13 @@ static int timeout_arg(const char *s, int def)
 /* ---- commands -------------------------------------------------------------------- */
 
 static const char help_text[] =
-    "ping | state | teleport X Y [Z] | face DEG | goto X Y [TIMEOUT] [--radius=R] | "
-    "walk_to X Y [TIMEOUT] (experimental: the game's own routing) | "
-    "enter_car nearest|ID [TIMEOUT] [--key] [--passenger] | exit_car [TIMEOUT] [--key] | "
+    "ping | state | teleport X Y [Z] | face DEG | goto X Y [TIMEOUT] [--straight [--radius=R]] | "
+    "walk_to X Y (= goto) | drive_to X Y [TIMEOUT] [--debug] | "
+    "enter_car nearest|ID [TIMEOUT] [--straight] [--key] [--passenger] | exit_car [TIMEOUT] [--key] | "
     "key NAME [FRAMES] | keydown NAME | keyup NAME | "
     "spawn car MODEL [REMAP] | spawn ped REMAP [ROLE] [--behave=normal|hostile|follow] | "
     "spawn object TYPE [REMAP] (spawn: [--at=X,Y[,Z]] [--rot=DEG]) | "
-    "wait FIELD OP VALUE [TIMEOUT] | wait frames N | shot PATH | log TEXT | quit | help";
+    "wait FIELD OP VALUE [TIMEOUT] | wait frames N | shot PATH | log TEXT | sms TEXT | sms_echo on|off | quit | help";
 
 static const char *role_names[] = {
     "auto", "civilian", "gang", "cop", "swat", "fbi", "army", "medic", "fireman",
@@ -406,14 +413,17 @@ static void cmd_spawn(client_t *c, int argc, char **argv)
     done(c, &b);
 }
 
+static int sms_echo;                     /* sms_echo on: each command as a brief */
+
 static void start_command(client_t *c, char *line)
 {
     char *argv[MAX_ARGS], *rest = 0, *save;
     int argc = 0;
     jbuf b;
-    char text[sizeof clients[0].in];
+    char text[sizeof clients[0].in], whole[sizeof clients[0].in];
     while (*line == ' ' || *line == '\t')
         line++;
+    snprintf(whole, sizeof whole, "%s", line);
     rest = line + strcspn(line, " \t");    /* the rest of the line, for `log`, untokenised */
     snprintf(text, sizeof text, "%s", rest);
     rest = text;
@@ -425,6 +435,10 @@ static void start_command(client_t *c, char *line)
     c->start = r_frames;
     c->kind = K_NONE;
     Ped *ped = ctl_ped();
+    /* sms_echo: every script step shows up in the game as a brief (polls excepted) */
+    if (sms_echo && ped && strcmp(cmd, "state") && strcmp(cmd, "ping") && strcmp(cmd, "sms") &&
+        strcmp(cmd, "sms_echo"))
+        ctl_sms(whole);
 
     if (!strcmp(cmd, "ping")) {
         begin_ok(&b);
@@ -457,6 +471,45 @@ static void start_command(client_t *c, char *line)
         ctl_steer.heading = ((int)lrint(d * 4) % 1440 + 1440) % 1440;
         c->kind = K_FACE;
         c->deadline = r_frames + 60;
+    } else if (!strcmp(cmd, "walk_to") ||
+               (!strcmp(cmd, "goto") && !flag(argc, argv, "--straight"))) {
+        /* goto / walk_to: the game's own routing (GO_TO_AREA_ON_FOOT) */
+        char *pos[MAX_ARGS];
+        int np = positional(argc, argv, pos);
+        double x, y;
+        int32_t px, py, pz;
+        const char *why;
+        if (np < 3 || !num(pos[1], &x) || !num(pos[2], &y))
+            return reply_error(c, "usage: goto X Y [TIMEOUT_FRAMES] [--straight [--radius=R]]");
+        if (!ctl_pos(&px, &py, &pz) || !ctl_order_walk(f_to_scr(x), f_to_scr(y), pz, &why))
+            return reply_error(c, ped ? why : "not in a game");
+        take_steer(c, STEER_NONE);
+        ctl_steer.tx = f_to_scr(x);
+        ctl_steer.ty = f_to_scr(y);
+        c->kind = K_WALK;
+        c->deadline = r_frames + (uint32_t)timeout_arg(np > 3 ? pos[3] : 0, 3000);
+        c->best = INT32_MAX;
+        c->progress_frame = r_frames;
+        printf("ctl: walk_to %.2f %.2f (GO_TO_AREA_ON_FOOT)\n", x, y);
+    } else if (!strcmp(cmd, "drive_to")) {        /* experimental: the car AI drives */
+        char *pos[MAX_ARGS];
+        int np = positional(argc, argv, pos);
+        double x, y;
+        int32_t px, py, pz;
+        const char *why;
+        if (np < 3 || !num(pos[1], &x) || !num(pos[2], &y))
+            return reply_error(c, "usage: drive_to X Y [TIMEOUT_FRAMES] [--debug]");
+        if (!ctl_pos(&px, &py, &pz) || !ctl_order_drive(f_to_scr(x), f_to_scr(y), pz, &why))
+            return reply_error(c, ped ? why : "not in a game");
+        take_steer(c, STEER_NONE);
+        ctl_steer.tx = f_to_scr(x);
+        ctl_steer.ty = f_to_scr(y);
+        c->kind = K_DRIVE;
+        c->straight = flag(argc, argv, "--debug");
+        c->deadline = r_frames + (uint32_t)timeout_arg(np > 3 ? pos[3] : 0, 5400);
+        c->best = INT32_MAX;
+        c->progress_frame = r_frames;
+        printf("ctl: drive_to %.2f %.2f (GO_TO_AREA_IN_CAR)\n", x, y);
     } else if (!strcmp(cmd, "goto")) {
         char *pos[MAX_ARGS];
         int np = positional(argc, argv, pos);
@@ -474,22 +527,6 @@ static void start_command(client_t *c, char *line)
         c->deadline = r_frames + (uint32_t)timeout_arg(np > 3 ? pos[3] : 0, 1800);
         c->best = INT32_MAX;
         c->progress_frame = r_frames;
-    } else if (!strcmp(cmd, "walk_to")) {         /* experimental: the game's own routing */
-        double x, y;
-        int32_t px, py, pz;
-        const char *why;
-        if (argc < 3 || !num(argv[1], &x) || !num(argv[2], &y))
-            return reply_error(c, "usage: walk_to X Y [TIMEOUT_FRAMES]");
-        if (!ctl_pos(&px, &py, &pz) || !ctl_order_walk(f_to_scr(x), f_to_scr(y), pz, &why))
-            return reply_error(c, ped ? why : "not in a game");
-        take_steer(c, STEER_NONE);
-        ctl_steer.tx = f_to_scr(x);
-        ctl_steer.ty = f_to_scr(y);
-        c->kind = K_WALK;
-        c->deadline = r_frames + (uint32_t)timeout_arg(argc > 3 ? argv[3] : 0, 3000);
-        c->best = INT32_MAX;
-        c->progress_frame = r_frames;
-        printf("ctl: walk_to %.2f %.2f (GO_TO_AREA_ON_FOOT)\n", x, y);
     } else if (!strcmp(cmd, "enter_car")) {
         char *pos[MAX_ARGS];
         int np = positional(argc, argv, pos), id;
@@ -509,8 +546,10 @@ static void start_command(client_t *c, char *line)
         c->by_key = flag(argc, argv, "--key");
         c->passenger = flag(argc, argv, "--passenger");
         c->tries = 0;
-        c->phase = PH_APPROACH;
-        take_steer(c, STEER_GOTO);
+        c->straight = flag(argc, argv, "--straight") || c->by_key;
+        c->phase = PH_APPROACH;         /* default: walk there by the game's routing */
+        c->order_frame = 0;
+        take_steer(c, c->straight ? STEER_GOTO : STEER_NONE);
         ctl_steer.radius = ENTER_RANGE;
         c->kind = K_ENTER;
         c->deadline = r_frames + (uint32_t)timeout_arg(np > 2 ? pos[2] : 0, 1800);
@@ -580,6 +619,22 @@ static void start_command(client_t *c, char *line)
         jb_printf(&b, ",\"path\":");
         jb_str(&b, argv[1]);
         done(c, &b);
+    } else if (!strcmp(cmd, "sms")) {
+        while (rest && (*rest == ' ' || *rest == '\t'))
+            rest++;
+        if (!rest || !*rest)
+            return reply_error(c, "usage: sms TEXT");
+        if (!ped || !ctl_sms(rest))
+            return reply_error(c, "sms: no HUD (not in a game)");
+        begin_ok(&b);
+        done(c, &b);
+    } else if (!strcmp(cmd, "sms_echo")) {
+        if (argc < 2 || (strcmp(argv[1], "on") && strcmp(argv[1], "off")))
+            return reply_error(c, "usage: sms_echo on|off");
+        sms_echo = !strcmp(argv[1], "on");
+        begin_ok(&b);
+        jb_printf(&b, ",\"sms_echo\":%s", sms_echo ? "true" : "false");
+        done(c, &b);
     } else if (!strcmp(cmd, "log")) {
         while (rest && (*rest == ' ' || *rest == '\t'))
             rest++;
@@ -610,6 +665,12 @@ static int cmp(double a, int op, double b)
     case OP_GT: return a > b;
     default:    return a >= b;
     }
+}
+
+static void ctl_drive_stop(void)
+{
+    ctl_clear_objective();
+    ctl_autopilot_off();
 }
 
 /* progress toward ctl_steer's target: 1 = stuck (no gain for STUCK_FRAMES unpaused frames) */
@@ -663,11 +724,22 @@ static void step_enter(client_t *c)
             int32_t x, y, z;
             ctl_pos(&x, &y, &z);
             if (ctl_dist(x, y, s->x, s->y) > ENTER_RANGE) {
-                if (stuck(c))
+                if (!c->straight && (!c->order_frame || r_frames - c->order_frame >= 30)) {
+                    const char *why;                 /* GO_TO_AREA_ON_FOOT, re-aimed at the car */
+                    if (!ctl_order_walk(s->x, s->y, z, &why))
+                        return reply_error(c, why);
+                    c->order_frame = r_frames;
+                }
+                if (stuck(c)) {
+                    if (!c->straight)
+                        ctl_clear_objective();
                     return reply_result(c, 0, "stuck", 0);
+                }
                 return;
             }
         }
+        if (!c->straight)
+            ctl_clear_objective();
         ctl_steer.mode = STEER_NONE;                 /* a move would cancel the enter */
         c->phase = PH_ORDER;
         /* fall through */
@@ -708,7 +780,8 @@ static void step_enter(client_t *c)
         if (++c->tries >= ENTER_TRIES)
             return reply_result(c, 0, ped->objective == 35 ? "no reachable door" : "enter failed", 0);
         c->phase = PH_APPROACH;
-        take_steer(c, STEER_GOTO);
+        c->order_frame = 0;
+        take_steer(c, c->straight ? STEER_GOTO : STEER_NONE);
         ctl_steer.radius = ENTER_RANGE;
         c->best = INT32_MAX;
         c->progress_frame = r_frames;
@@ -752,8 +825,49 @@ static void step(client_t *c)
 {
     ctl_state s;
     jbuf b;
-    char extra[64];
+    char extra[400];
     switch (c->kind) {
+    case K_DRIVE: {
+        Ped *ped = ctl_ped();
+        int32_t x, y, z;
+        if (!ped)
+            return reply_error(c, "player gone");
+        ctl_pos(&x, &y, &z);
+        Car *dc = GP(Car, ped->currentCar);
+        if (c->straight && r_frames % 15 == 0)  /* drive_to --debug */
+            ctl_drive_debug();
+        snprintf(extra, sizeof extra, ",\"objective\":%u,\"status\":%u,\"ai\":%u,\"order\":%u"
+                 ",\"carspeed\":%d,\"slot\":%d,\"tspeed\":%d,\"aiflags\":%u,\"engine\":%u,\"aban\":%u,\"aiticks\":%u,\"pmode\":%u,\"gas\":%u,\"brake\":%u,\"steer\":%d,\"aif\":%u",
+                 ped->objective, ped->objectiveStatus, dc ? dc->ai : 0, dc ? dc->driveOrder : 0,
+                 ped->carSpeed, dc && dc->ai ? (int)rd32(dc->ai + 0x28) : -9,
+                 dc && dc->ai ? (int)rd32(dc->ai + 0x74) : -9, dc ? dc->aiFlags : 0,
+                 dc ? dc->engineState : 0, dc ? dc->isAbandoned : 0, ctl_autopilot_ticks,
+                 dc && dc->physics ? (unsigned)GP(CarPhysics, dc->physics)->mode : 0,
+                 dc && dc->physics ? GP(CarPhysics, dc->physics)->isForwardGasOn : 0,
+                 dc && dc->physics ? GP(CarPhysics, dc->physics)->isBrakeOn : 0,
+                 dc && dc->physics ? GP(CarPhysics, dc->physics)->steering : 0,
+                 dc && dc->ai ? rd32(dc->ai + 0x24) : 0);
+        if (ctl_dist(x, y, ctl_steer.tx, ctl_steer.ty) < DRIVE_RADIUS)
+            return ctl_drive_stop(), reply_result(c, 1, "arrived", extra);
+        if (ped->objective == 14 && ped->objectiveStatus == 1)
+            return ctl_drive_stop(), reply_result(c, 1, "arrived", extra);
+        if (!ped->currentCar)
+            return ctl_drive_stop(), reply_result(c, 0, "out of the car", extra);
+        if (ped->objective != 14 || ped->objectiveStatus == 2)
+            return ctl_drive_stop(), reply_result(c, 0, "objective lost", extra);
+        if ((int32_t)(r_frames - c->deadline) >= 0)
+            return ctl_drive_stop(), reply_result(c, 0, "timeout", extra);
+        /* a route may lead away from the target (one-way streets, blocks around): stuck means
+         * the car has not moved half a block in 10 s, lights and traffic included */
+        if (c->best == INT32_MAX || ctl_dist(x, y, c->moved_x, c->moved_y) > DRIVE_STUCK_MOVE) {
+            c->best = 0;
+            c->moved_x = x;
+            c->moved_y = y;
+            c->progress_frame = r_frames;
+        } else if (r_frames - c->progress_frame > 300)
+            return ctl_drive_stop(), reply_result(c, 0, "stuck", extra);
+        return;
+    }
     case K_WALK: {
         Ped *ped = ctl_ped();
         int32_t x, y, z;
@@ -837,6 +951,8 @@ static void drop(client_t *c)
         ctl_cancel_objective();
     if (c->kind == K_WALK)
         ctl_clear_objective();
+    if (c->kind == K_DRIVE)
+        ctl_drive_stop();
     if (c->kind == K_KEY || (c->up_frame && (c->kind == K_ENTER || c->kind == K_EXIT)))
         input_push_key(c->scancode, 0);
     if (c->up_frame && c->kind == K_ENTER && c->passenger)
