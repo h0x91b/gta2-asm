@@ -324,8 +324,10 @@ int ctl_teleport(int32_t x, int32_t y, int32_t z, int has_z, const char **why)
 /* The enter branch of Player_HandleControls @0x4A76D0 (own decompile), with the car
  * chosen by us instead of Ped_FindEnterableCarInFront: Ped_SetTask(NO_OBJ), then
  * PedSetObjective(ENTER_CAR 35, 9999), Ped_SetObjCar, not as a passenger, door 0. The ped
- * then walks to the door and gets in (or jacks the driver) on its own. */
-int ctl_order_enter(gptr car, const char **why)
+ * then walks to the door and gets in (or jacks the driver) on its own. As a passenger:
+ * the flag 1 and door 1, what SET_CHAR_OBJECTIVE (char, ENTER_CAR_AS_PASSENGER, car) does
+ * plus the front passenger door (docs/passenger.md); the game then never jacks. */
+int ctl_order_enter(gptr car, int passenger, const char **why)
 {
     Ped *ped = ctl_ped();
     *why = "no player";
@@ -337,12 +339,17 @@ int ctl_order_enter(gptr car, const char **why)
     *why = "leaving a car";
     if (ped->objective == 36)
         return 0;
+    /* Car_GetDoorCount @0x41F880 fastcall(Car*): CarInfo.num_doors in al. Doorless
+     * models would send the passenger door search past the door table (Seq 27). */
+    *why = "no passenger door";
+    if (passenger && (game_fastcall(0x41F880, car, 0, 0) & 0xFF) < 2)
+        return 0;
     gptr p = (gptr)(uintptr_t)ped;
     game_fastcall(0x436920, p, 0, 2, 0u, 9999u);          /* Ped_SetTask */
     game_fastcall(0x43BBC0, p, 0, 2, 35u, 9999u);         /* PedSetObjective ENTER_CAR */
     game_thiscall(0x403AA0, p, 1, car);                   /* Ped_SetObjCar */
-    game_thiscall(0x4039B0, p, 1, 0u);                    /* Ped_SetEnterCarAsPassenger */
-    game_thiscall(0x403A70, p, 1, 0u);                    /* Ped_SetTargetCarDoor */
+    game_thiscall(0x4039B0, p, 1, passenger ? 1u : 0u);   /* Ped_SetEnterCarAsPassenger */
+    game_thiscall(0x403A70, p, 1, passenger ? 1u : 0u);   /* Ped_SetTargetCarDoor */
     *why = "";
     return 1;
 }

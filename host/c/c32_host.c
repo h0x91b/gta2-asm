@@ -1,6 +1,7 @@
 /* c32_host.c — the 64-bit side of C32 (docs/c32.md): maps the 32-bit image that
  * the host/c32 sources are linked into, binds its host services, runs its initialisers, and owns
- * the car bonus's config key and K menu row (64-bit host C serving C32 code).
+ * the car bonus's config key and K menu row, and the passenger mod's switch (64-bit host C
+ * serving C32 code).
  *
  * The image (c32.bin, raw, linked at its header's base) is embedded in the loader by
  * host/c32_blob.asm. c32_load runs from _main right after protect_image: the initialisers
@@ -25,6 +26,14 @@ uint32_t new_slot(const char *dll, const char *name, int ordinal) NASM(new_slot)
 
 #define BONUS_DEFAULT 333
 #define BONUS_MAX     1000000
+
+#define DIK_LSHIFT 0x2A
+#define DIK_RSHIFT 0x36
+
+/* w32_dinput.asm: the keyboard state, 0x80 = down */
+extern const uint8_t di_keys[256] NASM(di_keys);
+/* mods.passenger_enter (config.c key table, default on; K menu Mods page) */
+uint8_t mods_passenger_enter;
 
 static struct c32_header *hdr;          /* = the mapped image */
 static uint32_t *bonus;                 /* exported car_bonus (c32/car_bonus.c) */
@@ -89,6 +98,14 @@ uint64_t c32_svc_log(const uint32_t *args)
     return 0;
 }
 
+/* passenger_wanted() (c32/passenger.c, on the enter key only): the mod is on and a Shift
+ * is held, read from the one keyboard state the DirectInput shim keeps */
+uint64_t c32_svc_passenger_wanted(const uint32_t *args)
+{
+    (void)args;
+    return mods_passenger_enter && ((di_keys[DIK_LSHIFT] | di_keys[DIK_RSHIFT]) & 0x80);
+}
+
 /* ---- the car bonus (c32/car_bonus.c): config key and K menu row ----------------------- */
 
 /* config.c, `mods:` section: 0 applied, 1 unknown key, -1 bad value (*msg = why) */
@@ -123,4 +140,18 @@ void c32_carbonus_fmt(char *end)
         snprintf(end, 32, "$%u", *bonus);
     else
         snprintf(end, 32, "off");
+}
+
+/* ---- the passenger mod (c32/passenger.c): K menu row; the config key is in config.c --- */
+
+void c32_passenger_change(void *item, int dir)
+{
+    (void)item;
+    (void)dir;
+    mods_passenger_enter = !mods_passenger_enter;
+}
+
+void c32_passenger_fmt(char *end)
+{
+    snprintf(end, 32, "%s", mods_passenger_enter ? "on" : "off");
 }

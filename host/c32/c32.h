@@ -40,6 +40,7 @@ GAME_FN(int, G2_CDECL, game_vsprintf, 0x4D7FE6, (char *buf, const char *fmt, va_
 
 /* ---- host services: 32-bit stubs into the 64-bit host (c32_host.c) -------------------- */
 void c32_log(const char *fmt, ...);     /* "c32: <text>" on the host's stdout, 511 chars max */
+int c32_passenger_wanted(void);         /* mods.passenger_enter on and a Shift down (passenger.c) */
 
 /* ---- hooks ----------------------------------------------------------------------------
  * Only during C32_INIT: the host makes the game's .text rwx while the initialisers run

@@ -28,6 +28,7 @@ ZOOM_MAX    equ 400
 global reg_key_add, reg_val_find, reg_val_set   ; w32_advapi32.asm: the in-memory registry
 global fail                         ; loader.asm
 global key_table                    ; w32_dinput.asm: key names as in --keys
+global di_keys                      ; w32_dinput.asm: keyboard state (c32_host.c)
 global pm_strafe_on, pm_mouse_on, pm_key_left, pm_key_right, pm_mouse_sens, pm_report
 
 ; mss32 on SDL3 audio (c/audio.c, audio_wav.c); its import table is w32_mss32.asm

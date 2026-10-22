@@ -37,7 +37,7 @@ gptr ctl_car_by_id(uint32_t id);                /* a live car with that id, or 0
 gptr ctl_nearest_car(void);                     /* the nearest car that is not the player's */
 int32_t ctl_dist(int32_t ax, int32_t ay, int32_t bx, int32_t by);   /* SCR_f */
 int ctl_teleport(int32_t x, int32_t y, int32_t z, int has_z, const char **why);
-int ctl_order_enter(gptr car, const char **why);
+int ctl_order_enter(gptr car, int passenger, const char **why);
 int ctl_order_exit(const char **why);
 void ctl_cancel_objective(void);
 int ctl_order_walk(int32_t x, int32_t y, int32_t z, const char **why);   /* experimental */

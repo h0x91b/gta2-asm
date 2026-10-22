@@ -7,8 +7,11 @@ global new_slot                     ; loader.asm, for c32_load's service stubs
 
 extern _c32_load                    ; c/c32_host.c
 extern _c32_svc_log
+extern _c32_svc_passenger_wanted
 extern _c32_carbonus_change
 extern _c32_carbonus_fmt
+extern _c32_passenger_change
+extern _c32_passenger_fmt
 
 section .rodata
 align 16
@@ -22,6 +25,7 @@ align 8
 shimtab_c32:
     dq s_c32
     SHIM "log", 4, _c32_svc_log     ; void __stdcall log(const char *text)
+    SHIM "passenger_wanted", 0, _c32_svc_passenger_wanted  ; int __stdcall (void)
     dq 0
 
 section .rodata

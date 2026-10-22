@@ -10,9 +10,10 @@ extern const struct c32_export c32_exports[], c32_exports_end[];
 static void G2_STDCALL c32_start(void);
 
 /* host services, bound by c32_host.c; the order is the index used below */
-enum { SVC_LOG };
+enum { SVC_LOG, SVC_PASSENGER_WANTED };
 static struct c32_import imports[] = {
     [SVC_LOG] = { (uint32_t)"log", 0 },
+    [SVC_PASSENGER_WANTED] = { (uint32_t)"passenger_wanted", 0 },
 };
 
 __attribute__((section(".c32.head"), used))
@@ -45,6 +46,11 @@ void c32_log(const char *fmt, ...)
     game_vsprintf(buf, fmt, ap);        /* the game's own CRT; no length limit, keep it short */
     va_end(ap);
     ((void (G2_STDCALL *)(const char *))imports[SVC_LOG].slot)(buf);
+}
+
+int c32_passenger_wanted(void)
+{
+    return (int)((uint32_t (G2_STDCALL *)(void))imports[SVC_PASSENGER_WANTED].slot)();
 }
 
 /* ---- hooks ------------------------------------------------------------------------- */

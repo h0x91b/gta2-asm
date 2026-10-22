@@ -72,6 +72,8 @@ static int reports;
 void pm_report(void) NASM(pm_report);
 void pm_report(void) { reports++; }
 
+uint8_t mods_passenger_enter;
+
 static long mods_bonus = -1;
 int c32_cfg_mods(const char *key, const char *val, const char **msg)
 {
@@ -123,6 +125,7 @@ int main(void)
     /* defaults are in place before main */
     CHECK(cam_zoom_cfg == 70 && pm_strafe_on == 1 && pm_mouse_on == 0);
     CHECK(pm_key_left == 0x10 && pm_key_right == 0x12 && pm_mouse_sens == 100);
+    CHECK(mods_passenger_enter == 1);
 
     CHECK(run("# a comment\n"
               "camera:\n"
@@ -136,6 +139,7 @@ int main(void)
               "  mouse_sensitivity: 250\r\n"
               "mods:\n"
               "  car_enter_bonus: 500\n"
+              "  passenger_enter: off\n"
               "debug:\n"
               "  DO_BLOOD: true\n"
               "  show_player_names: off\n"
@@ -145,7 +149,7 @@ int main(void)
               "  rain: whatever\n") == 0);
     CHECK(cam_zoom_cfg == 150 && pm_strafe_on == 0 && pm_mouse_on == 1);
     CHECK(pm_key_left == 0x1E && pm_key_right == 0x2A && pm_mouse_sens == 250);
-    CHECK(mods_bonus == 500 && reports == 1);
+    CHECK(mods_bonus == 500 && reports == 1 && mods_passenger_enter == 0);
     CHECK(debug_val("do_blood", &live) == 1 && live);
     CHECK(debug_val("show_player_names", &live) == 0 && live);   /* by value: dword 0 */
     debug_val("do_show_ids", &live);

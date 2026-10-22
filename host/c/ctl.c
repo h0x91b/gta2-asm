@@ -59,7 +59,7 @@ typedef struct {
     /* goto / enter_car */
     int32_t best;
     uint32_t progress_frame;
-    int phase, tries, by_key;
+    int phase, tries, by_key, passenger;
     gptr car;
     uint32_t car_id, order_frame;
     /* key */
@@ -307,7 +307,7 @@ static int timeout_arg(const char *s, int def)
 static const char help_text[] =
     "ping | state | teleport X Y [Z] | face DEG | goto X Y [TIMEOUT] [--radius=R] | "
     "walk_to X Y [TIMEOUT] (experimental: the game's own routing) | "
-    "enter_car nearest|ID [TIMEOUT] [--key] | exit_car [TIMEOUT] [--key] | "
+    "enter_car nearest|ID [TIMEOUT] [--key] [--passenger] | exit_car [TIMEOUT] [--key] | "
     "key NAME [FRAMES] | keydown NAME | keyup NAME | "
     "spawn car MODEL [REMAP] | spawn ped REMAP [ROLE] [--behave=normal|hostile|follow] | "
     "spawn object TYPE [REMAP] (spawn: [--at=X,Y[,Z]] [--rot=DEG]) | "
@@ -502,11 +502,12 @@ static void start_command(client_t *c, char *line)
         else if (inum(pos[1], &id))
             c->car = ctl_car_by_id((uint32_t)id);
         else
-            return reply_error(c, "usage: enter_car nearest|CAR_ID [TIMEOUT_FRAMES] [--key]");
+            return reply_error(c, "usage: enter_car nearest|CAR_ID [TIMEOUT_FRAMES] [--key] [--passenger]");
         if (!c->car)
             return reply_error(c, "no such car");
         c->car_id = GP(Car, c->car)->id;
         c->by_key = flag(argc, argv, "--key");
+        c->passenger = flag(argc, argv, "--passenger");
         c->tries = 0;
         c->phase = PH_APPROACH;
         take_steer(c, STEER_GOTO);
@@ -673,13 +674,19 @@ static void step_enter(client_t *c)
     case PH_ORDER: {
         const char *why = "";
         if (c->by_key) {
+            /* --passenger: Shift+Enter, the passenger mod's key (c32/passenger.c); LSHIFT
+             * goes down first and up with RETURN */
+            if (c->passenger)
+                input_push_key(key_by_name("LSHIFT")->scancode, 1);
             input_push_key(key_by_name("RETURN")->scancode, 1);
             c->scancode = key_by_name("RETURN")->scancode;
             c->up_frame = r_frames + KEY_HOLD;
-        } else if (!ctl_order_enter(c->car, &why)) {
+        } else if (!ctl_order_enter(c->car, c->passenger, &why)) {
             return reply_error(c, why);
         }
-        printf("ctl: enter_car %u: %s (try %d)\n", c->car_id, c->by_key ? "RETURN" : "ENTER_CAR objective",
+        printf("ctl: enter_car %u: %s%s (try %d)\n", c->car_id,
+               c->by_key ? (c->passenger ? "LSHIFT+" : "") : "",
+               c->by_key ? "RETURN" : c->passenger ? "ENTER_CAR objective, passenger" : "ENTER_CAR objective",
                c->tries + 1);
         c->order_frame = r_frames;
         c->phase = PH_WAIT;
@@ -688,6 +695,8 @@ static void step_enter(client_t *c)
     default:
         if (c->by_key && c->up_frame && r_frames >= c->up_frame) {
             input_push_key(c->scancode, 0);
+            if (c->passenger)
+                input_push_key(key_by_name("LSHIFT")->scancode, 0);
             c->up_frame = 0;
         }
         /* entering: objective ENTER_CAR (35) or state ENTERING_CAR (3); else it was lost.
@@ -830,6 +839,8 @@ static void drop(client_t *c)
         ctl_clear_objective();
     if (c->kind == K_KEY || (c->up_frame && (c->kind == K_ENTER || c->kind == K_EXIT)))
         input_push_key(c->scancode, 0);
+    if (c->up_frame && c->kind == K_ENTER && c->passenger)
+        input_push_key(key_by_name("LSHIFT")->scancode, 0);
     if (steer_owner == c - clients) {
         ctl_steer.mode = STEER_NONE;
         steer_owner = -1;

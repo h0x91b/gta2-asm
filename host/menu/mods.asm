@@ -5,6 +5,8 @@
 section .data
     DM_PAGE  dmp_mods, dmp_root, 125, "Mods"
     DM_ITEM  dmp_mods, 10, DM_VALUE, "Car entry bonus: ", dmv_carbonus  ; c/c32_host.c
+    DM_ITEM  dmp_mods, 20, DM_VALUE, "Passenger: ", dmv_passenger      ; c/c32_host.c
 align 8
 dmv_carbonus: dq _c32_carbonus_change, _c32_carbonus_fmt
+dmv_passenger: dq _c32_passenger_change, _c32_passenger_fmt
 section .text

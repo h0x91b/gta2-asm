@@ -90,7 +90,7 @@ Coordinates are blocks (floats, 1.0 = one map block); headings are degrees, **0 
 | `face DEG` | ≤ 60 frames | on foot; `"result":"facing"` |
 | `goto X Y [TIMEOUT] [--radius=R] [--run]` | default 1800 frames | walks straight at the point (no pathfinding yet); `arrived` (within R, default 0.3), `stuck` (no 0.05-block gain in 90 unpaused frames), `timeout`. On foot only. `--run` is accepted and ignored: the on-foot walker has one speed |
 | `walk_to X Y [TIMEOUT]` | default 3000 frames | **experimental**: gives the player the game's own GO_TO_AREA_ON_FOOT (12) objective, so the ped AI routes there (around walls) instead of walking straight; our steering stays off. `arrived` (within 0.5 or objective passed), `objective lost`, `stuck`, `timeout`. Measured 2026-10-22: start (159.5, 139.5) → road (168.5, 133.5) in ~175 frames along a bent path (north, east, then diagonal — cell waypoints, not a straight line), and back out of the start courtyard in 347 frames |
-| `enter_car nearest\|ID [TIMEOUT] [--key]` | default 1800 frames | walks to within 1.5 blocks of the car (following it if it moves), then gives the game's own enter order; the game walks the ped to a door and gets in, jacking a driver if there is one. `"result":"driver"` / `"passenger"`, `car_id`, `car_model`, `target_car` (false = it ended up in another car). Failures: `stuck`, `no reachable door` (3 tries, 300 frames each), `enter failed`, `car gone`, `timeout`. `--key` presses RETURN instead (the game then picks the car half a block in front) |
+| `enter_car nearest\|ID [TIMEOUT] [--key] [--passenger]` | default 1800 frames | walks to within 1.5 blocks of the car (following it if it moves), then gives the game's own enter order; the game walks the ped to a door and gets in, jacking a driver if there is one. `"result":"driver"` / `"passenger"`, `car_id`, `car_model`, `target_car` (false = it ended up in another car). Failures: `stuck`, `no reachable door` (3 tries, 300 frames each), `enter failed`, `car gone`, `timeout`. `--key` presses RETURN instead (the game then picks the car half a block in front). `--passenger`: get in as a passenger (no jack): the order with the passenger flag and door 1 (`no passenger door` on doorless models), or with `--key` LSHIFT+RETURN, the passenger mod's key ([passenger.md](passenger.md)) |
 | `exit_car [TIMEOUT] [--key]` | default 600 frames | `"result":"on foot"`; refused while the car is too fast to leave (`Car_CanExitCar`, \|v\| ≥ 0.3) |
 | `key NAME [FRAMES]` | FRAMES (default 4) | a tap: down now, up FRAMES later; names as in `--keys` (`RETURN`, `UP`, `LCONTROL`, `A`, …) |
 | `keydown NAME` / `keyup NAME` | | hold / release (e.g. drive: `keydown UP` … `keyup UP`) |
@@ -186,8 +186,9 @@ Game facts used (Seq 27's answers, `docs/re/ped-movement-collision.md`):
   (`controlsDisabled`), or while the ENTER_CAR objective walks the ped to a door.
 - **Entering** is the enter branch of `Player_HandleControls` 0x4A76D0 with our car instead of
   `Ped_FindEnterableCarInFront`: `Ped_SetTask(NO_OBJ)`, `PedSetObjective(ENTER_CAR 35, 9999)`,
-  `Ped_SetObjCar`, not as a passenger, door 0. No key and no focus needed. The player has no
-  passenger key in 11.44: `passenger` only happens through scripts.
+  `Ped_SetObjCar`, not as a passenger, door 0 (`--passenger`: passenger flag 1, door 1). No
+  key and no focus needed. Vanilla 11.44 has no passenger key; the passenger mod adds
+  Shift+Enter ([passenger.md](passenger.md)).
 - **Exiting**: `Car_CanExitCar` 0x4222A0, then `PedSetObjective(LEAVE_CAR 36)` and
   `Ped_SetObjCar`.
 - `Ped.currentCar` is set only when seated; a seated ped has no game object (position from

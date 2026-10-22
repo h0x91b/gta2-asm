@@ -36,8 +36,12 @@ controls:
 # car_enter_bonus: dollars the player gets every time he gets into a car as the driver
 # (an empty car or a jacked one), paid through the game's own money function so the HUD
 # counter rolls up as usual. 0 = off. Also a switch on the debug menu's (K) Mods page.
+# passenger_enter: Shift+Enter on foot gets into the car in front as a passenger, through
+# the game's own passenger path (the one mission scripts use); plain Enter is unchanged.
+# Also a switch on the K menu's Mods page.
 mods:
   car_enter_bonus: 0             # e.g. 333
+  passenger_enter: true
 
 # The game's own debug flags (DMA Design developer switches), read by HiddenDebugFlags
 # (0x451930) from HKCU\SOFTWARE\DMA Design Ltd\GTA2\Debug. A flag is on when its
