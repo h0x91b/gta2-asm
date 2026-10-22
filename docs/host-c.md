@@ -4,10 +4,15 @@ Logic-heavy host code may be written in plain **C99** and linked into the loader
 the NASM. Hooks, thunks, Win32 shims, the loader and the renderer stay in NASM. C here is
 **64-bit host code**, exactly like the NASM it sits next to: it runs on the host stack
 between two stretches of 32-bit game code, may use libc, and reaches the game only through
-its memory and through `call32`. Nothing C-compiled ever runs inside the 32-bit segment.
+its memory and through `call32`. Code that runs *inside* the 32-bit segment is the other C
+flavour, C32 (`host/c32/`, `docs/c32.md`).
 
-Pilot (Seq 53, 2026-10-22): `host/c/car_bonus.c`, a mod that pays the player money every
-time they get into a car as the driver (see "Worked example" below).
+Which one: **game logic** — mods, detours into game functions, anything that mostly reads
+game structs and calls game functions — is C32. **Host features** — the K menu, config,
+SDL, logs, the C32 loader itself — are 64-bit host C (this page). Pilots: Seq 53 (host C)
+and Seq 54 (C32), 2026-10-22, the same car-entry mod in both; the mod now lives in C32
+(`host/c32/car_bonus.c`), its config key and K menu row here (`host/c/c32_host.c`, see
+"Worked example").
 
 ## Build
 
@@ -25,7 +30,7 @@ clang -arch x86_64 -std=c99 -O2 -Wall -Wextra -Werror -mmacosx-version-min=26.0 
 dependencies: the loader already links libSystem, so libc is there. `-no_pie` with
 clang's PIC objects is fine (they only use RIP-relative addressing).
 
-Check that a module is in the link: `nm -m host/loader | grep c_on_driver_enter`.
+Check that a module is in the link: `nm -m host/loader | grep c32_load`.
 
 ## Adding a module
 
@@ -48,11 +53,13 @@ plain `call`: integer arguments in `rdi, rsi, rdx, rcx, r8, r9`, return in `eax`
 (`rdx:rax` for 64 bits). The callee may clobber `rax, rcx, rdx, rsi, rdi, r8-r11` and keeps
 `rbx, rbp, r12-r15` — which is why the handler below keeps its values in `r12-r14`.
 
+The pattern, as the Seq 53 pilot used it (a `CALLHOOK 0x43F279` on `Car_OnDriverEnter`;
+the mod itself has since moved to C32, which hooks without any NASM):
+
 ```nasm
 ; host/c_bridge.asm
 extern _c_on_driver_enter
 
-; host/mods.asm — CALLHOOK 0x43F279 on Car_OnDriverEnter(Car* this, Ped*)
 hk_DriverEnter:
     HENTER
     mov r12d, [abs G_ECX]           ; Car* (G_ECX: read before any call32)
@@ -73,20 +80,22 @@ hk_DriverEnter:
 ```
 
 ```c
-/* host/c/car_bonus.c */
 void c_on_driver_enter(gptr car, gptr ped, gptr site);
 ```
+
+In the tree today `_main` calls `_c32_load` (`host/c/c32_host.c`) and `config_apply` calls
+`_c32_cfg_mods` the same way.
 
 A C function can also *be* the handler or a table entry directly when its contract is
 SysV already: the K menu's `DM_VALUE` pair `{change(esi = dir), fmt(rdi = text end)}` is
 called with an aligned stack, so `host/menu/mods.asm` points it straight at C:
 
 ```nasm
-dmv_carbonus: dq _c_carbonus_change, _c_carbonus_fmt
+dmv_carbonus: dq _c32_carbonus_change, _c32_carbonus_fmt
 ```
 ```c
-void c_carbonus_change(void *item, int dir);   /* esi = dir is the 2nd SysV argument */
-void c_carbonus_fmt(char *end);                /* rdi */
+void c32_carbonus_change(void *item, int dir);   /* esi = dir is the 2nd SysV argument */
+void c32_carbonus_fmt(char *end);                /* rdi */
 ```
 
 ### C → game (C calls a 32-bit game function)
@@ -132,9 +141,9 @@ nests, so a C function called from a hook may call the game again; read `G_EAX/G
 Shared globals are ordinary symbols:
 
 - NASM → C: `global r_frames` (c_bridge.asm), then `extern uint32_t r_frames NASM(r_frames);`
-  (game.h). Used by car_bonus.c for its debounce.
-- C → NASM: a C global `int32_t car_bonus_amount;` is `_car_bonus_amount` to NASM
-  (`extern _car_bonus_amount`, `mov eax, [rel _car_bonus_amount]`).
+  (game.h); `global new_slot` / `c32_blob` (c32_blob.asm) the same way for `c32_host.c`.
+- C → NASM: a C global `int32_t amount;` is `_amount` to NASM
+  (`extern _amount`, `mov eax, [rel _amount]`).
 
 ## Game structs in C
 
@@ -180,27 +189,21 @@ which is always the case on the host side (the game is stopped while host code r
 - **No headers shared with NASM**: NASM uses `re/gta2_types.inc`, C `re/gta2_types_c64.h`,
   both generated from the same export, so offsets agree.
 
-## Worked example: `+$333` on every car entry
+## Worked example: `host/c/c32_host.c`
 
-- Seam: `Car_OnDriverEnter(Car* this, Ped*)` `0x427A20`, thiscall, ret 4 — the game's own
-  "this ped is now the driver" step (it shows the car's name, hands over the player's car
-  weapons via `Player_OnEnterCarWeapons` `0x4A5570`, stores `Car.lastPlayerDriverId`).
-  Call-hooked at `0x43F279` in `Ped_UpdatePosition` (`0x43F180`), the end of every
-  enter-car animation, taken when `Ped.enterCarAsPassenger` (+0x248) is 0 — the same path
-  for an empty car and a jacked one. Its only other caller, `0x4A63A3` in
-  `Player_TakeControlOfCar` (`0x4A6350`), is remote control of a car, not an entry, so it is
-  not hooked. Own disassembly, confirmed by Seq 27 in Ghidra; names from `re/functions.csv`.
-  Not covered: a script that puts the player straight into a car may set the driver without
-  `Car_OnDriverEnter` (Seq 27, unchecked).
-- Checks (C): the ped is the current player's (`Game->currentPlayer` → `Player->ped`, and
-  `Ped->player` → the same Player), the car's `driver` (+0x54) is that ped, and the same
-  car again within 30 frames is ignored (one entry = one bonus).
-- Money: `ChangeMoney` `0x421990` (exact amount; `GiveMoney` `0x41DC40` would multiply it by
-  the player's score multiplier), so the HUD counter rolls up as for any reward.
-- Switch: `mods: car_enter_bonus: N` in config.yaml (0 = off, the default), and the K menu's
-  Mods page (`host/menu/mods.asm`, any key toggles). Log line:
-  `mods: car_enter_bonus +$333: car 59 (model 3) via 0x43f279, money 0 -> 333, frame 652`.
+The host side of C32, i.e. everything about a C32 mod that is not game logic:
 
-Try it: put `mods:` / `  car_enter_bonus: 333` in
+- **Loader** (`c32_load`, called from `_main`): checks the image header, `mmap`s it at its
+  link address (hint, verified), binds its host services with `new_slot("c32", name)`,
+  `call32`s its initialisers with `.text` temporarily `rwx` (`docs/c32.md`).
+- **Host services** (`c32_svc_log`): import handlers, `uint64_t f(const uint32_t *args)`,
+  listed in `shimtab_c32` (`host/c32_blob.asm`).
+- **Config key** (`c32_cfg_mods`, from `config_apply`'s `mods:` section): parses
+  `mods: car_enter_bonus: N` with `strtol` and writes the C32 global the image exports
+  (`C32_EXPORT(car_bonus)`), found by name — the image is mapped 1:1, so it is a plain store.
+- **K menu row** (`c32_carbonus_change` / `c32_carbonus_fmt`): the Mods page's value row,
+  pointed at C directly (above).
+
+Try the mod: put `mods:` / `  car_enter_bonus: 333` in
 `~/Library/Application Support/gta2-resurrected/config.yaml` (or `--config=PATH`), run
-`host/build.sh --load --entry`, PLAY, walk to a car, RETURN.
+`host/build.sh --load --entry`, PLAY, walk to a car, RETURN; or K → Mods → Car entry bonus.

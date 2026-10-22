@@ -24,5 +24,6 @@ shim_tables:
     dq shimtab_gta2
     dq shimtab_dmavideo
     dq shimtab_d3ddll
+    dq shimtab_c32                  ; c32_blob.asm: C32 host services
     dq 0
 section .text

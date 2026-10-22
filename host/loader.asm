@@ -980,6 +980,7 @@ _main:
     call patch_imports
     call install_hooks
     call protect_image
+    call _c32_load                  ; C32 image (docs/c32.md), patches .text in its init
     call setup_kernel32
     call setup_user32
     call setup_renderer
@@ -1167,6 +1168,7 @@ hold:        db 0                   ; --hold: keep the SDL window up 5 s when we
 section .text
 %include "w32_core.asm"
 %include "c_bridge.asm"            ; symbols shared with host/c/*.c
+%include "c32_blob.asm"            ; the C32 image + its host services
 %include "w32_kernel32.asm"
 %include "w32_files.asm"
 %include "w32_vfs.asm"
@@ -1182,7 +1184,6 @@ section .text
 %include "debug_paths.asm"
 %include "debug_roads.asm"
 %include "player_move.asm"
-%include "mods.asm"
 %include "debug_roadblocks.asm"
 %include "debug_emergency.asm"
 %include "w32_renderer.asm"

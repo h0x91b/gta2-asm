@@ -397,7 +397,6 @@ hooks:
     CALLHOOK 0x4A7901, "MoveOnFoot", 0x4A5C50           ; player_move.asm
     JMPHOOK 0x49AC76, "WalkHeading", {0x8A,0x44,0x24,0x11, 0x84,0xC0}   ; player_move.asm
     CALLHOOK 0x432678, "CarAIFollowRoute", 0x430320     ; debug_emergency.asm
-    CALLHOOK 0x43F279, "DriverEnter", 0x427A20          ; mods.asm (c/car_bonus.c)
     dq 0
 
 shimtab_gta2:
@@ -411,7 +410,6 @@ shimtab_gta2:
     SHIM "MoveOnFoot", 4, hk_MoveOnFoot
     SHIM "WalkHeading", 4, hk_WalkHeading
     SHIM "CarAIFollowRoute", 0, hk_FollowRoute
-    SHIM "DriverEnter", 4, hk_DriverEnter
     dq 0
 
 hook_kinds: dq s_hk_entry, s_hk_call, s_hk_jmp, s_hk_patch

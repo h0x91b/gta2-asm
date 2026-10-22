@@ -30,6 +30,22 @@ rm -f host main.o loader loader.o c/*.o
 for f in menu/*.asm; do printf '%%include "%s"\n' "$f"; done > menu_modules.inc
 nasm -f macho64 ${NASMFLAGS:-} -o main.o main.asm
 link host main.o -L"$SDL3_PREFIX/lib" -lSDL3 -rpath "$SDL3_PREFIX/lib"
+# C32 (docs/c32.md): host/c32/*.c is i386 code that runs inside the game's 32-bit segment.
+# Linked by ld.lld (Apple ld has no i386) into one flat image, c32/c32.bin, which
+# loader.asm embeds (c32_blob.asm); c32/c32.map lists its symbols.
+LLD="${LLD:-$(command -v ld.lld || echo /opt/homebrew/bin/ld.lld)}"
+[ -x "$LLD" ] || { echo "no ld.lld (brew install lld)" >&2; exit 1; }
+C32FLAGS="-target i386-pc-none-elf -march=i686 -std=c99 -ffreestanding -fno-pic \
+  -fno-stack-protector -fno-asynchronous-unwind-tables -mno-sse -mno-mmx \
+  -mstack-alignment=4 -freg-struct-return -O2 -Wall -Wextra -Werror ${C32FLAGS_EXTRA:-}"
+rm -f c32/*.o c32/c32.elf c32/c32.bin c32/c32.map
+c32objs=
+for f in c32/*.c; do
+  "$(xcrun -f clang)" $C32FLAGS -c -o "${f%.c}.o" "$f"
+  c32objs="$c32objs ${f%.c}.o"
+done
+"$LLD" -m elf_i386 -T c32/c32.ld -Map c32/c32.map -o c32/c32.elf $c32objs
+"$LLD" -m elf_i386 -T c32/c32.ld --oformat binary -o c32/c32.bin $c32objs
 nasm -f macho64 ${NASMFLAGS:-} -I. -o loader.o loader.asm
 # Host C modules (docs/host-c.md): every c/*.c is compiled and linked into the loader,
 # 64-bit host code like the NASM around it. Same target as the link (minos 26.0, SDK).

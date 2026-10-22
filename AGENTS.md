@@ -37,6 +37,10 @@ point jumps to `0x56DCDA`, past VirtualSize end `0x56DBC0`).
 
 - **Host**: an x86-64 Mach-O built from NASM (`-f macho64`) plus C99 host modules
   (`host/c/*.c`, clang, `docs/host-c.md`), running under **Rosetta 2** on Apple Silicon.
+- **C32**: i386 C99 (`host/c32/*.c`, clang + `ld.lld`) linked into a flat image at
+  `0x0F000000`, mapped by the loader and run inside the game's own 32-bit segment: real
+  `gta2_types.h` pointers, direct game calls, hooks that jump straight into C
+  (`docs/c32.md`).
 - **Image**: the host maps `gta2.exe` sections at the PE's preferred base
   (`0x3F0000`, see below) with `mmap(MAP_FIXED)`, then resolves its import table to
   our own shims.
@@ -239,6 +243,7 @@ MacOSX 26.2 SDK, Apple clang 17.0.0.
 | lldb | ✅ lldb-1703 | Debugging x86_64 processes under Rosetta works through Rosetta's debugserver. 32-bit LDT code segments are untested; expect lldb to mis-disassemble them (it assumes 64-bit mode). Plan to need `disassemble --arch i386 -s <addr>` or a manual memory dump. |
 | SDL3 (x86_64) | ✅ 3.4.14 at **`~/.local/opt/sdl3-x86_64`** (`include/`, `lib/libSDL3.dylib`) | Built from source in `~/.local/src/SDL-x86` (tag `release-3.4.14`), `minos 26.0`. Install name is `@rpath/libSDL3.0.dylib`: `host` links it with `-rpath`; `loader` dlopens `lib/libSDL3.0.dylib` (see `host/build.sh`). Do not modify that prefix. Homebrew's `sdl3`/`sdl2-compat` under `/opt/homebrew` are arm64-only and unusable from a Rosetta host; x86_64 Homebrew refuses to install on Apple Silicon. |
 | Ghidra | ✅ 12.1.4 (Homebrew formula `ghidra`) | `ghidraRun` on `PATH`; headless at `/opt/homebrew/opt/ghidra/libexec/support/analyzeHeadless`. Uses JDK 21 (`/opt/homebrew/opt/openjdk@21`). |
+| ld.lld (i386 linker) | ✅ LLD 23.1.4 (Homebrew formula `lld`, `/opt/homebrew/bin/ld.lld`) | **Required to build** (`brew install lld`): links the C32 image (`host/c32/`, `docs/c32.md`), Apple `ld` cannot link i386. Agents may install it into the arm64 Homebrew; `host/build.sh` stops with a hint without it, `LLD=` overrides the path. |
 | cmake / ninja / pkg-config | ✅ (arm64 Homebrew) | They run natively and can still drive an x86_64 build via `CMAKE_OSX_ARCHITECTURES=x86_64`. |
 
 ### Required link flags for the host (verified)
@@ -320,9 +325,9 @@ the assembly side.
 - Addresses are always virtual addresses for ImageBase `0x3F0000` (11.44). Cite
   where an address came from (seuko-mod file, Ghidra, own analysis) when you add
   one to the code.
-- **Logic-heavy host code may be C99** (`host/c/`, how-to and ABI glue: `docs/host-c.md`);
-  hooks, thunks, Win32 shims, the loader and the renderer stay NASM. C is 64-bit host code
-  only: it reaches the game through memory accessors and `call32`, never runs in the
-  32-bit segment, and game pointers in it are `uint32_t` (`gptr`).
+- **Where code goes.** Game logic (mods, detours into game functions) is **C32**: i386 C99
+  in `host/c32/`, run inside the game's segment (`docs/c32.md`). Host features (K menu,
+  config, SDL, logs) are **64-bit host C** in `host/c/`, game pointers as `uint32_t`
+  (`docs/host-c.md`). Hooks, thunks, Win32 shims, the loader and the renderer stay NASM.
 - Keep the execution model above in sync with what the spike proves. If it changes,
   update this file in the same change.

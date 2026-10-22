@@ -31,8 +31,8 @@
 ;          shows the same part of the city as 640x480, only magnified (measured), so
 ;          auto = 640 / window width keeps the original 640x480 pixel scale at any size.
 ;          Without the key it is ZOOM_DEFAULT (70%); `zoom: 100` is the vanilla view.
-;   mods   gameplay mods written in C (host/c/, docs/host-c.md), parsed by c_cfg_mods
-;          (c/car_bonus.c): car_enter_bonus (dollars per car entry, 0 = off).
+;   mods   gameplay mods (C32, docs/c32.md), parsed by c32_cfg_mods (c/c32_host.c):
+;          car_enter_bonus (dollars per car entry, 0 = off).
 
 CFG_LINE    equ 1024
 CFG_PATH    equ 1024
@@ -273,11 +273,11 @@ config_apply:
 .err_controls:
     mov r9, rdx
     jmp .err
-.mods:                              ; mods.*: host C modules (c/car_bonus.c)
+.mods:                              ; mods.*: C32 mods (c/c32_host.c)
     mov rdi, rbx
     mov rsi, [cfg_val]
     lea rdx, [cfg_cmsg]
-    call _c_cfg_mods
+    call _c32_cfg_mods
     test eax, eax
     jz .counted
     js .err_mods
@@ -618,7 +618,7 @@ alignb 8
 cfg_val:      resq 1
 cfg_nset:     resd 1
 cfg_end:      resq 1
-cfg_cmsg:     resq 1                ; c_cfg_mods: why a value was refused
+cfg_cmsg:     resq 1                ; c32_cfg_mods: why a value was refused
 cfg_dword:    resd 1
 cfg_abs:      resb CFG_PATH
 cfg_line:     resb CFG_LINE

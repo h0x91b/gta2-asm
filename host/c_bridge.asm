@@ -10,7 +10,3 @@
 global call32                       ; loader.asm: C -> 32-bit game code (game.h)
 global r_frames                     ; w32_renderer.asm: presented frames
 
-extern _c_on_driver_enter           ; c/car_bonus.c
-extern _c_cfg_mods
-extern _c_carbonus_change
-extern _c_carbonus_fmt

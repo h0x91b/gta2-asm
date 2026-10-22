@@ -4,3 +4,7 @@ loader.o
 loader
 menu_modules.inc
 c/*.o
+c32/*.o
+c32/c32.elf
+c32/c32.bin
+c32/c32.map
