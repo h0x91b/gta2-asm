@@ -1475,11 +1475,69 @@ dm_call_car:
     add rsp, 8
     ret
 
+; eax = dm_spawn_pos(rdi = out dd[4]: SCR_f x, y, z, rotation; esi = distance, SCR_f): that
+; far in front of the player on foot, facing the same way (Ped +0x168 PedGameObject, +0x80 Sprite: +0
+; rotation, +0x14 / +0x18 / +0x1c x, y, z). eax = the player's Sprite*, or 0 and
+; rdx = why not (a toast string: no player, in a car). Shared by the spawner pages.
+dm_spawn_pos:
+    push rbx
+    push r12
+    sub rsp, 24
+    mov r12, rdi
+    mov [rsp + 8], esi
+    lea r8, [s_dm_noplayer2]
+    call dm_player_ped
+    test eax, eax
+    jz .no
+    lea r8, [s_dm_incar]
+    cmp dword [rax + PED_CAR], 0
+    jne .no
+    lea r8, [s_dm_nospawn]
+    mov eax, [rax + PED_GAMEOBJ]
+    test eax, eax
+    jz .no
+    mov ebx, [rax + 0x80]           ; Sprite*
+    test ebx, ebx
+    jz .no
+    ; offset = distance * (sx * sin a, sy * cos a), a = rotation * 2pi / 1440
+    movzx eax, word [rbx]
+    mov [rsp], eax
+    fild dword [rsp]
+    fmul qword [f_dm_rot2rad]
+    fsincos                         ; st0 = cos, st1 = sin
+    fimul dword [rsp + 8]
+    fistp dword [rsp]               ; cos * d
+    fimul dword [rsp + 8]
+    fistp dword [rsp + 4]           ; sin * d
+    mov eax, [rbx + 0x14]
+    mov ecx, [rbx + 0x18]
+    mov edx, [dm_spawn_sx]
+    imul edx, [rsp + 4]
+    add eax, edx
+    mov edx, [dm_spawn_sy]
+    imul edx, [rsp]
+    add ecx, edx
+    mov [r12], eax                  ; x
+    mov [r12 + 4], ecx              ; y
+    mov eax, [rbx + 0x1c]
+    mov [r12 + 8], eax              ; z
+    movzx eax, word [rbx]
+    mov [r12 + 12], eax             ; rotation
+    mov eax, ebx
+    jmp .out
+.no:
+    xor eax, eax
+    mov rdx, r8
+.out:
+    add rsp, 24
+    pop r12
+    pop rbx
+    ret
+
 ; dm_spawn_car: SpawnCar @0x426AC0, fastcall(TrafficManager* ecx = [0x5E4CA4], edx = 0;
 ; SCR_f x, y, z, int rotation, CAR_MODEL4 model, int scale = [0x5E4D4C]) -> Car*, at
-; DM_SPAWN_DIST in front of the player, facing the same way (the player's sprite:
-; Ped +0x168 PedGameObject, +0x80 Sprite); the model is dm_spawnable[dm_model]. Refused in
-; a car. eax = the Car*, or 0.
+; dm_spawn_pos; the model is dm_spawnable[dm_model]. Refused in a car. eax = the Car*,
+; or 0.
 ; From gta2-seuko-mod by izawartka (https://github.com/izawartka/gta2-seuko-mod),
 ; src/game/functions.h, memory.h, src/modules/modmenu/utils/spawn-car.cpp @25b1985 —
 ; SpawnCar 0x426AC0, TrafficManager 0x5E4CA4, CarsScale 0x5E4D4C.
@@ -1490,47 +1548,17 @@ dm_spawn_car:
     push r13
     sub rsp, 32
     mov dword [dm_spawned], 0
-    lea r13, [s_dm_noplayer2]
-    call dm_player_ped
+    mov rdi, rsp                    ; x, y, z, rotation
+    mov esi, DM_SPAWN_DIST
+    call dm_spawn_pos
+    mov r13, rdx
     test eax, eax
     jz .toast
-    lea r13, [s_dm_incar]
-    cmp dword [rax + PED_CAR], 0
-    jne .toast
+    mov ebx, eax                    ; the player's Sprite*
     lea r13, [s_dm_nospawn]
-    mov eax, [rax + PED_GAMEOBJ]
-    test eax, eax
-    jz .toast
-    mov ebx, [rax + 0x80]           ; Sprite*
-    test ebx, ebx
-    jz .toast
     mov r12d, [abs 0x5E4CA4]        ; TrafficManager*
     test r12d, r12d
     jz .toast
-    ; offset = DM_SPAWN_DIST * (sx * sin a, sy * cos a), a = rotation * 2pi / 1440
-    movzx eax, word [rbx]
-    mov [rsp + 24], eax
-    fild dword [rsp + 24]
-    fmul qword [f_dm_rot2rad]
-    fsincos                         ; st0 = cos, st1 = sin
-    fimul dword [i_dm_spawn_dist]
-    fistp dword [rsp + 24]          ; cos * d
-    fimul dword [i_dm_spawn_dist]
-    fistp dword [rsp + 28]          ; sin * d
-    mov eax, [rbx + 0x14]
-    mov ecx, [rbx + 0x18]
-    mov edx, [dm_spawn_sx]
-    imul edx, [rsp + 28]
-    add eax, edx
-    mov edx, [dm_spawn_sy]
-    imul edx, [rsp + 24]
-    add ecx, edx
-    mov [rsp], eax                  ; x
-    mov [rsp + 4], ecx              ; y
-    mov eax, [rbx + 0x1c]
-    mov [rsp + 8], eax              ; z
-    movzx eax, word [rbx]
-    mov [rsp + 12], eax             ; rotation
     mov eax, [dm_model]
     lea rcx, [dm_spawnable]
     movzx eax, byte [rcx + rax]
@@ -1574,61 +1602,6 @@ dm_spawn_car:
     pop rbx
     ret
 
-; eax = dm_spawn_point(rdi = out dd x, y, z, rotation; esi = distance, SCR_f): the point that
-; far in front of the player on foot, with the player's z and rotation, by the same math as
-; dm_spawn_car; for spawners of things other than cars. eax = 0 (and rdx = the reason, a
-; toast string) without a player, in a car or without a body sprite.
-dm_spawn_point:
-    push rbx
-    push r12
-    sub rsp, 24
-    mov r12, rdi
-    mov [rsp + 8], esi
-    lea rdx, [s_dm_noplayer2]
-    call dm_player_ped
-    test eax, eax
-    jz .fail
-    lea rdx, [s_dm_incar]
-    cmp dword [rax + PED_CAR], 0
-    jne .fail
-    lea rdx, [s_dm_nospawn]
-    mov eax, [rax + PED_GAMEOBJ]
-    test eax, eax
-    jz .fail
-    mov ebx, [rax + 0x80]           ; Sprite*
-    test ebx, ebx
-    jz .fail
-    movzx eax, word [rbx]
-    mov [rsp], eax
-    fild dword [rsp]
-    fmul qword [f_dm_rot2rad]
-    fsincos                         ; st0 = cos, st1 = sin
-    fimul dword [rsp + 8]
-    fistp dword [rsp]               ; cos * d
-    fimul dword [rsp + 8]
-    fistp dword [rsp + 4]           ; sin * d
-    mov eax, [dm_spawn_sx]
-    imul eax, [rsp + 4]
-    add eax, [rbx + 0x14]
-    mov [r12], eax
-    mov eax, [dm_spawn_sy]
-    imul eax, [rsp]
-    add eax, [rbx + 0x18]
-    mov [r12 + 4], eax
-    mov eax, [rbx + 0x1c]
-    mov [r12 + 8], eax
-    movzx eax, word [rbx]
-    mov [r12 + 12], eax
-    mov eax, 1
-    jmp .out
-.fail:
-    xor eax, eax
-.out:
-    add rsp, 24
-    pop r12
-    pop rbx
-    ret
-
 section .data
 align 8
 dm_page: dq 0                       ; the current page (dmp_root once built)
@@ -1641,7 +1614,6 @@ dmi_close: dq 0
     dq s_dm_close, 0
 dm_spawn_sx:   dd 1                 ; front = (sin, cos) of Sprite.rotation (user-checked in play)
 dm_spawn_sy:   dd 1
-i_dm_spawn_dist: dd DM_SPAWN_DIST
 align 8
 f_dm_rot2rad:  dq 0x3F71DF46A2529D39 ; 2*pi / 1440 (Sprite.rotation units)
 align 8

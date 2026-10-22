@@ -395,7 +395,7 @@ sp_spawn:
     sub rsp, 32
     mov rdi, rsp
     mov esi, SP_DIST
-    call dm_spawn_point
+    call dm_spawn_pos
     test eax, eax
     jz .fail
     lea rdx, [s_sp_full]            ; Ped_Spawn pops the ped pool with no empty check

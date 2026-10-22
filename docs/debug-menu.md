@@ -110,8 +110,9 @@ DM_FRAME order, fn          ; fn() once per gameplay frame, on the game's side, 
 | UP / DOWN | select (wraps) |
 | PAGE UP / PAGE DOWN | 10 rows up / down |
 | HOME / END | first / last row |
-| LEFT / RIGHT | change the value (on Spawn car: the remap; on Spawn ped: the role) |
-| RETURN | activate (open page, run action, toggle; on Spawn car / ped: spawn) |
+| LEFT / RIGHT | change the value (on Spawn car / object: the remap; on Spawn ped: the role) |
+| RETURN | activate (open page, run action, toggle; on Spawn car / ped / object: spawn) |
+| PAGE UP / PAGE DOWN | on Spawn object: the previous / next group (instead of 10 rows) |
 | B | on Spawn ped: the behaviour (normal / hostile / follows you) |
 | BACKSPACE | back to the parent page |
 
@@ -142,11 +143,13 @@ CALLHOOK while the pause is ours.
   content starts at `[dm_pane_x]` (set every frame from the box's measured width).
 - `dm_sprite_wh(edi = type, esi = id) -> eax = w | h << 8` — a sprite's size.
 - `dm_toast_set(rax = string)` — the message line at the bottom.
-- `dm_spawn_point(rdi = out dd x, y, z, rot; esi = distance SCR_f) -> eax = 1 / 0, rdx = toast`
-  — the point that far in front of the player on foot (same math as `dm_spawn_car`), for
-  spawners of things other than cars.
 - `dm_player_ped`, `dm_car`, `dm_spawn_car` (model = `dm_spawnable[dm_model]`, returns the
   Car*), `dm_call_car` (a fastcall on a Car*) — shared game helpers.
+- `dm_spawn_pos(rdi = out dd[4], esi = distance SCR_f) -> eax` — where spawners put things:
+  SCR_f x, y, z and the rotation, that far in front of the player on foot, facing the same way
+  (`DM_SPAWN_DIST` = 1.5 blocks for cars and objects, 1 block for peds); eax = the
+  player's Sprite*, or 0 with rdx = a toast string (no player, in a car). `dm_spawn_car`,
+  `spawn_ped.asm` and `spawn_object.asm` use it.
 - `dm_car_info(edi = model) -> eax = CarInfo*` or 0 — `g_StyleData 0x670684 +0x5C` →
   `AllCarsInfo.cars[model]` (re/ `GetCarInfoById` 0x4BF1F0).
 - `dm_gxt(rdi = key, rsi = out, edx = size)` — game text (`Gxt_FindTextW` 0x4C2120 on
@@ -218,6 +221,25 @@ the remap and RETURN as "spawn" through `dm_defer`; a `draw` callback with `dm_p
     the role is a short cycle that applies to any look (a cop in Elvis' remap is a valid debug
     case), and "auto" keeps the common case one key. The behaviour is orthogonal to both, so it
     gets its own key instead of a third list.
+  - **Object** (`menu/spawn_object.asm`): every world object type the level's prefab table
+    holds (the game's static tables plus the style's map objects; 122 in Downtown), named
+    from the GXT for pickups (`c%02d`, like the game's pickup message) and from the
+    `OBJECT_TYPE` enum otherwise (an unnamed map object reads "Map object N"), in groups:
+    street furniture (the style's map objects and their moving / dead variants), weapon,
+    car weapon and power-up pickups, explosives, phones (the idle ones), other (skids,
+    blood, gang decals, fire, ...). PAGE UP / PAGE DOWN jump between groups,
+    LEFT / RIGHT picks the remap (own colours or each remap of the code / map object
+    palette), the preview is the object's sprite up to 4x, animated for the animated
+    kinds, with type, sprite id, size, frames, kind and solid / pushable / explosive. RETURN
+    spawns it 1.5 blocks in front of the player through the script's own call (pickups
+    200..244 `Object_NewPhysicsObjUnlessBlocked`, the rest `SpawnObject`), so it gets the
+    collision grid, a pickup its default ammo and is collectable; "Blocked here" when the
+    game refuses (something in the way, a full pool). Not offered: projectiles, particle
+    systems, lights, logic and car-shop objects, crane / crusher parts, the moving pickup
+    clones 64..108, the bonus token (it would use up one of the level's token flags), the
+    bonus letters (GXT "na"; picking one up would call AddWeapon with a letter's index) and
+    ringing / in-call phones (touching one answers it through the mission script). Seq 27's
+    notes on what is safe: `seq52_prep.md` (Seq 27 report).
 - **Debug flags** (`menu/flags.asm`): the game's own flags; Road network (`debug_roads.asm`).
 
 ## 7. RE facts used (sources)
@@ -243,10 +265,15 @@ the remap and RETURN as "spawn" through `dm_defer`; a `draw` callback with `dm_p
 | Ped frames: graphicType * 158 + anim, walk = 0..7; DrawSprite2D palette kind 4 takes the raw PED_REMAP | `0x497DF0`, `0x4C2AC0` | Seq 27 + style render (`bun tools/formats/cli.ts sty --sprite`) |
 | ped pool `PedManager_S25*` +0 freeListHead; Ped +0x238 class, +0x240 occupation, +0x17C gang, +0x288 / +0x28C threat search / reaction | `0x5E5BBC` | re/gta2_types.h, Seq 27 |
 | `SpawnCar`, TrafficManager, CarsScale | `0x426AC0`, `0x5E4CA4`, `0x5E4D4C` | gta2-seuko-mod `spawn-car.cpp` |
+| `g_ObjectPrefabsContainer` (+0x87F4 `ObjectPrefab* byId[300]`), `ObjectPrefabs_Get` | `0x665B40`, `0x488170` | re/globals.csv, re/gta2_types.h, docs/re/objects-and-weapons.md |
+| `ObjectPrefab`: +0x1C remap, +0x1E sprite id, +0x28 sprite type (4 / 5), +0x30 palette kind, +0x34 kind, +0x40 grid, +0x44 impact, +0x48 explosive, +0x64 ticks/frame, +0x6C frames | — | re/gta2_types.h; +0x28 goes to `Sprite_SetCollisionKind` in `ObjectPrefab_ApplyToPosition` `0x4883A0` (own decompile) |
+| Style map objects become prefabs, id = OBJI model | `0x488450` `ObjectPrefabs_InitFromStyle` | own decompile |
+| `SpawnObject` / `Object_NewPhysicsObjUnlessBlocked` thiscall(`g_ObjectSpawner` `0x665788`; type, x, y, z, rot), ret 0x14, insert into the grid; the script picks by type 200..244 | `0x4852E0`, `0x485480`; `Script_Decl_OBJ_DATA_SET` `0x476EA0` | own disassembly + decompile |
+| `ObjectSpawner_CreateObject`: default ammo for weapon pickups, bonus-token flags | `0x484E00` | own decompile |
+| `StyleData` +0x10 palette counts (`PaletteBase`: +8 code obj, +0xA map obj remaps) | `0x670684` | re/gta2_types.h |
 
 ## 8. Next pages the structure makes cheap
 
-- **Object spawner**: rows = code / map objects of the style, preview type 4 / 5.
 - **Skin picker with preview**: the Player page's skin row gets a `draw` callback.
 - **Car respray with preview**: the Vehicle page's colour row, same component.
 - **Weapons page**: one row per weapon, HUD weapon icon as preview (user sprites, type 6).
