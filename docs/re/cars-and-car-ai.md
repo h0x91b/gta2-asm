@@ -278,7 +278,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x411870 | CarDoor_IsOpeningStart | V | state==2 && animationFrame==0 && frameDelay==0 |
 | 0x411890 | CarDoor_IsClosingAtFrame1 | V | state==3 && animationFrame==1 |
 | 0x4118B0 | Car_GetDriver | V | Car+0x54, 19 callers |
-| 0x411950 | Car_TakeHonkReason | V | Car+0xac read-and-clear |
+| 0x411950 | Car_TakeDriverReaction | V | Car+0xac read-and-clear |
 | 0x411990 | Car_GetHornStateOrZero | V | Car+0xa7, 0 if >0xf8 |
 | 0x4119B0 | Car_HasBomb | V | push 0x84 (OBJECT_TYPE_CAR_BOMB); call Car_FindAttachmentByType |
 | 0x4119C0 | Car_IsEngineStateSiren | V | engineState==4 = REL_TO_CAR_SIREN; caller is siren sound |
@@ -293,7 +293,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x411D20 | SoundMgr_UpdateCraneSource | V | type 8 case of 4163a0; owner flags +0x156..+0x159 |
 | 0x412010 | SoundMgr_UpdateCrusherSource | V | type 9; owner +0x24/+0x28 pos |
 | 0x4121F0 | SoundMgr_CalcImpactVolume | V | event type 2..5 -> normalised volume; default random 5..14 |
-| 0x4123C0 | CarSound_AddDriverReaction | H | Car_TakeHonkReason -> samples 0x101..0x10f, layer 7 |
+| 0x4123C0 | CarSound_AddDriverReaction | H | Car_TakeDriverReaction -> samples 0x101..0x10f, layer 7 |
 | 0x412680 | CarSound_AddTrainCabSpeedLoopA | V | speed/maxspeed -> vol, sample 4, layer 0 |
 | 0x412830 | CarSound_AddTrainCabSpeedLoopB | V | sample 5, layer 2, vol 0x7f scale |
 | 0x4129D0 | SoundMgr_GetChannelCar | V | channel -> client owner -> Sprite_GetCar |

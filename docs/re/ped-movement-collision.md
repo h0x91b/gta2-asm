@@ -24,8 +24,8 @@ The imported struct names from three old projects overlap. What they really are:
 
 | real thing | names in `re/gta2_types.h` | where it hangs |
 |---|---|---|
-| **ped body object**, 0xB4, pool of 400 (`PedGameObjectManager` 0x66A3B4) | `GameObject` (seuko) = `Sprite` (auto) = `PedS1` (gzf 2021) | `Ped+0x168` |
-| **physics body** (pose + collision box), 0x3C | `Position` = `Pos` = `PedSprite` = `CarSprite` (truncated) | `GameObject+0x80`, `Car+0x50`; fields typed `Sprite*` there point to a `Position` |
+| **ped body object**, 0xB4, pool of 400 (`PedGameObjectManager` 0x66A3B4) | `GameObject` (the only live type since 2026-10-22; the duplicates `Sprite` 0x100 and `PedS1` 0x90 are renamed `*_OLD`, no users left) | `Ped+0x168` |
+| **physics body** (pose + collision box), 0x3C | `Position` = `Pos` = `PedSprite` = `CarSprite` (truncated) | `GameObject+0x80` (`body`), `Car+0x50`, `CarAI+0x70`, `CarAttachment+0`, `Collide+0`, `S21+0`, `S24_char+8` (all retyped `Position*`) |
 | bounds object (size, corners, AABB) | none (untyped) | `Position+0xC` (typed `next_`, wrong) |
 
 `ObjectMotionState` belongs to dynamic map objects, not to peds.
@@ -45,6 +45,17 @@ The imported struct names from three old projects overlap. What they really are:
 | +0x7C / +0x80 | Ped* / Position* | owner and body |
 | +0x98 / +0x9C | SCR_f | velocity **output** (published after the move; writing it does nothing) |
 | +0xA4..+0xAC | SCR_f ×3 | teleport target (`TeleportGameObject` 0x491E00, no collision) |
+
+Full layout of the rest of `GameObject` (2026-10-22 pass; V = behaviour + caller checked, H = hypothesis):
+`+0x14` Ang16 targetHeading (V), `+0x16` downedFlag (V), `+0x18`/`+0x1C` obstacle / lastObstacle
+(Car* or WorldObject*, V), `+0x20` obstacleKind 1 car / 3 object (V), `+0x24` int walkAroundPhase 0..3 (V),
+`+0x28`/`+0x2A` walk-around heading / turn step (V), `+0x44` groundType (V, `GameObject_GetGroundType`),
+`+0x45` slopeType (V), `+0x46` stateTimer (V), `+0x48` getUpTimer (V), `+0x54` jumpTick (V),
+`+0x55` detourTimer (V), `+0x5C` objectBumpCooldown (H), `+0x60` detourAxis (H), `+0x68` animFrame,
+`+0x6C` anim, `+0x70`/`+0x71` animTick / animTicksPerFrame (V), `+0x72`/`+0x73` detour tile (V),
+`+0x84` Car* (V), `+0x88` CarAttachment* list (V), `+0x8C` jumpStartZ, `+0x90` fallSpeed,
+`+0x94` fallZVelocity (V), `+0xA0` onTopOfCarLayer (H). Written only by init/deinit, no reader
+found: `+4/+5/+6`, `+0x2C`, `+0x30`, `+0x34`, `+0x42`, `+0x64`, `+0xB0` (named `unk_*`).
 
 `Ped.rotation` (+0x12C) and the pose copy inside the Ped are **mirrors** of the GameObject and the
 body, rewritten every tick by `Ped_UpdatePosition`. Writing them moves nothing.

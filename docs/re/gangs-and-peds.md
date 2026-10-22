@@ -33,14 +33,13 @@ used by the decompiler.
 |---|---|---|---|
 | 0x00 | u8 | `present` | slot used (`GangRespectContainer_AllocGang` 0x45dc20) |
 | 0x01 | u8 | `id` | slot index 0..9 |
-| 0x02 | char[10] | `gangName` | zone name, e.g. `yakuzagang`; identity = first 4 chars |
+| 0x02 | char[255] | `gangName` | zone name, e.g. `yakuzagang`; `Gang_SetName` copies up to 0xFF bytes + NUL (`zaibatsugang` already overflows a [10]); identity = first 4 chars |
 | 0x101 | u8 | `pedRemap` | ped remap of members (init 1) |
 | 0x104 / 0x108 / 0x10C | i32 | `basicWeapon` / `angryWeapon` / `hateWeapon` | WEAPON_INDEX |
 | 0x110 | u8 | `highRespectFlag` | `respect > 79` of the **last changed** player (single flag) — gang attacks cops (§4) |
 | 0x111 | u8 | `killAffectsRespect` | set by SET_GANG_KILL_REACTION / SET_GANG_CHAR_RESPECT |
 | 0x112 | u8[10] | `hostileToGang[otherId]` | init **1** for every pair, no writer found → all gangs hate each other |
-| 0x11C | s8[4] | `respect[player]` | −100..+100 per player index |
-| 0x120 | u16 | ? | zeroed in init, unused |
+| 0x11C | s8[6] | `respect[player]` | −100..+100, one per `Game.players[6]`; init zeroes it as dword@0x11C + word@0x120 (Ghidra still has 0x120 as a separate `undefined2` until a Clear) |
 | 0x122 | s8[10] | `killReaction[otherId]` | init 0; SET_GANG_KILL_REACTION |
 | 0x12C / 0x130 / 0x134 | Q14 | `arrowTargetX/Y/Z` | HUD arrow target from SET_GANG_INFO |
 | 0x138 | u8 | `arrowColour` | gang icon id 1..7: HUD sprite `0x3F+n`, name `ganga%d`, car decal `KILL_FRENZY+n` |
@@ -508,7 +507,7 @@ pass verified them.
 | address | name | role |
 |---|---|---|
 | 0x403920 | Ped_SetBitState2 (really SetPedClass, reported) | writes `pedClass` |
-| 0x403b40 / 0x450cb0 | Ped_SetObjectiveDone / Ped_GetObjectiveDone | `Ped+0x225` |
+| 0x403b40 / 0x450cb0 | Ped_SetObjectiveDone / Ped_GetObjectiveStatus | `Ped+0x225` |
 | 0x404120 | unsure_PedGroup_SwapMemberWithLeader | dead leader/medic replacement |
 | 0x40fea0 | Position_GetOwnerSpriteIfPed | body kind 3 → owner |
 | 0x41f9f0 | Car_RequestFireTruckAndSpawnFlames | wreck → fire truck |
@@ -590,7 +589,7 @@ missing ones added.
 
 - Who ever writes `GangRespect.hostileToGang` (+0x112) after init — none found; confirm at runtime
   that rival gangs actually fight in a shipped map.
-- Reader of `highRespectFlag` besides the cop branch; meaning of `GangRespect+0x120`.
+- Reader of `highRespectFlag` besides the cop branch.
 - `Ped+0x290` values 1/3 (reduce the respect kill delta to 1): meaning unknown.
 - `PoliceCrew_Update` 0x4ad600 and `FUN_00446b80` (caller of the threat-grid filter) not read.
 - Per-edge spawn heading constants (Ang16 copies set by CRT stubs at 0x5052d0..) not resolved.
@@ -611,7 +610,7 @@ missing ones added.
 | 0x4337F0 | Position_SetUnlitFlag | U | `byte+0x2C \|= 4`; 27 callers (particles, Ped_ApplyInvulnerabilitySpriteFlag) |
 | 0x433830 | S3Bytes_Clear | V | zeroes a/b/c; caller InitPeds |
 | 0x433A70 | unsure_GameObject_InitAnimState | U | +0x68=0, +0x6C=arg; Ped_InitSpawnedState |
-| 0x433A90 | unsure_GameObject_GetField44 | U | returns +0x44; flee/cross-road tasks |
+| 0x433A90 | GameObject_GetGroundType | U | returns +0x44; flee/cross-road tasks |
 | 0x433AA0 | GameObject_IsWalkingAroundObstacle | U | +0x69 != 0; Ped_Obj2_ApproachAndAttackTarget |
 | 0x4340A0 | WorldObject_GetPickupAmmo | U | +0x26; Ped_PickUp, SaveGame_CollectPickups |
 | 0x434130 | Object_SetAnimLoopsLeft | U | `*(u16*)(this->+0xC + 4) = v`; Ped_DropWeaponPickup, Weapon_ThrowMolotovOrGrenade |

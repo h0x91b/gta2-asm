@@ -225,23 +225,39 @@ struc Crane
     .candCargo                        resb 4      ; 0x6c void *
     .candCargoTransporter             resb 4      ; 0x70 void *
     .heldCar                          resb 4      ; 0x74 void *
-    .unsure_homeCrane                 resb 4      ; 0x78 Crane *
+    .homeCrane                        resb 4      ; 0x78 Crane *
     .sound                            resb 4      ; 0x7c void *
     .baseZ                            resb 4      ; 0x80 Fix16
     .hookDrop                         resb 4      ; 0x84 Fix16
-    resb 4
+    .hookDropVel                      resb 4      ; 0x88 Fix16
     .boomAngle                        resb 4      ; 0x8c Fix16
     .hookExtension                    resb 4      ; 0x90 Fix16
-    resb 12
+    .hookExtensionVel                 resb 4      ; 0x94 Fix16
+    .boomAngleVel                     resb 4      ; 0x98 Fix16
+    .unk_0x9C                         resb 4      ; 0x9c Fix16
     .headRotation                     resb 4      ; 0xa0 Fix16
-    resb 4
+    .headRotationVel                  resb 4      ; 0xa4 Fix16
     .homeAngle                        resb 4      ; 0xa8 Fix16
     .targetAngle                      resb 4      ; 0xac Fix16
     .targetExtension                  resb 4      ; 0xb0 Fix16
     .targetRotation                   resb 4      ; 0xb4 Fix16
     .targetDrop                       resb 4      ; 0xb8 Fix16
-    resb 132
-    .unsure_scriptEventId             resb 2      ; 0x140 ushort
+    .candTransporterPose              resb 28     ; 0xbc CraneCandidatePose
+    .candCarPose                      resb 28     ; 0xd8 CraneCandidatePose
+    .candCargoPose                    resb 28     ; 0xf4 CraneCandidatePose
+    .statePoseAngle                   resb 4      ; 0x110 Fix16
+    .statePoseLength                  resb 4      ; 0x114 Fix16
+    .statePoseRotation                resb 4      ; 0x118 Fix16
+    .statePoseDrop                    resb 4      ; 0x11c Fix16
+    .target1Length                    resb 4      ; 0x120 Fix16
+    .target1Angle                     resb 4      ; 0x124 Fix16
+    .target1Rotation                  resb 4      ; 0x128 Fix16
+    .target1Drop                      resb 4      ; 0x12c Fix16
+    .target2Length                    resb 4      ; 0x130 Fix16
+    .target2Angle                     resb 4      ; 0x134 Fix16
+    .target2Rotation                  resb 4      ; 0x138 Fix16
+    .target2Drop                      resb 4      ; 0x13c Fix16
+    .powerupDeclCmdId                 resb 2      ; 0x140 ushort
     resb 2
     .kind                             resb 4      ; 0x144 int
     .disabled                         resb 4      ; 0x148 int
@@ -249,9 +265,24 @@ struc Crane
     .motionSettled                    resb 1      ; 0x14d byte
     resb 2
     .state                            resb 4      ; 0x150 int
-    resb 1
+    .unk_0x154                        resb 1      ; 0x154 byte
     .phase                            resb 1      ; 0x155 byte
-    resb 6
+    .angleMoving                      resb 1      ; 0x156 bool
+    .extensionMoving                  resb 1      ; 0x157 bool
+    .dropMoving                       resb 1      ; 0x158 bool
+    .pickedUpThisFrame                resb 1      ; 0x159 bool
+    resb 2
+endstruc
+
+; /CraneCandidatePose  (28 bytes)
+struc CraneCandidatePose
+    .length                           resb 4      ; 0x0 Fix16
+    .angle                            resb 4      ; 0x4 Fix16
+    .x                                resb 4      ; 0x8 Fix16
+    .y                                resb 4      ; 0xc Fix16
+    .z                                resb 4      ; 0x10 Fix16
+    .rotation                         resb 4      ; 0x14 Fix16
+    .drop                             resb 4      ; 0x18 Fix16
 endstruc
 
 ; /CraneManager  (3484 bytes)
@@ -533,7 +564,7 @@ struc HudArrow
     .spriteId                         resb 2      ; 0x24 short
     .retargetCooldown                 resb 1      ; 0x26 byte
     resb 1
-    .gang                             resb 4      ; 0x28 void *
+    .gang                             resb 4      ; 0x28 GangRespect *
     .minRespect                       resb 1      ; 0x2c char
     .visible                          resb 1      ; 0x2d byte
     .inUse                            resb 1      ; 0x2e byte
@@ -1124,15 +1155,15 @@ struc PolicePursuitTarget
     .wantedLevel                      resb 4      ; 0x4 int
     .state                            resb 4      ; 0x8 PURSUIT_STATE
     .sightTimer                       resb 2      ; 0xc ushort
-    .unsure_escalated                 resb 1      ; 0xe byte
+    .chaseHitCount                    resb 1      ; 0xe byte
     resb 1
     .lastSeenX                        resb 4      ; 0x10 SCR_f
     .lastSeenY                        resb 4      ; 0x14 SCR_f
     .lastSeenZ                        resb 4      ; 0x18 SCR_f
-    .unsure_searchDone                resb 1      ; 0x1c byte
+    .searchAbandoned                  resb 1      ; 0x1c byte
     resb 3
     .crews                            resb 24     ; 0x20 PoliceCrew *[6]
-    resb 56
+    .crewsUnused                      resb 56     ; 0x38 PoliceCrew *[14]
     .numPoliceCrews                   resb 1      ; 0x70 byte
     .targetPoliceCrews                resb 1      ; 0x71 byte
     .numSwatCrews                     resb 1      ; 0x72 byte
@@ -1701,7 +1732,7 @@ struc Car
     .carModel                         resb 4      ; 0x84 CAR_MODEL4
     .lifeState                        resb 4      ; 0x88 CAR_LIFE_STATE
     .damageFireStage                  resb 1      ; 0x8c byte
-    .unsure_scriptFlags               resb 1      ; 0x8d byte
+    .enterScriptFlags                 resb 1      ; 0x8d byte
     .alarmTimer                       resb 1      ; 0x8e byte
     resb 1
     .lastAttackerWeapon               resb 4      ; 0x90 int
@@ -1718,8 +1749,8 @@ struc Car
     .hornCooldown                     resb 1      ; 0xa8 byte
     .wreckTimer                       resb 1      ; 0xa9 byte
     resb 2
-    .unsure_honkReason                resb 4      ; 0xac int
-    resb 4
+    .driverReactionSound              resb 4      ; 0xac int
+    .radioStation                     resb 4      ; 0xb0 int
     .shopReaction                     resb 4      ; 0xb4 int
     .isTurretBeingRotated             resb 1      ; 0xb8 bool
     resb 3
@@ -1742,8 +1773,8 @@ struc CarManager
     .damageFireSlot                   resb 1      ; 0x1a byte
     resb 1
     .explosionSlot                    resb 4      ; 0x1c int
-    .unsure_greenDirA                 resb 4      ; 0x20 int
-    .unsure_greenDirB                 resb 4      ; 0x24 int
+    .unusedGreenDirX                  resb 4      ; 0x20 int
+    .unusedGreenDirY                  resb 4      ; 0x24 int
     .recycledCars                     resb 4      ; 0x28 int
     .ambulanceCars                    resb 4      ; 0x2c int
     .fireTruckCars                    resb 4      ; 0x30 int
@@ -2082,8 +2113,8 @@ struc Game
     resb 3
 endstruc
 
-; /_game/GameStats  (1344 bytes)
-struc GameStats
+; /_game/GameStats_OLD  (1344 bytes)
+struc GameStats_OLD
     resb 112
     .field112_0x70                    resb 4      ; 0x70 uint
     .field113_0x74                    resb 4      ; 0x74 uint
@@ -2157,7 +2188,7 @@ struc Player
     .enterExitDisabled                resb 1      ; 0x30 byte
     .weaponSelectLocked               resb 1      ; 0x31 byte
     resb 2
-    .gangZone                         resb 4      ; 0x34 void *
+    .gangZone                         resb 4      ; 0x34 GangRespect *
     .localNavZone                     resb 4      ; 0x38 void *
     .navZone                          resb 4      ; 0x3c void *
     .arrowBlockerZone                 resb 4      ; 0x40 void *
@@ -2839,8 +2870,7 @@ endstruc
 struc GangRespect
     .present                          resb 1      ; 0x0 bool
     .id                               resb 1      ; 0x1 char
-    .gangName                         resb 10     ; 0x2 char[10]
-    resb 245
+    .gangName                         resb 255    ; 0x2 char[255]
     .pedRemap                         resb 1      ; 0x101 byte
     resb 2
     .basicWeapon                      resb 4      ; 0x104 int
@@ -2850,7 +2880,7 @@ struc GangRespect
     .killAffectsRespect               resb 1      ; 0x111 byte
     .hostileToGang                    resb 10     ; 0x112 byte[10]
     .respect                          resb 4      ; 0x11c char[4]
-    .field258_0x120                   resb 2      ; 0x120 undefined2
+    .field13_0x120                    resb 2      ; 0x120 undefined2
     .killReaction                     resb 10     ; 0x122 char[10]
     .arrowTargetX                     resb 4      ; 0x12c int
     .arrowTargetY                     resb 4      ; 0x130 int
@@ -3360,8 +3390,15 @@ struc ScriptThreadPool
     resb 2
 endstruc
 
-; /auto_structs/Sprite  (256 bytes)
-struc Sprite
+; /auto_structs/SpriteManager  (8 bytes)
+struc SpriteManager
+    .drawCounter                      resb 4      ; 0x0 undefined4
+    .inc                              resb 2      ; 0x4 undefined2
+    resb 2
+endstruc
+
+; /auto_structs/Sprite_OLD  (256 bytes)
+struc Sprite_OLD
     .id                               resb 4      ; 0x0 uint
     resb 32
     ._id                              resb 2      ; 0x24 ushort
@@ -3370,17 +3407,10 @@ struc Sprite
     resb 22
     .bit1                             resb 4      ; 0x58 uint
     resb 28
-    .next_                            resb 4      ; 0x78 Sprite *
+    .next_                            resb 4      ; 0x78 Sprite_OLD *
     .ped                              resb 4      ; 0x7c Ped *
     .actualPosition                   resb 4      ; 0x80 Position *
     resb 124
-endstruc
-
-; /auto_structs/SpriteManager  (8 bytes)
-struc SpriteManager
-    .drawCounter                      resb 4      ; 0x0 undefined4
-    .inc                              resb 2      ; 0x4 undefined2
-    resb 2
 endstruc
 
 ; /auto_structs/SubScript  (32 bytes)
@@ -3787,8 +3817,8 @@ endstruc
 LIGHTING.LIGHTING_DAY equ 0
 LIGHTING.LIGHTING_NIGHT equ 32768
 
-; /imported/gzf-2021/PedS1  (144 bytes)
-struc PedS1
+; /imported/gzf-2021/PedS1_OLD  (144 bytes)
+struc PedS1_OLD
     resb 8
     .field8_0x8                       resb 4      ; 0x8 int
     resb 52
@@ -4280,7 +4310,7 @@ struc CarAI
     resb 12
     .nearbyCar                        resb 4      ; 0x68 Car *
     .blockingCar                      resb 4      ; 0x6c Car *
-    .obstacleHit                      resb 4      ; 0x70 Sprite *
+    .obstacleHit                      resb 4      ; 0x70 Position *
     .targetSpeed                      resb 4      ; 0x74 SCR_f
 endstruc
 
@@ -4292,7 +4322,7 @@ endstruc
 
 ; /imported/seuko-mod/CarAttachment  (24 bytes)
 struc CarAttachment
-    .sprite                           resb 4      ; 0x0 Sprite *
+    .sprite                           resb 4      ; 0x0 Position *
     .next                             resb 4      ; 0x4 CarAttachment *
     .xOffset                          resb 4      ; 0x8 int
     .yOffset                          resb 4      ; 0xc int
@@ -4427,7 +4457,7 @@ endstruc
 
 ; /imported/seuko-mod/Collide  (12 bytes)
 struc Collide
-    .ptr1                             resb 4      ; 0x0 Sprite *
+    .ptr1                             resb 4      ; 0x0 Position *
     .ptr2                             resb 4      ; 0x4 void *
     .ptr3                             resb 4      ; 0x8 Collide *
 endstruc
@@ -4524,44 +4554,75 @@ endstruc
 ; /imported/seuko-mod/GameObject  (180 bytes)
 struc GameObject
     resb 4
-    .someBitstate                     resb 4      ; 0x4 int
+    .unk_0x4                          resb 1      ; 0x4 byte
+    .unk_0x5                          resb 1      ; 0x5 byte
+    .unk_0x6                          resb 1      ; 0x6 byte
+    resb 1
     .state1                           resb 4      ; 0x8 PED_STATE
     .state2                           resb 4      ; 0xc PED_STATE2
-    .relToId                          resb 4      ; 0x10 uint
-    .id                               resb 4      ; 0x14 int
-    .type                             resb 4      ; 0x18 OBJECT_TYPE
-    .probablyPhysics                  resb 4      ; 0x1c Camera *
-    resb 4
-    .probablyRemap                    resb 2      ; 0x24 ushort
-    resb 18
+    .walkSubMode                      resb 4      ; 0x10 int
+    .targetHeading                    resb 2      ; 0x14 Ang16
+    .downedFlag                       resb 1      ; 0x16 byte
+    resb 1
+    .obstacle                         resb 4      ; 0x18 void *
+    .lastObstacle                     resb 4      ; 0x1c void *
+    .obstacleKind                     resb 4      ; 0x20 int
+    .walkAroundPhase                  resb 4      ; 0x24 int
+    .walkAroundHeading                resb 2      ; 0x28 Ang16
+    .walkAroundTurnStep               resb 2      ; 0x2a Ang16
+    .unk_0x2c                         resb 2      ; 0x2c Ang16
+    resb 2
+    .unk_0x30                         resb 4      ; 0x30 int
+    .unk_0x34                         resb 2      ; 0x34 short
+    resb 2
     .speed                            resb 4      ; 0x38 SCR_f
     .walkSpeedTarget                  resb 4      ; 0x3c SCR_f
     .spriteRotation                   resb 2      ; 0x40 short
-    .field_0x42                       resb 2      ; 0x42 short
-    resb 2
-    .field_0x46                       resb 2      ; 0x46 short
-    resb 2
+    .unk_0x42                         resb 2      ; 0x42 Ang16
+    .groundType                       resb 1      ; 0x44 byte
+    .slopeType                        resb 1      ; 0x45 byte
+    .stateTimer                       resb 2      ; 0x46 short
+    .getUpTimer                       resb 1      ; 0x48 byte
+    resb 1
     .cigaretteIdleTimer               resb 2      ; 0x4a short
     .pushX                            resb 4      ; 0x4c SCR_f
     .pushY                            resb 4      ; 0x50 SCR_f
-    resb 4
+    .jumpTick                         resb 1      ; 0x54 byte
+    .detourTimer                      resb 1      ; 0x55 byte
+    resb 2
     .bit1                             resb 1      ; 0x58 SPRITE_BIT1
-    resb 19
-    .field_0x6c                       resb 4      ; 0x6c int
-    resb 8
+    resb 3
+    .objectBumpCooldown               resb 1      ; 0x5c byte
+    resb 3
+    .detourAxis                       resb 4      ; 0x60 int
+    .unk_0x64                         resb 4      ; 0x64 int
+    .animFrame                        resb 1      ; 0x68 byte
+    .walkingAroundObstacle            resb 1      ; 0x69 bool
+    .stepAsideTimer                   resb 1      ; 0x6a byte
+    resb 1
+    .anim                             resb 4      ; 0x6c int
+    .animTick                         resb 1      ; 0x70 byte
+    .animTicksPerFrame                resb 1      ; 0x71 byte
+    .detourTileX                      resb 1      ; 0x72 byte
+    .detourTileY                      resb 1      ; 0x73 byte
+    .stepAsideHeading                 resb 2      ; 0x74 Ang16
+    resb 2
     .nextMaybe                        resb 4      ; 0x78 GameObject *
     .ped                              resb 4      ; 0x7c Ped *
-    .sprite                           resb 4      ; 0x80 Sprite *
-    resb 12
-    .field_0x90                       resb 4      ; 0x90 int
-    resb 4
+    .body                             resb 4      ; 0x80 Position *
+    .car                              resb 4      ; 0x84 Car *
+    .attachments                      resb 4      ; 0x88 CarAttachment *
+    .jumpStartZ                       resb 4      ; 0x8c Fix16
+    .fallSpeed                        resb 4      ; 0x90 Fix16
+    .fallZVelocity                    resb 4      ; 0x94 Fix16
     .deltaX                           resb 4      ; 0x98 SCR_f
     .deltaY                           resb 4      ; 0x9c SCR_f
-    resb 4
+    .onTopOfCarLayer                  resb 1      ; 0xa0 bool
+    resb 3
     .teleportX                        resb 4      ; 0xa4 undefined4
     .teleportY                        resb 4      ; 0xa8 undefined4
     .teleportZ                        resb 4      ; 0xac undefined4
-    .field_0xb0                       resb 4      ; 0xb0 int
+    .unk_0xb0                         resb 4      ; 0xb0 int
 endstruc
 
 ; /imported/seuko-mod/GlobalSettings  (100 bytes)
@@ -5269,7 +5330,7 @@ endstruc
 
 ; /imported/seuko-mod/S21  (367267 bytes)
 struc S21
-    .last                             resb 4      ; 0x0 Sprite *
+    .last                             resb 4      ; 0x0 Position *
     resb 367262
     .field_0x59aa2                    resb 1      ; 0x59aa2 undefined1
 endstruc
@@ -5285,7 +5346,7 @@ struc S24_char
     .PedCapacity                      resb 2      ; 0x0 short
     .dummy_chars                      resb 1      ; 0x2 byte
     resb 5
-    .position                         resb 4      ; 0x8 Sprite *
+    .position                         resb 4      ; 0x8 Position *
 endstruc
 
 ; enum /imported/seuko-mod/S32_SHOW_IMAGINARY  (4 bytes)
