@@ -1398,12 +1398,12 @@ dm_add_money:
 
 ; ---- shared Ped / Car helpers (used by the pages in menu/ and by the feature modules).
 ; Ped fields (gta2-seuko-mod src/game/gta2.h @25b1985): copValue +0x20a, remap +0x244,
-; graphicType +0x26c, currentCar +0x16c, GameObject +0x168 (sprite at +0x80).
+; graphicType +0x26c, currentCar +0x16c, PedGameObject +0x168 (sprite at +0x80).
 PED_COPVALUE equ 0x20a
 PED_REMAP    equ 0x244
 PED_GTYPE    equ 0x26c
 PED_CAR      equ 0x16c
-PED_GAMEOBJ  equ 0x168              ; GameObject*, sprite at +0x80
+PED_GAMEOBJ  equ 0x168              ; PedGameObject*, sprite at +0x80
 
 ; Car fields (seuko-mod src/game/gta2.h): deltasBitstate +0x8 (bits 0-4 broken lights and
 ; windscreen), lastCar +0x4c, sprite +0x50 (the body, a Sprite: rotation +0
@@ -1478,7 +1478,7 @@ dm_call_car:
 ; dm_spawn_car: SpawnCar @0x426AC0, fastcall(TrafficManager* ecx = [0x5E4CA4], edx = 0;
 ; SCR_f x, y, z, int rotation, CAR_MODEL4 model, int scale = [0x5E4D4C]) -> Car*, at
 ; DM_SPAWN_DIST in front of the player, facing the same way (the player's sprite:
-; Ped +0x168 GameObject, +0x80 Sprite); the model is dm_spawnable[dm_model]. Refused in
+; Ped +0x168 PedGameObject, +0x80 Sprite); the model is dm_spawnable[dm_model]. Refused in
 ; a car. eax = the Car*, or 0.
 ; From gta2-seuko-mod by izawartka (https://github.com/izawartka/gta2-seuko-mod),
 ; src/game/functions.h, memory.h, src/modules/modmenu/utils/spawn-car.cpp @25b1985 —

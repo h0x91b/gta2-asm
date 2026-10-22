@@ -325,8 +325,8 @@ jump table 0x459E10 with a per-page index byte table at **0x459E20**.
 - `FrontendPageDecor` (0x6E): kind (1 text, 3 sprite), enabled, x, y, text[50], fontId, remap.
 - `FrontendPageCursor` (6): x, y, enabled (UP/DOWN only stop on enabled cursors).
 - `FrontendPage` (0xBCA): itemCount @0, decorCount @2, items[10] @4, decor[15] @0x518,
-  cursors[10] @0xB8A, selected @0xBC6, defaultSelected @0xBC8. The old gzf `FrontendS1*` structs use
-  a wrong cursor stride (5) and are obsolete.
+  cursors[10] @0xB8A, selected @0xBC6, defaultSelected @0xBC8. The old gzf `FrontendS1*` structs (wrong
+  cursor stride 5) were merged into these types.
 - `FrontendLevelPaths` (0x300: gmp, sty, scr paths) × 12 at FrontEnd+0xC9D4 (index = stage +
   area × 4), filled by `FrontEnd_LoadSeq` from `data\*.seq`; `FrontendSaveSlotInfo` (4) × 8 at
   +0xEDD4.
@@ -500,7 +500,7 @@ SFXVol seed 0x0B is much lower than the 0x7F default — probably the installer'
 * **Savegame file:** `player\plyslot<N>.svg`, N = `Menu_GetProfileSlot` (0..7). Built in SaveGame (0x47EF40) with `sprintf("player\\plyslot%d.svg")` when the caller passes an empty name; `FrontEnd_BuildSaveSlotPath` does the same for the frontend. When a caller gives a path (`Menu_GetSavePath` = `Menu.unk2`/savePath, set by `Menu_SetSavePath`) that is used instead. Writes through `FUN_00402CF0` (create "wb") + `FUN_00402DA0` ("ab"), reads through `File_Open/File_Read`; the host serves the first from its overlay (`~/Library/Application Support/gta2-resurrected/player/`).
 * **Format:** `[0x748-byte SaveGameHeader]` then three sections `[u32 size][size bytes]`, each possibly size 0 (the data block is skipped when size==0): (1) `g_MapBlocks` delta A = `*(MapBlocks+0x40008) + *(MapBlocks+0x40000)*4`, size `(this+0x360 - off)*4`; (2) delta B = `*(+0x4000C)+*(+0x40004)*0xC`, size `(this+0x354-off)*0xC`; (3) `this+4`, size `*(this+0x324) << 3`. These are the *dynamic tail* of the map's block/column tables (blocks added at runtime, i.e. modified map). Extracted by `FUN_004642A0`, re-applied by `FUN_00464250`. Layout semantics = hypothesis (Seq 37/map owner can confirm). No checksum, no version.
 * **Functions:** save: `SaveGame` 0x47EF40 ← `Script_Op_SAVE_GAME` 0x47FE50 (opcode 277, unused in bil.scr), `Script_Op_PERFORM_SAVE_GAME` 0x47FE80 (opcode 438: the church/save point; costs $50000, "svmiss"/"svscore"/"svdone" HUD messages via `Hud_Brief_EnqueueNoArg`, refuses when a mission is active), `SomeSwitch` 0x41D0B0 case 9 (debug key via Player_OnKeyDown); helpers FUN_0047EE70 (collect patched script commands), FUN_00475CA0 (fill the three path strings + area/bonus bytes), FUN_00483D90 (collect weapon pickups), `Player::Player_SaveCheckpoint`. Load: `FrontEnd_LoadSavedGameSlot` 0x455850 (reads the first 0x52 header bytes, validates that each path starts with `data\`, calls `Menu_SetSavePath/GmpPath/StyPath/ScrPath/StartArea/BonusLevelId/IsBonusLevel`; DisplayError codes 0xA6/0xA7/0xA8 on a bad path) → game start → `InitGame` → `LoadGMP_and_STY_Files` 0x45B469 → `MissionScript_LoadSaveGame` 0x47F0B0 when `Menu_GetSavePath` is non-empty. Other callers of `Menu_SetSavePath`: `FrontEnd_SelectLevel`/`FrontEnd_UpdateMenuMode` clear it (`DAT_0056E5B4` = ""), `Replay_ReadHeader`, `Menu_LoadDebugLevelFromRegistry` (Debug\savename).
-* **Other persistent files**: `player\plyslot<N>.dat` — profile/unlock data, 0x7E bytes, written by `FUN_004A89E0` (callers FrontEnd_CommitProfileName, FrontEnd_DeleteCurrentProfile, UnlockAllLevels, WinMain2-via-FUN_004A8F90 on level end, InitS28); `player\hiscores.hsc` — 0xF0 + 3×0x3F0 bytes of high scores, `FUN_004A8D80` (`FUN_004A8B60` builds the name). Both go through `FUN_00402CF0`. Owner: whoever takes `plydat`/`InitS28` (0x4A8xxx).
+* **Other persistent files**: `player\plyslot<N>.dat` — profile/unlock data, 0x7E bytes, written by `FUN_004A89E0` (callers FrontEnd_CommitProfileName, FrontEnd_DeleteCurrentProfile, UnlockAllLevels, WinMain2-via-FUN_004A8F90 on level end, PlayerData_Ctor); `player\hiscores.hsc` — 0xF0 + 3×0x3F0 bytes of high scores, `FUN_004A8D80` (`FUN_004A8B60` builds the name). Both go through `FUN_00402CF0`. Owner: whoever takes `plydat`/`PlayerData_Ctor` (0x4A8xxx).
 * **`host/debug_menu.asm` quick save** calls `SaveGame` 0x47EF40 directly (credit seuko-mod `save-game.cpp`); that is the full "save here" entry point for mods.
 
 
@@ -1221,24 +1221,24 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4A8630 | `HiScoreTable_Insert` | high | sorted insert (name,score) into 10-entry table, returns inserted |
 | 0x4A8700 | `ProfileSlot_Reset` | med | zeroes 0xa4 slot, unlocks first level; FrontEnd_DeleteCurrentProfile |
 | 0x4A8780 | `ProfileSlot_GetTotalScore` | med | sums ints of 12 level records |
-| 0x4A87B0 | `S28_DtorMembers` | high | vector dtors for arr8/arr12; caller scalar deleting dtor |
+| 0x4A87B0 | `PlayerData_DtorMembers` | high | vector dtors for profiles/levelHiScores; caller scalar deleting dtor |
 | 0x4A8820 | `Profile_BuildDatPath` | high | builds "player\plyslot<N>.dat" |
 | 0x4A88C0 | `Profile_DatFileExists` | high | _findfirst on that path |
-| 0x4A8910 | `S28_LoadProfileSlot` | high | reads plyslot<N>.dat into slot N |
-| 0x4A89E0 | `S28_SaveProfileSlot` | high | packs 0x7E-byte image, File_WriteWhole |
-| 0x4A8A90 | `S28_UnlockLevel` | med | sets unlock byte of level (area*4+stage), saves slot |
+| 0x4A8910 | `PlayerData_LoadProfileSlot` | high | reads plyslot<N>.dat into slot N |
+| 0x4A89E0 | `PlayerData_SaveProfileSlot` | high | packs 0x7E-byte image, File_WriteWhole |
+| 0x4A8A90 | `PlayerData_UnlockLevel` | med | sets unlock byte of level (area*4+stage), saves slot |
 | 0x4A8B60 | `HiScores_BuildPath` | high | copies "player\hiscores.hsc" |
-| 0x4A8B80 | `S28_InitDefaultHiScores` | med | default names ALAN..JACKSON / scores into S28+0x24c0 |
-| 0x4A8CB0 | `S28_LoadHiScores` | high | reads hiscores.hsc |
-| 0x4A8D80 | `S28_SaveHiScores` | high | writes hiscores.hsc |
-| 0x4A8ED0 | `S28_ResetHiScoresToDefaults` | med | clears + inserts built-in default entries |
-| 0x4A8F50 | `S28_ScalarDeletingDtor` | high | DtorMembers + _free(flag&1) |
+| 0x4A8B80 | `PlayerData_InitDefaultHiScores` | med | default names ALAN..JACKSON / scores into PlayerData+0x24c0 |
+| 0x4A8CB0 | `PlayerData_LoadHiScores` | high | reads hiscores.hsc |
+| 0x4A8D80 | `PlayerData_SaveHiScores` | high | writes hiscores.hsc |
+| 0x4A8ED0 | `PlayerData_ResetHiScoresToDefaults` | med | clears + inserts built-in default entries |
+| 0x4A8F50 | `PlayerData_ScalarDeletingDtor` | high | DtorMembers + _free(flag&1) |
 | 0x4A8F70 | `HiScoreTable_Ctor` | high | Clear(this); return this |
-| 0x4A8F90 | `S28_UpdateProfileLevelScore` | med | level end: best/last score of current level, save slot; WinMain2 |
+| 0x4A8F90 | `PlayerData_UpdateProfileLevelScore` | med | level end: best/last score of current level, save slot; WinMain2 |
 | 0x4A9050 | `HiScores_FileExists` | high | _findfirst hiscores.hsc |
-| 0x4A90A0 | `S28_UpdateHiScoresAfterLevel` | med | inserts into tables, crime bests, saves; WinMain2 |
-| 0x4A9210 | `S28_ApplyMuchCashCheat` | high | profile name == "MUCHCASH" -> GiveMoney 500000 |
-| 0x4A9270 | `S28_DestroyGlobalInstance` | high | delete ptrToS28PlayerData |
+| 0x4A90A0 | `PlayerData_UpdateHiScoresAfterLevel` | med | inserts into tables, crime bests, saves; WinMain2 |
+| 0x4A9210 | `PlayerData_ApplyMuchCashCheat` | high | profile name == "MUCHCASH" -> GiveMoney 500000 |
+| 0x4A9270 | `PlayerData_DestroyGlobalInstance` | high | delete g_PlayerData |
 | 0x4A9AC0 | `PoliceManager_FreeBuffer` | high | _free(this+0xa0); callers include 3 unwinds so maybe member dtor |
 | 0x4AB9D0 | `PoliceCrew_HandleObjEnterCar` | high | case 0x23 of PoliceCrew_Update switch |
 | 0x4ABA30 | `PoliceCrew_HandleObjLeaveCar` | high | case 0x24 of PoliceCrew_Update switch |

@@ -162,7 +162,7 @@ by DMA in `NetworkX.cpp` (the file name appears in `DisplayError` calls). It has
 - **Player name**: kept in the registry value `PlayerName`.
 
 Struct facts for the layouts were sent to their owners: PedGroup/Ped → Seq 27,
-TrailerController/Car → Seq 43 (which identified the `0x40F7C0-0x40F830` accessors as `CarPhysics_Get/Set{CenterPos,ZPos,Heading}`), GameObject/Object/collision record → Seq 46.
+TrailerController/Car → Seq 43 (which identified the `0x40F7C0-0x40F830` accessors as `CarPhysics_Get/Set{CenterPos,ZPos,Heading}`), PedGameObject/Object/collision record → Seq 46.
 
 ### Corrections made while checking the sub-agents' names
 
@@ -209,7 +209,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x403870` | `PedGroupPool_Init` | high | startGame; calls 0x4035a0, then PedGroup_Init for 20 groups at 0x5D28C8 stride 0x44 |
 | `0x4038E0` | `PedGroup_SetActive` | high | sets byte +0x40=1; paired with PedGroupPool_Alloc |
 | `0x4038F0` | `PedGroup_IsActive` | high | returns byte +0x40 used by pool alloc |
-| `0x403900` | `GameObject_GetCar` | medium | returns +0x84 (GameObject.car per gta2_types.h); callers pass ped->gameObject |
+| `0x403900` | `PedGameObject_GetCar` | medium | returns +0x84 (PedGameObject.car per gta2_types.h); callers pass ped->gameObject |
 | `0x403930` | `Ped_SetGroup` | high | writes Ped+0x164 (group); called from PedGroup_SetLeader/SetMember |
 | `0x403940` | `Ped_SetGroupSlot` | high | writes byte Ped+0x23c groupSlot; PedGroup_SetLeader passes 99 |
 | `0x403950` | `Ped_SetEngaged` | high | flags |
@@ -354,7 +354,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x40F410` | `TrailerController_GetOtherCar` | high | Returns +0xc if arg equals +8 else +8 |
 | `0x40F450` | `TrailerController_CreatePhysics` | high | Car_CreatePhysics on cab (+8) and trailer (+0xc) |
 | `0x40F470` | `TrailerController_FreePhysics` | high | Car_FreePhysics on cab (+8) and trailer (+0xc) |
-| `0x40F5B0` | `Nop_ReturnThis` | medium | Returns its ecx argument; trivial ctor used by CarPhysics_Ctor/Init_S22_1 |
+| `0x40F5B0` | `Nop_ReturnThis` | medium | Returns its ecx argument; trivial ctor used by CarPhysics_Ctor/SpriteBounds_Ctor |
 | `0x40F7B0` | `Sprite_SetLayer` | medium | Setter this+0x28; called by Car_SetSpriteLayer (40 callers) |
 | `0x40F7C0` | `CarPhysics_GetCenterPos` | high (Seq 43) | Copies 2 dwords from this+0x38; used only by TrailerController_UpdateAlignment |
 | `0x40F7E0` | `CarPhysics_SetCenterPos` | high (Seq 43) | Writes 2 dwords to this+0x38; used by UpdateAlignment |
@@ -366,7 +366,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x40FD40` | `TrailerController_ComputeHitchPosition` | medium | Vec2 rotate/add of hitch offsets by cab and trailer angles; sole caller CarManager_SpawnArticulated |
 | `0x40FE30` | `CollisionHit_SetPosition` | medium | Stores 3 dwords at this+4..0xc; callers are collision-record fillers |
 | `0x40FE60` | `SoundClientPool_Release` | medium | Unlinks node then makes it head (next at +0xc); used by Weapon_Release/Player_Dtor |
-| `0x40FE80` | `Position_IsObjectKind` | low | Returns whether field +0x30 is 1, 4 or 5 |
+| `0x40FE80` | `Sprite_IsObjectKind` | low | Returns whether field +0x30 is 1, 4 or 5 |
 | `0x40FEE0` | `CollisionHit_SetKindObject` | medium | Sets this+0=3, +0x20=param |
 | `0x40FEF0` | `Object_GetModel` | medium | Returns field +0x18; caller Script_Op_CHECK_OBJ_MODEL |
 | `0x40FF00` | `unsure_WorldObject_GetPrefabByte63` | low | Returns byte at (*(this+8))+99 |

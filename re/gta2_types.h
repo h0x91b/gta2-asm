@@ -10,6 +10,7 @@ typedef uint8_t GUID[16]; // Ghidra built-in, 16 bytes
 typedef uint8_t bool_;
 typedef uint8_t byte;
 typedef uint32_t dword;
+typedef int8_t sbyte;
 typedef uint8_t uchar;
 typedef uint32_t uint;
 typedef uint8_t undefined;
@@ -17,6 +18,7 @@ typedef uint8_t undefined1;
 typedef uint16_t undefined2;
 typedef uint32_t undefined4;
 typedef uint16_t ushort;
+typedef uint16_t wchar16;
 typedef uint16_t wchar_t;
 
 #pragma pack(push, 1)
@@ -138,7 +140,6 @@ typedef struct StyleFileHeader StyleFileHeader;
 typedef struct Car Car;
 typedef struct CarManager CarManager;
 typedef struct CarPool CarPool;
-typedef struct MaybeCarEngine MaybeCarEngine;
 typedef struct MaybeCarEngineHolder MaybeCarEngineHolder;
 typedef struct AnimatedValue AnimatedValue;
 typedef struct FrontEnd FrontEnd;
@@ -157,12 +158,16 @@ typedef struct SCR_STRING_HEADER SCR_STRING_HEADER;
 typedef struct SoundClient SoundClient;
 typedef struct WEAPON_STRUCT WEAPON_STRUCT;
 typedef struct WeaponPool WeaponPool;
+typedef struct CarSpriteCache CarSpriteCache;
+typedef struct CarSpriteCacheEntry CarSpriteCacheEntry;
 typedef struct CrimeEvent CrimeEvent;
 typedef struct CrimeEventQueue CrimeEventQueue;
 typedef struct DummyPedManager DummyPedManager;
 typedef struct FrameTimingStats FrameTimingStats;
 typedef struct GangRespect GangRespect;
 typedef struct GangRespectContainer GangRespectContainer;
+typedef struct HiScoreEntry HiScoreEntry;
+typedef struct HiScoreTable HiScoreTable;
 typedef struct HudManager HudManager;
 typedef struct LayerDrawQueues LayerDrawQueues;
 typedef struct Light Light;
@@ -175,26 +180,27 @@ typedef struct MikeDebug MikeDebug;
 typedef struct MissionCleanupList MissionCleanupList;
 typedef struct MissionScript MissionScript;
 typedef struct OwnerSlotTable OwnerSlotTable;
+typedef struct PlayerData PlayerData;
+typedef struct PlayerProfile PlayerProfile;
 typedef struct PoliceCrew PoliceCrew;
 typedef struct PoliceManager PoliceManager;
-typedef struct Position Position;
-typedef struct PositionsArray_S21 PositionsArray_S21;
+typedef struct ProfileLevelRecord ProfileLevelRecord;
+typedef struct RadioStationSlot RadioStationSlot;
 typedef struct S14_sub1 S14_sub1;
 typedef struct S18_sub S18_sub;
 typedef struct S2 S2;
-typedef struct S22 S22;
-typedef struct S22_1 S22_1;
-typedef struct S23 S23;
-typedef struct S28 S28;
 typedef struct S30 S30;
 typedef struct S5 S5;
-typedef struct S6 S6;
-typedef struct S7 S7;
 typedef struct SRelToBonus2 SRelToBonus2;
 typedef struct Script4k Script4k;
 typedef struct ScriptThread ScriptThread;
 typedef struct ScriptThreadPool ScriptThreadPool;
+typedef struct SoundManager SoundManager;
+typedef struct Sprite Sprite;
+typedef struct SpriteBounds SpriteBounds;
+typedef struct SpriteBoundsPool SpriteBoundsPool;
 typedef struct SpriteManager SpriteManager;
+typedef struct SpritePool SpritePool;
 typedef struct SubScript SubScript;
 typedef struct SubScript20k SubScript20k;
 typedef struct SubSubScript SubSubScript;
@@ -202,48 +208,29 @@ typedef struct TextureCache TextureCache;
 typedef struct TrafficLights TrafficLights;
 typedef struct Vec2i Vec2i;
 typedef struct Vec3i Vec3i;
-typedef struct Gang Gang;
-typedef struct Gangs Gangs;
 typedef struct ObjectMotionState ObjectMotionState;
 typedef struct PedManager PedManager;
-typedef struct Pos Pos;
 typedef struct S22_2 S22_2;
-typedef struct S31 S31;
 typedef struct S32 S32;
 typedef struct S34 S34;
 typedef struct S35 S35;
-typedef struct S37 S37;
 typedef struct S38 S38;
 typedef struct SCR_CMD_SIX_PARAMS SCR_CMD_SIX_PARAMS;
 typedef struct SCR_TWO_SHORTS SCR_TWO_SHORTS;
 typedef struct ScriptFunctionsAddrTable ScriptFunctionsAddrTable;
 typedef union U_SCR_TWO_PARAMS U_SCR_TWO_PARAMS;
-typedef struct AllCars AllCars;
 typedef struct CarS1 CarS1;
 typedef struct CarSprite CarSprite;
-typedef struct CarsS2 CarsS2;
-typedef struct CarsS3 CarsS3;
-typedef struct FrontendS1 FrontendS1;
-typedef struct FrontendS1S1 FrontendS1S1;
-typedef struct FrontendS1S2 FrontendS1S2;
 typedef struct FrontendS1S3 FrontendS1S3;
 typedef struct PedSprite PedSprite;
-typedef struct PedsManager PedsManager;
 typedef struct PlayerS2 PlayerS2;
 typedef struct S1 S1;
 typedef struct S3 S3;
 typedef struct S3Bytes S3Bytes;
-typedef struct S8 S8;
 typedef struct SKeyboard SKeyboard;
 typedef struct Timing Timing;
-typedef struct TrafficLights_Gzf2021 TrafficLights_Gzf2021;
 typedef struct FrontendImage FrontendImage;
-typedef struct Ambulance Ambulance;
-typedef struct AmbulanceSub AmbulanceSub;
 typedef struct BitMap BitMap;
-typedef struct BusAndTrains BusAndTrains;
-typedef struct BusAndTrains2 BusAndTrains2;
-typedef struct BusAndTrainsHolder BusAndTrainsHolder;
 typedef struct Camera Camera;
 typedef struct CameraPos CameraPos;
 typedef struct CarAI CarAI;
@@ -251,41 +238,35 @@ typedef struct CarAIPool CarAIPool;
 typedef struct CarAttachment CarAttachment;
 typedef struct CarDoor CarDoor;
 typedef struct CarEngineData CarEngineData;
-typedef struct CarInfoChunk CarInfoChunk;
 typedef struct CarManager5_S1 CarManager5_S1;
 typedef struct CarPhysics CarPhysics;
 typedef struct CarPhysicsData CarPhysicsData;
 typedef struct CarPhysicsPool CarPhysicsPool;
 typedef struct Collide Collide;
 typedef struct Collide1 Collide1;
-typedef struct Collide2 Collide2;
 typedef struct CollideArray256 CollideArray256;
 typedef struct CollideTopLevel CollideTopLevel;
 typedef struct CollisionBox CollisionBox;
 typedef struct D3DContext_s1 D3DContext_s1;
 typedef struct DirectInput_DeviceObjectData DirectInput_DeviceObjectData;
 typedef struct EnginesDataHolder EnginesDataHolder;
-typedef struct Game2 Game2;
 typedef struct Game2Holder Game2Holder;
-typedef struct GameObject GameObject;
 typedef struct GlobalSettings GlobalSettings;
 typedef struct GtaString GtaString;
 typedef struct GtaStringsHolder GtaStringsHolder;
 typedef struct Keyboard Keyboard;
 typedef struct KeyboardEvent KeyboardEvent;
 typedef struct LocaleSingle LocaleSingle;
-typedef struct MapBlocks_SeukoMod MapBlocks_SeukoMod;
 typedef struct ObjectPrefab ObjectPrefab;
 typedef struct ObjectPrefabsContainer ObjectPrefabsContainer;
 typedef struct Passenger Passenger;
+typedef struct PedGameObject PedGameObject;
 typedef struct PedGameObjectManager PedGameObjectManager;
 typedef struct PedGroup PedGroup;
 typedef struct PhysicalPalette PhysicalPalette;
 typedef struct RenderDistanceArrayItem RenderDistanceArrayItem;
 typedef struct RoofSpritesHolder RoofSpritesHolder;
-typedef struct S10_TxtMessage S10_TxtMessage;
 typedef struct S21 S21;
-typedef struct S21_1 S21_1;
 typedef struct S24_char S24_char;
 typedef struct S33 S33;
 typedef struct S4_1 S4_1;
@@ -301,20 +282,15 @@ typedef struct SMission SMission;
 typedef struct STexture STexture;
 typedef struct SVideo SVideo;
 typedef struct TILE TILE;
-typedef struct Texture Texture;
 typedef struct Texture_S1 Texture_S1;
 typedef struct Texture_S2 Texture_S2;
 typedef struct Tick Tick;
 typedef struct TrailerController TrailerController;
 typedef struct TrailerControllerPool TrailerControllerPool;
-typedef struct Vert Vert;
 typedef struct Verts Verts;
 typedef struct WorldObject WorldObject;
 typedef struct WorldObjectPool WorldObjectPool;
 typedef struct WorldRect WorldRect;
-typedef struct XYZ XYZ;
-typedef struct sprite_base sprite_base;
-typedef struct sprite_entry sprite_entry;
 typedef struct Vec2 Vec2;
 typedef struct SCR_CMD_HEADER SCR_CMD_HEADER;
 typedef struct SCR_FOUR_PARAMS SCR_FOUR_PARAMS;
@@ -410,7 +386,7 @@ enum CRIME_KIND_values {
     CRIME_VEHICLE_DAMAGE = 1,
     CRIME_FIRE_WEAPON = 2,
     CRIME_CAR_DESTROYED_OR_STOLEN = 3,
-    CRIME_UNKNOWN_4 = 4,
+    CRIME_BUS_HIJACKED = 4,
     CRIME_CARJACK = 5,
     CRIME_KILL_PED_REL1_3 = 6,
     CRIME_KILL_PED_OTHER = 7,
@@ -2582,11 +2558,11 @@ struct CraneManager {
 
 // /CrimeStats  size 0x3c
 struct CrimeStats {
-    int crimeCount[10]; /* 0x0 */
-    byte oneShotFlag[10]; /* 0x28 */
+    int crimeCount[10]; /* 0x0 Per-level event counters of one Player (Player+0x644), indexed by CRIME_KIND. Bumped ONLY by CrimeEvent_Report -> CrimeStats_CountCrime (+1 each), and only if the reporting ped is not law enforcement/army and Ped_HasWeapons(ped). [0] never used; [1] CRIME_VEHICLE_DAMAGE (hit/ram a car); [2] CRIME_FIRE_WEAPON (once per tick, see oneShotFlag; every Weapon_Fire* /thrown/electrogun/car-gun call); [3] CRIME_CAR_DESTROYED_OR_STOLEN (car or full bus destroyed); [4] bus hijacked (was CRIME_UNKNOWN_4); [5] carjack = frontend row 'carjack'; [6] ped killed with weapon 1 or 3 = row 'run_ovr'; [7] other civilian kill = row 'murder'; [8] cop/army/FBI/SWAT/medic/fireman kill = row 'cop_kl'; [9] rival gang member kill = row 'gng_kl'. Copied to Menu by Menu_CopyPlayerCrimeStats; saved/restored by Player_SaveCheckpoint/LoadCheckpoint. */
+    byte oneShotFlag[10]; /* 0x28 1 = this kind may still be counted. Only index 2 (FIRE_WEAPON) is ever cleared (in CountCrime); CrimeStats_RearmOneShots (called every tick from Player_Update) sets [1..9] back to 1, so crimeCount[2] counts ticks in which a weapon fired, not bullets. Init to 1 by CrimeStats_Ctor. */
     uint8_t _gap_0x32[0x2];
-    int unsure_totalEarned; /* 0x34 */
-    int wantedStarSeconds; /* 0x38 */
+    int carDamageCost; /* 0x34 Money-equivalent of vehicle damage/destruction caused by this player (frontend row 'car_cst', shown as $%d). Only CrimeStats_AddEarned adds to it: PlayerScore_OnCarDamaged/OnCarRammed (1..100 scaled by damage), OnCarDestroyed (car value * combo mult), OnFullBusDestroyed (100); each * Player_GetMoneyMultiplier. Ped kills and carjacks do NOT add. Was unsure_totalEarned. */
+    int wantedStarSeconds; /* 0x38 Sum over time of the player's cop stars (Ped_GetCopStars 0..6), added once per second in PlayerScore_Update via CrimeStats_AddWantedStarSeconds. Frontend row 'evsnrtg'. Higher = longer/hotter wanted level. */
 };
 
 // /Crusher  size 0x30
@@ -2789,7 +2765,7 @@ struct GTAVertex {
     float z; /* 0x8 */
     float z2; /* 0xc */
     uint flags; /* 0x10 */
-    uint8_t _gap_0x14[0x4];
+    dword spec; /* 0x14 specular (from seuko Vert) */
     float u; /* 0x18 */
     float v; /* 0x1c */
 };
@@ -3115,7 +3091,7 @@ struct ObjectSpawner {
     byte bonusTokenAllowed[50]; /* 0x20 */
     uint8_t _gap_0x52[0x2];
     int bonusTokenCounter; /* 0x54 */
-    Position *position; /* 0x58 */
+    Sprite *position; /* 0x58 */
 };
 
 // /OwnerSlot  size 0x8
@@ -3159,7 +3135,7 @@ struct Particle {
     void *owner; /* 0x28 */
     ushort ttl; /* 0x2c */
     ushort ttlInit; /* 0x2e */
-    Position *pos; /* 0x30 */
+    Sprite *pos; /* 0x30 */
     uint flagA; /* 0x34 */
     uint type; /* 0x38 */
     void **next; /* 0x3c */
@@ -3727,7 +3703,7 @@ struct Car {
     CAR_DELTAS_BITSTATE deltasBitstate; /* 0x8 */
     CarDoor carDoor[4]; /* 0xc */
     Car *next; /* 0x4c */
-    Position *body; /* 0x50 */
+    Sprite *body; /* 0x50 */
     Ped *driver; /* 0x54 */
     CarPhysics *physics; /* 0x58 */
     CarAI *ai; /* 0x5c */
@@ -3827,24 +3803,10 @@ struct CarPool {
     uint8_t _gap_0xe0c2[0x2];
 };
 
-// /_car/MaybeCarEngine  size 0xb0
-struct MaybeCarEngine {
-    uint8_t _gap_0x0[0xc];
-    MaybeCarEngine *next; /* 0xc */
-    int field13_0x10[2][4]; /* 0x10 */
-    uint8_t _gap_0x30[0x2c];
-    void *prev_; /* 0x5c */
-    uint8_t _gap_0x60[0x32];
-    byte field109_0x92; /* 0x92 */
-    bool_ IsAccelerateForward; /* 0x93 */
-    bool_ IsAccelerateBackward; /* 0x94 */
-    uint8_t _gap_0x95[0x1b];
-};
-
 // /_car/MaybeCarEngineHolder  size 0x8
 struct MaybeCarEngineHolder {
-    MaybeCarEngine *firstElement; /* 0x0 */
-    MaybeCarEngine *arr306; /* 0x4 */
+    CarPhysics *firstElement; /* 0x0 */
+    CarPhysics *arr306; /* 0x4 */
 };
 
 // /_game/FrontEnd  size 0x1eb40
@@ -3867,23 +3829,19 @@ struct FrontEnd {
     int cursorBlinkTimer; /* 0x118 */
     short defaultFontId; /* 0x11c */
     short pageId; /* 0x11e */
-    uint8_t _gap_0x120[0xc3e];
-    short plyrslot; /* 0xd5e */
-    short plyrslot2; /* 0xd60 */
-    uint8_t _gap_0xd62[0x4076];
-    wchar_t field19906_0x4dd8[50]; /* 0x4dd8 */
-    uint8_t _gap_0x4e3c[0x7b50];
+    uint8_t _gap_0x120[0x2];
+    FrontendPage pages[17]; /* 0x122 */
     WCHAR playerName[8]; /* 0xc98c */
-    short field51476_0xc99c; /* 0xc99c */
+    short field272_0xc99c; /* 0xc99c */
     byte nameLen; /* 0xc99e */
     byte textKeyHeld; /* 0xc99f */
     short lastKeyDik; /* 0xc9a0 */
     short keyRepeatCounter; /* 0xc9a2 */
-    int field51481_0xc9a4; /* 0xc9a4 */
-    int field51482_0xc9a8; /* 0xc9a8 */
-    int field51483_0xc9ac; /* 0xc9ac */
-    int field51484_0xc9b0; /* 0xc9b0 */
-    short field51485_0xc9b4; /* 0xc9b4 */
+    int field277_0xc9a4; /* 0xc9a4 */
+    int field278_0xc9a8; /* 0xc9a8 */
+    int field279_0xc9ac; /* 0xc9ac */
+    int field280_0xc9b0; /* 0xc9b0 */
+    short field281_0xc9b4; /* 0xc9b4 */
     byte codeLen; /* 0xc9b6 */
     byte codeErrorShown; /* 0xc9b7 */
     byte keyLeftEdge; /* 0xc9b8 */
@@ -3900,15 +3858,13 @@ struct FrontEnd {
     byte keyEnterPrev; /* 0xc9c3 */
     byte keyEscapePrev; /* 0xc9c4 */
     dword time; /* 0xc9c5 */
-    byte field51502_0xc9c9; /* 0xc9c9 */
-    byte field51503_0xc9ca; /* 0xc9ca */
+    byte field298_0xc9c9; /* 0xc9c9 */
+    byte field299_0xc9ca; /* 0xc9ca */
     uint8_t _gap_0xc9cb[0x2];
     bool_ cheatsAreActive; /* 0xc9cd */
     uint8_t _gap_0xc9ce[0x2];
     dword idleTimerStart; /* 0xc9d0 */
-    uint8_t _gap_0xc9d4[0x23e1];
-    undefined1 vector_8; /* 0xedb5 Created by retype action */
-    uint8_t _gap_0xedb6[0x1e];
+    FrontendLevelPaths levelPaths[12]; /* 0xc9d4 */
     FrontendSaveSlotInfo saveSlots[8]; /* 0xedd4 */
     byte backgroundId; /* 0xedf4 */
     uint8_t _gap_0xedf5[0x1];
@@ -4157,7 +4113,7 @@ struct Ped {
     short followOffsetAngle; /* 0x132 */
     short homeRotation; /* 0x134 */
     uint8_t _gap_0x136[0x2];
-    GameObject *bumpPartnerObject; /* 0x138 */
+    PedGameObject *bumpPartnerObject; /* 0x138 */
     void *trainStop; /* 0x13c */
     Car *refCar; /* 0x140 */
     Ped *attackerPed; /* 0x144 */
@@ -4169,7 +4125,7 @@ struct Ped {
     Player *player; /* 0x15c */
     Ped *nextPed; /* 0x160 */
     PedGroup *group; /* 0x164 */
-    GameObject *gameObject; /* 0x168 */
+    PedGameObject *gameObject; /* 0x168 */
     Car *currentCar; /* 0x16c */
     WEAPON_STRUCT *selectedWeapon; /* 0x170 */
     WEAPON_STRUCT *altWeapon; /* 0x174 */
@@ -4357,6 +4313,25 @@ struct WeaponPool {
     uint8_t _gap_0x2fda[0x2];
 };
 
+// /auto_structs/CarSpriteCacheEntry  size 0x14
+struct CarSpriteCacheEntry {
+    undefined *pixelBuf; /* 0x0 slice of S23.alignedBuf */
+    ushort spriteId; /* 0x4 0xFFFF = free */
+    ushort unsure_pad6; /* 0x6 never touched */
+    uint deltaMask; /* 0x8 bit n = delta record n */
+    uint stamp; /* 0xc LRU stamp */
+    ushort textureSlot; /* 0x10 0..0x2F */
+    ushort palette; /* 0x12 */
+};
+
+// /auto_structs/CarSpriteCache  size 0x3cc
+struct CarSpriteCache {
+    CarSpriteCacheEntry entries[48]; /* 0x0 48 car-sprite cache entries */
+    uint stampCounter; /* 0x3c0 S23_NextStamp++ */
+    undefined *alignedBuf; /* 0x3c4 MallocAligned64K result, 0x40000 bytes */
+    undefined *rawBuf; /* 0x3c8 raw malloc pointer stored by MallocAligned64K */
+};
+
 // /auto_structs/CrimeEvent  size 0x14
 struct CrimeEvent {
     int type; /* 0x0 */
@@ -4382,7 +4357,7 @@ struct DummyPedManager {
     byte emergencyPeds; /* 0x5 */
     byte onScreenPeds; /* 0x6 */
     byte makeAllCharsMuggers; /* 0x7 */
-    Position *spawnProbe; /* 0x8 */
+    Sprite *spawnProbe; /* 0x8 */
 };
 
 // /auto_structs/FrameTimingStats  size 0x54
@@ -4413,8 +4388,7 @@ struct GangRespect {
     byte highRespectFlag; /* 0x110 */
     byte killAffectsRespect; /* 0x111 */
     byte hostileToGang[10]; /* 0x112 */
-    char respect[4]; /* 0x11c */
-    undefined2 field13_0x120; /* 0x120 */
+    sbyte respect[6]; /* 0x11c respect towards each of the 6 gangs */
     char killReaction[10]; /* 0x122 */
     int arrowTargetX; /* 0x12c */
     int arrowTargetY; /* 0x130 */
@@ -4433,11 +4407,20 @@ struct GangRespectContainer {
     GangRespect gang[10]; /* 0x0 */
 };
 
+// /auto_structs/HiScoreEntry  size 0x18
+struct HiScoreEntry {
+    wchar16 name[10]; /* 0x0 10 wchar */
+    uint score; /* 0x14 */
+};
+
+// /auto_structs/HiScoreTable  size 0xf0
+struct HiScoreTable {
+    HiScoreEntry entries[10]; /* 0x0 top 10 */
+};
+
 // /auto_structs/HudManager  size 0x2af8
 struct HudManager {
-    uint8_t _gap_0x0[0x2e];
-    char field46_0x2e; /* 0x2e */
-    uint8_t _gap_0x2f[0x1d];
+    HudCarNameLabel carName; /* 0x0 car name label (HudCarNameLabel) */
     HudZoneNameLabel zoneName; /* 0x4c */
     HudBriefQueue briefQueue; /* 0xe4 */
     HudPagerArray pagerArray; /* 0x7e8 */
@@ -4504,13 +4487,14 @@ struct ListNodePool {
     S18_sub s18_sub_50[50]; /* 0x4 */
 };
 
-// /auto_structs/LocaleSettings  size 0x11
+// /auto_structs/LocaleSettings  size 0x14
 struct LocaleSettings {
     LocaleSingle *keys; /* 0x0 */
     int keyCount; /* 0x4 Created by retype action */
     wchar_t *text; /* 0x8 */
     uint textLength; /* 0xc */
     char language; /* 0x10 Created by retype action */
+    uint8_t _gap_0x11[0x3];
 };
 
 // /auto_structs/MapBlocks  size 0x370
@@ -4681,6 +4665,35 @@ struct OwnerSlotTable {
     OwnerSlot slots[255]; /* 0x0 */
 };
 
+// /auto_structs/ProfileLevelRecord  size 0xc
+struct ProfileLevelRecord {
+    byte unlocked; /* 0x0 */
+    byte pad[3]; /* 0x1 */
+    uint bestScore; /* 0x4 */
+    uint lastScore; /* 0x8 */
+};
+
+// /auto_structs/PlayerProfile  size 0xa4
+struct PlayerProfile {
+    ProfileLevelRecord levels[12]; /* 0x0 12 level records */
+    wchar16 name[9]; /* 0x90 9 wchar */
+    byte pad[2]; /* 0xa2 */
+};
+
+// /auto_structs/PlayerData  size 0x2bc0
+struct PlayerData {
+    byte ioPackBuffer[3264]; /* 0x0 S28_SaveProfileSlot / SaveHiScores pack here before File_WriteWhole */
+    uint8_t _gap_0xcc0[0xb40];
+    uint bestCrimeStats[3][10]; /* 0x1800 [area][10] */
+    uint bestTotalEarned[3]; /* 0x1878 */
+    uint bestWantedStarSeconds[3]; /* 0x1884 */
+    HiScoreTable levelHiScores[12]; /* 0x1890 index area*4+stage */
+    HiScoreTable overallHiScores; /* 0x23d0 */
+    HiScoreTable unsure_extraHiScoresA; /* 0x24c0 ctor'd by InitS28, default names ALAN..JACKSON, never saved */
+    HiScoreTable unsure_extraHiScoresB; /* 0x25b0 ctor'd by InitS28, no other user */
+    PlayerProfile profiles[8]; /* 0x26a0 8 player slots */
+};
+
 // /auto_structs/PoliceCrew  size 0x38
 struct PoliceCrew {
     ushort id; /* 0x0 */
@@ -4731,85 +4744,23 @@ struct PoliceManager {
     uint8_t _gap_0x7b5[0x3];
 };
 
-// /auto_structs/Position  size 0x3c
-struct Position {
-    short rotation; /* 0x0 */
-    uint8_t _gap_0x2[0x2];
-    void *frameBounds; /* 0x4 */
-    void *owner; /* 0x8 */
-    void *bounds; /* 0xc */
-    void *soundClient; /* 0x10 */
-    int x; /* 0x14 Created by retype action */
-    int y; /* 0x18 Created by retype action */
-    int z; /* 0x1c Created by retype action */
-    short incFromS20; /* 0x20 */
-    short field11_0x22; /* 0x22 */
-    short field12_0x24; /* 0x24 */
-    uint8_t _gap_0x26[0x2];
-    int layer; /* 0x28 */
-    byte field16_0x2c; /* 0x2c */
-    uint8_t _gap_0x2d[0x3];
-    int collisionKind; /* 0x30 */
-    int field21_0x34; /* 0x34 */
-    byte field22_0x38; /* 0x38 */
-    byte cachedZLayer; /* 0x39 */
-    uint8_t _gap_0x3a[0x2];
-};
-
-// /auto_structs/PositionsArray_S21  size 0x49b28
-struct PositionsArray_S21 {
-    Position *last; /* 0x0 */
-    Position arr[5031]; /* 0x4 */
+// /auto_structs/RadioStationSlot  size 0x1c
+struct RadioStationSlot {
+    byte active; /* 0x0 */
+    uint8_t _gap_0x1[0x3];
+    Fix16 x; /* 0x4 */
+    Fix16 y; /* 0x8 */
+    int stationId; /* 0xc */
+    short innerRadius; /* 0x10 band radius (Radio_GetSignalStrength) */
+    short outerRadius; /* 0x12 band radius (Radio_GetSignalStrength) */
+    int timer; /* 0x14 */
+    int savedStreamPos; /* 0x18 */
 };
 
 // /auto_structs/S2  size 0x8
 struct S2 {
     int f1; /* 0x0 */
     int f2; /* 0x4 */
-};
-
-// /auto_structs/S22  size 0x5d598
-struct S22 {
-    int last; /* 0x0 */
-    uint8_t _gap_0x4[0x5d594];
-};
-
-// /auto_structs/S22_1  size 0x13a7
-struct S22_1 {
-    uint8_t _gap_0x0[0x13a7];
-};
-
-// /auto_structs/S23  size 0x3cc
-struct S23 {
-    int field0_0x0; /* 0x0 */
-    uint8_t _gap_0x4[0xc];
-    ushort field13_0x10; /* 0x10 */
-    uint8_t _gap_0x12[0x2];
-    int field16_0x14; /* 0x14 */
-    uint8_t _gap_0x18[0xc];
-    ushort field29_0x24; /* 0x24 */
-    uint8_t _gap_0x26[0x2];
-    int field32_0x28; /* 0x28 */
-    uint8_t _gap_0x2c[0x10];
-    int field49_0x3c; /* 0x3c */
-    uint8_t _gap_0x40[0x10];
-    int field66_0x50; /* 0x50 */
-    uint8_t _gap_0x54[0x24];
-    int field103_0x78; /* 0x78 */
-    uint8_t _gap_0x7c[0x218];
-    int field640_0x294; /* 0x294 */
-    uint8_t _gap_0x298[0x128];
-    undefined4 field937_0x3c0; /* 0x3c0 */
-    int field938_0x3c4; /* 0x3c4 */
-    undefined4 buf0x40000; /* 0x3c8 */
-};
-
-// /auto_structs/S28  size 0x2bc0
-struct S28 {
-    uint8_t _gap_0x0[0x1890];
-    byte arr12[12][240]; /* 0x1890 */
-    uint8_t _gap_0x23d0[0x2d0];
-    byte arr8[8][164]; /* 0x26a0 */
 };
 
 // /auto_structs/S30  size 0x324
@@ -4827,64 +4778,6 @@ struct S5 {
     short field8_0x8; /* 0x8 */
     byte field9_0xa; /* 0xa */
     uint8_t _gap_0xb[0x1];
-};
-
-// /auto_structs/S6  size 0x5540
-struct S6 {
-    uint8_t _gap_0x0[0x1];
-    bool_ IsGamePaused; /* 0x1 */
-    uint8_t _gap_0x2[0x1466];
-    SCR_Vector2 gameCameraPos; /* 0x1468 */
-    SCR_f pedZ; /* 0x1470 */
-    ushort rotation; /* 0x1474 */
-    uint8_t _gap_0x1476[0x2];
-    uint length; /* 0x1478 Created by retype action */
-    uint8_t _gap_0x147c[0xc];
-    S5 arrS5_1020[1020]; /* 0x1488 */
-    uint8_t _gap_0x4458[0xff8];
-    int relToAudio; /* 0x5450 */
-    uint8_t _gap_0x5454[0x10];
-    VOCAL vocal; /* 0x5464 */
-    uint8_t _gap_0x5468[0x10];
-    undefined1 someArray; /* 0x5478 */
-    uint8_t _gap_0x5479[0x6f];
-    short field9477_0x54e8; /* 0x54e8 */
-    uint8_t _gap_0x54ea[0x1e];
-    int field9508_0x5508; /* 0x5508 */
-    uint8_t _gap_0x550c[0x10];
-    int field9525_0x551c; /* 0x551c */
-    uint8_t _gap_0x5520[0x20];
-};
-
-// /auto_structs/S7  size 0x78a
-struct S7 {
-    uint8_t _gap_0x0[0x2];
-    int field2_0x2; /* 0x2 */
-    uint8_t _gap_0x6[0x2];
-    undefined2 field5_0x8; /* 0x8 */
-    short field6_0xa; /* 0xa */
-    undefined4 field7_0xc; /* 0xc */
-    int field8_0x10; /* 0x10 */
-    undefined2 field9_0x14; /* 0x14 */
-    undefined2 field10_0x16; /* 0x16 */
-    uint8_t _gap_0x18[0x10];
-    byte field27_0x28; /* 0x28 */
-    byte field28_0x29; /* 0x29 */
-    uint8_t _gap_0x2a[0x2];
-    undefined2 field31_0x2c; /* 0x2c */
-    uint8_t _gap_0x2e[0x3a];
-    undefined4 field90_0x68; /* 0x68 */
-    uint8_t _gap_0x6c[0x258];
-    int field691_0x2c4; /* 0x2c4 */
-    uint8_t _gap_0x2c8[0x378];
-    byte field1580_0x640; /* 0x640 */
-    uint8_t _gap_0x641[0x3f];
-    undefined2 field1644_0x680; /* 0x680 */
-    undefined2 field1645_0x682; /* 0x682 */
-    uint8_t _gap_0x684[0x94];
-    byte weapons[15]; /* 0x718 */
-    uint8_t _gap_0x727[0x61];
-    undefined2 field1892_0x788; /* 0x788 */
 };
 
 // /auto_structs/SRelToBonus2  size 0x2d
@@ -4929,11 +4822,142 @@ struct ScriptThreadPool {
     uint8_t _gap_0x8ea[0x2];
 };
 
+// /auto_structs/SoundManager  size 0x5578
+struct SoundManager {
+    byte initialized; /* 0x0 */
+    bool_ IsGamePaused; /* 0x1 */
+    byte frameEnabled; /* 0x2 */
+    byte unsure_musicMode; /* 0x3 */
+    Fix16 unsure_fix16_4; /* 0x4 */
+    int unsure_int8; /* 0x8 */
+    Fix16 unsure_fix16_c; /* 0xc */
+    byte voiceCount; /* 0x10 */
+    uint8_t _gap_0x11[0x3];
+    int sampleRate; /* 0x14 */
+    byte unsure_flag18; /* 0x18 */
+    byte unsure_flag19; /* 0x19 */
+    byte unsure_flag1a; /* 0x1a */
+    byte unsure_flag1b; /* 0x1b */
+    byte unsure_flag1c; /* 0x1c */
+    byte sound3DActive; /* 0x1d */
+    uint8_t _gap_0x1e[0x6];
+    byte sfxVolume; /* 0x24 */
+    byte musicVolume; /* 0x25 */
+    uint8_t _gap_0x26[0x2];
+    Fix16 distSqToListener; /* 0x28 */
+    byte distSqrtComputed; /* 0x2c */
+    uint8_t _gap_0x2d[0x3];
+    byte pendingRequest[104]; /* 0x30 */
+    byte activeRequestBuf; /* 0x98 */
+    uint8_t _gap_0x99[0x3];
+    byte requestBuffers[3328]; /* 0x9c */
+    byte requestSortIdx[32]; /* 0xd9c */
+    byte requestCount[2]; /* 0xdbc */
+    uint8_t _gap_0xdbe[0x2];
+    byte voices[1664]; /* 0xdc0 */
+    uint8_t _gap_0x1440[0x10];
+    int unsure_int1450; /* 0x1450 */
+    uint randomSeeds[5]; /* 0x1454 */
+    SCR_Vector2 gameCameraPos; /* 0x1468 */
+    SCR_f pedZ; /* 0x1470 */
+    ushort rotation; /* 0x1474 */
+    uint8_t _gap_0x1476[0x2];
+    uint listenerSourceSlot; /* 0x1478 */
+    byte sourceSlot0Unused[12]; /* 0x147c */
+    S5 sourceSlotsFrom1[1019]; /* 0x1488 */
+    uint activeSourceIds[1020]; /* 0x444c */
+    uint activeSourceCount; /* 0x543c */
+    int unsure_int5440; /* 0x5440 */
+    int unsure_int5444; /* 0x5444 */
+    int unsure_int5448; /* 0x5448 */
+    byte slowTick; /* 0x544c */
+    uint8_t _gap_0x544d[0x3];
+    int relToAudio; /* 0x5450 */
+    uint8_t _gap_0x5454[0x10];
+    VOCAL vocal; /* 0x5464 */
+    RadioStationSlot radioSlots[5]; /* 0x5468 radio station table (Seq 27 sub-agent: SoundMgr_VocalSlots_*, CancelVocalAt, Radio_GetSignalStrength); 0x544C..0x5467 may overlay a slot 0 used as vocal client header */
+    byte unsure_radioFlag54f4; /* 0x54f4 */
+    uint8_t _gap_0x54f5[0x1];
+    byte radioSignalLevel; /* 0x54f6 */
+    byte radioCurrentSlot; /* 0x54f7 */
+    byte unsure_radioFlag54f8; /* 0x54f8 */
+    uint8_t _gap_0x54f9[0x3];
+    byte radioBand; /* 0x54fc */
+    uint8_t _gap_0x54fd[0x7];
+    byte radioChangeRequest; /* 0x5504 */
+    uint8_t _gap_0x5505[0x1];
+    ushort radioRetuneCountdown; /* 0x5506 */
+    int radioStreamId; /* 0x5508 */
+    int unsure_radioClientKind; /* 0x550c */
+    byte unsure_radioClientByte10; /* 0x5510 */
+    uint8_t _gap_0x5511[0x7];
+    int unsure_radioClientInt18; /* 0x5518 */
+    int radioFadeTimer; /* 0x551c */
+    byte policeRadioReady; /* 0x5520 */
+    byte policeVariantCounter; /* 0x5521 */
+    uint8_t _gap_0x5522[0x6];
+    byte policeQueueRead; /* 0x5528 */
+    byte policeQueueWrite; /* 0x5529 */
+    uint8_t _gap_0x552a[0x2];
+    byte policeQueue[15]; /* 0x552c */
+    uint8_t _gap_0x553b[0x2d];
+    byte policeType8TileX; /* 0x5568 */
+    byte policeType8TileY; /* 0x5569 */
+    ushort policeStandbyTimer; /* 0x556a */
+    ushort unsure_policeTimer556c; /* 0x556c */
+    ushort unsure_policeTimer556e; /* 0x556e */
+    ushort unsure_policeTimer5570; /* 0x5570 */
+    uint8_t _gap_0x5572[0x2];
+    int unsure_policeCarDescState; /* 0x5574 */
+};
+
+// /auto_structs/Sprite  size 0x3c
+struct Sprite {
+    short rotation; /* 0x0 */
+    uint8_t _gap_0x2[0x2];
+    void *frameBounds; /* 0x4 */
+    void *owner; /* 0x8 */
+    void *bounds; /* 0xc */
+    void *soundClient; /* 0x10 */
+    int x; /* 0x14 Created by retype action */
+    int y; /* 0x18 Created by retype action */
+    int z; /* 0x1c Created by retype action */
+    short incFromS20; /* 0x20 */
+    short spriteId; /* 0x22 sprite index within its sprite-base (Sprite_GetSpriteIndex 0x4BA230) */
+    short remap; /* 0x24 palette remap, set with +0x34 by Sprite_SetRemap 0x4B9B00 */
+    uint8_t _gap_0x26[0x2];
+    int layer; /* 0x28 */
+    byte field16_0x2c; /* 0x2c */
+    uint8_t _gap_0x2d[0x3];
+    int collisionKind; /* 0x30 */
+    int paletteKind; /* 0x34 render palette kind, 1-based: 2 sprite, 3 car remap, 4 ped remap, 8 font (Sprite_SetRemap / Sprite_SetNoRemapState 0x420700) */
+    byte field22_0x38; /* 0x38 */
+    byte cachedZLayer; /* 0x39 */
+    uint8_t _gap_0x3a[0x2];
+};
+
+// /auto_structs/SpriteBounds  size 0x13a7
+struct SpriteBounds {
+    uint8_t _gap_0x0[0x13a7];
+};
+
+// /auto_structs/SpriteBoundsPool  size 0x5d598
+struct SpriteBoundsPool {
+    int last; /* 0x0 */
+    uint8_t _gap_0x4[0x5d594];
+};
+
 // /auto_structs/SpriteManager  size 0x8
 struct SpriteManager {
     undefined4 drawCounter; /* 0x0 */
     undefined2 inc; /* 0x4 */
     uint8_t _gap_0x6[0x2];
+};
+
+// /auto_structs/SpritePool  size 0x49b28
+struct SpritePool {
+    Sprite *last; /* 0x0 */
+    Sprite arr[5031]; /* 0x4 */
 };
 
 // /auto_structs/SubScript  size 0x20
@@ -4997,26 +5021,6 @@ struct Vec3i {
     int z; /* 0x8 */
 };
 
-// /imported/gta2-mouse/Gang  size 0x144
-struct Gang {
-    uint8_t _gap_0x0[0x104];
-    int field_0x104; /* 0x104 */
-    int field_0x108; /* 0x108 */
-    int field_0x10c; /* 0x10c */
-    uint8_t _gap_0x110[0xc];
-    byte respect[4]; /* 0x11c */
-    short field_0x120; /* 0x120 */
-    uint8_t _gap_0x122[0x1a];
-    int field_0x13c; /* 0x13c */
-    uint8_t _gap_0x140[0x3];
-    undefined1 field_0x143; /* 0x143 */
-};
-
-// /imported/gta2-mouse/Gangs  size 0xca8
-struct Gangs {
-    Gang arr[10]; /* 0x0 */
-};
-
 // /imported/gta2-mouse/ObjectMotionState  size 0x3c
 struct ObjectMotionState {
     uint8_t _gap_0x0[0x4];
@@ -5053,29 +5057,6 @@ struct PedManager {
     undefined1 field_0x2053b; /* 0x2053b */
 };
 
-// /imported/gta2-mouse/Pos  size 0x3c
-struct Pos {
-    short rotation; /* 0x0 */
-    uint8_t _gap_0x2[0x2];
-    Pos *MaybePrev; /* 0x4 */
-    int field_0x8; /* 0x8 */
-    S22_1 *s22_1; /* 0xc */
-    void *ptrRelToPos; /* 0x10 */
-    int x; /* 0x14 */
-    int y; /* 0x18 */
-    int z; /* 0x1c */
-    short incFromS20; /* 0x20 */
-    short field_0x22; /* 0x22 */
-    short field_0x24; /* 0x24 */
-    uint8_t _gap_0x26[0x2];
-    int field_0x28; /* 0x28 */
-    uint8_t _gap_0x2c[0x4];
-    int field_0x30; /* 0x30 */
-    int field_0x34; /* 0x34 */
-    uint8_t _gap_0x38[0x3];
-    undefined1 field_0x3b; /* 0x3b */
-};
-
 // /imported/gta2-mouse/S22_2  size 0x8
 struct S22_2 {
     uint8_t _gap_0x0[0x7];
@@ -5085,26 +5066,16 @@ struct S22_2 {
 // /imported/gta2-mouse/S32  size 0x2c
 struct S32 {
     int field_0x0; /* 0x0 */
-    S22_1 *s22_1_ex; /* 0x4 */
+    SpriteBounds *s22_1_ex; /* 0x4 */
     uint8_t _gap_0x8[0x4];
-    S22_1 *s22_1; /* 0xc */
-    Pos *pos; /* 0x10 */
+    SpriteBounds *s22_1; /* 0xc */
+    Sprite *pos; /* 0x10 */
     int field_0x14; /* 0x14 */
     int field_0x18; /* 0x18 */
     uint8_t _gap_0x1c[0x4];
     int field_0x20; /* 0x20 */
     uint8_t _gap_0x24[0x7];
     undefined1 field_0x2b; /* 0x2b */
-};
-
-// /imported/gta2-mouse/S31  size 0x29178
-struct S31 {
-    S32 *last; /* 0x0 */
-    int field_0x4; /* 0x4 */
-    S32 arrS32[3825]; /* 0x8 */
-    short field_0x29174; /* 0x29174 */
-    uint8_t _gap_0x29176[0x1];
-    undefined1 field_0x29177; /* 0x29177 */
 };
 
 // /imported/gta2-mouse/S34  size 0x8
@@ -5154,17 +5125,6 @@ struct S38 {
     int field_0x70; /* 0x70 */
 };
 
-// /imported/gta2-mouse/S37  size 0x8ca8
-struct S37 {
-    ushort index; /* 0x0 */
-    uint8_t _gap_0x2[0x2];
-    S38 arr[300]; /* 0x4 */
-    uint8_t _gap_0x87f4[0x4b0];
-    short someShort; /* 0x8ca4 */
-    uint8_t _gap_0x8ca6[0x1];
-    undefined1 field_0x8ca7; /* 0x8ca7 */
-};
-
 // /imported/gta2-mouse/SCR_TWO_SHORTS  size 0x4
 struct SCR_TWO_SHORTS {
     short s1; /* 0x0 */
@@ -5191,15 +5151,6 @@ struct ScriptFunctionsAddrTable {
     undefined1 field_0x303; /* 0x303 */
 };
 
-// /imported/gzf-2021/AllCars  size 0xe0c4
-struct AllCars {
-    Car *field0_0x0; /* 0x0 */
-    Car *firstCar; /* 0x4 */
-    Car cars[306]; /* 0x8 */
-    uint8_t _gap_0xe0c0[0x3];
-    undefined1 field_0xe0c3; /* 0xe0c3 */
-};
-
 // /imported/gzf-2021/CarS1  size 0x10
 struct CarS1 {
     uint8_t _gap_0x0[0xf];
@@ -5216,67 +5167,10 @@ struct CarSprite {
     ushort color; /* 0x24 */
 };
 
-// /imported/gzf-2021/CarsS3  size 0xb0
-struct CarsS3 {
-    int *field0_0x0; /* 0x0 */
-    int *field1_0x4; /* 0x4 */
-    uint8_t _gap_0x8[0x4];
-    int next; /* 0xc */
-    int arr; /* 0x10 */
-    uint8_t _gap_0x14[0x4];
-    int field9_0x18; /* 0x18 */
-    uint8_t _gap_0x1c[0x4];
-    int field14_0x20; /* 0x20 */
-    uint8_t _gap_0x24[0x4];
-    int field19_0x28; /* 0x28 */
-    uint8_t _gap_0x2c[0x4];
-    int field24_0x30; /* 0x30 */
-    uint8_t _gap_0x34[0x4];
-    int field29_0x38; /* 0x38 */
-    uint8_t _gap_0x3c[0x4];
-    int field34_0x40; /* 0x40 */
-    uint8_t _gap_0x44[0x18];
-    int field58_0x5c; /* 0x5c */
-    uint8_t _gap_0x60[0x4f];
-    undefined1 field_0xaf; /* 0xaf */
-};
-
-// /imported/gzf-2021/CarsS2  size 0xd264
-struct CarsS2 {
-    uint8_t _gap_0x0[0x4];
-    CarsS3 arr[306]; /* 0x4 */
-};
-
-// /imported/gzf-2021/FrontendS1S1  size 0x82
-struct FrontendS1S1 {
-    uint8_t _gap_0x0[0x2];
-    undefined2 x; /* 0x2 */
-    undefined2 y; /* 0x4 */
-    WCHAR *label; /* 0x6 */
-    uint8_t _gap_0xa[0x77];
-    undefined1 field_0x81; /* 0x81 */
-};
-
-// /imported/gzf-2021/FrontendS1S2  size 0x6e
-struct FrontendS1S2 {
-    uint8_t _gap_0x0[0x6d];
-    undefined1 field_0x6d; /* 0x6d */
-};
-
 // /imported/gzf-2021/FrontendS1S3  size 0x5
 struct FrontendS1S3 {
     uint8_t _gap_0x0[0x4];
     undefined1 field_0x4; /* 0x4 */
-};
-
-// /imported/gzf-2021/FrontendS1  size 0xbca
-struct FrontendS1 {
-    uint8_t _gap_0x0[0x4];
-    FrontendS1S1 arr[10]; /* 0x4 */
-    FrontendS1S2 arr2[15]; /* 0x518 */
-    FrontendS1S3 arr3[10]; /* 0xb8a */
-    uint8_t _gap_0xbbc[0xd];
-    undefined1 field_0xbc9; /* 0xbc9 */
 };
 
 // /imported/gzf-2021/PedSprite  size 0x20
@@ -5286,16 +5180,6 @@ struct PedSprite {
     undefined4 x; /* 0x14 */
     undefined4 y; /* 0x18 */
     undefined4 z; /* 0x1c */
-};
-
-// /imported/gzf-2021/PedsManager  size 0x203ac
-struct PedsManager {
-    Ped *freeListHead; /* 0x0 */
-    Ped *activeListHead; /* 0x4 */
-    Ped peds[200]; /* 0x8 */
-    short activeCountLastTick; /* 0x203a8 */
-    uint8_t _gap_0x203aa[0x1];
-    undefined1 field_0x203ab; /* 0x203ab */
 };
 
 // /imported/gzf-2021/PlayerS2  size 0xc
@@ -5321,16 +5205,6 @@ struct S3 {
     S1 *s1; /* 0x14c */
 };
 
-// /imported/gzf-2021/S8  size 0xc1ea8
-struct S8 {
-    uint8_t _gap_0x0[0x338];
-    uint *field47_0x338; /* 0x338 */
-    uint8_t _gap_0x33c[0xc1af0];
-    bool_ field79_0xc1e2c; /* 0xc1e2c */
-    uint8_t _gap_0xc1e2d[0x7a];
-    undefined1 field_0xc1ea7; /* 0xc1ea7 */
-};
-
 // /imported/gzf-2021/SKeyboard  size 0x404
 struct SKeyboard {
     uint8_t _gap_0x0[0x403];
@@ -5345,41 +5219,11 @@ struct Timing {
     undefined4 fps2; /* 0x14 */
 };
 
-// /imported/gzf-2021/TrafficLights_Gzf2021  size 0x194
-struct TrafficLights_Gzf2021 {
-    uint8_t _gap_0x0[0x190];
-    ushort field400_0x190; /* 0x190 */
-    byte phase; /* 0x192 */
-    byte timer; /* 0x193 */
-};
-
 // /imported/renderer-doc/FrontendImage  size 0x88
 struct FrontendImage {
     CHAR path[128]; /* 0x0 */
     uint size; /* 0x80 */
     int handle; /* 0x84 */
-};
-
-// /imported/seuko-mod/AmbulanceSub  size 0x20
-struct AmbulanceSub {
-    uint8_t _gap_0x0[0x4];
-    int field_0x4; /* 0x4 */
-    int field_0x8; /* 0x8 */
-    int field_0xc; /* 0xc */
-    int field_0x10; /* 0x10 */
-    uint8_t _gap_0x14[0x2];
-    short field_0x16; /* 0x16 */
-    int field_0x18; /* 0x18 */
-    uint8_t _gap_0x1c[0x3];
-    undefined1 field_0x1f; /* 0x1f */
-};
-
-// /imported/seuko-mod/Ambulance  size 0x110
-struct Ambulance {
-    uint8_t _gap_0x0[0x1];
-    byte maybeIndex; /* 0x1 */
-    uint8_t _gap_0x2[0xce];
-    AmbulanceSub arr[2]; /* 0xd0 */
 };
 
 // /imported/seuko-mod/BitMap  size 0x14
@@ -5392,26 +5236,6 @@ struct BitMap {
     short field_0xa; /* 0xa */
     uint8_t _gap_0xc[0x4];
     int field_0x10; /* 0x10 */
-};
-
-// /imported/seuko-mod/BusAndTrains  size 0x34
-struct BusAndTrains {
-    uint8_t _gap_0x0[0x33];
-    undefined1 field_0x33; /* 0x33 */
-};
-
-// /imported/seuko-mod/BusAndTrains2  size 0x58
-struct BusAndTrains2 {
-    uint8_t _gap_0x0[0x57];
-    undefined1 field_0x57; /* 0x57 */
-};
-
-// /imported/seuko-mod/BusAndTrainsHolder  size 0x181c
-struct BusAndTrainsHolder {
-    BusAndTrains arr[100]; /* 0x0 */
-    BusAndTrains2 arr2[10]; /* 0x1450 */
-    uint8_t _gap_0x17c0[0x5b];
-    undefined1 field_0x181b; /* 0x181b */
 };
 
 // /imported/seuko-mod/CarAI  size 0x78
@@ -5453,7 +5277,7 @@ struct CarAI {
     uint8_t _gap_0x5c[0xc];
     Car *nearbyCar; /* 0x68 */
     Car *blockingCar; /* 0x6c */
-    Position *obstacleHit; /* 0x70 */
+    Sprite *obstacleHit; /* 0x70 */
     SCR_f targetSpeed; /* 0x74 */
 };
 
@@ -5465,7 +5289,7 @@ struct CarAIPool {
 
 // /imported/seuko-mod/CarAttachment  size 0x18
 struct CarAttachment {
-    Position *sprite; /* 0x0 */
+    Sprite *sprite; /* 0x0 */
     CarAttachment *next; /* 0x4 */
     int xOffset; /* 0x8 */
     int yOffset; /* 0xc */
@@ -5497,12 +5321,6 @@ struct CarEngineData {
     SCR_f gear3_multiplier; /* 0x3c */
     SCR_f gear2_speed; /* 0x40 */
     SCR_f gear3_speed; /* 0x44 */
-};
-
-// /imported/seuko-mod/CarInfoChunk  size 0x404
-struct CarInfoChunk {
-    CarInfo *last; /* 0x0 */
-    CarInfo *carInfoArray[256]; /* 0x4 */
 };
 
 // /imported/seuko-mod/CarManager5_S1  size 0x10
@@ -5587,7 +5405,7 @@ struct CarPhysicsPool {
 
 // /imported/seuko-mod/Collide  size 0xc
 struct Collide {
-    Position *ptr1; /* 0x0 */
+    Sprite *ptr1; /* 0x0 */
     void *ptr2; /* 0x4 */
     Collide *ptr3; /* 0x8 */
 };
@@ -5596,12 +5414,6 @@ struct Collide {
 struct Collide1 {
     uint8_t _gap_0x0[0x8003];
     undefined1 field_0x8003; /* 0x8003 */
-};
-
-// /imported/seuko-mod/Collide2  size 0x11944
-struct Collide2 {
-    uint8_t _gap_0x0[0x11943];
-    undefined1 field_0x11943; /* 0x11943 */
 };
 
 // /imported/seuko-mod/CollideArray256  size 0x400
@@ -5661,92 +5473,10 @@ struct EnginesDataHolder {
     undefined4 counter2; /* 0x804 */
 };
 
-// /imported/seuko-mod/Game2  size 0xd9c
-struct Game2 {
-    uint8_t _gap_0x0[0x28];
-    Car *car; /* 0x28 */
-    uint8_t _gap_0x2c[0xd6f];
-    undefined1 field_0xd9b; /* 0xd9b */
-};
-
 // /imported/seuko-mod/Game2Holder  size 0x881c
 struct Game2Holder {
-    Game2 arr[10]; /* 0x0 */
-    Game2 *last; /* 0x8818 */
-};
-
-// /imported/seuko-mod/GameObject  size 0xb4
-struct GameObject {
-    uint8_t _gap_0x0[0x4];
-    byte unk_0x4; /* 0x4 */
-    byte unk_0x5; /* 0x5 */
-    byte unk_0x6; /* 0x6 */
-    uint8_t _gap_0x7[0x1];
-    PED_STATE state1; /* 0x8 */
-    PED_STATE2 state2; /* 0xc */
-    int walkSubMode; /* 0x10 */
-    Ang16 targetHeading; /* 0x14 */
-    byte downedFlag; /* 0x16 */
-    uint8_t _gap_0x17[0x1];
-    void *obstacle; /* 0x18 */
-    void *lastObstacle; /* 0x1c */
-    int obstacleKind; /* 0x20 */
-    int walkAroundPhase; /* 0x24 */
-    Ang16 walkAroundHeading; /* 0x28 */
-    Ang16 walkAroundTurnStep; /* 0x2a */
-    Ang16 unk_0x2c; /* 0x2c */
-    uint8_t _gap_0x2e[0x2];
-    int unk_0x30; /* 0x30 */
-    short unk_0x34; /* 0x34 */
-    uint8_t _gap_0x36[0x2];
-    SCR_f speed; /* 0x38 */
-    SCR_f walkSpeedTarget; /* 0x3c */
-    short spriteRotation; /* 0x40 */
-    Ang16 unk_0x42; /* 0x42 */
-    byte groundType; /* 0x44 */
-    byte slopeType; /* 0x45 */
-    short stateTimer; /* 0x46 */
-    byte getUpTimer; /* 0x48 */
-    uint8_t _gap_0x49[0x1];
-    short cigaretteIdleTimer; /* 0x4a */
-    SCR_f pushX; /* 0x4c */
-    SCR_f pushY; /* 0x50 */
-    byte jumpTick; /* 0x54 */
-    byte detourTimer; /* 0x55 */
-    uint8_t _gap_0x56[0x2];
-    SPRITE_BIT1 bit1; /* 0x58 */
-    uint8_t _gap_0x59[0x3];
-    byte objectBumpCooldown; /* 0x5c */
-    uint8_t _gap_0x5d[0x3];
-    int detourAxis; /* 0x60 */
-    int unk_0x64; /* 0x64 */
-    byte animFrame; /* 0x68 */
-    bool_ walkingAroundObstacle; /* 0x69 */
-    byte stepAsideTimer; /* 0x6a */
-    uint8_t _gap_0x6b[0x1];
-    int anim; /* 0x6c */
-    byte animTick; /* 0x70 */
-    byte animTicksPerFrame; /* 0x71 */
-    byte detourTileX; /* 0x72 */
-    byte detourTileY; /* 0x73 */
-    Ang16 stepAsideHeading; /* 0x74 */
-    uint8_t _gap_0x76[0x2];
-    GameObject *nextMaybe; /* 0x78 */
-    Ped *ped; /* 0x7c */
-    Position *body; /* 0x80 */
-    Car *car; /* 0x84 */
-    CarAttachment *attachments; /* 0x88 */
-    Fix16 jumpStartZ; /* 0x8c */
-    Fix16 fallSpeed; /* 0x90 */
-    Fix16 fallZVelocity; /* 0x94 */
-    SCR_f deltaX; /* 0x98 */
-    SCR_f deltaY; /* 0x9c */
-    bool_ onTopOfCarLayer; /* 0xa0 */
-    uint8_t _gap_0xa1[0x3];
-    undefined4 teleportX; /* 0xa4 */
-    undefined4 teleportY; /* 0xa8 */
-    undefined4 teleportZ; /* 0xac */
-    int unk_0xb0; /* 0xb0 */
+    CraneManager arr[10]; /* 0x0 */
+    CraneManager *last; /* 0x8818 */
 };
 
 // /imported/seuko-mod/GlobalSettings  size 0x64
@@ -5898,19 +5628,6 @@ struct LocaleSingle {
     char id[8]; /* 0x4 */
 };
 
-// /imported/seuko-mod/MapBlocks_SeukoMod  size 0x370
-struct MapBlocks_SeukoMod {
-    int field_0x0; /* 0x0 */
-    uint8_t _gap_0x4[0x328];
-    int len; /* 0x32c */
-    void *ptrRelToMap; /* 0x330 */
-    void *probablyArray; /* 0x334 */
-    uint8_t _gap_0x338[0x2c];
-    ushort lenOrCounter; /* 0x364 */
-    uint8_t _gap_0x366[0x9];
-    undefined1 field_0x36f; /* 0x36f */
-};
-
 // /imported/seuko-mod/ObjectPrefab  size 0x74
 struct ObjectPrefab {
     Fix16 boxX; /* 0x0 */
@@ -5965,10 +5682,84 @@ struct Passenger {
     Passenger *next; /* 0x4 */
 };
 
+// /imported/seuko-mod/PedGameObject  size 0xb4
+struct PedGameObject {
+    uint8_t _gap_0x0[0x4];
+    byte unk_0x4; /* 0x4 */
+    byte unk_0x5; /* 0x5 */
+    byte unk_0x6; /* 0x6 */
+    uint8_t _gap_0x7[0x1];
+    PED_STATE state1; /* 0x8 */
+    PED_STATE2 state2; /* 0xc */
+    int walkSubMode; /* 0x10 */
+    Ang16 targetHeading; /* 0x14 */
+    byte downedFlag; /* 0x16 */
+    uint8_t _gap_0x17[0x1];
+    void *obstacle; /* 0x18 */
+    void *lastObstacle; /* 0x1c */
+    int obstacleKind; /* 0x20 */
+    int walkAroundPhase; /* 0x24 */
+    Ang16 walkAroundHeading; /* 0x28 */
+    Ang16 walkAroundTurnStep; /* 0x2a */
+    Ang16 unk_0x2c; /* 0x2c */
+    uint8_t _gap_0x2e[0x2];
+    int unk_0x30; /* 0x30 */
+    short unk_0x34; /* 0x34 */
+    uint8_t _gap_0x36[0x2];
+    SCR_f speed; /* 0x38 */
+    SCR_f walkSpeedTarget; /* 0x3c */
+    short spriteRotation; /* 0x40 */
+    Ang16 unk_0x42; /* 0x42 */
+    byte groundType; /* 0x44 */
+    byte slopeType; /* 0x45 */
+    short stateTimer; /* 0x46 */
+    byte getUpTimer; /* 0x48 */
+    uint8_t _gap_0x49[0x1];
+    short cigaretteIdleTimer; /* 0x4a */
+    SCR_f pushX; /* 0x4c */
+    SCR_f pushY; /* 0x50 */
+    byte jumpTick; /* 0x54 */
+    byte detourTimer; /* 0x55 */
+    uint8_t _gap_0x56[0x2];
+    SPRITE_BIT1 bit1; /* 0x58 */
+    uint8_t _gap_0x59[0x3];
+    byte objectBumpCooldown; /* 0x5c */
+    uint8_t _gap_0x5d[0x3];
+    int detourAxis; /* 0x60 */
+    int unk_0x64; /* 0x64 */
+    byte animFrame; /* 0x68 */
+    bool_ walkingAroundObstacle; /* 0x69 */
+    byte stepAsideTimer; /* 0x6a */
+    uint8_t _gap_0x6b[0x1];
+    int anim; /* 0x6c */
+    byte animTick; /* 0x70 */
+    byte animTicksPerFrame; /* 0x71 */
+    byte detourTileX; /* 0x72 */
+    byte detourTileY; /* 0x73 */
+    Ang16 stepAsideHeading; /* 0x74 */
+    uint8_t _gap_0x76[0x2];
+    PedGameObject *nextMaybe; /* 0x78 */
+    Ped *ped; /* 0x7c */
+    Sprite *body; /* 0x80 */
+    Car *car; /* 0x84 */
+    CarAttachment *attachments; /* 0x88 */
+    Fix16 jumpStartZ; /* 0x8c */
+    Fix16 fallSpeed; /* 0x90 */
+    Fix16 fallZVelocity; /* 0x94 */
+    SCR_f deltaX; /* 0x98 */
+    SCR_f deltaY; /* 0x9c */
+    bool_ onTopOfCarLayer; /* 0xa0 */
+    uint8_t _gap_0xa1[0x3];
+    undefined4 teleportX; /* 0xa4 */
+    undefined4 teleportY; /* 0xa8 */
+    undefined4 teleportZ; /* 0xac */
+    int unk_0xb0; /* 0xb0 */
+};
+
 // /imported/seuko-mod/PedGameObjectManager  size 0x11944
 struct PedGameObjectManager {
-    GameObject *nextFreeMaybe; /* 0x0 */
-    GameObject objects[400]; /* 0x4 */
+    PedGameObject *nextFreeMaybe; /* 0x0 */
+    PedGameObject objects[400]; /* 0x4 */
 };
 
 // /imported/seuko-mod/PedGroup  size 0x37
@@ -5991,28 +5782,11 @@ struct RoofSpritesHolder {
     CarAttachment arr[300]; /* 0x4 */
 };
 
-// /imported/seuko-mod/S10_TxtMessage  size 0x704
-struct S10_TxtMessage {
-    WCHAR message[640]; /* 0x0 */
-    uint8_t _gap_0x500[0x24];
-    int *field_0x524; /* 0x524 */
-    uint8_t _gap_0x528[0x1d0];
-    S10_TxtMessage *prev; /* 0x6f8 */
-    int field_0x6fc; /* 0x6fc */
-    char *messageCode; /* 0x700 */
-};
-
 // /imported/seuko-mod/S21  size 0x59aa3
 struct S21 {
-    Position *last; /* 0x0 */
+    Sprite *last; /* 0x0 */
     uint8_t _gap_0x4[0x59a9e];
     undefined1 field_0x59aa2; /* 0x59aa2 */
-};
-
-// /imported/seuko-mod/S21_1  size 0x3c
-struct S21_1 {
-    uint8_t _gap_0x0[0x3b];
-    undefined1 field_0x3b; /* 0x3b */
 };
 
 // /imported/seuko-mod/S24_char  size 0xc
@@ -6020,7 +5794,7 @@ struct S24_char {
     short PedCapacity; /* 0x0 */
     byte dummy_chars; /* 0x2 */
     uint8_t _gap_0x3[0x5];
-    Position *position; /* 0x8 */
+    Sprite *position; /* 0x8 */
 };
 
 // /imported/seuko-mod/S33  size 0xd5
@@ -6214,12 +5988,6 @@ struct TILE {
     float field_0x7c; /* 0x7c */
 };
 
-// /imported/seuko-mod/Texture  size 0x20
-struct Texture {
-    uint8_t _gap_0x0[0x1f];
-    undefined1 field_0x1f; /* 0x1f */
-};
-
 // /imported/seuko-mod/Texture_S1  size 0x24
 struct Texture_S1 {
     uint8_t _gap_0x0[0x6];
@@ -6254,27 +6022,15 @@ struct TrailerControllerPool {
     CarManager5_S1 arr10[10]; /* 0x4 */
 };
 
-// /imported/seuko-mod/Vert  size 0x20
-struct Vert {
-    float x; /* 0x0 */
-    float y; /* 0x4 */
-    float z; /* 0x8 */
-    float w; /* 0xc */
-    dword diff; /* 0x10 */
-    dword spec; /* 0x14 */
-    float u; /* 0x18 */
-    float v; /* 0x1c */
-};
-
 // /imported/seuko-mod/Verts  size 0x80
 struct Verts {
-    Vert mVerts[4]; /* 0x0 */
+    GTAVertex mVerts[4]; /* 0x0 */
 };
 
 // /imported/seuko-mod/WorldObject  size 0x2c
 struct WorldObject {
     WorldObject *next; /* 0x0 */
-    Position *position; /* 0x4 */
+    Sprite *position; /* 0x4 */
     ObjectPrefab *prefab; /* 0x8 */
     void *kindState; /* 0xc */
     ObjectMotionState *motion; /* 0x10 */
@@ -6298,44 +6054,6 @@ struct WorldObjectPool {
     ushort visitCounter; /* 0x29174 */
     uint8_t _gap_0x29176[0x1];
     undefined1 field_0x29177; /* 0x29177 */
-};
-
-// /imported/seuko-mod/XYZ  size 0x100
-struct XYZ {
-    SCR_Vector3 position; /* 0x0 */
-    int field_0xc; /* 0xc */
-    SCR_Vector3 position2; /* 0x10 */
-    int field_0x1c; /* 0x1c */
-    uint8_t _gap_0x20[0x1c];
-    int field_0x3c; /* 0x3c */
-    uint8_t _gap_0x40[0x28];
-    uint width; /* 0x68 */
-    uint height; /* 0x6c */
-    uint halfWidth; /* 0x70 */
-    uint halfHeight; /* 0x74 */
-    uint8_t _gap_0x78[0x20];
-    SCR_Vector3 position3; /* 0x98 */
-    int field_0xa4; /* 0xa4 */
-    uint8_t _gap_0xa8[0x57];
-    undefined1 field_0xff; /* 0xff */
-};
-
-// /imported/seuko-mod/sprite_base  size 0xc
-struct sprite_base {
-    ushort car; /* 0x0 */
-    ushort ped; /* 0x2 */
-    ushort code_obj; /* 0x4 */
-    ushort map_obj; /* 0x6 */
-    ushort user; /* 0x8 */
-    ushort font; /* 0xa */
-};
-
-// /imported/seuko-mod/sprite_entry  size 0x8
-struct sprite_entry {
-    void *ptr; /* 0x0 */
-    byte w; /* 0x4 */
-    byte h; /* 0x5 */
-    ushort pad; /* 0x6 */
 };
 
 // /scr_structs.h/_struct_17  size 0x4

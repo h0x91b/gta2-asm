@@ -95,7 +95,7 @@ The police crew code at 0x4AC0xx..0x4AD5FF (sets 32, 35, 36, 43, 52) has no Ghid
 ## 3. The state pair
 
 `Ped+0x278 state` (`PED_STATE`, 0..10) and `Ped+0x27C state2` (`PED_STATE2`, sub-state) are mirrored
-into `GameObject+0x8/+0xC` each tick, and `PedGameObject_Tick` 0x49C460 dispatches the body on
+into `PedGameObject+0x8/+0xC` each tick, and `PedGameObject_Tick` 0x49C460 dispatches the body on
 `state`. Most writes go through `Ped_SetStatePreset` 0x433580, which picks one of 7 pairs from the
 objective/task value (`PedSetObjective`, `Ped_SetTask`, `Ped_SetStatesFromObjective` 0x433650):
 
@@ -155,7 +155,7 @@ by `Ped_Obj1_GoToAreaAnyMeans` but never set.
 
 | offset | name | meaning |
 |---|---|---|
-| 0x138 | bumpPartnerObject | `GameObject` of the ped this one is blocking (mutual link) |
+| 0x138 | bumpPartnerObject | `PedGameObject` of the ped this one is blocking (mutual link) |
 | 0x178 | carWeapon | weapon created by `CarAddWeapon` for a non-player driver; `Ped_Remove` only zeroes it (possible weapon-slot leak) |
 | 0x198 | zapTargetPed | electro-gun victim |
 | 0x1E8 | guardEngageRange | read by `GUARD_AREA`, never written (always 0) |
@@ -176,5 +176,5 @@ Game+0x20..0x22: `playerIterCursor`, `cameraIterPlayer`, `cameraIterAux` (iterat
 
 - Objectives 10, 11, 15, 22 and 51 have handlers but no setter in game code: dead, or script-only.
 - `PED_CLASS` 4 and 6 names are guesses that fit every writer.
-- `GameObject+0x10` (movement sub-state: 0xF jump, 0x24 entering a car) and `+0x6C` (body
+- `PedGameObject+0x10` (movement sub-state: 0xF jump, 0x24 entering a car) and `+0x6C` (body
   animation state, 5 = jump) are not decoded; the old `PED_STATE4` enum was meant for `+0x6C`.

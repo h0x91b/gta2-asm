@@ -23,7 +23,7 @@ Coverage: the live DB had **348** unnamed functions in `0x410000–0x42FFFF` at 
 | 0x410000–0x414E4F | sound events and the car-sound helpers: `SoundEventQueue_*`, `SoundEvent_InitFrom*Hit`, impact sample pickers, car-model → engine-sound tables (`unsure_CarModel_GetEngine*`), `CarSound_Add*` emitters, voice range / volume, CarPhysics and CarDoor read-only getters used by sound |
 | 0x414E50–0x41DDFF | `SoundMgr_*` (g_SoundManager, the game-side mixer above mss32): request queue, 16 voices, 1020 source slots, listener, pan / distance / Doppler, police radio phrase queue; ComboList (bonus checks, unrelated to sound) |
 | 0x41DE00–0x41F5FF | Camera: target / smoothed position, shake, pan, view size, visibility tests |
-| 0x41F600–0x42179F | CarDoor, model predicates, roof attachments, upgrades / shop, Position helpers, CarManager traffic lists and category counters, CarDeltas |
+| 0x41F600–0x42179F | CarDoor, model predicates, roof attachments, upgrades / shop, Sprite helpers, CarManager traffic lists and category counters, CarDeltas |
 | 0x4217A0–0x42A4FF | Car lifecycle: model checks, lights / siren deltas, damage, wreck, explosion, recycling, trailers, trains, pools |
 | 0x42A500–0x42FFFF | CarAI helpers and drive orders: `CarAI_Ctor/Reinit`, `Fix16_ChebyshevDist`, `CarAI_SetRouteTarget`, junction reservation, lane change, `CarAI_UpdateDriveOrder`, `CarDriveOrder_Drive` |
 | 0x430000–0x432800 | CarAI per-tick: `CarAI_FollowRoute`, `CarAI_ApplyRouteTurn`, `CarAI_FollowLane`, `CarAI_UpdateJunctionTurn`, `CarAI_DriveStep`, `CarAI_Update`, `CarAI_PreUpdate` |
@@ -31,7 +31,7 @@ Coverage: the live DB had **348** unnamed functions in `0x410000–0x42FFFF` at 
 
 ## 2. Car sound (SoundManager)
 
-`g_SoundManager` 0x5DCBC8 (type `S6`, 0x5540 bytes) sits above our mss32 reimplementation
+`g_SoundManager` 0x5DCBC8 (a static `SoundManager` object, 0x5578 bytes; was `S6`, 0x5540) sits above our mss32 reimplementation
 ([win32-shims.md](../win32-shims.md) "Audio"). Per tick `SoundMgr_Update` → `SoundMgr_UpdateFrame`:
 
 1. flip the request double buffer (`+0x98`), reset the sort index;
@@ -39,13 +39,13 @@ Coverage: the live DB had **348** unnamed functions in `0x410000–0x42FFFF` at 
    `SoundMgr_UpdateSource` 0x4163A0 for every active slot — a switch on the source kind: 1 sprite
    (ped / car / object → `SoundMgr_UpdateSpriteSource` 0x4162C0), 2 music stream, 3 radio, 6 event
    queue, 7 weapon, 10 vocal, 0xB HUD counter;
-3. each branch fills the pending request (`S6+0x30`, a 0x68-byte record) and calls
+3. each branch fills the pending request (`SoundManager+0x30`, a 0x68-byte record) and calls
    `SoundMgr_QueueRequest` 0x4171A0 when audible (`SoundMgr_IsVoiceInRange` 0x4116B0,
    `SoundMgr_ComputeVoiceVolume` 0x4116F0 → `SoundMgr_CalcDistanceVolume` 0x416DA0);
 4. repeating requests are re-issued, then the sorted requests are mapped onto the 16 Miles voices
-   (`S6+0xDC0`, 0x68 each) by (slot, emitter id).
+   (`SoundManager+0xDC0`, 0x68 each) by (slot, emitter id).
 
-Sources live in a 1020-entry slot table at `S6+0x147C` (stride 0xC: `+0` used, `+1` age capped at 10,
+Sources live in a 1020-entry slot table at `SoundManager+0x147C` (stride 0xC: `+0` used, `+1` age capped at 10,
 `+4` source*, `+8` extra*); the active list is at `+0x444C`, count `+0x543C`. A source
 (`SoundClient`, 16 bytes, pool of 1000) is `+0 kind, +4 inactive, +8 voice channel, +0xC owner`.
 
@@ -53,7 +53,7 @@ Car sources: `SoundMgr_UpdateCarSource` 0x415DF0 dispatches on the car's info in
 special); the default chain adds engine, heavy-vehicle slide / idle, speed loops, tyre slip, doors,
 alarm, horn (`SoundMgr_UpdateCarHorn` 0x415880, `Car_IsHonking`), siren (`SoundMgr_UpdateCarSiren`
 0x415A90, `Car_IsSirenActive` 0x414F80 = emergency lights && `SIREN_ON` bit), damaged engine, shop
-and bomb ticks. Police radio: a ring of 15 phrase ids (`S6+0x552C`, read `+0x5528`, write `+0x5529`)
+and bomb ticks. Police radio: a ring of 15 phrase ids (`SoundManager+0x552C`, read `+0x5528`, write `+0x5529`)
 filled by crime-report / car-description / location builders and drained by
 `PoliceRadio_Update` 0x41C600.
 
@@ -204,8 +204,7 @@ revives it; the fire truck reaches the wreck, hoses (slot states 3 → 4 → 5) 
   `+0x56 routeStep` (always 0, §5), `+0x74 targetSpeed`.
 - `CarDriveOrder` (0x40): see §5; new in Seq 43: `+0x10 unsure_driveFlag`, `+0x2A/2C/2E
   unsure_counter*`, `+0x34 retryCooldown`.
-- `CarManager` (0x6C): §3. `CarDoor`: §3. `S6` / SoundManager layout: §2 (struct not yet edited in
-  the DB; the existing `S5` slot type is the 0xC slot record, `SoundClient` is 16 bytes — the 0x30
+- `CarManager` (0x6C): §3. `CarDoor`: §3. `SoundManager` layout: §2 (filled in the DB 2026-10-22, ~55 fields + `radioSlots[5]` `RadioStationSlot` @0x5468; the existing `S5` slot type is the 0xC slot record, `SoundClient` is 16 bytes — the 0x30
   layout currently in the DB is the weapon's).
 
 ## 8. Open questions
@@ -249,7 +248,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x410710 | SoundClient_FreeVoice | V | relatedToS6 on node+8; called by 40fe60 (pool free) |
 | 0x410790 | Sound_NopPreInit | V | empty; from initSound |
 | 0x4107A0 | Sound_NopPreShutdown | V | empty; from 4164d0 |
-| 0x4107B0 | SoundMgr_PickImpactSample3Tier | V | vol<0xf none; <0x28 ->0x25; <0x5a ->0x26; else 0x27; writes S6+0x44/0x50 |
+| 0x4107B0 | SoundMgr_PickImpactSample3Tier | V | vol<0xf none; <0x28 ->0x25; <0x5a ->0x26; else 0x27; writes SoundManager+0x44/0x50 |
 | 0x410800 | Sound_PlayStreamTrackByCode | V | code 0x40..0x68 (+0x88) -> track -> MssAudio_Stream_OpenTrack |
 | 0x410A70 | SoundMgr_PickImpactSample2Tier | V | samples 0x28/0x29 |
 | 0x410AC0 | SoundMgr_PickImpactSample3TierNoCutoff | V | as 4107b0 w/o cutoff |
@@ -260,13 +259,13 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x410F00 | CarModel_GetHornSample | V | -> 0x10..0x17 |
 | 0x410FC0 | CarModel_GetHornBaseFreq | V | returns sample rates (0x5622 = 22050 ...) |
 | 0x411120 | CarModel_IsHeavyVehicle | V | set {3,7,0xb,0x11,0x15,0x3a,0x3f,0x40,0x56}; same set as 413eb0 idle |
-| 0x4112B0 | SoundMgr_CreateVocalClient | V | ff1 type-10 client into S6+0x5450 |
-| 0x4112F0 | SoundMgr_DestroyVocalClient | V | frees S6+0x5450 |
-| 0x411330 | SoundMgr_UpdateVocalClient | V | VOCAL id S6+0x5464 -> MssAudio_Stream_OpenTrack, clears it |
+| 0x4112B0 | SoundMgr_CreateVocalClient | V | ff1 type-10 client into SoundManager+0x5450 |
+| 0x4112F0 | SoundMgr_DestroyVocalClient | V | frees SoundManager+0x5450 |
+| 0x411330 | SoundMgr_UpdateVocalClient | V | VOCAL id SoundManager+0x5464 -> MssAudio_Stream_OpenTrack, clears it |
 | 0x4116B0 | SoundMgr_IsVoiceInRange | V | dist2(+0x28) < arg, lazy sqrt -> +0x58, flag +0x2c |
 | 0x4116F0 | SoundMgr_ComputeVoiceVolume | V | 416da0 attenuation -> +0x54, halved if muffled |
 | 0x411730 | SoundMgr_GetDistSqToListener | V | (+0x38-+0x1468)^2+(+0x3c-+0x146c)^2 |
-| 0x4117B0 | Position_GetXYZ | V | +0x14/+0x18/+0x1c; caller Hud_ArrowTarget_UpdatePosition |
+| 0x4117B0 | Sprite_GetXYZ | V | +0x14/+0x18/+0x1c; caller Hud_ArrowTarget_UpdatePosition |
 | 0x4117D0 | Ped_TakeTrainStop | H | read-and-clear +0x13c (receiver = driver Ped from Car_GetDriver) |
 | 0x4117F0 | Ped_TakeTrainStop2 | H | identical twin of 4117d0 |
 | 0x411810 | CarPhysics_IsReverseGasOn | V | CarPhysics+0x94 |
@@ -289,7 +288,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x411A20 | Crusher_GetPosX | V | owner+0x24 of type-9 client |
 | 0x411A30 | Crusher_GetPosY | V | owner+0x28 |
 | 0x411A40 | SoundClient_GetType | V | *p |
-| 0x411A50 | SoundMgr_UpdateMusicClient | V | type-2 client, MusicStream_IsDone -> Close/Open, vol S6+0x25*6/10 |
+| 0x411A50 | SoundMgr_UpdateMusicClient | V | type-2 client, MusicStream_IsDone -> Close/Open, vol SoundManager+0x25*6/10 |
 | 0x411D20 | SoundMgr_UpdateCraneSource | V | type 8 case of 4163a0; owner flags +0x156..+0x159 |
 | 0x412010 | SoundMgr_UpdateCrusherSource | V | type 9; owner +0x24/+0x28 pos |
 | 0x4121F0 | SoundMgr_CalcImpactVolume | V | event type 2..5 -> normalised volume; default random 5..14 |
@@ -320,7 +319,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x414E50 | SoundMgr_UpdateOnScreenCounterSource | V | called from UpdateSource for kind 0xB; sample 0x39, vol by value of FUN_00411A40 (thresholds 0x97/0x12D) |
 | 0x414F80 | Car_IsSirenActive | V | IsCarHasEmergencyLights && lightsBitstate SIREN_ON |
 | 0x414FA0 | SoundMgr_ResolveRequestParams | V | switch on request category (+0x58): picks sample, freq, radius, loop, bank fields B0/B8/BC |
-| 0x4150E0 | SoundMgr_PickEventSample | V | event id (+0x18) + category 1/3/7/9 -> sample id (S6+0x44), pitch (S6+0x50) from random S6+0x1454/58 |
+| 0x4150E0 | SoundMgr_PickEventSample | V | event id (+0x18) + category 1/3/7/9 -> sample id (SoundManager+0x44), pitch (SoundManager+0x50) from random SoundManager+0x1454/58 |
 | 0x415520 | SoundMgr_ResolveEventCategory9 | V | id filter then PickEventSample(..,9) |
 | 0x4156B0 | thunk → CarSound_AddDoors | V | thunk |
 | 0x4156C0 | unsure_CarSound_AddTankCarContactLoop | H | needs Car_IsEngineOn + Car_HasFlag2000; request type 0xE, cat 0xD |
@@ -342,7 +341,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x4166E0 | SoundMgr_GetPitchJitter | V | random % bank field B4, sign toggled via DAT_00591DF5 |
 | 0x4167C0 | SoundMgr_InsertRequestSorted | V | memmove into sorted index (0xD9C + buf*16) |
 | 0x416880 | Fix16_PtrToInt | V | *p >> 14 (also used by NearestSprite_SpiralSearch) |
-| 0x416890 | SoundMgr_RecalcRequestRemaining | V | bank size * S6[+8] / freq into request+0x44, -3 when no loop |
+| 0x416890 | SoundMgr_RecalcRequestRemaining | V | bank size * SoundManager[+8] / freq into request+0x44, -3 when no loop |
 | 0x4168E0 | SoundMgr_GetPosRelativeToListener | V | Fix16_Sub with +0x1468/146C/1470 |
 | 0x416940 | Fix16_ToFloatStore | V | stdcall(Fix16, float*) |
 | 0x416960 | SoundMgr_ScaleVolumeByDistanceFade | V | linear fade in last 1/4 of radius |
@@ -351,15 +350,15 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x416B20 | SoundMgr_ReseedRandoms | V | 5x random32 into +0x1454 |
 | 0x416B50 | Ped_GetZ | V | writes *(Ped+0x1B4) to out; sibling of Ped_GetX/Y; 46 callers |
 | 0x416B70 | Camera_GetFollowedPed | V | returns +0x34; nonzero -> ped branch in 417030 |
-| 0x416B80 | Car_GetBodyPos | V | reads Car+0x50 -> +0x14/18/1C (Position*) |
+| 0x416B80 | Car_GetBodyPos | V | reads Car+0x50 -> +0x14/18/1C (Sprite*) |
 | 0x416BB0 | Car_GetBodyRotation | V | reads u16 at *(Car+0x50) |
-| 0x416BF0 | SoundMgr_ShutdownIfInitialized | V | wrapper on S6[0] |
+| 0x416BF0 | SoundMgr_ShutdownIfInitialized | V | wrapper on SoundManager[0] |
 | 0x416D60 | SoundMgr_ReacquireAudioDevice | V | AIL_digital_handle_reacquire |
 | 0x416DA0 | SoundMgr_CalcDistanceVolume | V | clamp 0..0x7F; called by 4116F0 |
 | 0x416E50 | SoundMgr_CalcPan | V | pan 10..0x75 from relative X, table at 0x591DF8 |
 | 0x416F20 | SoundMgr_ApplyDopplerToFrequency | V | scales freq by relative speed vs DAT_005E2228 |
 | 0x417030 | SoundMgr_UpdateListenerAndSources | V | listener from player ped/car, loop active list calling UpdateSource |
-| 0x4171A0 | SoundMgr_QueueRequest | V | 39 xrefs; copies S6+0x30 (0x68 B) into queue; key (0x7F-vol)*[+0x4C] |
+| 0x4171A0 | SoundMgr_QueueRequest | V | 39 xrefs; copies SoundManager+0x30 (0x68 B) into queue; key (0x7F-vol)*[+0x4C] |
 | 0x417260 | SoundMgr_RequeueRepeatingRequests | V | replays previous buffer entries with remaining counter (+0x4C of record) |
 | 0x417410 | SoundMgr_ApplyRequestsToVoices | V | MssAudio_Sample[3D]_* calls |
 | 0x417CE0 | SoundMgr_Apply3DDistanceFade | V | only when 3D; __ftol2 + 416960 |
@@ -405,7 +404,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x41DB10 | ComboEntry_MatchCarModel | V | groups {3,0xC,0x16,0x1E,0x34,0x36,0x54}, wildcards 0x33/0x38 |
 | 0x41DD20 | ComboList_FindMatchingEntry | V | scans 10 entries; caller ComboList_Add |
 
-#### Camera, doors, CarManager, Position (0x41DE00–0x42179F, 87)
+#### Camera, doors, CarManager, Sprite (0x41DE00–0x42179F, 87)
 
 | address | name | V/H | evidence |
 |---|---|---|---|
@@ -455,12 +454,12 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x420470 | Box3_SetXYRangesWithZCenter | V | 4 stack args + z -+ DAT_005e4d50 |
 | 0x4204D0 | Box3_SetFromCenterSize | V | 6 fields from center/size |
 | 0x420590 | Fix16Holder_Load | V | *out = *this; callers 420720/420740/Ped_React... |
-| 0x420660 | Position_SetZ | V | +0x1c + Position_MarkBoundsDirty |
-| 0x4206E0 | Position_SetField22 | V | short +0x22 |
-| 0x4206F0 | Position_SetCollisionKind | V | +0x30 + SetDefaultField28ByKind |
+| 0x420660 | Sprite_SetZ | V | +0x1c + Sprite_MarkBoundsDirty |
+| 0x4206E0 | Sprite_SetField22 | V | short +0x22 |
+| 0x4206F0 | Sprite_SetCollisionKind | V | +0x30 + SetDefaultField28ByKind |
 | 0x420710 | Sprite_SetOwner | V | CarManager_SpawnCar: FUN(car2->body, car2) writes body+8 = car |
-| 0x420720 | Position_GetFrameWidth | H | Fix16Holder_Load(*(this+4)); Car_IsSpriteZDifferent |
-| 0x420740 | Position_GetBodyWidth | H | Fix16Holder_Load(*(this+0xc)); CrusherSlot_Update, Car_IsSpriteZDifferent |
+| 0x420720 | Sprite_GetFrameWidth | H | Fix16Holder_Load(*(this+4)); Car_IsSpriteZDifferent |
+| 0x420740 | Sprite_GetBodyWidth | H | Fix16Holder_Load(*(this+0xc)); CrusherSlot_Update, Car_IsSpriteZDifferent |
 | 0x4207E0 | ListHead_Init | V | *this=0; Car_InitAttachments(&attachments), Crane_Init, WeaponManager_Ctor(&hitCarList), CarManager_Ctor(2 globals) |
 | 0x420B50 | Ped_GetOwnerSlot | V | Ped+0x267 |
 | 0x420B60 | Ped_GetId | V | Ped+0x200 |
@@ -468,13 +467,13 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x420D80 | CarDeltas_Ctor | V | Car_Ctor: FUN(&car->deltasBitstate) |
 | 0x420D90 | CarDeltas_Reset | V | Car_Reset, Car_BecomeWreck on &deltasBitstate |
 | 0x420DA0 | DynBuffer_ScalarDeletingDtor | V | DynBuffer_FreeAndReset + free; CarManager_FreePools |
-| 0x420E00 | Position_ScalarDeletingDtor | V | thunk_FUN_004bbd10 + free; CarManager_FreePools |
+| 0x420E00 | Sprite_ScalarDeletingDtor | V | thunk_FUN_004bbd10 + free; CarManager_FreePools |
 | 0x420E40 | CarAIPool_ClearLast | V | *this=0 from CarAIPool_ScalarDeletingDtor |
 | 0x420E60 | TrailerControllerPool_ClearHead | V | *this=0 from TrailerControllerPool_ScalarDeletingDtor |
 | 0x420EA0 | PedQueue_IsEmpty | V | *p==0; Car_IsTaxiAvailableForHire, AmbulanceSlot_Update, Ped_UpdateTaxiPassenger |
 | 0x420FF0 | WorldObject_GetOwnerSlot | V | byte +0x26, passed to OwnerSlotTable_GetPedId; Object type 0x84 (projectile) |
 | 0x421020 | WorldObject_GetShopId | V | byte +0x26 of object type 0x82; only Car_OnEnterShop |
-| 0x421030 | PositionPool_Free | V | unlink (FUN_004bdc40) + push, +0xc = next |
+| 0x421030 | SpritePool_Free | V | unlink (FUN_004bdc40) + push, +0xc = next |
 | 0x421050 | WorldObject_GetParamByte26 | V | byte +0x26; bonusTokenAllowed[], DoorManager_ShouldDoorBlock, surface code |
 | 0x421080 | unsure_WorldObject_KindHasOwnerSlot | H | (*(this+8))+0x34 not in {1,6,7,8,9,10,12} |
 | 0x4210B0 | WorldObject_IsPrefabGridKind3 | V | (*(this+8))+0x40 == 3; Sprite_ShouldCollideWithSprite |
@@ -520,7 +519,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x421EF0 | Car_GetMinHalfExtent | V | relToSpiteOfCar[min(w,h)] |
 | 0x421F40 | Car_NeedsRemapChange | V | num_remaps>1 && spriteId!=remap |
 | 0x421F80 | Car_NeedsRemapChangeWithTrailer | V |  |
-| 0x421FD0 | Car_ApplyRemap | V | Position_SetRemap on car+trailer |
+| 0x421FD0 | Car_ApplyRemap | V | Sprite_SetRemap on car+trailer |
 | 0x422260 | Car_UnlinkFromWorld | V | RemoveSprite x2, CarPool_UnlinkUsed, SetDetached |
 | 0x4222D0 | Car_ResumeAICruise | V | ai+0x18=DAT_5e4dc4; Car_ResumeAI; 12 callers |
 | 0x4224A0 | unsure_Car_IsDoorOffCentre | H |  |

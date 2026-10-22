@@ -110,7 +110,8 @@ public class ExportGta2Re extends GhidraScript {
 	}
 
 	private static String oneLine(String s) {
-		return s == null ? "" : s.replaceAll("\\s+", " ").trim();
+		// "*/" inside a Ghidra comment would close the C comment it is exported into
+		return s == null ? "" : s.replaceAll("\\s+", " ").replace("*/", "* /").trim();
 	}
 
 	// -------------------------------------------------------------- functions

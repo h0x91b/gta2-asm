@@ -109,7 +109,7 @@ hk_FollowRoute:
     mov r13d, [rax + 0x60]          ; CarDriveOrder*
     test r13d, r13d
     jz .call
-    mov ecx, [rax + 0x50]           ; body (Position)
+    mov ecx, [rax + 0x50]           ; body (Sprite)
     mov r14d, [r13 + 0x1c]          ; the order's z
     mov ecx, [rcx + 0x1c]
     sub ecx, 0x4000

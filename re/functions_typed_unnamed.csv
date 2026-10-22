@@ -1,10 +1,13 @@
 address,name,namespace,name_source,calling_convention,signature_source,size,thunk_to,signature
+0x0041d8f0,ComboEntry_Reset,,DEFAULT,__fastcall,USER_DEFINED,5,ComboEntry_Reset,undefined __fastcall ComboEntry_Reset(ComboEntry * param_1)
+0x00433040,CarModelTable_Free,,DEFAULT,__fastcall,USER_DEFINED,5,CarModelTable_Free,undefined __fastcall CarModelTable_Free(CarModelTable * param_1)
 0x0044a1e0,CrimeStats_RearmOneShots,,DEFAULT,__fastcall,USER_DEFINED,5,CrimeStats_RearmOneShots,undefined __fastcall CrimeStats_RearmOneShots(CrimeStats * param_1)
 0x0045c1e0,LightManager_Update,,DEFAULT,__fastcall,USER_DEFINED,5,LightManager_Update,void __fastcall LightManager_Update(LightManager * this)
 0x004744b0,GetTickCount,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::GetTickCount,DWORD __stdcall GetTickCount(void)
 0x0049ff70,CarPhysics_UpdateZOnRailway,CarPhysics,DEFAULT,__thiscall,USER_DEFINED,5,CarPhysics::CarPhysics_UpdateZOnRailway,"uint __thiscall CarPhysics_UpdateZOnRailway(CarPhysics * this, int step)"
 0x004a50e0,AnimatedValue_Set,,DEFAULT,__fastcall,USER_DEFINED,5,AnimatedValue_Set,"void __fastcall AnimatedValue_Set(AnimatedValue * param_1, int * param_1_00, int param_3)"
 0x004b75a0,AnimatedValue_Get,,DEFAULT,__fastcall,USER_DEFINED,5,AnimatedValue_Get,int __fastcall AnimatedValue_Get(AnimatedValue * param_1)
+0x004c54b0,EmergencyVehicleSlot_Reset,,DEFAULT,__fastcall,USER_DEFINED,5,EmergencyVehicleSlot_Reset,undefined __fastcall EmergencyVehicleSlot_Reset(EmergencyVehicleSlot * param_1)
 0x004d17b0,DirectInput8Create,DINPUT8.DLL,DEFAULT,__stdcall,USER_DEFINED,6,DINPUT8.DLL::DirectInput8Create,"HRESULT __stdcall DirectInput8Create(HINSTANCE hinst, DWORD dwVersion, DWORD riidltf, LPVOID * ppvOut, LPUNKNOWN punkOuter)"
 0x004d2b02,VerQueryValueA,VERSION.DLL,DEFAULT,__stdcall,USER_DEFINED,6,VERSION.DLL::VerQueryValueA,"BOOL __stdcall VerQueryValueA(LPCVOID pBlock, LPCSTR lpSubBlock, LPVOID * lplpBuffer, PUINT puLen)"
 0x004d2b08,GetFileVersionInfoA,VERSION.DLL,DEFAULT,__stdcall,USER_DEFINED,6,VERSION.DLL::GetFileVersionInfoA,"BOOL __stdcall GetFileVersionInfoA(LPCSTR lptstrFilename, DWORD dwHandle, DWORD dwLen, LPVOID lpData)"

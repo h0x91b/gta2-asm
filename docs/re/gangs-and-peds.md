@@ -26,8 +26,8 @@ verified here), struct names from gta2-seuko-mod / gta2-resurection / gta2-mouse
 ### `GangRespect` (= one gang, 0x144 bytes) (V)
 
 There is no separate gang table: `g_GangRespect` (`0x5EB898`) points to a `GangRespectContainer`
-= **10 gang slots × 0x144**. `Gang`/`Gangs` (gta2-mouse) describe the same memory and are not
-used by the decompiler.
+= **10 gang slots × 0x144**. The gta2-mouse duplicates `Gang`/`Gangs` were merged into these
+types (2026-10-22).
 
 | off | size | field | meaning / evidence |
 |---|---|---|---|
@@ -50,7 +50,7 @@ used by the decompiler.
 
 ### Ped pool and `DummyPedManager` (V)
 
-- **Pool**: `PedManager_S25` (= `PedsManager`, 0x203AC bytes, `ptrToPedManager` 0x5E5BBC, built by
+- **Pool**: `PedManager_S25` (gzf `PedsManager` merged into it, 0x203AC bytes, `ptrToPedManager` 0x5E5BBC, built by
   `DummyPedManager_Ctor` 0x4416b0): `+0 freeListHead`, `+4 activeListHead`, `+8 peds[200]` (660 B
   each, linked by `Ped.nextPed`), `+0x203A8 activeCountLastTick`. **200 peds** for everyone
   (ambient, cops, mission, gang drivers, player). `PedManager_AllocPed` 0x403890 pops the free list
@@ -68,7 +68,7 @@ used by the decompiler.
 | 5 | u8 | `emergencyPeds` | paramedics need `< 30` |
 | 6 | u8 | `onScreenPeds` | compared with zone density / 25 |
 | 7 | u8 | `makeAllCharsMuggers` | MAKE_ALL_CHARS_MUGGERS op |
-| 8 | Position* | `spawnProbe` | |
+| 8 | Sprite* | `spawnProbe` | |
 
 ### `MapZoneInfo` (22 bytes, new) (V)
 
@@ -94,10 +94,10 @@ Setters: `MapBlocks_SetZone*` 0x462ce0..0x462e20; MAP_ZONE decl → `MapBlocks_S
 
 ### Emergency-service structures (V)
 
-- `AmbulanceManager` (0x110, `g_AmbulanceManager` 0x663DE4; seuko `Ambulance` is the same memory):
+- `AmbulanceManager` (0x110, `g_AmbulanceManager` 0x663DE4; seuko `Ambulance` merged into it):
   `+0 enabled`, `+1 pendingCount` (queued corpses, cap 25), `+4 pedQueue` (list head; nodes from the
   global ped-list pool), `+8 table[50]` (zeroed, unused), `+0xD0 slots[2]`.
-- `AmbulanceSlot` (0x20; seuko `AmbulanceSub`): `+0..2 spawnTileX/Y/Z` (u8), `+4 vehicle`
+- `AmbulanceSlot` (0x20; seuko `AmbulanceSub` merged into it): `+0..2 spawnTileX/Y/Z` (u8), `+4 vehicle`
   (EmergencyVehicleSlot*), `+8 driverTargetPed`, `+0xC passengerTargetPed`, `+0x10 pedQueue`,
   `+0x14 queuedCount` (< 10), `+0x18 state` (1 active), `+0x1C idle`, `+0x1D reviveTicks`.
 - `EmergencyVehiclePool` (`g_EmergencyVehiclePool` 0x672B90): **10 × `EmergencyVehicleSlot`
@@ -112,15 +112,15 @@ Setters: `MapBlocks_SetZone*` 0x462ce0..0x462e20; MAP_ZONE decl → `MapBlocks_S
 
 ### `PedSprite`, `S36`, `S32` — not ped structures (V)
 
-- `PedSprite` (gzf 2021, 0x20) is a truncated view of **`Position`** (0x3C), the collision/render
-  body of every `Sprite` (`Sprite+0x80`), pool `PositionsArray_S21` (5031 × 0x3C), used by peds,
+- `PedSprite` (gzf 2021, 0x20) is a truncated view of **`Sprite`** (0x3C), the collision/render
+  body (`PedGameObject+0x80`), pool `SpritePool` (5031 × 0x3C), used by peds,
   cars and objects: `+8` owner, `+0x22` frame, `+0x24` remap, `+0x30` kind (2 car, 3 ped),
   `+0x34` render state.
-- `S32` (gta2-mouse) = existing `BareGameObject` (3825 × 0x2C, object.cpp); `S31` =
-  `BareGameObjectManager`.
+- `S32` (gta2-mouse) = existing `WorldObject` (3825 × 0x2C, object.cpp); `S31` (merged) =
+  `WorldObjectPool`.
 - `S36` = per-object motion state of dynamic objects (pool `S35`, 385 × 0x3C, `DAT_00665780`),
   renamed **`ObjectMotionState`**.
-- The ped `Sprite` pool is 400 × 0x100 (`ptrTo_relSprites`); `Ped_CreateSprite` 0x4360c0 pops it.
+- The ped body (`PedGameObject`) pool is 400 × 0xB4 (`PedGameObjectManager`); `Ped_CreateSprite` 0x4360c0 pops it.
 
 ## 2. Gangs: declaration and zones (V)
 
@@ -509,7 +509,7 @@ pass verified them.
 | 0x403920 | Ped_SetBitState2 (really SetPedClass, reported) | writes `pedClass` |
 | 0x403b40 / 0x450cb0 | Ped_SetObjectiveDone / Ped_GetObjectiveStatus | `Ped+0x225` |
 | 0x404120 | unsure_PedGroup_SwapMemberWithLeader | dead leader/medic replacement |
-| 0x40fea0 | Position_GetOwnerSpriteIfPed | body kind 3 → owner |
+| 0x40fea0 | Sprite_GetOwnerSpriteIfPed | body kind 3 → owner |
 | 0x41f9f0 | Car_RequestFireTruckAndSpawnFlames | wreck → fire truck |
 | 0x433430 | MapBlocks_IsSlope45to52At | spawn test |
 | 0x433b30 | Gang_GetKillAffectsRespect | +0x111 |
@@ -562,10 +562,10 @@ pass verified them.
 | 0x473ce0 / 0x473e00 | AmbulanceSlot_Update / AmbulanceManager_DispatchForQueuedPed | |
 | 0x475910 / 0x475950 | Gang_SetArrowTarget / Gang_SetHasRespectMeter | |
 | 0x482540 | unsure_Object_IsActiveFlame | object type 0x71 |
-| 0x497df0 | Sprite_UpdatePedAnimFrame | frame = graphicType base (0/158/316) + anim, remap re-applied |
-| 0x497c20 / 0x4338e0 / 0x433880 / 0x4355c0 | Sprite_Init / Sprite_SetOwnerPed / GameObject_PlaceBody / SpritePool_Release | |
+| 0x497df0 | PedGameObject_UpdateAnimFrame | frame = graphicType base (0/158/316) + anim, remap re-applied |
+| 0x497c20 / 0x4338e0 / 0x433880 / 0x4355c0 | PedGameObject_Init / Sprite_SetOwnerPed / PedGameObject_PlaceBody / PedGameObjectPool_Release | |
 | 0x4b9a10 | unsure_Ped_ThreatGridCandidateFilter | |
-| 0x4b9b00 / 0x420700 / 0x4206c0 / 0x4bafd0 | Position_SetRemap / _SetNoRemapState / _SetFrame / Position_ResizeToFrame | |
+| 0x4b9b00 / 0x420700 / 0x4206c0 / 0x4bafd0 | Sprite_SetRemap / _SetNoRemapState / _SetFrame / Sprite_ResizeToFrame | |
 | 0x4bf430 | StyleData_GetPaletteIndex | ped remap → palette |
 | 0x4c5480 / 0x4c54c0 / 0x4c54f0 / 0x4c5a00 | EmergencyVehicleSlot_Reset / _RemoveDriverFromGroup / _IsDriverNotWasted / _UpdateLeaving | |
 
@@ -598,20 +598,20 @@ missing ones added.
 - Paramedic objective branches 0x0 / 0x1C / 0x23 only partly read; fire spread between cars not
   searched.
 - Occupations 6, 20, 21, 28, 30: no setter in the exe.
-- Duplicate types kept in the DB: `PedSprite` (= `Position`), `S31`/`S32` (= `BareGameObject*`),
-  `Ambulance`/`AmbulanceSub` (= `AmbulanceManager`/`AmbulanceSlot`), `Gang`/`Gangs`
-  (= `GangRespect`).
+- Duplicate types still in the DB: `PedSprite` and `CarSprite` (truncated views of `Sprite`), `S32`
+  (= `WorldObject`). `S31`, `Ambulance`/`AmbulanceSub` and `Gang`/`Gangs` were merged into
+  `WorldObjectPool`, `AmbulanceManager`/`AmbulanceSlot` and `GangRespect`/`GangRespectContainer`.
 
 ### Names added by Seq 47 (slice 1): ped pools, weapon probe, small getters
 
 | Address | Name | Conf | Evidence |
 |---|---|---|---|
 | 0x433560 | Box3_ZRangesOverlap | U | Fix16_RangesOverlap on +0x10/+0x14 of two blocks; Ped_Obj2_EnterCar |
-| 0x4337F0 | Position_SetUnlitFlag | U | `byte+0x2C \|= 4`; 27 callers (particles, Ped_ApplyInvulnerabilitySpriteFlag) |
+| 0x4337F0 | Sprite_SetUnlitFlag | U | `byte+0x2C \|= 4`; 27 callers (particles, Ped_ApplyInvulnerabilitySpriteFlag) |
 | 0x433830 | S3Bytes_Clear | V | zeroes a/b/c; caller InitPeds |
 | 0x433A70 | unsure_GameObject_InitAnimState | U | +0x68=0, +0x6C=arg; Ped_InitSpawnedState |
-| 0x433A90 | GameObject_GetGroundType | U | returns +0x44; flee/cross-road tasks |
-| 0x433AA0 | GameObject_IsWalkingAroundObstacle | U | +0x69 != 0; Ped_Obj2_ApproachAndAttackTarget |
+| 0x433A90 | PedGameObject_GetGroundType | U | returns +0x44; flee/cross-road tasks |
+| 0x433AA0 | PedGameObject_IsWalkingAroundObstacle | U | +0x69 != 0; Ped_Obj2_ApproachAndAttackTarget |
 | 0x4340A0 | WorldObject_GetPickupAmmo | U | +0x26; Ped_PickUp, SaveGame_CollectPickups |
 | 0x434130 | Object_SetAnimLoopsLeft | U | `*(u16*)(this->+0xC + 4) = v`; Ped_DropWeaponPickup, Weapon_ThrowMolotovOrGrenade |
 | 0x434140 | WorldObject_IsPowergenOrInvisibleDead | U | +0x18 ∈ {0x11A,0x11D}; ApproachAndAttackTarget |

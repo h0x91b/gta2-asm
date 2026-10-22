@@ -5,7 +5,7 @@
 ; Analysis: docs/re/ped-movement-collision.md §6.
 ;
 ; Strafe. All on-foot collision is inline in PedGameObject_StateWalk 0x49A560 and keyed off
-; the heading (GameObject+0x40, Ang16, 1440 per turn): the probe, the tile-edge tests, the
+; the heading (PedGameObject+0x40, Ang16, 1440 per turn): the probe, the tile-edge tests, the
 ; wall slide and the sprite obstacles all run along it. The game walks BACKWARDS by turning
 ; the heading 180° for one move and restoring it at the end (0x49AA8E saves it in the local
 ; [esp+0x24] and clears the flag [esp+0x11]; 0x49B0A5 restores it when the flag is clear), so
@@ -30,7 +30,7 @@
 ; and src/events/keyboard-state-update.cpp @25b1985; h0x91b/gta2-resurection
 ; (https://github.com/h0x91b/gta2-resurection), mod-mouse-rotation.lua @87e1d98;
 ; h0x91b/gta2-mouse (https://github.com/h0x91b/gta2-mouse), MainWindow.cpp @6c5351b wrote
-; GameObject+0x40 directly, which the walker overwrites every tick.
+; PedGameObject+0x40 directly, which the walker overwrites every tick.
 
 ANG_TURN    equ 1440                ; Ang16 units per full turn
 ANG_90      equ 360
@@ -40,9 +40,9 @@ PL_TURNRATE equ 0x08                ; Player fields (docs/re/ped-movement-collis
 PL_MOVESPD  equ 0x0C
 PL_KEYFWD   equ 0x78
 PL_KEYBACK  equ 0x79
-PED_GOBJ    equ 0x168               ; Ped: GameObject*, current car
+PED_GOBJ    equ 0x168               ; Ped: PedGameObject*, current car
 PED_CAR     equ 0x16C
-GO_HEADING  equ 0x40                ; GameObject fields
+GO_HEADING  equ 0x40                ; PedGameObject fields
 GO_FLAGS    equ 0x58                ; bit 3: walking backwards
 WALK_FLAG   equ 0x11                ; StateWalk locals at 0x49AC76: heading not changed yet
 WALK_SAVED  equ 0x24                ;   the heading to restore at 0x49B0A5
@@ -155,8 +155,8 @@ hk_MoveOnFoot:
 .out:
     HRET
 
-; JMPHOOK 0x49AC76 in PedGameObject_StateWalk (esi = GameObject*), before the walker saves
-; the heading it will restore: for the player's GameObject with a strafe offset this tick,
+; JMPHOOK 0x49AC76 in PedGameObject_StateWalk (esi = PedGameObject*), before the walker saves
+; the heading it will restore: for the player's PedGameObject with a strafe offset this tick,
 ; save the facing ourselves, clear the "unchanged" flag and turn the heading for this move.
 ; If the walker has already turned it (backward walk, bit 3), the offset goes on top; any
 ; other turn of its own (stepping around an obstacle) wins and this tick does not strafe.
@@ -369,7 +369,7 @@ fmt_pm:       db "controls: strafe %s (%s / %s), mouse turning %s (%d%%)", 10, 0
 
 section .bss
 alignb 4
-pm_gobj:        resd 1              ; the player's GameObject this tick, 0 = not on foot
+pm_gobj:        resd 1              ; the player's PedGameObject this tick, 0 = not on foot
 pm_mouse_frame: resd 1              ; r_frames at the last MoveOnFoot call
 pm_offset:      resw 1              ; heading offset for this tick's move, 0 = none
 pm_game_turn:   resw 1              ; turnRate as the game computed it

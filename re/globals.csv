@@ -121,11 +121,11 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005d81dc,g_SoundEventQueue,,USER_DEFINED,.data.exp,,/SoundEventQueue *,4
 0x005dcb08,g_LevelStem,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005dcb58,IsGamePaused,,USER_DEFINED,.data.exp,,/undefined1,1
-0x005dcbc8,g_SoundManager,,USER_DEFINED,.data.exp,,/auto_structs/S6 *,4
-0x005dcbe5,g_sound3DActive,,USER_DEFINED,.data.exp,,/undefined1,1
-0x005dcbec,SFXVolume,,USER_DEFINED,.data.exp,,/undefined1,1
-0x005dcbed,CDVol,,USER_DEFINED,.data.exp,,/undefined1,1
-0x005e202c,ptrToPlayAVocal,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005dcbc8,g_SoundManager,,USER_DEFINED,.data.exp,,/auto_structs/SoundManager,21880
+0x005dcbe5,g_sound3DActive,,USER_DEFINED,.data.exp,,,
+0x005dcbec,SFXVolume,,USER_DEFINED,.data.exp,,,
+0x005dcbed,CDVol,,USER_DEFINED,.data.exp,,,
+0x005e202c,ptrToPlayAVocal,,USER_DEFINED,.data.exp,,,
 0x005e21cc,ptrToS5,,USER_DEFINED,.data.exp,,/auto_structs/S5 *,4
 0x005e3cc4,g_ViewCamera,,USER_DEFINED,.data.exp,,/imported/seuko-mod/Camera *,4
 0x005e3f54,eq8192,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -210,7 +210,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e7ae0,UnknownPtrOrScalar,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e7d70,g_CrusherManager,,USER_DEFINED,.data.exp,,/CrusherManager *,4
 0x005e8108,g_FrameCounter,,USER_DEFINED,.data.exp,,/FrameCounter *,4
-0x005e85c0,ptrToS23,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e85c0,g_CarSpriteCache,,USER_DEFINED,.data.exp,,/auto_structs/CarSpriteCache *,4
 0x005e8b80,g_LayerDrawQueues,,USER_DEFINED,.data.exp,,/auto_structs/LayerDrawQueues *,4
 0x005e8f04,DirectInputDeviceObjectDataCount,,USER_DEFINED,.data.exp,,/dword,4
 0x005e8f5c,Controls,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -462,7 +462,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x0066b038,g_Fix16SteerAssistWindow25Deg,,USER_DEFINED,.data.exp,,/undefined,1
 0x0066b04c,g_Fix16RestitutionCarCar,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0066b060,g_Fix16SteerSpeedFloor,,USER_DEFINED,.data.exp,,/undefined4,4
-0x0066b404,ptrToS28PlayerData,,USER_DEFINED,.data.exp,,/auto_structs/S28 *,4
+0x0066b404,g_PlayerData,,USER_DEFINED,.data.exp,,/auto_structs/PlayerData *,4
 0x0066b788,g_crewSpawnType,,USER_DEFINED,.data.exp,,/EMERGENCY_CREW_TYPE,4
 0x0066b78c,g_crewSpawnTimer,,USER_DEFINED,.data.exp,,/short,2
 0x0066b790,g_crewSpawnState,,USER_DEFINED,.data.exp,,/POLICE_CREW_STATE,4
@@ -486,8 +486,8 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x0066c950,g_MssAudioDevice,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0066f5dc,g_FloatingScoreManager,,USER_DEFINED,.data.exp,,/FloatingScoreManager *,4
 0x0066fb0c,g_OwnerSlotTable,,USER_DEFINED,.data.exp,,/auto_structs/OwnerSlotTable *,4
-0x0066ff1c,ptrToPositionsArray_S21,,USER_DEFINED,.data.exp,,/undefined4,4
-0x0066ff20,ptrToS22,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066ff1c,g_SpritePool,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066ff20,g_SpriteBoundsPool,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0066ff24,g_SpriteManager,,USER_DEFINED,.data.exp,,/auto_structs/SpriteManager *,4
 0x0066ff7c,relToSpriteRotation,,USER_DEFINED,.data.exp,,/undefined2,2
 0x00670010,relToSpriteXYZ_ZERO,,USER_DEFINED,.data.exp,,/undefined4,4

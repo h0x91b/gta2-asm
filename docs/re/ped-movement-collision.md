@@ -24,13 +24,13 @@ The imported struct names from three old projects overlap. What they really are:
 
 | real thing | names in `re/gta2_types.h` | where it hangs |
 |---|---|---|
-| **ped body object**, 0xB4, pool of 400 (`PedGameObjectManager` 0x66A3B4) | `GameObject` (the only live type since 2026-10-22; the duplicates `Sprite` 0x100 and `PedS1` 0x90 are renamed `*_OLD`, no users left) | `Ped+0x168` |
-| **physics body** (pose + collision box), 0x3C | `Position` = `Pos` = `PedSprite` = `CarSprite` (truncated) | `GameObject+0x80` (`body`), `Car+0x50`, `CarAI+0x70`, `CarAttachment+0`, `Collide+0`, `S21+0`, `S24_char+8` (all retyped `Position*`) |
-| bounds object (size, corners, AABB) | none (untyped) | `Position+0xC` (typed `next_`, wrong) |
+| **ped body object**, 0xB4, pool of 400 (`PedGameObjectManager` 0x66A3B4) | `PedGameObject` (was `GameObject`; the phantom duplicates (old `Sprite` 0x100, `PedS1` 0x90) were deleted 2026-10-22) | `Ped+0x168` |
+| **physics body** (pose + collision box), 0x3C | `Sprite` (was `Position`; `Pos` and `S21_1` merged into it), `PedSprite` / `CarSprite` (truncated views) | `PedGameObject+0x80` (`body`), `Car+0x50`, `CarAI+0x70`, `CarAttachment+0`, `Collide+0`, `S21+0`, `S24_char+8` |
+| bounds object (size, corners, AABB) | none (untyped) | `Sprite+0xC` (typed `next_`, wrong) |
 
 `ObjectMotionState` belongs to dynamic map objects, not to peds.
 
-### GameObject fields used by the walker (verified)
+### PedGameObject fields used by the walker (verified)
 
 | off | type | meaning |
 |---|---|---|
@@ -42,14 +42,14 @@ The imported struct names from three old projects overlap. What they really are:
 | +0x4C / +0x50 | SCR_f | `pushX` / `pushY`, world-axis displacement added to one move, then zeroed |
 | +0x58 | bits | bit 0 on a slope block, **bit 3 walking backwards**, bit 5 teleport pending, bit 7 no ped collision |
 | +0x69 / +0x6A / +0x74 | byte / byte / Ang16 | walking around an obstacle / step-aside timer / step-aside heading |
-| +0x7C / +0x80 | Ped* / Position* | owner and body |
+| +0x7C / +0x80 | Ped* / Sprite* | owner and body |
 | +0x98 / +0x9C | SCR_f | velocity **output** (published after the move; writing it does nothing) |
 | +0xA4..+0xAC | SCR_f ×3 | teleport target (`TeleportGameObject` 0x491E00, no collision) |
 
-Full layout of the rest of `GameObject` (2026-10-22 pass; V = behaviour + caller checked, H = hypothesis):
+Full layout of the rest of `PedGameObject` (2026-10-22 pass; V = behaviour + caller checked, H = hypothesis):
 `+0x14` Ang16 targetHeading (V), `+0x16` downedFlag (V), `+0x18`/`+0x1C` obstacle / lastObstacle
 (Car* or WorldObject*, V), `+0x20` obstacleKind 1 car / 3 object (V), `+0x24` int walkAroundPhase 0..3 (V),
-`+0x28`/`+0x2A` walk-around heading / turn step (V), `+0x44` groundType (V, `GameObject_GetGroundType`),
+`+0x28`/`+0x2A` walk-around heading / turn step (V), `+0x44` groundType (V, `PedGameObject_GetGroundType`),
 `+0x45` slopeType (V), `+0x46` stateTimer (V), `+0x48` getUpTimer (V), `+0x54` jumpTick (V),
 `+0x55` detourTimer (V), `+0x5C` objectBumpCooldown (H), `+0x60` detourAxis (H), `+0x68` animFrame,
 `+0x6C` anim, `+0x70`/`+0x71` animTick / animTicksPerFrame (V), `+0x72`/`+0x73` detour tile (V),
@@ -57,7 +57,7 @@ Full layout of the rest of `GameObject` (2026-10-22 pass; V = behaviour + caller
 `+0x94` fallZVelocity (V), `+0xA0` onTopOfCarLayer (H). Written only by init/deinit, no reader
 found: `+4/+5/+6`, `+0x2C`, `+0x30`, `+0x34`, `+0x42`, `+0x64`, `+0xB0` (named `unk_*`).
 
-`Ped.rotation` (+0x12C) and the pose copy inside the Ped are **mirrors** of the GameObject and the
+`Ped.rotation` (+0x12C) and the pose copy inside the Ped are **mirrors** of the PedGameObject and the
 body, rewritten every tick by `Ped_UpdatePosition`. Writing them moves nothing.
 
 ### Player input fields (verified)
@@ -65,7 +65,7 @@ body, rewritten every tick by `Ped_UpdatePosition`. Writing them moves nothing.
 | off | meaning |
 |---|---|
 | Player+0x04 | key mask (fwd 1, back 2, left 4, right 8, attack 0x10, enter 0x20, jump 0x40, …), written by `SetKeyState` 0x4A4930 |
-| Player+0x08 | **`turnRate`**, Ang16 per tick, added to GameObject+0x40 every tick |
+| Player+0x08 | **`turnRate`**, Ang16 per tick, added to PedGameObject+0x40 every tick |
 | Player+0x0C | **`moveSpeed`**: a direction flag, +1.0 forward / −1.0 back / 0 (not a speed) |
 | Player+0x78..+0x83 | key booleans (fwd, back, left, right, attack, enter, jump, …) unpacked by `Player_MapKeys` |
 
@@ -81,15 +81,15 @@ GameTick 0x45C1F0
  └ … PedManager_UpdateActivePeds → Ped_Update 0x4454E0
        ├ Ped_UpdateState 0x43ECC0       player: STAYING↔WALK from moveSpeed / turnRate
        └ Ped_UpdatePosition 0x43F180   fastcall(Ped*)
-           ├ GameObject.state1/state2 := Ped.state/state2
-           ├ PedGameObject_Tick 0x49C460   thiscall(GameObject*, arg) ret 4
+           ├ PedGameObject.state1/state2 := Ped.state/state2
+           ├ PedGameObject_Tick 0x49C460   thiscall(PedGameObject*, arg) ret 4
            │   ├ last good pose → playerPedX_ / DAT_0066A74C / DAT_0066A754
            │   ├ CollisionGrid_RemoveSprite 0x447C40 (g_CollisionGridObstacles, body)
            │   ├ switch state1: 0 → PedGameObject_StateWalk 0x49A560 (THE mover)
            │   │                7 → PedGameObject_StateStaying 0x49BD10 (turns; runs StateWalk if push ≠ 0)
            │   │                8 fall, 9 PedGameObject_StateWasted, 1/2/3/5 car enter/exit …
-           │   ├ Sprite_UpdatePedAnimFrame 0x497DF0 (animation + z placement only)
-           │   ├ SetRotation(body, GameObject+0x40)
+           │   ├ PedGameObject_UpdateAnimFrame 0x497DF0 (animation + z placement only)
+           │   ├ SetRotation(body, PedGameObject+0x40)
            │   ├ velocity output → +0x98/+0x9C
            │   └ CollisionGrid_InsertSprite 0x447C00 (body at its new pose)
            └ body pose / heading → copies in Ped
@@ -99,7 +99,7 @@ GameTick 0x45C1F0
 
 `Player_MoveOnFoot`: left key `turnRate += turnStep` (20 = 5°) up to +48 (12°/tick), right key the
 same downwards, no key → 0; max 24 while the sub-mode is 0xF; attack held without forward → step 3°.
-The walker adds `turnRate` to the heading: `Ang16_AddAssign(GameObject+0x40, turnRate)` at
+The walker adds `turnRate` to the heading: `Ang16_AddAssign(PedGameObject+0x40, turnRate)` at
 0x49A98F–0x49A99B (and in `StateStaying`). The player has a single heading; "desired" headings
 (`Ped+0x130`, `+0x12E`) exist only for AI and auto-aim.
 
@@ -159,8 +159,8 @@ Z: `FUN_00494180` snaps z to the level or to the slope surface (`MapBlocks_GetSl
 
 | address | name | prototype | what | |
 |---|---|---|---|---|
-| 0x4BD670 | `Sprite_TestMapCollisionAndRecord` | `bool __fastcall(Position*)` | body rectangle vs walls at its current pose, writes `g_CollisionKind` | verified |
-| 0x46B440 | `MapBlocks_IsBodyBlockedByWalls` | `bool __thiscall(MapBlocks*, xBlk, yBlk, zBlk, Position* mover, u16 mask)` ret 0x14 | the wall test; needs the block-bounds globals 0x662BD4/BF8/BAC/BFC (`CollisionBox_LoadBlockBoundsToGlobals` 0x4BA5E0) | verified |
+| 0x4BD670 | `Sprite_TestMapCollisionAndRecord` | `bool __fastcall(Sprite*)` | body rectangle vs walls at its current pose, writes `g_CollisionKind` | verified |
+| 0x46B440 | `MapBlocks_IsBodyBlockedByWalls` | `bool __thiscall(MapBlocks*, xBlk, yBlk, zBlk, Sprite* mover, u16 mask)` ret 0x14 | the wall test; needs the block-bounds globals 0x662BD4/BF8/BAC/BFC (`CollisionBox_LoadBlockBoundsToGlobals` 0x4BA5E0) | verified |
 | 0x46A570 | `MapBlocks_ScanBoxFacesForWalls` | thiscall, 7 stack ints | face scan of the box strips | verified structure |
 | 0x4656D0 | `MapBlocks_IsBlockEdgeCrossingBlocked` | `thiscall(MapBlocks*, x, y, z, dir, byte* out, char flag)` ret 0x18 | ped edge crossing; nonzero = blocked; writes only `MapBlocks+0x36E` | verified |
 | 0x4BA720 | `CollisionBox_HitsMapSolid` | `bool __fastcall(SCR_f box[6])` | map-only test for an arbitrary box, no sprite (faces only, no sub-block refinement) | verified |
@@ -181,13 +181,13 @@ check** — the community crash at 0x447352), 6000 cell headers (`DAT_005E6688`)
 cross-checked against the constructor sizes.
 
 **Nothing re-buckets a body automatically**: `SetPosition` 0x420600 only stores the pose and marks
-the bounds dirty (`Position_MarkBoundsDirty` 0x4B99F0). The ped tick removes the body before its
+the bounds dirty (`Sprite_MarkBoundsDirty` 0x4B99F0). The ped tick removes the body before its
 step and inserts it after. A host move outside the tick must do the same, one-to-one: an insert
 without a remove leaks nodes until the pool empties.
 
 After the map step, `Ped_ResolveSpriteObstacle` 0x499F00 `thiscall(go, char flag)` →
 `Sprite_FindObstacleAndRecord` 0x4BDFE0 → `Collision_FindObstacle` 0x447740
-**`thiscall(grid, Position* body, int preferredKind)` ret 8** (preferredKind is a kind value, not
+**`thiscall(grid, Sprite* body, int preferredKind)` ret 8** (preferredKind is a kind value, not
 a mask) → `Sprite_ShouldCollideWithSprite` 0x4B9A30 (filter) → `Sprite_CollisionCheck` 0x4BCAC0
 (z overlap + rectangle corners). Responses (verified flow, names hypothesis):
 
@@ -224,25 +224,25 @@ objects (`FireFromGun` 0x4D0530) moving and colliding per tick, no hitscan.
 | 0x436140 / 0x4348E0 | `Ped_GetPlayerTurnRate` / `Player_GetTurnRate` | thiscall, out pointer | Player+8 | verified |
 | 0x436200 / 0x4348F0 | `Ped_GetPlayerMoveSpeed` / `Player_GetMoveSpeed` | thiscall, out pointer | Player+0xC | verified |
 | 0x43F180 | `Ped_UpdatePosition` | `void __fastcall(Ped*)` | state → body object, tick, copy pose back | verified |
-| 0x49C460 | `PedGameObject_Tick` | `void __thiscall(GameObject*, arg)` ret 4 | grid remove, state dispatch, rotation, grid insert | verified |
-| 0x49A560 | `PedGameObject_StateWalk` | `void __fastcall(GameObject*)` | **the walker**: turn, speed, probe, tile test, commit/slide, sprite obstacles | verified |
-| 0x49BD10 | `PedGameObject_StateStaying` | `void __fastcall(GameObject*)` | turn on the spot; runs StateWalk when push ≠ 0 | verified |
-| 0x49C120 | `PedGameObject_StateWasted` | `void __fastcall(GameObject*)` | state 9 | verified |
-| 0x495BF0 | `PedGameObject_CanMovePlayer` | `bool __thiscall(GameObject*, char tileX, char tileY)` ret 8 | player tile-edge test (1 = free) | verified |
+| 0x49C460 | `PedGameObject_Tick` | `void __thiscall(PedGameObject*, arg)` ret 4 | grid remove, state dispatch, rotation, grid insert | verified |
+| 0x49A560 | `PedGameObject_StateWalk` | `void __fastcall(PedGameObject*)` | **the walker**: turn, speed, probe, tile test, commit/slide, sprite obstacles | verified |
+| 0x49BD10 | `PedGameObject_StateStaying` | `void __fastcall(PedGameObject*)` | turn on the spot; runs StateWalk when push ≠ 0 | verified |
+| 0x49C120 | `PedGameObject_StateWasted` | `void __fastcall(PedGameObject*)` | state 9 | verified |
+| 0x495BF0 | `PedGameObject_CanMovePlayer` | `bool __thiscall(PedGameObject*, char tileX, char tileY)` ret 8 | player tile-edge test (1 = free) | verified |
 | 0x495540 | `PedGameObject_CanMoveNpc` | same | npc version | verified |
-| 0x495980 | `PedGameObject_CanCrossTileEdgePlayer` | `bool __thiscall(GameObject*, int dir)` ret 4 | edge + neighbour + tentative body test | verified |
+| 0x495980 | `PedGameObject_CanCrossTileEdgePlayer` | `bool __thiscall(PedGameObject*, int dir)` ret 4 | edge + neighbour + tentative body test | verified |
 | 0x495220 | `PedGameObject_CanCrossTileEdge` | same | edge + neighbour | verified |
 | 0x497410 | `PedGameObject_IsInTileCenter` | `bool(void)`, reads the pose globals | sub-tile 20..44 px → skip tests | verified |
-| 0x4995A0 | `PedGameObject_SlideAlongWallPlayer` | `void __fastcall(GameObject*)` | octant re-tests, half step | verified |
-| 0x4994D0 | `PedGameObject_TurnAwayFromWallNpc` | `void __fastcall(GameObject*)` | | verified |
-| 0x499F00 | `Ped_ResolveSpriteObstacle` | `void __thiscall(GameObject*, char)` | sprite obstacles + response | verified |
+| 0x4995A0 | `PedGameObject_SlideAlongWallPlayer` | `void __fastcall(PedGameObject*)` | octant re-tests, half step | verified |
+| 0x4994D0 | `PedGameObject_TurnAwayFromWallNpc` | `void __fastcall(PedGameObject*)` | | verified |
+| 0x499F00 | `Ped_ResolveSpriteObstacle` | `void __thiscall(PedGameObject*, char)` | sprite obstacles + response | verified |
 | 0x494280 / 0x4948C0 / 0x4993B0 | `Ped_ReactToPedObstacle` / `…ToCarOrObjectObstacle` / `…ToObjectObstacle` | thiscall | responses (§4) | verified flow |
-| 0x447740 | `Collision_FindObstacle` | `int __thiscall(grid, Position*, int kind)` ret 8 | first obstacle overlapping the body | verified |
-| 0x447C00 / 0x447C40 | `CollisionGrid_InsertSprite` / `CollisionGrid_RemoveSprite` | `thiscall(grid, Position*)` | bbox insert / remove | verified |
+| 0x447740 | `Collision_FindObstacle` | `int __thiscall(grid, Sprite*, int kind)` ret 8 | first obstacle overlapping the body | verified |
+| 0x447C00 / 0x447C40 | `CollisionGrid_InsertSprite` / `CollisionGrid_RemoveSprite` | `thiscall(grid, Sprite*)` | bbox insert / remove | verified |
 | 0x41FC20 | `Ang16_PolarToXY` | `void __stdcall(short* ang, SCR_f* len, SCR_f* outX, SCR_f* outY)` ret 0x10 | x = sin·len, y = cos·len | verified |
 | 0x41FA70 | `Ang16_AddAssign` | `short* __thiscall(short*, short*)` | add and wrap to 0..1439 | verified |
-| 0x433970 | `Sprite_RampSpeedToward` | `void __thiscall(GameObject*, SCR_f)` ret 4 | speed ± 1/256 toward target | verified |
-| 0x4B99F0 | `Position_MarkBoundsDirty` | `void __fastcall(Position*)` | | verified |
+| 0x433970 | `Sprite_RampSpeedToward` | `void __thiscall(PedGameObject*, SCR_f)` ret 4 | speed ± 1/256 toward target | verified |
+| 0x4B99F0 | `Sprite_MarkBoundsDirty` | `void __fastcall(Sprite*)` | | verified |
 | 0x491E00 / 0x435C80 | `TeleportGameObject` / `Ped_Teleport` | | applied at the next tick, **no collision** | verified |
 
 ## 6. How to move the player sideways safely
@@ -255,7 +255,7 @@ to B" query: the collision is inline in `PedGameObject_StateWalk`, keyed off the
    sprite obstacles) run along the real direction, restore the heading before the sprite is
    rotated. Strafe is the same trick with ±90° (±360 units), ±45° when combined with forward.
    Cost: one `JMPHOOK` plus an input-side change.
-2. **Push accumulator** `GameObject+0x4C/+0x50`. No code patch, and it works even for a standing
+2. **Push accumulator** `PedGameObject+0x4C/+0x50`. No code patch, and it works even for a standing
    ped (`StateStaying` runs the walker when the push is nonzero). But the wall probe still points
    6 px **along the heading**, and `CanMovePlayer` ignores the push when the front box already
    crosses a tile edge, so a wall beside the ped is not always caught, and a wall in front can
@@ -276,7 +276,7 @@ heading when the flag is clear.
 0x49AC76  8A 44 24 11     mov al,[esp+0x11]        ; JMPHOOK here: 6 bytes, no relative branch
 0x49AC7A  84 C0           test al,al
 0x49AC7C  74 09           jz 0x49AC87
-0x49AC7E  66 8B 56 40     mov dx,[esi+0x40]        ; ESI = GameObject*
+0x49AC7E  66 8B 56 40     mov dx,[esi+0x40]        ; ESI = PedGameObject*
 0x49AC82  66 89 54 24 24  mov [esp+0x24],dx
 0x49AC87  …               probe from the heading (Ang16_PolarToXY at 0x49ACB5)
 …
@@ -286,7 +286,7 @@ heading when the flag is clear.
 0x49B0B2  66 89 4E 40     mov [esi+0x40],cx        ; heading restored
 ```
 
-Stub at 0x49AC76, for the local player's GameObject only (`[[esi+0x7C]+0x15C]` = its Player*) and
+Stub at 0x49AC76, for the local player's PedGameObject only (`[[esi+0x7C]+0x15C]` = its Player*) and
 a nonzero offset: if `[esp+0x11] ≠ 0`, store `[esi+0x40]` into `[esp+0x24]` and clear the flag;
 then `[esi+0x40] = wrap1440([esi+0x40] + offset)`. The displaced `mov`/`test` then see the clear
 flag, skip the save, and the end of the function restores the facing.
@@ -299,7 +299,7 @@ y and the heading unchanged, and each run stopped at a building wall (left: x pi
 blocks for 250 frames). Implementation: `host/player_move.asm`.
 
 **The hook sees every walking ped**, not only the player: the check for the player's
-GameObject must come before anything is consumed (the first version cleared the offset on an
+PedGameObject must come before anything is consumed (the first version cleared the offset on an
 NPC that walked earlier in the tick, and the player never strafed).
 
 ### Input side
@@ -313,7 +313,7 @@ state machine stays in WALK and the walk animation plays. Disable strafe when th
 
 `Player.turnRate` is the per-tick heading delta and the player has no separate target heading, so
 writing `turnRate` after `Player_MoveOnFoot` turns the ped smoothly by any amount through the
-game's own code (`StateWalk` and `StateStaying` both apply it). Writing GameObject+0x40 directly
+game's own code (`StateWalk` and `StateStaying` both apply it). Writing PedGameObject+0x40 directly
 also works, but `Ped_UpdateState` keys WALK↔STAYING on `turnRate`, so the delta path keeps the
 state machine honest.
 
@@ -325,7 +325,7 @@ state machine honest.
   in the same tick, so the temporary offset does not affect it) — the weapon code was not read to
   the end.
 - `MapBlocks_SweepBodyIsClear` 0x469F90: argument order at the call sites.
-- GameObject+0x10 sub-mode values, `DAT_0066A3C6` and `DAT_005E6664` writers.
+- PedGameObject+0x10 sub-mode values, `DAT_0066A3C6` and `DAT_005E6664` writers.
 - `PedGameObject_Tick` has a second caller, 0x4BE870 (probably remote players), not read.
 
 ## 8. Prior mods
@@ -334,6 +334,6 @@ None of them strafed or touched collision; all three only turned the ped.
 
 | mod | how it turned the ped | limit |
 |---|---|---|
-| [h0x91b/gta2-mouse](https://github.com/h0x91b/gta2-mouse) `6c5351b` (MIT), `MainWindow.cpp:334-391` | cursor angle → `GameObject+0x40 = deg·4` written from a 60 Hz timer | the walker overwrites it every tick (jitter); cursor must stay in the window |
+| [h0x91b/gta2-mouse](https://github.com/h0x91b/gta2-mouse) `6c5351b` (MIT), `MainWindow.cpp:334-391` | cursor angle → `PedGameObject+0x40 = deg·4` written from a 60 Hz timer | the walker overwrites it every tick (jitter); cursor must stay in the window |
 | [h0x91b/gta2-resurection](https://github.com/h0x91b/gta2-resurection) `87e1d98` (MIT), `mod-mouse-rotation.lua:18-111`, `dllmain.cpp:58` | hook `SetKeyState` 0x4A4930, presses virtual left/right while the angle error > 15°, direct write inside the dead zone | turn speed capped by `turnRate`, 15° dead zone |
 | [izawartka/gta2-seuko-mod](https://github.com/izawartka/gta2-seuko-mod) `25b1985` (credit + link, not for sale), `src/modules/modmenu/cheats/mouse-control/`, `src/events/keyboard-state-update.cpp` | jump hook at 0x4A4934 (inside `SetKeyState`), virtual left/right from point-at-mouse or a locked relative mouse | turn speed capped by `turnRate` |

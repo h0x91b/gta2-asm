@@ -24,14 +24,14 @@ movement, collision grids), [car-physics.md](car-physics.md), [math-helpers.md](
 
 | struct | size | pool / global | capacity | notes |
 |---|---|---|---|---|
-| `WorldObject` | 0x2C | `WorldObjectPool` at `0x665784` (0x29178 B, ctor `WorldObjectPool_Ctor` 0x483F10) | **3825** (0xEF1) | the real world object. +0 next, +4 `Position*` (the body that lives in the collision grid), +8 `ObjectPrefab*`, +0xC kind state, +0x10 `ObjectMotionState*`, +0x14 serial (`DAT_00593210++`), +0x18 `OBJECT_TYPE`, +0x1C "kind state is a ParticleState", +0x20 list state (1 active / 2 static), +0x24 pending type (morph), +0x25 lifecycle (0 alive, 1 dead now, 2 dead when off-screen), +0x26 owner slot **or** extra byte (below) |
+| `WorldObject` | 0x2C | `WorldObjectPool` at `0x665784` (0x29178 B, ctor `WorldObjectPool_Ctor` 0x483F10) | **3825** (0xEF1) | the real world object. +0 next, +4 `Sprite*` (the body that lives in the collision grid), +8 `ObjectPrefab*`, +0xC kind state, +0x10 `ObjectMotionState*`, +0x14 serial (`DAT_00593210++`), +0x18 `OBJECT_TYPE`, +0x1C "kind state is a ParticleState", +0x20 list state (1 active / 2 static), +0x24 pending type (morph), +0x25 lifecycle (0 alive, 1 dead now, 2 dead when off-screen), +0x26 owner slot **or** extra byte (below) |
 | `ObjectAnimState` | 8 | `0x66577C` (ctor `ObjectAnimStatePool_Ctor` 0x483F60) | 1101 | +4 loops left, +6 tick counter, +7 frame (`ObjectAnimState_Init` 0x482AD0) |
 | `ObjectMotionState` | 0x3C | `0x665780` (ctor `ObjectMotionStatePool_Ctor` 0x4848C0) | **385** | heading, speed, z-velocity, lifetime, airborne flag. Type owned by the map task (Seq 44); field facts sent there |
 | `ParticleState` | 0x30 | `ParticleStatePool40` | 40 | emitter state of explosions and fires (section 5) |
-| `ObjectSpawner` | 0x5C | `g_ObjectSpawner` | 1 | counters: +0x10 category-2 objects (hard cap 360), +0x14 category-3 objects (soft cap 88), +0x20 50 bonus-token flags, +0x54 bonus-token counter, +0x58 scratch `Position*` |
+| `ObjectSpawner` | 0x5C | `g_ObjectSpawner` | 1 | counters: +0x10 category-2 objects (hard cap 360), +0x14 category-3 objects (soft cap 88), +0x20 50 bonus-token flags, +0x54 bonus-token counter, +0x58 scratch `Sprite*` |
 
 The struct named `Object` (0x5C) in `re/gta2_types.h` is a duplicate of `ObjectSpawner`; the 0xB4
-`GameObject` is the ped body (ped walker), not a world object.
+`PedGameObject` is the ped body (ped walker), not a world object.
 
 `WorldObject.+0x26` is dual-use (verified): for objects spawned by a ped it is the
 `OwnerSlotTable` index (`WorldObject_SetOwnerSlotAddRef` 0x482790 stores it and increments the
@@ -116,8 +116,8 @@ BIN_LID, …): static, obstacles grid, and a transform into the physics variant 
 `SpawnObject` 0x4852E0, `ObjectSpawner_SpawnPhysicsObject`, `_SpawnLightObject`, `_SpawnMovingObject`,
 `_SpawnThrown` 0x485500, `Object_NewWithPedRefIdx`, `Object_NewPhysicsObjUnlessBlocked` (script
 pickups), `SaveGame_RestorePickups` 0x485640 (inverse of `SaveGame_CollectPickups`), and
-`Weapon_SpawnProjectile` 0x4CDA90. It pops a `WorldObject` and a `Position`, then by prefab kind
-an anim state, a motion state or a `ParticleState`, applies the prefab to the `Position`
+`Weapon_SpawnProjectile` 0x4CDA90. It pops a `WorldObject` and a `Sprite`, then by prefab kind
+an anim state, a motion state or a `ParticleState`, applies the prefab to the `Sprite`
 (`ObjectPrefab_ApplyToPosition` 0x4883A0), inserts the body into the grid chosen by `gridKind`
 (`Object_InsertIntoGrid` 0x482630) and puts the object on the active list if `onActiveList`.
 **None of the three pool pops checks for empty** (object pool at 0x4829A3, motion pool at 0x483FE3).
@@ -139,7 +139,7 @@ hits record the impact surface (`Projectile_SetImpactSurfaceFromCollision` 0x483
 active list + mark dead). The next `ObjectSpawner_Update` calls `Object_Destroy` 0x484910: clears
 the type, decrements the category counters, `OwnerSlotTable_DecRef`, `Object_FreeStates` 0x484760
 (anim/motion state back to their pools, `ParticleState_Release`, light free), frees the
-`Position`, pushes the object back on the free list. `Object_FreeNow` 0x485260 is the immediate
+`Sprite`, pushes the object back on the free list. `Object_FreeNow` 0x485260 is the immediate
 path used by car-attachment code. Lifecycle 2 objects stay until no player camera sees them.
 
 ## 4. Projectiles and explosions
@@ -167,9 +167,9 @@ four sub-fires at timer 0x59/0x4F/0x45/0x3B.
 
 **Known leak (verified code path).** If `ParticleStatePool40` is full, `Object_CreateExplosion`
 returns 0 **without freeing the object it already spawned**: it stays on the active list with no
-state, forever, holding a `Position` and a grid node. The same pattern is in the kind-5 branch of
+state, forever, holding a `Sprite` and a grid node. The same pattern is in the kind-5 branch of
 `ObjectSpawner_CreateObject`. Under rocket/grenade spam this slowly drains the object pool, the
-5031 `Position`s and the 4096 collision-grid nodes — the community crash at 0x447352 is the grid
+5031 `Sprite`s and the 4096 collision-grid nodes — the community crash at 0x447352 is the grid
 pop. (Seq 27 note 87b729ac; reproduced in code, not at runtime.)
 
 ## 5. Particle system
@@ -185,10 +185,10 @@ Two different things are called "particle" (Seq 27 pass C, verified):
   `ParticlePool_Ctor` 0x48F1E0, owned by `ParticleManager` 0x491B90), updated by
   `UpdateParticles` 0x491CE0 → `Particle_UpdateOne` 0x490760, a switch over ~20 particle types
   (ember, smoke, trail puff, blood pool, muzzle flash, spark, flame, car-light glow, water/flame
-  bullet, …). Every particle takes one `Position` and one collision-grid point node, re-inserted
+  bullet, …). Every particle takes one `Sprite` and one collision-grid point node, re-inserted
   every tick. The generic allocator `ParticlePool_Alloc` 0x48C930 checks both the particle pool
-  and the `Position` pool; six fire/explosion emitters check only the particle pool, so a dry
-  `Position` pool is a second NULL-deref candidate. `g_skipParticles` (registry debug flag) skips
+  and the `Sprite` pool; six fire/explosion emitters check only the particle pool, so a dry
+  `Sprite` pool is a second NULL-deref candidate. `g_skipParticles` (registry debug flag) skips
   most emitters.
 
 One-shot emitters called from gameplay: `Particle_EmitMuzzleFlash`, `…EmitBloodPool`,
@@ -245,7 +245,7 @@ explosion; blast damage is section 4.
 
 ## 7. Ped-body helpers in this range
 
-0x491E00-0x49FFFF is mostly the ped body (`GameObject`, 0xB4, `this+0x7C` Ped, `+0x80` Sprite), not
+0x491E00-0x49FFFF is mostly the ped body (`PedGameObject`, 0xB4, `this+0x7C` Ped, `+0x80` Sprite), not
 world-object movement. New names there (Seq 46, details in Ghidra comments):
 
 - `PedGameObject_CanMoveToTile` 0x492420 (35 xrefs, verified): can the body step into tile
@@ -265,8 +265,8 @@ world-object movement. New names there (Seq 46, details in Ghidra comments):
 - `PedGameObject_Ctor` 0x497A60 constructs the 400 × 0xB4 array; `ResetVals` is now
   `PedGameObject_ResetTickCountersAndSpriteIds` 0x493520.
 
-Struct facts for `GameObject` (+0x10 walk sub-state, +0x14 target heading, +0x46 state timer,
-+0x58 flag bits) and `Ped` were sent to the Ped owner (Seq 27); `GameObject` was not edited.
+Struct facts for `PedGameObject` (+0x10 walk sub-state, +0x14 target heading, +0x46 state timer,
++0x58 flag bits) and `Ped` were sent to the Ped owner (Seq 27); `PedGameObject` was not edited.
 StateWalk and the walker documented in ped-movement-collision.md were left as they were.
 
 ## 8. Census and open questions
@@ -485,8 +485,8 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x482960 | `unsure_ObjectSpawner_SetPendingOwnerSlot` | hypothesis | this+0x18=byte; caller Weapon_ThrowMolotovOrGrenade |
 | 0x482970 | `WorldObjectPool_GetFirstObject` | verified | returns this+8; caller SaveGame_CollectPickups |
 | 0x482980 | `Vec3_Set` | verified | stores 3 dwords at +0/+4/+8 |
-| 0x482A30 | `Position_SetOwner` | verified | this+8=param; callers object-init, Weapon_SpawnProjectile |
-| 0x482A40 | `Position_SetVec3AtOffsetCAndMarkDirty` | verified | Vec3_Set(*(this+0xC)) + Position_MarkBoundsDirty(this) |
+| 0x482A30 | `Sprite_SetOwner2` | verified | this+8=param; callers object-init, Weapon_SpawnProjectile |
+| 0x482A40 | `Sprite_SetVec3AtOffsetCAndMarkDirty` | verified | Vec3_Set(*(this+0xC)) + Sprite_MarkBoundsDirty(this) |
 | 0x482A70 | `Collision_SetKind4ClearField8` | verified | operates on g_CollisionKind: [0]=4,[8]=0; caller FUN_00486d70 |
 | 0x482A80 | `Collision_SetKind5ClearField8` | verified | same, kind 5 |
 | 0x482A90 | `WorldObject_SetMotionState` | verified | this+0x10=param (WorldObject+0x10 = motion per objects_A); caller Object_CreateExplosion |
@@ -499,7 +499,7 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x482BF0 | `Object_SetSpriteLayer0x1D` | verified | Sprite_SetLayer(pos, 0x1D) |
 | 0x482C00 | `Object_SetOwnerSlot` | verified | writes +0x26; only caller Object_NewWithPedRefIdx |
 | 0x482C10 | `Object_IsAnimationFinished` | verified | kindState->+4 short==0 && +7 byte==0; callers AdvanceAnimation, ExplodeAttachedCar |
-| 0x482C30 | `Object_GetPositionXY` | verified | Position_GetXY(this+4) |
+| 0x482C30 | `Object_GetPositionXY` | verified | Sprite_GetXY(this+4) |
 | 0x482C50 | `Object_GetVelocityVec2` | verified | motion? GetVelocityVec2 : zero vec DAT_006657d4 |
 | 0x482C80 | `Object_GetPrefabMass` | verified | returns prefab+0x18; callers car/ped collision with object |
 | 0x482C90 | `Object_IsMovable` | verified | prefab.kind (+0x34) in {3,4} or kind 0..2 with impactMode(+0x44)==2 |
@@ -511,7 +511,7 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x482FA0 | `Projectile_PrefabAllowsHitSprite` | verified | switch prefab+0x54 vs Sprite_GetKind (1 ped? 2 car 3 ped/4,5 obj kinds) |
 | 0x483030 | `Projectile_ShouldHitSprite` | verified | non-null && AllowsHit && !IsHitSpriteOwnerPed |
 | 0x483060 | `Object_TestSpriteHitAndRecord` | verified | Sprite_FindObstacleAndRecord(pos,2); sets DAT_665790 (hit sprite), DAT_665798 (hit special car 0xA6/0xA9 flag), CollisionHit_SetKindObject |
-| 0x483100 | `Position_SnapZToSlopeSurface` | verified | MapBlocks_GetSlopeSurfaceZ, Fix16 floor/frac, SetPosition |
+| 0x483100 | `Sprite_SnapZToSlopeSurface` | verified | MapBlocks_GetSlopeSurfaceZ, Fix16 floor/frac, SetPosition |
 | 0x483460 | `Object_LandOnSpriteSurface` | hypothesis | after TestSpriteHit: if speed<=DAT_6657ac set layer 0x1D/6, speed, decel=prefab+0x14; caller Object_UpdatePhysicsAnimated-step (FUN_00486e90) |
 | 0x483880 | `Object_InheritMotionFromSprite` | verified | by Sprite_GetKind: 2 car speed/angle/layer, 3 ped speed*DAT_665a60, 4/5 object copy motion; caller Object_UpdateAttached |
 | 0x483990 | `Object_InitFromPrefab` | verified | ObjectPrefabs_Get, type+0x18, position alloc, SetPosition/Rotation; callers CreateObject, Object_MorphTo |
@@ -555,13 +555,13 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x488060 | `ObjectPrefab_SetRemap` | hypothesis | +0x1C=remap; paletteBase 4→5, 5→6 |
 | 0x4880A0 | `ObjectPrefab_OffsetFrameAndSetFrameCount` | verified | +0x1E += a, +0x6C = b |
 | 0x4881D0 | `ObjectPrefabs_AddSlot` | verified | slot=base+len*0x74+4, byId[id]=slot, len++, slot+0x24=id (returns slot) |
-| 0x488200 | `Position_SetByte2C` | verified | this+0x2C = byte |
+| 0x488200 | `Sprite_SetByte2C` | verified | this+0x2C = byte |
 | 0x488210 | `ObjectPrefabRow126_Construct` | verified | 126 callers, all in CRT static-init 0x537D70..0x53BEED, ecx = 0x665C50 + n*0x6C; ret 0x74 |
 | 0x4882F0 | `ObjectPrefabRow24_Construct` | verified | 24 callers in static-init 0x53BEF0..0x53C888, rows of 0x54 at 0x6692C0; ret 0x54 |
-| 0x4883A0 | `ObjectPrefab_ApplyToPosition` | verified | pushes prefab sprite type/frame/layer/remap/box onto a Position |
+| 0x4883A0 | `ObjectPrefab_ApplyToPosition` | verified | pushes prefab sprite type/frame/layer/remap/box onto a Sprite |
 | 0x488420 | `ObjectPrefabs_AddSpriteEntry` | verified | AddSlot + spriteType, frame(+0x1E), frameCount(+0x6C), paletteBase=2 |
 | 0x488E70 | `ObjectPrefabs_ZeroSpriteColor` | hypothesis | zero colour of CODE_OBJ sprite of prefab frame |
-| 0x488EF0 | `ObjectPrefab_CreatePosition` | verified | GetNewFreePositionStruct + ApplyToPosition; caller Object_InitFromPrefab |
+| 0x488EF0 | `ObjectPrefab_CreatePosition` | verified | SpritePool_Alloc + ApplyToPosition; caller Object_InitFromPrefab |
 | 0x488F10 | `ObjectPrefabs_ZeroGangDecalSpriteColors` | verified | ids 0x11F..0x125 = OBJECT_TYPE_GANG_DECAL_* (enum) |
 | 0x489560 | `ParkingZone_GetPedExitAngle` | hypothesis | switch direction 1..3 → short from 4 globals |
 | 0x4895D0 | `CarPhysics_ClearParkingMotion` | hypothesis | +0x74=DAT zero, Vec2 +0x40 zero |
@@ -593,10 +593,10 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x491F80 | `StyleData_IsTileSurfaceType5` | verified | this=g_StyleData; *(this + tile*4 + 0x6C) == 5; 0x49B0D0 then does Ped+0x210 += 3 (ground damage?) |
 | 0x491FA0 | `PedGameObject_PickWalkSubModeAndTimer` | hypothesis | only from StateWalk; if +0x46==0 switch on relToS24_unk33 → +0x10 ∈ {1,3,4,7}, +0x6C ∈ {0,1,2}, +0x46 = random(200/400) |
 | 0x4920A0 | `PedGameObject_StepTurnTowardHeading14` | verified | Ang16 compare of +0x14 vs +0x40, adds DAT_0066A62C or 52C to +0x40; caller FUN_00495700 |
-| 0x492130 | `MapBlocks_ClearSlopeStepBlockedFlag` | verified | *(byte*)(p+0x36E)=0, this beyond GameObject size → Ped |
+| 0x492130 | `MapBlocks_ClearSlopeStepBlockedFlag` | verified | *(byte*)(p+0x36E)=0, this beyond PedGameObject size → Ped |
 | 0x492140 | `MapBlocks_HasArrowsAt` | verified | GetBlock(x,y,z) != 0 && block[+10] != 0 (gmp block_info +10 = arrows byte); in 0x49B0D0 false → ped falls |
 | 0x492170 | `CollisionBox_GetZSize` | hypothesis | *out = this[+8]; CarWeapon_FireOil does /2 right after CollisionBox_GetYSize; ReactToCarOrObject compares > 0.5 |
-| 0x492180 | `Position_SetOwnerSprite` | verified | this[+8] = param; only caller FUN_00493850 (new Position, SetCollisionKind(3), setter(pos, sprite)) |
+| 0x492180 | `Sprite_SetOwnerSprite` | verified | this[+8] = param; only caller FUN_00493850 (new Sprite, SetCollisionKind(3), setter(pos, sprite)) |
 | 0x492190 | `PedGameObject_IsTileEdgeOpen` | verified | thiscall(go, dir): MapBlocks_IsBlockEdgeCrossingBlocked + neighbour GetGroundTypeAt (0 air → false, ≤4 ok), slope retry via bit 0x58&1; callers CanCrossTileE... |
 | 0x4923A0 | `PedGameObject_StartTurnState8` | verified | QuantizeWalkDir(+0x40), += DAT_0066A738, +0x10=8, +0x46=10 (StateWalk only) |
 | 0x4923D0 | `PedGameObject_StartTurnState9` | verified | same with DAT_0066A4A4, state 9 (left/right pair, which is which unknown — angle consts are Ang16 not in static_constants.csv) |
@@ -605,7 +605,7 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x4928A0 | `PedGameObject_AddHeading` | verified | Ang16_AddAssign(go+0x40, stack arg) (ret 4); caller FUN_004955F0 (random wobble) |
 | 0x492C20 | `Ped_GetHostility` | verified | Ped+0x230 = struct unsure_hostility |
 | 0x492C30 | `PedGameObject_CanStepAlongHeading` | verified | pos + PolarToXY(heading, DAT_0066A6A8 if state2==3 else 4FC) → ToIntB → CanMoveToTile; used in 0x49B0D0 after StepHeadingToward |
-| 0x492CB0 | `Ped_SetRefCar` | verified | Ped+0x140 = arg (struct refCar); caller Sprite_UpdatePedAnimFrame |
+| 0x492CB0 | `Ped_SetRefCar` | verified | Ped+0x140 = arg (struct refCar); caller PedGameObject_UpdateAnimFrame |
 | 0x492CE0 | `Ped_GetMoveTargetX` | verified | Ped+0x1C4 = moveTarget.x |
 | 0x492CF0 | `Ped_GetMoveTargetY` | verified | Ped+0x1C8 |
 | 0x492D00 | `PedGameObject_PickDetourTile` | verified | on DAT_00593228 (blocked dir) compares Ped moveTarget with player pose, tries neighbour tiles via CanMoveToTile, writes goal tile bytes go+0x72/+0x73. 0x4965... |
@@ -619,14 +619,14 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x493520 | `PedGameObject_ResetTickCountersAndSpriteIds` | verified | body: relToS24_unk33=0; relToS24_unk34=0; nextSpriteId=0; unk33 is the 0..20 counter bumped in PedGameObject_Tick; sole caller DummyPedManager_Ctor |
 | 0x493540 | `ParkingZone_IsCar` | verified | return param == *(uint*)this; caller Ped_ReactToCarOrObjectObstacle |
 | 0x493550 | `PedGameObject_ResetMoveScratch` | verified | first call in PedGameObject_Tick; sets DAT_00593228/0059322c=1, DAT_0066a3c1..c8=0, copies Fix16 zero (DAT_0066a4d8) into the pose globals playerPedX_/0066a7... |
-| 0x493640 | `Sprite_Deinit` | verified | pairs with Sprite_Init; CollisionGrid_RemoveSprite + PositionPool_Free(+0x80), Car_FreeAttachments(+0x88), +0xb0=-1; caller SpritePool_Release |
+| 0x493640 | `PedGameObject_Deinit` | verified | pairs with PedGameObject_Init; CollisionGrid_RemoveSprite + SpritePool_Free(+0x80), Car_FreeAttachments(+0x88), +0xb0=-1; caller PedGameObjectPool_Release |
 | 0x493710 | `PedGameObject_EnterJumpMode` | verified | called from Ped_Jump 0x433C40; sets sub-mode +0x10=0xF, anim +0x6c=5, +0x38 = jump speed, +0x8c = Z byte |
 | 0x493780 | `PedGameObject_GetBackwardPolarOffset` | verified | Vec2_FromPolar(-DAT_0066a504, angle at this+0x80); caller FUN_004867e0 |
 | 0x4937D0 | `Fix16_ToSubTilePixelX` | verified | frac(x)*64 -> int16; used by PedGameObject_IsInTileCenter (sub-tile 20..44 px) |
 | 0x493810 | `Fix16_ToSubTilePixelY` | verified | identical body, used for y |
-| 0x493850 | `Sprite_AllocPosition` | verified | GetNewFreePositionStruct, Position_SetCollisionKind(3), SoundClient_EnsureSource; only caller Sprite_Init |
+| 0x493850 | `PedGameObject_AllocSprite` | verified | SpritePool_Alloc, Sprite_SetCollisionKind(3), SoundClient_EnsureSource; only caller PedGameObject_Init |
 | 0x4938A0 | `PedGameObject_StartDrowning` | verified | Ped_SetState(FALL_ON_GROUND), SetState2(0x14), Particle_EmitBurstAt; callers Walk/Staying/GetOutOfCar/FallOnGround... |
-| 0x493940 | `Car_ComputePedDoorStepPos` | verified | CarInfo_GetDoorInfo + relToSpiteOfCar table, switch on door/anim step 0..0xC,99, Ang16_RotateXY; callers GameLogic, Sprite_UpdatePedAnimFrame, Ped_RunTask |
+| 0x493940 | `Car_ComputePedDoorStepPos` | verified | CarInfo_GetDoorInfo + relToSpiteOfCar table, switch on door/anim step 0..0xC,99, Ang16_RotateXY; callers GameLogic, PedGameObject_UpdateAnimFrame, Ped_RunTask |
 | 0x494180 | `PedGameObject_UpdateGroundZ` | verified | MapBlocks_GetSlopeSurfaceZ -> +0x45 slope byte, bit0 of +0x58, SetPosition(x,y,z) |
 | 0x495470 | `PedGameObject_SteerAroundBlockedEdge` | verified | CanCrossTileEdge on heading class and both neighbours, then FUN_00492400 |
 | 0x4955F0 | `PedGameObject_JitterHeading` | verified | random() > 0x16 -> heading +- random Fix16 -> Ang16, sign fix-up |
@@ -636,7 +636,7 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x496800 | `PedGameObject_StateGetOutOfCar` | verified | Tick dispatch state1==4 = GETTING_OUT_FROM_CAR (PED_STATE enum); sets door anim 7, Ped_GetTargetCarDoor |
 | 0x496880 | `PedGameObject_StateFallOnGround` | verified | Tick dispatch state1==8 = FALL_ON_GROUND; switch state2 0x11/0x13/0x14/0x16/0x18-0x1a/0x1b (thrown, burning, lying, run-over); Ped_OnDeath, SpawnMovingObject... |
 | 0x4973E0 | `WorldObject_IsOwnerSlotEqual` | verified | unsure_WorldObject_KindHasOwnerSlot && byte+0x26 == arg; caller Sprite_ShouldCollideWithSprite |
-| 0x497A60 | `PedGameObject_Ctor` | verified | eh_vector_constructor_iterator 400 x 0xB4 in 0x435550; 0xB4 = sizeof(GameObject) |
+| 0x497A60 | `PedGameObject_Ctor` | verified | eh_vector_constructor_iterator 400 x 0xB4 in 0x435550; 0xB4 = sizeof(PedGameObject) |
 | 0x49A080 | `PedGameObject_WalkAroundObstacle` | verified | doc ped-movement-collision §4 "walk around along a tangent (+0x69, FUN_0049A080)"; uses +0x28 heading, Ped_ResolveSpriteObstacle |
 | 0x49B0D0 | `PedGameObject_StateWalkToTarget` | verified | Tick dispatch state1 1/2 (UNKNOWN_1 / GOING_TO_CAR); path/heading toward target (Ped_GetTargetRotation, StepHeadingTowardTarget, ChebyshevDist) |
 | 0x49BAC0 | `thunk_PedGameObject_StateWalkToTarget` | verified | 5-byte thunk to 0x49b0d0 (Tick case 2) |
