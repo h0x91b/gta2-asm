@@ -174,7 +174,7 @@ build of `host/debug_emergency.asm`, Downtown, 2026-10-22):
 4. Lowering the order z to 1.0 does not help either: `CarAI_UpdateDriveOrder` plans with that z and
    no longer finds the road block (route slot −1). No single z value satisfies both on flat ground.
 5. The proximity stops in the slot code need the car standing still: `Ped_Obj1_GoToAreaInCar`
-   counts only while `Car_GetSpeed == 0` (0x421EC0); `AmbulanceSlot_UpdateParamedics` waits for
+   counts only while `Car_GetFrameDisplacementLength == 0` (0x421EC0); `AmbulanceSlot_UpdateParamedics` waits for
    Chebyshev < 8.0 and a timer > 0x32, `FireEngineSlot_Update` state 2 for < 3.0 and a timer > 100.
 6. Port inputs ruled out: the CRT static constants read on this path are correct at runtime
    (`5E512C = 0x4000`, `5E50B8 = 0x14000`, `5E520C = 0x8000`, `5E5398 = 0x1EB`); the chain uses no
@@ -347,7 +347,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x416960 | SoundMgr_ScaleVolumeByDistanceFade | V | linear fade in last 1/4 of radius |
 | 0x4169A0 | SoundMgr_ResetRequestSortIndex | V | fills sort index with numVoices, count=0 |
 | 0x4169E0 | SoundMgr_ResetVoices | V | init 16 voices (0xDC0, 0x68 each) |
-| 0x416B20 | SoundMgr_ReseedRandoms | V | 5x random32 into +0x1454 |
+| 0x416B20 | SoundMgr_ReseedRandoms | V | 5x Crt_Rand into +0x1454 |
 | 0x416B50 | Ped_GetZ | V | writes *(Ped+0x1B4) to out; sibling of Ped_GetX/Y; 46 callers |
 | 0x416B70 | Camera_GetFollowedPed | V | returns +0x34; nonzero -> ped branch in 417030 |
 | 0x416B80 | Car_GetBodyPos | V | reads Car+0x50 -> +0x14/18/1C (Sprite*) |
@@ -515,7 +515,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x421DF0 | Car_IsOnSurface6 | V | physics+0x98 (surfaceType)==6 |
 | 0x421E00 | Car_GetVelocityAngle | V | angle of physics+0x40 else body rotation |
 | 0x421E70 | Car_GetVelocity | V | physics+0x40/44; train uses actor |
-| 0x421EC0 | Car_GetSpeed | V | length of velocity, 0 w/o physics |
+| 0x421EC0 | Car_GetFrameDisplacementLength | V | length of velocity, 0 w/o physics |
 | 0x421EF0 | Car_GetMinHalfExtent | V | g_Fix16Div64Table[min(w,h)] |
 | 0x421F40 | Car_NeedsRemapChange | V | num_remaps>1 && spriteId!=remap |
 | 0x421F80 | Car_NeedsRemapChangeWithTrailer | V |  |

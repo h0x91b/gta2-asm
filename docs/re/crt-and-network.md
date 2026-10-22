@@ -42,7 +42,7 @@ The PE timestamp says 2004-04-27, while the original 1999 release was built with
 | `0x4D0000-0x4D47xx` | Game code: weapons tail, `WndProc`, `WinMain`/`WinMain2`, `Startup_ConnectMultiplayerFromRegistry`, video/renderer DLL loading (`LoadRenderDll`, `InitVideoDll`). |
 | `0x4D48D0-0x4D5CC5` | Old MSVC iostream (about 50 functions). The game uses it only for logs: `do_miss_logging` → `ofstream_Open`, and `DebugLog_WriteLine` → `ostream_OperatorShiftString`. |
 | `0x4D5CE1-0x4E3Fxx` | MSVC 7.0 CRT in library link order: heap (`malloc`, `sbheap.c`), C++ EH (`frame.cpp`, `Unwind@` funclets), stdio, lowio, `output.c`/`input.c`, float conversion (`cvt.c`, `intrncvt.c`, `strgtold`, `x10fout`), mbctype, time/tz, environment, signals. |
-| `0x51C730`, `0x52E0A0` | Two static-initialiser functions reached only through data pointers (`0x584498`, `0x586D48`, presumably the `__xc` initialiser table): `StaticInit_DebugFlagsDefaults` and `StaticInit_RandomGen_eq_0`. They are game code, not CRT. |
+| `0x51C730`, `0x52E0A0` | Two static-initialiser functions reached only through data pointers (`0x584498`, `0x586D48`, presumably the `__xc` initialiser table): `StaticInit_DebugFlagsDefaults` and `StaticInit_RandomDebugLog`. They are game code, not CRT. |
 | `0x56DBE0-0x56DFxx` | Code that the 11.44 community patch put into `.text` raw slack past VirtualSize `0x56DBC0` (§4). |
 
 ### Process startup
@@ -71,8 +71,13 @@ The full list is the table in §6. By source module:
 - **Time**: `_time`, `_ctime`, `_localtime`, `_gmtime`, `__tzset`, `_cvtdate`, `__isindst`, `___loctotime_t`, `___timet_from_ft`.
 - **Environment/signals/misc**: `_getenv`, `__putenv_lk`, `_findenv`, `_copy_environ`, `__wtomb_environ`, `_signal`, `_raise`, `_siglookup`, `__XcptFilter`, `__chkstk`, `__resetstkoflw`, `___crtMessageBoxA`, `__ValidateRead`/`Write`, `_ValidateExecute`.
 
-Game-renamed CRT functions kept as they were: `Crt_Srand` `0x4D71ED` and `random32` (`srand`/`rand`),
+Game-renamed CRT functions kept as they were: `Crt_Srand` `0x4D71ED` and `Crt_Rand` (`srand`/`rand`),
 `Crt_Exit` `0x4D73A7` (`exit`), `copySomething` `0x4D78E0`.
+
+Random numbers: every game roll goes through `Random_S16` 0x472E00 (roll below a max) and `Crt_Rand` 0x4D71F7,
+whose whole state is the MSVC seed `g_CrtRandSeed` 0x595410. `Crt_Srand(1)` runs in `RandomDebugLog_Ctor`
+(static init) and again in `Game_Ctor`, so every level starts from seed 1. `g_RandomDebugLog` 0x663764 only keeps the
+last value for a debug log; it is not generator state.
 
 ## 4. The 11.44 patch stubs (`Patch1144_*`)
 
@@ -203,7 +208,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x403130` | `File_GetCharSkipBlanks` | medium | getc loop skipping space/CR/tab; returns 0 on newline/EOF; caller Seq_ReadLabelLine |
 | `0x4035A0` | `PedGroup_ResetDoorCursor` | high | sets DAT_0058f512=1; that byte is the seat/door cursor used in PedGroup enter-car update 0x405240 |
 | `0x4035B0` | `PedGroup_Init` | high | fastcall zeroes PedGroup fields (leader 0x2c,count 0x34, mode 0x38=2); called by PedGroupPool_Alloc |
-| `0x4035E0` | `PedGroup_ClearAllObjectives` | high | PedSetObjective+Ped_SetTask NO_OBJ for leader and every member |
+| `0x4035E0` | `PedGroup_ClearAllObjectives` | high | Ped_SetObjective+Ped_SetTask NO_OBJ for leader and every member |
 | `0x403650` | `PedGroup_KillMembersInCarAndCompact` | high | Ped_OnDeath on members with currentCar, nulls slots, compacts member array; returns bool |
 | `0x4037A0` | `PedGroup_AllMembersOnFoot` | medium | returns 0 if any member's currentCar(+0x16c) nonzero, else 1 |
 | `0x403870` | `PedGroupPool_Init` | high | startGame; calls 0x4035a0, then PedGroup_Init for 20 groups at 0x5D28C8 stride 0x44 |
@@ -540,7 +545,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x4E34F2` | `__putenv_lk` | high | SetEnvironmentVariableA, _findenv, realloc _environ table, free/copy_environ |
 | `0x4E36D2` | `__mbschr` | high | SWAR byte scan strchr, with _mbcs branch (_DAT_0067536c); caller __putenv_lk |
 | `0x51C730` | `StaticInit_DebugFlagsDefaults` | medium | static-init ctor (data ref 0x584498): sets g_* debug flags false |
-| `0x52E0A0` | `StaticInit_RandomGen_eq_0` | medium | static-init ctor (data ref 0x586d48): ctor of global g_RandomGen at 0x663764, calls Crt_Srand |
+| `0x52E0A0` | `StaticInit_RandomDebugLog` | medium | static-init ctor (data ref 0x586d48): ctor of global g_RandomDebugLog at 0x663764, calls Crt_Srand |
 
 ### 11.44 patch code (0x56Dxxx)
 
@@ -584,4 +589,4 @@ Evidence is in each function's Ghidra plate comment. `unsure_` = honest guess, `
 | `0x4620E0` | `Multiplayer_ShowPlayerLeftMessage` | high | GXT "comms1" to kill feed |
 | `0x462140`, `0x462440`, `0x4624E0`, `0x4626D0` | `Multiplayer_ExchangeLockstepInputs`, `_BroadcastLocalInput`, `_ApplyBufferedInputs`, `Game_UpdateLockstepInputFrame` | medium | Main.cpp lockstep input exchange, caller drawAndLimitFrames |
 | `0x462820` / `0x462850` | `Game_FatalExitWithAlert` / `Network_VerifyPlayerSyncInfo` | high | "Player %s: ... is different" strings |
-| `0x472620` | `RandomGen_Ctor` | high | Crt_Srand(1), StaticInit_RandomGen_eq_0 |
+| `0x472620` | `RandomDebugLog_Ctor` | high | Crt_Srand(1), StaticInit_RandomDebugLog |

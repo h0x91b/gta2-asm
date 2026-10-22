@@ -122,7 +122,7 @@ typedef struct PlayerScore PlayerScore;
 typedef struct PolicePursuitTarget PolicePursuitTarget;
 typedef struct PoliceRoadblock PoliceRoadblock;
 typedef struct PublicTransportManager PublicTransportManager;
-typedef struct RandomGen RandomGen;
+typedef struct RandomDebugLog RandomDebugLog;
 typedef struct RoadJunction RoadJunction;
 typedef struct RoadNetwork RoadNetwork;
 typedef struct RoadSearchNode RoadSearchNode;
@@ -3396,8 +3396,8 @@ struct PublicTransportManager {
     uint8_t _gap_0x1819[0x3];
 };
 
-// /RandomGen  size 0x4
-struct RandomGen {
+// /RandomDebugLog  size 0x4
+struct RandomDebugLog {
     int lastValue; /* 0x0 last roll, written by random 0x472E00 (word) and Random_U8 0x472E90 (byte) when g_logRandom; zeroed by RandomGen_Ctor 0x472620. Size: only +0 is used */
 };
 
@@ -3961,7 +3961,7 @@ struct Game {
     byte playerCount; /* 0x23 */
     char localPlayerIndex; /* 0x24 */
     uint8_t _gap_0x25[0x3];
-    int exitFrame; /* 0x28 */
+    int exitFrame; /* 0x28 -1 = no exit scheduled */
     int quitReason; /* 0x2c */
     byte compensationFPSTime; /* 0x30 */
     uint8_t _gap_0x31[0x3];
@@ -4052,7 +4052,7 @@ struct Camera {
 struct Player {
     byte isLocal; /* 0x0 */
     uint8_t _gap_0x1[0x3];
-    uint32_t inputWord; /* 0x4 */
+    uint32_t inputWord; /* 0x4 Raw input bits, decoded by Player_MapKeys 0x4A4AE0 into key* bools (+ *Changed edge flags): 0x1 forward, 0x2 backward, 0x4 left, 0x8 right, 0x10 attack, 0x20 enter/exit, 0x40 jump/handbrake, 0x80 prev weapon, 0x100 next weapon, 0x200 special1 (horn), 0x400 special2, 0x800 special3. */
     short turnRate; /* 0x8 */
     short turnStep; /* 0xa */
     SCR_f moveSpeed; /* 0xc */

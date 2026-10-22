@@ -493,7 +493,7 @@ sp_spawn:
 
 ; rax = sp_behaviour(edi = Ped*): hostile / follower, per sp_spawn_behave; rax = the toast
 ; Hostile = SET_CHAR_OBJECTIVE KILL_CHAR_ON_FOOT on the player (handler 0x47A1E0):
-; PedSetObjective, then the target (PedSetObjective clears it). Follower = the player's
+; Ped_SetObjective, then the target (Ped_SetObjective clears it). Follower = the player's
 ; group (ADD_EXISTING_CHAR_TO_GROUP, 0x47BAC0): PedGroupCreate(player, 0) when he has none,
 ; then PedGroupAddPed; the group AI makes members follow (Seq 27 seq51_answer.md §4).
 sp_behaviour:
@@ -717,7 +717,7 @@ PED_SETCLASS    equ 0x403920        ; Ped_SetPedClass thiscall(Ped*; class)
 PED_SETOCC      equ 0x403970        ; Ped_SetOccupation thiscall(Ped*; OCUPATION)
 PED_SETWEAPON   equ 0x43D830        ; Ped_SetWeapon fastcall(Ped*, edx; WEAPON_INDEX)
 GANG_WEAPON     equ 0x45DB70        ; Gang_PickWeaponByRespect fastcall(GangRespect*) -> weapon
-PED_SETOBJ      equ 0x43BBC0        ; PedSetObjective thiscall(Ped*; objective, short timer)
+PED_SETOBJ      equ 0x43BBC0        ; Ped_SetObjective thiscall(Ped*; objective, short timer)
 PED_SETTARGET   equ 0x403AC0        ; Ped_SetObjTargetPed thiscall(Ped*; Ped*)
 PEDGROUP_CREATE equ 0x440350        ; PedGroupCreate fastcall(Ped* leader, edx; byte members)
 PEDGROUP_ADD    equ 0x404C90        ; PedGroupAddPed fastcall(PedGroup*, edx = 0; Ped*)

@@ -260,7 +260,7 @@ the remap and RETURN as "spawn" through `dm_defer`; a `draw` callback with `dm_p
 | `Ped_Spawn` stdcall(x, y, z, PED_REMAP, Ang16 rot) -> Ped*, RET 0x14; sets sprite, remap, health 100, AREA / RUN_AWAY, graphicType 0 only; no empty-pool check | `0x43DB40` | Seq 27 (seq51_answer.md), CREATE_CHAR = `Script_Decl_CHAR_DATA_SET` 0x477560 |
 | `Ped_SetPedClass` / `Ped_SetOccupation` thiscall(Ped*; value), RET 4 (Ghidra's fastcall prototype is wrong) | `0x403920`, `0x403970` | Seq 27 disassembly |
 | `Ped_SetWeapon` fastcall(Ped*, edx; weapon), `Gang_PickWeaponByRespect` fastcall(GangRespect*) | `0x43D830`, `0x45DB70` | Seq 27 |
-| `PedSetObjective` thiscall(Ped*; objective, timer) RET 8 (clears the target), `Ped_SetObjTargetPed` thiscall(Ped*; Ped*) | `0x43BBC0`, `0x403AC0` | Seq 27, SET_CHAR_OBJECTIVE handler 0x47A1E0 |
+| `Ped_SetObjective` thiscall(Ped*; objective, timer) RET 8 (clears the target), `Ped_SetObjTargetPed` thiscall(Ped*; Ped*) | `0x43BBC0`, `0x403AC0` | Seq 27, SET_CHAR_OBJECTIVE handler 0x47A1E0 |
 | `PedGroupCreate` fastcall(Ped* leader, edx; byte n), `PedGroupAddPed` fastcall(PedGroup*, 0; Ped*), `Ped.group` +0x164, `PedGroup.membersCount` +0x34 (max 8) | `0x440350`, `0x404C90` | Seq 27, re/gta2_types.h |
 | Ped frames: graphicType * 158 + anim, walk = 0..7; DrawSprite2D palette kind 4 takes the raw PED_REMAP | `0x497DF0`, `0x4C2AC0` | Seq 27 + style render (`bun tools/formats/cli.ts sty --sprite`) |
 | ped pool `PedManager_S25*` +0 freeListHead; Ped +0x238 class, +0x240 occupation, +0x17C gang, +0x288 / +0x28C threat search / reaction | `0x5E5BBC` | re/gta2_types.h, Seq 27 |

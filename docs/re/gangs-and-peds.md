@@ -380,7 +380,7 @@ respect > 79 already attack cops. What does **not** exist: police *pursuit* of n
 
 **Ambulance** — trigger is a death: the death handler (named `Ped_AttachToGame` 0x4411b0 in the
 DB; it is really the kill handler) sets objective 28 on the corpse (sprite, no group, not mission,
-not player); `PedSetObjective` case 28 (0x43bde1) → `AmbulanceManager_EnqueuePed` 0x472f20 (cap
+not player); `Ped_SetObjective` case 28 (0x43bde1) → `AmbulanceManager_EnqueuePed` 0x472f20 (cap
 **25**; player-class corpses refused). `AmbulanceManager_Update` 0x4740b0 (skipped by
 `g_skipAmbulance` 0x5EAD6B; the queue still fills):
 
@@ -458,8 +458,8 @@ Used by the K menu's "Call ambulance" / "Call fire truck" (`host/debug_emergency
   `g_PedPathfinder` 0x66A7E4; `(char kind, u8* x, u8* y, u8* z, char wide)`) returns 0 at
   once while `PedPathfinder+0x38` is set and `wide == 0`; the flag flips every frame
   (1, 0, 1, …). `AmbulanceManager_DispatchForQueuedPed` passes `wide = 0`, so a body
-  popped on a busy tick is dropped. Its give-up `PedSetObjective(50)` is ignored for a
-  dead ped (`PedSetObjective` only takes objective 28 while WASTED), so the body keeps
+  popped on a busy tick is dropped. Its give-up `Ped_SetObjective(50)` is ignored for a
+  dead ped (`Ped_SetObjective` only takes objective 28 while WASTED), so the body keeps
   objective 28 and no ambulance ever comes. Queueing it again a frame later works.
   Without `wide` the search stops after 6 rings: the Downtown start square has no road
   in range, so no ambulance can come there at all.
@@ -495,7 +495,7 @@ Used by the K menu's "Call ambulance" / "Call fire truck" (`host/debug_emergency
 | spawn mix | `MapZoneInfo` +0xC..+0x14 (or the SET_*_RATIO ops), the `random(50) == 25` Elvis gate, the `random(25)` dummy remap |
 | despawn time | `g_PedOffscreenTicksLimit` 0x5E5D80 (40); immediates 100/200/60 in `Ped_UpdateState` 0x43ecc0 |
 | disable systems | debug flags `g_skipDummies` 0x5EAD69, `g_skipAmbulance` 0x5EAD6B, `g_skipFireEngines` 0x5EAD8B |
-| call services from a mod | `AmbulanceManager_EnqueuePed(g_AmbulanceManager, ped)` or `PedSetObjective(ped, 28)`; `FireEngineManager_RequestForCar(g_FireEngineManager, car)` |
+| call services from a mod | `AmbulanceManager_EnqueuePed(g_AmbulanceManager, ped)` or `Ped_SetObjective(ped, 28)`; `FireEngineManager_RequestForCar(g_FireEngineManager, car)` |
 | roadblocks from a mod | `PoliceManager_TryCreateRoadblockAt(fake manager, x, y, dir)` on your own `PoliceRoadblock` (Ctor first) with `copLevel` at −0x10: as many as you like, never despawned because the game only updates its own 2 (`host/debug_roadblocks.asm`) |
 | emergency tuning | revive 50 (`0x32` in 0x473410), ambulance delay 300 and give-up 500, pickup range 0x664164, slot count 2, queue 25 |
 

@@ -5,7 +5,7 @@
 ;
 ; - Ambulance. The only trigger is a corpse in g_AmbulanceManager's queue. The nearest
 ;   body within DE_RANGE (on foot, with a sprite, no group, not player / special AI /
-;   mission class, not queued yet: objective not 28 or 50) gets PedSetObjective(28),
+;   mission class, not queued yet: objective not 28 or 50) gets Ped_SetObjective(28),
 ;   whose case 28 is AmbulanceManager_EnqueuePed. With no body, the nearest such live ped
 ;   is killed with Ped_OnDeath, as the mission opcode KILL_CHAR does (0x47E130); its own
 ;   death path sets objective 28 (0x441306). Nobody is picked without a road tile near
@@ -34,7 +34,7 @@
 ; route); every build prints an "emerg:" line per call and per slot state change.
 ;
 ; Addresses: re/functions.csv, re/globals.csv and own decompiler reading in
-; gta-2-recovered (2026-10-21); PedSetObjective 0x43BBC0 fastcall(Ped*, edx; objective,
+; gta-2-recovered (2026-10-21); Ped_SetObjective 0x43BBC0 fastcall(Ped*, edx; objective,
 ; timer), ret 8, from gta2-seuko-mod by izawartka
 ; (https://github.com/izawartka/gta2-seuko-mod), src/game/functions.h @25b1985.
 ; Struct offsets: re/gta2_types.h (Ped, AmbulanceManager, AmbulanceSlot,
@@ -329,7 +329,7 @@ de_log_changes:
 ; game has dropped it. AmbulanceManager_DispatchForQueuedPed pops the body and gives up
 ; without a road tile, and its unsure_Map_FindSpawnRoadTile refuses outright while
 ; PedPathfinder +0x38 is set, which flips every frame (measured: 1, 0, 1, ...). The
-; give-up sets objective 50, which PedSetObjective ignores on a dead ped, so the body
+; give-up sets objective 50, which Ped_SetObjective ignores on a dead ped, so the body
 ; just lies there with objective 28 and no ambulance (measured, 2026-10-21). Dropped =
 ; queue empty and no AmbulanceSlot active; done as soon as one is.
 de_amb_requeue:
@@ -355,7 +355,7 @@ de_amb_requeue:
     jne .out
     mov dword [de_args], DE_OBJ_AMBULANCE
     mov dword [de_args + 4], 9999
-    mov edi, 0x43BBC0               ; PedSetObjective(body, 28, 9999): queue it again
+    mov edi, 0x43BBC0               ; Ped_SetObjective(body, 28, 9999): queue it again
     lea rsi, [de_args]
     mov edx, 2
     xor ecx, ecx
@@ -468,7 +468,7 @@ de_call_ambulance:
     lea r13, [s_de_amb_noroad]
     test eax, eax
     jz .toast
-    mov dword [rsp], DE_OBJ_AMBULANCE  ; PedSetObjective(body, 28, 9999)
+    mov dword [rsp], DE_OBJ_AMBULANCE  ; Ped_SetObjective(body, 28, 9999)
     mov dword [rsp + 4], 9999
     mov edi, 0x43BBC0
     mov rsi, rsp

@@ -1265,8 +1265,8 @@ struc PublicTransportManager
     resb 3
 endstruc
 
-; /RandomGen  (4 bytes)
-struc RandomGen
+; /RandomDebugLog  (4 bytes)
+struc RandomDebugLog
     .lastValue                        resb 4      ; 0x0 int
 endstruc
 

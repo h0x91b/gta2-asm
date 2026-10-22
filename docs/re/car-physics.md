@@ -300,7 +300,7 @@ comment in Ghidra has the evidence.
 | `0x429E50` | `Car_Update` | per-car update, calls Car_UpdatePhysics | verified |
 | `0x42A2D0` | `CarPool_UpdateAll` | iterate cars, Car_Update, destroy | verified |
 | `0x42A4C0` | `CarManager_Update` | car manager tick | verified |
-| `0x44AA30` | `FrameCounter_Advance` | `frame++; frameRandom=random32()` on g_FrameCounter | verified |
+| `0x44AA30` | `FrameCounter_Advance` | `frame++; frameRandom=Crt_Rand()` on g_FrameCounter | verified |
 | `0x45A460` | `nextFrameDeltaTime` | tick length: 33 ms (11 ms if compensationFPSTime) | verified |
 | `0x45C1F0` | `GameTick` | all per-tick managers; CarManager_Update inside; FrameCounter_Advance near the end | verified |
 | `0x45C3B0` | `Game_StepByStatus` | processPlayerKeys, gameStatus switch -> GameTick | verified |

@@ -14,6 +14,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00575904,MaxAmmoArray,,USER_DEFINED,.rdata,,/byte[28],28
 0x00575920,g_WeaponDefaultAmmo,,USER_DEFINED,.rdata,,/byte[28],28
 0x005787c8,vftable,type_info,IMPORTED,.rdata,,/pointer,4
+0x0058f512,g_PedGroupDoorCursor,,USER_DEFINED,.data.exp,,/byte,1
 0x00591e7c,g_PedOffscreenTicksLimitInit,,USER_DEFINED,.data.exp,,/undefined2,2
 0x00591e84,nextPedId,,USER_DEFINED,.data.exp,,/uint,4
 0x00591e88,relToS24_unk17,,USER_DEFINED,.data.exp,,/undefined1,1
@@ -100,7 +101,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00595390,RTTI_Type_Descriptor,ostream_withassign,IMPORTED,.data.exp,,/TypeDescriptor,8
 0x005953b4,RTTI_Type_Descriptor,streambuf,IMPORTED,.data.exp,,/TypeDescriptor,8
 0x005953cc,RTTI_Type_Descriptor,filebuf,IMPORTED,.data.exp,,/TypeDescriptor,8
-0x00595410,random_seed,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00595410,g_CrtRandSeed,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00595428,RTTI_Type_Descriptor,type_info,IMPORTED,.data.exp,,/TypeDescriptor,8
 0x00595ffb,replay_number,,USER_DEFINED,.data.exp,,,
 0x005d25f0,g_File,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -151,7 +152,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e4dd0,g_Fix16SteerAssistLimitKShortCar,,USER_DEFINED,.data.exp,,/undefined,1
 0x005e4eb0,g_Fix16SteerAssistLimitK,,USER_DEFINED,.data.exp,,/undefined,1
 0x005e4eb8,WaterCannonRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
-0x005e4f38,g_fishflapCarScale,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e4f38,g_Fix16_Half,,USER_DEFINED,.data.exp,,/math/Fix16,4
 0x005e500c,JeepGunRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
 0x005e5014,AntennaRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
 0x005e508c,g_CarAIPool,,USER_DEFINED,.data.exp,,/imported/seuko-mod/CarAIPool *,4
@@ -193,7 +194,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e5cfc,ZERO,,USER_DEFINED,.data.exp,,/int,4
 0x005e5d80,g_PedOffscreenTicksLimit,,USER_DEFINED,.data.exp,,/undefined2,2
 0x005e5e1c,_relToS24_unk12,,USER_DEFINED,.data.exp,,/short,2
-0x005e5e58,relToS24_unk23,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e5e58,g_PedTargetDistance,,USER_DEFINED,.data.exp,,/math/Fix16,4
 0x005e5ee0,relToS24_unk35,,USER_DEFINED,.data.exp,,/int,4
 0x005e5f40,g_PedSpawnCameraHeading,,USER_DEFINED,.data.exp,,/short,2
 0x005e5fbc,g_PedListNodePool,,USER_DEFINED,.data.exp,,/PedListNodePool *,4
@@ -393,7 +394,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x006636f0,g_MapRenderBlockRelY,,USER_DEFINED,.data.exp,,/undefined,1
 0x00663730,g_Fix16_64,,USER_DEFINED,.data.exp,,/undefined,1
 0x00663738,g_MapRenderLayerZFix,,USER_DEFINED,.data.exp,,/undefined,1
-0x00663764,g_RandomGen,,USER_DEFINED,.data.exp,,/RandomGen,4
+0x00663764,g_RandomDebugLog,,USER_DEFINED,.data.exp,,/RandomDebugLog,4
 0x006639a0,g_Fix16Div64Table,,USER_DEFINED,.data.exp,,/math/Fix16[256],1024
 0x00663de4,g_AmbulanceManager,,USER_DEFINED,.data.exp,,/AmbulanceManager *,4
 0x00664164,g_AmbulancePickupRange,,USER_DEFINED,.data.exp,,/scr_structs.h/SCR_f,4

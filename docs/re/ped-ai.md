@@ -18,7 +18,7 @@ A ped carries two goals that share one enum, `PED_OBJECTIVE`:
 | | objective | task |
 |---|---|---|
 | field | `Ped+0x258 objective` | `Ped+0x25C task` |
-| set by | `PedSetObjective` 0x43BBC0 | `Ped_SetTask` 0x436920 |
+| set by | `Ped_SetObjective` 0x43BBC0 | `Ped_SetTask` 0x436920 |
 | timer | `+0x218 objectiveTimer` | `+0x21A taskTimer` |
 | result | `+0x225 objectiveStatus` | `+0x226 taskStatus` |
 | targets | `+0x148` ped, `+0x150` car, `+0x1A0` object, `+0x1DC` position | `+0x14C`, `+0x154`, `+0x1A4`, `+0x1D0` |
@@ -42,7 +42,7 @@ its result. Status values are `PED_GOAL_STATUS`: 0 running, 1 passed, 2 failed. 
   object; else the stored position) and the Chebyshev distance to it.
 
 **Script numbering is the enum.** `ScriptThread_SetCharObjective` 0x4751F0 passes the script's
-16-bit objective straight to `PedSetObjective` (timer 9999) and clears `PED_FLAG_REMOVAL_REQUESTED`.
+16-bit objective straight to `Ped_SetObjective` (timer 9999) and clears `PED_FLAG_REMOVAL_REQUESTED`.
 DMA's objective names (`tools/formats/scr-consts.ts` `OBJECTIVES[]`) index the enum 1:1;
 `ENTER_CAR_AS_DRIVER` and `ENTER_CAR_AS_PASSENGER` are both 35, told apart by
 `Ped+0x248 enterCarAsPassenger`. The script table stops at 59: 37, 38, 43..54, 60 and 61 are
@@ -80,7 +80,7 @@ Slot: O = used as objective, T = used as task. "No setter" = no game code writes
 | 43 | UNSURE_PATROL_IN_CAR | O | `PoliceManager_AdoptTrafficCarAsCrew` | writes CarAI+0x74 target speed 1.0; `CarAI_UpdateDriveOrder` 0x42D390 overwrites it with `driver->carSpeed` every tick while a drive order exists |
 | 44-47 | WAIT_AT_CURB_TO_CROSS_{NEG_Y,POS_X,POS_Y,NEG_X} | T | `Ped_StartCrossingRoadIfAtCurb` (dummy peds) | wait for the crossing light, find pavement up to 6 tiles away |
 | 48, 49 | CROSS_ROAD, PAUSE_AFTER_CROSSING | T | 44-47 handlers, 48 handler (timer 100) | |
-| 50 | FORCE_WASTED | O | `AmbulanceManager_DispatchForQueuedPed` | `PedSetObjective` sets (9, 0xF) at once |
+| 50 | FORCE_WASTED | O | `AmbulanceManager_DispatchForQueuedPed` | `Ped_SetObjective` sets (9, 0xF) at once |
 | 51 | UNSURE_FAIL_WHEN_TIMER_ZERO | O | no setter | |
 | 52 | DRIVE_AND_ATTACK_CHAR | O,T | police crew | `CarDriveOrder`; the 3.0 it writes to CarAI+0x74 is overwritten each tick by `driver->carSpeed` |
 | 54 | BUSTED_TAKEN_AWAY_IN_COP_CAR | O | `Player_OnBusted` (timer 60) | spawns a COPCAR, ped rides as passenger, then 33 |
@@ -97,7 +97,7 @@ The police crew code at 0x4AC0xx..0x4AD5FF (sets 32, 35, 36, 43, 52) has no Ghid
 `Ped+0x278 state` (`PED_STATE`, 0..10) and `Ped+0x27C state2` (`PED_STATE2`, sub-state) are mirrored
 into `PedGameObject+0x8/+0xC` each tick, and `PedGameObject_Tick` 0x49C460 dispatches the body on
 `state`. Most writes go through `Ped_SetStatePreset` 0x433580, which picks one of 7 pairs from the
-objective/task value (`PedSetObjective`, `Ped_SetTask`, `Ped_SetStatesFromObjective` 0x433650):
+objective/task value (`Ped_SetObjective`, `Ped_SetTask`, `Ped_SetStatesFromObjective` 0x433650):
 
 | preset | (state, state2) | used for |
 |---|---|---|

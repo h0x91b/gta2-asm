@@ -1,7 +1,7 @@
 /* car_bonus.c — mod: money every time the local player gets into a car as the driver.
  *
  * Seam: Car_OnDriverEnter(Car* this, Ped*) @0x427A20, thiscall, ret 4 — the only function
- * that makes a ped a car's driver. Callers: 0x43F279 Ped_UpdatePosition (end of the
+ * that makes a ped a car's driver. Callers: 0x43F279 Ped_TickGameObjectAndSeatInCar (end of the
  * enter-car animation, driver branch: an empty car and a jacked one alike) and 0x4A63A3
  * Player_TakeControlOfCar (remote control, the player's aux ped). Seq 27's RE (Ghidra
  * gta-2-recovered) and own disassembly; names from re/functions.csv. Detoured at its entry.

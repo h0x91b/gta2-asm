@@ -16,7 +16,7 @@
 ; on, a "paths:" line counts the peds.
 ;
 ; Test build: NASMFLAGS=-DDP_TEST=F sends every ped after the player on foot at frame F
-; (PedSetObjective), so paths show up without a mission.
+; (Ped_SetObjective), so paths show up without a mission.
 ;
 ; Ped fields (re/gta2_types.h, Ghidra; relayed from the Ped naming pass): path[100] at
 ; +0 = S3Bytes map cells (x, y, z block coordinates), ended by a (0,0,0) triple;
@@ -32,7 +32,7 @@
 ; so the camera.zoom factor is already in. Its result is in 640x480 units; times the
 ; main camera's uiScale gives back-buffer pixels, the space DrawFlatRect2D draws in.
 ; A cell becomes a world point as cell * 1.0 (0x40CE30 there), +0.5 for the centre.
-; WorldPointToScreen, PedSetObjective and PedManager from gta2-seuko-mod by izawartka
+; WorldPointToScreen, Ped_SetObjective and PedManager from gta2-seuko-mod by izawartka
 ; (https://github.com/izawartka/gta2-seuko-mod), src/game/functions.h, memory.h @25b1985;
 ; SetZ and ShowJunctionIds (do_show_junc_id) were named in the user's 2021 Ghidra DB,
 ; gta2-resurected.exe.gzf in https://github.com/h0x91b/gta2-resurection @87e1d98.
@@ -95,7 +95,7 @@ dm_draw_paths:
     inc dword [dp_live]
 %ifdef DP_TEST
     ; test only: at frame DP_TEST every ped is sent after the player on foot
-    ; (PedSetObjective 0x43BBC0 fastcall(Ped*, edx; objective, timer), ret 8; then
+    ; (Ped_SetObjective 0x43BBC0 fastcall(Ped*, edx; objective, timer), ret 8; then
     ; objectiveTargetPed +0x148, which it clears), so the game plans real paths
     cmp dword [r_frames], DP_TEST
     jne .notest

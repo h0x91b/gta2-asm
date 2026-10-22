@@ -34,7 +34,7 @@ The imported struct names from three old projects overlap. What they really are:
 
 | off | type | meaning |
 |---|---|---|
-| +0x08 / +0x0C | PED_STATE / PED_STATE2 | copied from the Ped every tick by `Ped_UpdatePosition` |
+| +0x08 / +0x0C | PED_STATE / PED_STATE2 | copied from the Ped every tick by `Ped_TickGameObjectAndSeatInCar` |
 | +0x10 | int | walk sub-mode (0 idle, 1 moving, 7 stop, 0xF lying/jumping, 0x1B nudged by obstacle, …; meanings partly hypothesis) |
 | +0x38 | SCR_f | **speed** along the heading |
 | +0x3C | SCR_f | `walkSpeedTarget` = **0.0625 block/tick** (1.9 blocks/s) for every ped; no run speed in this path |
@@ -58,7 +58,7 @@ Full layout of the rest of `PedGameObject` (2026-10-22 pass; V = behaviour + cal
 found: `+4/+5/+6`, `+0x2C`, `+0x30`, `+0x34`, `+0x42`, `+0x64`, `+0xB0` (named `unk_*`).
 
 `Ped.rotation` (+0x12C) and the pose copy inside the Ped are **mirrors** of the PedGameObject and the
-body, rewritten every tick by `Ped_UpdatePosition`. Writing them moves nothing.
+body, rewritten every tick by `Ped_TickGameObjectAndSeatInCar`. Writing them moves nothing.
 
 ### Player input fields (verified)
 
@@ -80,7 +80,7 @@ GameTick 0x45C1F0
  │            writes only Player.turnRate and Player.moveSpeed (+ jump, special key)
  └ … PedManager_UpdateActivePeds → Ped_Update 0x4454E0
        ├ Ped_UpdateState 0x43ECC0       player: STAYING↔WALK from moveSpeed / turnRate
-       └ Ped_UpdatePosition 0x43F180   fastcall(Ped*)
+       └ Ped_TickGameObjectAndSeatInCar 0x43F180   fastcall(Ped*)
            ├ PedGameObject.state1/state2 := Ped.state/state2
            ├ PedGameObject_Tick 0x49C460   thiscall(PedGameObject*, arg) ret 4
            │   ├ last good pose → playerPedX_ / DAT_0066A74C / DAT_0066A754
@@ -223,7 +223,7 @@ objects (`FireFromGun` 0x4D0530) moving and colliding per tick, no hitscan.
 | 0x43ECC0 | `Ped_UpdateState` | `uint __fastcall(Ped*)` | player: WALK↔STAYING from moveSpeed / turnRate | verified |
 | 0x436140 / 0x4348E0 | `Ped_GetPlayerTurnRate` / `Player_GetTurnRate` | thiscall, out pointer | Player+8 | verified |
 | 0x436200 / 0x4348F0 | `Ped_GetPlayerMoveSpeed` / `Player_GetMoveSpeed` | thiscall, out pointer | Player+0xC | verified |
-| 0x43F180 | `Ped_UpdatePosition` | `void __fastcall(Ped*)` | state → body object, tick, copy pose back | verified |
+| 0x43F180 | `Ped_TickGameObjectAndSeatInCar` | `void __fastcall(Ped*)` | state → body object, tick, copy pose back | verified |
 | 0x49C460 | `PedGameObject_Tick` | `void __thiscall(PedGameObject*, arg)` ret 4 | grid remove, state dispatch, rotation, grid insert | verified |
 | 0x49A560 | `PedGameObject_StateWalk` | `void __fastcall(PedGameObject*)` | **the walker**: turn, speed, probe, tile test, commit/slide, sprite obstacles | verified |
 | 0x49BD10 | `PedGameObject_StateStaying` | `void __fastcall(PedGameObject*)` | turn on the spot; runs StateWalk when push ≠ 0 | verified |
