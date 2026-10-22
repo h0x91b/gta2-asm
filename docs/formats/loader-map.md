@@ -225,7 +225,7 @@ i32 loop end`. V. The RAW buffer at `this+0x1EA8` is `AIL_mem_alloc_lock` memory
 are later pointed into it with `AIL_set_sample_address` (per `docs/win32-shims.md`, "Audio";
 not re-traced here). The individual calls from SDT entry to `mss32` sample handle (`Mss_Init2DSamples`
 `0x4B6F70`, `Mss_Init3DSamples` `0x4B72B0`) were not traced; our `mss32` replacement is
-`host/w32_audio.asm`.
+`host/c/audio.c` (WAV loading: `host/c/audio_wav.c`).
 
 ## `.scr` — mission script (`MissionScript_Load`, `0x47F280`)
 

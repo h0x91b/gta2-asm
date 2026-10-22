@@ -22,3 +22,10 @@ global reg_key_add, reg_val_find, reg_val_set   ; w32_advapi32.asm: the in-memor
 global fail                         ; loader.asm
 global key_table                    ; w32_dinput.asm: key names as in --keys
 global pm_strafe_on, pm_mouse_on, pm_key_left, pm_key_right, pm_mouse_sens, pm_report
+
+; mss32 on SDL3 audio (c/audio.c, audio_wav.c); its import table is w32_mss32.asm
+extern _setup_audio, _audio_dump_open, _audio_pump, _audio_focus, _aud_bg_audio
+global sdl_lib                      ; w32_user32.asm: the dlopen'ed SDL3
+global focus_poll                   ; w32_user32.asm: polls the window focus -> _audio_focus
+global vfs_load                     ; w32_vfs.asm: a whole game file (overlay, then pak)
+global heap_alloc, heap_free        ; w32_core.asm: low-memory heap (AIL_mem_alloc_lock)

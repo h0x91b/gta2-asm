@@ -8,7 +8,7 @@ with `%include` (one NASM unit).
 
 **Update:** with the renderer plugins implemented (`host/w32_renderer.asm`,
 [`renderer-sdl.md`](renderer-sdl.md)) the game no longer stops: it loads both plugins,
-initialises the audio (real since `w32_audio.asm`, see "Audio"), loads the frontend and **runs the frontend loop,
+initialises the audio (real since the mss32 shim, `host/c/audio.c`, see "Audio"), loads the frontend and **runs the frontend loop,
 drawing the main menu**, until the window is closed (or `--frames=N`). The section
 below is the record of the stop before that step.
 
@@ -268,7 +268,7 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
 | DINPUT8 DirectInput8Create ✓ | **must succeed** (failure is fatal, `0x44BA2B` → error handler `0x450530`) |
 | IDirectInput8A (11 methods) | CreateDevice ✓ → device (kind = GUID.Data1: keyboard/mouse); EnumDevices enumerates nothing (no joysticks); most others DI_OK |
 | IDirectInputDevice8A (32 methods) | real keyboard + mouse fed by SDL3, see "Input" |
-| mss32 (52) | 36 real (`w32_audio.asm`, see "Audio"); the 16 `AIL_*3D*` exports keep the silent default |
+| mss32 (52) | 36 real (`host/c/audio.c`, table `w32_mss32.asm`, see "Audio"); the 16 `AIL_*3D*` exports keep the silent default |
 | binkw32 (18) | default silent stub: 0, correct stdcall pop from the `@N` decoration; first call logged |
 
 ### Hooks (`w32_hooks.asm`)
@@ -406,7 +406,12 @@ So the shim also posts `WM_ACTIVATE(WA_ACTIVE)` right behind it — the user ret
 from a manager that closed at once. `ShowWindow(7)` is harmless here: our `ShowWindow`
 never minimizes. Our own options screen replaces this later.
 
-## Audio (`w32_audio.asm`)
+## Audio (`host/c/audio.c`)
+
+64-bit host C since Seq 57 (2026-10-22; NASM `w32_audio.asm` before, same behaviour and
+log lines): `host/c/audio.c` (exports, mixer, device, focus mute, `--audio-dump`),
+`host/c/audio_wav.c` (WAV / IMA ADPCM), `host/c/audio.h`. The 36 `AIL_*` handlers are C
+import handlers listed in `host/w32_mss32.asm` (docs/host-c.md, "Import shims in C").
 
 ### How the game uses mss32 (own analysis of vanilla 11.44, code `0x4B5F70`..`0x4B73E0`)
 

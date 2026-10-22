@@ -902,24 +902,8 @@ _main:
     jnz .not_dump
     mov rax, [rbx]
     add rax, 13
-    mov [aud_dump_path], rax
     mov rdi, rax
-    lea rsi, [s_wb]
-    call _fopen
-    mov [aud_dump_file], rax
-    test rax, rax
-    jz .arg
-    sub rsp, 64                     ; placeholder header, rewritten at exit
-    mov rdi, rsp
-    xor esi, esi
-    mov edx, 64
-    call _memset
-    mov rdi, rsp
-    mov esi, 1
-    mov edx, 44
-    mov rcx, [aud_dump_file]
-    call _fwrite
-    add rsp, 64
+    call _audio_dump_open           ; host/c/audio.c
     jmp .arg
 .not_dump:
     mov rdi, [rbx]                  ; --config=PATH: settings file instead of config.yaml
@@ -984,7 +968,7 @@ _main:
     call setup_kernel32
     call setup_user32
     call setup_renderer
-    call setup_audio
+    call _setup_audio               ; host/c/audio.c
     call setup_input
     call setup_registry
     mov al, [trace]
@@ -1124,7 +1108,7 @@ arg_options:                        ; {name, byte flag}
     dq s_opt_trace_input, trace_input
     dq s_opt_input_test, input_test_on
     dq s_opt_input_selftest, input_selftest
-    dq s_opt_bg_audio, aud_bg_audio
+    dq s_opt_bg_audio, _aud_bg_audio    ; host/c/audio.c
     dq 0
 prot_names:  db "---", 0, "r--", 0, "-w-", 0, "rw-", 0, "--x", 0, "r-x", 0, "-wx", 0, "rwx", 0
 str_pass:    db "PASS", 0
@@ -1186,7 +1170,7 @@ section .text
 %include "debug_roadblocks.asm"
 %include "debug_emergency.asm"
 %include "w32_renderer.asm"
-%include "w32_audio.asm"
+%include "w32_mss32.asm"            ; mss32 import table -> host/c/audio.c
 %include "w32_tables.asm"
 
 section .rodata

@@ -105,6 +105,54 @@ void c32_carbonus_change(void *item, int dir);   /* esi = dir is the 2nd SysV ar
 void c32_carbonus_fmt(char *end);                /* rdi */
 ```
 
+### Import shims in C (the game calls a Win32 / DLL export)
+
+An import handler — what a shim table entry points at — needs no NASM glue either:
+`host_dispatch` calls `imp_handler[slot](rdi = args, esi = slot)` with a 16-byte aligned
+host stack, and far-returns `edx:eax` to the game after `common32` pops the stdcall
+argument bytes the table lists. So a shim is a plain C function:
+
+```c
+/* args[0] is the first stdcall argument ([esp+4] at the game's call), args[1] the next, ... */
+uint64_t ail_set_sample_volume(const uint32_t *args)       /* (HSAMPLE, 0..127) */
+{
+    struct voice *v = aud_voice(args[0]);
+    if (v)
+        v->vol = args[1];
+    return 0;                                               /* eax; edx = rdx, ignored */
+}
+```
+
+and the table stays NASM (the `SHIM` macro builds the `{name, handler, pop}` records that
+`bind_slot` / `GetProcAddress` search), naming the C symbol with its underscore:
+
+```nasm
+; host/w32_mss32.asm (or any w32_<dll>.asm), listed in w32_tables.asm
+extern _ail_set_sample_volume
+shimtab_mss32:
+    dq s_mss32                              ; the DLL name
+    SHIM "_AIL_set_sample_volume@8", 8, _ail_set_sample_volume   ; 8 = bytes common32 pops
+    dq 0
+```
+
+Rules:
+
+- The **pop count is the table's job**, not the handler's: stdcall `@N` names pop N,
+  cdecl exports (`wsprintfA`) pop 0. A wrong N corrupts the game's stack after the call.
+- Arguments are 32-bit game values: pointers come in as `gptr` (read/write them with
+  `rd32`/`wr32`, or cast through `uintptr_t`; the image and every allocation are mapped
+  1:1). Out-parameters are written in place (`wr32(args[0], AUD_DRV)`).
+- The return value is `rax`; the game sees `eax` (and `edx` for 64-bit results — return
+  `(uint64_t)hi << 32 | lo`).
+- A handler may call the game back (`call32` / `game_stdcall`): calls nest. If it needs the
+  game's `ecx`/`edx` (a thiscall/fastcall import or hook), read `G_ECX`/`G_EDX` before that.
+- Memory handed to the game must come from the low arena (`heap_alloc`, w32_core.asm,
+  `global` in c_bridge.asm), never `malloc`.
+
+Users: `c32_svc_log` (`shimtab_c32`, c32_blob.asm) and the whole `mss32` shim
+(`host/c/audio.c`, table `w32_mss32.asm`; ported from NASM in Seq 57). The NASM shims'
+`HENTER`/`ARG(n)` is the same contract (`rbx = rdi = args`).
+
 ### C → game (C calls a 32-bit game function)
 
 Through the same `call32` (`loader.asm`) the NASM uses, exported to C:
@@ -179,7 +227,8 @@ which is always the case on the host side (the game is stopped while host code r
 `host/c/<name>.c` into `host/test/<name>` (git-ignored) and runs it, without the game, the
 pak or SDL. The test stubs every NASM symbol the module uses under the same `NASM()` name
 (`test/config_test.c`: an in-memory registry, a short `key_table`, `fail` that `longjmp`s
-back with its message). It cannot cover the NASM itself; parity runs of the loader do that.
+back with its message). It cannot cover the NASM itself; parity runs of the loader do that. `test/audio_wav_test.c` feeds `audio_wav.c` synthetic WAVs through a
+`vfs_load` stub and checks the IMA ADPCM decoder against hand-worked values.
 
 ## Pitfalls
 

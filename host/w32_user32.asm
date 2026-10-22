@@ -287,7 +287,7 @@ pump_sdl:
     push r13
     sub rsp, 128                    ; SDL_Event (128); rsp stays 16-aligned
     call focus_poll                 ; mute state before the first mixed sample
-    call audio_pump                 ; mss32 mixer: top the audio output up
+    call _audio_pump                ; mss32 mixer (c/audio.c): top the audio output up
     cmp byte [sdl_inited], 0
     je .out
 .poll:
@@ -340,7 +340,7 @@ pump_sdl:
     mov ebx, edi
     call input_focus
     mov edi, ebx
-    call audio_focus                ; mute while unfocused (w32_audio.asm)
+    call _audio_focus               ; mute while unfocused (c/audio.c)
     jmp .poll
 .motion:
     movss xmm0, [rsp + SDL_MOTION_XREL]
@@ -442,7 +442,7 @@ focus_poll:
     test eax, SDL_WINDOW_INPUT_FOCUS
     setnz dil
 .set:
-    call audio_focus
+    call _audio_focus
 .done:
     add rsp, 8
 .r:
