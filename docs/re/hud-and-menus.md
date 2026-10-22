@@ -172,8 +172,8 @@ GXT key ─ Gxt_FindTextW_thunk 0x4C23A0(g_LocaleSettings, "key") ─► wchar_t
    ▼
  DrawGTAText 0x4CC100(str, x, y, fontId, scale, PALETTE_BASE* pal, remap, invisibility, alpha)  stdcall, ret 0x24
      per u16: '\n' new line, ' ' advance, '#' toggles (pal, remap) ↔ (8, 0);
-     else sprite = StyleData_GetFontGlyphSpriteId(font, code − 0x21) → GetSpriteIndex(FONT)
-          → GetSpriteEntry → TextureCache_GetSpriteTexture(g_TextureCache, …) → gbh_DrawQuad
+     else sprite = StyleData_GetFontGlyphSpriteId(font, code − 0x21) → StyleData_GetSpriteIndex(FONT)
+          → StyleData_GetSpriteEntry → TextureCache_GetSpriteTexture(g_TextureCache, …) → gbh_DrawQuad
      Kanji fonts take a separate path: KanjiFont_UploadGlyphSmall/Large per code
 ```
 
@@ -283,8 +283,8 @@ HUD font roles (`Font_AssignRolesByLocale` 0x4CA520; Japanese switches to kanji 
 
 ### 5.1 How a HUD sprite gets drawn
 
-`GetSpriteIndex(style, type, id)` = `spriteBases[type] + id` (type 6 = USER, 7 = FONT) →
-`GetSpriteEntry` (8-byte {ptr, w, h}) → `TextureCache_GetSpriteTexture(g_TextureCache, type, id, pal, remap)`
+`StyleData_GetSpriteIndex(style, type, id)` = `spriteBases[type] + id` (type 6 = USER, 7 = FONT) →
+`StyleData_GetSpriteEntry` (8-byte {ptr, w, h}) → `TextureCache_GetSpriteTexture(g_TextureCache, type, id, pal, remap)`
 → `gbh_DrawQuad`. `DrawSprite2D` 0x4CBA50 builds the rotated quad. HUD digits, weapon icons, stars,
 hearts and popup digits are all USER sprites of the style file, so replacing a HUD image means
 patching USER sprite data or overriding `TextureCache_GetSpriteTexture` for type 6.

@@ -150,8 +150,8 @@ PALB CARI SPEC (SPEC is always last); `fstyle.sty` = PPAL SPRB FONB PALX SPRG SP
 | other | `0x402F60` | — | V | default branch skips by size |
 
 `StyleData` fields not written by any chunk reader: `+0x6A` (byte), `+0x0A` gap — unknown.
-Consumers of the sprite tables (`GetSpriteEntry` `0x4BF280`, `GetSpriteIndex` `0x4BF2A0`,
-`GetCarInfoById` `0x4BF1F0`, `TextureCache_RegisterStylePalettes` `0x4C2970`, `TextureCache_GetSpriteTexture`
+Consumers of the sprite tables (`StyleData_GetSpriteEntry` `0x4BF280`, `StyleData_GetSpriteIndex` `0x4BF2A0`,
+`StyleData_GetCarInfo` `0x4BF1F0`, `TextureCache_RegisterStylePalettes` `0x4C2970`, `TextureCache_GetSpriteTexture`
 `0x4C2AC0`) are named in `re/` but were not traced for this map.
 
 ## `.gmp` — map (`LoadMAP_GMPFile`, `0x464990`)

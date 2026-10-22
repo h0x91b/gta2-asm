@@ -137,7 +137,7 @@ mission ends. Helpers: `MissionCleanup_Ctor` `0x474E50`, `MissionCleanup_FindFre
 | `0x6644B8` | `g_MissionCleanup` (was `ptrToS17Mission`) | `gMiss2_25C_6F805C` |
 | `0x6644BC` | `g_MissionScript` | `gScriptManager_6F8060` |
 | `0x6644C0` | `g_ScriptThreadPool` (was `ptrToS16_missions`) | `miss2_0x11C_Pool_6F8064` |
-| `0x6644C4` | `g_ListNodePool` (GOSUB frame pool, name kept) | `gScriptStackFramePool_6F8068` |
+| `0x6644C4` | `g_ScriptStackNodePool` (GOSUB frame pool, name kept) | `gScriptStackFramePool_6F8068` |
 | `0x6644C8` | `g_ScriptPrevCmdIdx` | `gPrevCmdIdx_6F806C` |
 | `0x6644CC` | `g_ScriptCurCmd` | `gBasePtr_6F8070` |
 | `0x6646BC` | `g_SavedAnsweredPhoneBits` | — |

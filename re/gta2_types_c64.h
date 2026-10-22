@@ -115,6 +115,7 @@ typedef struct RoadSegment RoadSegment;
 typedef struct SaveGameHeader SaveGameHeader;
 typedef struct ScriptTrigger ScriptTrigger;
 typedef struct ScriptTriggerPool ScriptTriggerPool;
+typedef struct SoundClient SoundClient;
 typedef struct SoundClientPool SoundClientPool;
 typedef struct SoundEvent SoundEvent;
 typedef struct SoundEventQueue SoundEventQueue;
@@ -160,7 +161,6 @@ typedef struct _s_UnwindMapEntry _s_UnwindMapEntry;
 typedef struct SCR_PLAYER_PED SCR_PLAYER_PED;
 typedef struct SCR_STRINGS SCR_STRINGS;
 typedef struct SCR_STRING_HEADER SCR_STRING_HEADER;
-typedef struct SoundClient SoundClient;
 typedef struct WEAPON_STRUCT WEAPON_STRUCT;
 typedef struct WeaponPool WeaponPool;
 typedef struct CarSpriteCache CarSpriteCache;
@@ -183,7 +183,6 @@ typedef struct LayerDrawQueues LayerDrawQueues;
 typedef struct LayerDrawStack LayerDrawStack;
 typedef struct Light Light;
 typedef struct LightManager LightManager;
-typedef struct ListNodePool ListNodePool;
 typedef struct LocaleSettings LocaleSettings;
 typedef struct MapBlocks MapBlocks;
 typedef struct MapRenderer MapRenderer;
@@ -210,7 +209,9 @@ typedef struct S14_sub1 S14_sub1;
 typedef struct S2 S2;
 typedef struct S5 S5;
 typedef struct Script4k Script4k;
+typedef struct ScriptStack ScriptStack;
 typedef struct ScriptStackNode ScriptStackNode;
+typedef struct ScriptStackNodePool ScriptStackNodePool;
 typedef struct ScriptThread ScriptThread;
 typedef struct ScriptThreadPool ScriptThreadPool;
 typedef struct SoundManager SoundManager;
@@ -579,6 +580,22 @@ enum PURSUIT_STATE_values {
     PURSUIT_ACTIVE = 3,
     PURSUIT_ENDED = 4,
     PURSUIT_SEARCHING = 5,
+};
+
+// /SOUND_CLIENT_KIND
+typedef uint32_t SOUND_CLIENT_KIND;
+enum SOUND_CLIENT_KIND_values {
+    SOUND_CLIENT_NONE = 0,
+    SOUND_CLIENT_SPRITE = 1,
+    SOUND_CLIENT_MUSIC = 2,
+    SOUND_CLIENT_RADIO = 3,
+    SOUND_CLIENT_LISTENER = 5,
+    SOUND_CLIENT_EVENT_QUEUE = 6,
+    SOUND_CLIENT_WEAPON = 7,
+    SOUND_CLIENT_CRANE = 8,
+    SOUND_CLIENT_CRUSHER = 9,
+    SOUND_CLIENT_VOCAL = 10,
+    SOUND_CLIENT_ONSCREEN_COUNTER = 11,
 };
 
 // /_STY/CarInfoFlags
@@ -2472,7 +2489,7 @@ struct Crane {
     uint32_t /* void * */ candCargoTransporter; /* 0x70 */
     uint32_t /* void * */ heldCar; /* 0x74 */
     uint32_t /* Crane * */ homeCrane; /* 0x78 */
-    uint32_t /* void * */ sound; /* 0x7c */
+    uint32_t /* SoundClient * */ sound; /* 0x7c SoundClient kind 8, Crane_Init 0x449130 */
     Fix16 baseZ; /* 0x80 */
     Fix16 hookDrop; /* 0x84 */
     Fix16 hookDropVel; /* 0x88 */
@@ -2926,7 +2943,7 @@ struct HudKillFeedLine {
 struct HudPagerEntry {
     int timerTicks; /* 0x0 */
     uint32_t /* int * */ counterPtr; /* 0x4 */
-    uint32_t /* void * */ sound; /* 0x8 */
+    uint32_t /* SoundClient * */ sound; /* 0x8 SoundClient kind 11, Hud_Pager_C_Slot_SetCounter 0x4C7130 */
 };
 
 // /HudPagerArray  size 0x30
@@ -3481,10 +3498,20 @@ struct ScriptTriggerPool {
     uint8_t _gap_0x212[0x2];
 };
 
+// /SoundClient  size 0x10
+// Sound source client, 0x10 bytes, pooled 1000x in g_SoundClientPool 0x5D85A0 (stride 16, SoundClientPool_InitFreeList 0x4106A0); also embedded: g_FrontendMusicSoundClient 0x5EAF40, SoundManager+0x5454 (vocal), SoundManager radio client. Was a 0x2D '/_weapon/SoundClient' whose bytes >= 0x10 were really WEAPON_STRUCT (Weapon_* users retyped). Seq27SND.
+struct SoundClient {
+    SOUND_CLIENT_KIND kind; /* 0x0 SOUND_CLIENT_KIND; switch key of SoundMgr_UpdateSource 0x4163A0 */
+    uint8_t disabled; /* 0x4 SoundMgr_UpdateSource skips the client while != 0; SoundClient_Clear sets 1 on pop, SoundClientPool_Create clears it */
+    uint8_t _pad5[3]; /* 0x5 */
+    uint32_t sourceSlot; /* 0x8 1-based SoundManager source-slot index returned by SoundMgr_AttachClient 0x417DB0 (0 = none); freed by SoundClient_FreeVoice 0x410710 */
+    uint32_t /* void * */ owner; /* 0xc while live: the object this client voices (Sprite, Camera, SoundEventQueue, WEAPON_STRUCT, Crane, Crusher, HudPagerEntry, frontend music state), set by SoundClientPool_Create 0x410750 and read by every SoundMgr_Update*Source; while pooled: next free SoundClient (SoundClientPool_InitFreeList 0x4106A0, _Release 0x40FE60, _PopFree 0x410730) */
+};
+
 // /SoundClientPool  size 0x3e84
 struct SoundClientPool {
     uint32_t /* SoundClient * */ freeHead; /* 0x0 SoundClientPool_Release 0x40FE60 pushes here */
-    uint8_t nodes[16000]; /* 0x4 1000 SoundClient nodes x 16 bytes, free link at node+0xC (SoundClientPool_InitFreeList 0x4106A0). Not typed SoundClient[1000]: that type is 0x2D long, the real node is 0x10 */
+    SoundClient nodes[1000]; /* 0x4 1000 SoundClient nodes, free list through link.nextFree (SoundClientPool_InitFreeList 0x4106A0) */
 };
 
 // /SoundEvent  size 0x28
@@ -4065,7 +4092,7 @@ struct Player {
     DEATH_REASON deathReason; /* 0x44 */
     uint8_t dbgCamFollowPlayer; /* 0x48 */
     uint8_t _gap_0x49[0x3];
-    uint32_t /* void * */ soundListener; /* 0x4c */
+    uint32_t /* SoundClient * */ soundListener; /* 0x4c SoundClient kind 5 (owner = gameCamera), Player_OnLevelStart 0x4A81E0 */
     int unsure_throwCharge; /* 0x50 */
     uint32_t /* Car * */ lastCarOldest; /* 0x54 */
     uint32_t /* Car * */ lastCarMiddle; /* 0x58 */
@@ -4312,25 +4339,6 @@ struct SCR_STRING_HEADER {
     char textStart; /* 0x9 */
 };
 
-// /_weapon/SoundClient  size 0x2d
-struct SoundClient {
-    uint32_t unknownLowValueSomeKindOfType; /* 0x0 */
-    uint8_t f1; /* 0x4 */
-    uint8_t _gap_0x5[0x3];
-    uint32_t f2; /* 0x8 */
-    uint32_t /* SoundClient * */ _prev; /* 0xc */
-    uint8_t _gap_0x10[0x4];
-    uint32_t field11_0x14; /* 0x14 */
-    uint8_t _gap_0x18[0x4];
-    uint32_t field16_0x1c; /* 0x1c */
-    uint8_t field17_0x20; /* 0x20 */
-    uint8_t field18_0x21; /* 0x21 */
-    uint8_t _gap_0x22[0x2];
-    uint32_t field21_0x24; /* 0x24 */
-    uint32_t field22_0x28; /* 0x28 */
-    uint8_t field23_0x2c; /* 0x2c */
-};
-
 // /_weapon/WEAPON_STRUCT  size 0x30
 struct WEAPON_STRUCT {
     uint16_t ammo; /* 0x0 */
@@ -4345,7 +4353,7 @@ struct WEAPON_STRUCT {
     uint8_t justThrown; /* 0x21 */
     uint8_t _gap_0x22[0x2];
     uint32_t /* Ped * */ ped; /* 0x24 */
-    uint32_t /* void * */ audioEmitter; /* 0x28 */
+    uint32_t /* SoundClient * */ audioEmitter; /* 0x28 SoundClient kind 7, created by Weapon_Reset 0x4CC810, released by Weapon_Release/Weapon_Dtor */
     uint8_t firingFlag; /* 0x2c */
     uint8_t _gap_0x2d[0x3];
 };
@@ -4560,21 +4568,6 @@ struct LightManager {
     Light nightArr3000[3000]; /* 0x8 Created by retype action */
     short activeCount; /* 0x1d4c8 */
     uint8_t _gap_0x1d4ca[0x2];
-};
-
-// /auto_structs/ScriptStackNode  size 0xc
-// 12-byte g_ListNodePool node used for script GOSUB stacks (was S18_sub). ScriptStack_Init 0x474F90.
-struct ScriptStackNode {
-    uint32_t value; /* 0x0 stack header: top node; entry: saved return ip (Script_Op_GOSUB 0x4785D0) */
-    uint16_t depth; /* 0x4 header only; ScriptStack_Push/Pop +-1 */
-    uint8_t _gap_0x6[0x2];
-    uint32_t next; /* 0x8 next node; also the ListNodePool free link */
-};
-
-// /auto_structs/ListNodePool  size 0x25c
-struct ListNodePool {
-    int freeListHead; /* 0x0 */
-    ScriptStackNode s18_sub_50[50]; /* 0x4 */
 };
 
 // /auto_structs/LocaleSettings  size 0x14
@@ -4995,9 +4988,10 @@ struct S2 {
 // /auto_structs/S5  size 0xc
 struct S5 {
     char f1; /* 0x0 */
-    uint8_t _gap_0x1[0x7];
-    short field8_0x8; /* 0x8 */
-    uint8_t field9_0xa; /* 0xa */
+    uint8_t _gap_0x1[0x3];
+    uint32_t /* SoundClient * */ client; /* 0x4 source-slot client (SoundMgr_AttachClient 0x417DB0 stores it, SoundMgr_UpdateSource 0x4163A0 reads kind/disabled through it) */
+    short field5_0x8; /* 0x8 */
+    uint8_t field6_0xa; /* 0xa */
     uint8_t _gap_0xb[0x1];
 };
 
@@ -5006,6 +5000,29 @@ struct Script4k {
     uint16_t numOfStrings; /* 0x0 */
     uint8_t _gap_0x2[0x2];
     uint32_t /* SCR_STRING_HEADER * */ strings[999]; /* 0x4 */
+};
+
+// /auto_structs/ScriptStack  size 0x8
+// Per-thread GOSUB stack header, 8 B: operator_new(8) in constructorForS16Vector 0x475BA7, ctor ScriptStack_Ctor 0x474FA0, stored at ScriptThread+0x114.
+struct ScriptStack {
+    uint32_t /* ScriptStackNode * */ top; /* 0x0 top node (ScriptStack_Push 0x474FB9, Pop 0x474FD9) */
+    uint8_t depth; /* 0x4 u8 node count: Push INC byte 0x474FBB, Pop DEC 0x474FE2, PopToDepth CMP 0x474FF8 */
+    uint8_t _gap_0x5[0x3];
+};
+
+// /auto_structs/ScriptStackNode  size 0xc
+// GOSUB frame, 12 B, 50 in ListNodePool (g_ListNodePool 0x6644C4, ctor 0x45BFE0). Pushed onto ScriptStack (ScriptThread+0x114).
+struct ScriptStackNode {
+    int saved_cond_result; /* 0x0 ScriptThread+8 saved by Script_Op_GOSUB 0x4785E8, restored by Script_Op_RETURN 0x478639 */
+    uint16_t return_cmd; /* 0x4 GOSUB cmd +4 (next cmd); RETURN jumps there via 0x476E80 (0x47862C) */
+    uint8_t _gap_0x6[0x2];
+    uint32_t /* ScriptStackNode * */ next; /* 0x8 next node toward stack bottom (ScriptStack_Push 0x474FB6); also ListNodePool free link (0x476786) */
+};
+
+// /auto_structs/ScriptStackNodePool  size 0x25c
+struct ScriptStackNodePool {
+    uint32_t /* ScriptStackNode * */ freeListHead; /* 0x0 free node list head (pop 0x476762, push 0x476789) */
+    ScriptStackNode nodes[50]; /* 0x4 */
 };
 
 // /auto_structs/ScriptThread  size 0x11c
@@ -5022,7 +5039,7 @@ struct ScriptThread {
     uint8_t _gap_0x11[0x1];
     short exec_flag; /* 0x12 */
     char str[256]; /* 0x14 */
-    uint32_t /* void * */ gosub_stack; /* 0x114 */
+    uint32_t /* ScriptStack * */ gosub_stack; /* 0x114 ScriptStack*: alloc 0x475BA7, freed ScriptThread_FreeCallStack 0x47F9C0 */
     uint8_t in_level_start; /* 0x118 */
     uint8_t _gap_0x119[0x1];
     short thread_id; /* 0x11a */
@@ -5088,7 +5105,7 @@ struct SoundManager {
     uint8_t slowTick; /* 0x544c */
     uint8_t _gap_0x544d[0x3];
     int relToAudio; /* 0x5450 */
-    uint8_t _gap_0x5454[0x10];
+    SoundClient vocalClient; /* 0x5454 embedded SoundClient kind 10 (SoundMgr_CreateVocalClient 0x4112B0); its source slot is kept in relToAudio +0x5450 */
     VOCAL vocal; /* 0x5464 */
     RadioStationSlot radioSlots[5]; /* 0x5468 radio station table (Seq 27 sub-agent: SoundMgr_VocalSlots_*, CancelVocalAt, Radio_GetSignalStrength); 0x544C..0x5467 may overlay a slot 0 used as vocal client header */
     uint8_t unsure_radioFlag54f4; /* 0x54f4 */
@@ -5133,7 +5150,7 @@ struct Sprite {
     uint32_t /* SpriteBounds * */ frameBounds; /* 0x4 SpriteBounds from SpriteBoundsPool_Alloc (Sprite_EnsureSpriteBounds) */
     uint32_t /* void * */ owner; /* 0x8 */
     uint32_t /* SpriteBounds * */ bounds; /* 0xc SpriteBounds from SpriteBoundsPool_Alloc (Sprite_SetBoundsSize) */
-    uint32_t /* void * */ soundClient; /* 0x10 */
+    uint32_t /* SoundClient * */ soundClient; /* 0x10 */
     int x; /* 0x14 Created by retype action */
     int y; /* 0x18 Created by retype action */
     int z; /* 0x1c Created by retype action */

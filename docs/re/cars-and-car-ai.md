@@ -259,7 +259,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x410F00 | CarModel_GetHornSample | V | -> 0x10..0x17 |
 | 0x410FC0 | CarModel_GetHornBaseFreq | V | returns sample rates (0x5622 = 22050 ...) |
 | 0x411120 | CarModel_IsHeavyVehicle | V | set {3,7,0xb,0x11,0x15,0x3a,0x3f,0x40,0x56}; same set as 413eb0 idle |
-| 0x4112B0 | SoundMgr_CreateVocalClient | V | ff1 type-10 client into SoundManager+0x5450 |
+| 0x4112B0 | SoundMgr_CreateVocalClient | V | SoundMgr_AttachClient type-10 client into SoundManager+0x5450 |
 | 0x4112F0 | SoundMgr_DestroyVocalClient | V | frees SoundManager+0x5450 |
 | 0x411330 | SoundMgr_UpdateVocalClient | V | VOCAL id SoundManager+0x5464 -> MssAudio_Stream_OpenTrack, clears it |
 | 0x4116B0 | SoundMgr_IsVoiceInRange | V | dist2(+0x28) < arg, lazy sqrt -> +0x58, flag +0x2c |
@@ -287,7 +287,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x411A10 | Crusher_GetHasTarget | V | x+0x2c |
 | 0x411A20 | Crusher_GetPosX | V | owner+0x24 of type-9 client |
 | 0x411A30 | Crusher_GetPosY | V | owner+0x28 |
-| 0x411A40 | SoundClient_GetType | V | *p |
+| 0x411A40 | HudPagerEntry_GetTimerTicks | V | *p |
 | 0x411A50 | SoundMgr_UpdateMusicClient | V | type-2 client, MusicStream_IsDone -> Close/Open, vol SoundManager+0x25*6/10 |
 | 0x411D20 | SoundMgr_UpdateCraneSource | V | type 8 case of 4163a0; owner flags +0x156..+0x159 |
 | 0x412010 | SoundMgr_UpdateCrusherSource | V | type 9; owner +0x24/+0x28 pos |
@@ -433,7 +433,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x41F2F0 | Camera_Tick | V | followState(0x3c) 1 smooth / 2 snap, shake, UpdateBoundaries, commit |
 | 0x41F680 | CarDoor_RequestOpen | V | state 1/2 -> timer(+0xc)=0x32; 3..6 -> state 2, byte1=4 |
 | 0x41F6E0 | Car_IsPoliceModel | V | model in {12,52,84} |
-| 0x41F880 | Car_GetDoorCount | V | CarInfo_GetDoorInfo(model)[0] |
+| 0x41F880 | Car_GetDoorCount | V | StyleData_GetCarDoorInfo(model)[0] |
 | 0x41F8A0 | Car_OpenAllDoors | V | loop CarDoor_RequestOpen |
 | 0x41F8F0 | Car_CloseAllDoors | V | loop CarDoor_RequestClose |
 | 0x41F9B0 | DamageFire_GetEffectTypeForStage | V | 1->0xc,2->0xd,3->0xe; Car_SpawnDamageFireEffect |
@@ -448,7 +448,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x41FF20 | CarInfo_GetRearWindowOffsetFix16 | V | relTable[this+0xb] |
 | 0x41FF40 | CarInfo_GetFrontWindowOffsetFix16 | V | relTable[this+0xa] |
 | 0x41FF60 | CarInfo_GetScaledWidthFix16 | V | relTable[this+2]*DAT_005e4fb4 |
-| 0x420220 | StyleData_GetSpriteWidth | V | GetSpriteEntry(id)->w |
+| 0x420220 | StyleData_GetSpriteWidth | V | StyleData_GetSpriteEntry(id)->w |
 | 0x420230 | StyleData_GetSpriteSizeFix16 | V | relTable[w], relTable[h] |
 | 0x420270 | Car_GetLookAheadZ | V | physics(0x58) ? CarPhysics_GetLookAheadZ : sprite+0x1c |
 | 0x420470 | Box3_SetXYRangesWithZCenter | V | 4 stack args + z -+ DAT_005e4d50 |

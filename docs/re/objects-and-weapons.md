@@ -626,7 +626,7 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x493810 | `Fix16_ToSubTilePixelY` | verified | identical body, used for y |
 | 0x493850 | `PedGameObject_AllocSprite` | verified | SpritePool_Alloc, Sprite_SetCollisionKind(3), SoundClient_EnsureSource; only caller PedGameObject_Init |
 | 0x4938A0 | `PedGameObject_StartDrowning` | verified | Ped_SetState(FALL_ON_GROUND), SetState2(0x14), Particle_EmitBurstAt; callers Walk/Staying/GetOutOfCar/FallOnGround... |
-| 0x493940 | `Car_ComputePedDoorStepPos` | verified | CarInfo_GetDoorInfo + g_Fix16Div64Table table, switch on door/anim step 0..0xC,99, Ang16_RotateXY; callers GameLogic, PedGameObject_UpdateAnimFrame, Ped_RunTask |
+| 0x493940 | `Car_ComputePedDoorStepPos` | verified | StyleData_GetCarDoorInfo + g_Fix16Div64Table table, switch on door/anim step 0..0xC,99, Ang16_RotateXY; callers GameLogic, PedGameObject_UpdateAnimFrame, Ped_RunTask |
 | 0x494180 | `PedGameObject_UpdateGroundZ` | verified | MapBlocks_GetSlopeSurfaceZ -> +0x45 slope byte, bit0 of +0x58, SetPosition(x,y,z) |
 | 0x495470 | `PedGameObject_SteerAroundBlockedEdge` | verified | CanCrossTileEdge on heading class and both neighbours, then FUN_00492400 |
 | 0x4955F0 | `PedGameObject_JitterHeading` | verified | random() > 0x16 -> heading +- random Fix16 -> Ang16, sign fix-up |

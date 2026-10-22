@@ -239,7 +239,7 @@ struc Crane
     .candCargoTransporter             resb 4      ; 0x70 void *
     .heldCar                          resb 4      ; 0x74 void *
     .homeCrane                        resb 4      ; 0x78 Crane *
-    .sound                            resb 4      ; 0x7c void *
+    .sound                            resb 4      ; 0x7c SoundClient *
     .baseZ                            resb 4      ; 0x80 Fix16
     .hookDrop                         resb 4      ; 0x84 Fix16
     .hookDropVel                      resb 4      ; 0x88 Fix16
@@ -701,7 +701,7 @@ endstruc
 struc HudPagerEntry
     .timerTicks                       resb 4      ; 0x0 int
     .counterPtr                       resb 4      ; 0x4 int *
-    .sound                            resb 4      ; 0x8 void *
+    .sound                            resb 4      ; 0x8 SoundClient *
 endstruc
 
 ; /HudPausePage  (4 bytes)
@@ -1325,6 +1325,19 @@ struc RoadSegment
     .maxY                             resb 1      ; 0x7 byte
 endstruc
 
+; enum /SOUND_CLIENT_KIND  (4 bytes)
+SOUND_CLIENT_KIND.SOUND_CLIENT_NONE equ 0
+SOUND_CLIENT_KIND.SOUND_CLIENT_SPRITE equ 1
+SOUND_CLIENT_KIND.SOUND_CLIENT_MUSIC equ 2
+SOUND_CLIENT_KIND.SOUND_CLIENT_RADIO equ 3
+SOUND_CLIENT_KIND.SOUND_CLIENT_LISTENER equ 5
+SOUND_CLIENT_KIND.SOUND_CLIENT_EVENT_QUEUE equ 6
+SOUND_CLIENT_KIND.SOUND_CLIENT_WEAPON equ 7
+SOUND_CLIENT_KIND.SOUND_CLIENT_CRANE equ 8
+SOUND_CLIENT_KIND.SOUND_CLIENT_CRUSHER equ 9
+SOUND_CLIENT_KIND.SOUND_CLIENT_VOCAL equ 10
+SOUND_CLIENT_KIND.SOUND_CLIENT_ONSCREEN_COUNTER equ 11
+
 ; /SaveGameHeader  (1864 bytes)
 struc SaveGameHeader
     .gmpPath                          resb 25     ; 0x0 char[25]
@@ -1365,10 +1378,19 @@ struc ScriptTriggerPool
     resb 2
 endstruc
 
+; /SoundClient  (16 bytes)
+struc SoundClient
+    .kind                             resb 4      ; 0x0 SOUND_CLIENT_KIND
+    .disabled                         resb 1      ; 0x4 bool
+    ._pad5                            resb 3      ; 0x5 byte[3]
+    .sourceSlot                       resb 4      ; 0x8 uint
+    .owner                            resb 4      ; 0xc void *
+endstruc
+
 ; /SoundClientPool  (16004 bytes)
 struc SoundClientPool
     .freeHead                         resb 4      ; 0x0 SoundClient *
-    .nodes                            resb 16000  ; 0x4 undefined1[16000]
+    .nodes                            resb 16000  ; 0x4 SoundClient[1000]
 endstruc
 
 ; /SoundEvent  (40 bytes)
@@ -2240,7 +2262,7 @@ struc Player
     .deathReason                      resb 4      ; 0x44 DEATH_REASON
     .dbgCamFollowPlayer               resb 1      ; 0x48 byte
     resb 3
-    .soundListener                    resb 4      ; 0x4c void *
+    .soundListener                    resb 4      ; 0x4c SoundClient *
     .unsure_throwCharge               resb 4      ; 0x50 int
     .lastCarOldest                    resb 4      ; 0x54 Car *
     .lastCarMiddle                    resb 4      ; 0x58 Car *
@@ -2791,25 +2813,6 @@ struc SCR_STRING_HEADER
     .textStart                        resb 1      ; 0x9 char
 endstruc
 
-; /_weapon/SoundClient  (45 bytes)
-struc SoundClient
-    .unknownLowValueSomeKindOfType    resb 4      ; 0x0 uint
-    .f1                               resb 1      ; 0x4 byte
-    resb 3
-    .f2                               resb 4      ; 0x8 undefined4
-    ._prev                            resb 4      ; 0xc SoundClient *
-    resb 4
-    .field11_0x14                     resb 4      ; 0x14 undefined4
-    resb 4
-    .field16_0x1c                     resb 4      ; 0x1c undefined4
-    .field17_0x20                     resb 1      ; 0x20 byte
-    .field18_0x21                     resb 1      ; 0x21 byte
-    resb 2
-    .field21_0x24                     resb 4      ; 0x24 undefined4
-    .field22_0x28                     resb 4      ; 0x28 undefined4
-    .field23_0x2c                     resb 1      ; 0x2c byte
-endstruc
-
 ; enum /_weapon/WEAPON_INDEX  (4 bytes)
 WEAPON_INDEX.PISTOL equ 0
 WEAPON_INDEX.SMG equ 1
@@ -2854,7 +2857,7 @@ struc WEAPON_STRUCT
     .justThrown                       resb 1      ; 0x21 byte
     resb 2
     .ped                              resb 4      ; 0x24 Ped *
-    .audioEmitter                     resb 4      ; 0x28 void *
+    .audioEmitter                     resb 4      ; 0x28 SoundClient *
     .firingFlag                       resb 1      ; 0x2c byte
     resb 3
 endstruc
@@ -3062,12 +3065,6 @@ struc LightManager
     .nightArr3000                     resb 120000 ; 0x8 Light[3000]
     .activeCount                      resb 2      ; 0x1d4c8 short
     resb 2
-endstruc
-
-; /auto_structs/ListNodePool  (604 bytes)
-struc ListNodePool
-    .freeListHead                     resb 4      ; 0x0 int
-    .s18_sub_50                       resb 600    ; 0x4 ScriptStackNode[50]
 endstruc
 
 ; /auto_structs/LocaleSettings  (20 bytes)
@@ -3448,9 +3445,10 @@ endstruc
 ; /auto_structs/S5  (12 bytes)
 struc S5
     .f1                               resb 1      ; 0x0 char
-    resb 7
-    .field8_0x8                       resb 2      ; 0x8 short
-    .field9_0xa                       resb 1      ; 0xa byte
+    resb 3
+    .client                           resb 4      ; 0x4 SoundClient *
+    .field5_0x8                       resb 2      ; 0x8 short
+    .field6_0xa                       resb 1      ; 0xa byte
     resb 1
 endstruc
 
@@ -3461,12 +3459,25 @@ struc Script4k
     .strings                          resb 3996   ; 0x4 SCR_STRING_HEADER *[999]
 endstruc
 
+; /auto_structs/ScriptStack  (8 bytes)
+struc ScriptStack
+    .top                              resb 4      ; 0x0 ScriptStackNode *
+    .depth                            resb 1      ; 0x4 byte
+    resb 3
+endstruc
+
 ; /auto_structs/ScriptStackNode  (12 bytes)
 struc ScriptStackNode
-    .value                            resb 4      ; 0x0 undefined4
-    .depth                            resb 2      ; 0x4 undefined2
+    .saved_cond_result                resb 4      ; 0x0 int
+    .return_cmd                       resb 2      ; 0x4 ushort
     resb 2
-    .next                             resb 4      ; 0x8 undefined4
+    .next                             resb 4      ; 0x8 ScriptStackNode *
+endstruc
+
+; /auto_structs/ScriptStackNodePool  (604 bytes)
+struc ScriptStackNodePool
+    .freeListHead                     resb 4      ; 0x0 ScriptStackNode *
+    .nodes                            resb 600    ; 0x4 ScriptStackNode[50]
 endstruc
 
 ; /auto_structs/ScriptThread  (284 bytes)
@@ -3483,7 +3494,7 @@ struc ScriptThread
     resb 1
     .exec_flag                        resb 2      ; 0x12 short
     .str                              resb 256    ; 0x14 char[256]
-    .gosub_stack                      resb 4      ; 0x114 void *
+    .gosub_stack                      resb 4      ; 0x114 ScriptStack *
     .in_level_start                   resb 1      ; 0x118 byte
     resb 1
     .thread_id                        resb 2      ; 0x11a short
@@ -3549,7 +3560,7 @@ struc SoundManager
     .slowTick                         resb 1      ; 0x544c byte
     resb 3
     .relToAudio                       resb 4      ; 0x5450 int
-    resb 16
+    .vocalClient                      resb 16     ; 0x5454 SoundClient
     .vocal                            resb 4      ; 0x5464 VOCAL
     .radioSlots                       resb 140    ; 0x5468 RadioStationSlot[5]
     .unsure_radioFlag54f4             resb 1      ; 0x54f4 byte
@@ -3594,7 +3605,7 @@ struc Sprite
     .frameBounds                      resb 4      ; 0x4 SpriteBounds *
     .owner                            resb 4      ; 0x8 void *
     .bounds                           resb 4      ; 0xc SpriteBounds *
-    .soundClient                      resb 4      ; 0x10 void *
+    .soundClient                      resb 4      ; 0x10 SoundClient *
     .x                                resb 4      ; 0x14 int
     .y                                resb 4      ; 0x18 int
     .z                                resb 4      ; 0x1c int

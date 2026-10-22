@@ -950,7 +950,7 @@ DS_SIZE   equ 36
 ; @0x4C71B0 passes scale = uiScale (1:1 in 640x480 units) and a11 = 0, as we do. Own
 ; disassembly, confirmed by Seq 27 (seq49-car-sprite-remap.md). w, h from the style's
 ; sprite entries (StyleData +0x14 spriteBases[type - 2] + id, +0x20 entries: w +4, h +5;
-; GetSpriteIndex @0x4BF2A0). eax = 0 when there is no such sprite.
+; StyleData_GetSpriteIndex @0x4BF2A0). eax = 0 when there is no such sprite.
 dm_sprite:
     push rbx
     sub rsp, 48
@@ -1062,7 +1062,7 @@ dm_sprite_wh:
     ret
 
 ; eax = dm_car_info(edi = model): the style's CarInfo* for that model, or 0 when this
-; level's style has no such car (g_StyleData +0x5c AllCarsInfo.cars[256]; GetCarInfoById
+; level's style has no such car (g_StyleData +0x5c AllCarsInfo.cars[256]; StyleData_GetCarInfo
 ; @0x4BF1F0, re/functions.csv; CarInfo: +1 spriteIndex, +2 w, +3 h, +4 num_remaps,
 ; +5 passengers, +7 rating, +0xe remap[num_remaps], re/gta2_types.h)
 dm_car_info:

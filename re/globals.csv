@@ -331,10 +331,10 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005eadb1,g_doShowCollisionBox,,USER_DEFINED,.data.exp,,/bool,1
 0x005eadb2,g_showAllArrows,,USER_DEFINED,.data.exp,,/bool,1
 0x005eadb3,g_doKillPhonesOnAnswer,,USER_DEFINED,.data.exp,,/bool,1
-0x005eaf40,unk3,,USER_DEFINED,.data.exp,,/undefined,1
-0x005eaf44,unk4,,USER_DEFINED,.data.exp,,/undefined,1
-0x005eaf48,unk6,,USER_DEFINED,.data.exp,,/undefined4,4
-0x005eaf4c,unk2Ptr,,USER_DEFINED,.data.exp,,/undefined,1
+0x005eaf40,g_FrontendMusicSoundClient,,USER_DEFINED,.data.exp,,/SoundClient,16
+0x005eaf44,unk4,,USER_DEFINED,.data.exp,,,
+0x005eaf48,unk6,,USER_DEFINED,.data.exp,,,
+0x005eaf4c,unk2Ptr,,USER_DEFINED,.data.exp,,,
 0x005eaf50,MainMenuSoundPlay,,USER_DEFINED,.data.exp,,/_mainmenu/MAIN_MENU_SOUND,4
 0x005eaf54,unk5,,USER_DEFINED,.data.exp,,/undefined,1
 0x005eaf60,moviePath,,USER_DEFINED,.data.exp,,/undefined1,1
@@ -404,7 +404,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x006644b8,g_MissionCleanup,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006644bc,g_MissionScript,,USER_DEFINED,.data.exp,,/auto_structs/MissionScript *,4
 0x006644c0,g_ScriptThreadPool,,USER_DEFINED,.data.exp,,/undefined4,4
-0x006644c4,g_ListNodePool,,USER_DEFINED,.data.exp,,/auto_structs/ListNodePool *,4
+0x006644c4,g_ScriptStackNodePool,,USER_DEFINED,.data.exp,,/auto_structs/ScriptStackNodePool *,4
 0x006644c8,g_ScriptPrevCmdIdx,,USER_DEFINED,.data.exp,,/undefined,1
 0x006644cc,g_ScriptCurCmd,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00664590,buf466,,USER_DEFINED,.data.exp,,/undefined4,4

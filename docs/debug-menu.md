@@ -151,7 +151,7 @@ CALLHOOK while the pause is ours.
   player's Sprite*, or 0 with rdx = a toast string (no player, in a car). `dm_spawn_car`,
   `spawn_ped.asm` and `spawn_object.asm` use it.
 - `dm_car_info(edi = model) -> eax = CarInfo*` or 0 — `g_StyleData 0x670684 +0x5C` →
-  `AllCarsInfo.cars[model]` (re/ `GetCarInfoById` 0x4BF1F0).
+  `AllCarsInfo.cars[model]` (re/ `StyleData_GetCarInfo` 0x4BF1F0).
 - `dm_gxt(rdi = key, rsi = out, edx = size)` — game text (`Gxt_FindTextW` 0x4C2120 on
   `g_LocaleSettings` 0x671550) as ASCII.
 
@@ -248,7 +248,7 @@ the remap and RETURN as "spawn" through `dm_defer`; a `draw` callback with `dm_p
 |---|---|---|
 | `DrawSprite2D` stdcall, 11 args, `RET 0x2C` | `0x4CBA50` | own disassembly + Seq 27 report |
 | `Hud_DrawSprite2DScaled` (HUD wrapper, scale = uiScale, a11 = 0) | `0x4C71B0` | own disassembly + Seq 27 |
-| `GetSpriteIndex` = `spriteBases[type-2] + id` | `0x4BF2A0` | own decompile |
+| `StyleData_GetSpriteIndex` = `spriteBases[type-2] + id` | `0x4BF2A0` | own decompile |
 | `g_StyleData` StyleData*; +0x14 spriteBases, +0x20 sprite index (8-byte entries, w +4, h +5), +0x5C AllCarsInfo | `0x670684` | re/globals.csv, re/gta2_types.h |
 | `CarInfo`: +1 spriteIndex, +2 w, +3 h, +4 num_remaps, +5 passengers, +7 rating, +0xE remap[] | — | re/gta2_types.h, Seq 27 |
 | `Sprite_SetRemap` thiscall(Sprite*, ushort) | `0x4B9B00` | Ghidra (renamed from Position_* by Seq 27) + Seq 27 report |
