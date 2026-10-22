@@ -348,6 +348,8 @@ pm_report:
     ret
 
 section .data
+    DM_ITEM  dmp_root, 60, DM_FLAG, "Mouse turning: ", pm_mouse_on
+    DM_ITEM  dmp_root, 70, DM_FLAG, "Strafe (Q/E): ", pm_strafe_on
 pm_strafe_on:   db 1                ; controls.strafe
 pm_mouse_on:    db 0                ; controls.mouse_turn
 pm_key_left:    db 0x10             ; DIK_Q, controls.strafe_left

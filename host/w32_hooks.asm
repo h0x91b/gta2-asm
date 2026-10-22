@@ -393,6 +393,7 @@ hooks:
     CALLHOOK 0x4BE394, "ScaleShadow", 0x401BD0
     CALLHOOK 0x472535, "DrawMapLayer", 0x4720E0
     CALLHOOK 0x45A61F, "DrawUI", 0x4CA440               ; debug_menu.asm
+    CALLHOOK 0x4CA4F9, "PauseOverlay", 0x4C9FA0         ; debug_menu.asm
     CALLHOOK 0x4A7901, "MoveOnFoot", 0x4A5C50           ; player_move.asm
     JMPHOOK 0x49AC76, "WalkHeading", {0x8A,0x44,0x24,0x11, 0x84,0xC0}   ; player_move.asm
     CALLHOOK 0x432678, "CarAIFollowRoute", 0x430320     ; debug_emergency.asm
@@ -405,6 +406,7 @@ shimtab_gta2:
     SHIM "ScaleShadow", 8, hk_ScaleShadow
     SHIM "DrawMapLayer", 0, hk_DrawMapLayer
     SHIM "DrawUI", 0, hk_DrawUI
+    SHIM "PauseOverlay", 0, hk_PauseOverlay
     SHIM "MoveOnFoot", 4, hk_MoveOnFoot
     SHIM "WalkHeading", 4, hk_WalkHeading
     SHIM "CarAIFollowRoute", 0, hk_FollowRoute

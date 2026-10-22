@@ -178,7 +178,7 @@ de_is_service_car:
 .out:
     ret
 
-; de_run: once per gameplay frame from hk_DrawUI, on the game's side
+; de_run (DM_FRAME): once per gameplay frame from hk_DrawUI, on the game's side
 de_run:
     sub rsp, 8
 %ifdef DE_TEST_TP
@@ -1263,6 +1263,9 @@ align 8
 de_low:      dq 0
     DMVALUE ambulance
     DMVALUE firetruck
+    DM_ITEM  dmp_player, 70, DM_VALUE, "Call ambulance", dmv_ambulance
+    DM_ITEM  dmp_player, 80, DM_VALUE, "Call fire truck", dmv_firetruck
+    DM_FRAME 30, de_run
 de_log_left: dd 0
 de_req:      db 0
 de_assist:   db 0

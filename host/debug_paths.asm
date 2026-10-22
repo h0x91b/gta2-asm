@@ -56,6 +56,12 @@ PED_ID      equ 0x200
 
 section .text
 
+; dp_frame (DM_FRAME): the overlay while the "Ped paths" toggle is on
+dp_frame:
+    cmp byte [dm_paths], 0
+    jne dm_draw_paths
+    ret
+
 dm_draw_paths:
     push rbx
     push r12
@@ -629,6 +635,8 @@ dp_label:
     ret
 
 section .data
+    DM_ITEM  dmp_root, 50, DM_FLAG, "Ped paths: ", dm_paths
+    DM_FRAME 40, dp_frame
 DP_GREEN equ 0xFF20FF20
 DP_CYAN  equ 0xFF20E0FF
 DP_GREY  equ 0xC0C0C0C0
@@ -645,6 +653,7 @@ section .rodata
 fmt_dp_stats: db "paths: %d peds listed, %d alive on foot, %d on a path, %d moveTarget only (zoom %d%%)", 10, 0
 
 section .bss
+dm_paths:      resb 1               ; "Ped paths" toggle (DM_FLAG byte)
 alignb 8
 dp_low:        resq 1               ; low memory: WorldPointToScreen's outX, outY
 dp_cam:        resd 1

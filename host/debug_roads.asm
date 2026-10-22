@@ -90,7 +90,12 @@ dm_roads_fmt:
     mov rsi, [rcx + rax*8]
     jmp _strcpy
 
-; ---- per frame, from hk_DrawUI
+; ---- per frame (DM_FRAME), on the game's side before the HUD, while the overlay is on
+dr_frame:
+    cmp byte [dr_mode], 0
+    jne dr_draw
+    ret
+
 dr_draw:
     push rbx
     push r12
@@ -1135,6 +1140,9 @@ dr_routes:
     ret
 
 section .data
+    DM_ITEM  dmp_flags, 100, DM_VALUE, "Road network: ", dmv_roads
+    DMVALUE roads
+    DM_FRAME 50, dr_frame
 DR_PAVE      equ 0x4020C040         ; pavement fill
 DR_PAVE_EDGE equ 0xFF40FF60
 DR_ARROW     equ 0xD0FFFFFF

@@ -62,7 +62,7 @@ RB_REQ_CLEAR equ 2
 
 section .text
 
-; rb_frame: from hk_DrawUI, once per gameplay frame: requests from the menu, housekeeping
+; rb_frame (DM_FRAME, run by hk_DrawUI): once per gameplay frame: requests from the menu, housekeeping
 rb_frame:
     push rbx
     push r12
@@ -608,6 +608,11 @@ dm_rbclear_fmt:
     ret
 
 section .data
+    DM_ITEM  dmp_player, 50, DM_VALUE, "Place roadblock: ", dmv_rbplace
+    DM_ITEM  dmp_player, 60, DM_VALUE, "Remove roadblocks: ", dmv_rbclear
+    DMVALUE rbplace
+    DMVALUE rbclear
+    DM_FRAME 10, rb_frame
 align 8
 rb_kind_names: dq s_rb_police, s_rb_fbi, s_rb_army
 RB_NKINDS equ ($ - rb_kind_names) / 8

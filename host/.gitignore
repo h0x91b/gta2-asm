@@ -2,3 +2,4 @@ main.o
 host
 loader.o
 loader
+menu_modules.inc

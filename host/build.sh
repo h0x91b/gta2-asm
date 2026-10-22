@@ -25,6 +25,9 @@ link() {
 }
 
 rm -f host main.o loader loader.o
+# K menu pages: every menu/*.asm registers itself (docs/debug-menu.md), so the list of
+# includes is generated, not kept by hand
+for f in menu/*.asm; do printf '%%include "%s"\n' "$f"; done > menu_modules.inc
 nasm -f macho64 ${NASMFLAGS:-} -o main.o main.asm
 link host main.o -L"$SDL3_PREFIX/lib" -lSDL3 -rpath "$SDL3_PREFIX/lib"
 nasm -f macho64 ${NASMFLAGS:-} -I. -o loader.o loader.asm

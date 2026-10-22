@@ -40,17 +40,23 @@ Settings (for now the game's own debug flags: FPS counter, camera coordinates, s
 the main menu, …) go in `config.yaml` in that folder; copy
 [config.example.yaml](config.example.yaml), which lists every one, or point at a file with
 `--config=PATH`.
-In a game, **K** opens a debug menu (game font, arrows + RETURN): quick save where you
+In a game, **K** opens a debug menu and pauses the game (game font and sprites; arrows, PAGE UP / DOWN, HOME / END,
+RETURN, BACKSPACE = back): quick save where you
 stand (not during a mission), all weapons, +$100000, live camera zoom (70% by default, `camera.zoom` in config.yaml; 100 = vanilla), Ped paths (each ped's next
 10 path cells, numbered 1 = next, in a colour of its own; else a tick showing where it faces); a Player page (set
 or lock the wanted level, skin and body type; place real police, FBI or army roadblocks on the
 nearest road ahead, which stay until you remove them; call an ambulance or a fire truck the
 game's own way: a nearby body is queued, or a ped killed, for the ambulance; a parked car
-mid-lane is set alight for the fire truck — `host/debug_emergency.asm`), a Vehicle page (spawn any car in front of
-you; colour, invincibility, repair or explode the car you are in or left last) and a
+mid-lane is set alight for the fire truck — `host/debug_emergency.asm`), a Vehicle page (colour,
+invincibility, repair or explode the car you are in or left last), a Spawn page with **Spawn >
+Car**: every car of the level by its in-game name, LEFT / RIGHT picks the remap (random, none or
+each of the model's own) with a big rotating preview of the car in it, RETURN spawns it in front
+of you in that remap; and a
 Debug flags page (FPS / camera info / invulnerability / no police and a few other DMA
 flags, and the Road network overlay: lane arrows, the junction graph, live traffic lights,
-routes, the pavement peds walk on; [docs/debug-roads.md](docs/debug-roads.md)). Back returns to the main page; ESC or K closes the menu.
+routes, the pavement peds walk on; [docs/debug-roads.md](docs/debug-roads.md)). BACKSPACE or Back
+returns to the parent page; ESC or K closes the menu. Every page is its own file that registers
+itself; how to add one: [docs/debug-menu.md](docs/debug-menu.md).
 Flags and internals: [host/README.md](host/README.md), [docs/](docs/).
 
 ## Inspect the game files
