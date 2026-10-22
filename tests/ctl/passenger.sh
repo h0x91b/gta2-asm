@@ -38,7 +38,8 @@ game() {        # game NAME CONFIG_TEXT: start Downtown with --ctl, wait for the
     trap 'kill $GAME 2>/dev/null || true' EXIT
     step --wait-sock=60 ping >/dev/null
     step wait in_game == 1 1200
-    step wait frames 30
+    step wait frame '>=' 260         # every --keys RETURN is through (a level started early,
+    step wait frames 30              # e.g. by a real key press, would get them as Enter = car)
 }
 quit() {
     step quit

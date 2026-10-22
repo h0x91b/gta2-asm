@@ -143,8 +143,11 @@ Telemetry example (`--telemetry=t.jsonl,every=30`):
 ## How agents should test
 
 - **Prefer gta2ctl to `--keys` timings.** Use `--keys` only to get through the frontend
-  (`--keys=150:RETURN,250:RETURN` starts Downtown), then `wait in_game == 1` and drive the
-  rest with commands whose replies say when they are done.
+  (`--keys=150:RETURN,250:RETURN` starts Downtown), then `wait in_game == 1` **and
+  `wait frame >= 260`** (past the last scripted key), and drive the rest with commands whose
+  replies say when they are done. Without the second wait a level that started early (a real
+  key press while the window had focus: measured, gameplay at frame 60) gets the pending
+  `--keys` RETURNs as Enter, which enters or leaves a car in the middle of the test.
 - One game per agent: `--ctl=$TMPDIR/gta2ctl-<something unique>.sock` and `GTA2_CTL` set to it;
   the socket name must match `gta2ctl-*.sock` to show up in `gta2ctl list`.
 - Gate on facts, not on time: `wait money >= 333`, `wait in_car == 1`, `wait speed < 0.01`.

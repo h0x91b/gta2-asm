@@ -32,6 +32,9 @@ step() {
 
 step --wait-sock=60 ping
 step wait in_game == 1 1200                 # the menu keys start the level
+step wait frame '>=' 260                    # every --keys RETURN is through: if the level
+                                            # started early (a real key press), a late one
+                                            # would land in play as Enter = enter / exit car
 step wait frames 30
 step state
 step teleport 132 195                       # Downtown: 2 blocks from a parked car (id 29)
