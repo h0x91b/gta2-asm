@@ -2954,9 +2954,7 @@ endstruc
 ; /auto_structs/MapBlocks  (880 bytes)
 struc MapBlocks
     .grid                             resb 4      ; 0x0 MapGrid *
-    .edits                            resb 792    ; 0x4 MapChangeEntry[99]
-    .edits99_columnBase               resb 4      ; 0x31c uint
-    .edits99_xyPad                    resb 4      ; 0x320 undefined4
+    .edits                            resb 800    ; 0x4 MapChangeEntry[100]
     .editCount                        resb 4      ; 0x324 uint
     .zoneData                         resb 4      ; 0x328 void *
     .zoneIndex                        resb 4      ; 0x32c void *
@@ -2974,15 +2972,15 @@ struc MapBlocks
     .columnWordCapacity               resb 4      ; 0x35c uint
     .columnWordsLive                  resb 4      ; 0x360 uint
     .zoneIter                         resb 2      ; 0x364 ushort
-    .field21_0x366                    resb 2      ; 0x366 undefined2
+    .field19_0x366                    resb 2      ; 0x366 undefined2
     .zoneIterType                     resb 1      ; 0x368 byte
-    .field23_0x369                    resb 1      ; 0x369 byte
+    .field21_0x369                    resb 1      ; 0x369 byte
     .zoneIterX                        resb 1      ; 0x36a byte
     .zoneIterY                        resb 1      ; 0x36b byte
     .zoneIterUsePoint                 resb 1      ; 0x36c byte
-    .field27_0x36d                    resb 1      ; 0x36d byte
+    .field25_0x36d                    resb 1      ; 0x36d byte
     .slopeStepBlockedFlag             resb 1      ; 0x36e byte
-    .field29_0x36f                    resb 1      ; 0x36f byte
+    .field27_0x36f                    resb 1      ; 0x36f byte
 endstruc
 
 ; /auto_structs/MapRenderer  (12036 bytes)

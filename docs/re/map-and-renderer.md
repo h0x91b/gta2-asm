@@ -94,7 +94,7 @@ Formats match [tools/formats/map.ts](../../tools/formats/map.ts) and the DMA spe
 | off | field | meaning |
 |---|---|---|
 | 0x000 | `MapGrid *grid` | |
-| 0x004 | `MapChangeEntry edits[100]` | runtime edit list (§2.5). In Ghidra as `edits[99]` + `edits99_columnBase`/`edits99_xyPad`: an old `int` at 0x320 could not be cleared through MCP |
+| 0x004 | `MapChangeEntry edits[100]` | runtime edit list (§2.5) |
 | 0x324 | `editCount` | **no bound check** (§2.5) |
 | 0x328 | `zoneData` | raw ZONE chunk |
 | 0x32C | `zoneIndex` | `{u16 count; u16 pad; u8 *rec[count]}` |

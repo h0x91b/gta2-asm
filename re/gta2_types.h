@@ -4516,9 +4516,7 @@ struct LocaleSettings {
 // /auto_structs/MapBlocks  size 0x370
 struct MapBlocks {
     MapGrid *grid; /* 0x0 */
-    MapChangeEntry edits[99]; /* 0x4 */
-    uint edits99_columnBase; /* 0x31c */
-    undefined4 edits99_xyPad; /* 0x320 */
+    MapChangeEntry edits[100]; /* 0x4 */
     uint editCount; /* 0x324 */
     void *zoneData; /* 0x328 */
     void *zoneIndex; /* 0x32c */
@@ -4536,15 +4534,15 @@ struct MapBlocks {
     uint columnWordCapacity; /* 0x35c */
     uint columnWordsLive; /* 0x360 */
     ushort zoneIter; /* 0x364 */
-    undefined2 field21_0x366; /* 0x366 */
+    undefined2 field19_0x366; /* 0x366 */
     byte zoneIterType; /* 0x368 */
-    byte field23_0x369; /* 0x369 */
+    byte field21_0x369; /* 0x369 */
     byte zoneIterX; /* 0x36a */
     byte zoneIterY; /* 0x36b */
     byte zoneIterUsePoint; /* 0x36c */
-    byte field27_0x36d; /* 0x36d */
+    byte field25_0x36d; /* 0x36d */
     byte slopeStepBlockedFlag; /* 0x36e */
-    byte field29_0x36f; /* 0x36f */
+    byte field27_0x36f; /* 0x36f */
 };
 
 // /imported/seuko-mod/RenderDistanceArrayItem  size 0x8
