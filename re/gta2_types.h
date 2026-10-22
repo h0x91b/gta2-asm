@@ -913,8 +913,9 @@ enum PLAYER_MOVEMENT_STATE_values {
     CTRL_JUMP_HANDBRAKE = 64,
     CTRL_WEAPON_PREV = 128,
     CTRL_WEAPON_NEXT = 256,
-    CTRL_SPECIAL_1 = 512,
-    CTRL_SPECIAL_2 = 1024,
+    CTRL_SPECIAL_1_HORN = 512,
+    CTRL_CAMERA_PAN = 1024,
+    CTRL_SPECIAL_3_UNUSED = 2048,
 };
 
 // /_enums/VOCAL
@@ -1735,9 +1736,9 @@ enum KEYBOARD_STATE_values {
     KEYBOARD_STATE_JUMP = 64,
     KEYBOARD_STATE_PREV_WEAPON = 128,
     KEYBOARD_STATE_NEXT_WEAPON = 256,
-    KEYBOARD_STATE_SPECIAL = 512,
-    KEYBOARD_STATE_SPECIAL2 = 1024,
-    KEYBOARD_STATE_SPECIAL3 = 2048,
+    KEYBOARD_STATE_SPECIAL1_HORN = 512,
+    KEYBOARD_STATE_CAMERA_PAN = 1024,
+    KEYBOARD_STATE_SPECIAL3_UNUSED = 2048,
 };
 
 // /imported/seuko-mod/OBJECT_TYPE
@@ -3804,7 +3805,7 @@ struct Car {
     short offscreenTicks; /* 0x76 */
     uint16_t flags; /* 0x78 */
     uint8_t _gap_0x7a[0x2];
-    PED_CLASS driverClass; /* 0x7c */
+    PED_CLASS driverClass; /* 0x7c Class of the car's driver as seen by car code (PED_CLASS; set by Car_SetDriverClass, Car_AssignDummyDriver/GangDriver (AMBIENT), Car_Reset (AMBIENT), Car_Ctor (0), Ped_Remove/Ped_TickLifecycle/EmergencyVehicleSlot_UpdateActive (back to AMBIENT)). Readers: CarAI_DriveStep (PLAYER -> clears CarAI.flags 0x10), CarAI_Update (MISSION -> stuckTicks reset, never abandoned), CarAI_HandleCarAhead (PLAYER / AMBIENT), Car_IsRecycleProtected (MISSION), Car_CanBeRecycled (4), Car_TryStartAlarm (not PLAYER), Ped_UpdateCarThief, Door_CarMayOpen, CarPhysics_GetMinGasPedal + CarPhysics_UpdateSteerAngle (PLAYER handling), PoliceCrew_TryDespawnOffscreen, PoliceRoadblock_Update (UNSURE_CREW), FireEngineSlot_Update, AmbulanceSlot_SpawnParamedicCrew, EmergencyVehicleSlot_UpdateActive. NOTE: Car_Update's 'skip AI for the player' test (0x429EC7/0x429EDC) reads the driver Ped's pedClass via Ped_GetPedClass(car->driver), not this field (AI still runs for a player driver when carModel == 0x3C). */
     bool_ isAbandoned; /* 0x80 */
     uint8_t _gap_0x81[0x3];
     CAR_MODEL4 carModel; /* 0x84 */
@@ -3822,8 +3823,8 @@ struct Car {
     CAR_CATEGORY category; /* 0xa0 */
     CAR_LIGHTS_BITSTATE lightsBitstate; /* 0xa4 */
     char lightPhase; /* 0xa5 */
-    byte aiFlags; /* 0xa6 */
-    char hornState; /* 0xa7 */
+    byte aiFlags; /* 0xa6 Car AI flag byte. 0x01 turn left / 0x02 turn right (Car_Set/Clear/IsTurnLeft/Right, set by CarAI_ApplyRouteTurn from the next route junction). 0x04 (Car_SetRouteBit2) set by CarAI_ApplyRouteTurn before a left turn when the car is not in lane 0; 0x08 (Car_SetRouteBit3) set before a right turn when it is not in the last lane (likely: 'move over to the turning lane'). Car_ClearRouteBits clears 0x04|0x08. 0x20 = AI halted: Car_HaltAI 0x421540 sets, Car_ResumeAI 0x421550 clears, Car_IsAIHalted 0x42AC60 tests; CarAI_PreUpdate halts when car.isAbandoned or while ai.haltTimer runs and then skips CarAI_Update (only brake/stop); also set by scripts (STOP_CHAR_DRIVING, GIVE_DRIVER_AND_BRAKE) and ped objectives (WAIT_IN_CAR, GO_TO_AREA_IN_CAR on arrival). Zeroed by Car_Ctor/Car_Reset. */
+    char hornState; /* 0xa7 Horn timer/state byte (treat as unsigned). 0 = silent. 1..0xF8 = honking (Car_IsHonking 0x411970: != 0 && < 0xF9). Car_TickHorn 0x420330 (Car_UpdateSystems) decrements it each tick except at 0 and 0xF8, so AI honks (Car_StartHonkIfAllowed / Car_UpdateAiHonk set 0x2D) last 45 ticks and the player horn (0xF8) lasts while the key is held. Player press (Car_ApplyHornInput 0x4260C0): 0xF8, or 0xFF on cars with emergency lights, which first counts 0xFF->0xF8 silently (7 ticks); release clears it, and a release while still > 0xF8 (a tap shorter than 7 ticks) toggles the siren (Car_ToggleSiren). */
     byte hornCooldown; /* 0xa8 */
     byte wreckTimer; /* 0xa9 */
     uint8_t _gap_0xaa[0x2];
@@ -4079,7 +4080,7 @@ struct Camera {
 struct Player {
     byte isLocal; /* 0x0 */
     uint8_t _gap_0x1[0x3];
-    uint32_t inputWord; /* 0x4 Raw input bits, decoded by Player_MapKeys 0x4A4AE0 into key* bools (+ *Changed edge flags): 0x1 forward, 0x2 backward, 0x4 left, 0x8 right, 0x10 attack, 0x20 enter/exit, 0x40 jump/handbrake, 0x80 prev weapon, 0x100 next weapon, 0x200 special1 (horn), 0x400 special2, 0x800 special3. */
+    uint32_t inputWord; /* 0x4 Raw input bits, decoded by Player_MapKeys 0x4A4AE0 into key* bools (+ *Changed edge flags): 0x1 forward, 0x2 backward, 0x4 left, 0x8 right, 0x10 attack, 0x20 enter/exit, 0x40 jump/handbrake, 0x80 prev weapon, 0x100 next weapon, 0x200 special1 (horn), 0x400 camera pan (special2), 0x800 special3 (unused). */
     short turnRate; /* 0x8 */
     short turnStep; /* 0xa */
     SCR_f moveSpeed; /* 0xc */
@@ -4134,12 +4135,12 @@ struct Player {
     bool_ keyJump; /* 0x7e */
     bool_ keyPrevWeapon; /* 0x7f */
     bool_ keyNextWeapon; /* 0x80 */
-    bool_ keySpecial1; /* 0x81 */
-    bool_ keySpecial2; /* 0x82 */
-    bool_ keySpecial3; /* 0x83 */
-    bool_ keySpecial1Changed; /* 0x84 */
-    bool_ keySpecial2Changed; /* 0x85 */
-    bool_ keySpecial3Changed; /* 0x86 */
+    bool_ keySpecial1Horn; /* 0x81 Control slot 9 (default Tab, bit 0x200) held. In a car: horn while held, a tap (< 7 ticks) toggles the siren on emergency vehicles (Car_ApplyHornInput 0x4260C0), and with left/right turns a roof turret (Car_RotateRoofTurret 0x423720 via Car_ApplyDriverControls). On foot: pressed (not while attacking) -> Ped_SetPendingSpeech(0x14), the player's taunt line (Player_MoveOnFoot 0x4A5E60). Was: keySpecial1. */
+    bool_ keyCameraPan; /* 0x82 Control slot 10 (default Left Alt, bit 0x400) held: the arrow keys pan the camera instead of moving or driving (Player_FeedKeysToPanCamera 0x4A4CF0 clears forward/backward/left/right). Was: keySpecial2. */
+    bool_ keySpecial3Unused; /* 0x83 Control slot 11 (default Right Shift, bit 0x800): decoded by Player_MapKeys, cleared by Player_ClearInput, never read in 11.44 (operand search Seq 27). Was: keySpecial3. */
+    bool_ keySpecial1HornChanged; /* 0x84 Edge flag for keySpecial1Horn (changed this tick). Drives Car_ApplyHornInput (press/release) and the on-foot taunt. Was: keySpecial1Changed. */
+    bool_ keyCameraPanChanged; /* 0x85 Edge flag for keyCameraPan; no reader. Was: keySpecial2Changed. */
+    bool_ keySpecial3UnusedChanged; /* 0x86 Edge flag for keySpecial3Unused; no reader. Was: keySpecial3Changed. */
     bool_ keyNextWeaponChanged; /* 0x87 */
     bool_ keyPrevWeaponChanged; /* 0x88 */
     bool_ keyEnterExitChanged; /* 0x89 */
@@ -5356,10 +5357,12 @@ struct PedSprite {
     undefined4 z; /* 0x1c */
 };
 
-// /imported/gzf-2021/SKeyboard  size 0x404
+// /imported/gzf-2021/SKeyboard  size 0x204
+// SKeyboard (0x204 bytes: operator_new(0x204) in keybrd 0x461200; SKeyboard_ClearKeyTable 0x460FD0 zeroes 0x80 dwords + the dword at +0x200). Keyboard-layout scancode -> char table, single global instance g_SKeyboard 0x662128. Rebuilt Seq27KEY from the 1028-byte gzf-2021 stub.
 struct SKeyboard {
-    uint8_t _gap_0x0[0x403];
-    undefined1 field_0x403; /* 0x403 */
+    uint16_t chars[256]; /* 0x0 UTF-16 char per DIK scancode (0 = none), 256 entries read by keybrd 0x461200 from data\keyboard\<lang>_kb.cfg ('~' -> 0, '`' -> 0) */
+    uint16_t languageIndex; /* 0x200 keybrd: from GetKeyboardLayoutNameA primary LANGID: 0 English (default), 1 French (0x0C), 2 German (0x07), 3 Italian (0x10), 4 Spanish (0x0A), 5 Portuguese (0x16); picks the matching *_kb.cfg */
+    uint16_t unsure_pad202; /* 0x202 always written 0 by keybrd next to languageIndex; SKeyboard_ClearKeyTable clears +0x200 as one dword */
 };
 
 // /imported/renderer-doc/FrontendImage  size 0x88
@@ -5380,11 +5383,11 @@ struct CarAI {
     CarAI *nextFree; /* 0xc */
     short heading; /* 0x10 */
     uint8_t _gap_0x12[0x2];
-    SCR_f unsure_trainSpeedCur; /* 0x14 */
-    SCR_f unsure_trainSpeedGoal; /* 0x18 */
-    SCR_f unsure_trainSpeedStep; /* 0x1c */
+    SCR_f railSpeedCur; /* 0x14 Rail speed (trains/trams only): MapBlocks_MoveAlongRailForward/Backward step in CarAI_FollowRoad 0x42FF20 (sole caller Car_UpdateTrain). Ramped toward railSpeedGoal by CarAI_UpdateSpeedRamp 0x42FE80 / CarAI_RaiseCurSpeed 0x42A9B0. Init DAT_005E5194 (0) in CarAI_Ctor/CarAI_Reinit. Full decompile scan (4834 functions): no road-car reader. Was: unsure_trainSpeedCur. */
+    SCR_f railSpeedGoal; /* 0x18 Rail target speed: written by PublicTransportManager_GetTrainSpeedForCar (via CarAI_FollowRoad), read by CarAI_UpdateSpeedRamp. Car_ResumeAICruise 0x4222D0 also writes DAT_005E4DC4 here for road cars (crews, taxi/bus passengers, thieves), but no road-car path reads it (dead write unless the car is a train). Was: unsure_trainSpeedGoal. */
+    SCR_f railSpeedStep; /* 0x1c Rail acceleration per tick added to railSpeedCur by CarAI_UpdateSpeedRamp (decel uses a constant DAT_005E53B8*DAT_005E50C4). Init DAT_005E5304. Was: unsure_trainSpeedStep. */
     uint8_t _gap_0x20[0x4];
-    uint32_t flags; /* 0x24 */
+    uint32_t flags; /* 0x24 CarAI flag word. Bit 0x10 (meaning not settled; looks like 'stopped for an obstacle / may follow route'): SET by CarAI_OnHitObject 0x42A8F0 (no drive order active, obstacle owner type 0x15 or 0x7A: brake hard), by CarAI_Update 0x432370 when no drive order steers this tick and obstacleHit is a kind-1 sprite of owner type 0x7A (then obstacleHit = NULL), and in several CarAI_FollowLane 0x430CC0 branches; CLEARED by CarAI_Update in the same no-order case otherwise, by CarAI_DriveStep 0x431C10 when car.driverClass == PLAYER, and by Car_Update after the AI tick (0x429EFE: AND CH,0xEF clears 0x1000, see below). READ by CarAI_Update (routeSlot > 0 && 0x10 && driveOrder.followRoadActive == 1 -> CarAI_FollowRoute) and CarAI_FollowLane. Other bits seen: 0x40/0x80 off-road turn, 0x100 lane change, 0x800 route exit, 0x1000 car-collision this tick (CarPhysics_CollideWithCar sets, cleared each tick), 0x2000 lane-follow, 0x10000, 0x100000 police chase (brake to full stop when halted), 0x200000 copied from driver flags / free drive. */
     char routeSlot; /* 0x28 */
     uint8_t _gap_0x29[0x1];
     byte stillTicks; /* 0x2a */
@@ -5566,7 +5569,7 @@ struct Keyboard {
     undefined1 directInputCleanedMaybe; /* 0x0 */
     uint8_t _gap_0x1[0x3];
     KEYBOARD_STATE state; /* 0x4 */
-    KEYBOARD_STATE controls[12]; /* 0x8 */
+    KEYBOARD_STATE controlBitMasks[12]; /* 0x8 Per control slot i (0..11) the bit it sets in state (+0x04) / Player.inputWord: always 1<<i (Keyboard_Init 0x45F780, Keyboard_InitAttractReplay 0x45F640). Read by Keyboard_SetMappedBit/ClearMappedBit/TestMappedBit. Was: controls. */
     REPLAY_STATUS replayStatus; /* 0x38 */
     KeyboardEvent allEvents[40000]; /* 0x3c */
     uint32_t replayEventCount; /* 0x7533c */

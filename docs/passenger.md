@@ -77,7 +77,7 @@ needs it on the Enter edge when a car was found, so one host service (`passenger
 32→64 import stub, `c32_host.c`) answers "mod on and LSHIFT or RSHIFT down" — one mode switch
 per Enter press, nothing per frame. LSHIFT is not bound to a game control; RSHIFT is
 control slot 11 in the default registry (`Control\11` = 0x36 in `gta2_install.reg`), which
-sets `keySpecial3` (input bit 0x800) — a key nothing in 11.44 reads (Seq 27, verified; slots 9
+sets `keySpecial3Unused` (input bit 0x800) — a key nothing in 11.44 reads (Seq 27, verified; slots 9
 Tab and 10 LAlt are horn/siren and camera pan). Holding it for 20 frames on foot and in a car
 changed nothing (measured), so both Shifts count. `di_keys` sees a bound key either way. The
 switch itself is a host byte (`mods_passenger_enter`), so the

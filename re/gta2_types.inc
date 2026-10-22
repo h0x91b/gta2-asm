@@ -2016,8 +2016,9 @@ PLAYER_MOVEMENT_STATE.CTRL_ENTER_EXIT equ 32
 PLAYER_MOVEMENT_STATE.CTRL_JUMP_HANDBRAKE equ 64
 PLAYER_MOVEMENT_STATE.CTRL_WEAPON_PREV equ 128
 PLAYER_MOVEMENT_STATE.CTRL_WEAPON_NEXT equ 256
-PLAYER_MOVEMENT_STATE.CTRL_SPECIAL_1 equ 512
-PLAYER_MOVEMENT_STATE.CTRL_SPECIAL_2 equ 1024
+PLAYER_MOVEMENT_STATE.CTRL_SPECIAL_1_HORN equ 512
+PLAYER_MOVEMENT_STATE.CTRL_CAMERA_PAN equ 1024
+PLAYER_MOVEMENT_STATE.CTRL_SPECIAL_3_UNUSED equ 2048
 
 ; enum /_enums/VOCAL  (4 bytes)
 VOCAL.INSANE_STUNT_BONUS_ equ 1
@@ -2289,12 +2290,12 @@ struc Player
     .keyJump                          resb 1      ; 0x7e bool
     .keyPrevWeapon                    resb 1      ; 0x7f bool
     .keyNextWeapon                    resb 1      ; 0x80 bool
-    .keySpecial1                      resb 1      ; 0x81 bool
-    .keySpecial2                      resb 1      ; 0x82 bool
-    .keySpecial3                      resb 1      ; 0x83 bool
-    .keySpecial1Changed               resb 1      ; 0x84 bool
-    .keySpecial2Changed               resb 1      ; 0x85 bool
-    .keySpecial3Changed               resb 1      ; 0x86 bool
+    .keySpecial1Horn                  resb 1      ; 0x81 bool
+    .keyCameraPan                     resb 1      ; 0x82 bool
+    .keySpecial3Unused                resb 1      ; 0x83 bool
+    .keySpecial1HornChanged           resb 1      ; 0x84 bool
+    .keyCameraPanChanged              resb 1      ; 0x85 bool
+    .keySpecial3UnusedChanged         resb 1      ; 0x86 bool
     .keyNextWeaponChanged             resb 1      ; 0x87 bool
     .keyPrevWeaponChanged             resb 1      ; 0x88 bool
     .keyEnterExitChanged              resb 1      ; 0x89 bool
@@ -3857,10 +3858,11 @@ struc S3Bytes
     .c                                resb 1      ; 0x2 undefined1
 endstruc
 
-; /imported/gzf-2021/SKeyboard  (1028 bytes)
+; /imported/gzf-2021/SKeyboard  (516 bytes)
 struc SKeyboard
-    resb 1027
-    .field_0x403                      resb 1      ; 0x403 undefined1
+    .chars                            resb 512    ; 0x0 ushort[256]
+    .languageIndex                    resb 2      ; 0x200 ushort
+    .unsure_pad202                    resb 2      ; 0x202 ushort
 endstruc
 
 ; enum /imported/gzf-2021/WEAPON  (4 bytes)
@@ -4178,9 +4180,9 @@ struc CarAI
     .nextFree                         resb 4      ; 0xc CarAI *
     .heading                          resb 2      ; 0x10 short
     resb 2
-    .unsure_trainSpeedCur             resb 4      ; 0x14 SCR_f
-    .unsure_trainSpeedGoal            resb 4      ; 0x18 SCR_f
-    .unsure_trainSpeedStep            resb 4      ; 0x1c SCR_f
+    .railSpeedCur                     resb 4      ; 0x14 SCR_f
+    .railSpeedGoal                    resb 4      ; 0x18 SCR_f
+    .railSpeedStep                    resb 4      ; 0x1c SCR_f
     resb 4
     .flags                            resb 4      ; 0x24 uint
     .routeSlot                        resb 1      ; 0x28 char
@@ -4392,16 +4394,16 @@ KEYBOARD_STATE.KEYBOARD_STATE_ENTER_CAR equ 32
 KEYBOARD_STATE.KEYBOARD_STATE_JUMP equ 64
 KEYBOARD_STATE.KEYBOARD_STATE_PREV_WEAPON equ 128
 KEYBOARD_STATE.KEYBOARD_STATE_NEXT_WEAPON equ 256
-KEYBOARD_STATE.KEYBOARD_STATE_SPECIAL equ 512
-KEYBOARD_STATE.KEYBOARD_STATE_SPECIAL2 equ 1024
-KEYBOARD_STATE.KEYBOARD_STATE_SPECIAL3 equ 2048
+KEYBOARD_STATE.KEYBOARD_STATE_SPECIAL1_HORN equ 512
+KEYBOARD_STATE.KEYBOARD_STATE_CAMERA_PAN equ 1024
+KEYBOARD_STATE.KEYBOARD_STATE_SPECIAL3_UNUSED equ 2048
 
 ; /imported/seuko-mod/Keyboard  (480070 bytes)
 struc Keyboard
     .directInputCleanedMaybe          resb 1      ; 0x0 undefined1
     resb 3
     .state                            resb 4      ; 0x4 KEYBOARD_STATE
-    .controls                         resb 48     ; 0x8 KEYBOARD_STATE[12]
+    .controlBitMasks                  resb 48     ; 0x8 KEYBOARD_STATE[12]
     .replayStatus                     resb 4      ; 0x38 REPLAY_STATUS
     .allEvents                        resb 480000 ; 0x3c KeyboardEvent[40000]
     .replayEventCount                 resb 4      ; 0x7533c uint

@@ -297,7 +297,7 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
   DOWN `D0`, RETURN `1C`, ESCAPE `01`, DELETE `D3`. Only while `FrontEnd+0x10D` is set:
   `InitFrontend` sets it, WndProc's `WM_ACTIVATE` (via `0x4D09D0` → `0x453A30`) writes the
   active flag into it.
-- **In-game: DirectInput `GetDeviceData`, buffered.** `directInputUtils` `@0x44BB30`
+- **In-game: DirectInput `GetDeviceData`, buffered.** `DInput_CreateKeyboardDevice` `@0x44BB30`
   (diutil.cpp; stdcall, 2 args, `ret 8` — Ghidra's `void` is wrong) creates the keyboard
   `0x5E8F4C` with `DIPROP_BUFFERSIZE = 10000` and acquires it; `0x44C0F0` reads one
   20-byte `DIDEVICEOBJECTDATA` per call until the buffer is empty (`0x44BA60` first asks
@@ -360,7 +360,7 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
 
 `--input-selftest` (no renderer needed) drives the game's own code: DirectInput8Create
 through the IAT into `0x5E8FA4`, `dInput8` `@0x453D80` on a zeroed FrontEnd, the in-game
-`directInputUtils` `@0x44BB30`, `InitMouseExclusive` `@0x4CAD30`; then per frame the
+`DInput_CreateKeyboardDevice` `@0x44BB30`, `InitMouseExclusive` `@0x4CAD30`; then per frame the
 frontend poll `0x452050`, `GetDeviceData` on `0x5E8F4C` one record at a time, the mouse
 state. It pushes 10 key taps (one shorter than a frame, one auto-repeat, three held
 across a focus loss) plus mouse motion/buttons and checks 14 counters — 14/14 PASS,

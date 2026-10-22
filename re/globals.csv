@@ -155,7 +155,12 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e4f38,g_Fix16_Half,,USER_DEFINED,.data.exp,,/math/Fix16,4
 0x005e500c,JeepGunRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
 0x005e5014,AntennaRoofOffsetY,,USER_DEFINED,.data.exp,,/int,4
+0x005e507c,g_CarAI_onRampBlock,,USER_DEFINED,.data.exp,,/bool,1
+0x005e507e,g_CarAI_driveOrderActive,,USER_DEFINED,.data.exp,,/bool,1
+0x005e507f,g_CarAI_followLaneAllowed,,USER_DEFINED,.data.exp,,/bool,1
 0x005e508c,g_CarAIPool,,USER_DEFINED,.data.exp,,/imported/seuko-mod/CarAIPool *,4
+0x005e5338,g_CarAI_targetSpeed,,USER_DEFINED,.data.exp,,/scr_structs.h/SCR_f,4
+0x005e5430,g_CarAI_curSpeed,,USER_DEFINED,.data.exp,,/scr_structs.h/SCR_f,4
 0x005e5448,g_CarModelTable_GciPath,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005e5488,g_CarModelTable,,USER_DEFINED,.data.exp,,/CarModelTable *,4
 0x005e54a0,g_Fix16MassBonus10Pct,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -215,9 +220,11 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e85c0,g_CarSpriteCache,,USER_DEFINED,.data.exp,,/auto_structs/CarSpriteCache *,4
 0x005e8b80,g_LayerDrawQueues,,USER_DEFINED,.data.exp,,/auto_structs/LayerDrawQueues *,4
 0x005e8f04,DirectInputDeviceObjectDataCount,,USER_DEFINED,.data.exp,,/dword,4
+0x005e8f1c,g_ControlDeviceType,,USER_DEFINED,.data.exp,,/uint[12],48
 0x005e8f5c,Controls,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e8f8c,KeyPressCode,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e8f90,KeyPressState,,USER_DEFINED,.data.exp,,/uint,4
+0x005e8fa0,g_altKeyHeld,,USER_DEFINED,.data.exp,,/bool,1
 0x005e8fa4,relatedToFronteמd,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e8fa8,g_pDirectInputObj,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e9340,g_DoorInfoTable,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -348,6 +355,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005ecac8,?keyboard,,USER_DEFINED,.data.exp,,/undefined,1
 0x005ecacc,playerMovementState,,USER_DEFINED,.data.exp,,/_enums/PLAYER_MOVEMENT_STATE,4
 0x00661e98,g_KanjiFont,,USER_DEFINED,.data.exp,,/KanjiFont *,4
+0x00662128,g_SKeyboard,,USER_DEFINED,.data.exp,,/imported/gzf-2021/SKeyboard *,4
 0x006622b4,buf16384,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006622b8,g_LightManager,,USER_DEFINED,.data.exp,,/auto_structs/LightManager *,4
 0x006626a0,g_mpTimeAnnounced,,USER_DEFINED,.data.exp,,/undefined1,1

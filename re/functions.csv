@@ -760,7 +760,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00420a10,CarManager_BuildTrafficModelLists,,USER_DEFINED,__fastcall,ANALYSIS,300,,CarInfo * __fastcall CarManager_BuildTrafficModelLists(short param_1)
 0x00420b50,Ped_GetOwnerSlot,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall Ped_GetOwnerSlot(Ped * param_1)
 0x00420b60,Ped_GetId,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined4 __fastcall Ped_GetId(Ped * param_1)
-0x00420b70,Ped_GetPedClass,,USER_DEFINED,__fastcall,USER_DEFINED,7,,uint __fastcall Ped_GetPedClass(Ped * param_1)
+0x00420b70,Ped_GetPedClass,,USER_DEFINED,__fastcall,USER_DEFINED,7,,PED_CLASS __fastcall Ped_GetPedClass(Ped * ped)
 0x00420b80,Ped_ClearCopLevel,,USER_DEFINED,__fastcall,USER_DEFINED,10,,void __fastcall Ped_ClearCopLevel(Ped * param_1)
 0x00420b90,CarManager_DecrementCounter,CarManager,USER_DEFINED,__thiscall,USER_DEFINED,71,,"void __thiscall CarManager_DecrementCounter(CarManager * this, CAR_CATEGORY category)"
 0x00420c00,CarManager_UpdateFreeShoppingFlag,CarManager,USER_DEFINED,__thiscall,USER_DEFINED,44,,void __thiscall CarManager_UpdateFreeShoppingFlag(CarManager * this)
@@ -780,7 +780,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00420e90,ResetIntPtr,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall ResetIntPtr(int * param_1)
 0x00420ea0,PedQueue_IsEmpty,,USER_DEFINED,__fastcall,USER_DEFINED,7,,bool __fastcall PedQueue_IsEmpty(PedListNode * * head)
 0x00420eb0,CarAIPool_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,61,,CarAIPool * __fastcall CarAIPool_Ctor(CarAIPool * pool)
-0x00420ef0,CarAIPool_Alloc,,USER_DEFINED,__fastcall,USER_DEFINED,19,,undefined4 * __fastcall CarAIPool_Alloc(CarAIPool * param_1)
+0x00420ef0,CarAIPool_Alloc,,USER_DEFINED,__fastcall,USER_DEFINED,19,,CarAI * __fastcall CarAIPool_Alloc(CarAIPool * pool)
 0x00420f10,OwnerSlotTable_GetPedId,OwnerSlotTable,USER_DEFINED,__thiscall,USER_DEFINED,15,,"int __thiscall OwnerSlotTable_GetPedId(OwnerSlotTable * this, uint slot)"
 0x00420f20,CarPool_PushUsed,,USER_DEFINED,__thiscall,USER_DEFINED,16,,"undefined __thiscall CarPool_PushUsed(CarPool * this, int param_2)"
 0x00420f30,CarPool_UnlinkUsed,,USER_DEFINED,__thiscall,USER_DEFINED,69,,"undefined __thiscall CarPool_UnlinkUsed(CarPool * this, int param_2)"
@@ -824,7 +824,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004214d0,Car_IsDetached,,USER_DEFINED,__fastcall,USER_DEFINED,11,,undefined __fastcall Car_IsDetached(Car * param_1)
 0x004214e0,Car_SetDetached,,USER_DEFINED,__fastcall,USER_DEFINED,11,,undefined __fastcall Car_SetDetached(Car * param_1)
 0x004214f0,Car_IsDrivenByNonPlayer,,USER_DEFINED,__fastcall,USER_DEFINED,23,,undefined __fastcall Car_IsDrivenByNonPlayer(Car * param_1)
-0x00421510,Car_AllocAI,,USER_DEFINED,__fastcall,USER_DEFINED,26,,"void __fastcall Car_AllocAI(Car * car, DWORD edx)"
+0x00421510,Car_AllocAI,,USER_DEFINED,__fastcall,USER_DEFINED,26,,void __fastcall Car_AllocAI(Car * car)
 0x00421530,Car_SetRouteBit3,,USER_DEFINED,__fastcall,USER_DEFINED,8,,void __fastcall Car_SetRouteBit3(Car * car)
 0x00421540,Car_HaltAI,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall Car_HaltAI(Car * param_1)
 0x00421550,Car_ResumeAI,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall Car_ResumeAI(Car * param_1)
@@ -1004,7 +1004,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00425f20,Car_Repair,,USER_DEFINED,__fastcall,ANALYSIS,166,,undefined __fastcall Car_Repair(Car * param_1)
 0x00425fd0,CarAddRoofAntenna,,USER_DEFINED,__fastcall,USER_DEFINED,83,,void __fastcall CarAddRoofAntenna(Car * car)
 0x00426030,Car_UpdateEngineState,,USER_DEFINED,__fastcall,USER_DEFINED,136,,undefined __fastcall Car_UpdateEngineState(Car * car)
-0x004260c0,Car_ApplyHornInput,,USER_DEFINED,__thiscall,USER_DEFINED,87,,"void __thiscall Car_ApplyHornInput(Car * this, char param_2)"
+0x004260c0,Car_ApplyHornInput,,USER_DEFINED,__thiscall,USER_DEFINED,87,,"void __thiscall Car_ApplyHornInput(Car * this, char hornKeyDown)"
 0x00426120,Car_FreePhysics,,USER_DEFINED,__fastcall,USER_DEFINED,31,,void __fastcall Car_FreePhysics(Car * param_1)
 0x00426140,Car_UpdateLightsAndSiren,,USER_DEFINED,__fastcall,ANALYSIS,678,,undefined __fastcall Car_UpdateLightsAndSiren(Car * param_1)
 0x00426220,Car_UpdateSystems,,USER_DEFINED,__fastcall,ANALYSIS,244,,undefined __fastcall Car_UpdateSystems(Car * param_1)
@@ -1056,7 +1056,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00429660,Car_TickWreckTimer,,USER_DEFINED,__fastcall,ANALYSIS,26,,undefined __fastcall Car_TickWreckTimer(Car * param_1)
 0x00429680,Car_PlaceTrainWagonsAlongRail,,USER_DEFINED,__thiscall,USER_DEFINED,378,,"undefined __thiscall Car_PlaceTrainWagonsAlongRail(Car * this, SCR_f param_2, void * param_3, void * param_4)"
 0x00429800,Car_DropTrailerIfAny,,USER_DEFINED,__fastcall,ANALYSIS,13,,undefined __fastcall Car_DropTrailerIfAny(Car * param_1)
-0x00429810,Car_ApplyDriverControls,,USER_DEFINED,__thiscall,USER_DEFINED,145,,"void __thiscall Car_ApplyDriverControls(Car * this, bool forward, bool backward, bool left, bool right, bool handbrake, bool special1, bool special1Changed, bool attackDetachTrailer)"
+0x00429810,Car_ApplyDriverControls,,USER_DEFINED,__thiscall,USER_DEFINED,145,,"void __thiscall Car_ApplyDriverControls(Car * this, bool forward, bool backward, bool left, bool right, bool handbrake, bool special1, bool special1Changed, bool keyAttack)"
 0x004298b0,Car_UpdateTrain,,USER_DEFINED,__fastcall,USER_DEFINED,1419,,undefined4 __fastcall Car_UpdateTrain(Car * car)
 0x00429e50,Car_Update,,USER_DEFINED,__fastcall,USER_DEFINED,367,,uint __fastcall Car_Update(Car * car)
 0x00429fc0,Car_UpdateSystemsAndWreckTimer,,USER_DEFINED,__fastcall,USER_DEFINED,45,,void __fastcall Car_UpdateSystemsAndWreckTimer(Car * car)
@@ -1080,7 +1080,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0042a8f0,CarAI_OnHitObject,,USER_DEFINED,__fastcall,USER_DEFINED,57,,undefined __fastcall CarAI_OnHitObject(CarAI * param_1)
 0x0042a930,CarAI_OnHitPed,,USER_DEFINED,__fastcall,USER_DEFINED,113,,undefined __fastcall CarAI_OnHitPed(CarAI * param_1)
 0x0042a9b0,CarAI_RaiseCurSpeed,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"undefined __thiscall CarAI_RaiseCurSpeed(CarAI * this, int param_2)"
-0x0042a9d0,CarAI_SetParentCar,,USER_DEFINED,__fastcall,USER_DEFINED,9,,"void __fastcall CarAI_SetParentCar(CarAI * ai, DWORD edx, Car * car)"
+0x0042a9d0,CarAI_SetParentCar,,USER_DEFINED,__thiscall,USER_DEFINED,9,,"void __thiscall CarAI_SetParentCar(CarAI * this, Car * car)"
 0x0042a9e0,CarAI_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,215,,undefined __fastcall CarAI_Ctor(CarAI * param_1)
 0x0042aac0,CarAI_Reinit,,USER_DEFINED,__fastcall,USER_DEFINED,200,,undefined __fastcall CarAI_Reinit(CarAI * param_1)
 0x0042ab90,CarPhysics_SteerPlus,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall CarPhysics_SteerPlus(CarPhysics * param_1)
@@ -1112,7 +1112,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0042fb80,CarAI_ReactToNearbyCar,,USER_DEFINED,__fastcall,USER_DEFINED,616,,undefined __fastcall CarAI_ReactToNearbyCar(CarAI * ai)
 0x0042fdf0,CarAI_PickRandomTurn,,USER_DEFINED,__fastcall,USER_DEFINED,77,,undefined __fastcall CarAI_PickRandomTurn(CarAI * param_1)
 0x0042fe40,CarAI_ClearTurnBits,,USER_DEFINED,__fastcall,USER_DEFINED,27,,undefined __fastcall CarAI_ClearTurnBits(CarAI * param_1)
-0x0042fe60,Car_ClearRouteBits,,USER_DEFINED,__fastcall,USER_DEFINED,26,,undefined __fastcall Car_ClearRouteBits(Car * param_1)
+0x0042fe60,CarAI_ClearCarRouteBits,,USER_DEFINED,__fastcall,USER_DEFINED,26,,void __fastcall CarAI_ClearCarRouteBits(CarAI * ai)
 0x0042fe80,CarAI_UpdateSpeedRamp,,USER_DEFINED,__fastcall,USER_DEFINED,145,,undefined __fastcall CarAI_UpdateSpeedRamp(CarAI * param_1)
 0x0042ff20,CarAI_FollowRoad,,USER_DEFINED,__fastcall,USER_DEFINED,347,,undefined __fastcall CarAI_FollowRoad(CarAI * ai)
 0x00430090,CarAI_ReverseOrCoast,,USER_DEFINED,__fastcall,USER_DEFINED,72,,void __fastcall CarAI_ReverseOrCoast(CarAI * ai)
@@ -1151,8 +1151,8 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00433200,Ped_GetEnteringLeavingCar,,USER_DEFINED,__fastcall,USER_DEFINED,26,,undefined4 __fastcall Ped_GetEnteringLeavingCar(Ped * param_1)
 0x00433220,Ped_ExtinguishFire,,USER_DEFINED,__fastcall,USER_DEFINED,39,,undefined __fastcall Ped_ExtinguishFire(Ped * param_1)
 0x00433250,Ped_SpawnFireOnSprite,,USER_DEFINED,unknown,DEFAULT,140,,undefined Ped_SpawnFireOnSprite()
-0x00433270,Ped_SetState,,USER_DEFINED,__thiscall,USER_DEFINED,53,,"void __thiscall Ped_SetState(Ped * this, PED_STATE state, int param_3)"
-0x004332b0,Ped_SetState2,,USER_DEFINED,__thiscall,USER_DEFINED,80,,"void __thiscall Ped_SetState2(Ped * this, PED_STATE2 state2, int param_3)"
+0x00433270,Ped_SetState,,USER_DEFINED,__thiscall,USER_DEFINED,53,,"void __thiscall Ped_SetState(Ped * this, PED_STATE state)"
+0x004332b0,Ped_SetState2,,USER_DEFINED,__thiscall,USER_DEFINED,80,,"void __thiscall Ped_SetState2(Ped * this, PED_STATE2 state2)"
 0x00433300,Ped_RestoreSavedState,,USER_DEFINED,__fastcall,USER_DEFINED,25,,undefined __fastcall Ped_RestoreSavedState(Ped * param_1)
 0x00433320,Ped_PutInCarAsPassenger,,USER_DEFINED,__thiscall,USER_DEFINED,56,,"void __thiscall Ped_PutInCarAsPassenger(Ped * this, Car * car)"
 0x00433360,PedGroup_SetMembersCount,,USER_DEFINED,__thiscall,USER_DEFINED,13,,"undefined __thiscall PedGroup_SetMembersCount(PedGroup * this, byte count)"
@@ -1167,7 +1167,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00433500,MapBlocks_IsRoadAtWest,,USER_DEFINED,__thiscall,USER_DEFINED,46,,"uint __thiscall MapBlocks_IsRoadAtWest(MapBlocks * this, char param_2, uint param_3, uint param_4)"
 0x00433530,MapBlocks_IsPavementAt,,USER_DEFINED,__thiscall,USER_DEFINED,44,,"uint __thiscall MapBlocks_IsPavementAt(MapBlocks * this, uint param_2, uint param_3, byte param_4)"
 0x00433560,Box3_ZRangesOverlap,,USER_DEFINED,__thiscall,USER_DEFINED,28,,"undefined __thiscall Box3_ZRangesOverlap(Box3 * this, Box3 * param_2)"
-0x00433580,Ped_SetStatePreset,,USER_DEFINED,__thiscall,USER_DEFINED,169,,"undefined __thiscall Ped_SetStatePreset(Ped * this, uint param_2, int param_3)"
+0x00433580,Ped_SetStatePreset,,USER_DEFINED,__thiscall,USER_DEFINED,169,,"void __thiscall Ped_SetStatePreset(Ped * this, uint preset)"
 0x00433650,Ped_SetStatesFromObjective,,USER_DEFINED,__thiscall,USER_DEFINED,282,,"undefined __thiscall Ped_SetStatesFromObjective(Ped * this, char param_2, int param_3)"
 0x004337d0,setBit,,USER_DEFINED,__thiscall,USER_DEFINED,19,,"void __thiscall setBit(Sprite * this, int iParm1, byte param_3, char param_4)"
 0x004337f0,Sprite_SetUnlitFlag,,USER_DEFINED,__fastcall,USER_DEFINED,5,,undefined __fastcall Sprite_SetUnlitFlag(Sprite * param_1)
@@ -1225,7 +1225,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00433d80,Ped_GetIfHasGameObject,,USER_DEFINED,__stdcall,ANALYSIS,19,,uint __stdcall Ped_GetIfHasGameObject(void)
 0x00433da0,Ped_IsInvisibleWithSprite,,USER_DEFINED,unknown,DEFAULT,28,,undefined Ped_IsInvisibleWithSprite()
 0x00433dc0,Ped_GetWantedPoints,Ped,USER_DEFINED,__thiscall,USER_DEFINED,8,,short __thiscall Ped_GetWantedPoints(Ped * this)
-0x00433dd0,Ped_SetPendingSpeech,,USER_DEFINED,__thiscall,USER_DEFINED,22,,"void __thiscall Ped_SetPendingSpeech(Ped * this, int iParm1, undefined4 param_3)"
+0x00433dd0,Ped_SetPendingSpeech,,USER_DEFINED,__thiscall,USER_DEFINED,22,,"void __thiscall Ped_SetPendingSpeech(Ped * this, int speechEvent)"
 0x00433df0,Ped_InitSpawnedState,,USER_DEFINED,__fastcall,ANALYSIS,92,,undefined __fastcall Ped_InitSpawnedState(Ped * param_1)
 0x00433e50,Ped_SetHurtSpeechThrottled,,USER_DEFINED,__fastcall,ANALYSIS,53,,undefined __fastcall Ped_SetHurtSpeechThrottled(Ped * param_1)
 0x00433e90,Camera_HasTarget,,USER_DEFINED,__fastcall,USER_DEFINED,20,,undefined4 __fastcall Camera_HasTarget(Camera * param_1)
@@ -1486,7 +1486,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004461a0,CarDriveOrder_Reset,,USER_DEFINED,__fastcall,USER_DEFINED,92,,void __fastcall CarDriveOrder_Reset(CarDriveOrder * this)
 0x00446200,CarDriveOrderPool_Alloc,,USER_DEFINED,__fastcall,USER_DEFINED,61,,CarDriveOrder * __fastcall CarDriveOrderPool_Alloc(CarDriveOrderPool * this)
 0x00446240,CarDriveOrderPool_HasOrderForTarget,CarDriveOrderPool,USER_DEFINED,__thiscall,ANALYSIS,61,,"int __thiscall CarDriveOrderPool_HasOrderForTarget(CarDriveOrderPool * this, int param_1)"
-0x00446290,CarDriveOrderPool_Free,CarDriveOrderPool,USER_DEFINED,__thiscall,ANALYSIS,75,,"undefined __thiscall CarDriveOrderPool_Free(CarDriveOrderPool * this, int param_1)"
+0x00446290,CarDriveOrderPool_Free,CarDriveOrderPool,USER_DEFINED,__thiscall,USER_DEFINED,75,,"undefined __thiscall CarDriveOrderPool_Free(CarDriveOrderPool * this, CarDriveOrder * order)"
 0x004462e0,CarDriveOrderPool_DtorBody,,USER_DEFINED,__fastcall,USER_DEFINED,16,,undefined __fastcall CarDriveOrderPool_DtorBody(CarDriveOrderPool * param_1)
 0x004462f0,Ped_AreAllied,,USER_DEFINED,__stdcall,ANALYSIS,73,,"uint __stdcall Ped_AreAllied(Ped * param_1, Ped * param_2)"
 0x00446340,CarDriveOrderPool_FindAlliedDriverByManeuverTargetingPed,,USER_DEFINED,__thiscall,USER_DEFINED,117,,"undefined4 __thiscall CarDriveOrderPool_FindAlliedDriverByManeuverTargetingPed(CarDriveOrderPool * this, int param_2, Ped * param_3)"
@@ -1674,11 +1674,11 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0044ba40,relatedToDInput8,,USER_DEFINED,__stdcall,ANALYSIS,26,,undefined __stdcall relatedToDInput8(void)
 0x0044ba60,DInput_PollDeviceReady,,USER_DEFINED,unknown,DEFAULT,101,,undefined DInput_PollDeviceReady(undefined4 param_1)
 0x0044bad0,DInput_ReleaseDevices,,USER_DEFINED,__stdcall,ANALYSIS,84,,undefined __stdcall DInput_ReleaseDevices(void)
-0x0044bb30,directInputUtils,,USER_DEFINED,__stdcall,ANALYSIS,252,,bool __stdcall directInputUtils(void)
+0x0044bb30,DInput_CreateKeyboardDevice,,USER_DEFINED,__stdcall,USER_DEFINED,252,,"bool __stdcall DInput_CreateKeyboardDevice(void * inputObj, HINSTANCE hInstance)"
 0x0044bcf0,DInput_ConfigureJoystick,,USER_DEFINED,__stdcall,ANALYSIS,468,,undefined __stdcall DInput_ConfigureJoystick(void)
 0x0044bed0,DirectInput8CreateIfEmpty,,USER_DEFINED,__fastcall,ANALYSIS,89,,undefined4 __fastcall DirectInput8CreateIfEmpty(undefined4 param_1)
 0x0044bf30,regGet,,USER_DEFINED,__stdcall,ANALYSIS,54,,undefined __stdcall regGet(void)
-0x0044bf70,ReturnHandleOfDirectInput,,USER_DEFINED,__stdcall,ANALYSIS,52,,undefined __stdcall ReturnHandleOfDirectInput(undefined4 param_1)
+0x0044bf70,DInput_InitDevices,,USER_DEFINED,__stdcall,USER_DEFINED,52,,"void __stdcall DInput_InitDevices(void * inputObj, HINSTANCE hInstance)"
 0x0044bfb0,OnKeyUpDown,,USER_DEFINED,__stdcall,ANALYSIS,43,,"undefined __stdcall OnKeyUpDown(uint * param_1, int * param_2)"
 0x0044bfe0,Input_SetAltKeyHeld,,USER_DEFINED,__stdcall,ANALYSIS,15,,undefined __stdcall Input_SetAltKeyHeld(byte param_1)
 0x0044bff0,DInput_FlushBuffers,,USER_DEFINED,__stdcall,ANALYSIS,73,,undefined __stdcall DInput_FlushBuffers(void)
@@ -2083,13 +2083,13 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0045f580,Keyboard_CheckAttractReplayFiles,,USER_DEFINED,__stdcall,ANALYSIS,122,,undefined __stdcall Keyboard_CheckAttractReplayFiles(void)
 0x0045f600,Keyboard_GetNextAttractReplayPath,,USER_DEFINED,__thiscall,USER_DEFINED,62,,"undefined __thiscall Keyboard_GetNextAttractReplayPath(Keyboard * this, char * param_2)"
 0x0045f640,Keyboard_InitAttractReplay,,USER_DEFINED,__thiscall,USER_DEFINED,301,,"void __thiscall Keyboard_InitAttractReplay(Keyboard * this, HINSTANCE hInstance)"
-0x0045f780,input.cpp_PLayReplay,,USER_DEFINED,__thiscall,USER_DEFINED,370,,"void __thiscall input.cpp_PLayReplay(Keyboard * this, undefined4 param_2)"
+0x0045f780,Keyboard_Init,,USER_DEFINED,__thiscall,USER_DEFINED,370,,"void __thiscall Keyboard_Init(Keyboard * this, HINSTANCE hInstance)"
 0x0045f900,Keyboard_ShowControlBits,,USER_DEFINED,__fastcall,USER_DEFINED,97,,undefined __fastcall Keyboard_ShowControlBits(Keyboard * param_1)
 0x0045f970,Keyboard_IsReplayPlayback,,USER_DEFINED,__fastcall,USER_DEFINED,19,,int __fastcall Keyboard_IsReplayPlayback(Keyboard * param_1)
 0x0045f990,showInput,,USER_DEFINED,__fastcall,USER_DEFINED,74,,undefined __fastcall showInput(Keyboard * param_1)
 0x0045f9e0,FrameCounter_GetField4,,USER_DEFINED,__fastcall,USER_DEFINED,4,,undefined4 __fastcall FrameCounter_GetField4(FrameCounter * param_1)
 0x0045f9f0,Keyboard_ClearFlag200000,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall Keyboard_ClearFlag200000(Keyboard * param_1)
-0x0045fa00,Keyboard_InitReplayState,,USER_DEFINED,__fastcall,USER_DEFINED,80,,undefined * __fastcall Keyboard_InitReplayState(Keyboard * param_1)
+0x0045fa00,Keyboard_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,80,,Keyboard * __fastcall Keyboard_Ctor(Keyboard * this_)
 0x0045fa50,Keyboard_RecordInputEvent,,USER_DEFINED,__thiscall,USER_DEFINED,175,,"undefined __thiscall Keyboard_RecordInputEvent(Keyboard * this, uint param_2)"
 0x0045faff,Keyboard_RecordInputEvent_Tail,,USER_DEFINED,__stdcall,ANALYSIS,11,,undefined __stdcall Keyboard_RecordInputEvent_Tail(void)
 0x0045fb10,Keyboard_FlushReplayLog,,USER_DEFINED,__fastcall,USER_DEFINED,73,,undefined __fastcall Keyboard_FlushReplayLog(Keyboard * param_1)
@@ -2112,9 +2112,9 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00460ee0,FileHeader_CheckMagic,,USER_DEFINED,__stdcall,USER_DEFINED,37,,"void __stdcall FileHeader_CheckMagic(char * magicbytes, char * param_2)"
 0x00460f10,KanjiFont_LoadKanjiDat,,USER_DEFINED,__fastcall,USER_DEFINED,155,,void __fastcall KanjiFont_LoadKanjiDat(void)
 0x00460fb0,KanjiFont_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,30,,KanjiFont * __fastcall KanjiFont_Ctor(void)
-0x00460fd0,SKeyboard_ClearKeyTable,,USER_DEFINED,__fastcall,USER_DEFINED,28,,undefined4 * __fastcall SKeyboard_ClearKeyTable(SKeyboard * param_1)
+0x00460fd0,SKeyboard_ClearKeyTable,,USER_DEFINED,__fastcall,USER_DEFINED,28,,SKeyboard * __fastcall SKeyboard_ClearKeyTable(SKeyboard * param_1)
 0x00461000,File_ReadWideToken,,USER_DEFINED,__stdcall,ANALYSIS,85,,"undefined __stdcall File_ReadWideToken(FILE * param_1, int param_2)"
-0x004611f0,GetKeyState,,USER_DEFINED,__thiscall,USER_DEFINED,16,,"undefined2 __thiscall GetKeyState(ushort * this, SKeyboard * param_1_00, uint param_3)"
+0x004611f0,SKeyboard_GetCharForScancode,,USER_DEFINED,__thiscall,USER_DEFINED,16,,"ushort __thiscall SKeyboard_GetCharForScancode(SKeyboard * this, uint scancode)"
 0x00461200,keybrd,,USER_DEFINED,__cdecl,ANALYSIS,414,,undefined __cdecl keybrd(void)
 0x00461250,SKeyboard_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,26,,"void * __thiscall SKeyboard_ScalarDeletingDtor(SKeyboard * this, byte param_2)"
 0x00461270,SKeyboard_FreeGlobal,,USER_DEFINED,__stdcall,ANALYSIS,28,,undefined __stdcall SKeyboard_FreeGlobal(void)

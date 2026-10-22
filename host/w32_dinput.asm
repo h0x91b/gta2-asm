@@ -1064,7 +1064,7 @@ input_keys_frame:
 ;   2. dInput8 @0x453D80 (frontend2.cpp: CreateDevice keyboard, c_dfDIKeyboard,
 ;      coop 6, Acquire) on a zeroed FrontEnd, then FrontEnd+0x10D = 1 as InitFrontend
 ;      does (it is the "active" flag WM_ACTIVATE toggles);
-;   3. directInputUtils @0x44BB30 (diutil.cpp: the in-game keyboard 0x5E8F4C,
+;   3. DInput_CreateKeyboardDevice @0x44BB30 (diutil.cpp: the in-game keyboard 0x5E8F4C,
 ;      DIPROP_BUFFERSIZE 10000, Acquire), stdcall, 2 unused args (ret 8);
 ;   4. InitMouseExclusive @0x4CAD30 (mouse 0x6735A8, c_dfDIMouse, exclusive) with
 ;      --input-selftest only (it captures the cursor);
