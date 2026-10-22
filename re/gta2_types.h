@@ -38,7 +38,7 @@ typedef uint16_t wchar16;
 typedef struct AmbulanceManager AmbulanceManager;
 typedef struct AmbulanceSlot AmbulanceSlot;
 typedef struct BlockInfo BlockInfo;
-typedef struct C1 C1;
+typedef struct Box3 Box3;
 typedef struct CLIENT_ID CLIENT_ID;
 typedef struct CarDriveOrder CarDriveOrder;
 typedef struct CarDriveOrderPool CarDriveOrderPool;
@@ -46,6 +46,7 @@ typedef struct CarModelTable CarModelTable;
 typedef struct ChatInput ChatInput;
 typedef struct CollisionGrid CollisionGrid;
 typedef struct CollisionManager CollisionManager;
+typedef struct CollisionResult CollisionResult;
 typedef struct ComboEntry ComboEntry;
 typedef struct ComboList ComboList;
 typedef struct Crane Crane;
@@ -63,14 +64,15 @@ typedef struct FireEngineManager FireEngineManager;
 typedef struct FireEngineSlot FireEngineSlot;
 typedef struct FloatingScore FloatingScore;
 typedef struct FloatingScoreManager FloatingScoreManager;
+typedef struct FloatingScorePool FloatingScorePool;
 typedef struct FrameCounter FrameCounter;
+typedef struct FrameTimer FrameTimer;
 typedef struct FrontendLevelPaths FrontendLevelPaths;
 typedef struct FrontendPage FrontendPage;
 typedef struct FrontendPageCursor FrontendPageCursor;
 typedef struct FrontendPageDecor FrontendPageDecor;
 typedef struct FrontendPageItem FrontendPageItem;
 typedef struct FrontendSaveSlotInfo FrontendSaveSlotInfo;
-typedef struct GTAVertex GTAVertex;
 typedef struct Generator Generator;
 typedef struct GeneratorManager GeneratorManager;
 typedef struct GridEntry GridEntry;
@@ -97,9 +99,11 @@ typedef struct IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryStruct IMAGE_RESOURCE_DIR
 typedef union IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion;
 typedef struct KanjiFont KanjiFont;
 typedef struct MapChangeEntry MapChangeEntry;
+typedef struct MapChangeList MapChangeList;
 typedef struct MapGrid MapGrid;
 typedef struct MapZoneInfo MapZoneInfo;
 typedef struct MissionCleanupEntry MissionCleanupEntry;
+typedef struct ObjectPrefabRow24 ObjectPrefabRow24;
 typedef struct ObjectSpawner ObjectSpawner;
 typedef struct OwnerSlot OwnerSlot;
 typedef struct ParkingZone ParkingZone;
@@ -118,6 +122,7 @@ typedef struct PlayerScore PlayerScore;
 typedef struct PolicePursuitTarget PolicePursuitTarget;
 typedef struct PoliceRoadblock PoliceRoadblock;
 typedef struct PublicTransportManager PublicTransportManager;
+typedef struct RandomGen RandomGen;
 typedef struct RoadJunction RoadJunction;
 typedef struct RoadNetwork RoadNetwork;
 typedef struct RoadSearchNode RoadSearchNode;
@@ -125,6 +130,7 @@ typedef struct RoadSegment RoadSegment;
 typedef struct SaveGameHeader SaveGameHeader;
 typedef struct ScriptTrigger ScriptTrigger;
 typedef struct ScriptTriggerPool ScriptTriggerPool;
+typedef struct SoundClientPool SoundClientPool;
 typedef struct SoundEvent SoundEvent;
 typedef struct SoundEventQueue SoundEventQueue;
 typedef struct TaxiList TaxiList;
@@ -218,7 +224,6 @@ typedef struct RadioStationSlot RadioStationSlot;
 typedef struct S14_sub1 S14_sub1;
 typedef struct S2 S2;
 typedef struct S5 S5;
-typedef struct SRelToBonus2 SRelToBonus2;
 typedef struct Script4k Script4k;
 typedef struct ScriptStackNode ScriptStackNode;
 typedef struct ScriptThread ScriptThread;
@@ -231,37 +236,20 @@ typedef struct SpriteManager SpriteManager;
 typedef struct SpriteNodePool SpriteNodePool;
 typedef struct SpritePool SpritePool;
 typedef struct SubScript SubScript;
-typedef struct SubScript20k SubScript20k;
-typedef struct SubSubScript SubSubScript;
 typedef struct TextureCache TextureCache;
 typedef struct TextureCacheUserSlot TextureCacheUserSlot;
 typedef struct TextureTable TextureTable;
 typedef struct TrafficLights TrafficLights;
 typedef struct Vec2i Vec2i;
-typedef struct Vec3i Vec3i;
+typedef struct filebuf filebuf;
 typedef struct ObjectMotionState ObjectMotionState;
 typedef struct PedManager PedManager;
-typedef struct S22_2 S22_2;
-typedef struct S32 S32;
 typedef struct S34 S34;
-typedef struct S35 S35;
-typedef struct S38 S38;
-typedef struct SCR_CMD_SIX_PARAMS SCR_CMD_SIX_PARAMS;
-typedef struct SCR_TWO_SHORTS SCR_TWO_SHORTS;
-typedef struct ScriptFunctionsAddrTable ScriptFunctionsAddrTable;
-typedef union U_SCR_TWO_PARAMS U_SCR_TWO_PARAMS;
-typedef struct CarS1 CarS1;
 typedef struct CarSprite CarSprite;
-typedef struct FrontendS1S3 FrontendS1S3;
 typedef struct PedSprite PedSprite;
-typedef struct PlayerS2 PlayerS2;
-typedef struct S1 S1;
-typedef struct S3 S3;
 typedef struct S3Bytes S3Bytes;
 typedef struct SKeyboard SKeyboard;
-typedef struct Timing Timing;
 typedef struct FrontendImage FrontendImage;
-typedef struct BitMap BitMap;
 typedef struct Camera Camera;
 typedef struct CameraPos CameraPos;
 typedef struct CarAI CarAI;
@@ -274,73 +262,33 @@ typedef struct CarPhysics CarPhysics;
 typedef struct CarPhysicsData CarPhysicsData;
 typedef struct CarPhysicsPool CarPhysicsPool;
 typedef struct Collide Collide;
-typedef struct Collide1 Collide1;
-typedef struct CollideArray256 CollideArray256;
-typedef struct CollideTopLevel CollideTopLevel;
 typedef struct CollisionBox CollisionBox;
-typedef struct D3DContext_s1 D3DContext_s1;
-typedef struct DirectInput_DeviceObjectData DirectInput_DeviceObjectData;
-typedef struct EnginesDataHolder EnginesDataHolder;
-typedef struct Game2Holder Game2Holder;
-typedef struct GlobalSettings GlobalSettings;
 typedef struct GtaString GtaString;
-typedef struct GtaStringsHolder GtaStringsHolder;
 typedef struct Keyboard Keyboard;
 typedef struct KeyboardEvent KeyboardEvent;
 typedef struct LocaleSingle LocaleSingle;
 typedef struct ObjectPrefab ObjectPrefab;
 typedef struct ObjectPrefabsContainer ObjectPrefabsContainer;
-typedef struct Passenger Passenger;
 typedef struct PedGameObject PedGameObject;
 typedef struct PedGameObjectManager PedGameObjectManager;
 typedef struct PedGroup PedGroup;
-typedef struct PhysicalPalette PhysicalPalette;
 typedef struct RenderDistanceArrayItem RenderDistanceArrayItem;
-typedef struct RoofSpritesHolder RoofSpritesHolder;
-typedef struct S4_2 S4_2;
 typedef struct SCR_Vector2 SCR_Vector2;
 typedef struct SCR_Vector3 SCR_Vector3;
 typedef struct SDevice SDevice;
 typedef struct SDisplayMode SDisplayMode;
-typedef struct SGlobals SGlobals;
-typedef struct SLight SLight;
 typedef struct SMission SMission;
-typedef struct STexture STexture;
 typedef struct SVideo SVideo;
-typedef struct TILE TILE;
-typedef struct Texture_S1 Texture_S1;
-typedef struct Texture_S2 Texture_S2;
-typedef struct Tick Tick;
 typedef struct TrailerController TrailerController;
 typedef struct TrailerControllerPool TrailerControllerPool;
-typedef struct Verts Verts;
 typedef struct WorldObject WorldObject;
 typedef struct WorldObjectPool WorldObjectPool;
 typedef struct WorldRect WorldRect;
+typedef struct ios ios;
 typedef struct Vec2 Vec2;
 typedef struct SCR_CMD_HEADER SCR_CMD_HEADER;
-typedef struct SCR_FOUR_PARAMS SCR_FOUR_PARAMS;
-typedef struct SCR_MISSION_HEADER SCR_MISSION_HEADER;
-typedef struct SCR_Rect_f SCR_Rect_f;
-typedef struct SCR_SIX_PARAMS SCR_SIX_PARAMS;
-typedef struct SCR_TWO_PARAMS SCR_TWO_PARAMS;
-typedef struct SCR_XYZ_c SCR_XYZ_c;
 typedef struct SCR_XYZ_f SCR_XYZ_f;
-typedef struct SCR_XYZ_uc SCR_XYZ_uc;
-typedef struct SCR_XY_c SCR_XY_c;
-typedef struct SCR_XY_f SCR_XY_f;
-typedef struct SCR_XY_uc SCR_XY_uc;
-typedef struct _struct_13 _struct_13;
-typedef struct _struct_14 _struct_14;
-typedef struct _struct_17 _struct_17;
-typedef struct _struct_18 _struct_18;
-typedef struct _struct_20 _struct_20;
-typedef struct _struct_21 _struct_21;
-typedef struct _struct_24 _struct_24;
-typedef union _union_12 _union_12;
-typedef union _union_16 _union_16;
-typedef union _union_19 _union_19;
-typedef union _union_23 _union_23;
+typedef struct streambuf streambuf;
 
 /* ---- enums (stored as fixed-size integers to keep layout) */
 
@@ -1919,7 +1867,7 @@ enum OBJECT_TYPE_values {
     OBJECT_TYPE_PHONE = 163,
     OBJECT_TYPE_PHONE_RINGING = 164,
     OBJECT_TYPE_UNSURE_LIGHT_OBJECT = 165,
-    OBJECT_TYPE_UNK_166 = 166,
+    OBJECT_TYPE_DIAGONAL_COLLISION_DUMMY = 166,
     OBJECT_TYPE_UNK_167 = 167,
     OBJECT_TYPE_UNK_168 = 168,
     OBJECT_TYPE_UNK_169 = 169,
@@ -2323,7 +2271,6 @@ typedef _s_UnwindMapEntry UnwindMapEntry;
 typedef uint32_t DWORD;
 typedef HINSTANCE__ *HINSTANCE;
 typedef HWND__ *HWND;
-typedef uint16_t WORD;
 typedef uchar MissionCode[3072];
 typedef uint32_t G2_FASTCALL dt_b293fec6(undefined p0);
 typedef char INT8;
@@ -2386,16 +2333,14 @@ struct BlockInfo {
     byte slopeType; /* 0xb */
 };
 
-// /C1  size 0x2478
-// PlaceHolder Class Structure
-struct C1 {
-    char f1; /* 0x0 */
-    uint8_t _gap_0x1[0x1477];
-    uint32_t countOfS5; /* 0x1478 Created by retype action */
-    uint8_t _gap_0x147c[0x1];
-    byte field5242_0x147d; /* 0x147d */
-    uint8_t _gap_0x147e[0xa];
-    S5 *s5Arr1020[1020]; /* 0x1488 */
+// /Box3  size 0x18
+struct Box3 {
+    Fix16 minX; /* 0x0 Axis-aligned box of 6 Fix16 (Box3_SetFromCenterSize 0x4204D0, Box3_Overlaps 0x41E2F0, 0x18 = operator_new in TrafficSpawner_Ctor 0x4B3496 / PoliceRoadblock_Ctor 0x4AC048) */
+    Fix16 maxX; /* 0x4 */
+    Fix16 minY; /* 0x8 */
+    Fix16 maxY; /* 0xc */
+    Fix16 minZ; /* 0x10 */
+    Fix16 maxZ; /* 0x14 */
 };
 
 // /CLIENT_ID  size 0x8
@@ -2463,6 +2408,20 @@ struct CollisionManager {
     int visitCount; /* 0x0 */
     int queryStamp; /* 0x4 */
     int movingCheckActive; /* 0x8 */
+};
+
+// /CollisionResult  size 0x28
+struct CollisionResult {
+    int kind; /* 0x0 1 map wall along X (CollisionResult_SetMapWallAlongX 0x4BA250), 2 along Y (0x4BA280), 3 sprite (CollisionResult_SetHitSprite 0x40FEE0); 0 = none (CollisionResult_Clear 0x4637B0) */
+    int unsure_wallXTileX; /* 0x4 set by SetMapWallAlongX arg1; read as tile x by SoundEvent_SetFromCollisionResult (NorthFace) */
+    int unsure_wallXArg2; /* 0x8 SetMapWallAlongX arg2 */
+    int unsure_wallYTileY; /* 0xc SetMapWallAlongY arg1; WestFace y */
+    int unsure_wallYArg2; /* 0x10 SetMapWallAlongY arg2 */
+    int unsure_wallYTileX; /* 0x14 SetMapWallAlongY arg3; WestFace x */
+    int unsure_wallXTileY; /* 0x18 SetMapWallAlongX arg3; NorthFace y */
+    int hitZ; /* 0x1c CollisionResult_SetHitZ 0x4BA2B0; face tile z */
+    Sprite *hitSprite; /* 0x20 kind 3 (SetHitSprite 0x40FEE0); was label g_CollisionHitSprite 0x5E6894 */
+    Sprite *moverSprite; /* 0x24 CollisionResult_SetMoverSprite 0x49EF10; was label g_CollisionMoverSprite 0x5E6898 */
 };
 
 // /ComboEntry  size 0x2c
@@ -2694,12 +2653,18 @@ struct FloatingScore {
     uint32_t amount; /* 0x4c */
 };
 
+// /FloatingScorePool  size 0x8
+// Free/active singly linked lists of FloatingScore (next at +0x44), embedded at FloatingScoreManager+4. Methods 0x4B8FD0/0x4B8FE0/0x4B9000. Seq27 W2.
+struct FloatingScorePool {
+    FloatingScore *freeHead; /* 0x0 */
+    FloatingScore *activeHead; /* 0x4 FloatingScorePool_GetActiveHead 0x4B8FD0 */
+};
+
 // /FloatingScoreManager  size 0x100
 struct FloatingScoreManager {
     uint16_t colorCounter; /* 0x0 */
     short freeCount; /* 0x2 */
-    FloatingScore *freeHead; /* 0x4 */
-    FloatingScore *activeHead; /* 0x8 */
+    FloatingScorePool pool; /* 0x4 free/active lists (FloatingScorePool) */
     FloatingScore scores[3]; /* 0xc */
     uint16_t activeCount; /* 0xfc */
     uint8_t _gap_0xfe[0x1];
@@ -2710,6 +2675,14 @@ struct FloatingScoreManager {
 struct FrameCounter {
     int frame; /* 0x0 */
     uint32_t frameRandom; /* 0x4 */
+};
+
+// /FrameTimer  size 0xc
+// Wall-clock accumulator, 5 of them in FrameTimingStats +0x18..+0x48 (FrameTimingStats_Ctor). Seq27 W2.
+struct FrameTimer {
+    int unsure_field0; /* 0x0 zeroed by FrameTimer_Clear 0x4C36A0 only */
+    DWORD startTime; /* 0x4 timeGetTime() at Timer_StoreStartTime 0x4C3670 */
+    DWORD elapsedMs; /* 0x8 += now - startTime in Timer_AddElapsedSinceStart 0x4C3680 */
 };
 
 // /FrontendLevelPaths  size 0x300
@@ -2782,18 +2755,6 @@ struct _s_FuncInfo {
     TryBlockMapEntry *pTryBlockMap; /* 0x10 */
     uint32_t nIPMapEntries; /* 0x14 */
     void *pIPToStateMap; /* 0x18 */
-};
-
-// /GTAVertex  size 0x20
-struct GTAVertex {
-    float x; /* 0x0 */
-    float y; /* 0x4 */
-    float z; /* 0x8 */
-    float z2; /* 0xc */
-    uint32_t flags; /* 0x10 */
-    dword spec; /* 0x14 specular (from seuko Vert) */
-    float u; /* 0x18 */
-    float v; /* 0x1c */
 };
 
 // /Generator  size 0x2c
@@ -3074,6 +3035,12 @@ struct MapChangeEntry {
     byte pad[2]; /* 0x6 */
 };
 
+// /MapChangeList  size 0x324
+struct MapChangeList {
+    MapChangeEntry edits[100]; /* 0x0 */
+    uint32_t count; /* 0x320 MapChangeList_Record 0x463990 appends; MapChangeList_Reset 0x4630A0 zeroes. Lives at MapBlocks+4 (edits/editCount there) */
+};
+
 // /MapGrid  size 0x40010
 struct MapGrid {
     uint32_t base[65536]; /* 0x0 */
@@ -3106,9 +3073,41 @@ struct MissionCleanupEntry {
     int entity_id; /* 0x8 */
 };
 
+// /ObjectPrefabRow24  size 0x54
+// One row of the static object prefab override table g_ObjectPrefabRows24 0x6692C0 (24 rows, count DAT_00593218), built by ObjectPrefabRow24_Construct 0x4882F0 (CRT static init) and copied onto ObjectPrefab by ObjectPrefabs_InitTable24 0x4884B0 (stride 0x54). Field names = the ObjectPrefab field each is copied to. Seq27 W2.
+struct ObjectPrefabRow24 {
+    OBJECT_TYPE objectType; /* 0x0 ObjectPrefabs_Get key */
+    OBJECT_KIND kind; /* 0x4 -> ObjectPrefab.kind +0x34 */
+    int transform; /* 0x8 -> killTransform +0x38 and endTransform +0x3C */
+    byte onActiveList; /* 0xc -> +0x61 */
+    uint8_t _gap_0xd[0x3];
+    int impactMode; /* 0x10 -> +0x44 */
+    int explosiveClass; /* 0x14 -> +0x48 */
+    int gridKind; /* 0x18 -> +0x40 */
+    Fix16 initialSpeed; /* 0x1c -> +0x10 */
+    Fix16 deceleration; /* 0x20 -> +0x14 */
+    byte loopsOrLifetime; /* 0x24 -> +0x65 */
+    uint8_t _gap_0x25[0x3];
+    int unsure_solidityVsCar; /* 0x28 -> +0x4C */
+    int unsure_field2C; /* 0x2c set by ctor, not copied by InitTable24 */
+    byte ticksPerFrame; /* 0x30 -> +0x64 */
+    uint8_t _gap_0x31[0x3];
+    int usesGravity; /* 0x34 -> +0x58 */
+    Fix16 mass; /* 0x38 -> +0x18 */
+    int spriteLayer; /* 0x3c -> +0x2C */
+    byte spriteFlag; /* 0x40 -> +0x20 */
+    uint8_t _gap_0x41[0x3];
+    int extraSpriteFlag; /* 0x44 -> +0x70 */
+    byte unsure_prefab62; /* 0x48 -> ObjectPrefab +0x62 */
+    uint8_t _gap_0x49[0x3];
+    int category; /* 0x4c -> +0x5C */
+    byte unsure_prefab63; /* 0x50 -> ObjectPrefab +0x63 */
+    uint8_t _gap_0x51[0x3];
+};
+
 // /ObjectSpawner  size 0x5c
 struct ObjectSpawner {
-    uint8_t _gap_0x0[0x10];
+    WorldObject *diagonalDummies[4]; /* 0x0 Invisible diagonal-collision dummy objects (OBJECT_TYPE 0xA6), created by ObjectSpawner_SpawnDiagonalCollisionDummies 0x485ED0 (extra byte 0x2D..0x30), read by ObjectSpawner_GetDiagonalDummy 0x4828F0: [0] slope 0xB4/0xC4, [1] 0xC0/0xD0, [2] 0xB8/0xC8, [3] 0xBC/0xCC. Zeroed by ctor/dtor. */
     int numCategory2Objects; /* 0x10 */
     int numCategory3Objects; /* 0x14 */
     byte nextOwnerSlot; /* 0x18 */
@@ -3344,7 +3343,7 @@ struct PoliceRoadblock {
     WorldObject *barrierObjs[12]; /* 0x28 */
     int barrierObjIds[12]; /* 0x58 */
     Ped *guards[6]; /* 0x88 */
-    void *collisionRect; /* 0xa0 */
+    Box3 *collisionRect; /* 0xa0 */
 };
 
 // /TransportStop  size 0x34
@@ -3395,6 +3394,11 @@ struct PublicTransportManager {
     TransportActor busActor; /* 0x17c0 */
     byte busNoDismount; /* 0x1818 */
     uint8_t _gap_0x1819[0x3];
+};
+
+// /RandomGen  size 0x4
+struct RandomGen {
+    int lastValue; /* 0x0 last roll, written by random 0x472E00 (word) and Random_U8 0x472E90 (byte) when g_logRandom; zeroed by RandomGen_Ctor 0x472620. Size: only +0 is used */
 };
 
 // /RoadJunction  size 0x10
@@ -3492,13 +3496,24 @@ struct ScriptTriggerPool {
     uint8_t _gap_0x212[0x2];
 };
 
+// /SoundClientPool  size 0x3e84
+struct SoundClientPool {
+    SoundClient *freeHead; /* 0x0 SoundClientPool_Release 0x40FE60 pushes here */
+    undefined1 nodes[16000]; /* 0x4 1000 SoundClient nodes x 16 bytes, free link at node+0xC (SoundClientPool_InitFreeList 0x4106A0). Not typed SoundClient[1000]: that type is 0x2D long, the real node is 0x10 */
+};
+
 // /SoundEvent  size 0x28
 struct SoundEvent {
     int type; /* 0x0 */
     int posX; /* 0x4 */
     int posY; /* 0x8 */
     int posZ; /* 0xc */
-    uint8_t _gap_0x10[0x17];
+    uint8_t _gap_0x10[0x4];
+    Car *hitCar; /* 0x14 kind 2: car whose sprite was hit (SoundEvent_SetFromCollisionResult 0x40FF20) */
+    int hitObjectModel; /* 0x18 kind 3: Object_GetModel of the hit object (0x40FF20) */
+    uint8_t _gap_0x1c[0x4];
+    int hitSurface; /* 0x20 kind 5: face tile material / Collision_GetHitTileSurfaceType (0x40FF20) */
+    uint8_t _gap_0x24[0x3];
     byte end; /* 0x27 */
 };
 
@@ -3563,7 +3578,7 @@ struct TrafficJunction {
 // /TrafficSpawner  size 0x14
 struct TrafficSpawner {
     Camera *curCamera; /* 0x0 */
-    CollisionBox *probeBox; /* 0x4 */
+    Box3 *probeBox; /* 0x4 */
     bool_ scanFromFarEnd; /* 0x8 */
     byte probeCarModel; /* 0x9 */
     byte unusedProbeModel2; /* 0xa */
@@ -3745,7 +3760,7 @@ struct CarDoor {
 // /_car/Car  size 0xbc
 struct Car {
     CarAttachment *attachments; /* 0x0 */
-    Passenger *passengers; /* 0x4 */
+    PedListNode *passengers; /* 0x4 */
     CAR_DELTAS_BITSTATE deltasBitstate; /* 0x8 */
     CarDoor carDoor[4]; /* 0xc */
     Car *next; /* 0x4c */
@@ -4435,11 +4450,11 @@ struct FrameTimingStats {
     undefined4 drawFrameCount; /* 0xc */
     DWORD drawWindowStart; /* 0x10 */
     undefined4 drawFps; /* 0x14 */
-    int field6_0x18[3]; /* 0x18 */
-    int field7_0x24[3]; /* 0x24 */
-    int field8_0x30[3]; /* 0x30 */
-    int field9_0x3c[3]; /* 0x3c */
-    int field10_0x48[3]; /* 0x48 */
+    FrameTimer logicTimer; /* 0x18 Timer_AddElapsedSinceStart in Game_RunLogicStep */
+    FrameTimer unsure_timer1; /* 0x24 */
+    FrameTimer unsure_timer2; /* 0x30 */
+    FrameTimer unsure_timer3; /* 0x3c */
+    FrameTimer unsure_timer4; /* 0x48 */
 };
 
 // /auto_structs/GangRespect  size 0x144
@@ -5001,12 +5016,6 @@ struct S5 {
     uint8_t _gap_0xb[0x1];
 };
 
-// /auto_structs/SRelToBonus2  size 0x2d
-struct SRelToBonus2 {
-    uint8_t _gap_0x0[0x2c];
-    byte mask; /* 0x2c */
-};
-
 // /auto_structs/Script4k  size 0xfa0
 struct Script4k {
     uint16_t numOfStrings; /* 0x0 */
@@ -5136,9 +5145,9 @@ struct SoundManager {
 struct Sprite {
     short rotation; /* 0x0 */
     uint8_t _gap_0x2[0x2];
-    void *frameBounds; /* 0x4 */
+    SpriteBounds *frameBounds; /* 0x4 SpriteBounds from SpriteBoundsPool_Alloc (Sprite_EnsureSpriteBounds) */
     void *owner; /* 0x8 */
-    void *bounds; /* 0xc */
+    SpriteBounds *bounds; /* 0xc SpriteBounds from SpriteBoundsPool_Alloc (Sprite_SetBoundsSize) */
     void *soundClient; /* 0x10 */
     int x; /* 0x14 Created by retype action */
     int y; /* 0x18 Created by retype action */
@@ -5157,15 +5166,23 @@ struct Sprite {
     uint8_t _gap_0x3a[0x2];
 };
 
-// /auto_structs/SpriteBounds  size 0x13a7
+// /auto_structs/SpriteBounds  size 0x4c
+// Sprite collision body (Sprite.bounds +0xC / Sprite.frameBounds +4), 0x4C bytes, pool of 5031 in SpriteBoundsPool (eh_vector_constructor 76 x 5031 in SpriteBoundsPool_Ctor 0x4BC9A0). Was len 5031 (the element COUNT) with no fields. seuko CollisionBox (0x2C) = its first 0x2C bytes. Seq27 W2.
 struct SpriteBounds {
-    uint8_t _gap_0x0[0x13a7];
+    Fix16 w; /* 0x0 size set by Sprite_SetBoundsSize; half = w/2 in Bounds_GetHalfExtents 0x4BA0A0 */
+    Fix16 h; /* 0x4 */
+    Fix16 zsize; /* 0x8 */
+    Vec2 corners[4]; /* 0xc world corners, SpriteBounds_RecomputeCorners 0x4BBD40 (ctor builds Vec2[4] at +0xC) */
+    int queryStamp; /* 0x2c collision query visit stamp (SpriteBounds_SetQueryStamp 0x446920); while pooled = free-list next (SpriteBoundsPool_Alloc 0x4BC9F0) */
+    Box3 aabb; /* 0x30 world AABB, filled by SpriteBounds_RecomputeCorners */
+    byte cornersValid; /* 0x48 0 = corners/aabb stale (Bounds_Set* /Shrink* /Scale*), 1 after RecomputeCorners */
+    uint8_t _gap_0x49[0x3];
 };
 
 // /auto_structs/SpriteBoundsPool  size 0x5d598
 struct SpriteBoundsPool {
     int last; /* 0x0 */
-    uint8_t _gap_0x4[0x5d594];
+    SpriteBounds elements[5031]; /* 0x4 SpriteBoundsPool_Ctor 0x4BC9A0 */
 };
 
 // /auto_structs/SpriteManager  size 0x8
@@ -5210,16 +5227,6 @@ struct SubScript {
     uint8_t _gap_0x16[0xa];
 };
 
-// /auto_structs/SubScript20k  size 0x4e20
-struct SubScript20k {
-    uint8_t _gap_0x0[0x4e20];
-};
-
-// /auto_structs/SubSubScript  size 0xc00
-struct SubSubScript {
-    uint8_t _gap_0x0[0xc00];
-};
-
 // /auto_structs/TextureCacheUserSlot  size 0xc
 // GBH user-sprite texture slot, 96 at TextureCache+0x10C4 (ctor vector_constructor_iterator(+0x10C4, 0xC, 0x60, TextureCacheUserSlot_Init 0x4C2F70) in TextureCache_Ctor 0x4C3190). Was seuko S4_1.
 struct TextureCacheUserSlot {
@@ -5248,7 +5255,7 @@ struct TextureCache {
     byte carTexturesRegistered; /* 0x1000 set by TextureCache_RegisterSpriteSlotTextures 0x4C2F90; gates freeing spriteTextures in 0x4C2D60 */
     byte tileTexturesRegistered; /* 0x1001 set by TextureCache_RegisterTileTextures 0x4C3040; gates freeing tileTextures in 0x4C2D60 */
     uint8_t _gap_0x1002[0x2];
-    int spriteTextures[48]; /* 0x1004 48 car sprite textures (first 32 64x64, rest 128x128) from g_CarSpriteCache, TextureCache_RegisterSpriteSlotTextures 0x4C2F90 */
+    int carSpriteTextures[48]; /* 0x1004 48 car sprite textures (first 32 64x64, rest 128x128) from g_CarSpriteCache, registered by TextureCache_RegisterSpriteSlotTextures 0x4C2F90; indexed by the CarSpriteCache_GetOrCreateCarSpriteSlot result in Sprite_Draw 0x4BE293/0x4BE4A6 via TextureCache_GetSpriteTextureSlot/_SetSpriteSlotPalette. Was spriteTextures. */
     TextureCacheUserSlot userSlots[96]; /* 0x10c4 96 user-sprite slots (HUD digit glyphs etc.), TextureCache_RegisterUserSpriteSlots 0x4C2A00; count in userTextureCount */
     int scratchTexture; /* 0x1544 */
     TextureTable textureTables[7]; /* 0x1548 per palette base (TextureCache_GetSpriteTexture 0x4C2AC0, built in 0x4C30A0): [0] SPRITE (all sprites, pal type 2) [1] CAR_REMAP (2,3) [2] PED_REMAP (3,4) [3] CODE_OBJ_REMAP (4,5) [4] MAP_OBJ_REMAP (5,6) [5] FONT_REMAP (7,8) [6] USER_REMAP (6,7) */
@@ -5270,11 +5277,29 @@ struct Vec2i {
     int y; /* 0x4 */
 };
 
-// /auto_structs/Vec3i  size 0xc
-struct Vec3i {
-    int x; /* 0x0 */
-    int y; /* 0x4 */
-    int z; /* 0x8 */
+// /streambuf  size 0x30
+// Old MSVC (pre-standard) iostream streambuf, non-MT layout. streambuf_Ctor 0x4D59E3 zeroes +4..+0x2C; filebuf fd at +0x30 => size 0x30. Seq27 W2.
+struct streambuf {
+    void *vftable; /* 0x0 0x57870C */
+    int _fAlloc; /* 0x4 streambuf_Setb: free _base if set */
+    int _fUnbuf; /* 0x8 */
+    int x_lastc; /* 0xc -1 in ctor */
+    char *_base; /* 0x10 */
+    char *_ebuf; /* 0x14 */
+    char *_pbase; /* 0x18 */
+    char *_pptr; /* 0x1c */
+    char *_epptr; /* 0x20 */
+    char *_eback; /* 0x24 */
+    char *_gptr; /* 0x28 */
+    char *_egptr; /* 0x2c */
+};
+
+// /filebuf  size 0x38
+// Old MSVC iostream filebuf : streambuf. Seq27 W2.
+struct filebuf {
+    streambuf base; /* 0x0 */
+    int x_fd; /* 0x30 -1 = closed (filebuf_Ctor 0x4D5465) */
+    int x_fOpened; /* 0x34 */
 };
 
 // /imported/gta2-mouse/PedManager  size 0x2053c
@@ -5287,104 +5312,12 @@ struct PedManager {
     undefined1 field_0x2053b; /* 0x2053b */
 };
 
-// /imported/gta2-mouse/S22_2  size 0x8
-struct S22_2 {
-    uint8_t _gap_0x0[0x7];
-    undefined1 field_0x7; /* 0x7 */
-};
-
-// /imported/gta2-mouse/S32  size 0x2c
-struct S32 {
-    int field_0x0; /* 0x0 */
-    SpriteBounds *s22_1_ex; /* 0x4 */
-    uint8_t _gap_0x8[0x4];
-    SpriteBounds *s22_1; /* 0xc */
-    Sprite *pos; /* 0x10 */
-    int field_0x14; /* 0x14 */
-    int field_0x18; /* 0x18 */
-    uint8_t _gap_0x1c[0x4];
-    int field_0x20; /* 0x20 */
-    uint8_t _gap_0x24[0x7];
-    undefined1 field_0x2b; /* 0x2b */
-};
-
 // /imported/gta2-mouse/S34  size 0x8
 struct S34 {
     S34 *ref1; /* 0x0 */
     short field_0x4; /* 0x4 */
     uint8_t _gap_0x6[0x1];
     undefined1 field_0x7; /* 0x7 */
-};
-
-// /imported/gta2-mouse/S35  size 0x5a40
-struct S35 {
-    ObjectMotionState *last; /* 0x0 */
-    ObjectMotionState arr[385]; /* 0x4 */
-};
-
-// /imported/gta2-mouse/S38  size 0x74
-struct S38 {
-    int field_0x0; /* 0x0 */
-    int field_0x4; /* 0x4 */
-    int field_0x8; /* 0x8 */
-    int field_0xc; /* 0xc */
-    int field_0x10; /* 0x10 */
-    int field_0x14; /* 0x14 */
-    int field_0x18; /* 0x18 */
-    short field_0x1c; /* 0x1c */
-    short field_0x1e; /* 0x1e */
-    uint8_t _gap_0x20[0x4];
-    int field_0x24; /* 0x24 */
-    int field_0x28; /* 0x28 */
-    int field_0x2c; /* 0x2c */
-    int field_0x30; /* 0x30 */
-    int field_0x34; /* 0x34 */
-    int field_0x38; /* 0x38 */
-    int field_0x3c; /* 0x3c */
-    int field_0x40; /* 0x40 */
-    int field_0x44; /* 0x44 */
-    int field_0x48; /* 0x48 */
-    int field_0x4c; /* 0x4c */
-    int field_0x50; /* 0x50 */
-    int field_0x54; /* 0x54 */
-    int field_0x58; /* 0x58 */
-    int field_0x5c; /* 0x5c */
-    uint8_t _gap_0x60[0x8];
-    int field_0x68; /* 0x68 */
-    uint8_t _gap_0x6c[0x4];
-    int field_0x70; /* 0x70 */
-};
-
-// /imported/gta2-mouse/SCR_TWO_SHORTS  size 0x4
-struct SCR_TWO_SHORTS {
-    short s1; /* 0x0 */
-    short s2; /* 0x2 */
-};
-
-// /imported/gta2-mouse/U_SCR_TWO_PARAMS  size 0x4
-union U_SCR_TWO_PARAMS {
-    SCR_TWO_SHORTS shorts; /* 0x0 */
-    int i32val; /* 0x0 */
-};
-
-// /imported/gta2-mouse/SCR_CMD_SIX_PARAMS  size 0x16
-struct SCR_CMD_SIX_PARAMS {
-    uint8_t _gap_0x0[0xa];
-    U_SCR_TWO_PARAMS params12; /* 0xa */
-    U_SCR_TWO_PARAMS params34; /* 0xe */
-    U_SCR_TWO_PARAMS params56; /* 0x12 */
-};
-
-// /imported/gta2-mouse/ScriptFunctionsAddrTable  size 0x304
-struct ScriptFunctionsAddrTable {
-    uint8_t _gap_0x0[0x303];
-    undefined1 field_0x303; /* 0x303 */
-};
-
-// /imported/gzf-2021/CarS1  size 0x10
-struct CarS1 {
-    uint8_t _gap_0x0[0xf];
-    undefined1 field_0xf; /* 0xf */
 };
 
 // /imported/gzf-2021/CarSprite  size 0x26
@@ -5397,12 +5330,6 @@ struct CarSprite {
     uint16_t color; /* 0x24 */
 };
 
-// /imported/gzf-2021/FrontendS1S3  size 0x5
-struct FrontendS1S3 {
-    uint8_t _gap_0x0[0x4];
-    undefined1 field_0x4; /* 0x4 */
-};
-
 // /imported/gzf-2021/PedSprite  size 0x20
 struct PedSprite {
     undefined2 readonlyRotation; /* 0x0 */
@@ -5412,41 +5339,10 @@ struct PedSprite {
     undefined4 z; /* 0x1c */
 };
 
-// /imported/gzf-2021/PlayerS2  size 0xc
-struct PlayerS2 {
-    int x; /* 0x0 */
-    int y; /* 0x4 */
-    int z; /* 0x8 */
-};
-
-// /imported/gzf-2021/S1  size 0x189
-struct S1 {
-    uint8_t _gap_0x0[0x34];
-    Ped *playerPed; /* 0x34 */
-    uint8_t _gap_0x38[0x140];
-    Ped *playerPed2; /* 0x178 */
-    uint8_t _gap_0x17c[0xc];
-    undefined1 field_0x188; /* 0x188 */
-};
-
-// /imported/gzf-2021/S3  size 0x150
-struct S3 {
-    uint8_t _gap_0x0[0x14c];
-    S1 *s1; /* 0x14c */
-};
-
 // /imported/gzf-2021/SKeyboard  size 0x404
 struct SKeyboard {
     uint8_t _gap_0x0[0x403];
     undefined1 field_0x403; /* 0x403 */
-};
-
-// /imported/gzf-2021/Timing  size 0x18
-struct Timing {
-    uint8_t _gap_0x0[0x8];
-    undefined4 fps1; /* 0x8 */
-    uint8_t _gap_0xc[0x8];
-    undefined4 fps2; /* 0x14 */
 };
 
 // /imported/renderer-doc/FrontendImage  size 0x88
@@ -5454,18 +5350,6 @@ struct FrontendImage {
     CHAR path[128]; /* 0x0 */
     uint32_t size; /* 0x80 */
     int handle; /* 0x84 */
-};
-
-// /imported/seuko-mod/BitMap  size 0x14
-struct BitMap {
-    short field_0x0; /* 0x0 */
-    short field_0x2; /* 0x2 */
-    short field_0x4; /* 0x4 */
-    short field_0x6; /* 0x6 */
-    short field_0x8; /* 0x8 */
-    short field_0xa; /* 0xa */
-    uint8_t _gap_0xc[0x4];
-    int field_0x10; /* 0x10 */
 };
 
 // /imported/seuko-mod/CarAI  size 0x78
@@ -5629,26 +5513,6 @@ struct Collide {
     Collide *ptr3; /* 0x8 */
 };
 
-// /imported/seuko-mod/Collide1  size 0x8004
-struct Collide1 {
-    uint8_t _gap_0x0[0x8003];
-    undefined1 field_0x8003; /* 0x8003 */
-};
-
-// /imported/seuko-mod/CollideArray256  size 0x400
-struct CollideArray256 {
-    uint8_t _gap_0x0[0x3ff];
-    undefined1 field_0x3ff; /* 0x3ff */
-};
-
-// /imported/seuko-mod/CollideTopLevel  size 0xc
-struct CollideTopLevel {
-    uint32_t length; /* 0x0 */
-    uint32_t someIncrement; /* 0x4 */
-    uint8_t _gap_0x8[0x3];
-    undefined1 field_0xb; /* 0xb */
-};
-
 // /imported/seuko-mod/CollisionBox  size 0x2c
 struct CollisionBox {
     uint32_t xsize; /* 0x0 */
@@ -5658,143 +5522,6 @@ struct CollisionBox {
     SCR_Vector2 blCorner; /* 0x14 */
     SCR_Vector2 flCorner; /* 0x1c */
     SCR_Vector2 frCorner; /* 0x24 */
-};
-
-// /imported/seuko-mod/D3DContext_s1  size 0x64
-struct D3DContext_s1 {
-    SVideo *field_0x0; /* 0x0 */
-    uint8_t _gap_0x4[0xc];
-    int field_0x10; /* 0x10 */
-    uint8_t _gap_0x14[0xc];
-    void *gbh_CloseScreen; /* 0x20 */
-    void *Vid_SetMode; /* 0x24 */
-    uint8_t _gap_0x28[0x18];
-    void *Vid_GetSurface; /* 0x40 */
-    void *Vid_FreeSurface; /* 0x44 */
-    uint8_t _gap_0x48[0x1b];
-    undefined1 field_0x63; /* 0x63 */
-};
-
-// /imported/seuko-mod/DirectInput_DeviceObjectData  size 0x14
-struct DirectInput_DeviceObjectData {
-    dword ofs; /* 0x0 */
-    dword data; /* 0x4 */
-    dword timeStamp; /* 0x8 */
-    dword sequence; /* 0xc */
-    void *appData; /* 0x10 */
-};
-
-// /imported/seuko-mod/EnginesDataHolder  size 0x808
-struct EnginesDataHolder {
-    void *maybeAlsoCars; /* 0x0 */
-    CarPhysicsData *physicsArray[256]; /* 0x4 */
-    CarEngineData *engineArray[256]; /* 0x404 */
-    undefined4 counter2; /* 0x804 */
-};
-
-// /imported/seuko-mod/Game2Holder  size 0x881c
-struct Game2Holder {
-    CraneManager arr[10]; /* 0x0 */
-    CraneManager *last; /* 0x8818 */
-};
-
-// /imported/seuko-mod/GlobalSettings  size 0x64
-struct GlobalSettings {
-    bool_ do_3d_sound; /* 0x0 */
-    bool_ do_blood; /* 0x1 */
-    bool_ do_show_object_ids; /* 0x2 */
-    bool_ skip_traffic_lights; /* 0x3 */
-    bool_ skip_buses; /* 0x4 */
-    bool_ do_show_instruments; /* 0x5 */
-    bool_ skip_particles; /* 0x6 */
-    bool_ skip_trains; /* 0x7 */
-    bool_ do_show_input; /* 0x8 */
-    bool_ skip_right; /* 0x9 */
-    bool_ show_hidden_faces; /* 0xa */
-    bool_ skip_recycling; /* 0xb */
-    bool_ field_0xc; /* 0xc */
-    bool_ exploding_on; /* 0xd */
-    bool_ skip_police; /* 0xe */
-    bool_ skip_bottom; /* 0xf */
-    bool_ do_police_1; /* 0x10 */
-    bool_ do_infinite_lives; /* 0x11 */
-    uint8_t _gap_0x12[0x1];
-    bool_ log_random; /* 0x13 */
-    bool_ skip_user; /* 0x14 */
-    uint8_t _gap_0x15[0x1];
-    bool_ do_miss_logging; /* 0x16 */
-    bool_ skip_left; /* 0x17 */
-    bool_ do_corner_window; /* 0x18 */
-    bool_ skip_dummies; /* 0x19 */
-    uint8_t _gap_0x1a[0x1];
-    bool_ skip_ambulance; /* 0x1b */
-    bool_ skip_window_check; /* 0x1c */
-    uint8_t _gap_0x1d[0x2];
-    bool_ do_show_imaginary; /* 0x1f */
-    uint8_t _gap_0x20[0x1];
-    bool_ do_invulnerable; /* 0x21 */
-    bool_ skip_audio; /* 0x22 */
-    bool_ relatedToGXTFiles; /* 0x23 */
-    bool_ get_all_weapons; /* 0x24 */
-    bool_ no_annoying_chars; /* 0x25 */
-    bool_ show_player_names; /* 0x26 */
-    bool_ log_directinput; /* 0x27 */
-    bool_ skip_slopes; /* 0x28 */
-    bool_ do_show_timing; /* 0x29 */
-    bool_ log_random_extra; /* 0x2a */
-    uint8_t _gap_0x2b[0x1];
-    bool_ skip_frontend; /* 0x2c */
-    bool_ do_brian_test; /* 0x2d */
-    bool_ do_load_savegame; /* 0x2e */
-    bool_ do_show_horn; /* 0x2f */
-    bool_ do_test; /* 0x30 */
-    bool_ do_mike; /* 0x31 */
-    bool_ do_show_camera; /* 0x32 */
-    uint8_t _gap_0x33[0x1];
-    bool_ do_free_shopping; /* 0x34 */
-    bool_ do_show_physics; /* 0x35 */
-    bool_ ignore_replay_header; /* 0x36 */
-    bool_ do_debug_keys; /* 0x37 */
-    bool_ skip_draw; /* 0x38 */
-    bool_ do_show_junc_ids; /* 0x39 */
-    uint8_t _gap_0x3a[0x1];
-    bool_ skip_fire_engines; /* 0x3b */
-    bool_ skip_top; /* 0x3c */
-    bool_ do_iain_test; /* 0x3d */
-    uint8_t _gap_0x3e[0x2];
-    bool_ skip_tiles; /* 0x40 */
-    bool_ log_input; /* 0x41 */
-    uint8_t _gap_0x42[0x2];
-    bool_ dont_get_car_back; /* 0x44 */
-    bool_ do_show_counters; /* 0x45 */
-    bool_ do_show_traffic_lights_info; /* 0x46 */
-    uint8_t _gap_0x47[0x2];
-    bool_ log_routefinder; /* 0x49 */
-    uint8_t _gap_0x4a[0x2];
-    bool_ skip_lid; /* 0x4c */
-    bool_ do_police_2; /* 0x4d */
-    bool_ keep_weapons_after_death; /* 0x4e */
-    bool_ spawn_only_elvis; /* 0x4f */
-    uint8_t _gap_0x50[0x1];
-    bool_ do_show_ids; /* 0x51 */
-    bool_ jail_key; /* 0x52 */
-    uint8_t _gap_0x53[0x1];
-    bool_ skip_replay_sync_check; /* 0x54 */
-    bool_ show_brief_number; /* 0x55 */
-    uint8_t _gap_0x56[0x1];
-    bool_ show_cycle; /* 0x57 */
-    bool_ do_sync_check; /* 0x58 */
-    bool_ do_police_3; /* 0x59 */
-    bool_ play_replay; /* 0x5a */
-    bool_ skip_quit_confirm; /* 0x5b */
-    byte limit_recycling; /* 0x5c */
-    bool_ do_exit_after_replay; /* 0x5d */
-    bool_ skip_mission; /* 0x5e */
-    bool_ skip_skidmarks; /* 0x5f */
-    bool_ log_collisions; /* 0x60 */
-    bool_ do_show_collision_box; /* 0x61 */
-    bool_ show_all_arrows; /* 0x62 */
-    bool_ do_kill_phones_on_answer; /* 0x63 */
 };
 
 // /imported/seuko-mod/GtaString  size 0x18
@@ -5808,16 +5535,6 @@ struct GtaString {
     uint8_t _gap_0xc[0x6];
     uint16_t id; /* 0x12 */
     GtaString *prev; /* 0x14 */
-};
-
-// /imported/seuko-mod/GtaStringsHolder  size 0x4bc
-struct GtaStringsHolder {
-    GtaString *last; /* 0x0 */
-    GtaString *first; /* 0x4 */
-    GtaString arr50[50]; /* 0x8 */
-    undefined2 total; /* 0x4b8 */
-    uint8_t _gap_0x4ba[0x1];
-    undefined1 field_0x4bb; /* 0x4bb */
 };
 
 // /imported/seuko-mod/KeyboardEvent  size 0xc
@@ -5893,12 +5610,6 @@ struct ObjectPrefabsContainer {
     ObjectPrefab prefabs[300]; /* 0x4 */
     ObjectPrefab *byId[300]; /* 0x87f4 */
     uint32_t eq99OnInit; /* 0x8ca4 */
-};
-
-// /imported/seuko-mod/Passenger  size 0x8
-struct Passenger {
-    Ped *ped; /* 0x0 */
-    Passenger *next; /* 0x4 */
 };
 
 // /imported/seuko-mod/PedGameObject  size 0xb4
@@ -6000,24 +5711,6 @@ struct PedGroup {
     uint8_t _gap_0x41[0x3];
 };
 
-// /imported/seuko-mod/PhysicalPalette  size 0x400
-struct PhysicalPalette {
-    uint8_t _gap_0x0[0x3ff];
-    undefined1 field_0x3ff; /* 0x3ff */
-};
-
-// /imported/seuko-mod/RoofSpritesHolder  size 0x1c24
-struct RoofSpritesHolder {
-    CarAttachment *last; /* 0x0 */
-    CarAttachment arr[300]; /* 0x4 */
-};
-
-// /imported/seuko-mod/S4_2  size 0x8
-struct S4_2 {
-    uint8_t _gap_0x0[0x6];
-    short field_0x6; /* 0x6 */
-};
-
 // /imported/seuko-mod/SDevice  size 0x30
 struct SDevice {
     dword id; /* 0x0 */
@@ -6045,26 +5738,6 @@ struct SDisplayMode {
     undefined1 field_0x3f; /* 0x3f */
 };
 
-// /imported/seuko-mod/SGlobals  size 0x100
-struct SGlobals {
-    int mNumPolysDrawn; /* 0x0 */
-    int mNumTextureSwaps; /* 0x4 */
-    int mNumBatchFlushes; /* 0x8 */
-    dword mSceneTime_2B93EAC; /* 0xc */
-    dword gCacheSizes_dword_43EB0[12]; /* 0x10 */
-    dword gCacheSizes_word_10810[12]; /* 0x40 */
-    dword gCacheHitRates_dword_E43F10[12]; /* 0x70 */
-    dword gCacheUnknown_107F8[12]; /* 0xa0 */
-    void *cache_12_array_dword_E13D80[12]; /* 0xd0 */
-};
-
-// /imported/seuko-mod/SLight  size 0x14
-struct SLight {
-    uint8_t _gap_0x0[0x4];
-    SCR_Vector3 position; /* 0x4 */
-    dword rgba; /* 0x10 */
-};
-
 // /imported/seuko-mod/SMission  size 0x300
 struct SMission {
     uint8_t _gap_0x0[0x168];
@@ -6080,23 +5753,6 @@ struct SMission {
     int field_0x248; /* 0x248 */
     uint8_t _gap_0x24c[0xb3];
     undefined1 field_0x2ff; /* 0x2ff */
-};
-
-// /imported/seuko-mod/STexture  size 0x20
-struct STexture {
-    uint16_t id; /* 0x0 */
-    uint8_t _gap_0x2[0x2];
-    undefined2 pal_is_trans; /* 0x4 */
-    uint16_t pal_size; /* 0x6 */
-    void *locked_pixels_ptr; /* 0x8 */
-    uint8_t _gap_0xc[0x2];
-    uint16_t width; /* 0xe */
-    uint16_t height; /* 0x10 */
-    byte bPalIsValid; /* 0x12 */
-    byte flags; /* 0x13 */
-    byte *original_pixel_data_ptr; /* 0x14 */
-    WORD *pPaltData; /* 0x18 */
-    void *cachePtr; /* 0x1c */
 };
 
 // /imported/seuko-mod/SVideo  size 0x4c4
@@ -6146,63 +5802,6 @@ struct SVideo {
     HWND hwnd; /* 0x4c0 */
 };
 
-// /imported/seuko-mod/TILE  size 0x80
-struct TILE {
-    float field_0x0; /* 0x0 */
-    float field_0x4; /* 0x4 */
-    float field_0x8; /* 0x8 */
-    float field_0xc; /* 0xc */
-    uint32_t field_0x10; /* 0x10 */
-    float field_0x14; /* 0x14 */
-    float field_0x18; /* 0x18 */
-    float field_0x1c; /* 0x1c */
-    float field_0x20; /* 0x20 */
-    float field_0x24; /* 0x24 */
-    float field_0x28; /* 0x28 */
-    float field_0x2c; /* 0x2c */
-    uint32_t field_0x30; /* 0x30 */
-    float field_0x34; /* 0x34 */
-    float field_0x38; /* 0x38 */
-    float field_0x3c; /* 0x3c */
-    float field_0x40; /* 0x40 */
-    float field_0x44; /* 0x44 */
-    float field_0x48; /* 0x48 */
-    float field_0x4c; /* 0x4c */
-    float field_0x50; /* 0x50 */
-    float field_0x54; /* 0x54 */
-    float field_0x58; /* 0x58 */
-    float field_0x5c; /* 0x5c */
-    float field_0x60; /* 0x60 */
-    float field_0x64; /* 0x64 */
-    float field_0x68; /* 0x68 */
-    float field_0x6c; /* 0x6c */
-    float field_0x70; /* 0x70 */
-    float field_0x74; /* 0x74 */
-    float field_0x78; /* 0x78 */
-    float field_0x7c; /* 0x7c */
-};
-
-// /imported/seuko-mod/Texture_S1  size 0x24
-struct Texture_S1 {
-    uint8_t _gap_0x0[0x6];
-    uint16_t field_0x6; /* 0x6 */
-    int decr; /* 0x8 */
-    uint8_t _gap_0xc[0x17];
-    undefined1 field_0x23; /* 0x23 */
-};
-
-// /imported/seuko-mod/Texture_S2  size 0x24
-struct Texture_S2 {
-    uint8_t _gap_0x0[0x23];
-    undefined1 field_0x23; /* 0x23 */
-};
-
-// /imported/seuko-mod/Tick  size 0x8
-struct Tick {
-    uint32_t tick; /* 0x0 */
-    uint32_t random; /* 0x4 */
-};
-
 // /imported/seuko-mod/TrailerController  size 0x10
 struct TrailerController {
     uint8_t _gap_0x0[0x8];
@@ -6214,11 +5813,6 @@ struct TrailerController {
 struct TrailerControllerPool {
     int *field_0x0; /* 0x0 */
     CarManager5_S1 arr10[10]; /* 0x4 */
-};
-
-// /imported/seuko-mod/Verts  size 0x80
-struct Verts {
-    GTAVertex mVerts[4]; /* 0x0 */
 };
 
 // /imported/seuko-mod/WorldObject  size 0x2c
@@ -6250,136 +5844,23 @@ struct WorldObjectPool {
     undefined1 field_0x29177; /* 0x29177 */
 };
 
-// /scr_structs.h/_struct_17  size 0x4
-struct _struct_17 {
-    Uint16 var1; /* 0x0 */
-    Uint16 var2; /* 0x2 */
-};
-
-// /scr_structs.h/_struct_18  size 0x4
-struct _struct_18 {
-    Sint16 sintvar1; /* 0x0 */
-    Sint16 sintvar2; /* 0x2 */
-};
-
-// /scr_structs.h/_union_16  size 0x4
-union _union_16 {
-    _struct_17 field0; /* 0x0 */
-    _struct_18 field1; /* 0x0 */
-};
-
-// /scr_structs.h/_struct_20  size 0x4
-struct _struct_20 {
-    Uint16 var3; /* 0x0 */
-    Uint16 var4; /* 0x2 */
-};
-
-// /scr_structs.h/_struct_21  size 0x4
-struct _struct_21 {
-    Sint16 sintvar3; /* 0x0 */
-    Sint16 sintvar4; /* 0x2 */
-};
-
-// /scr_structs.h/_union_19  size 0x4
-union _union_19 {
-    _struct_20 field0; /* 0x0 */
-    _struct_21 field1; /* 0x0 */
-    Sint32 sint32val; /* 0x0 */
-    SCR_f floatval; /* 0x0 */
-};
-
-// /scr_structs.h/SCR_FOUR_PARAMS  size 0x8
-struct SCR_FOUR_PARAMS {
-    _union_16 field0_0x0; /* 0x0 */
-    _union_19 field1_0x4; /* 0x4 */
-};
-
-// /scr_structs.h/SCR_MISSION_HEADER  size 0x8
-struct SCR_MISSION_HEADER {
-    Uint16 base_script_max_pointers; /* 0x0 */
-    Uint16 unk1; /* 0x2 */
-    Uint16 mission_script_size; /* 0x4 */
-    Uint16 unk2; /* 0x6 */
-};
-
-// /scr_structs.h/SCR_XY_f  size 0x8
-struct SCR_XY_f {
-    SCR_f x; /* 0x0 */
-    SCR_f y; /* 0x4 */
-};
-
-// /scr_structs.h/SCR_Rect_f  size 0x14
-struct SCR_Rect_f {
-    SCR_XYZ_f pos; /* 0x0 */
-    SCR_XY_f size; /* 0xc */
-};
-
-// /scr_structs.h/_struct_24  size 0xc
-struct _struct_24 {
-    Uint16 var1; /* 0x0 */
-    Uint16 var2; /* 0x2 */
-    SCR_XY_f size; /* 0x4 */
-};
-
-// /scr_structs.h/_union_23  size 0xc
-union _union_23 {
-    _struct_24 field0; /* 0x0 */
-    SCR_XYZ_f pos; /* 0x0 */
-};
-
-// /scr_structs.h/SCR_SIX_PARAMS  size 0xc
-struct SCR_SIX_PARAMS {
-    _union_23 field0_0x0; /* 0x0 */
-};
-
-// /scr_structs.h/_struct_13  size 0x4
-struct _struct_13 {
-    Uint16 var1; /* 0x0 */
-    Uint16 var2; /* 0x2 */
-};
-
-// /scr_structs.h/_struct_14  size 0x4
-struct _struct_14 {
-    Sint16 sintvar1; /* 0x0 */
-    Sint16 sintvar2; /* 0x2 */
-};
-
-// /scr_structs.h/_union_12  size 0x4
-union _union_12 {
-    _struct_13 field0; /* 0x0 */
-    _struct_14 field1; /* 0x0 */
-    Sint32 sint32val; /* 0x0 */
-};
-
-// /scr_structs.h/SCR_TWO_PARAMS  size 0x4
-struct SCR_TWO_PARAMS {
-    _union_12 field0_0x0; /* 0x0 */
-};
-
-// /scr_structs.h/SCR_XYZ_c  size 0x3
-struct SCR_XYZ_c {
-    Sint8 x; /* 0x0 */
-    Sint8 y; /* 0x1 */
-    Sint8 z; /* 0x2 */
-};
-
-// /scr_structs.h/SCR_XYZ_uc  size 0x3
-struct SCR_XYZ_uc {
-    Uint8 x; /* 0x0 */
-    Uint8 y; /* 0x1 */
-    Uint8 z; /* 0x2 */
-};
-
-// /scr_structs.h/SCR_XY_c  size 0x2
-struct SCR_XY_c {
-    Sint8 x; /* 0x0 */
-    Sint8 y; /* 0x1 */
-};
-
-// /scr_structs.h/SCR_XY_uc  size 0x2
-struct SCR_XY_uc {
-    Uint8 x; /* 0x0 */
-    Uint8 y; /* 0x1 */
+// /ios  size 0x34
+// Old MSVC iostream ios (virtual base of ostream/ofstream, at +8 of ostream). ios_Ctor 0x4D48D0 writes up to +0x30: length 0x34 is a lower bound (MT lock fields, if any, not seen). Seq27 W2.
+struct ios {
+    void *vftable; /* 0x0 0x57868C */
+    streambuf *bp; /* 0x4 ios_Init 0x4D4969 */
+    int state; /* 0x8 4 = badbit when bp null */
+    int ispecial; /* 0xc */
+    int ospecial; /* 0x10 */
+    int isfx_special; /* 0x14 */
+    int osfx_special; /* 0x18 */
+    int x_delbuf; /* 0x1c delete bp in dtor/init */
+    void *x_tie; /* 0x20 ostream*, flushed by ostream_Opfx */
+    int x_flags; /* 0x24 0x2000 unitbuf, 0x4000 stdio (ostream_Osfx) */
+    int x_precision; /* 0x28 6 */
+    char x_fill; /* 0x2c ' ' */
+    uint8_t _gap_0x2d[0x3];
+    int x_width; /* 0x30 */
 };
 
 #pragma pack(pop)

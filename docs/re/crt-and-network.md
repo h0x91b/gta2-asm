@@ -345,7 +345,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x40BF80` | `Network_HandleReceivedPacket` | medium | Dispatches ping/pong (RTT -> Network_UpdatePlayerPing) and start-game (event 9) |
 | `0x40C120` | `Network_ReceiveFrameData` | medium | Waits up to 500ms for next in-order frame packet from player, uses pending table |
 | `0x40C380` | `Network_UpdateLobby` | high | Per-state poll: state1 EnumSessions refresh (event 5), state 3/4 pings and packet receive |
-| `0x40CF60` | `Fix16Rect_ContainsPoint` | high | Four Fix16 compares of two stack args against bounds at +0x78..+0x84 |
+| `0x40CF60` | `Camera_BoundsContainPoint` | high | Four Fix16 compares of two stack args against bounds at +0x78..+0x84 |
 | `0x40E490` | `Ang16_SnapToCardinal` | low | Clamps *short into 0, 0x168 or 0x438 buckets; used by PedGameObject_StateWalk |
 | `0x40ECB0` | `Fix16_SteerAngleToward` | medium | Wraps delta to +-pi, ramps rate toward target with limits, WrapRadians; used by Car_UpdateSystems |
 | `0x40EE60` | `TrailerController_ClampAngleDelta` | medium | Same wrap/clamp pattern, returns wrapped angle; sole caller TrailerController_UpdateAlignment |
@@ -364,14 +364,14 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x40F830` | `CarPhysics_SetHeading` | high (Seq 43) | Writes short this+0x58 |
 | `0x40FB70` | `TrailerController_ExplodeIfEitherWrecked` | high | If one of cab/trailer is wrecked, set other's hp 32000 and Car_Explode |
 | `0x40FD40` | `TrailerController_ComputeHitchPosition` | medium | Vec2 rotate/add of hitch offsets by cab and trailer angles; sole caller CarManager_SpawnArticulated |
-| `0x40FE30` | `CollisionHit_SetPosition` | medium | Stores 3 dwords at this+4..0xc; callers are collision-record fillers |
+| `0x40FE30` | `SoundEvent_SetPosition` | medium | Stores 3 dwords at this+4..0xc; callers are collision-record fillers |
 | `0x40FE60` | `SoundClientPool_Release` | medium | Unlinks node then makes it head (next at +0xc); used by Weapon_Release/Player_Dtor |
 | `0x40FE80` | `Sprite_IsObjectKind` | low | Returns whether field +0x30 is 1, 4 or 5 |
-| `0x40FEE0` | `CollisionHit_SetKindObject` | medium | Sets this+0=3, +0x20=param |
+| `0x40FEE0` | `CollisionResult_SetHitSprite` | medium | Sets this+0=3, +0x20=param |
 | `0x40FEF0` | `Object_GetModel` | medium | Returns field +0x18; caller Script_Op_CHECK_OBJ_MODEL |
 | `0x40FF00` | `unsure_WorldObject_GetPrefabByte63` | low | Returns byte at (*(this+8))+99 |
-| `0x40FF10` | `CollisionHit_SetField24` | low | Writes this+0x24 |
-| `0x40FF20` | `CollisionHit_FillFromGlobals` | medium | Sets kind 2/3/4/5 from g_CollisionKind/g_CollisionHitSprite |
+| `0x40FF10` | `SoundEvent_SetField24` | low | Writes this+0x24 |
+| `0x40FF20` | `SoundEvent_SetFromCollisionResult` | medium | Sets kind 2/3/4/5 from g_CollisionResult.kind/.hitSprite |
 
 ### Game code, old iostream, CRT (0x4D0000-0x52FFFF)
 
@@ -540,7 +540,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x4E34F2` | `__putenv_lk` | high | SetEnvironmentVariableA, _findenv, realloc _environ table, free/copy_environ |
 | `0x4E36D2` | `__mbschr` | high | SWAR byte scan strchr, with _mbcs branch (_DAT_0067536c); caller __putenv_lk |
 | `0x51C730` | `StaticInit_DebugFlagsDefaults` | medium | static-init ctor (data ref 0x584498): sets g_* debug flags false |
-| `0x52E0A0` | `StaticInit_RandomGen_eq_0` | medium | static-init ctor (data ref 0x586d48): ctor of global eq_0 at 0x663764, calls Crt_Srand |
+| `0x52E0A0` | `StaticInit_RandomGen_eq_0` | medium | static-init ctor (data ref 0x586d48): ctor of global g_RandomGen at 0x663764, calls Crt_Srand |
 
 ### 11.44 patch code (0x56Dxxx)
 

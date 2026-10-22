@@ -44,15 +44,14 @@ struc BlockInfo
     .slopeType                        resb 1      ; 0xb byte
 endstruc
 
-; /C1  (9336 bytes)
-struc C1
-    .f1                               resb 1      ; 0x0 char
-    resb 5239
-    .countOfS5                        resb 4      ; 0x1478 uint
-    resb 1
-    .field5242_0x147d                 resb 1      ; 0x147d byte
-    resb 10
-    .s5Arr1020                        resb 4080   ; 0x1488 S5 *[1020]
+; /Box3  (24 bytes)
+struc Box3
+    .minX                             resb 4      ; 0x0 Fix16
+    .maxX                             resb 4      ; 0x4 Fix16
+    .minY                             resb 4      ; 0x8 Fix16
+    .maxY                             resb 4      ; 0xc Fix16
+    .minZ                             resb 4      ; 0x10 Fix16
+    .maxZ                             resb 4      ; 0x14 Fix16
 endstruc
 
 ; enum /CAR_CATEGORY  (4 bytes)
@@ -178,6 +177,20 @@ struc CollisionManager
     .visitCount                       resb 4      ; 0x0 int
     .queryStamp                       resb 4      ; 0x4 int
     .movingCheckActive                resb 4      ; 0x8 int
+endstruc
+
+; /CollisionResult  (40 bytes)
+struc CollisionResult
+    .kind                             resb 4      ; 0x0 int
+    .unsure_wallXTileX                resb 4      ; 0x4 int
+    .unsure_wallXArg2                 resb 4      ; 0x8 int
+    .unsure_wallYTileY                resb 4      ; 0xc int
+    .unsure_wallYArg2                 resb 4      ; 0x10 int
+    .unsure_wallYTileX                resb 4      ; 0x14 int
+    .unsure_wallXTileY                resb 4      ; 0x18 int
+    .hitZ                             resb 4      ; 0x1c int
+    .hitSprite                        resb 4      ; 0x20 Sprite *
+    .moverSprite                      resb 4      ; 0x24 Sprite *
 endstruc
 
 ; /ComboEntry  (44 bytes)
@@ -415,18 +428,30 @@ endstruc
 struc FloatingScoreManager
     .colorCounter                     resb 2      ; 0x0 ushort
     .freeCount                        resb 2      ; 0x2 short
-    .freeHead                         resb 4      ; 0x4 FloatingScore *
-    .activeHead                       resb 4      ; 0x8 FloatingScore *
+    .pool                             resb 8      ; 0x4 FloatingScorePool
     .scores                           resb 240    ; 0xc FloatingScore[3]
     .activeCount                      resb 2      ; 0xfc ushort
     resb 1
     .end                              resb 1      ; 0xff byte
 endstruc
 
+; /FloatingScorePool  (8 bytes)
+struc FloatingScorePool
+    .freeHead                         resb 4      ; 0x0 FloatingScore *
+    .activeHead                       resb 4      ; 0x4 FloatingScore *
+endstruc
+
 ; /FrameCounter  (8 bytes)
 struc FrameCounter
     .frame                            resb 4      ; 0x0 int
     .frameRandom                      resb 4      ; 0x4 uint
+endstruc
+
+; /FrameTimer  (12 bytes)
+struc FrameTimer
+    .unsure_field0                    resb 4      ; 0x0 int
+    .startTime                        resb 4      ; 0x4 DWORD
+    .elapsedMs                        resb 4      ; 0x8 DWORD
 endstruc
 
 ; /FrontendLevelPaths  (768 bytes)
@@ -488,18 +513,6 @@ struc FrontendSaveSlotInfo
     .area                             resb 1      ; 0x1 byte
     .levelOrBonusId                   resb 1      ; 0x2 byte
     .isBonusLevel                     resb 1      ; 0x3 byte
-endstruc
-
-; /GTAVertex  (32 bytes)
-struc GTAVertex
-    .x                                resb 4      ; 0x0 float
-    .y                                resb 4      ; 0x4 float
-    .z                                resb 4      ; 0x8 float
-    .z2                               resb 4      ; 0xc float
-    .flags                            resb 4      ; 0x10 uint
-    .spec                             resb 4      ; 0x14 dword
-    .u                                resb 4      ; 0x18 float
-    .v                                resb 4      ; 0x1c float
 endstruc
 
 ; /Generator  (44 bytes)
@@ -776,6 +789,12 @@ struc MapChangeEntry
     .pad                              resb 2      ; 0x6 byte[2]
 endstruc
 
+; /MapChangeList  (804 bytes)
+struc MapChangeList
+    .edits                            resb 800    ; 0x0 MapChangeEntry[100]
+    .count                            resb 4      ; 0x320 uint
+endstruc
+
 ; /MapGrid  (262160 bytes)
 struc MapGrid
     .base                             resb 262144 ; 0x0 uint[65536]
@@ -823,9 +842,40 @@ OBJECT_KIND.OBJECT_KIND_UNK_A equ 10
 OBJECT_KIND.OBJECT_KIND_LIGHT equ 11
 OBJECT_KIND.OBJECT_KIND_UNK_C equ 12
 
+; /ObjectPrefabRow24  (84 bytes)
+struc ObjectPrefabRow24
+    .objectType                       resb 4      ; 0x0 OBJECT_TYPE
+    .kind                             resb 4      ; 0x4 OBJECT_KIND
+    .transform                        resb 4      ; 0x8 int
+    .onActiveList                     resb 1      ; 0xc byte
+    resb 3
+    .impactMode                       resb 4      ; 0x10 int
+    .explosiveClass                   resb 4      ; 0x14 int
+    .gridKind                         resb 4      ; 0x18 int
+    .initialSpeed                     resb 4      ; 0x1c Fix16
+    .deceleration                     resb 4      ; 0x20 Fix16
+    .loopsOrLifetime                  resb 1      ; 0x24 byte
+    resb 3
+    .unsure_solidityVsCar             resb 4      ; 0x28 int
+    .unsure_field2C                   resb 4      ; 0x2c int
+    .ticksPerFrame                    resb 1      ; 0x30 byte
+    resb 3
+    .usesGravity                      resb 4      ; 0x34 int
+    .mass                             resb 4      ; 0x38 Fix16
+    .spriteLayer                      resb 4      ; 0x3c int
+    .spriteFlag                       resb 1      ; 0x40 byte
+    resb 3
+    .extraSpriteFlag                  resb 4      ; 0x44 int
+    .unsure_prefab62                  resb 1      ; 0x48 byte
+    resb 3
+    .category                         resb 4      ; 0x4c int
+    .unsure_prefab63                  resb 1      ; 0x50 byte
+    resb 3
+endstruc
+
 ; /ObjectSpawner  (92 bytes)
 struc ObjectSpawner
-    resb 16
+    .diagonalDummies                  resb 16     ; 0x0 WorldObject *[4]
     .numCategory2Objects              resb 4      ; 0x10 int
     .numCategory3Objects              resb 4      ; 0x14 int
     .nextOwnerSlot                    resb 1      ; 0x18 byte
@@ -1203,7 +1253,7 @@ struc PoliceRoadblock
     .barrierObjs                      resb 48     ; 0x28 WorldObject *[12]
     .barrierObjIds                    resb 48     ; 0x58 int[12]
     .guards                           resb 24     ; 0x88 Ped *[6]
-    .collisionRect                    resb 4      ; 0xa0 void *
+    .collisionRect                    resb 4      ; 0xa0 Box3 *
 endstruc
 
 ; /PublicTransportManager  (6172 bytes)
@@ -1213,6 +1263,11 @@ struc PublicTransportManager
     .busActor                         resb 88     ; 0x17c0 TransportActor
     .busNoDismount                    resb 1      ; 0x1818 byte
     resb 3
+endstruc
+
+; /RandomGen  (4 bytes)
+struc RandomGen
+    .lastValue                        resb 4      ; 0x0 int
 endstruc
 
 ; /RoadJunction  (16 bytes)
@@ -1310,13 +1365,24 @@ struc ScriptTriggerPool
     resb 2
 endstruc
 
+; /SoundClientPool  (16004 bytes)
+struc SoundClientPool
+    .freeHead                         resb 4      ; 0x0 SoundClient *
+    .nodes                            resb 16000  ; 0x4 undefined1[16000]
+endstruc
+
 ; /SoundEvent  (40 bytes)
 struc SoundEvent
     .type                             resb 4      ; 0x0 int
     .posX                             resb 4      ; 0x4 int
     .posY                             resb 4      ; 0x8 int
     .posZ                             resb 4      ; 0xc int
-    resb 23
+    resb 4
+    .hitCar                           resb 4      ; 0x14 Car *
+    .hitObjectModel                   resb 4      ; 0x18 int
+    resb 4
+    .hitSurface                       resb 4      ; 0x20 int
+    resb 3
     .end                              resb 1      ; 0x27 byte
 endstruc
 
@@ -1380,7 +1446,7 @@ endstruc
 ; /TrafficSpawner  (20 bytes)
 struc TrafficSpawner
     .curCamera                        resb 4      ; 0x0 Camera *
-    .probeBox                         resb 4      ; 0x4 CollisionBox *
+    .probeBox                         resb 4      ; 0x4 Box3 *
     .scanFromFarEnd                   resb 1      ; 0x8 bool
     .probeCarModel                    resb 1      ; 0x9 byte
     .unusedProbeModel2                resb 1      ; 0xa byte
@@ -1727,7 +1793,7 @@ CAR_UPGRADE.UPGRADE_25k_GUN equ 18
 ; /_car/Car  (188 bytes)
 struc Car
     .attachments                      resb 4      ; 0x0 CarAttachment *
-    .passengers                       resb 4      ; 0x4 Passenger *
+    .passengers                       resb 4      ; 0x4 PedListNode *
     .deltasBitstate                   resb 4      ; 0x8 CAR_DELTAS_BITSTATE
     .carDoor                          resb 64     ; 0xc CarDoor[4]
     .next                             resb 4      ; 0x4c Car *
@@ -2875,11 +2941,11 @@ struc FrameTimingStats
     .drawFrameCount                   resb 4      ; 0xc undefined4
     .drawWindowStart                  resb 4      ; 0x10 DWORD
     .drawFps                          resb 4      ; 0x14 undefined4
-    .field6_0x18                      resb 12     ; 0x18 int[3]
-    .field7_0x24                      resb 12     ; 0x24 int[3]
-    .field8_0x30                      resb 12     ; 0x30 int[3]
-    .field9_0x3c                      resb 12     ; 0x3c int[3]
-    .field10_0x48                     resb 12     ; 0x48 int[3]
+    .logicTimer                       resb 12     ; 0x18 FrameTimer
+    .unsure_timer1                    resb 12     ; 0x24 FrameTimer
+    .unsure_timer2                    resb 12     ; 0x30 FrameTimer
+    .unsure_timer3                    resb 12     ; 0x3c FrameTimer
+    .unsure_timer4                    resb 12     ; 0x48 FrameTimer
 endstruc
 
 ; /auto_structs/GangRespect  (324 bytes)
@@ -3388,12 +3454,6 @@ struc S5
     resb 1
 endstruc
 
-; /auto_structs/SRelToBonus2  (45 bytes)
-struc SRelToBonus2
-    resb 44
-    .mask                             resb 1      ; 0x2c byte
-endstruc
-
 ; /auto_structs/Script4k  (4000 bytes)
 struc Script4k
     .numOfStrings                     resb 2      ; 0x0 ushort
@@ -3531,9 +3591,9 @@ endstruc
 struc Sprite
     .rotation                         resb 2      ; 0x0 short
     resb 2
-    .frameBounds                      resb 4      ; 0x4 void *
+    .frameBounds                      resb 4      ; 0x4 SpriteBounds *
     .owner                            resb 4      ; 0x8 void *
-    .bounds                           resb 4      ; 0xc void *
+    .bounds                           resb 4      ; 0xc SpriteBounds *
     .soundClient                      resb 4      ; 0x10 void *
     .x                                resb 4      ; 0x14 int
     .y                                resb 4      ; 0x18 int
@@ -3552,15 +3612,22 @@ struc Sprite
     resb 2
 endstruc
 
-; /auto_structs/SpriteBounds  (5031 bytes)
+; /auto_structs/SpriteBounds  (76 bytes)
 struc SpriteBounds
-    resb 5031
+    .w                                resb 4      ; 0x0 Fix16
+    .h                                resb 4      ; 0x4 Fix16
+    .zsize                            resb 4      ; 0x8 Fix16
+    .corners                          resb 32     ; 0xc Vec2[4]
+    .queryStamp                       resb 4      ; 0x2c int
+    .aabb                             resb 24     ; 0x30 Box3
+    .cornersValid                     resb 1      ; 0x48 byte
+    resb 3
 endstruc
 
 ; /auto_structs/SpriteBoundsPool  (382360 bytes)
 struc SpriteBoundsPool
     .last                             resb 4      ; 0x0 int
-    resb 382356
+    .elements                         resb 382356 ; 0x4 SpriteBounds[5031]
 endstruc
 
 ; /auto_structs/SpriteManager  (8 bytes)
@@ -3593,23 +3660,13 @@ struc SubScript
     resb 10
 endstruc
 
-; /auto_structs/SubScript20k  (20000 bytes)
-struc SubScript20k
-    resb 20000
-endstruc
-
-; /auto_structs/SubSubScript  (3072 bytes)
-struc SubSubScript
-    resb 3072
-endstruc
-
 ; /auto_structs/TextureCache  (5592 bytes)
 struc TextureCache
     .tileTextures                     resb 4096   ; 0x0 int[1024]
     .carTexturesRegistered            resb 1      ; 0x1000 byte
     .tileTexturesRegistered           resb 1      ; 0x1001 byte
     resb 2
-    .spriteTextures                   resb 192    ; 0x1004 int[48]
+    .carSpriteTextures                resb 192    ; 0x1004 int[48]
     .userSlots                        resb 1152   ; 0x10c4 TextureCacheUserSlot[96]
     .scratchTexture                   resb 4      ; 0x1544 int
     .textureTables                    resb 140    ; 0x1548 TextureTable[7]
@@ -3650,13 +3707,6 @@ struc Vec2i
     .y                                resb 4      ; 0x4 int
 endstruc
 
-; /auto_structs/Vec3i  (12 bytes)
-struc Vec3i
-    .x                                resb 4      ; 0x0 int
-    .y                                resb 4      ; 0x4 int
-    .z                                resb 4      ; 0x8 int
-endstruc
-
 ; enum /defines/define_WINVER  (8 bytes)
 define_WINVER.WINVER equ 2304
 
@@ -3671,6 +3721,13 @@ define__M_IX86._M_IX86 equ 300
 
 ; enum /defines/define___WORDSIZE  (8 bytes)
 define___WORDSIZE.__WORDSIZE equ 32
+
+; /filebuf  (56 bytes)
+struc filebuf
+    .base                             resb 48     ; 0x0 streambuf
+    .x_fd                             resb 4      ; 0x30 int
+    .x_fOpened                        resb 4      ; 0x34 int
+endstruc
 
 ; enum /imported/gta2-mouse/CAR_TYPE_COUNTER  (4 bytes)
 CAR_TYPE_COUNTER.COUNTER_RECYCLED_CAR equ 1
@@ -3729,27 +3786,6 @@ struc PedManager
     .field_0x2053b                    resb 1      ; 0x2053b undefined1
 endstruc
 
-; /imported/gta2-mouse/S22_2  (8 bytes)
-struc S22_2
-    resb 7
-    .field_0x7                        resb 1      ; 0x7 undefined1
-endstruc
-
-; /imported/gta2-mouse/S32  (44 bytes)
-struc S32
-    .field_0x0                        resb 4      ; 0x0 int
-    .s22_1_ex                         resb 4      ; 0x4 SpriteBounds *
-    resb 4
-    .s22_1                            resb 4      ; 0xc SpriteBounds *
-    .pos                              resb 4      ; 0x10 Sprite *
-    .field_0x14                       resb 4      ; 0x14 int
-    .field_0x18                       resb 4      ; 0x18 int
-    resb 4
-    .field_0x20                       resb 4      ; 0x20 int
-    resb 7
-    .field_0x2b                       resb 1      ; 0x2b undefined1
-endstruc
-
 ; /imported/gta2-mouse/S34  (8 bytes)
 struc S34
     .ref1                             resb 4      ; 0x0 S34 *
@@ -3757,70 +3793,6 @@ struc S34
     resb 1
     .field_0x7                        resb 1      ; 0x7 undefined1
 endstruc
-
-; /imported/gta2-mouse/S35  (23104 bytes)
-struc S35
-    .last                             resb 4      ; 0x0 ObjectMotionState *
-    .arr                              resb 23100  ; 0x4 ObjectMotionState[385]
-endstruc
-
-; /imported/gta2-mouse/S38  (116 bytes)
-struc S38
-    .field_0x0                        resb 4      ; 0x0 int
-    .field_0x4                        resb 4      ; 0x4 int
-    .field_0x8                        resb 4      ; 0x8 int
-    .field_0xc                        resb 4      ; 0xc int
-    .field_0x10                       resb 4      ; 0x10 int
-    .field_0x14                       resb 4      ; 0x14 int
-    .field_0x18                       resb 4      ; 0x18 int
-    .field_0x1c                       resb 2      ; 0x1c short
-    .field_0x1e                       resb 2      ; 0x1e short
-    resb 4
-    .field_0x24                       resb 4      ; 0x24 int
-    .field_0x28                       resb 4      ; 0x28 int
-    .field_0x2c                       resb 4      ; 0x2c int
-    .field_0x30                       resb 4      ; 0x30 int
-    .field_0x34                       resb 4      ; 0x34 int
-    .field_0x38                       resb 4      ; 0x38 int
-    .field_0x3c                       resb 4      ; 0x3c int
-    .field_0x40                       resb 4      ; 0x40 int
-    .field_0x44                       resb 4      ; 0x44 int
-    .field_0x48                       resb 4      ; 0x48 int
-    .field_0x4c                       resb 4      ; 0x4c int
-    .field_0x50                       resb 4      ; 0x50 int
-    .field_0x54                       resb 4      ; 0x54 int
-    .field_0x58                       resb 4      ; 0x58 int
-    .field_0x5c                       resb 4      ; 0x5c int
-    resb 8
-    .field_0x68                       resb 4      ; 0x68 int
-    resb 4
-    .field_0x70                       resb 4      ; 0x70 int
-endstruc
-
-; /imported/gta2-mouse/SCR_CMD_SIX_PARAMS  (22 bytes)
-struc SCR_CMD_SIX_PARAMS
-    resb 10
-    .params12                         resb 4      ; 0xa U_SCR_TWO_PARAMS
-    .params34                         resb 4      ; 0xe U_SCR_TWO_PARAMS
-    .params56                         resb 4      ; 0x12 U_SCR_TWO_PARAMS
-endstruc
-
-; /imported/gta2-mouse/SCR_TWO_SHORTS  (4 bytes)
-struc SCR_TWO_SHORTS
-    .s1                               resb 2      ; 0x0 short
-    .s2                               resb 2      ; 0x2 short
-endstruc
-
-; /imported/gta2-mouse/ScriptFunctionsAddrTable  (772 bytes)
-struc ScriptFunctionsAddrTable
-    resb 771
-    .field_0x303                      resb 1      ; 0x303 undefined1
-endstruc
-
-; union /imported/gta2-mouse/U_SCR_TWO_PARAMS  (4 bytes)
-U_SCR_TWO_PARAMS.shorts equ 0 ; SCR_TWO_SHORTS (4 bytes)
-U_SCR_TWO_PARAMS.i32val equ 0 ; int (4 bytes)
-U_SCR_TWO_PARAMS_size equ 4
 
 ; enum /imported/gzf-2021/CAR_TYPE  (4 bytes)
 CAR_TYPE.CAR_FIRE_TRUCK equ 17
@@ -3844,12 +3816,6 @@ CHEAT_ENUM.MUCHCASH equ 301620
 CHEAT_ENUM.SCHURULZ equ 316868
 CHEAT_ENUM.VOLTFEST equ 318071
 
-; /imported/gzf-2021/CarS1  (16 bytes)
-struc CarS1
-    resb 15
-    .field_0xf                        resb 1      ; 0xf undefined1
-endstruc
-
 ; /imported/gzf-2021/CarSprite  (38 bytes)
 struc CarSprite
     resb 20
@@ -3858,12 +3824,6 @@ struc CarSprite
     .z                                resb 4      ; 0x1c int
     resb 4
     .color                            resb 2      ; 0x24 ushort
-endstruc
-
-; /imported/gzf-2021/FrontendS1S3  (5 bytes)
-struc FrontendS1S3
-    resb 4
-    .field_0x4                        resb 1      ; 0x4 undefined1
 endstruc
 
 ; enum /imported/gzf-2021/LIGHTING  (4 bytes)
@@ -3879,29 +3839,6 @@ struc PedSprite
     .z                                resb 4      ; 0x1c undefined4
 endstruc
 
-; /imported/gzf-2021/PlayerS2  (12 bytes)
-struc PlayerS2
-    .x                                resb 4      ; 0x0 int
-    .y                                resb 4      ; 0x4 int
-    .z                                resb 4      ; 0x8 int
-endstruc
-
-; /imported/gzf-2021/S1  (393 bytes)
-struc S1
-    resb 52
-    .playerPed                        resb 4      ; 0x34 Ped *
-    resb 320
-    .playerPed2                       resb 4      ; 0x178 Ped *
-    resb 12
-    .field_0x188                      resb 1      ; 0x188 undefined1
-endstruc
-
-; /imported/gzf-2021/S3  (336 bytes)
-struc S3
-    resb 332
-    .s1                               resb 4      ; 0x14c S1 *
-endstruc
-
 ; /imported/gzf-2021/S3Bytes  (3 bytes)
 struc S3Bytes
     .a                                resb 1      ; 0x0 undefined1
@@ -3913,14 +3850,6 @@ endstruc
 struc SKeyboard
     resb 1027
     .field_0x403                      resb 1      ; 0x403 undefined1
-endstruc
-
-; /imported/gzf-2021/Timing  (24 bytes)
-struc Timing
-    resb 8
-    .fps1                             resb 4      ; 0x8 undefined4
-    resb 8
-    .fps2                             resb 4      ; 0x14 undefined4
 endstruc
 
 ; enum /imported/gzf-2021/WEAPON  (4 bytes)
@@ -3941,18 +3870,6 @@ struc FrontendImage
     .path                             resb 128    ; 0x0 CHAR[128]
     .size                             resb 4      ; 0x80 uint
     .handle                           resb 4      ; 0x84 int
-endstruc
-
-; /imported/seuko-mod/BitMap  (20 bytes)
-struc BitMap
-    .field_0x0                        resb 2      ; 0x0 short
-    .field_0x2                        resb 2      ; 0x2 short
-    .field_0x4                        resb 2      ; 0x4 short
-    .field_0x6                        resb 2      ; 0x6 short
-    .field_0x8                        resb 2      ; 0x8 short
-    .field_0xa                        resb 2      ; 0xa short
-    resb 4
-    .field_0x10                       resb 4      ; 0x10 int
 endstruc
 
 ; enum /imported/seuko-mod/CAMERA_FOLLOW_STATE  (4 bytes)
@@ -4424,26 +4341,6 @@ struc Collide
     .ptr3                             resb 4      ; 0x8 Collide *
 endstruc
 
-; /imported/seuko-mod/Collide1  (32772 bytes)
-struc Collide1
-    resb 32771
-    .field_0x8003                     resb 1      ; 0x8003 undefined1
-endstruc
-
-; /imported/seuko-mod/CollideArray256  (1024 bytes)
-struc CollideArray256
-    resb 1023
-    .field_0x3ff                      resb 1      ; 0x3ff undefined1
-endstruc
-
-; /imported/seuko-mod/CollideTopLevel  (12 bytes)
-struc CollideTopLevel
-    .length                           resb 4      ; 0x0 uint
-    .someIncrement                    resb 4      ; 0x4 uint
-    resb 3
-    .field_0xb                        resb 1      ; 0xb undefined1
-endstruc
-
 ; /imported/seuko-mod/CollisionBox  (44 bytes)
 struc CollisionBox
     .xsize                            resb 4      ; 0x0 uint
@@ -4455,148 +4352,11 @@ struc CollisionBox
     .frCorner                         resb 8      ; 0x24 SCR_Vector2
 endstruc
 
-; /imported/seuko-mod/D3DContext_s1  (100 bytes)
-struc D3DContext_s1
-    .field_0x0                        resb 4      ; 0x0 SVideo *
-    resb 12
-    .field_0x10                       resb 4      ; 0x10 int
-    resb 12
-    .gbh_CloseScreen                  resb 4      ; 0x20 void *
-    .Vid_SetMode                      resb 4      ; 0x24 void *
-    resb 24
-    .Vid_GetSurface                   resb 4      ; 0x40 void *
-    .Vid_FreeSurface                  resb 4      ; 0x44 void *
-    resb 27
-    .field_0x63                       resb 1      ; 0x63 undefined1
-endstruc
-
-; /imported/seuko-mod/DirectInput_DeviceObjectData  (20 bytes)
-struc DirectInput_DeviceObjectData
-    .ofs                              resb 4      ; 0x0 dword
-    .data                             resb 4      ; 0x4 dword
-    .timeStamp                        resb 4      ; 0x8 dword
-    .sequence                         resb 4      ; 0xc dword
-    .appData                          resb 4      ; 0x10 void *
-endstruc
-
 ; enum /imported/seuko-mod/EXPLOSION_SIZE  (4 bytes)
 EXPLOSION_SIZE.EXPLOSION_SIZE_NONE equ 17
 EXPLOSION_SIZE.EXPLOSION_SIZE_SMALL equ 18
 EXPLOSION_SIZE.EXPLOSION_SIZE_MEDIUM equ 19
 EXPLOSION_SIZE.EXPLOSION_SIZE_LARGE equ 20
-
-; /imported/seuko-mod/EnginesDataHolder  (2056 bytes)
-struc EnginesDataHolder
-    .maybeAlsoCars                    resb 4      ; 0x0 void *
-    .physicsArray                     resb 1024   ; 0x4 CarPhysicsData *[256]
-    .engineArray                      resb 1024   ; 0x404 CarEngineData *[256]
-    .counter2                         resb 4      ; 0x804 undefined4
-endstruc
-
-; /imported/seuko-mod/Game2Holder  (34844 bytes)
-struc Game2Holder
-    .arr                              resb 34840  ; 0x0 CraneManager[10]
-    .last                             resb 4      ; 0x8818 CraneManager *
-endstruc
-
-; /imported/seuko-mod/GlobalSettings  (100 bytes)
-struc GlobalSettings
-    .do_3d_sound                      resb 1      ; 0x0 bool
-    .do_blood                         resb 1      ; 0x1 bool
-    .do_show_object_ids               resb 1      ; 0x2 bool
-    .skip_traffic_lights              resb 1      ; 0x3 bool
-    .skip_buses                       resb 1      ; 0x4 bool
-    .do_show_instruments              resb 1      ; 0x5 bool
-    .skip_particles                   resb 1      ; 0x6 bool
-    .skip_trains                      resb 1      ; 0x7 bool
-    .do_show_input                    resb 1      ; 0x8 bool
-    .skip_right                       resb 1      ; 0x9 bool
-    .show_hidden_faces                resb 1      ; 0xa bool
-    .skip_recycling                   resb 1      ; 0xb bool
-    .field_0xc                        resb 1      ; 0xc bool
-    .exploding_on                     resb 1      ; 0xd bool
-    .skip_police                      resb 1      ; 0xe bool
-    .skip_bottom                      resb 1      ; 0xf bool
-    .do_police_1                      resb 1      ; 0x10 bool
-    .do_infinite_lives                resb 1      ; 0x11 bool
-    resb 1
-    .log_random                       resb 1      ; 0x13 bool
-    .skip_user                        resb 1      ; 0x14 bool
-    resb 1
-    .do_miss_logging                  resb 1      ; 0x16 bool
-    .skip_left                        resb 1      ; 0x17 bool
-    .do_corner_window                 resb 1      ; 0x18 bool
-    .skip_dummies                     resb 1      ; 0x19 bool
-    resb 1
-    .skip_ambulance                   resb 1      ; 0x1b bool
-    .skip_window_check                resb 1      ; 0x1c bool
-    resb 2
-    .do_show_imaginary                resb 1      ; 0x1f bool
-    resb 1
-    .do_invulnerable                  resb 1      ; 0x21 bool
-    .skip_audio                       resb 1      ; 0x22 bool
-    .relatedToGXTFiles                resb 1      ; 0x23 bool
-    .get_all_weapons                  resb 1      ; 0x24 bool
-    .no_annoying_chars                resb 1      ; 0x25 bool
-    .show_player_names                resb 1      ; 0x26 bool
-    .log_directinput                  resb 1      ; 0x27 bool
-    .skip_slopes                      resb 1      ; 0x28 bool
-    .do_show_timing                   resb 1      ; 0x29 bool
-    .log_random_extra                 resb 1      ; 0x2a bool
-    resb 1
-    .skip_frontend                    resb 1      ; 0x2c bool
-    .do_brian_test                    resb 1      ; 0x2d bool
-    .do_load_savegame                 resb 1      ; 0x2e bool
-    .do_show_horn                     resb 1      ; 0x2f bool
-    .do_test                          resb 1      ; 0x30 bool
-    .do_mike                          resb 1      ; 0x31 bool
-    .do_show_camera                   resb 1      ; 0x32 bool
-    resb 1
-    .do_free_shopping                 resb 1      ; 0x34 bool
-    .do_show_physics                  resb 1      ; 0x35 bool
-    .ignore_replay_header             resb 1      ; 0x36 bool
-    .do_debug_keys                    resb 1      ; 0x37 bool
-    .skip_draw                        resb 1      ; 0x38 bool
-    .do_show_junc_ids                 resb 1      ; 0x39 bool
-    resb 1
-    .skip_fire_engines                resb 1      ; 0x3b bool
-    .skip_top                         resb 1      ; 0x3c bool
-    .do_iain_test                     resb 1      ; 0x3d bool
-    resb 2
-    .skip_tiles                       resb 1      ; 0x40 bool
-    .log_input                        resb 1      ; 0x41 bool
-    resb 2
-    .dont_get_car_back                resb 1      ; 0x44 bool
-    .do_show_counters                 resb 1      ; 0x45 bool
-    .do_show_traffic_lights_info      resb 1      ; 0x46 bool
-    resb 2
-    .log_routefinder                  resb 1      ; 0x49 bool
-    resb 2
-    .skip_lid                         resb 1      ; 0x4c bool
-    .do_police_2                      resb 1      ; 0x4d bool
-    .keep_weapons_after_death         resb 1      ; 0x4e bool
-    .spawn_only_elvis                 resb 1      ; 0x4f bool
-    resb 1
-    .do_show_ids                      resb 1      ; 0x51 bool
-    .jail_key                         resb 1      ; 0x52 bool
-    resb 1
-    .skip_replay_sync_check           resb 1      ; 0x54 bool
-    .show_brief_number                resb 1      ; 0x55 bool
-    resb 1
-    .show_cycle                       resb 1      ; 0x57 bool
-    .do_sync_check                    resb 1      ; 0x58 bool
-    .do_police_3                      resb 1      ; 0x59 bool
-    .play_replay                      resb 1      ; 0x5a bool
-    .skip_quit_confirm                resb 1      ; 0x5b bool
-    .limit_recycling                  resb 1      ; 0x5c byte
-    .do_exit_after_replay             resb 1      ; 0x5d bool
-    .skip_mission                     resb 1      ; 0x5e bool
-    .skip_skidmarks                   resb 1      ; 0x5f bool
-    .log_collisions                   resb 1      ; 0x60 bool
-    .do_show_collision_box            resb 1      ; 0x61 bool
-    .show_all_arrows                  resb 1      ; 0x62 bool
-    .do_kill_phones_on_answer         resb 1      ; 0x63 bool
-endstruc
 
 ; /imported/seuko-mod/GtaString  (24 bytes)
 struc GtaString
@@ -4609,16 +4369,6 @@ struc GtaString
     resb 6
     .id                               resb 2      ; 0x12 ushort
     .prev                             resb 4      ; 0x14 GtaString *
-endstruc
-
-; /imported/seuko-mod/GtaStringsHolder  (1212 bytes)
-struc GtaStringsHolder
-    .last                             resb 4      ; 0x0 GtaString *
-    .first                            resb 4      ; 0x4 GtaString *
-    .arr50                            resb 1200   ; 0x8 GtaString[50]
-    .total                            resb 2      ; 0x4b8 undefined2
-    resb 1
-    .field_0x4bb                      resb 1      ; 0x4bb undefined1
 endstruc
 
 ; enum /imported/seuko-mod/KEYBOARD_STATE  (4 bytes)
@@ -4804,7 +4554,7 @@ OBJECT_TYPE.OBJECT_TYPE_SAVE_POINT equ 161
 OBJECT_TYPE.OBJECT_TYPE_PHONE equ 163
 OBJECT_TYPE.OBJECT_TYPE_PHONE_RINGING equ 164
 OBJECT_TYPE.OBJECT_TYPE_UNSURE_LIGHT_OBJECT equ 165
-OBJECT_TYPE.OBJECT_TYPE_UNK_166 equ 166
+OBJECT_TYPE.OBJECT_TYPE_DIAGONAL_COLLISION_DUMMY equ 166
 OBJECT_TYPE.OBJECT_TYPE_UNK_167 equ 167
 OBJECT_TYPE.OBJECT_TYPE_UNK_168 equ 168
 OBJECT_TYPE.OBJECT_TYPE_UNK_169 equ 169
@@ -5135,12 +4885,6 @@ POWERUP_TYPE.POWERUP_TYPE_14 equ 14
 POWERUP_TYPE.POWERUP_TYPE_15 equ 15
 POWERUP_TYPE.POWERUP_TYPE_16 equ 16
 
-; /imported/seuko-mod/Passenger  (8 bytes)
-struc Passenger
-    .ped                              resb 4      ; 0x0 Ped *
-    .next                             resb 4      ; 0x4 Passenger *
-endstruc
-
 ; /imported/seuko-mod/PedGameObject  (180 bytes)
 struc PedGameObject
     resb 4
@@ -5240,12 +4984,6 @@ struc PedGroup
     resb 3
 endstruc
 
-; /imported/seuko-mod/PhysicalPalette  (1024 bytes)
-struc PhysicalPalette
-    resb 1023
-    .field_0x3ff                      resb 1      ; 0x3ff undefined1
-endstruc
-
 ; enum /imported/seuko-mod/REPLAY_STATUS  (4 bytes)
 REPLAY_STATUS.REPLAY_STATUS_NOT_PLAYING equ 0
 REPLAY_STATUS.REPLAY_STATUS_PLAYING equ 1
@@ -5257,23 +4995,11 @@ struc RenderDistanceArrayItem
     .position                         resb 8      ; 0x0 SCR_Vector2
 endstruc
 
-; /imported/seuko-mod/RoofSpritesHolder  (7204 bytes)
-struc RoofSpritesHolder
-    .last                             resb 4      ; 0x0 CarAttachment *
-    .arr                              resb 7200   ; 0x4 CarAttachment[300]
-endstruc
-
 ; enum /imported/seuko-mod/S32_SHOW_IMAGINARY  (4 bytes)
 S32_SHOW_IMAGINARY.UNK_0 equ 0
 S32_SHOW_IMAGINARY.SHOW equ 1
 S32_SHOW_IMAGINARY.DONT_SHOW equ 2
 S32_SHOW_IMAGINARY.UNK_3 equ 3
-
-; /imported/seuko-mod/S4_2  (8 bytes)
-struc S4_2
-    resb 6
-    .field_0x6                        resb 2      ; 0x6 short
-endstruc
 
 ; /imported/seuko-mod/SCR_Vector2  (8 bytes)
 struc SCR_Vector2
@@ -5315,26 +5041,6 @@ struc SDisplayMode
     .field_0x3f                       resb 1      ; 0x3f undefined1
 endstruc
 
-; /imported/seuko-mod/SGlobals  (256 bytes)
-struc SGlobals
-    .mNumPolysDrawn                   resb 4      ; 0x0 int
-    .mNumTextureSwaps                 resb 4      ; 0x4 int
-    .mNumBatchFlushes                 resb 4      ; 0x8 int
-    .mSceneTime_2B93EAC               resb 4      ; 0xc dword
-    .gCacheSizes_dword_43EB0          resb 48     ; 0x10 dword[12]
-    .gCacheSizes_word_10810           resb 48     ; 0x40 dword[12]
-    .gCacheHitRates_dword_E43F10      resb 48     ; 0x70 dword[12]
-    .gCacheUnknown_107F8              resb 48     ; 0xa0 dword[12]
-    .cache_12_array_dword_E13D80      resb 48     ; 0xd0 void *[12]
-endstruc
-
-; /imported/seuko-mod/SLight  (20 bytes)
-struc SLight
-    resb 4
-    .position                         resb 12     ; 0x4 SCR_Vector3
-    .rgba                             resb 4      ; 0x10 dword
-endstruc
-
 ; /imported/seuko-mod/SMission  (768 bytes)
 struc SMission
     resb 360
@@ -5370,23 +5076,6 @@ SPRITE_TYPE.SPRITE_TYPE_CODE_OBJ equ 4
 SPRITE_TYPE.SPRITE_TYPE_MAP_OBJ equ 5
 SPRITE_TYPE.SPRITE_TYPE_USER equ 6
 SPRITE_TYPE.SPRITE_TYPE_FONT equ 7
-
-; /imported/seuko-mod/STexture  (32 bytes)
-struc STexture
-    .id                               resb 2      ; 0x0 ushort
-    resb 2
-    .pal_is_trans                     resb 2      ; 0x4 undefined2
-    .pal_size                         resb 2      ; 0x6 ushort
-    .locked_pixels_ptr                resb 4      ; 0x8 void *
-    resb 2
-    .width                            resb 2      ; 0xe ushort
-    .height                           resb 2      ; 0x10 ushort
-    .bPalIsValid                      resb 1      ; 0x12 byte
-    .flags                            resb 1      ; 0x13 byte
-    .original_pixel_data_ptr          resb 4      ; 0x14 byte *
-    .pPaltData                        resb 4      ; 0x18 WORD *
-    .cachePtr                         resb 4      ; 0x1c void *
-endstruc
 
 ; /imported/seuko-mod/SVideo  (1220 bytes)
 struc SVideo
@@ -5435,42 +5124,6 @@ struc SVideo
     .hwnd                             resb 4      ; 0x4c0 HWND
 endstruc
 
-; /imported/seuko-mod/TILE  (128 bytes)
-struc TILE
-    .field_0x0                        resb 4      ; 0x0 float
-    .field_0x4                        resb 4      ; 0x4 float
-    .field_0x8                        resb 4      ; 0x8 float
-    .field_0xc                        resb 4      ; 0xc float
-    .field_0x10                       resb 4      ; 0x10 uint
-    .field_0x14                       resb 4      ; 0x14 float
-    .field_0x18                       resb 4      ; 0x18 float
-    .field_0x1c                       resb 4      ; 0x1c float
-    .field_0x20                       resb 4      ; 0x20 float
-    .field_0x24                       resb 4      ; 0x24 float
-    .field_0x28                       resb 4      ; 0x28 float
-    .field_0x2c                       resb 4      ; 0x2c float
-    .field_0x30                       resb 4      ; 0x30 uint
-    .field_0x34                       resb 4      ; 0x34 float
-    .field_0x38                       resb 4      ; 0x38 float
-    .field_0x3c                       resb 4      ; 0x3c float
-    .field_0x40                       resb 4      ; 0x40 float
-    .field_0x44                       resb 4      ; 0x44 float
-    .field_0x48                       resb 4      ; 0x48 float
-    .field_0x4c                       resb 4      ; 0x4c float
-    .field_0x50                       resb 4      ; 0x50 float
-    .field_0x54                       resb 4      ; 0x54 float
-    .field_0x58                       resb 4      ; 0x58 float
-    .field_0x5c                       resb 4      ; 0x5c float
-    .field_0x60                       resb 4      ; 0x60 float
-    .field_0x64                       resb 4      ; 0x64 float
-    .field_0x68                       resb 4      ; 0x68 float
-    .field_0x6c                       resb 4      ; 0x6c float
-    .field_0x70                       resb 4      ; 0x70 float
-    .field_0x74                       resb 4      ; 0x74 float
-    .field_0x78                       resb 4      ; 0x78 float
-    .field_0x7c                       resb 4      ; 0x7c float
-endstruc
-
 ; enum /imported/seuko-mod/TILE_ENUM1  (4 bytes)
 TILE_ENUM1.TILE_ENUM1_1 equ 1
 TILE_ENUM1.TILE_ENUM1_2 equ 2
@@ -5499,27 +5152,6 @@ TRAFFIC_PHASE.TRAFFIC_PHASE_HORIZONTAL_YELLOW equ 5
 TRAFFIC_PHASE.TRAFFIC_PHASE_HORIZONTAL_RED equ 6
 TRAFFIC_PHASE.TRAFFIC_PHASE_PEDS_CROSSING equ 7
 
-; /imported/seuko-mod/Texture_S1  (36 bytes)
-struc Texture_S1
-    resb 6
-    .field_0x6                        resb 2      ; 0x6 ushort
-    .decr                             resb 4      ; 0x8 int
-    resb 23
-    .field_0x23                       resb 1      ; 0x23 undefined1
-endstruc
-
-; /imported/seuko-mod/Texture_S2  (36 bytes)
-struc Texture_S2
-    resb 35
-    .field_0x23                       resb 1      ; 0x23 undefined1
-endstruc
-
-; /imported/seuko-mod/Tick  (8 bytes)
-struc Tick
-    .tick                             resb 4      ; 0x0 uint
-    .random                           resb 4      ; 0x4 uint
-endstruc
-
 ; /imported/seuko-mod/TrailerController  (16 bytes)
 struc TrailerController
     resb 8
@@ -5531,11 +5163,6 @@ endstruc
 struc TrailerControllerPool
     .field_0x0                        resb 4      ; 0x0 int *
     .arr10                            resb 160    ; 0x4 CarManager5_S1[10]
-endstruc
-
-; /imported/seuko-mod/Verts  (128 bytes)
-struc Verts
-    .mVerts                           resb 128    ; 0x0 GTAVertex[4]
 endstruc
 
 ; /imported/seuko-mod/WorldObject  (44 bytes)
@@ -5575,6 +5202,24 @@ struc WorldRect
     .bottom                           resb 4      ; 0xc SCR_f
 endstruc
 
+; /ios  (52 bytes)
+struc ios
+    .vftable                          resb 4      ; 0x0 void *
+    .bp                               resb 4      ; 0x4 streambuf *
+    .state                            resb 4      ; 0x8 int
+    .ispecial                         resb 4      ; 0xc int
+    .ospecial                         resb 4      ; 0x10 int
+    .isfx_special                     resb 4      ; 0x14 int
+    .osfx_special                     resb 4      ; 0x18 int
+    .x_delbuf                         resb 4      ; 0x1c int
+    .x_tie                            resb 4      ; 0x20 void *
+    .x_flags                          resb 4      ; 0x24 int
+    .x_precision                      resb 4      ; 0x28 int
+    .x_fill                           resb 1      ; 0x2c char
+    resb 3
+    .x_width                          resb 4      ; 0x30 int
+endstruc
+
 ; /math/Vec2  (8 bytes)
 struc Vec2
     .x                                resb 4      ; 0x0 Fix16
@@ -5589,43 +5234,6 @@ struc SCR_CMD_HEADER
     .return_value                     resb 2      ; 0x6 Uint16
 endstruc
 
-; /scr_structs.h/SCR_FOUR_PARAMS  (8 bytes)
-struc SCR_FOUR_PARAMS
-    .field0_0x0                       resb 4      ; 0x0 _union_16
-    .field1_0x4                       resb 4      ; 0x4 _union_19
-endstruc
-
-; /scr_structs.h/SCR_MISSION_HEADER  (8 bytes)
-struc SCR_MISSION_HEADER
-    .base_script_max_pointers         resb 2      ; 0x0 Uint16
-    .unk1                             resb 2      ; 0x2 Uint16
-    .mission_script_size              resb 2      ; 0x4 Uint16
-    .unk2                             resb 2      ; 0x6 Uint16
-endstruc
-
-; /scr_structs.h/SCR_Rect_f  (20 bytes)
-struc SCR_Rect_f
-    .pos                              resb 12     ; 0x0 SCR_XYZ_f
-    .size                             resb 8      ; 0xc SCR_XY_f
-endstruc
-
-; /scr_structs.h/SCR_SIX_PARAMS  (12 bytes)
-struc SCR_SIX_PARAMS
-    .field0_0x0                       resb 12     ; 0x0 _union_23
-endstruc
-
-; /scr_structs.h/SCR_TWO_PARAMS  (4 bytes)
-struc SCR_TWO_PARAMS
-    .field0_0x0                       resb 4      ; 0x0 _union_12
-endstruc
-
-; /scr_structs.h/SCR_XYZ_c  (3 bytes)
-struc SCR_XYZ_c
-    .x                                resb 1      ; 0x0 Sint8
-    .y                                resb 1      ; 0x1 Sint8
-    .z                                resb 1      ; 0x2 Sint8
-endstruc
-
 ; /scr_structs.h/SCR_XYZ_f  (12 bytes)
 struc SCR_XYZ_f
     .x                                resb 4      ; 0x0 SCR_f
@@ -5633,95 +5241,20 @@ struc SCR_XYZ_f
     .z                                resb 4      ; 0x8 SCR_f
 endstruc
 
-; /scr_structs.h/SCR_XYZ_uc  (3 bytes)
-struc SCR_XYZ_uc
-    .x                                resb 1      ; 0x0 Uint8
-    .y                                resb 1      ; 0x1 Uint8
-    .z                                resb 1      ; 0x2 Uint8
+; /streambuf  (48 bytes)
+struc streambuf
+    .vftable                          resb 4      ; 0x0 void *
+    ._fAlloc                          resb 4      ; 0x4 int
+    ._fUnbuf                          resb 4      ; 0x8 int
+    .x_lastc                          resb 4      ; 0xc int
+    ._base                            resb 4      ; 0x10 char *
+    ._ebuf                            resb 4      ; 0x14 char *
+    ._pbase                           resb 4      ; 0x18 char *
+    ._pptr                            resb 4      ; 0x1c char *
+    ._epptr                           resb 4      ; 0x20 char *
+    ._eback                           resb 4      ; 0x24 char *
+    ._gptr                            resb 4      ; 0x28 char *
+    ._egptr                           resb 4      ; 0x2c char *
 endstruc
-
-; /scr_structs.h/SCR_XY_c  (2 bytes)
-struc SCR_XY_c
-    .x                                resb 1      ; 0x0 Sint8
-    .y                                resb 1      ; 0x1 Sint8
-endstruc
-
-; /scr_structs.h/SCR_XY_f  (8 bytes)
-struc SCR_XY_f
-    .x                                resb 4      ; 0x0 SCR_f
-    .y                                resb 4      ; 0x4 SCR_f
-endstruc
-
-; /scr_structs.h/SCR_XY_uc  (2 bytes)
-struc SCR_XY_uc
-    .x                                resb 1      ; 0x0 Uint8
-    .y                                resb 1      ; 0x1 Uint8
-endstruc
-
-; /scr_structs.h/_struct_13  (4 bytes)
-struc _struct_13
-    .var1                             resb 2      ; 0x0 Uint16
-    .var2                             resb 2      ; 0x2 Uint16
-endstruc
-
-; /scr_structs.h/_struct_14  (4 bytes)
-struc _struct_14
-    .sintvar1                         resb 2      ; 0x0 Sint16
-    .sintvar2                         resb 2      ; 0x2 Sint16
-endstruc
-
-; /scr_structs.h/_struct_17  (4 bytes)
-struc _struct_17
-    .var1                             resb 2      ; 0x0 Uint16
-    .var2                             resb 2      ; 0x2 Uint16
-endstruc
-
-; /scr_structs.h/_struct_18  (4 bytes)
-struc _struct_18
-    .sintvar1                         resb 2      ; 0x0 Sint16
-    .sintvar2                         resb 2      ; 0x2 Sint16
-endstruc
-
-; /scr_structs.h/_struct_20  (4 bytes)
-struc _struct_20
-    .var3                             resb 2      ; 0x0 Uint16
-    .var4                             resb 2      ; 0x2 Uint16
-endstruc
-
-; /scr_structs.h/_struct_21  (4 bytes)
-struc _struct_21
-    .sintvar3                         resb 2      ; 0x0 Sint16
-    .sintvar4                         resb 2      ; 0x2 Sint16
-endstruc
-
-; /scr_structs.h/_struct_24  (12 bytes)
-struc _struct_24
-    .var1                             resb 2      ; 0x0 Uint16
-    .var2                             resb 2      ; 0x2 Uint16
-    .size                             resb 8      ; 0x4 SCR_XY_f
-endstruc
-
-; union /scr_structs.h/_union_12  (4 bytes)
-_union_12.field0 equ 0 ; _struct_13 (4 bytes)
-_union_12.field1 equ 0 ; _struct_14 (4 bytes)
-_union_12.sint32val equ 0 ; Sint32 (4 bytes)
-_union_12_size equ 4
-
-; union /scr_structs.h/_union_16  (4 bytes)
-_union_16.field0 equ 0 ; _struct_17 (4 bytes)
-_union_16.field1 equ 0 ; _struct_18 (4 bytes)
-_union_16_size equ 4
-
-; union /scr_structs.h/_union_19  (4 bytes)
-_union_19.field0 equ 0 ; _struct_20 (4 bytes)
-_union_19.field1 equ 0 ; _struct_21 (4 bytes)
-_union_19.sint32val equ 0 ; Sint32 (4 bytes)
-_union_19.floatval equ 0 ; SCR_f (4 bytes)
-_union_19_size equ 4
-
-; union /scr_structs.h/_union_23  (12 bytes)
-_union_23.field0 equ 0 ; _struct_24 (12 bytes)
-_union_23.pos equ 0 ; SCR_XYZ_f (12 bytes)
-_union_23_size equ 12
 
 %endif

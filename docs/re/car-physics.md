@@ -158,7 +158,7 @@ The same external-velocity trick carries object pushes (`CarPhysics_ApplyConveyo
   0x5E668C/90/94) → filter `Sprite_ShouldCollideWithSprite` 0x4B9A30 → narrow phase
   `Sprite_CollisionCheck` 0x4BCAC0 (z overlap + rotated-rect corners both ways) → time of impact
   (stepped sweep, then 3 bisections) → replay pose at the hit → contact point → impulse.
-  Result record at `g_CollisionKind` 0x5E6874 (1 wall X, 2 wall Y, 3 sprite).
+  Result record at `g_CollisionResult` 0x5E6874 (1 wall X, 2 wall Y, 3 sprite).
 * Impulse (`CarPhysics_ComputeCollisionImpulse` 0x4A05C0, verified):
   `j = −(1+e)·(v_rel·n̂) / ((n·n)(1/mA + 1/mB) + (rA⊥·n)²/IA + (rB⊥·n)²/IB)`, impulse = `n̂·j`;
   an immovable body passes mass −1 (`g_Fix16MinusOne`) and its terms are dropped.
@@ -372,7 +372,7 @@ comment in Ghidra has the evidence.
 | `0x4A2A30` | `CarPhysics_NudgeOutOfWallY` | Y twin of NudgeOutOfWallX (uses contact rel-cm x). | verified |
 | `0x4A2B40` | `CarPhysics_NudgeOutOfWallX` | wall-X stuck fix: from heading (+0x58, half-turn flip if +0x94), compares contact rel-cm y (g_CollisionContactRelCm+4) sign with heading… | verified |
 | `0x4A2C70` | `CarPhysics_NudgeOutOfSprite` | stuck-vs-sprite nudge: kick strength chosen by hit sprite (obj type 0xA6 weak DAT_0066aea8, player driver DAT_0066af80, AI… | verified |
-| `0x4A2D70` | `CarPhysics_NudgeOutOfCollision` | called by MoveAndCollide after a hit when engine accelerates: switch g_CollisionKind 1 -> NudgeOutOfWallX, 2 -> WallY, 3 ->… | verified |
+| `0x4A2D70` | `CarPhysics_NudgeOutOfCollision` | called by MoveAndCollide after a hit when engine accelerates: switch g_CollisionResult.kind 1 -> NudgeOutOfWallX, 2 -> WallY, 3 ->… | verified |
 | `0x4A2DB0` | `CarPhysics_CheckPendingCollision` | if Car flag 0x2000: overlap check vs sprites (mask 2), else clear flag | verified |
 | `0x4A2E00` | `CarPhysics_ApplyImpulseAndIntegrate` | ApplyForceAtPoint(mode 0)+ForcesToAccel+IntegrateVelocity | verified |
 | `0x4A2E30` | `CarPhysics_StepIntegrate` | move by `step` of remaining movement; prototype fixed to `(CarPhysics*, int step)` | verified |
@@ -496,7 +496,7 @@ comment in Ghidra has the evidence.
 | `0x49E270` | `CarPhysics_CheckCarAndTrailerCollisions` | grid query for car and trailer sprites on g_CollisionGridNotify | verified |
 | `0x49E330` | `CarPhysics_ApplyAngularImpulse` | torqueAccum(+0x7C) -= arg * g_CurCarPhysicsData->inertia (CarPhysicsData+0). Callers: the three unsure_CarPhysics_NudgeOutOf* (collision… | verified |
 | `0x49E360` | `unsure_Fix16Vec2_DivScalar` | Vec2 / scalar | hypothesis |
-| `0x49EF10` | `CollisionResult_SetMoverSprite` | record +0x24 = sprite (g_CollisionKind struct, +0x24 = g_CollisionMoverSprite). Caller CarPhysics_TestCollision. | verified |
+| `0x49EF10` | `CollisionResult_SetMoverSprite` | record +0x24 = sprite (g_CollisionResult struct, +0x24 = g_CollisionResult.moverSprite). Caller CarPhysics_TestCollision. | verified |
 | `0x49EF20` | `CollisionResult_IsHitPed` | kind(+0) == 3 (sprite hit) && unsure_Sprite_GetPedSprite(hit sprite +0x20) != 0. Caller CarPhysics_StepAndResolveCollisions (ped hits… | verified |
 | `0x49EFC0` | `Car_AddFlag2000` |  | verified |
 | `0x49EFD0` | `Car_ClearFlag2000` |  | verified |
@@ -514,7 +514,7 @@ comment in Ghidra has the evidence.
 | `0x4A3A40` | `CarPhysics_CollideWithObject` | car vs map object (lamp posts etc.), reaction on object | verified |
 | `0x4A3DF0` | `CarPhysics_CollideWithWallX` | car vs map wall on X | verified |
 | `0x4A3FB0` | `CarPhysics_CollideWithWallY` | Y twin (same body, +0x3c, 0x5E6880..8C, ContactPointY) | verified |
-| `0x4A4170` | `CarPhysics_DispatchCollision` | switch on g_CollisionKind 1/2/3 -> wall X / wall Y / sprite; then sound event | verified |
+| `0x4A4170` | `CarPhysics_DispatchCollision` | switch on g_CollisionResult.kind 1/2/3 -> wall X / wall Y / sprite; then sound event | verified |
 | `0x4A4270` | `CarPhysics_OnCollision` | replays pose at hit fraction, dispatches | verified |
 | `0x4B9A30` | `Sprite_ShouldCollideWithSprite` | collision filter by entry type 1..5 | verified |
 | `0x4BCAC0` | `Sprite_CollisionCheck` | narrow phase: z overlap + rect corners both ways | verified |
@@ -699,7 +699,7 @@ Mostly the `Sprite` (0x3C body) module (bounds object, corner math, draw). "high
 | `0x4BBD10` / `0x4BBD30` | `Sprite_ReleaseSoundClient` / `thunk_…` | `Sprite+0x10` back to pool `DAT_005D85A0` |
 | `0x4BBD40` | `SpriteBounds_RecomputeCorners` | 4 corners + AABB, sets `+0x48` |
 | `0x4BC580` | `Sprite_LoadBlockBoundsToGlobals` | |
-| `0x4BC590` | `Sprite_DrawDebugCollisionBox` | `g_doShowCollisionBox` |
+| `0x4BC590` | `SpriteBounds_DrawDebugBox` | `g_doShowCollisionBox` |
 | `0x4BC8F0` | `SpriteBounds_Reset` | |
 | `0x4BC950` / `0x4BDCB0` | `SpriteBoundsPool_Dtor` / `…ScalarDeletingDtor` | 0x13A7 × 0x4C pool (SpriteBoundsPool) |
 | `0x4BC970` / `0x4BDC90` | `SpritePool_Dtor` / `…ScalarDeletingDtor` | 0x13A7 × 0x3C |

@@ -799,7 +799,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x45E860 | `Menu_Ctor` | V |
 | 0x45E8D0 | `Menu_LoadDebugLevelFromRegistry` | old |
 | 0x45EC20 | `Menu_CopyPlayerCrimeStats` | V |
-| 0x45EC70 | `MpResults_OnKill` | V |
+| 0x45EC70 | `Menu_RecordMultiplayerKill` | V |
 | 0x45ED00 | `Keyboard_MaskLow12Bits` | V |
 | 0x45ED10 | `Keyboard_SetMappedBit` | V |
 | 0x45ED30 | `Keyboard_ClearMappedBit` | V |
@@ -1220,7 +1220,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4A8600 | `HiScoreTable_Clear` | high | 10x0x18 table cleared with default name |
 | 0x4A8630 | `HiScoreTable_Insert` | high | sorted insert (name,score) into 10-entry table, returns inserted |
 | 0x4A8700 | `ProfileSlot_Reset` | med | zeroes 0xa4 slot, unlocks first level; FrontEnd_DeleteCurrentProfile |
-| 0x4A8780 | `ProfileSlot_GetTotalScore` | med | sums ints of 12 level records |
+| 0x4A8780 | `PlayerProfile_GetTotalBestScore` | med | sums ints of 12 level records |
 | 0x4A87B0 | `PlayerData_DtorMembers` | high | vector dtors for profiles/levelHiScores; caller scalar deleting dtor |
 | 0x4A8820 | `Profile_BuildDatPath` | high | builds "player\plyslot<N>.dat" |
 | 0x4A88C0 | `Profile_DatFileExists` | high | _findfirst on that path |

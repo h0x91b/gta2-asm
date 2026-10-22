@@ -105,6 +105,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00595ffb,replay_number,,USER_DEFINED,.data.exp,,,
 0x005d25f0,g_File,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005d25f4,g_FileIsOpen,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005d28c8,g_PedGroups,,USER_DEFINED,.data.exp,,/imported/seuko-mod/PedGroup[20],1360
 0x005d31d8,g_NetDialogLocaleSettings,,USER_DEFINED,.data.exp,,/auto_structs/LocaleSettings *,4
 0x005d351c,g_RoadNetwork,,USER_DEFINED,.data.exp,,/RoadNetwork *,4
 0x005d3900,g_Ang16_0,,USER_DEFINED,.data.exp,,/math/Ang16,2
@@ -119,6 +120,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005d7e2c,g_Ang16_90,,USER_DEFINED,.data.exp,,/math/Ang16,2
 0x005d7e58,g_TrailerPool,,USER_DEFINED,.data.exp,,/imported/seuko-mod/TrailerControllerPool *,4
 0x005d81dc,g_SoundEventQueue,,USER_DEFINED,.data.exp,,/SoundEventQueue *,4
+0x005d85a0,g_SoundClientPool,,USER_DEFINED,.data.exp,,/SoundClientPool,16004
 0x005dcb08,g_LevelStem,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005dcb58,IsGamePaused,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005dcbc8,g_SoundManager,,USER_DEFINED,.data.exp,,/auto_structs/SoundManager,21880
@@ -202,9 +204,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e668c,g_CollisionGridObstacles,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e6690,g_CollisionGridNotify,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e6694,g_CollisionGridAux,,USER_DEFINED,.data.exp,,/undefined4,4
-0x005e6874,g_CollisionKind,,USER_DEFINED,.data.exp,,/undefined4,4
-0x005e6894,g_CollisionHitSprite,,USER_DEFINED,.data.exp,,/undefined4,4
-0x005e6898,g_CollisionMoverSprite,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e6874,g_CollisionResult,,USER_DEFINED,.data.exp,,/CollisionResult,40
 0x005e6a50,g_shuffleTable,,USER_DEFINED,.data.exp,,/ushort[1000],2000
 0x005e747c,g_CraneManager,,USER_DEFINED,.data.exp,,/CraneManager *,4
 0x005e79ec,g_CrimeEventQueue,,USER_DEFINED,.data.exp,,/auto_structs/CrimeEventQueue *,4
@@ -393,8 +393,8 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x006636f0,g_MapRenderBlockRelY,,USER_DEFINED,.data.exp,,/undefined,1
 0x00663730,g_Fix16_64,,USER_DEFINED,.data.exp,,/undefined,1
 0x00663738,g_MapRenderLayerZFix,,USER_DEFINED,.data.exp,,/undefined,1
-0x00663764,eq_0,,USER_DEFINED,.data.exp,,/undefined4,4
-0x006639a0,relToSpiteOfCar,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00663764,g_RandomGen,,USER_DEFINED,.data.exp,,/RandomGen,4
+0x006639a0,g_Fix16Div64Table,,USER_DEFINED,.data.exp,,/math/Fix16[256],1024
 0x00663de4,g_AmbulanceManager,,USER_DEFINED,.data.exp,,/AmbulanceManager *,4
 0x00664164,g_AmbulancePickupRange,,USER_DEFINED,.data.exp,,/scr_structs.h/SCR_f,4
 0x00664168,g_MikeDebug,,USER_DEFINED,.data.exp,,/auto_structs/MikeDebug *,4
@@ -419,13 +419,14 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00665784,g_WorldObjectPool,,USER_DEFINED,.data.exp,,/imported/seuko-mod/WorldObjectPool *,4
 0x00665788,g_ObjectSpawner,,USER_DEFINED,.data.exp,,/ObjectSpawner *,4
 0x00665b40,g_ObjectPrefabsContainer,,USER_DEFINED,.data.exp,,/imported/seuko-mod/ObjectPrefabsContainer *,4
+0x006692c0,g_ObjectPrefabRows24,,USER_DEFINED,.data.exp,,/ObjectPrefabRow24[24],2016
 0x00669ae4,g_ParkingZone,,USER_DEFINED,.data.exp,,/ParkingZone *,4
 0x00669e70,g_ParticlePool,,USER_DEFINED,.data.exp,,/ParticlePool *,4
 0x00669e74,g_ParticleManager,,USER_DEFINED,.data.exp,,/ParticleManager *,4
 0x00669e78,g_ParticleStatePool20,,USER_DEFINED,.data.exp,,/ParticleStatePool20 *,4
 0x00669e7c,g_ParticleStatePool40,,USER_DEFINED,.data.exp,,/ParticleStatePool40 *,4
 0x0066a228,g_PedPatrolRoutePool,,USER_DEFINED,.data.exp,,/PedPatrolRoutePool *,4
-0x0066a3b4,ptrTo_relSprites,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066a3b4,g_PedGameObjectPool,,USER_DEFINED,.data.exp,,/imported/seuko-mod/PedGameObjectManager *,4
 0x0066a3b8,relToS24_unk33,,USER_DEFINED,.data.exp,,/undefined1,1
 0x0066a3b9,relToS24_unk34,,USER_DEFINED,.data.exp,,/undefined,1
 0x0066a3bc,nextSpriteId,,USER_DEFINED,.data.exp,,/uint,4

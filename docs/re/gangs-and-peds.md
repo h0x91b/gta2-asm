@@ -598,8 +598,8 @@ missing ones added.
 - Paramedic objective branches 0x0 / 0x1C / 0x23 only partly read; fire spread between cars not
   searched.
 - Occupations 6, 20, 21, 28, 30: no setter in the exe.
-- Duplicate types still in the DB: `PedSprite` and `CarSprite` (truncated views of `Sprite`), `S32`
-  (= `WorldObject`). `S31`, `Ambulance`/`AmbulanceSub` and `Gang`/`Gangs` were merged into
+- Duplicate types still in the DB: `PedSprite` and `CarSprite` (truncated views of `Sprite`). `S32`
+  (= `WorldObject`) had no users and was deleted. `S31`, `Ambulance`/`AmbulanceSub` and `Gang`/`Gangs` were merged into
   `WorldObjectPool`, `AmbulanceManager`/`AmbulanceSlot` and `GangRespect`/`GangRespectContainer`.
 
 ### Names added by Seq 47 (slice 1): ped pools, weapon probe, small getters
@@ -621,7 +621,7 @@ missing ones added.
 | 0x4350C0 | Ped_UpdateWeaponProbeModeOnHitSprite | V | Weapon_SetProbeMode by Chebyshev dist; Projectile_OnHitSprite |
 | 0x435180 | Ped_UpdateWeaponProbeModeOnHitWorld | V | + PlayerScore_TrackAccuracy(1); Projectile_OnHitWorld, Object_ExplodeOnProjectileHit |
 | 0x435220 | Ped_OnProjectileMissed | V | PlayerScore_TrackAccuracy(0), probe 0; Object_UpdatePhysics |
-| 0x435510 / 0x435550 | PedGameObjectPool_Dtor / _Ctor | V | 400 x 0xB4 PedGameObject (ptrTo_relSprites); DummyPedManager_Ctor/Dtor |
+| 0x435510 / 0x435550 | PedGameObjectPool_Dtor / _Ctor | V | 400 x 0xB4 PedGameObject (g_PedGameObjectPool); DummyPedManager_Ctor/Dtor |
 | 0x43ADD0 | PedGameObjectPool_ScalarDeletingDtor | V | calls 0x435510, free if flag&1 |
 | 0x435540 / 0x43ADF0 | PedListNodePool_Dtor / _ScalarDeletingDtor | V | g_PedListNodePool 0x5E5FBC: free list of 100 {Ped*, next} nodes for PedQueue_*/PedList_* (PedListNodePool_Init 0x4355E0, _Alloc 0x445EF0, _Free 0x445F00); DummyPedManager_Ctor/Dtor. Same 0x324 template as TaxiNodePool (g_TaxiNodePool 0x5E580C) |
 | 0x43AE40 / 0x43DB20 | PedManager_Dtor / PedManager_ScalarDeletingDtor | V | 200 x Ped (0x294) in ptrToPedManager; callers DummyPedManager_Dtor, Game_Dtor |

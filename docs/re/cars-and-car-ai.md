@@ -224,14 +224,14 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 
 | address | name | V/H | evidence |
 |---|---|---|---|
-| 0x410010 | SoundEvent_InitFromPedHit | V | classifies g_CollisionKind/HitSprite -> event type 8/4/6/7 |
+| 0x410010 | SoundEvent_InitFromPedHit | V | classifies g_CollisionResult.kind/.hitSprite -> event type 8/4/6/7 |
 | 0x4100F0 | SoundEvent_InitFromObjectHit | V | same, types 10/3/7/9, +0x18 objType, +0x1c |
 | 0x410210 | SoundEventQueue_AddHit | V | appends event at queue+4+cnt*0x28, cnt at +0xc84 |
 | 0x4102A0 | SoundEventQueue_AddImpactEventSurfaceBelow | V | event types 0xb/0xc/1, z shifted |
 | 0x410370 | SoundEventQueue_AddImpactEvent | V | same without z shift |
 | 0x410440 | SoundEventQueue_ReleaseClient | V | from SoundEventQueue_Dtor; returns client to pool via 40fe60 |
 | 0x410460 | SoundEventQueue_AddHitDefaultVolume | V | wrapper of 410210 with DAT_005d82d0 |
-| 0x410480 | SoundEventQueue_AddHitWithKind | V | sets g_CollisionKind then 410460 |
+| 0x410480 | SoundEventQueue_AddHitWithKind | V | sets g_CollisionResult.kind then 410460 |
 | 0x410500 | SoundMgr_Init_Thunk | V | initSound(&g_SoundManager) |
 | 0x410570 | SoundMgr_Reset_Thunk | V | SoundManager_Reset(g_SoundManager), from Game_Dtor |
 | 0x410580 | SoundMgr_AddRadioStation_Thunk | V | caller Script_Decl_RADIO_STATION |
@@ -394,7 +394,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x41CCA0 | SoundMgr_UpdateWeaponSource | V | kind 7; sample 0x137..0x13F by weapon type |
 | 0x41D010 | WorldObject_Dtor | H | zeroes +0,+4,+8,+0x10; caller WorldObjectPool_Ctor |
 | 0x41D030 | WorldObject_ScalarDeletingDtor | H | 0 xrefs |
-| 0x41D070 | EmptyBase_Ctor | V | returns this; callers PoliceRoadblock_Ctor, TrafficSpawner_Ctor |
+| 0x41D070 | Box3_Ctor | V | returns this; callers PoliceRoadblock_Ctor, TrafficSpawner_Ctor |
 | 0x41D8A0 | ComboEntry_Reset | V | defaults (-1, 0x57, 0x33, ..) |
 | 0x41D8F0 | thunk → ComboEntry_Reset | V | thunk |
 | 0x41D950 | ComboList_FindFreeEntry | V | first entry with +0x2A == 0, else 10 |
@@ -414,7 +414,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x41E010 | Camera_ResetSmoothing | V | 0x98 := 0x0, velocity(0xac) := 0; Player_Watch*/OnWasted/OnBusted/OnLevelStart/WARP_FROM_CAR_TO_POINT |
 | 0x41E350 | Box3_SetXYRanges | V | writes [0..3] = xmin,xmax,ymin,ymax (use in 41f180) |
 | 0x41E370 | Box3_SetZRange | V | writes [4],[5] |
-| 0x41E390 | Bounds_IsSquareAndSmall | H | a==b && a<=DAT_005e3e10 |
+| 0x41E390 | SpriteBounds_IsSquareAndSmall | H | a==b && a<=DAT_005e3e10 |
 | 0x41E3D0 | Camera_SetTarget | V | target x,y, z=p3+elev(0x40), w |
 | 0x41E410 | Camera_CommitTarget | V | cameraPosTarget2 := cameraPosTarget |
 | 0x41E480 | Camera_IsTrackingSprite | V | compares with followCar(0x38) / ped(0x34)'s car |
@@ -466,7 +466,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x420C30 | OwnerSlot_IsValid | V | slot<13 |
 | 0x420D80 | CarDeltas_Ctor | V | Car_Ctor: FUN(&car->deltasBitstate) |
 | 0x420D90 | CarDeltas_Reset | V | Car_Reset, Car_BecomeWreck on &deltasBitstate |
-| 0x420DA0 | DynBuffer_ScalarDeletingDtor | V | DynBuffer_FreeAndReset + free; CarManager_FreePools |
+| 0x420DA0 | TrafficSpawner_ScalarDeletingDtor | V | TrafficSpawner_Dtor + free; CarManager_FreePools |
 | 0x420E00 | Sprite_ScalarDeletingDtor | V | thunk_FUN_004bbd10 + free; CarManager_FreePools |
 | 0x420E40 | CarAIPool_ClearLast | V | *this=0 from CarAIPool_ScalarDeletingDtor |
 | 0x420E60 | TrailerControllerPool_ClearHead | V | *this=0 from TrailerControllerPool_ScalarDeletingDtor |
@@ -516,7 +516,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x421E00 | Car_GetVelocityAngle | V | angle of physics+0x40 else body rotation |
 | 0x421E70 | Car_GetVelocity | V | physics+0x40/44; train uses actor |
 | 0x421EC0 | Car_GetSpeed | V | length of velocity, 0 w/o physics |
-| 0x421EF0 | Car_GetMinHalfExtent | V | relToSpiteOfCar[min(w,h)] |
+| 0x421EF0 | Car_GetMinHalfExtent | V | g_Fix16Div64Table[min(w,h)] |
 | 0x421F40 | Car_NeedsRemapChange | V | num_remaps>1 && spriteId!=remap |
 | 0x421F80 | Car_NeedsRemapChangeWithTrailer | V |  |
 | 0x421FD0 | Car_ApplyRemap | V | Sprite_SetRemap on car+trailer |

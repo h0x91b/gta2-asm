@@ -159,14 +159,14 @@ Z: `FUN_00494180` snaps z to the level or to the slope surface (`MapBlocks_GetSl
 
 | address | name | prototype | what | |
 |---|---|---|---|---|
-| 0x4BD670 | `Sprite_TestMapCollisionAndRecord` | `bool __fastcall(Sprite*)` | body rectangle vs walls at its current pose, writes `g_CollisionKind` | verified |
+| 0x4BD670 | `Sprite_TestMapCollisionAndRecord` | `bool __fastcall(Sprite*)` | body rectangle vs walls at its current pose, writes `g_CollisionResult` | verified |
 | 0x46B440 | `MapBlocks_IsBodyBlockedByWalls` | `bool __thiscall(MapBlocks*, xBlk, yBlk, zBlk, Sprite* mover, u16 mask)` ret 0x14 | the wall test; needs the block-bounds globals 0x662BD4/BF8/BAC/BFC (`CollisionBox_LoadBlockBoundsToGlobals` 0x4BA5E0) | verified |
 | 0x46A570 | `MapBlocks_ScanBoxFacesForWalls` | thiscall, 7 stack ints | face scan of the box strips | verified structure |
 | 0x4656D0 | `MapBlocks_IsBlockEdgeCrossingBlocked` | `thiscall(MapBlocks*, x, y, z, dir, byte* out, char flag)` ret 0x18 | ped edge crossing; nonzero = blocked; writes only `MapBlocks+0x36E` | verified |
 | 0x4BA720 | `CollisionBox_HitsMapSolid` | `bool __fastcall(SCR_f box[6])` | map-only test for an arbitrary box, no sprite (faces only, no sub-block refinement) | verified |
 | 0x469F90 | `MapBlocks_SweepBodyIsClear` | stdcall, 9 args, ret 0x24 | steps a temporary body from A to B; **call-site argument order unresolved, do not call** | verified |
 
-`g_CollisionKind` 0x5E6874 record (setters 0x4BA250 / 0x4BA280, verified): kind 1 stores a segment
+`g_CollisionResult` 0x5E6874 record (setters 0x4BA250 / 0x4BA280, verified): kind 1 stores a segment
 in +4/+8 and its line in +0x18; kind 2 a segment in +0xC/+0x10 and its line in +0x14; kind 3 = a
 sprite hit (+0x20 hit sprite, +0x24 mover). Per slice 2's reading of the callers, kind 1 is a wall
 along constant y and kind 2 a wall along constant x — [car-physics.md](car-physics.md) labels them

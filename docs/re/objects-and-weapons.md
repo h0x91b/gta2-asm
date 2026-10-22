@@ -150,7 +150,7 @@ pass B, code paths verified):
 | what it hits | path | explosion kind |
 |---|---|---|
 | wall / ground | `ImpactEvent_Dispatch` → `Projectile_OnHitWorld` → `Object_CreateExplosion` + `Particle_EmitImpactParticles` (6 sparks) | by surface: 0x12, or the directional wall/floor bursts 0x16..0x19 |
-| ped | `Projectile_OnHitSprite` → `PedSprite_OnExplosiveProjectileHit` 0x4932D0 | 0x12 |
+| ped | `Projectile_OnHitSprite` → `PedGameObject_OnExplosiveProjectileHit` 0x4932D0 | 0x12 |
 | car | `Car_OnDamage` → `Car_AddDamage(32000)` → `Car_Explode` | 0x13 (0x12 if already wrecked) |
 | explosive object (`explosiveClass` 0xC/0xD) | `Object_ExplodeOnProjectileHit` 0x485B00 | 0x12 / 0x13 |
 
@@ -484,11 +484,11 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x4828F0 | `ObjectSpawner_GetDiagonalDummy` | verified | switch 0xB4/C4->[0], B8/C8->[2], BC/CC->[3], C0/D0->[1]; caller MapBlocks_FindDiagonalCollisionDummy |
 | 0x482960 | `unsure_ObjectSpawner_SetPendingOwnerSlot` | hypothesis | this+0x18=byte; caller Weapon_ThrowMolotovOrGrenade |
 | 0x482970 | `WorldObjectPool_GetFirstObject` | verified | returns this+8; caller SaveGame_CollectPickups |
-| 0x482980 | `Vec3_Set` | verified | stores 3 dwords at +0/+4/+8 |
+| 0x482980 | `SpriteBounds_SetSize` | verified | stores 3 dwords at +0/+4/+8 |
 | 0x482A30 | `Sprite_SetOwner2` | verified | this+8=param; callers object-init, Weapon_SpawnProjectile |
-| 0x482A40 | `Sprite_SetVec3AtOffsetCAndMarkDirty` | verified | Vec3_Set(*(this+0xC)) + Sprite_MarkBoundsDirty(this) |
-| 0x482A70 | `Collision_SetKind4ClearField8` | verified | operates on g_CollisionKind: [0]=4,[8]=0; caller FUN_00486d70 |
-| 0x482A80 | `Collision_SetKind5ClearField8` | verified | same, kind 5 |
+| 0x482A40 | `Sprite_SetVec3AtOffsetCAndMarkDirty` | verified | SpriteBounds_SetSize(*(this+0xC)) + Sprite_MarkBoundsDirty(this) |
+| 0x482A70 | `CollisionResult_SetKind4ClearHitSprite` | verified | operates on g_CollisionResult: [0]=4,[8]=0; caller FUN_00486d70 |
+| 0x482A80 | `CollisionResult_SetKind5ClearHitSprite` | verified | same, kind 5 |
 | 0x482A90 | `WorldObject_SetMotionState` | verified | this+0x10=param (WorldObject+0x10 = motion per objects_A); caller Object_CreateExplosion |
 | 0x482AD0 | `ObjectAnimState_Init` | verified | ++DAT_00665764 (alloc counter), clears +4..+7; sole caller ObjectAnimStatePool_Pop |
 | 0x482AF0 | `ObjectAnimState_UpdateFreeCounters` | verified | --DAT_00665764, ++DAT_0066576c; sole caller ObjectAnimStatePool_Push |
@@ -510,7 +510,7 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x482ED0 | `Object_IntegrateGravityAndFriction` | verified | motion+0x2A==1 (airborne): vz(+0x1C)+=gravity(DAT_665948), z-vel(+0x10)+=vz; else speed(+0xC)+=decel(+0x18), clamp >=0 |
 | 0x482FA0 | `Projectile_PrefabAllowsHitSprite` | verified | switch prefab+0x54 vs Sprite_GetKind (1 ped? 2 car 3 ped/4,5 obj kinds) |
 | 0x483030 | `Projectile_ShouldHitSprite` | verified | non-null && AllowsHit && !IsHitSpriteOwnerPed |
-| 0x483060 | `Object_TestSpriteHitAndRecord` | verified | Sprite_FindObstacleAndRecord(pos,2); sets DAT_665790 (hit sprite), DAT_665798 (hit special car 0xA6/0xA9 flag), CollisionHit_SetKindObject |
+| 0x483060 | `Object_TestSpriteHitAndRecord` | verified | Sprite_FindObstacleAndRecord(pos,2); sets DAT_665790 (hit sprite), DAT_665798 (hit special car 0xA6/0xA9 flag), CollisionResult_SetHitSprite |
 | 0x483100 | `Sprite_SnapZToSlopeSurface` | verified | MapBlocks_GetSlopeSurfaceZ, Fix16 floor/frac, SetPosition |
 | 0x483460 | `Object_LandOnSpriteSurface` | hypothesis | after TestSpriteHit: if speed<=DAT_6657ac set layer 0x1D/6, speed, decel=prefab+0x14; caller Object_UpdatePhysicsAnimated-step (FUN_00486e90) |
 | 0x483880 | `Object_InheritMotionFromSprite` | verified | by Sprite_GetKind: 2 car speed/angle/layer, 3 ped speed*DAT_665a60, 4/5 object copy motion; caller Object_UpdateAttached |
@@ -546,7 +546,7 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x486950 | `Object_ApplyWallBounceImpulse` | verified | impulse vs wall mass DAT_0066583c, ImpactEvent_Dispatch(this,0) |
 | 0x4869E0 | `Object_CollideWithWallX` | hypothesis | ComputeWallContactPointX, X-axis constants DAT_005e687c/6878 |
 | 0x486B20 | `Object_CollideWithWallY` | hypothesis | mirror of X with ComputeWallContactPointY |
-| 0x486C60 | `Object_ResolveCollisionByKind` | verified | switch g_CollisionKind 1=X wall 2=Y wall 3=sprite (car/ped/object) |
+| 0x486C60 | `Object_ResolveCollisionByKind` | verified | switch g_CollisionResult.kind 1=X wall 2=Y wall 3=sprite (car/ped/object) |
 | 0x486D70 | `Object_OnMoveBlocked` | hypothesis | switch on prefab+0x4C solidity; calls ResolveCollisionByKind for 2/3 |
 | 0x486E90 | `Object_MoveBallisticWithCollision` | verified | called by UpdatePhysics/Animated when prefab+0x58 != 0; gravity, StepCollisionFalling/Rising/Grounded |
 | 0x4874D0 | `Object_MoveFlatWithCollision` | verified | same callers when prefab+0x58 == 0; no vertical stepping; Projectile_SetImpactSurfaceFromCollision |
@@ -626,7 +626,7 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x493810 | `Fix16_ToSubTilePixelY` | verified | identical body, used for y |
 | 0x493850 | `PedGameObject_AllocSprite` | verified | SpritePool_Alloc, Sprite_SetCollisionKind(3), SoundClient_EnsureSource; only caller PedGameObject_Init |
 | 0x4938A0 | `PedGameObject_StartDrowning` | verified | Ped_SetState(FALL_ON_GROUND), SetState2(0x14), Particle_EmitBurstAt; callers Walk/Staying/GetOutOfCar/FallOnGround... |
-| 0x493940 | `Car_ComputePedDoorStepPos` | verified | CarInfo_GetDoorInfo + relToSpiteOfCar table, switch on door/anim step 0..0xC,99, Ang16_RotateXY; callers GameLogic, PedGameObject_UpdateAnimFrame, Ped_RunTask |
+| 0x493940 | `Car_ComputePedDoorStepPos` | verified | CarInfo_GetDoorInfo + g_Fix16Div64Table table, switch on door/anim step 0..0xC,99, Ang16_RotateXY; callers GameLogic, PedGameObject_UpdateAnimFrame, Ped_RunTask |
 | 0x494180 | `PedGameObject_UpdateGroundZ` | verified | MapBlocks_GetSlopeSurfaceZ -> +0x45 slope byte, bit0 of +0x58, SetPosition(x,y,z) |
 | 0x495470 | `PedGameObject_SteerAroundBlockedEdge` | verified | CanCrossTileEdge on heading class and both neighbours, then FUN_00492400 |
 | 0x4955F0 | `PedGameObject_JitterHeading` | verified | random() > 0x16 -> heading +- random Fix16 -> Ang16, sign fix-up |
