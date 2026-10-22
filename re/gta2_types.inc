@@ -2803,6 +2803,18 @@ struc CarSpriteCacheEntry
     .palette                          resb 2      ; 0x12 ushort
 endstruc
 
+; /auto_structs/CollisionEntryPool  (32772 bytes)
+struc CollisionEntryPool
+    .freeHead                         resb 4      ; 0x0 GridEntry *
+    .entries                          resb 32768  ; 0x4 GridEntry[4096]
+endstruc
+
+; /auto_structs/CollisionStripPool  (72004 bytes)
+struc CollisionStripPool
+    .freeHead                         resb 4      ; 0x0 GridStrip *
+    .strips                           resb 72000  ; 0x4 GridStrip[6000]
+endstruc
+
 ; /auto_structs/CrimeEvent  (20 bytes)
 struc CrimeEvent
     .type                             resb 4      ; 0x0 int
@@ -2817,6 +2829,12 @@ struc CrimeEventQueue
     .field0_0x0                       resb 2      ; 0x0 short
     .readIndex                        resb 2      ; 0x2 short
     .arr10                            resb 200    ; 0x4 CrimeEvent[10]
+endstruc
+
+; /auto_structs/DoorFacePool  (708 bytes)
+struc DoorFacePool
+    .freeHead                         resb 4      ; 0x0 DoorFace *
+    .faces                            resb 704    ; 0x4 DoorFace[44]
 endstruc
 
 ; /auto_structs/DummyPedManager  (12 bytes)
@@ -2911,9 +2929,28 @@ struc HudManager
     .text_speed                       resb 4      ; 0x2af4 int
 endstruc
 
+; /auto_structs/LayerDrawNode  (12 bytes)
+struc LayerDrawNode
+    .sprite                           resb 4      ; 0x0 Sprite *
+    .left                             resb 4      ; 0x4 LayerDrawNode *
+    .right                            resb 4      ; 0x8 LayerDrawNode *
+endstruc
+
+; /auto_structs/LayerDrawNodePool  (12004 bytes)
+struc LayerDrawNodePool
+    .nodes                            resb 12000  ; 0x0 LayerDrawNode[1000]
+    .usedCount                        resb 4      ; 0x2ee0 uint
+endstruc
+
 ; /auto_structs/LayerDrawQueues  (28 bytes)
 struc LayerDrawQueues
     .layerQueues                      resb 28     ; 0x0 int[7]
+endstruc
+
+; /auto_structs/LayerDrawStack  (4004 bytes)
+struc LayerDrawStack
+    .items                            resb 4000   ; 0x0 LayerDrawNode *[1000]
+    .top                              resb 4      ; 0xfa0 LayerDrawNode * *
 endstruc
 
 ; /auto_structs/Light  (40 bytes)
@@ -2946,7 +2983,7 @@ endstruc
 ; /auto_structs/ListNodePool  (604 bytes)
 struc ListNodePool
     .freeListHead                     resb 4      ; 0x0 int
-    .s18_sub_50                       resb 600    ; 0x4 S18_sub[50]
+    .s18_sub_50                       resb 600    ; 0x4 ScriptStackNode[50]
 endstruc
 
 ; /auto_structs/LocaleSettings  (20 bytes)
@@ -3109,6 +3146,111 @@ struc MissionScript
     resb 2
 endstruc
 
+; /auto_structs/MssAudio  (10008 bytes)
+struc MssAudio
+    .driver                           resb 4      ; 0x0 undefined4
+    .unsure_musicVolume               resb 1      ; 0x4 byte
+    .audioDir                         resb 80     ; 0x5 char[80]
+    .musicEnabled                     resb 1      ; 0x55 byte
+    resb 2
+    .samples2D                        resb 64     ; 0x58 undefined4[16]
+    .extraSample                      resb 4      ; 0x98 undefined4
+    .streams                          resb 8      ; 0x9c undefined4[2]
+    .bankLoaded                       resb 1      ; 0xa4 byte
+    resb 3
+    .bankEntries                      resb 7680   ; 0xa8 MssBankEntry[320]
+    .bankBuffer                       resb 4      ; 0x1ea8 void *
+    .bankBase                         resb 4      ; 0x1eac void *
+    .num2DSamples                     resb 1      ; 0x1eb0 byte
+    .channels                         resb 1      ; 0x1eb1 byte
+    .num3DSamples                     resb 1      ; 0x1eb2 byte
+    resb 1
+    .providers                        resb 1024   ; 0x1eb4 undefined4[256]
+    .providerNames                    resb 1024   ; 0x22b4 char *[256]
+    .unsure_selectedProvider          resb 4      ; 0x26b4 int
+    .unsure_eaxAvailable              resb 4      ; 0x26b8 int
+    .eaxEnvironment                   resb 4      ; 0x26bc int
+    .provider3D                       resb 4      ; 0x26c0 undefined4
+    .samples3D                        resb 64     ; 0x26c4 undefined4[16]
+    .unsure_listenerPos               resb 12     ; 0x2704 float[3]
+    .providerCount                    resb 4      ; 0x2710 uint
+    .use3D                            resb 1      ; 0x2714 byte
+    resb 3
+endstruc
+
+; /auto_structs/MssBankEntry  (24 bytes)
+struc MssBankEntry
+    .offset                           resb 4      ; 0x0 int
+    .size                             resb 4      ; 0x4 int
+    .sampleRate                       resb 4      ; 0x8 int
+    .unsure_fieldB4                   resb 4      ; 0xc int
+    .unsure_fieldB8                   resb 4      ; 0x10 int
+    .unsure_fieldBC                   resb 4      ; 0x14 int
+endstruc
+
+; /auto_structs/MultiplayerTag  (40 bytes)
+struc MultiplayerTag
+    .itPlayer                         resb 4      ; 0x0 Player *
+    .tagTime                          resb 24     ; 0x4 int[6]
+    .frameTick                        resb 4      ; 0x1c int
+    .playerLeft                       resb 6      ; 0x20 byte[6]
+    resb 2
+endstruc
+
+; /auto_structs/NetDlg  (131616 bytes)
+struc NetDlg
+    resb 130404
+    .mapCount                         resb 4      ; 0x1fd64 int
+    .exitFlag                         resb 4      ; 0x1fd68 int
+    .playerCount                      resb 4      ; 0x1fd6c int
+    resb 1180
+    .currentPage                      resb 4      ; 0x2020c int
+    resb 8
+    .hwnd                             resb 4      ; 0x20218 undefined4
+    resb 4
+endstruc
+
+; /auto_structs/NetEventHandler  (12 bytes)
+struc NetEventHandler
+    .callback                         resb 4      ; 0x0 undefined4
+    .unsure_context                   resb 4      ; 0x4 undefined4
+    .unsure_param                     resb 4      ; 0x8 undefined4
+endstruc
+
+; /auto_structs/Network  (3256 bytes)
+struc Network
+    resb 84
+    .eventHandlers                    resb 108    ; 0x54 NetEventHandler[9]
+    resb 1296
+    .localPlayerIndex                 resb 4      ; 0x5d0 int
+    .unsure_localDpid                 resb 4      ; 0x5d4 undefined4
+    resb 4
+    .unsure_dpLobby                   resb 4      ; 0x5dc undefined4
+    .directPlay                       resb 4      ; 0x5e0 undefined4
+    resb 368
+    .groupId                          resb 4      ; 0x754 undefined4
+    resb 1372
+    .pendingPacketCount               resb 4      ; 0xcb4 int
+endstruc
+
+; /auto_structs/ObjectAnimState  (8 bytes)
+struc ObjectAnimState
+    .nextFree                         resb 4      ; 0x0 ObjectAnimState *
+    .unsure_state                     resb 4      ; 0x4 undefined4
+endstruc
+
+; /auto_structs/ObjectAnimStatePool  (8812 bytes)
+struc ObjectAnimStatePool
+    .freeHead                         resb 4      ; 0x0 ObjectAnimState *
+    .states                           resb 8808   ; 0x4 ObjectAnimState[1101]
+endstruc
+
+; /auto_structs/ObjectMotionStatePool  (23104 bytes)
+struc ObjectMotionStatePool
+    .freeHead                         resb 4      ; 0x0 ObjectMotionState *
+    .states                           resb 23100  ; 0x4 ObjectMotionState[385]
+endstruc
+
 ; /auto_structs/OwnerSlotTable  (2040 bytes)
 struc OwnerSlotTable
     .slots                            resb 2040   ; 0x0 OwnerSlot[255]
@@ -3213,14 +3355,6 @@ struc S14_sub1
     .f2                               resb 4      ; 0x7c int
 endstruc
 
-; /auto_structs/S18_sub  (12 bytes)
-struc S18_sub
-    .b                                resb 4      ; 0x0 undefined4
-    .c                                resb 2      ; 0x4 undefined2
-    resb 2
-    .a                                resb 4      ; 0x8 undefined4
-endstruc
-
 ; /auto_structs/S2  (8 bytes)
 struc S2
     .f1                               resb 4      ; 0x0 int
@@ -3255,6 +3389,14 @@ struc Script4k
     .numOfStrings                     resb 2      ; 0x0 ushort
     resb 2
     .strings                          resb 3996   ; 0x4 SCR_STRING_HEADER *[999]
+endstruc
+
+; /auto_structs/ScriptStackNode  (12 bytes)
+struc ScriptStackNode
+    .value                            resb 4      ; 0x0 undefined4
+    .depth                            resb 2      ; 0x4 undefined2
+    resb 2
+    .next                             resb 4      ; 0x8 undefined4
 endstruc
 
 ; /auto_structs/ScriptThread  (284 bytes)
@@ -3418,6 +3560,12 @@ struc SpriteManager
     resb 2
 endstruc
 
+; /auto_structs/SpriteNodePool  (7204 bytes)
+struc SpriteNodePool
+    .freeHead                         resb 4      ; 0x0 CarAttachment *
+    .nodes                            resb 7200   ; 0x4 CarAttachment[300]
+endstruc
+
 ; /auto_structs/SpritePool  (301864 bytes)
 struc SpritePool
     .last                             resb 4      ; 0x0 Sprite *
@@ -3462,6 +3610,17 @@ struc TextureCache
     resb 18
     .userTextureCount                 resb 2      ; 0x15d4 ushort
     resb 2
+endstruc
+
+; /auto_structs/TextureTable  (20 bytes)
+struc TextureTable
+    .handles                          resb 4      ; 0x0 undefined4 *
+    .count                            resb 2      ; 0x4 ushort
+    .palettesPerSprite                resb 2      ; 0x6 ushort
+    .spriteType                       resb 4      ; 0x8 int
+    .paletteType                      resb 4      ; 0xc int
+    .allocated                        resb 1      ; 0x10 byte
+    resb 3
 endstruc
 
 ; /auto_structs/TrafficLights  (404 bytes)
@@ -5049,12 +5208,23 @@ struc PedGameObjectManager
     .objects                          resb 72000  ; 0x4 PedGameObject[400]
 endstruc
 
-; /imported/seuko-mod/PedGroup  (55 bytes)
+; /imported/seuko-mod/PedGroup  (68 bytes)
 struc PedGroup
-    resb 52
+    .unsure_byte0                     resb 1      ; 0x0 byte
+    .unsure_byte1                     resb 1      ; 0x1 byte
+    resb 2
+    .members                          resb 36     ; 0x4 Ped *[9]
+    resb 4
+    .leader                           resb 4      ; 0x2c Ped *
+    .unsure_attackedFlag              resb 4      ; 0x30 int
     .membersCount                     resb 1      ; 0x34 byte
+    .minMembersBeforeSplit            resb 1      ; 0x35 byte
+    .unsure_membersCountCopy          resb 1      ; 0x36 undefined1
     resb 1
-    .field_0x36                       resb 1      ; 0x36 undefined1
+    .unsure_mode                      resb 4      ; 0x38 int
+    .unsure_enterCarFlag              resb 4      ; 0x3c int
+    .active                           resb 1      ; 0x40 byte
+    resb 3
 endstruc
 
 ; /imported/seuko-mod/PhysicalPalette  (1024 bytes)

@@ -36,8 +36,11 @@ Measured, not assumed (bytecode of `GhidraScript.executeNormal` in 12.1.4, plus 
 source): the plugin itself opens no transaction, but **`GhidraScript` wraps every run in one**:
 `start(); run(); end(true)`, and `end(false)` (roll back) if `run()` throws.
 
-- So a plain script can write without any transaction code, and **throwing an exception rolls
-  back the whole run**. That is the cleanest abort: check, and `throw new Exception("...")`.
+- So a plain script can write without any transaction code. **But throwing does not roll
+  anything back through the MCP `run_script_inline` path** (measured 2026-10-22: a script that
+  created 3 structs and then threw left all 3 in the program). Validate everything (lengths, name
+  collisions, target addresses) *before* the first write, and write scripts that skip what already
+  exists so a rerun after a fix is safe.
 - `currentProgram.startTransaction(...)` inside a script opens a *sub*-transaction. Per
   `DomainObject.endTransaction` javadoc, if **any** sub-transaction ends with `commit=false`, the
   whole outer transaction is rolled back when it ends, i.e. everything the script did, and
@@ -88,5 +91,17 @@ From Seq 27 (Ghidra owner) runs, 2026-10:
 - Compile errors agents hit: `HighParam` has no `getHighVariable()`; `FlatProgramAPI.find(String)`
   is final, so do not name a helper method `find`; `replaceParameters` takes
   `(List, FunctionUpdateType, boolean, SourceType)`, check overloads in the `api/` stub first.
-- Make a struct edit all-or-nothing: do the whole edit in one script, verify (e.g. length unchanged),
-  and throw if the check fails.
+- Make a struct edit all-or-nothing by checking first: build the new type in a
+  `StructureDataType`, assert its length, then `addDataType` / apply. A throw after the first write
+  leaves the earlier writes in place (see "Transactions and saving").
+- **A parameter typed `DataType.DEFAULT` (`undefined`, 1 byte) has unassigned storage once the
+  function uses custom storage**, and `setCustomVariableStorage(true)` (our way of typing `this`)
+  freezes it that way. The decompiler then drops that argument at every call site. 66 functions had
+  it (Menu_Set*, Gang_Set*, Door*, ...). Before switching to custom storage retype DEFAULT params
+  to `Undefined1DataType`; to repair, give each one explicit storage with
+  `new VariableStorage(program, stackOffset, len)` in 4-byte slots (a `__fastcall` 2nd arg goes in
+  `DL`/`DX`/`EDX`) via `replaceParameters(list, CUSTOM_STORAGE, true, USER_DEFINED)`. Check:
+  no `Parameter` with `getVariableStorage().isUnassignedStorage()`.
+- Typing `this` in bulk: `f.setCustomVariableStorage(true)` then
+  `f.getParameter(0).setDataType(new PointerDataType(struct), true, true, SourceType.USER_DEFINED)`
+  keeps ECX and the name. Default-named params after it get renumbered (`param_1` -> `param_2`).

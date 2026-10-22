@@ -1,5 +1,6 @@
 address,name,namespace,name_source,calling_convention,signature_source,size,thunk_to,signature
 0x0040e0f0,RoadNetwork_FindRoute,,DEFAULT,__thiscall,USER_DEFINED,5,RoadNetwork_FindRoute,"undefined4 __thiscall RoadNetwork_FindRoute(RoadNetwork * this, uint param_2, uint param_3, uint param_4, uint param_5, uint param_6, uint param_7, int param_8)"
+0x004156b0,CarSound_AddDoors,,DEFAULT,__thiscall,USER_DEFINED,5,CarSound_AddDoors,"undefined __thiscall CarSound_AddDoors(SoundManager * this, int * param_2)"
 0x0041d8f0,ComboEntry_Reset,,DEFAULT,__fastcall,USER_DEFINED,5,ComboEntry_Reset,undefined __fastcall ComboEntry_Reset(ComboEntry * param_1)
 0x00433040,CarModelTable_Free,,DEFAULT,__fastcall,USER_DEFINED,5,CarModelTable_Free,undefined __fastcall CarModelTable_Free(CarModelTable * param_1)
 0x0044a1e0,CrimeStats_RearmOneShots,,DEFAULT,__fastcall,USER_DEFINED,5,CrimeStats_RearmOneShots,undefined __fastcall CrimeStats_RearmOneShots(CrimeStats * param_1)

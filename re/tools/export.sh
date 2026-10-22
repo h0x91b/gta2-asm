@@ -56,6 +56,15 @@ python3 -I "$REPO/re/tools/check_mapping.py" "$VANILLA" "$WORK/blocks"
 if command -v clang >/dev/null; then
   clang -target i686-pc-windows-msvc -fsyntax-only -Wno-pragma-pack -I "$OUT" "$WORK/gta2_types_check.c"
   echo "gta2_types.h: layout check OK"
+  # The 32-bit host C modules build freestanding i386 ELF C99 (wchar_t is int there).
+  clang -target i386-pc-none-elf -std=c99 -ffreestanding -Werror -Wall -fsyntax-only -I "$OUT" \
+    "$WORK/gta2_types_check.c"
+  echo "gta2_types.h: i386 ELF C99 freestanding check OK"
+  clang -m32 -std=c99 -Werror -Wall -fsyntax-only -I "$OUT" "$WORK/gta2_types_check.c"
+  echo "gta2_types.h: i386 Darwin (-m32) check OK"
+  # 64-bit host C variant: same offsets with 8-byte native pointers, C99, warnings fatal.
+  clang -arch x86_64 -std=c99 -Werror -Wall -fsyntax-only -I "$OUT" "$WORK/gta2_types_c64_check.c"
+  echo "gta2_types_c64.h: x86_64 C99 layout check OK"
 fi
 if command -v nasm >/dev/null; then
   nasm -f bin -I "$OUT/" -o /dev/null "$WORK/gta2_types_check.asm"
