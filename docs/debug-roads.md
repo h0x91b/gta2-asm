@@ -2,7 +2,9 @@
 
 K → **Debug flags...** → **Road network:** — LEFT / RIGHT / RETURN cycle
 `off → cars → peds → cars + peds`. Drawn every gameplay frame under the HUD and the menu
-(`host/debug_roads.asm`, called from `hk_DrawUI` next to Ped paths). Off = nothing of it runs.
+(C32 `host/c32/debug_roads.c` on the shared toolkit `overlay.c`; its row, `DM_FRAME` hook and
+stats line are host C, `host/c/menu/overlays.c`, see [debug-menu.md](debug-menu.md) "World
+overlays"). Off = nothing of it runs.
 
 ## What is drawn
 
@@ -41,7 +43,7 @@ counts what was drawn and the light phase.
 - Lights: at junction 200 (trafficlight32 zone, 157,167) the squares sit on the game's lamps and
   turn green → red between frames 1000 and 1150, matching the lamp sprites (phase 4 = E/W green).
 - Arrow and link directions agree (right-hand traffic: upper lanes westbound, lower eastbound).
-- Test build: `NASMFLAGS='-DDR_TEST=800 -DDR_TX=159 -DDR_TY=165' host/build.sh` teleports the
+- Test build: `C32FLAGS_EXTRA='-DDR_TEST=800 -DDR_TX=159 -DDR_TY=165' host/build.sh` teleports the
   player to that tile at frame 800 (`Ped_Teleport` 0x435C80) so a lit junction is in view.
 
 ## Known limits

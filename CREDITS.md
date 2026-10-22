@@ -73,7 +73,7 @@ License terms below are quoted as each source states them; this is not legal adv
     `src/events/keyboard-state-update.cpp`, hook 0x4A4934 inside `SetKeyState`): reviewed as
     prior art for `host/player_move.asm` (Seq 37); it turns the ped with virtual left/right
     keys, which our mouse turning bypasses. No code or address taken.
-  - `WorldPointToScreen`, `PedSetObjective`, `PedManager` (`host/debug_paths.asm`),
+  - `WorldPointToScreen`, `PedSetObjective`, `PedManager` (`host/c32/overlay.c`, `debug_paths.c`),
     `InitMouseExclusive`, `GameWindow` (`host/w32_dinput.asm`).
 - **License as stated** ([README#L123-L125](https://github.com/izawartka/gta2-seuko-mod/blob/25b198591f840b909dc5e3a38be880840d94c17d/README.md#L123-L125)):
   "You can modify and distribute this mod freely as long as you credit the original authors and

@@ -23,6 +23,15 @@ PED_GAMEOBJ  equ 0x168              ; PedGameObject*, sprite at +0x80
 PED_OCC      equ 0x240
 CAR_SPRITE   equ 0x50
 CAR_ID       equ 0x6c
+; Ped fields and the ped pool, for debug_roadblocks / debug_emergency (were in
+; debug_paths.asm, now C32: host/c32/debug_paths.c)
+PED_NEXT     equ 0x160
+PED_POS      equ 0x1ac
+PED_ROT      equ 0x12c              ; short, 1440 = full turn
+PED_LIFE     equ 0x234
+PED_ALIVE    equ 99
+PEDMGR       equ 0x5E5BBC           ; PedManager*, in-use list at +4 through PED_NEXT
+DP_MAXPEDS   equ 400                ; a pool walk's bound (the pool has 200)
 ; MainCamera, WindowedWidth: gta2-seuko-mod src/game/memory.h @25b1985
 UI_CAMERA  equ 0x5E3CC4             ; Camera* (main), uiScale at +0xa8
 WINDOW_W   equ 0x673578

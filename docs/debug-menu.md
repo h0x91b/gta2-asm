@@ -11,7 +11,7 @@ for growing it.
   `input_key` in `w32_dinput.asm`), the draw (`dm_draw`, from the `DrawUI` call hook
   `hk_DrawUI`), the Player and Vehicle features, and **four central tables**: `dmp_main`,
   `dmp_player`, `dmp_vehicle`, `dmp_flags` (`DMITEM kind, "label", data`).
-- Feature modules (`debug_paths.asm`, `debug_roads.asm`, `debug_roadblocks.asm`,
+- Feature modules (`debug_paths.asm`, `debug_roads.asm` — both C32 now, see "World overlays" —, `debug_roadblocks.asm`,
   `debug_emergency.asm`, `player_move.asm`) exported `dm_<name>_change` / `dm_<name>_fmt`
   pairs or flag bytes, and **debug_menu.asm listed them** in its tables. Their per-frame work
   (`rb_frame`, `de_run`, `dm_draw_paths`, `dr_draw`) was called by name from `hk_DrawUI`.
@@ -284,7 +284,7 @@ Files are in `host/c/menu/` unless a path is given.
 
 
 - **root** (`root.c`): Quick save, Get all weapons, Add $100000, Camera zoom; Ped
-  paths (`debug_paths.asm`), Mouse turning and Strafe (`player_move.asm`); links.
+  paths (`overlays.c`, drawn by C32 `debug_paths.c`), Mouse turning and Strafe (`player_move.asm`); links.
 - **Player** (`player.c`): wanted level and lock, skin, body; roadblocks
   (`debug_roadblocks.asm` registers them), ambulance / fire truck (`debug_emergency.asm`).
 - **Vehicle** (`vehicle.c`): the current / last car, colour, invincible, repair, explode.
@@ -331,7 +331,33 @@ Files are in `host/c/menu/` unless a path is given.
     ringing / in-call phones (touching one answers it through the mission script). Seq 27's
     notes on what is safe: `seq52_prep.md` (Seq 27 report).
 - **Mods** (`mods.c`): Car entry bonus and Passenger (registered by `host/c/c32_host.c`).
-- **Debug flags** (`flags.c`): the game's own flags; Road network (`debug_roads.asm`).
+- **Debug flags** (`flags.c`): the game's own flags; Road network (`overlays.c`, drawn by C32
+  `debug_roads.c`, [debug-roads.md](debug-roads.md)).
+
+### World overlays: Ped paths and Road network (C32, Seq 61)
+
+The two overlays drawn over the world under the HUD moved from NASM (`debug_paths.asm` 670 +
+`debug_roads.asm` 1188 lines) to C (2026-10-23). Where the code went, options considered:
+
+| Option | For | Against |
+|---|---|---|
+| All host C | one flavour, `printf` and the menu next to it | every point is a `WorldPointToScreen` and every dot a `DrawFlatRect2D`: ~100-250 boxes and as many projections per frame, each a `call32` mode switch; the game structs read through `GP()` casts |
+| All C32 | game calls are plain `call`s, `re/gta2_types.h` structs as they are | a C32 module cannot register menu records or print `printf` lines (only `c32: ` prefixed `c32_log`), and `r_frames` / `cam_zoom_pct` live in host memory above 4 GB |
+| **Split (chosen)** | the drawing — game memory reads and game calls — is C32 (`host/c32/debug_paths.c`, `debug_roads.c`, the shared toolkit `overlay.c`/`.h`); the rows, the two `DM_FRAME` hooks and the `paths:` / `roads:` stats lines are host C (`host/c/menu/overlays.c`): one `call32` per overlay per frame into the exported `dp_draw(frame)` / `dr_draw(mode, frame)`, the counters read back from the exported `dp_stats` / `dr_stats` | two files per feature |
+
+Same rows, orders, keys and log lines as the NASM. The menu state (`Ped paths` flag,
+`Road network` mode) is host data; the C32 functions get it as arguments. The heading tick
+keeps the NASM's x87 `fsincos` sequence (inline asm) so it rounds the same. Test builds:
+`C32FLAGS_EXTRA=-DDP_TEST=F` (every ped after the player at frame F) and
+`C32FLAGS_EXTRA='-DDR_TEST=F -DDR_TX=X -DDR_TY=Y'` (teleport), formerly `NASMFLAGS`.
+
+End to end: `tests/ctl/debug_overlays.sh` (both overlays through the menu's own keys, two
+places, a walk with a planned path, screenshots, the stats lines). Parity with the NASM was
+measured with a temporary harness that ran master's NASM and the C32 in the same frame, C32 in
+record mode, and compared the `DrawFlatRect2D` argument streams: 0 mismatches over every
+overlay frame of the test (roads 200+ frames / 40 060 boxes, paths 200+ frames / 22 007 boxes,
+and the same with every ped on a path); the screenshots of a normal run match master's
+byte for byte where the game itself repeats (two master runs differ after ~frame 1000).
 
 ## 7. RE facts used (sources)
 
