@@ -77,12 +77,12 @@ Slot: O = used as objective, T = used as task. "No setter" = no game code writes
 | 35-38 | ENTER_CAR, LEAVE_CAR, ENTER_TRAIN, LEAVE_TRAIN | O,T | script, player controls, transport, police | |
 | 39-41, 53 | UNUSED_* | | nowhere | no handler, no compare |
 | 42 | PATROL_ON_FOOT | O | script `ADD_PATROL_POINT` | allocates a patrol route |
-| 43 | UNSURE_PATROL_IN_CAR | O | `PoliceManager_AdoptTrafficCarAsCrew` | sets the car AI target speed to 1.0 |
+| 43 | UNSURE_PATROL_IN_CAR | O | `PoliceManager_AdoptTrafficCarAsCrew` | writes CarAI+0x74 target speed 1.0; `CarAI_UpdateDriveOrder` 0x42D390 overwrites it with `driver->carSpeed` every tick while a drive order exists |
 | 44-47 | WAIT_AT_CURB_TO_CROSS_{NEG_Y,POS_X,POS_Y,NEG_X} | T | `Ped_StartCrossingRoadIfAtCurb` (dummy peds) | wait for the crossing light, find pavement up to 6 tiles away |
 | 48, 49 | CROSS_ROAD, PAUSE_AFTER_CROSSING | T | 44-47 handlers, 48 handler (timer 100) | |
 | 50 | FORCE_WASTED | O | `AmbulanceManager_DispatchForQueuedPed` | `PedSetObjective` sets (9, 0xF) at once |
 | 51 | UNSURE_FAIL_WHEN_TIMER_ZERO | O | no setter | |
-| 52 | DRIVE_AND_ATTACK_CHAR | O,T | police crew | `CarDriveOrder`, speed 3.0 |
+| 52 | DRIVE_AND_ATTACK_CHAR | O,T | police crew | `CarDriveOrder`; the 3.0 it writes to CarAI+0x74 is overwritten each tick by `driver->carSpeed` |
 | 54 | BUSTED_TAKEN_AWAY_IN_COP_CAR | O | `Player_OnBusted` (timer 60) | spawns a COPCAR, ped rides as passenger, then 33 |
 | 55-60 | FOLLOW_CAR_IN_CAR, FOLLOW_CAR_ON_FOOT_WITH_OFFSET, FIRE_AT_OBJECT_FROM_VEHICLE, DESTROY_OBJECT, DESTROY_CAR, PUT_OUT_CAR_FIRE | O | script; 60 from `FireEngineSlot_Update` | |
 | 61 | UNSURE_FIRE_TURRET_AT_CHAR | O | `Ped_UpdateTankDriver` (occupation TANK_DRIVER) | handler `Ped_Obj1_FireTurretAtChar` 0x434530 |
