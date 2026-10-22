@@ -33,7 +33,8 @@ link host main.o -L"$SDL3_PREFIX/lib" -lSDL3 -rpath "$SDL3_PREFIX/lib"
 nasm -f macho64 ${NASMFLAGS:-} -I. -o loader.o loader.asm
 # Host C modules (docs/host-c.md): every c/*.c is compiled and linked into the loader,
 # 64-bit host code like the NASM around it. Same target as the link (minos 26.0, SDK).
-CFLAGS="-arch x86_64 -std=c99 -O2 -Wall -Wextra -Werror -mmacosx-version-min=26.0 \
+# -I../re: the generated game struct header re/gta2_types_c64.h.
+CFLAGS="-arch x86_64 -std=c99 -O2 -Wall -Wextra -Werror -mmacosx-version-min=26.0 -I../re \
   -isysroot $(xcrun --show-sdk-path) ${CFLAGS_EXTRA:-}"
 cobjs=
 for f in c/*.c; do

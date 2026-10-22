@@ -398,7 +398,6 @@ hooks:
     JMPHOOK 0x49AC76, "WalkHeading", {0x8A,0x44,0x24,0x11, 0x84,0xC0}   ; player_move.asm
     CALLHOOK 0x432678, "CarAIFollowRoute", 0x430320     ; debug_emergency.asm
     CALLHOOK 0x43F279, "DriverEnter", 0x427A20          ; mods.asm (c/car_bonus.c)
-    CALLHOOK 0x4A63A3, "DriverEnter", 0x427A20          ; mods.asm (c/car_bonus.c)
     dq 0
 
 shimtab_gta2:

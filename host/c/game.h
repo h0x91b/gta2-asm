@@ -47,31 +47,20 @@ uint32_t game_fastcall(gptr fn, uint32_t ecx, uint32_t edx, int nargs, ...);
 
 extern uint32_t r_frames NASM(r_frames);    /* presented frames (w32_renderer.asm) */
 
-/* ---- game structs: only the fields we use, as offsets (gptr + OFF) ---------------------
- * Sources: re/gta2_types.h (Ghidra project gta-2-recovered) and gta2-seuko-mod by
- * izawartka (https://github.com/izawartka/gta2-seuko-mod) src/game/gta2.h, memory.h
- * @25b1985; the uses below were checked in the disassembly (docs/host-c.md). */
+/* ---- game structs: re/gta2_types_c64.h, generated from the Ghidra project (Seq 27):
+ * exact 32-bit layouts, every game pointer a uint32_t, GP(T, v) turns one into a T*.
+ * Game globals not in the header: */
 
-#define G_GAME              0x5EB4FC    /* Game* (seuko memory.h) */
-#define GAME_PLAYER         0x38        /* Game: current Player* (debug_menu.asm dm_player_ped) */
-#define PLAYER_PED          0x2C4       /* Player: Ped* */
-#define PLAYER_SCORE        0x2D4       /* Player: PlayerScore (animated money: value +0) */
-#define PED_PLAYER          0x15C       /* Ped: Player* or 0 */
-#define PED_CAR             0x16C       /* Ped: currentCar */
-#define PED_AS_PASSENGER    0x248       /* Ped: enterCarAsPassenger */
-#define CAR_DRIVER          0x54        /* Car: Ped* */
-#define CAR_ID              0x6C        /* Car: id */
-#define CAR_MODEL           0x84        /* Car: model */
+#include "gta2_types_c64.h"
 
-static inline gptr game_player(void)
+#define G_GAME              0x5EB4FC    /* Game* (gta2-seuko-mod src/game/memory.h @25b1985) */
+
+static inline Game *game(void)       { return GP(Game, rd32(G_GAME)); }
+
+static inline Player *game_player(void)
 {
-    gptr game = rd32(G_GAME);
-    return game ? rd32(game + GAME_PLAYER) : 0;
-}
-
-static inline int32_t player_money(gptr player)
-{
-    return (int32_t)rd32(player + PLAYER_SCORE);
+    Game *g = game();
+    return g ? GP(Player, g->currentPlayer) : 0;
 }
 
 /* ---- typed game functions: one wrapper per function, address and ABI in one place ---- */
@@ -80,9 +69,9 @@ static inline int32_t player_money(gptr player)
  * PlayerScore_AddMoney` — adds to the animated money (clamped to its max), and in
  * multiplayer to the player's points. GiveMoney 0x41DC40 is the same times the
  * player's score multiplier (Player +0x6BC). Own disassembly; names from re/functions.csv. */
-static inline void ChangeMoney(gptr player, int32_t amount)
+static inline void ChangeMoney(Player *player, int32_t amount)
 {
-    game_thiscall(0x421990, player, 1, (uint32_t)amount);
+    game_thiscall(0x421990, (gptr)(uintptr_t)player, 1, (uint32_t)amount);
 }
 
 #endif
