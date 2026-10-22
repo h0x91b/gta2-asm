@@ -215,6 +215,13 @@ their absolute addresses apply 1:1. How this was checked:
   `program="gta2.segments.fixed.exe"` on every call; `rename_function` needs
   `strict_mode="off"` (its PascalCase gate rejects `Module_Verb` names); `rename_symbol`
   at an address that already has a label adds a second one — `delete_label` the old name.
+- **Ghidra docs — look the API up, do not guess it.** `docs/ghidra/api/ghidra.<package>.pyi`
+  is Ghidra 12.1.4's own API reference (signatures + full javadoc text, 16 packages, committed;
+  `grep -n 'def clearComponent' docs/ghidra/api/*.pyi`); `docs/ghidra/examples/` has bundled
+  scripts. `tools/ghidra-docs.sh` unpacks the full javadoc, in-app help and all bundled scripts
+  into git-ignored `ghidra-docs/` (~500 MB, 9 s). How to run scripts through the MCP
+  (`run_script_inline`, transactions, `save_program`, the calls we use and what bit us):
+  `docs/ghidra-scripting.md`; index: `docs/ghidra/README.md`.
 - Many `DAT_` constants are zero on disk and set by CRT static initialisers: read their
   values from `re/static_constants.csv` (`re/tools/static_constants.py`), not the file image.
 

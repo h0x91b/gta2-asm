@@ -93,3 +93,4 @@ Through the stdio bridge exactly as `.mcp.json` runs it: 75 tools after connect,
 → the WinMain decompilation (`OpenMutexA(0x1f0001,0,"GBH_BOB_MUTEX")`, `ShellExecuteA(... "gta2manager.exe" ...)`),
 matching the CodeBrowser.
 - Without Claude Code the same data is plain HTTP: `curl 127.0.0.1:8089/<endpoint>`.
+- Running Java through `run_script_inline` / `run_ghidra_script`: `docs/ghidra-scripting.md`; API reference: `docs/ghidra/`.

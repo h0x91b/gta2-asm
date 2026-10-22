@@ -189,6 +189,7 @@ the note next to the fact it backs.
 | SDL3 | https://www.libsdl.org/ · https://github.com/libsdl-org/SDL (3.4.14) | window, input, audio, rendering; dlopen'ed by the host | zlib |
 | NASM | https://www.nasm.us/ | assembler for the whole host | BSD-2-Clause |
 | Ghidra | https://ghidra-sre.org/ · https://github.com/NationalSecurityAgency/ghidra (12.1.4) | the RE database behind `re/` | Apache-2.0 |
+| Ghidra documentation | the Homebrew install of 12.1.4 (`/opt/homebrew/opt/ghidra/libexec`: `docs/ghidra_stubs/typestubs`, `docs/`, `support/`, `Ghidra/Features/*/ghidra_scripts`) | API reference stubs, cheat sheet, headless README, 11 example scripts copied unchanged into `docs/ghidra/` by `tools/ghidra-docs.sh --curated`; the full javadoc/help unpacked on demand into git-ignored `ghidra-docs/` | Apache-2.0 (install `LICENSE`, stubs `PKG-INFO`, script headers); the full javadoc's bundled jQuery (MIT) and DejaVu fonts are not committed |
 | GhidraMCP — bethington | https://github.com/bethington/ghidra-mcp (v7.0.0-rc.3) | agents query/annotate the live Ghidra (`tools/ghidra-mcp/`, `docs/ghidra-mcp.md`) | Apache-2.0 |
 | Bun | https://bun.sh | runs `tools/formats/` | MIT |
 | Rosetta 2, Xcode / Apple clang + ld | Apple | x86-64 host on Apple Silicon, linking | Apple terms |
