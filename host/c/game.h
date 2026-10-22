@@ -47,6 +47,9 @@ uint32_t game_fastcall(gptr fn, uint32_t ecx, uint32_t edx, int nargs, ...);
 
 extern uint32_t r_frames NASM(r_frames);    /* presented frames (w32_renderer.asm) */
 
+/* C32 (c32_host.c): the address of a C32_EXPORT'ed global or function, or 0 */
+void *c32_find(const char *name);
+
 /* ---- game structs: re/gta2_types_c64.h, generated from the Ghidra project (Seq 27):
  * exact 32-bit layouts, every game pointer a uint32_t, GP(T, v) turns one into a T*.
  * Game globals not in the header: */

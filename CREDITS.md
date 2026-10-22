@@ -51,13 +51,13 @@ License terms below are quoted as each source states them; this is not legal adv
     (Ped, Car, Player, Camera, enums such as `PED_REMAP`, `CAR_MODEL4`), harvested into
     `re/external/` and partly imported into our Ghidra database (`re/external/README.md`).
   - **Hook sites** from `src/events/*.cpp`, used in `host/w32_hooks.asm` and
-    `host/debug_menu.asm`: camera zoom `CameraPosApply` 0x41F3E9 (`camera-pos-apply.cpp`), shadow
+    `host/debug_menu.asm` / `host/c/menu/` (the K menu): camera zoom `CameraPosApply` 0x41F3E9 (`camera-pos-apply.cpp`), shadow
     offset 0x4BE394 (`scale-shadow.cpp`), the render-queue safety valve at `DrawMapLayer` call
     0x472535 (`draw-map-layer.cpp`, its "low zoom crashes" and custom render queue), `DrawUI`
     call 0x45A61F (`draw-ui.cpp`).
   - **Hook kinds:** our `CALLHOOK` and `JMPHOOK` follow its `FunctionCallHook` / `JumpHook`
     (`src/hook-types/`).
-  - **Debug-menu features** in `host/debug_menu.asm`: quick save `SaveGame` 0x47EF40
+  - **Debug-menu features** in `host/c/menu/` (`root.c`, `player.c`, `vehicle.c`, `helpers.c`): quick save `SaveGame` 0x47EF40
     (`save-game.cpp`), all weapons via `AddWeapon` 0x43E4B0 (`get-all-weapons.cpp`), money
     (`player-stats-menu.cpp`), wanted level and its lock (`cop-value-utils.cpp`,
     `player-appearance.cpp`), skins and car names (`lists-utils.cpp`, `gta2.h`), car spawn
@@ -92,7 +92,7 @@ License terms below are quoted as each source states them; this is not legal adv
   `gta2-resurected.ct` (live data addresses, e.g. the debug-flag bytes and window size); and the
   **Ghidra archive `gta2-resurected.exe.gzf`**, the 2021 Ghidra database, exported to
   `re/external/gzf/` (names such as `GameTick`, `InitVideoDll`, `WndProc`, `SetZ`,
-  `do_show_junc_id`, the debug-flag names used in `host/debug_menu.asm`). Harvest:
+  `do_show_junc_id`, the debug-flag names used in `host/c/menu/flags.c`). Harvest:
   `re/external/`.
   Its mouse rotation (`mod-mouse-rotation.lua`, the `SetKeyState` 0x4A4930 hook in
   `dllmain.cpp` @87e1d98, virtual left/right keys) is credited as prior art in

@@ -173,7 +173,7 @@ Also measured by hand: jacking a stopped driven car (`teleport` next to it, `ent
 |---|---|---|
 | socket, protocol, commands, telemetry, options | `host/c/ctl.c` | a host feature (64-bit host C, `docs/host-c.md`) |
 | state, nearest lists, teleport, enter/exit orders, steering | `host/c/ctl_game.c` | the game side of the same feature; its per-tick work is two `Player` fields, written from the existing NASM hook. A C32 half would need the command state twice, shared through exports |
-| spawning | `host/c/spawn.h` (interface agreed with Seq 55's C port of the K menu), `host/c/ctl_spawn.c` (stand-in until that port lands, then removed) | the K menu's recipes |
+| spawning | `host/c/spawn.h`, implemented by the K menu (`host/c/menu/helpers.c`, `spawn_ped.c`, `spawn_object.c`, `docs/debug-menu.md`) | the K menu's recipes |
 | hooks into the host | `vid_FlipBuffers` → `ctl_frame` (`w32_renderer.asm`), `hk_MoveOnFoot` → `ctl_on_foot` (`player_move.asm`), `_main` → `ctl_arg` / `ctl_init` (`loader.asm`), `input_push_key` (`w32_dinput.asm`) | |
 | client | `tools/gta2ctl/gta2ctl.c` | native, no Rosetta |
 

@@ -37,10 +37,7 @@ link() {
   [ -x "$out" ] || exit 1
 }
 
-rm -f host main.o loader loader.o c/*.o
-# K menu pages: every menu/*.asm registers itself (docs/debug-menu.md), so the list of
-# includes is generated, not kept by hand
-for f in menu/*.asm; do printf '%%include "%s"\n' "$f"; done > menu_modules.inc
+rm -f host main.o loader loader.o c/*.o c/menu/*.o menu_modules.inc
 nasm -f macho64 ${NASMFLAGS:-} -o main.o main.asm
 link host main.o -L"$SDL3_PREFIX/lib" -lSDL3 -rpath "$SDL3_PREFIX/lib"
 # C32 (docs/c32.md): host/c32/*.c is i386 code that runs inside the game's 32-bit segment.
@@ -60,13 +57,14 @@ done
 "$LLD" -m elf_i386 -T c32/c32.ld -Map c32/c32.map -o c32/c32.elf $c32objs
 "$LLD" -m elf_i386 -T c32/c32.ld --oformat binary -o c32/c32.bin $c32objs
 nasm -f macho64 ${NASMFLAGS:-} -I. -o loader.o loader.asm
-# Host C modules (docs/host-c.md): every c/*.c is compiled and linked into the loader,
+# Host C modules (docs/host-c.md): every c/*.c and c/menu/*.c (the K menu, each page
+# registers itself, docs/debug-menu.md) is compiled and linked into the loader,
 # 64-bit host code like the NASM around it. Same target as the link (minos 26.0, SDK).
 # -I../re: the generated game struct header re/gta2_types_c64.h.
 CFLAGS="-arch x86_64 -std=c99 -O2 -Wall -Wextra -Werror -mmacosx-version-min=26.0 -I../re \
   -isysroot $(xcrun --show-sdk-path) ${CFLAGS_EXTRA:-}"
 cobjs=
-for f in c/*.c; do
+for f in c/*.c c/menu/*.c; do
   [ -f "$f" ] || continue
   "$(xcrun -f clang)" $CFLAGS -c -o "${f%.c}.o" "$f"
   cobjs="$cobjs ${f%.c}.o"

@@ -501,7 +501,7 @@ SFXVol seed 0x0B is much lower than the 0x7F default — probably the installer'
 * **Format:** `[0x748-byte SaveGameHeader]` then three sections `[u32 size][size bytes]`, each possibly size 0 (the data block is skipped when size==0): (1) `g_MapBlocks` delta A = `*(MapBlocks+0x40008) + *(MapBlocks+0x40000)*4`, size `(this+0x360 - off)*4`; (2) delta B = `*(+0x4000C)+*(+0x40004)*0xC`, size `(this+0x354-off)*0xC`; (3) `this+4`, size `*(this+0x324) << 3`. These are the *dynamic tail* of the map's block/column tables (blocks added at runtime, i.e. modified map). Extracted by `FUN_004642A0`, re-applied by `FUN_00464250`. Layout semantics = hypothesis (Seq 37/map owner can confirm). No checksum, no version.
 * **Functions:** save: `SaveGame` 0x47EF40 ← `Script_Op_SAVE_GAME` 0x47FE50 (opcode 277, unused in bil.scr), `Script_Op_PERFORM_SAVE_GAME` 0x47FE80 (opcode 438: the church/save point; costs $50000, "svmiss"/"svscore"/"svdone" HUD messages via `Hud_Brief_EnqueueNoArg`, refuses when a mission is active), `SomeSwitch` 0x41D0B0 case 9 (debug key via Player_OnKeyDown); helpers FUN_0047EE70 (collect patched script commands), FUN_00475CA0 (fill the three path strings + area/bonus bytes), FUN_00483D90 (collect weapon pickups), `Player::Player_SaveCheckpoint`. Load: `FrontEnd_LoadSavedGameSlot` 0x455850 (reads the first 0x52 header bytes, validates that each path starts with `data\`, calls `Menu_SetSavePath/GmpPath/StyPath/ScrPath/StartArea/BonusLevelId/IsBonusLevel`; DisplayError codes 0xA6/0xA7/0xA8 on a bad path) → game start → `InitGame` → `LoadGMP_and_STY_Files` 0x45B469 → `MissionScript_LoadSaveGame` 0x47F0B0 when `Menu_GetSavePath` is non-empty. Other callers of `Menu_SetSavePath`: `FrontEnd_SelectLevel`/`FrontEnd_UpdateMenuMode` clear it (`DAT_0056E5B4` = ""), `Replay_ReadHeader`, `Menu_LoadDebugLevelFromRegistry` (Debug\savename).
 * **Other persistent files**: `player\plyslot<N>.dat` — profile/unlock data, 0x7E bytes, written by `FUN_004A89E0` (callers FrontEnd_CommitProfileName, FrontEnd_DeleteCurrentProfile, UnlockAllLevels, WinMain2-via-FUN_004A8F90 on level end, PlayerData_Ctor); `player\hiscores.hsc` — 0xF0 + 3×0x3F0 bytes of high scores, `FUN_004A8D80` (`FUN_004A8B60` builds the name). Both go through `FUN_00402CF0`. Owner: whoever takes `plydat`/`PlayerData_Ctor` (0x4A8xxx).
-* **`host/debug_menu.asm` quick save** calls `SaveGame` 0x47EF40 directly (credit seuko-mod `save-game.cpp`); that is the full "save here" entry point for mods.
+* **K menu quick save** (`host/c/menu/root.c`) calls `SaveGame` 0x47EF40 directly (credit seuko-mod `save-game.cpp`); that is the full "save here" entry point for mods.
 
 
 `SaveGameHeader` (0x748 bytes, struct created in the DB, not yet applied to `buf466` 0x664590):
@@ -535,7 +535,7 @@ Verified: sum of the sections == 0x748 == the length passed to the writer (`loca
 
 - **Insertion point**: the `CALL DrawUI` at **0x45A61F** in `eachFrame` (preceded by
   `MOV ECX,[0x672F40]` at 0x45A619; re-checked from the bytes `8B 0D 40 2F 67 00 E8 1C FE 06 00`).
-  The host already hooks this call site (`w32_hooks.asm`, used by `host/debug_menu.asm`). At that
+  The host already hooks this call site (`w32_hooks.asm`, used by the K menu: `host/debug_menu.asm` `hk_DrawUI`). At that
   point the frame is between `gbh_BeginScene` and `gbh_EndScene`, the world and the score popups
   are drawn, and `g_ViewCamera` (0x5E3CC4) points to the local camera (UI scale at +0xA8).
   Call the original `DrawUI` (`__fastcall`, ECX = HudManager*) and then draw your element, or skip

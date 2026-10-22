@@ -69,37 +69,80 @@ Option 1, verified in disassembly (`RET 0x2C`) by us and by Seq 27
 `Sprite.rotation`), `*palette` is the palette-base kind (2 sprite = no remap, 3 car remap,
 4 ped remap, 5 code obj, 6 map obj, 7 user, 8 font) and `remap` the index within that base.
 
-## 4. The v2 structure
+## 4. The structure (v2, in host C since v3)
 
-### Records (all macros in `host/debug_menu.asm`; a module file only needs them)
+### v3: the port to 64-bit host C (Seq 55, 2026-10-22)
 
-```nasm
-DM_PAGE  name, parent, order, "Title"[, draw, key, rows, rowfmt, rowchange]
-DM_ITEM  page, order, KIND, "label", data
-DM_FRAME order, fn          ; fn() once per gameplay frame, on the game's side, before the HUD
+The framework and every page moved from NASM (`host/debug_menu.asm` + `host/menu/*.asm`,
+4745 lines) to host C in `host/c/menu/` (one file per page, `docs/host-c.md`). Same keys,
+rows, layout, log lines; screenshots and logs compared scenario by scenario. What stays NASM
+is glue in `host/debug_menu.asm` (see "NASM glue" below).
+
+How a C file registers itself, options considered:
+
+| Option | For | Against |
+|---|---|---|
+| **A. The same linker sets, from C (chosen)** | `__attribute__((used, section("__DATA,__dm_items")))` records with the exact NASM layout, so C pages and the not-yet-ported NASM feature modules land in one array and sort together; static data, no init order, zero runtime glue | records stay fixed-size; a page needs the macro, not a function call |
+| B. Constructor registration (`__attribute__((constructor))` calling `dm_register`) | ordinary C, dynamic | runs before `_main` in libSystem's init (ordering vs our own setup); the NASM modules' records would need a second path or a rewrite now |
+| C. A central C table | trivial | violates requirement 1, merge conflicts between parallel tasks |
+
+A also keeps the NASM `DM_ITEM` / `DM_FRAME` / `DMVALUE` macros working unchanged, which the
+wave-1 rule required (the feature modules move to C32 in wave 2).
+
+### Records (macros in `host/c/menu/dm.h`)
+
+```c
+DM_PAGE(name, parent, order, "Title"[, .draw = f, .key = f, .rows = f, .rowfmt = f, .rowchange = f]);
+DM_ITEM(page, order, KIND, "label", data);
+DM_FRAME(order, fn);        /* fn() once per gameplay frame, on the game's side, before the HUD */
+DM_VALUE_FNS(x);            /* static const struct dm_value dmv_x = { x_change, x_fmt } */
+DM_PAGE_EXTERN(name);       /* another file's page, as a parent or for DM_ITEM */
 ```
 
 - `DM_PAGE` emits a page record **and** the link item `Title...` on its parent, so a page
-  appears in its parent's list by itself. `parent = 0` only for the root `dmp_root`.
-- Optional page callbacks, all 0 by default:
-  - `draw(rdi = page)` after the list: the preview pane or any extra content.
-  - `key(edi = DIK) -> eax = 1 consumed` before the generic keys.
-  - `rows() -> eax = n` dynamic rows shown before the registered items (for lists built at run
-    time, e.g. the models of the current style); `rowfmt(edi = row, rsi = buf)` writes the row
-    label; `rowchange(edi = row, esi = -1 / +1 / 0 enter)`.
-- Item kinds: `DM_ACTION` (data = fn, run deferred on the game's side), `DM_FLAG` (data = a
-  byte toggled 0/1), `DM_VALUE` (data = `dmv_x` = `{change(esi = dir), fmt(rdi = text end)}`,
-  `DMVALUE x` makes the pair from `dm_x_change` / `dm_x_fmt`), `DM_PAGE` (emitted by `DM_PAGE`).
-  Every page gets `Back` (or `Close` on the root) as its last row automatically.
-- `order`: rows sort by it (ties keep link order); leave gaps of 10.
+  appears in its parent's list by itself. Only the root (`root.c`) is written by hand
+  (no parent, no link). Every page is a global under its own name without the underscore
+  (`dmp_player`), so NASM can `extern` it; `dm.h` declares the well-known ones.
+- Optional page callbacks (0 by default):
+  - `void draw(struct dm_page *page)` after the list: the preview pane or any extra content.
+  - `int key(int dik)` → 1 consumed, before the generic keys.
+  - `int rows(void)` dynamic rows shown before the registered items (lists built at run time,
+    e.g. the models of the current style); `void rowfmt(int row, char *buf)` writes a row
+    label (128 bytes); `void rowchange(int row, int dir)`, dir -1 / +1 / 0 RETURN.
+- Item kinds: `DM_ACTION` (data = `void fn(void)`, run deferred on the game's side),
+  `DM_FLAG` (data = a byte toggled 0/1, may be a game address), `DM_VALUE` (data =
+  `&dmv_x`, `{void change(const struct dm_item *, int dir), void fmt(char *end)}`),
+  `DM_LINK` (emitted by `DM_PAGE`). Every page gets `Back` (or `Close` on the root) last.
+- `order`: rows sort by it (ties keep link order: NASM records first, then the C objects in
+  `build.sh` order); leave gaps of 10.
 
-### Runtime
+The NASM macros (`host/debug_menu.asm`) emit the same `struct dm_item` / `struct dm_frame`
+records: `DM_ITEM page, order, KIND, "label", data`, `DM_FRAME order, fn`, `DMVALUE x`
+(`dmv_x: dq dm_x_change, dm_x_fmt`). They have no `DM_PAGE`: new pages are C.
 
-- First open: `dm_build` walks `__dm_items` once and makes a sorted row array per page.
+### Runtime (`core.c`)
+
+- First gameplay frame: `dm_build` walks `__dm_items` once and makes a sorted row array per
+  page, and sorts the `__dm_frame` records in place.
 - `dm_page` is the current page; each page remembers its selection and scroll offset.
 - Up to `DM_VISIBLE` (16) rows show at once; a scroll bar appears when there are more.
-- `dm_defer(rdi = fn)`: queue a function for the game's side of the frame (`hk_DrawUI`, after
+- `dm_defer(fn)`: queue a function for the game's side of the frame (`dm_on_drawui`, after
   the `DM_FRAME` hooks). Actions and spawners use it.
+
+### NASM glue (`host/debug_menu.asm`)
+
+- `hk_DrawUI` / `hk_PauseOverlay`: the two CALLHOOK handlers; `hk_DrawUI` hands the
+  DrawUI `ecx` to `dm_on_drawui`.
+- `dbgmenu_key` (for `input_key`), `dm_player_ped` (eax = Ped\*, ecx = Player\*, every other
+  register kept), `dm_call_car`: the register contracts the NASM callers were written
+  against, as thin shims over C.
+- `dm_cb(fn, a, b)`: how C calls anything that may be NASM (frame hooks, value pairs,
+  actions, `low_alloc`, `input_release_all`). It keeps rbx, rbp, r12-r15 and aligns the
+  stack whatever the callee does, because NASM callbacks were only ever checked against
+  NASM callers.
+- C data the feature modules read or write keeps its NASM name through `NASM()` labels:
+  `dm_toast`, `dm_toast_left`, `dm_model`, `dm_spawnable`, `dm_last_car(_id)`,
+  `s_dm_noplayer2`, `fmt_dm_int`, `dm_paused`; `f_dm_rot2rad` stays NASM data.
 
 ### Keys
 
@@ -128,83 +171,130 @@ input). A pause the player made with the game's own key is left alone. The game'
 screen (`Hud_PauseOverlay_Draw` `0x4C9FA0`, called by `DrawUI` at `0x4CA4F9`) is skipped by a
 CALLHOOK while the pause is ours.
 
-### Reusable components
+### Reusable components (`dm.h`)
 
-- `dm_text_at(rdi = ASCII, esi = x, edx = y, ecx = 1 highlighted)` — game font text at any spot.
-- `dm_rect(edi = x1, esi = y1, edx = x2, ecx = y2, r8d = argb)` — a flat box.
-- `dm_sprite(rdi = DMSPRITE*)` — any sprite: `DS_TYPE` (SPRITE_TYPE 2 car, 3 ped, 4 code
-  obj, 5 map obj, 6 user, 7 font), `DS_ID` (relative to the type's base), `DS_PAL` (palette
-  kind), `DS_REMAP`, `DS_X`/`DS_Y` centre, `DS_BOX` fit size (0 = use `DS_SCALE` percent),
-  `DS_ROT` (1440 per turn). It looks up the sprite's w/h in the style to fit it into the box.
-- `dm_text_w(rdi = ASCII) -> eax` — a string's width in 640x480 units at the menu's text
-  size (`GetGTATextWidth` `0x4CB0C0`). The list box grows to its title and visible rows
-  (at least `DM_W_MIN`), so nothing leaves it; a pane measures its own lines the same way.
-- `dm_pane(esi = y1, ecx = y2, edx = width)` — the pane frame right of the list box; its
-  content starts at `[dm_pane_x]` (set every frame from the box's measured width).
-- `dm_sprite_wh(edi = type, esi = id) -> eax = w | h << 8` — a sprite's size.
-- `dm_toast_set(rax = string)` — the message line at the bottom.
-- `dm_player_ped`, `dm_car`, `dm_spawn_car` (model = `dm_spawnable[dm_model]`, returns the
-  Car*), `dm_call_car` (a fastcall on a Car*) — shared game helpers.
-- `dm_spawn_pos(rdi = out dd[4], esi = distance SCR_f) -> eax` — where spawners put things:
-  SCR_f x, y, z and the rotation, that far in front of the player on foot, facing the same way
-  (`DM_SPAWN_DIST` = 1.5 blocks for cars and objects, 1 block for peds); eax = the
-  player's Sprite*, or 0 with rdx = a toast string (no player, in a car). `dm_spawn_car`,
-  `spawn_ped.asm` and `spawn_object.asm` use it.
-- `dm_car_info(edi = model) -> eax = CarInfo*` or 0 — `g_StyleData 0x670684 +0x5C` →
-  `AllCarsInfo.cars[model]` (re/ `StyleData_GetCarInfo` 0x4BF1F0).
-- `dm_gxt(rdi = key, rsi = out, edx = size)` — game text (`Gxt_FindTextW` 0x4C2120 on
-  `g_LocaleSettings` 0x671550) as ASCII.
+- `dm_text_at(s, x, y, highlighted)` — game font text at any spot.
+- `dm_rect(x1, y1, x2, y2, argb)` — a flat box.
+- `dm_sprite(&(struct dm_sprite){ .type, .id, .pal, .remap, .x, .y, .box, .scale, .rot })` —
+  any sprite: type (SPRITE_TYPE 2 car, 3 ped, 4 code obj, 5 map obj, 6 user, 7 font), id
+  (relative to the type's base), palette kind, remap, centre, `box` fit size (0 = use
+  `scale` percent), `rot` (1440 per turn). It looks up w/h in the style to fit the box.
+- `dm_text_w(s)` — a string's width in 640x480 units at the menu's text size
+  (`GetGTATextWidth` `0x4CB0C0`). The list box grows to its title and visible rows (at least
+  `DM_W_MIN`), so nothing leaves it; a pane measures its own lines the same way.
+- `dm_pane(y1, y2, width)` — the pane frame right of the list box; its content starts at
+  `dm_pane_x` (set every frame from the box's measured width).
+- `dm_sprite_wh(type, id)` → `w | h << 8`; `dm_car_info(model)` → `CarInfo *` or 0
+  (`g_StyleData 0x670684 +0x5C` → `AllCarsInfo.cars[model]`, re/ `StyleData_GetCarInfo` 0x4BF1F0);
+  `dm_gxt(key, out, size)` — game text (`Gxt_FindTextW` 0x4C2120 on `g_LocaleSettings`
+  0x671550) as ASCII.
+- `dm_toast_set(s)` — the message line at the bottom.
+- `dm_player()`, `dm_player_ped()`, `dm_car(&in_it)` — shared game helpers (`helpers.c`).
+
+### Spawning without the UI (`host/c/spawn.h`)
+
+The Spawn pages are a UI over four plain functions, also used by gta2ctl (Seq 58):
+`km_spawn_pos(out[4], dist)` (where the menu spawns: that far in front of the player on
+foot, facing the same way; 1.5 blocks for cars and objects, 1 for peds),
+`km_spawn_car(model, remap, x, y, z, rot)`, `km_spawn_ped(remap, role, behave, x, y, z, rot)`,
+`km_spawn_object(type, remap, x, y, z, rot)`. Each returns the game object's VA or 0 and
+sets `km_spawn_why` to the menu's toast text; call them on the game's side of a frame. The
+pages print the `menu: spawn ...` log lines themselves.
 
 All layout is in 640x480 units, scaled by the main camera's `uiScale` like the HUD.
 
+### Known limits
+
+- `dm_sprite` computes `uiScale * k` in 32 bits, like the NASM did. Computed, not
+  observed: at `uiScale` 2.0 (1280x960) the ped preview's 450 % (k = 73728) wraps to a
+  negative scale; the spinning preview looks right in the screenshots, so it was kept for
+  parity. A 64-bit product is
+  the fix if a fixed-angle preview ever needs it.
+- `km_spawn_pos` uses libm `sin`/`cos` in doubles where the NASM used x87 `fsincos` at the
+  game's 24-bit precision: a spawn point may differ by 1/16384 of a block.
+
 ## 5. How to add a page (recipe)
 
-1. Create `host/menu/<thing>.asm`. `build.sh` includes every file there.
+1. Create `host/c/menu/<thing>.c`. `build.sh` compiles every file there.
 2. Declare the page and its rows. The page's link shows up on the parent by itself:
 
-```nasm
-; host/menu/hello.asm — a minimal page under the root
-section .data
-    DM_PAGE  dmp_hello, dmp_root, 90, "Hello"
-    DM_ITEM  dmp_hello, 10, DM_FLAG,   "A toggle: ", hello_flag
-    DM_ITEM  dmp_hello, 20, DM_ACTION, "Say hi", hello_say
-section .text
-hello_say:                          ; runs on the game's side of the frame
-    lea rax, [s_hello]
-    jmp dm_toast_set
-section .rodata
-s_hello: db "Hi", 0
-section .bss
-hello_flag: resb 1
+```c
+/* host/c/menu/hello.c — a minimal page under the root */
+#include "dm.h"
+
+static uint8_t hello_flag;
+
+static void hello_say(void)             /* runs on the game's side of the frame */
+{
+    dm_toast_set("Hi");
+}
+
+DM_PAGE(dmp_hello, dmp_root, 90, "Hello");
+DM_ITEM(dmp_hello, 10, DM_FLAG, "A toggle: ", &hello_flag);
+DM_ITEM(dmp_hello, 20, DM_ACTION, "Say hi", hello_say);
 ```
 
-3. Need graphics? Give the page a `draw` callback and call `dm_sprite` from it.
-   Need a list built at run time? Give it `rows` / `rowfmt` / `rowchange`.
-4. Need per-frame work (an overlay, a watchdog)? `DM_FRAME order, fn` in the same file.
+3. A value row: `static void x_change(const struct dm_item *it, int dir)` and
+   `static void x_fmt(char *end)`, then `DM_VALUE_FNS(x);` and
+   `DM_ITEM(page, order, DM_VALUE, "X: ", &dmv_x);`.
+4. Need graphics? Give the page `.draw = f` and call `dm_sprite` from it. A list built at
+   run time? `.rows` / `.rowfmt` / `.rowchange`. Per-frame work (an overlay, a watchdog)?
+   `DM_FRAME(order, fn);` in the same file.
 5. `host/build.sh`, run, open K.
 
-Adding an entry to an existing page is one line in your module:
-`DM_ITEM dmp_vehicle, 45, DM_VALUE, "Turbo: ", dmv_turbo`.
+Adding a row to an existing page is one line in your own file:
+`DM_PAGE_EXTERN(dmp_vehicle);` (not needed for the pages `dm.h` declares) and
+`DM_ITEM(dmp_vehicle, 45, DM_VALUE, "Turbo: ", &dmv_turbo);`.
 
-`host/menu/spawn_car.asm` is built exactly this way (a page under `dmp_spawn` with dynamic
-rows: `rows` lists the style's models, `rowfmt` names them, `rowchange` takes LEFT / RIGHT as
-the remap and RETURN as "spawn" through `dm_defer`; a `draw` callback with `dm_pane` and
-`dm_sprite`) and is the worked example for larger pages. It needed no line outside its file.
+`host/c/menu/spawn_car.c` is the worked example for larger pages: a page under `dmp_spawn`
+with dynamic rows (`rows` lists the style's models, `rowfmt` names them, `rowchange` takes
+LEFT / RIGHT as the remap and RETURN as "spawn" through `dm_defer`) and a `draw` callback
+with `dm_pane` and `dm_sprite`.
+
+### A row for a C32 module
+
+C32 code runs in the game's segment and cannot register host records itself; its row lives
+in host C (the mod's host file, like `host/c/c32_host.c`, or a page file) and reaches the
+C32 side through `C32_EXPORT` (`docs/c32.md`, "Exports"). A sketch (not built; the live
+example is below):
+
+```c
+/* host C */                                   /* host/c32/turbo.c (C32) */
+static uint32_t *turbo;   /* = c32_find("turbo_on") once the image is loaded */
+                                               uint32_t turbo_on;
+static void turbo_change(const struct dm_item *it, int dir)
+{                                              C32_EXPORT(turbo_on);
+    (void)it; (void)dir;
+    *turbo ^= 1;          /* a plain store: the image is mapped 1:1 */
+}
+static void turbo_fmt(char *end) { strcpy(end, *turbo ? "on" : "off"); }
+DM_VALUE_FNS(turbo);
+DM_ITEM(dmp_vehicle, 45, DM_VALUE, "Turbo: ", &dmv_turbo);
+```
+
+A C32 *function* (an action) is exported the same way (`C32_EXPORT(turbo_now)`) and called
+from a `DM_ACTION` with `call32((gptr)(uintptr_t)c32_find("turbo_now"), 0, 0, 0, 0, 0)` —
+actions run deferred on the game's side, where calling 32-bit code is allowed. The Mods
+page's "Car entry bonus" (`c32_host.c`) is the live example of the value-row form.
+
 
 ## 6. Pages today
 
-- **root** (`debug_menu.asm`): Quick save, Get all weapons, Add $100000, Camera zoom; Ped
+Files are in `host/c/menu/` unless a path is given.
+
+
+- **root** (`root.c`): Quick save, Get all weapons, Add $100000, Camera zoom; Ped
   paths (`debug_paths.asm`), Mouse turning and Strafe (`player_move.asm`); links.
-- **Player** (`menu/player.asm`): wanted level and lock, skin, body; roadblocks
+- **Player** (`player.c`): wanted level and lock, skin, body; roadblocks
   (`debug_roadblocks.asm` registers them), ambulance / fire truck (`debug_emergency.asm`).
-- **Vehicle** (`menu/vehicle.asm`): the current / last car, colour, invincible, repair, explode.
-- **Spawn** (`menu/spawn.asm`): a group page for spawners.
-  - **Car** (`menu/spawn_car.asm`): every spawnable car model of the current style, its
+- **Vehicle** (`vehicle.c`): the current / last car, colour, invincible, repair, explode.
+- **Spawn** (`spawn.c`): a group page for spawners.
+  - **Car** (`spawn_car.c`): every spawnable car model of the current style, its
     name from the GXT, sorted by the style's rating (99 special first, then good, average,
     bad; DMA's GTA2 Style Format), LEFT / RIGHT picks the remap (game's random, none, or each of the
     model's own remaps), a rotating preview with that remap at 2-3x size, size / seats /
     rating class / remap count; RETURN spawns it 1.5 blocks in front of the player with that remap.
-  - **Ped** (`menu/spawn_ped.asm`): one row per ped remap 0..52 (the look), named from the
+  - **Ped** (`spawn_ped.c`): one row per ped remap 0..52 (the look), named from the
     PED_REMAP enum (`Remap N (civilian)` for the unnamed ones), the level's gangs tagged with
     their gang (`Yakuza (yakuzagang)`) and sorted first, then police, emergency / special roles,
     named looks, plain civilians. LEFT / RIGHT picks the role: auto (the look's own: gang member
@@ -221,7 +311,7 @@ the remap and RETURN as "spawn" through `dm_defer`; a `draw` callback with `dm_p
     the role is a short cycle that applies to any look (a cop in Elvis' remap is a valid debug
     case), and "auto" keeps the common case one key. The behaviour is orthogonal to both, so it
     gets its own key instead of a third list.
-  - **Object** (`menu/spawn_object.asm`): every world object type the level's prefab table
+  - **Object** (`spawn_object.c`): every world object type the level's prefab table
     holds (the game's static tables plus the style's map objects; 122 in Downtown), named
     from the GXT for pickups (`c%02d`, like the game's pickup message) and from the
     `OBJECT_TYPE` enum otherwise (an unnamed map object reads "Map object N"), in groups:
@@ -240,7 +330,8 @@ the remap and RETURN as "spawn" through `dm_defer`; a `draw` callback with `dm_p
     bonus letters (GXT "na"; picking one up would call AddWeapon with a letter's index) and
     ringing / in-call phones (touching one answers it through the mission script). Seq 27's
     notes on what is safe: `seq52_prep.md` (Seq 27 report).
-- **Debug flags** (`menu/flags.asm`): the game's own flags; Road network (`debug_roads.asm`).
+- **Mods** (`mods.c`): Car entry bonus and Passenger (registered by `host/c/c32_host.c`).
+- **Debug flags** (`flags.c`): the game's own flags; Road network (`debug_roads.asm`).
 
 ## 7. RE facts used (sources)
 

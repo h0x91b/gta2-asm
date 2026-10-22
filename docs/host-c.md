@@ -16,9 +16,10 @@ and Seq 54 (C32), 2026-10-22, the same car-entry mod in both; the mod now lives 
 
 ## Build
 
-`host/build.sh` compiles every `host/c/*.c` and links the objects into `loader` through
+`host/build.sh` compiles every `host/c/*.c` and `host/c/menu/*.c` (the K menu,
+`docs/debug-menu.md`) and links the objects into `loader` through
 the same `/usr/bin/ld` line as `loader.o` (no list to edit; a new file is picked up by
-itself, like `host/menu/*.asm`):
+itself):
 
 ```sh
 clang -arch x86_64 -std=c99 -O2 -Wall -Wextra -Werror -mmacosx-version-min=26.0 \
@@ -94,16 +95,11 @@ for a caller whose `call` was aligned. `config.c` calls `reg_key_add`, `reg_val_
 `NASM()` in the C file. Check a NASM function's pushes before adding it to such a list.
 
 A C function can also *be* the handler or a table entry directly when its contract is
-SysV already: the K menu's `DM_VALUE` pair `{change(esi = dir), fmt(rdi = text end)}` is
-called with an aligned stack, so `host/menu/mods.asm` points it straight at C:
-
-```nasm
-dmv_carbonus: dq _c32_carbonus_change, _c32_carbonus_fmt
-```
-```c
-void c32_carbonus_change(void *item, int dir);   /* esi = dir is the 2nd SysV argument */
-void c32_carbonus_fmt(char *end);                /* rdi */
-```
+SysV already. The other way round, C calling a NASM function whose callee-saved discipline
+was only ever checked against NASM callers goes through `dm_cb(fn, a, b)`
+(`host/debug_menu.asm`): it keeps rbx, rbp, r12-r15 and realigns the stack around the call.
+The K menu (`host/c/menu/`) calls every `DM_FRAME` hook and `DM_VALUE` pair that way, since
+the NASM feature modules still register some.
 
 ### Import shims in C (the game calls a Win32 / DLL export)
 
@@ -266,7 +262,8 @@ The host side of C32, i.e. everything about a C32 mod that is not game logic:
   `mods: car_enter_bonus: N` with `strtol` and writes the C32 global the image exports
   (`C32_EXPORT(car_bonus)`), found by name — the image is mapped 1:1, so it is a plain store.
 - **K menu row** (`c32_carbonus_change` / `c32_carbonus_fmt`): the Mods page's value row,
-  pointed at C directly (above).
+  registered from this file with `DM_ITEM(dmp_mods, ...)` (`docs/debug-menu.md`, "A row
+  for a C32 module").
 
 Try the mod: put `mods:` / `  car_enter_bonus: 333` in
 `~/Library/Application Support/gta2-resurrected/config.yaml` (or `--config=PATH`), run

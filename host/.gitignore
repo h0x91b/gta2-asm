@@ -2,7 +2,7 @@ main.o
 host
 loader.o
 loader
-menu_modules.inc
+c/menu/*.o
 c/*.o
 c32/*.o
 c32/c32.elf

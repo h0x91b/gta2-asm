@@ -16,6 +16,11 @@ global input_push_key
 global have_focus
 
 extern _ctl_arg, _ctl_init, _ctl_frame, _ctl_exit, _ctl_on_foot   ; host/c/ctl.c (docs/gta2ctl.md)
+; host/c/menu (the K menu, docs/debug-menu.md); its own externs are in debug_menu.asm
+global dm_cb                        ; debug_menu.asm: C -> a callback that may be NASM
+global cam_zoom_pct                 ; w32_hooks.asm: the camera zoom the menu changes
+global input_release_all           ; w32_dinput.asm
+global low_alloc                    ; w32_core.asm: memory below 4 GB
 
 
 ; host/c/config.c (config.yaml): called by loader.asm (--config=) and after the registry

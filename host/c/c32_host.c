@@ -14,6 +14,7 @@
 #include <sys/mman.h>
 #include "game.h"
 #include "../c32/c32_abi.h"
+#include "menu/dm.h"
 
 extern const uint8_t c32_blob[] NASM(c32_blob);
 extern const uint8_t c32_blob_end[] NASM(c32_blob_end);
@@ -45,8 +46,8 @@ static void c32_fail(const char *why)
     exit(1);
 }
 
-/* the address of an exported C32 global, or 0 */
-static void *c32_find(const char *name)
+/* the address of an exported C32 global or function (C32_EXPORT), or 0 */
+void *c32_find(const char *name)
 {
     for (uint32_t e = hdr->exports; e < hdr->exports_end; e += 8)
         if (strcmp((const char *)(uintptr_t)rd32(e), name) == 0)
@@ -126,32 +127,38 @@ int c32_cfg_mods(const char *key, const char *val, const char **msg)
     return 0;
 }
 
-/* K menu value row (host/menu/mods.asm, DM_VALUE): any key toggles on / off */
-void c32_carbonus_change(void *item, int dir)
+/* K menu value row on the Mods page (menu/mods.c): any key toggles on / off */
+static void c32_carbonus_change(const struct dm_item *item, int dir)
 {
     (void)item;
     (void)dir;
     *bonus = *bonus ? 0 : bonus_amount;
 }
 
-void c32_carbonus_fmt(char *end)
+static void c32_carbonus_fmt(char *end)
 {
     if (*bonus)
         snprintf(end, 32, "$%u", *bonus);
     else
         snprintf(end, 32, "off");
 }
-
 /* ---- the passenger mod (c32/passenger.c): K menu row; the config key is in config.c --- */
 
-void c32_passenger_change(void *item, int dir)
+static void c32_passenger_change(const struct dm_item *item, int dir)
 {
     (void)item;
     (void)dir;
     mods_passenger_enter = !mods_passenger_enter;
 }
 
-void c32_passenger_fmt(char *end)
+static void c32_passenger_fmt(char *end)
 {
     snprintf(end, 32, "%s", mods_passenger_enter ? "on" : "off");
 }
+
+/* the Mods page rows (menu/mods.c) */
+DM_VALUE_FNS(c32_carbonus);
+DM_VALUE_FNS(c32_passenger);
+DM_PAGE_EXTERN(dmp_mods);
+DM_ITEM(dmp_mods, 10, DM_VALUE, "Car entry bonus: ", &dmv_c32_carbonus);
+DM_ITEM(dmp_mods, 20, DM_VALUE, "Passenger: ", &dmv_c32_passenger);

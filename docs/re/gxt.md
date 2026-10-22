@@ -195,7 +195,7 @@ clipping, no alignment**: callers centre with `(0x280 − GetGTATextWidth) / 2` 
 0x4521B0). Space width = width of glyph `n` (`StyleData_GetFontSpaceWidth` 0x4BF5D0), line height
 = height of glyph `A` (`StyleData_GetFontLineHeight` 0x4BF630). `invisibility` 0/1/2 and `alpha`
 go to `Text_GetQuadFlags` 0x4CB050 (0 = opaque; 1, 2 = blended with vertex colour
-`alpha << 27 | 0xFFFFFF`, H on the exact blend). host/debug_menu.asm calls it with (…, 0, 0): correct.
+`alpha << 27 | 0xFFFFFF`, H on the exact blend). The K menu (`host/c/menu/core.c` `dm_text_at`) calls it with (…, 0, 0): correct.
 
 Wrappers: `Hud_DrawScaledText` 0x4C7280 (× UI scale), `Hud_DrawScaledTextPlain` 0x4BA2C0,
 `Frontend_DrawText` 0x4539F0, `Frontend_DrawTextInCells` 0x4566C0 (name entry, one char per cell).
