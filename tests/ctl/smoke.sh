@@ -47,6 +47,7 @@ echo "$car"
 id=$(echo "$car" | sed 's/.*"id":\([0-9]*\).*/\1/')
 step enter_car "$id"
 step wait money '>=' 666 120
+step wait frames 60                         # the camera zooms out after entering
 step shot "$OUT/in-car.bmp"
 step exit_car
 step wait frames 10

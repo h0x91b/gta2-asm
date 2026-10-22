@@ -159,7 +159,7 @@ Telemetry example (`--telemetry=t.jsonl,every=30`):
 with `mods: car_enter_bonus: 333`, then: `state`; `teleport 132 195` (2 blocks from parked car
 29); `enter_car nearest`; `wait in_car == 1`; `wait money >= 333` (the bonus); `exit_car`;
 `goto 132.5 199.5` (5 blocks across the plaza); `spawn car 13 --at=129,199 --rot=90`;
-`enter_car <its id>`; `wait money >= 666`; `shot`; `exit_car`; `shot`; `log`; `quit`.
+`enter_car <its id>`; `wait money >= 666`; `wait frames 60`; `shot`; `exit_car`; `shot`; `log`; `quit`.
 Measured 2026-10-22: PASS, ~25 s, and two copies at once both PASS (two sockets, `gta2ctl
 list` shows both, a bare `gta2ctl ping` refuses to pick).
 
@@ -202,6 +202,10 @@ Game facts used (Seq 27's answers, `docs/re/ped-movement-collision.md`):
   foreground keyboard is not acquired (`focus` false in `state`). `goto`, `face`, `enter_car`
   and `exit_car` without `--key` do not use keys and work regardless.
 - Spawning in front of the player can put a car into a wall; use `--at`.
+- The camera is not settled right after `enter_car`: entering switches to the car camera,
+  which starts zoomed far in and pulls out (a `shot` 1 frame later showed only a roof
+  close-up; 60 frames later the car and street, measured 2026-10-22). `wait frames 60`
+  before a screenshot; phase 2 could expose the camera zoom as a `wait` field.
 
 ## For phase 2 and 3 (notes)
 
