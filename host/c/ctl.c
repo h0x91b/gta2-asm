@@ -46,7 +46,7 @@ extern char *r_shot_path NASM(r_shot_path);
 #define ENTER_TRIES   3
 #define ENTER_WALK    300               /* frames to reach a door after the order */
 
-enum { K_NONE, K_GOTO, K_FACE, K_ENTER, K_EXIT, K_KEY, K_WAIT, K_WAIT_FRAMES };
+enum { K_NONE, K_WALK, K_GOTO, K_FACE, K_ENTER, K_EXIT, K_KEY, K_WAIT, K_WAIT_FRAMES };
 enum { PH_APPROACH, PH_ORDER, PH_WAIT };
 enum { OP_EQ, OP_NE, OP_LT, OP_LE, OP_GT, OP_GE };
 
@@ -306,6 +306,7 @@ static int timeout_arg(const char *s, int def)
 
 static const char help_text[] =
     "ping | state | teleport X Y [Z] | face DEG | goto X Y [TIMEOUT] [--radius=R] | "
+    "walk_to X Y [TIMEOUT] (experimental: the game's own routing) | "
     "enter_car nearest|ID [TIMEOUT] [--key] | exit_car [TIMEOUT] [--key] | "
     "key NAME [FRAMES] | keydown NAME | keyup NAME | "
     "spawn car MODEL [REMAP] | spawn ped REMAP [ROLE] [--behave=normal|hostile|follow] | "
@@ -473,6 +474,22 @@ static void start_command(client_t *c, char *line)
         c->deadline = r_frames + (uint32_t)timeout_arg(np > 3 ? pos[3] : 0, 1800);
         c->best = INT32_MAX;
         c->progress_frame = r_frames;
+    } else if (!strcmp(cmd, "walk_to")) {         /* experimental: the game's own routing */
+        double x, y;
+        int32_t px, py, pz;
+        const char *why;
+        if (argc < 3 || !num(argv[1], &x) || !num(argv[2], &y))
+            return reply_error(c, "usage: walk_to X Y [TIMEOUT_FRAMES]");
+        if (!ctl_pos(&px, &py, &pz) || !ctl_order_walk(f_to_scr(x), f_to_scr(y), pz, &why))
+            return reply_error(c, ped ? why : "not in a game");
+        take_steer(c, STEER_NONE);
+        ctl_steer.tx = f_to_scr(x);
+        ctl_steer.ty = f_to_scr(y);
+        c->kind = K_WALK;
+        c->deadline = r_frames + (uint32_t)timeout_arg(argc > 3 ? argv[3] : 0, 3000);
+        c->best = INT32_MAX;
+        c->progress_frame = r_frames;
+        printf("ctl: walk_to %.2f %.2f (GO_TO_AREA_ON_FOOT)\n", x, y);
     } else if (!strcmp(cmd, "enter_car")) {
         char *pos[MAX_ARGS];
         int np = positional(argc, argv, pos), id;
@@ -728,6 +745,26 @@ static void step(client_t *c)
     jbuf b;
     char extra[64];
     switch (c->kind) {
+    case K_WALK: {
+        Ped *ped = ctl_ped();
+        int32_t x, y, z;
+        if (!ped)
+            return reply_error(c, "player gone");
+        ctl_pos(&x, &y, &z);
+        snprintf(extra, sizeof extra, ",\"objective\":%u,\"status\":%u", ped->objective,
+                 ped->objectiveStatus);
+        if (ped->objective == 12 && ped->objectiveStatus == 1)
+            return ctl_clear_objective(), reply_result(c, 1, "arrived", extra);
+        if (ctl_dist(x, y, ctl_steer.tx, ctl_steer.ty) < (int32_t)(0.5 * SCR_ONE))
+            return ctl_clear_objective(), reply_result(c, 1, "arrived", extra);
+        if (ped->objective != 12 || ped->objectiveStatus == 2)
+            return ctl_clear_objective(), reply_result(c, 0, "objective lost", extra);
+        if ((int32_t)(r_frames - c->deadline) >= 0)
+            return ctl_clear_objective(), reply_result(c, 0, "timeout", extra);
+        if (stuck(c))
+            return ctl_clear_objective(), reply_result(c, 0, "stuck", extra);
+        return;
+    }
     case K_GOTO:
         if (steer_owner != c - clients)
             return reply_result(c, 0, "preempted", 0);
@@ -789,6 +826,8 @@ static void drop(client_t *c)
 {
     if (c->kind == K_ENTER && c->phase == PH_WAIT)
         ctl_cancel_objective();
+    if (c->kind == K_WALK)
+        ctl_clear_objective();
     if (c->kind == K_KEY || (c->up_frame && (c->kind == K_ENTER || c->kind == K_EXIT)))
         input_push_key(c->scancode, 0);
     if (steer_owner == c - clients) {

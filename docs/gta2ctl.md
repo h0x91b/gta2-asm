@@ -89,6 +89,7 @@ Coordinates are blocks (floats, 1.0 = one map block); headings are degrees, **0 
 | `teleport X Y [Z]` | | on foot: `Ped_Teleport` (ground z) or, with Z, `TeleportGameObject`; in a car: `TeleportCar` (moves the car). Takes effect on the next tick |
 | `face DEG` | ≤ 60 frames | on foot; `"result":"facing"` |
 | `goto X Y [TIMEOUT] [--radius=R] [--run]` | default 1800 frames | walks straight at the point (no pathfinding yet); `arrived` (within R, default 0.3), `stuck` (no 0.05-block gain in 90 unpaused frames), `timeout`. On foot only. `--run` is accepted and ignored: the on-foot walker has one speed |
+| `walk_to X Y [TIMEOUT]` | default 3000 frames | **experimental**: gives the player the game's own GO_TO_AREA_ON_FOOT (12) objective, so the ped AI routes there (around walls) instead of walking straight; our steering stays off. `arrived` (within 0.5 or objective passed), `objective lost`, `stuck`, `timeout`. Measured 2026-10-22: start (159.5, 139.5) → road (168.5, 133.5) in ~175 frames along a bent path (north, east, then diagonal — cell waypoints, not a straight line), and back out of the start courtyard in 347 frames |
 | `enter_car nearest\|ID [TIMEOUT] [--key]` | default 1800 frames | walks to within 1.5 blocks of the car (following it if it moves), then gives the game's own enter order; the game walks the ped to a door and gets in, jacking a driver if there is one. `"result":"driver"` / `"passenger"`, `car_id`, `car_model`, `target_car` (false = it ended up in another car). Failures: `stuck`, `no reachable door` (3 tries, 300 frames each), `enter failed`, `car gone`, `timeout`. `--key` presses RETURN instead (the game then picks the car half a block in front) |
 | `exit_car [TIMEOUT] [--key]` | default 600 frames | `"result":"on foot"`; refused while the car is too fast to leave (`Car_CanExitCar`, \|v\| ≥ 0.3) |
 | `key NAME [FRAMES]` | FRAMES (default 4) | a tap: down now, up FRAMES later; names as in `--keys` (`RETURN`, `UP`, `LCONTROL`, `A`, …) |
@@ -195,7 +196,7 @@ Game facts used (Seq 27's answers, `docs/re/ped-movement-collision.md`):
 ## Limits (phase 1)
 
 - `goto` walks straight: anything in the way (a wall, a parked car right next to the player)
-  ends in `stuck`. Plan routes from open ground, or wait for phase 2.
+  ends in `stuck`. Use `walk_to` (the game's routing, experimental) when the way is not clear.
 - No `goto` in a car (phase 2 `drive_to`); `face` on foot only.
 - `key`/`keydown` go through SDL like `--keys`, so they need the game to see keyboard input:
   after the window has had focus and lost it, focus loss releases keys and the game's

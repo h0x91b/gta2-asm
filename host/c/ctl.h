@@ -39,7 +39,9 @@ int32_t ctl_dist(int32_t ax, int32_t ay, int32_t bx, int32_t by);   /* SCR_f */
 int ctl_teleport(int32_t x, int32_t y, int32_t z, int has_z, const char **why);
 int ctl_order_enter(gptr car, const char **why);
 int ctl_order_exit(const char **why);
-void ctl_cancel_objective(void);               /* a pending ENTER_CAR, before the door */
+void ctl_cancel_objective(void);
+int ctl_order_walk(int32_t x, int32_t y, int32_t z, const char **why);   /* experimental */
+void ctl_clear_objective(void);               /* a pending ENTER_CAR, before the door */
 
 /* steering: applied by ctl_on_foot after Player_MoveOnFoot every tick */
 enum { STEER_NONE, STEER_GOTO, STEER_FACE };

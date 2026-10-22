@@ -347,6 +347,41 @@ int ctl_order_enter(gptr car, const char **why)
     return 1;
 }
 
+/* Experimental (phase 2): the game's own GO_TO_AREA_ON_FOOT (12) objective toward a point,
+ * the way scripts give it: target position (+0x1DC), then PedSetObjective(12, 9999). The ped
+ * AI routes there itself (Ped_MoveTowardTarget, docs/re/ped-ai.md). */
+int ctl_order_walk(int32_t x, int32_t y, int32_t z, const char **why)
+{
+    Ped *ped = ctl_ped();
+    *why = "no player";
+    if (!ped)
+        return 0;
+    *why = "on foot only";
+    if (ped->currentCar)
+        return 0;
+    gptr p = (gptr)(uintptr_t)ped;
+    game_fastcall(0x436920, p, 0, 2, 0u, 9999u);          /* Ped_SetTask NO_OBJ */
+    ped->objectiveTargetPosition.x = x;
+    ped->objectiveTargetPosition.y = y;
+    ped->objectiveTargetPosition.z = z;
+    game_fastcall(0x43BBC0, p, 0, 2, 12u, 9999u);         /* PedSetObjective GO_TO_AREA_ON_FOOT */
+    ped->objectiveTargetPosition.x = x;                   /* in case the setter cleared it */
+    ped->objectiveTargetPosition.y = y;
+    ped->objectiveTargetPosition.z = z;
+    *why = "";
+    return 1;
+}
+
+void ctl_clear_objective(void)
+{
+    Ped *ped = ctl_ped();
+    if (!ped)
+        return;
+    gptr p = (gptr)(uintptr_t)ped;
+    game_fastcall(0x43BBC0, p, 0, 2, 0u, 9999u);
+    game_fastcall(0x436920, p, 0, 2, 0u, 9999u);
+}
+
 /* What Ped_CancelEnterCarOnPlayerMove @0x43E1E0 does to the objective (Seq 27): back to
  * NO_OBJ, objective and task, while the ped has not reached the door yet. */
 void ctl_cancel_objective(void)
@@ -397,7 +432,7 @@ void ctl_on_foot(gptr player, gptr ped)
     /* not while wasted / busted (the game drives the corpse then), in a cutscene, or while
      * the game walks the ped to a car door (Seq 27, reply-seq58-gta2ctl-re.md) */
     if (pl->ped != ped || pl->isDeadOrBusted || pl->controlState || pl->controlsDisabled ||
-        GP(Ped, ped)->objective == 35)
+        GP(Ped, ped)->objective == 35 || GP(Ped, ped)->objective == 12)
         return;
     PedGameObject *go = GP(PedGameObject, GP(Ped, ped)->gameObject);
     Sprite *s = go ? GP(Sprite, go->body) : 0;
