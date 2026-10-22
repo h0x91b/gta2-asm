@@ -76,10 +76,12 @@ Port / transports: **Edit > Tool Options... > GhidraMCP HTTP Server** in the pro
 - If Ghidra was not up when the session started, the bridge keeps retrying in the background;
   `connect_instance` / `list_instances` force it.
 - **The project is writable.** Rename/comment/retype/create tools change the user's Ghidra database.
-  Agents call them only when the user asked for annotations. Script execution is off
-  (`GHIDRA_MCP_ALLOW_SCRIPTS` unset) — keep it that way. `.claude/settings.json` hard-denies the
-  process/project-level destructive tools (`exit_ghidra`, `close_program`, `delete_function`,
-  `delete_file`, `set_image_base`, memory-block edits, imports, project moves/restores, script runners).
+  Agents call them only when the user asked for annotations. `.claude/settings.json` hard-denies the
+  process/project-level destructive tools (`exit_ghidra`, `close_program`,
+  `delete_file`, `set_image_base`, memory-block edits, imports, project moves/restores).
+  `delete_function`, `delete_data_type`, `run_ghidra_script` and `run_script_inline` are allowed (user's call, 2026-10-22),
+  but the plugin still refuses the two script runners unless the Ghidra process was started with
+  `GHIDRA_MCP_ALLOW_SCRIPTS=1`.
 - Read-only workhorses: `get_functions` (signature, callers/callees, xrefs, `decompiled_code` —
   up to 20 functions per call), `find_functions`, `get_function_count`, `list_strings`,
   `disassemble_function`, `read_memory`; xrefs/types live in lazy groups (`load_tool_group("xref")`).

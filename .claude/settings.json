@@ -7,8 +7,6 @@
       "mcp__ghidra__exit_ghidra",
       "mcp__ghidra__close_program",
       "mcp__ghidra__delete_file",
-      "mcp__ghidra__delete_function",
-      "mcp__ghidra__delete_data_type",
       "mcp__ghidra__move_file",
       "mcp__ghidra__move_folder",
       "mcp__ghidra__restore_project",
@@ -20,8 +18,6 @@
       "mcp__ghidra__set_image_base",
       "mcp__ghidra__create_memory_block",
       "mcp__ghidra__set_memory_block",
-      "mcp__ghidra__run_ghidra_script",
-      "mcp__ghidra__run_script_inline",
       "mcp__ghidra__server_admin_terminate_checkout",
       "mcp__ghidra__server_version_control_undo_checkout"
     ]

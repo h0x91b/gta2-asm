@@ -205,9 +205,12 @@ their absolute addresses apply 1:1. How this was checked:
     `get_struct_layout` after every edit; restore a lost name with `field_name="offset:N"`.
   - `remove_struct_field` on a non-packed struct deletes the bytes and shifts every later
     field (Ped went 660 → 645, no undo); `recreate_struct` fails on referenced types;
-    `add_struct_field` only fills undefined bytes. Never call the first two. If a wrong
-    field overlaps the layout you need, ask the user for a Structure Editor Clear of the
-    exact offset ranges, then `add_struct_field`.
+    `add_struct_field` only fills undefined bytes. Never call the first two. Retyping a
+    field to `undefined1` frees its other bytes without a shift, but the 1-byte stub stays a
+    component: a new field may start on it, yet nothing can span two stubs (measured
+    2026-10-22 on probe structs). A real Clear (`Structure.clearComponent`) needs
+    `run_script_inline`, i.e. Ghidra started with `GHIDRA_MCP_ALLOW_SCRIPTS=1`; else ask the
+    user for a Structure Editor Clear of the exact offset ranges, then `add_struct_field`.
 - Other MCP traps: several programs are open (the renderer DLLs too), so pass
   `program="gta2.segments.fixed.exe"` on every call; `rename_function` needs
   `strict_mode="off"` (its PascalCase gate rejects `Module_Verb` names); `rename_symbol`
