@@ -4148,7 +4148,7 @@ struct Ped {
     short homeRotation; /* 0x134 */
     uint8_t _gap_0x136[0x2];
     GameObject *bumpPartnerObject; /* 0x138 */
-    void *unsure_trainStop; /* 0x13c */
+    void *trainStop; /* 0x13c */
     Car *refCar; /* 0x140 */
     Ped *attackerPed; /* 0x144 */
     Ped *objectiveTargetPed; /* 0x148 */

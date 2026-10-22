@@ -2305,7 +2305,7 @@ struc Ped
     .homeRotation                     resb 2      ; 0x134 short
     resb 2
     .bumpPartnerObject                resb 4      ; 0x138 GameObject *
-    .unsure_trainStop                 resb 4      ; 0x13c void *
+    .trainStop                        resb 4      ; 0x13c void *
     .refCar                           resb 4      ; 0x140 Car *
     .attackerPed                      resb 4      ; 0x144 Ped *
     .objectiveTargetPed               resb 4      ; 0x148 Ped *
