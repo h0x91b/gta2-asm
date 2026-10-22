@@ -394,11 +394,9 @@ hooks:
     CALLHOOK 0x472535, "DrawMapLayer", 0x4720E0
     CALLHOOK 0x45A61F, "DrawUI", 0x4CA440               ; debug_menu.asm
     CALLHOOK 0x4CA4F9, "PauseOverlay", 0x4C9FA0         ; debug_menu.asm
-    CALLHOOK 0x4A7901, "MoveOnFoot", 0x4A5C50           ; player_move.asm
-    JMPHOOK 0x49AC76, "WalkHeading", {0x8A,0x44,0x24,0x11, 0x84,0xC0}   ; player_move.asm
-    CALLHOOK 0x429EDC, "CarDriverClass", 0x420B70       ; player_move.asm (gta2ctl drive_to)
-    CALLHOOK 0x4A78F3, "DriveCar", 0x4A4C40             ; player_move.asm (gta2ctl drive_to)
-    CALLHOOK 0x4C6561, "BriefText", 0x4C23A0            ; player_move.asm (gta2ctl sms)
+    CALLHOOK 0x429EDC, "CarDriverClass", 0x420B70       ; ctl_hooks.asm (gta2ctl drive_to)
+    CALLHOOK 0x4A78F3, "DriveCar", 0x4A4C40             ; ctl_hooks.asm (gta2ctl drive_to)
+    CALLHOOK 0x4C6561, "BriefText", 0x4C23A0            ; ctl_hooks.asm (gta2ctl sms)
     CALLHOOK 0x4C65C2, "BriefTextNum", 0x4C23A0         ; the same, show_brief_number path
     dq 0
 
@@ -410,8 +408,6 @@ shimtab_gta2:
     SHIM "DrawMapLayer", 0, hk_DrawMapLayer
     SHIM "DrawUI", 0, hk_DrawUI
     SHIM "PauseOverlay", 0, hk_PauseOverlay
-    SHIM "MoveOnFoot", 4, hk_MoveOnFoot
-    SHIM "WalkHeading", 4, hk_WalkHeading
     SHIM "CarDriverClass", 0, hk_CarDriverClass
     SHIM "DriveCar", 4, hk_DriveCar
     SHIM "BriefText", 4, hk_BriefText

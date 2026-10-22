@@ -14,6 +14,7 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include "../../re/gta2_types.h"
+#include "c32_abi.h"
 
 /* Compile-time check, C99 style: a negative array size stops the build. Use it for every
  * struct field a module relies on, so a re/ export that moves a field fails here. */
@@ -41,6 +42,12 @@ GAME_FN(int, G2_CDECL, game_vsprintf, 0x4D7FE6, (char *buf, const char *fmt, va_
 /* ---- host services: 32-bit stubs into the 64-bit host (c32_host.c) -------------------- */
 void c32_log(const char *fmt, ...);     /* "c32: <text>" on the host's stdout, 511 chars max */
 int c32_passenger_wanted(void);         /* mods.passenger_enter on and a Shift down (passenger.c) */
+/* player_move.c: this tick's on-foot controls, read by the host from its keyboard and
+ * mouse state. With on_foot = 0 only mouse_on is filled and nothing else happens; with 1 the
+ * host also captures / releases the mouse and hands over the motion since the last tick
+ * (struct c32_foot_input: c32_abi.h). */
+void c32_foot_input(struct c32_foot_input *in, int on_foot);
+void c32_ctl_on_foot(Player *player, Ped *ped);  /* gta2ctl goto / face steering (ctl_game.c) */
 
 /* ---- hooks ----------------------------------------------------------------------------
  * Only during C32_INIT: the host makes the game's .text rwx while the initialisers run
@@ -50,6 +57,15 @@ int c32_passenger_wanted(void);         /* mods.passenger_enter on and a Shift d
  * the displaced first n bytes (5..16, whole instructions, no relative branches) and jumps
  * back to va + n. Call the trampoline as the original function, same type as fn. */
 void *c32_detour(uint32_t va, const uint8_t *orig, unsigned n, void *fn);
+
+/* Mid-function hook: the n bytes at va (5..16, whole instructions, no relative operands) now
+ * jump to a trampoline that saves every register (pushad), calls fn with them, restores
+ * them, runs the displaced bytes and jumps back to va + n. fn may change memory (e.g. the
+ * caller's locals through regs->esp) but not the registers. Returns the trampoline or 0. */
+struct c32_regs {                       /* pushad order, lowest address first */
+    uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;   /* esp: at va, before the pushad */
+};
+void *c32_midhook(uint32_t va, const uint8_t *orig, unsigned n, void (*fn)(struct c32_regs *));
 
 /* Call hook: the `E8 call` at site now calls fn; returns its previous target, to be called
  * as the original. When site was already retargeted (a NASM CALLHOOK in w32_hooks.asm, or

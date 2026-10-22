@@ -8,6 +8,7 @@ global new_slot                     ; loader.asm, for c32_load's service stubs
 extern _c32_load                    ; c/c32_host.c
 extern _c32_svc_log
 extern _c32_svc_passenger_wanted
+extern _c32_svc_foot_input, _c32_svc_ctl_on_foot
 
 section .rodata
 align 16
@@ -22,6 +23,8 @@ shimtab_c32:
     dq s_c32
     SHIM "log", 4, _c32_svc_log     ; void __stdcall log(const char *text)
     SHIM "passenger_wanted", 0, _c32_svc_passenger_wanted  ; int __stdcall (void)
+    SHIM "foot_input", 8, _c32_svc_foot_input   ; void __stdcall (struct c32_foot_input*, int on_foot)
+    SHIM "ctl_on_foot", 8, _c32_svc_ctl_on_foot ; void __stdcall (Player*, Ped*)
     dq 0
 
 section .rodata

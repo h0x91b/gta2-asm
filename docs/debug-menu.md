@@ -12,7 +12,7 @@ for growing it.
   `hk_DrawUI`), the Player and Vehicle features, and **four central tables**: `dmp_main`,
   `dmp_player`, `dmp_vehicle`, `dmp_flags` (`DMITEM kind, "label", data`).
 - Feature modules (`debug_paths.asm`, `debug_roads.asm` — both C32 now, see "World overlays" —, `debug_roadblocks.asm`,
-  `debug_emergency.asm` — C32 now, see "Roadblocks and emergency services" —, `player_move.asm`) exported `dm_<name>_change` / `dm_<name>_fmt`
+  `debug_emergency.asm` — C32 now, see "Roadblocks and emergency services" —, `player_move.asm`, now C32 + `c32_host.c`) exported `dm_<name>_change` / `dm_<name>_fmt`
   pairs or flag bytes, and **debug_menu.asm listed them** in its tables. Their per-frame work
   (`rb_frame`, `de_run`, `dm_draw_paths`, `dr_draw`) was called by name from `hk_DrawUI`.
 - Item kinds: action (an id dispatched by a `cmp`/`call` chain in `hk_DrawUI`), flag byte,
@@ -86,8 +86,9 @@ How a C file registers itself, options considered:
 | B. Constructor registration (`__attribute__((constructor))` calling `dm_register`) | ordinary C, dynamic | runs before `_main` in libSystem's init (ordering vs our own setup); the NASM modules' records would need a second path or a rewrite now |
 | C. A central C table | trivial | violates requirement 1, merge conflicts between parallel tasks |
 
-A also keeps the NASM `DM_ITEM` / `DM_FRAME` / `DMVALUE` macros working unchanged, which the
-wave-1 rule required (the feature modules move to C32 in wave 2).
+A also kept the NASM `DM_ITEM` / `DM_FRAME` / `DMVALUE` macros working unchanged, which the
+wave-1 rule required. Wave 2 moved every NASM feature module to C / C32; the macros went with
+the last one (player_move, Seq 62).
 
 ### Records (macros in `host/c/menu/dm.h`)
 
@@ -113,12 +114,8 @@ DM_PAGE_EXTERN(name);       /* another file's page, as a parent or for DM_ITEM *
   `DM_FLAG` (data = a byte toggled 0/1, may be a game address), `DM_VALUE` (data =
   `&dmv_x`, `{void change(const struct dm_item *, int dir), void fmt(char *end)}`),
   `DM_LINK` (emitted by `DM_PAGE`). Every page gets `Back` (or `Close` on the root) last.
-- `order`: rows sort by it (ties keep link order: NASM records first, then the C objects in
-  `build.sh` order); leave gaps of 10.
-
-The NASM macros (`host/debug_menu.asm`) emit the same `struct dm_item` / `struct dm_frame`
-records: `DM_ITEM page, order, KIND, "label", data`, `DM_FRAME order, fn`, `DMVALUE x`
-(`dmv_x: dq dm_x_change, dm_x_fmt`). They have no `DM_PAGE`: new pages are C.
+- `order`: rows sort by it (ties keep link order: the C objects in `build.sh` order); leave
+  gaps of 10.
 
 ### Runtime (`core.c`)
 
@@ -284,7 +281,7 @@ Files are in `host/c/menu/` unless a path is given.
 
 
 - **root** (`root.c`): Quick save, Get all weapons, Add $100000, Camera zoom; Ped
-  paths (`overlays.c`, drawn by C32 `debug_paths.c`), Mouse turning and Strafe (`player_move.asm`); links.
+  paths (`overlays.c`, drawn by C32 `debug_paths.c`), Mouse turning and Strafe (`c32_host.c`, for `c32/player_move.c`); links.
 - **Player** (`player.c`): wanted level and lock, skin, body; roadblocks
   (`roadblocks.c`, C32 `host/c32/roadblocks.c`), ambulance / fire truck (`emergency.c`, C32
   `host/c32/emergency.c`); see "Roadblocks and emergency services" below.

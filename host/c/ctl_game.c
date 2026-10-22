@@ -2,9 +2,9 @@
  *
  * 64-bit host C, not C32, although it touches game objects every tick: it is the game side
  * of a host feature (the command channel), its state machine lives with the socket in
- * ctl.c, and the only per-tick work is two Player fields written from the existing NASM
- * hook on Player_MoveOnFoot (hk_MoveOnFoot, host/player_move.asm). A C32 half would need a
- * second copy of the command state, shared through exports, for no gain.
+ * ctl.c, and the only per-tick work is two Player fields written after Player_MoveOnFoot,
+ * called back by the C32 hook there (c32/player_move.c, service ctl_on_foot). A C32 half
+ * would need a second copy of the command state, shared through exports, for no gain.
  *
  * Game facts (re/gta2_types_c64.h, docs/re/ped-movement-collision.md): positions are SCR_f
  * (Q14, 0x4000 = 1 block); a heading is an Ang16, 1440 per turn, 0 faces +y, x = sin(h),
@@ -362,7 +362,7 @@ int ctl_order_enter(gptr car, int passenger, const char **why)
  * Ped_Obj1_GoToAreaInCar @0x438C40 gives the car a GO_TO_POINT drive order (follow roads)
  * and resumes its AI; passed when the drive order arrives (own decompile). */
 uint32_t ctl_autopilot_ticks;           /* hk_CarDriverClass: AI ticks given (debug) */
-uint32_t ctl_autopilot_ped;             /* player_move.asm: hk_CarDriverClass, hk_DriveCar */
+uint32_t ctl_autopilot_ped;             /* ctl_hooks.asm: hk_CarDriverClass, hk_DriveCar */
 static gptr autopilot_car;
 static uint32_t autopilot_class;
 
@@ -393,7 +393,7 @@ void ctl_autopilot_off(void)
  * with the key "ctlsms" and a private priority 4: higher than the game's, so it shows at once,
  * and ClearAllBriefsWithPriority @0x4C6860 (thiscall, RET 4) drops our previous one.
  * Hud_Brief_PrepareCurrentText asks Gxt_FindTextW_thunk for the key's text, and hk_BriefText
- * (player_move.asm) answers it with ctl_brief_text. Text and key live in the low arena: the game reads them.
+ * (ctl_hooks.asm) answers it with ctl_brief_text. Text and key live in the low arena: the game reads them.
  * docs/re/hud-and-menus.md §3.1 */
 #define SMS_MAX 120
 uint32_t heap_alloc(uint32_t size, uint32_t flags) NASM(heap_alloc);   /* w32_core.asm */

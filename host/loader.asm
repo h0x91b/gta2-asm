@@ -1179,7 +1179,7 @@ section .text
 %include "w32_dinput.asm"
 %include "w32_hooks.asm"
 %include "debug_menu.asm"
-%include "player_move.asm"
+%include "ctl_hooks.asm"
 %include "w32_renderer.asm"
 %include "w32_mss32.asm"            ; mss32 import table -> host/c/audio.c
 %include "w32_tables.asm"

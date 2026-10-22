@@ -1,6 +1,6 @@
 /* root.c — the K menu's root page: actions on the player and the camera zoom. The other
  * root rows come from their own files: Ped paths (debug_paths.asm), Mouse turning and
- * Strafe (player_move.asm), and the page links (each page's DM_PAGE). */
+ * Strafe (c32_host.c, for c32/player_move.c), and the page links (each page's DM_PAGE). */
 #include <stdio.h>
 #include "dm.h"
 

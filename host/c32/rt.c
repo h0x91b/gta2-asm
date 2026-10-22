@@ -10,10 +10,12 @@ extern const struct c32_export c32_exports[], c32_exports_end[];
 static void G2_STDCALL c32_start(void);
 
 /* host services, bound by c32_host.c; the order is the index used below */
-enum { SVC_LOG, SVC_PASSENGER_WANTED };
+enum { SVC_LOG, SVC_PASSENGER_WANTED, SVC_FOOT_INPUT, SVC_CTL_ON_FOOT };
 static struct c32_import imports[] = {
     [SVC_LOG] = { (uint32_t)"log", 0 },
     [SVC_PASSENGER_WANTED] = { (uint32_t)"passenger_wanted", 0 },
+    [SVC_FOOT_INPUT] = { (uint32_t)"foot_input", 0 },
+    [SVC_CTL_ON_FOOT] = { (uint32_t)"ctl_on_foot", 0 },
 };
 
 __attribute__((section(".c32.head"), used))
@@ -51,6 +53,16 @@ void c32_log(const char *fmt, ...)
 int c32_passenger_wanted(void)
 {
     return (int)((uint32_t (G2_STDCALL *)(void))imports[SVC_PASSENGER_WANTED].slot)();
+}
+
+void c32_foot_input(struct c32_foot_input *in, int on_foot)
+{
+    ((void (G2_STDCALL *)(struct c32_foot_input *, int))imports[SVC_FOOT_INPUT].slot)(in, on_foot);
+}
+
+void c32_ctl_on_foot(Player *player, Ped *ped)
+{
+    ((void (G2_STDCALL *)(Player *, Ped *))imports[SVC_CTL_ON_FOOT].slot)(player, ped);
 }
 
 /* ---- hooks ------------------------------------------------------------------------- */
@@ -111,6 +123,36 @@ void *c32_detour(uint32_t va, const uint8_t *orig, unsigned n, void *fn)
     for (unsigned i = 5; i < n; i++)
         code[i] = 0x90;
     c32_log("hook 0x%x -> 0x%x (detour, %u bytes to 0x%x)", va, (uint32_t)fn, n, (uint32_t)t);
+    return t;
+}
+
+void *c32_midhook(uint32_t va, const uint8_t *orig, unsigned n, void (*fn)(struct c32_regs *))
+{
+    uint8_t *code = (uint8_t *)va;
+    if (n < 5 || n > DETOUR_MAX || n_tramps == MAX_TRAMPS) {
+        c32_log("midhook 0x%x: bad length %u or out of trampolines", va, n);
+        return 0;
+    }
+    if (!bytes_equal(code, orig, n)) {
+        c32_log("midhook 0x%x: original bytes differ (not vanilla 11.44, or hooked already)", va);
+        return 0;
+    }
+    /* pushad; push esp; call fn; add esp, 4; popad; <displaced bytes>; jmp va + n */
+    uint8_t *t = tramps[n_tramps++];
+    t[0] = 0x60;
+    t[1] = 0x54;
+    put_rel32(t + 2, 0xE8, (uint32_t)fn);
+    t[7] = 0x83;
+    t[8] = 0xC4;
+    t[9] = 0x04;
+    t[10] = 0x61;
+    for (unsigned i = 0; i < n; i++)
+        t[11 + i] = code[i];
+    put_rel32(t + 11 + n, 0xE9, va + n);
+    put_rel32(code, 0xE9, (uint32_t)t);
+    for (unsigned i = 5; i < n; i++)
+        code[i] = 0x90;
+    c32_log("hook 0x%x -> 0x%x (mid, %u bytes to 0x%x)", va, (uint32_t)fn, n, (uint32_t)t);
     return t;
 }
 

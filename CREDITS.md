@@ -71,7 +71,7 @@ License terms below are quoted as each source states them; this is not legal adv
     quit-to-menu work.
   - **Mouse control** (`src/modules/modmenu/cheats/mouse-control/`,
     `src/events/keyboard-state-update.cpp`, hook 0x4A4934 inside `SetKeyState`): reviewed as
-    prior art for `host/player_move.asm` (Seq 37); it turns the ped with virtual left/right
+    prior art for on-foot mouse turning (Seq 37; now `host/c32/player_move.c`); it turns the ped with virtual left/right
     keys, which our mouse turning bypasses. No code or address taken.
   - `WorldPointToScreen`, `PedSetObjective`, `PedManager` (`host/c32/overlay.c`, `debug_paths.c`),
     `InitMouseExclusive`, `GameWindow` (`host/w32_dinput.asm`).
@@ -96,7 +96,7 @@ License terms below are quoted as each source states them; this is not legal adv
   `re/external/`.
   Its mouse rotation (`mod-mouse-rotation.lua`, the `SetKeyState` 0x4A4930 hook in
   `dllmain.cpp` @87e1d98, virtual left/right keys) is credited as prior art in
-  `host/player_move.asm`; no code taken.
+  `host/c32/player_move.c`; no code taken.
 - **License:** MIT, © 2021 Arseniy Pavlenko.
 
 ### gta2-mouse — h0x91b (Arseniy Pavlenko)
@@ -109,7 +109,7 @@ License terms below are quoted as each source states them; this is not legal adv
   the user's Ghidra project, see `re/README.md`), addresses from `MainWindow.cpp`
   (`ptrToGame`, `ptrToPedManager`, `GetSaveSlotByIndex`, …), harvested into `re/external/`.
   Its mouse aiming (`MainWindow.cpp` @6c5351b: cursor angle written to the ped's heading
-  GameObject+0x40) is the prior art for `host/player_move.asm`, which turns through
+  GameObject+0x40) is the prior art for `host/c32/player_move.c`, which turns through
   `Player.turnRate` instead because the game's walker overwrites a written heading every tick.
 - **License:** MIT, © 2019 Arseniy Pavlenko.
 

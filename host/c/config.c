@@ -36,7 +36,7 @@
  *          src/modules/modmenu/utils/categorized-native-cheats-data.cpp and
  *          src/events/after-debug-flags.cpp @25b1985 — the idea, the RISKY marks and the
  *          name GetSettingBooleanWithDefaultValue; the registry path is own analysis.
- *   controls  on-foot strafe and mouse turning (player_move.asm): strafe, strafe_left,
+ *   controls  on-foot strafe and mouse turning (c32/player_move.c): strafe, strafe_left,
  *          strafe_right (key names as in --keys), mouse_turn, mouse_sensitivity (percent).
  *   camera zoom: auto | percent (25..400). The camera's target zoom (cameraPosTarget.zoom,
  *          the view scale) is multiplied by percent/100 on its way to the camera
@@ -77,13 +77,13 @@ _Noreturn void fail(const char *msg) NASM(fail);
 /* w32_dinput.asm: {u16 SDL scancode, u8 DIK, u8 VK, u32 0, char *name}, ends at 0xFFFF */
 struct key_ent { uint16_t sdl; uint8_t dik, vk; uint32_t pad; const char *name; };
 extern const struct key_ent key_table[] NASM(key_table);
-/* player_move.asm: the controls, and their one-line summary */
-extern uint8_t pm_strafe_on NASM(pm_strafe_on);
-extern uint8_t pm_mouse_on NASM(pm_mouse_on);
-extern uint8_t pm_key_left NASM(pm_key_left);
-extern uint8_t pm_key_right NASM(pm_key_right);
-extern int32_t pm_mouse_sens NASM(pm_mouse_sens);
-void pm_report(void) NASM(pm_report);
+/* c32_host.c: the on-foot controls (c32/player_move.c), and their one-line summary */
+extern uint8_t pm_strafe_on;
+extern uint8_t pm_mouse_on;
+extern uint8_t pm_key_left;
+extern uint8_t pm_key_right;
+extern int32_t pm_mouse_sens;
+void pm_report(void);
 /* c32_host.c: the mods section, 0 applied, 1 unknown key, -1 bad value (*msg = why) */
 int c32_cfg_mods(const char *key, const char *val, const char **msg);
 extern uint8_t mods_passenger_enter;    /* c32_host.c, read by c32/passenger.c */

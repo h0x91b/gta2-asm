@@ -90,7 +90,7 @@ In the tree today `_main` calls `_c32_load` (`host/c/c32_host.c`), `loader.asm` 
 The other direction, C calling a NASM *function*, needs that function to be SysV-clean:
 arguments in `rdi, rsi, …`, callee-saved registers kept, and any libc call inside it aligned
 for a caller whose `call` was aligned. `config.c` calls `reg_key_add`, `reg_val_find`,
-`reg_val_set` (`w32_advapi32.asm`), `pm_report` (`player_move.asm`) and `fail`
+`reg_val_set` (`w32_advapi32.asm`) and `fail`
 (`loader.asm`), all checked for that; each is `global` in `c_bridge.asm` and declared with
 `NASM()` in the C file. Check a NASM function's pushes before adding it to such a list.
 

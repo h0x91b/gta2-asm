@@ -34,6 +34,7 @@ extern uint32_t ctl_autopilot_ticks;
 struct key_entry { uint16_t scancode; uint8_t dik, vk; uint32_t pad; const char *name; };
 extern const struct key_entry key_table[] NASM(key_table);   /* w32_dinput.asm */
 void input_push_key(int scancode, int down) NASM(input_push_key);
+void input_mouse_motion(float dx, float dy) NASM(input_mouse_motion);  /* w32_dinput.asm */
 void r_save_shot(void) NASM(r_save_shot);                    /* w32_renderer.asm */
 extern char *r_shot_path NASM(r_shot_path);
 
@@ -316,7 +317,7 @@ static const char help_text[] =
     "ping | state | teleport X Y [Z] | face DEG | goto X Y [TIMEOUT] [--straight [--radius=R]] | "
     "walk_to X Y (= goto) | drive_to X Y [TIMEOUT] [--debug] | "
     "enter_car nearest|ID [TIMEOUT] [--straight] [--key] [--passenger] | exit_car [TIMEOUT] [--key] | "
-    "key NAME [FRAMES] | keydown NAME | keyup NAME | "
+    "key NAME [FRAMES] | keydown NAME | keyup NAME | mouse DX [DY] | "
     "spawn car MODEL [REMAP] | spawn ped REMAP [ROLE] [--behave=normal|hostile|follow] | "
     "spawn object TYPE [REMAP] (spawn: [--at=X,Y[,Z]] [--rot=DEG]) | "
     "wait FIELD OP VALUE [TIMEOUT] | wait frames N | shot PATH | log TEXT | sms TEXT | sms_echo on|off | quit | help";
@@ -583,6 +584,15 @@ static void start_command(client_t *c, char *line)
         c->scancode = k->scancode;
         c->up_frame = r_frames + (uint32_t)frames;
         c->kind = K_KEY;
+    } else if (!strcmp(cmd, "mouse")) {
+        /* relative motion in pixels, added where SDL mouse motion lands (the DirectInput
+         * mouse and mouse turning read it); the real cursor is not touched */
+        double dx, dy = 0;
+        if (argc < 2 || !num(argv[1], &dx) || (argc > 2 && !num(argv[2], &dy)))
+            return reply_error(c, "usage: mouse DX [DY] (pixels)");
+        input_mouse_motion((float)dx, (float)dy);
+        begin_ok(&b);
+        done(c, &b);
     } else if (!strcmp(cmd, "wait")) {
         static const char *ops[] = { "==", "!=", "<", "<=", ">", ">=" };
         int n;

@@ -16,7 +16,7 @@
 camera:
   zoom: 70                       # the default; auto, or 100 for vanilla
 
-# On-foot controls the original game does not have (host/player_move.asm). Both go
+# On-foot controls the original game does not have (host/c32/player_move.c). Both go
 # through the game's own walking code, so walls, cars and other peds stop you as usual.
 # strafe: sidestep left / right with strafe_left / strafe_right held (key names as in
 # --keys: Q, E, A, D, LSHIFT, ...; the defaults Q and E are unused by the game). Together

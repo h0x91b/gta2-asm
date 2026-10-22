@@ -95,6 +95,7 @@ Coordinates are blocks (floats, 1.0 = one map block); headings are degrees, **0 
 | `drive_to X Y [TIMEOUT] [--debug]` | default 5400 frames | **experimental**: the game's own car AI drives the player's car there (as ambulances and fire engines go to a call): the player gets GO_TO_AREA_IN_CAR (14), the car gets a CarAI and a drive order, and for the run the car counts as a mission car with AI physics (see "Where the code is"). `arrived` (within 4 blocks, or the objective passed), `stuck` (moved < 0.5 block in 900 frames: lights and jams take a while), `out of the car`, `objective lost`, `timeout`. The car keeps its lane and follows the road arrows, so it may drive away from the target (one-way streets) before it comes back. `--debug`: the AI state every 15 frames into the game log (`ctl: drv …`). Driver only |
 | `key NAME [FRAMES]` | FRAMES (default 4) | a tap: down now, up FRAMES later; names as in `--keys` (`RETURN`, `UP`, `LCONTROL`, `A`, …) |
 | `keydown NAME` / `keyup NAME` | | hold / release (e.g. drive: `keydown UP` … `keyup UP`) |
+| `mouse DX [DY]` | | relative mouse motion in pixels, added to the accumulator SDL motion events feed (the DirectInput mouse and mouse turning read it); in-process, the real cursor never moves |
 | `spawn car MODEL [REMAP]` | | REMAP -1 random (default), 0 none, i = the model's i-th remap; `id` = the car id for `enter_car` |
 | `spawn ped REMAP [ROLE] [--behave=normal\|hostile\|follow]` | | ROLE: `auto civilian gang cop swat fbi army medic fireman elvis mugger thief psycho criminal still` or its number (the K menu's roles) |
 | `spawn object TYPE [REMAP]` | | an `OBJECT_TYPE` number |
@@ -178,10 +179,10 @@ Also measured by hand: jacking a stopped driven car (`teleport` next to it, `ent
 | Part | File | Why there |
 |---|---|---|
 | socket, protocol, commands, telemetry, options | `host/c/ctl.c` | a host feature (64-bit host C, `docs/host-c.md`) |
-| state, nearest lists, teleport, enter/exit orders, steering | `host/c/ctl_game.c` | the game side of the same feature; its per-tick work is two `Player` fields, written from the existing NASM hook. A C32 half would need the command state twice, shared through exports |
+| state, nearest lists, teleport, enter/exit orders, steering | `host/c/ctl_game.c` | the game side of the same feature; its per-tick work is two `Player` fields, written after the C32 on-foot hook (`c32/player_move.c`) calls it back through a host service. A C32 half would need the command state twice, shared through exports |
 | spawning | `host/c/spawn.h`, implemented by the K menu (`host/c/menu/helpers.c`, `spawn_ped.c`, `spawn_object.c`, `docs/debug-menu.md`) | the K menu's recipes |
-| hooks into the host | `vid_FlipBuffers` → `ctl_frame` (`w32_renderer.asm`), `hk_MoveOnFoot` → `ctl_on_foot` (`player_move.asm`), `_main` → `ctl_arg` / `ctl_init` (`loader.asm`), `input_push_key` (`w32_dinput.asm`) | |
-| game hooks (`w32_hooks.asm` CALLHOOKs, handlers in `player_move.asm`) | `CarDriverClass` 0x429EDC, `DriveCar` 0x4A78F3 (drive_to); `BriefText` 0x4C6561 / 0x4C65C2 (sms) | call-site detours that only change anything while gta2ctl uses them |
+| hooks into the host | `vid_FlipBuffers` → `ctl_frame` (`w32_renderer.asm`), `hk_move_on_foot` → service `ctl_on_foot` (`c32/player_move.c` → `c32_host.c`), `_main` → `ctl_arg` / `ctl_init` (`loader.asm`), `input_push_key` (`w32_dinput.asm`) | |
+| game hooks (`w32_hooks.asm` CALLHOOKs, handlers in `ctl_hooks.asm`) | `CarDriverClass` 0x429EDC, `DriveCar` 0x4A78F3 (drive_to); `BriefText` 0x4C6561 / 0x4C65C2 (sms) | call-site detours that only change anything while gta2ctl uses them |
 | client | `tools/gta2ctl/gta2ctl.c` | native, no Rosetta |
 
 Game facts used (Seq 27's answers, `docs/re/ped-movement-collision.md`):

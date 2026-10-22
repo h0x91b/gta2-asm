@@ -1,6 +1,7 @@
 /* c32_host.c — the 64-bit side of C32 (docs/c32.md): maps the 32-bit image that
  * the host/c32 sources are linked into, binds its host services, runs its initialisers, and owns
- * the car bonus's config key and K menu row, and the passenger mod's switch (64-bit host C
+ * the car bonus's config key and K menu row, the passenger mod's switch, and the keyboard,
+ * mouse, settings and K menu rows of on-foot strafe and mouse turning (64-bit host C
  * serving C32 code).
  *
  * The image (c32.bin, raw, linked at its header's base) is embedded in the loader by
@@ -14,6 +15,7 @@
 #include <sys/mman.h>
 #include "game.h"
 #include "../c32/c32_abi.h"
+#include "ctl.h"
 #include "menu/dm.h"
 
 extern const uint8_t c32_blob[] NASM(c32_blob);
@@ -31,8 +33,14 @@ uint32_t new_slot(const char *dll, const char *name, int ordinal) NASM(new_slot)
 #define DIK_LSHIFT 0x2A
 #define DIK_RSHIFT 0x36
 
-/* w32_dinput.asm: the keyboard state, 0x80 = down */
+/* w32_dinput.asm: the keyboard state, 0x80 = down; the mouse; key names for logs */
 extern const uint8_t di_keys[256] NASM(di_keys);
+extern uint8_t have_focus NASM(have_focus);     /* SDL keyboard focus */
+extern float mouse_dx NASM(mouse_dx);           /* motion accumulator, pixels */
+int take_axis(float *acc) NASM(take_axis);      /* whole pixels out, the fraction stays */
+void mouse_capture_on(void) NASM(mouse_capture_on);     /* SDL relative mode */
+void mouse_capture_off(void) NASM(mouse_capture_off);
+const char *dik_str(int dik) NASM(dik_str);
 /* mods.passenger_enter (config.c key table, default on; K menu Mods page) */
 uint8_t mods_passenger_enter;
 
@@ -106,6 +114,73 @@ uint64_t c32_svc_passenger_wanted(const uint32_t *args)
     (void)args;
     return mods_passenger_enter && ((di_keys[DIK_LSHIFT] | di_keys[DIK_RSHIFT]) & 0x80);
 }
+
+/* ---- on-foot strafe and mouse turning (c32/player_move.c) ----------------------------- */
+
+#define MOUSE_GAP 3                     /* frames without a call = the motion is stale, dropped */
+
+/* the controls: section of config.yaml (config.c's key table sets the defaults before main:
+ * strafe on, Q / E, mouse turning off, 100%) and the K menu root rows below */
+uint8_t pm_strafe_on;                   /* controls.strafe */
+uint8_t pm_mouse_on;                    /* controls.mouse_turn */
+uint8_t pm_key_left;                    /* DIK, controls.strafe_left */
+uint8_t pm_key_right;                   /* DIK, controls.strafe_right */
+int32_t pm_mouse_sens;                  /* controls.mouse_sensitivity, percent */
+static uint8_t pm_captured;             /* relative mouse mode switched on by us */
+static uint32_t pm_mouse_frame;         /* r_frames at the last on-foot mouse read */
+
+/* config.c: one line after the config, so a run log says what is active */
+void pm_report(void)
+{
+    printf("controls: strafe %s (%s / %s), mouse turning %s (%d%%)\n",
+           pm_strafe_on ? "on" : "off", dik_str(pm_key_left), dik_str(pm_key_right),
+           pm_mouse_on ? "on" : "off", pm_mouse_sens);
+}
+
+/* foot_input(struct c32_foot_input*, on_foot) (c32/player_move.c, every Player_MoveOnFoot):
+ * the strafe keys, and while on foot the mouse: relative mode on while mouse turning is on
+ * and the window has focus, given back when it is switched off (only if we took it: full
+ * screen takes it too), the whole pixels since the last tick, dropped after a gap (the
+ * first tick after a menu or a car) */
+uint64_t c32_svc_foot_input(const uint32_t *args)
+{
+    struct c32_foot_input *in = (struct c32_foot_input *)(uintptr_t)args[0];
+    in->mouse_on = pm_mouse_on;
+    in->strafe = 0;
+    in->mouse_px = 0;
+    in->mouse_ok = 0;
+    in->mouse_sens = pm_mouse_sens;
+    if (!args[1])
+        return 0;
+    if (pm_strafe_on)
+        in->strafe = (di_keys[pm_key_left] != 0) - (di_keys[pm_key_right] != 0);
+    if (!pm_mouse_on) {
+        if (pm_captured) {
+            pm_captured = 0;
+            mouse_capture_off();
+        }
+        return 0;
+    }
+    if (!have_focus)
+        return 0;
+    pm_captured = 1;
+    mouse_capture_on();
+    in->mouse_px = take_axis(&mouse_dx);
+    uint32_t gap = r_frames - pm_mouse_frame;
+    pm_mouse_frame = r_frames;
+    in->mouse_ok = gap <= MOUSE_GAP;
+    return 0;
+}
+
+/* ctl_on_foot(Player*, Ped*) (c32/player_move.c, after its own writes): gta2ctl steering */
+uint64_t c32_svc_ctl_on_foot(const uint32_t *args)
+{
+    ctl_on_foot(args[0], args[1]);
+    return 0;
+}
+
+DM_ITEM(dmp_root, 60, DM_FLAG, "Mouse turning: ", &pm_mouse_on);
+DM_ITEM(dmp_root, 70, DM_FLAG, "Strafe (Q/E): ", &pm_strafe_on);
 
 /* ---- the car bonus (c32/car_bonus.c): config key and K menu row ----------------------- */
 

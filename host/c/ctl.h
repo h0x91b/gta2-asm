@@ -58,7 +58,7 @@ typedef struct {
     int done;                                   /* set by ctl_on_foot: arrived / facing */
 } ctl_steer_t;
 extern ctl_steer_t ctl_steer;
-void ctl_on_foot(gptr player, gptr ped);        /* called from hk_MoveOnFoot (player_move.asm) */
+void ctl_on_foot(gptr player, gptr ped);        /* after Player_MoveOnFoot (c32/player_move.c) */
 
 #define SCR_ONE 16384.0
 static inline double scr_to_f(int32_t v) { return v / SCR_ONE; }

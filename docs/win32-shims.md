@@ -149,7 +149,7 @@ match the 64-bit-inode struct layouts; the plain names are the legacy ABI.
   `c32_cfg_mods` (`host/c/c32_host.c`, C32 mods). Section `camera:`,
   key `zoom: auto | 25..400` (percent of the game's zoom, see "Hooks", `0x41F3E9`);
   without it the camera runs at 70% (the table's default), `zoom: 100` is vanilla. Section
-  `controls:` (storage in `host/player_move.asm`): `strafe` (default on), `strafe_left` / `strafe_right`
+  `controls:` (storage in `host/c/c32_host.c`, used by `host/c32/player_move.c`): `strafe` (default on), `strafe_left` / `strafe_right`
   (key names as in `--keys`, default Q / E), `mouse_turn` (default off),
   `mouse_sensitivity` (percent, 10..1000, 100 = 0.5° per mouse point); the first two also
   toggle at run time from the debug menu (K); see "Hooks",
@@ -312,7 +312,8 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
   (EXCLUSIVE|FOREGROUND) and acquires it: only to hide/capture the cursor in full
   screen. No `GetDeviceState`/`GetDeviceData` on it anywhere (all 8 references are in
   `0x4CAD30..0x4CADCA`). No `WM_MOUSEMOVE` handling either. The host reads the SDL
-  motion itself for `controls.mouse_turn` (`player_move.asm`), and turns relative mode
+  motion itself for `controls.mouse_turn` (`c32_host.c` service `foot_input`, for
+  `c32/player_move.c`), and turns relative mode
   on while the player walks with it enabled.
 
 ### What the shim does

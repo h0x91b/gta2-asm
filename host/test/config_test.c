@@ -1,6 +1,6 @@
 /* config_test.c — host test of the config.yaml reader (host/c/config.c), without the
- * loader: the NASM symbols config.c uses (registry, key_table, player_move's controls,
- * fail) are stubs here, fail() longjmps back with its message. `host/build.sh --test`.
+ * loader: the NASM and c32_host.c symbols config.c uses (registry, key_table, the on-foot
+ * controls, fail) are stubs here, fail() longjmps back with its message. `host/build.sh --test`.
  */
 #include <setjmp.h>
 #include <stdio.h>
@@ -63,13 +63,12 @@ const struct key_ent key_table[] NASM(key_table) = {
     { 4, 0x1E, 'A', 0, "A" }, { 20, 0x10, 'Q', 0, "Q" }, { 8, 0x12, 'E', 0, "E" },
     { 225, 0x2A, 0x10, 0, "LSHIFT" }, { 0xFFFF, 0, 0, 0, 0 },
 };
-uint8_t pm_strafe_on NASM(pm_strafe_on);
-uint8_t pm_mouse_on NASM(pm_mouse_on);
-uint8_t pm_key_left NASM(pm_key_left);
-uint8_t pm_key_right NASM(pm_key_right);
-int32_t pm_mouse_sens NASM(pm_mouse_sens);
+uint8_t pm_strafe_on;                   /* c32_host.c */
+uint8_t pm_mouse_on;
+uint8_t pm_key_left;
+uint8_t pm_key_right;
+int32_t pm_mouse_sens;
 static int reports;
-void pm_report(void) NASM(pm_report);
 void pm_report(void) { reports++; }
 
 uint8_t mods_passenger_enter;

@@ -6,50 +6,16 @@
 ;   (dbgmenu_key for input_key, dm_player_ped), each a thin shim into C,
 ; - dm_cb, through which C calls functions that may be NASM (DM_FRAME hooks, DM_VALUE
 ;   change / format, DM_ACTION, low_alloc, input_release_all),
-; - the record macros (DM_ITEM, DM_FRAME, DMVALUE) and constants the not-yet-ported
-;   feature modules (player_move.asm) use to register their rows and frame hooks. The records have the layout of host/c/menu/dm.h
-;   (struct dm_item, struct dm_frame) and land in the same linker sets as the C ones.
+; - the item kinds dm_cb dispatches on. The feature modules that registered rows and frame
+;   hooks from NASM are all C or C32 now (the last, player_move.asm, moved in Seq 62), so
+;   the record macros are gone with them.
 
 DM_ACTION  equ 0                    ; item kinds (dm.h): data = fn, run on the game's side
 DM_FLAG    equ 2                    ; data = a byte toggled 0 / 1
 DM_VALUE   equ 6                    ; data = {change(rdi = item, esi = dir), format(rdi = text end)}
-DM_TOAST_FRAMES equ 120
-
-; shared game offsets the feature modules use (gta2-seuko-mod src/game/gta2.h @25b1985,
-; re/gta2_types.h)
-PED_CAR      equ 0x16c
-PED_GAMEOBJ  equ 0x168              ; PedGameObject*, sprite at +0x80
-; MainCamera, WindowedWidth: gta2-seuko-mod src/game/memory.h @25b1985
-UI_CAMERA  equ 0x5E3CC4             ; Camera* (main), uiScale at +0xa8
-WINDOW_W   equ 0x673578
-
-; DM_ITEM page, order, kind, "label", data: one row of a page (struct dm_item)
-%macro DM_ITEM 5
-[section __DATA,__dm_items data align=8]
-    dq %1
-    dd %2, %3
-    dq %%l, %5
-[section .rodata]
-%%l: db %4, 0
-__SECT__
-%endmacro
-; DM_FRAME order, fn: fn() once per gameplay frame on the game's side, before the HUD,
-; lowest order first, whether the menu is open or not (struct dm_frame)
-%macro DM_FRAME 2
-[section __DATA,__dm_frame data align=8]
-    dd %1, 0
-    dq %2
-__SECT__
-%endmacro
-; DMVALUE name: a DM_VALUE item's {change, format} pair, dmv_name
-%macro DMVALUE 1
-align 8
-dmv_%1: dq dm_%1_change, dm_%1_fmt
-%endmacro
 
 ; host/c/menu: pages and data under their NASM names (dm.h)
-extern dmp_root, dmp_player, dmp_vehicle, dmp_spawn, dmp_flags
-extern dm_toast, dm_toast_left, dm_paused
+extern dm_paused
 extern _dm_key, _dm_on_drawui, _dm_player_pair
 
 section .text
