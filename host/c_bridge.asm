@@ -18,7 +18,7 @@ global have_focus
 
 extern _ctl_autopilot_ticks
 extern _ctl_autopilot_ped           ; host/c/ctl_game.c: the player driven by drive_to, or 0
-extern _ctl_arg, _ctl_init, _ctl_frame, _ctl_exit, _ctl_brief_text   ; host/c/ctl.c (docs/gta2ctl.md)
+extern _ctl_arg, _ctl_init, _ctl_frame, _ctl_exit, _ctl_brief_text, _ctl_find_route   ; host/c/ctl.c (docs/gta2ctl.md)
 ; host/c/menu (the K menu, docs/debug-menu.md); its own externs are in debug_menu.asm
 global dm_cb                        ; debug_menu.asm: C -> a callback that may be NASM
 global cam_zoom_pct                 ; w32_hooks.asm: the camera zoom the menu changes

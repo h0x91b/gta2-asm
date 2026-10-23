@@ -469,6 +469,45 @@ void ctl_drive_assist(void)
     s->rotation = h;
 }
 
+/* drive_to route without a U-turn. RoadNetwork_FindRoute 0x40E0F0 is a best-first search from
+ * the junction ahead (by the tile's arrows) that may leave it back the way the car came; the car
+ * AI never executes such a U-turn (CarAI_ApplyRouteTurn only notes it in +0x38 / flag 0x800) and
+ * drives straight on, away from the target, re-planning from each next junction (Seq 27: 23% of
+ * routes on wil). For our car mark the junction behind as visited first:
+ * InitSearch 0x40D690 (thiscall, the same 7 args), FindSegmentJunctionAtTile 0x40D510 (thiscall
+ * x, y, z, kind 0 = the end behind, arrowLayer), visited[] at +0xCA40, RunSearch 0x40DFA0
+ * (thiscall arrowLayer), StoreRoute 0x40CC10 (fastcall). No route that way: 0x10000, the
+ * original search runs. The junction counts as behind only if it lies behind the car's
+ * heading (a car against its tile's arrows has kind 0 ahead). */
+static uint16_t route_behind;           /* the last junction behind drive_to's car */
+
+uint32_t ctl_find_route(gptr rn, const uint32_t *a)
+{
+    if (!autopilot_car || !rn)
+        return 0x10000;
+    Car *car = GP(Car, autopilot_car);
+    Sprite *s = GP(Sprite, car->body);
+    if (!s || (uint32_t)(s->x >> 14) != (a[0] & 0xFF) || (uint32_t)(s->y >> 14) != (a[1] & 0xFF))
+        return 0x10000;                                   /* another car's drive order */
+    if (!(game_thiscall(0x40D690, rn, 7, a[0], a[1], a[2], a[3], a[4], a[5], a[6]) & 0xFF))
+        return 0x10000;
+    uint16_t start = *(uint16_t *)(uintptr_t)(rn + 0x8618);
+    uint16_t behind = (uint16_t)game_thiscall(0x40D510, rn, 5, a[0], a[1], a[2], 0u, a[6]);
+    if (behind && behind != start && behind < 545) {
+        const uint8_t *r = (const uint8_t *)(uintptr_t)(rn + 0x8 + behind * 0x10u + 0xC);
+        double h = s->rotation * (2 * M_PI / 1440);
+        double jx = (r[0] + r[2] + 1) / 2.0 - s->x / 16384.0, jy = (r[1] + r[3] + 1) / 2.0 - s->y / 16384.0;
+        if (sin(h) * jx + cos(h) * jy < 0)                /* behind the car's heading */
+            route_behind = behind;
+    }
+    /* inside a junction the start is the junction itself: the one behind is where we came from */
+    if (route_behind && route_behind != start && route_behind < 545)
+        *(uint8_t *)(uintptr_t)(rn + 0xCA40 + route_behind) = 1;
+    if (!(game_thiscall(0x40DFA0, rn, 1, a[6]) & 0xFF))
+        return 0x10000;
+    return game_fastcall(0x40CC10, rn, 0, 0) & 0xFFFF;
+}
+
 /* drive_to debug: the AI's state, one line to the game log */
 void ctl_drive_debug(void)
 {
@@ -535,6 +574,7 @@ int ctl_order_drive(int32_t x, int32_t y, int32_t z, const char **why)
     autopilot_car = ped->currentCar;
     autopilot_class = car->driverClass;
     car->driverClass = 5;
+    route_behind = 0;
     car->aiFlags &= ~3;           /* stale TurnLeft/TurnRight bits from traffic (Seq 27) */
     /* PLAYER physics mode (2) takes gears from Player_DriveCar, which we skip: AI mode (1),
      * CarPhysics_SetModeAI @0x4212A0 */

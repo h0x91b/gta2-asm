@@ -182,7 +182,7 @@ Also measured by hand: jacking a stopped driven car (`teleport` next to it, `ent
 | state, nearest lists, teleport, enter/exit orders, steering | `host/c/ctl_game.c` | the game side of the same feature; its per-tick work is two `Player` fields, written after the C32 on-foot hook (`c32/player_move.c`) calls it back through a host service. A C32 half would need the command state twice, shared through exports |
 | spawning | `host/c/spawn.h`, implemented by the K menu (`host/c/menu/helpers.c`, `spawn_ped.c`, `spawn_object.c`, `docs/debug-menu.md`) | the K menu's recipes |
 | hooks into the host | `vid_FlipBuffers` → `ctl_frame` (`w32_renderer.asm`), `hk_move_on_foot` → service `ctl_on_foot` (`c32/player_move.c` → `c32_host.c`), `_main` → `ctl_arg` / `ctl_init` (`loader.asm`), `input_push_key` (`w32_dinput.asm`) | |
-| game hooks (`w32_hooks.asm` CALLHOOKs, handlers in `ctl_hooks.asm`) | `CarDriverClass` 0x429EDC, `DriveCar` 0x4A78F3 (drive_to); `BriefText` 0x4C6561 / 0x4C65C2 (sms) | call-site detours that only change anything while gta2ctl uses them |
+| game hooks (`w32_hooks.asm` CALLHOOKs, handlers in `ctl_hooks.asm`) | `CarDriverClass` 0x429EDC, `DriveCar` 0x4A78F3, `FindRoute` 0x42AD41 (drive_to); `BriefText` 0x4C6561 / 0x4C65C2 (sms) | call-site detours that only change anything while gta2ctl uses them |
 | client | `tools/gta2ctl/gta2ctl.c` | native, no Rosetta |
 
 Game facts used (Seq 27's answers, `docs/re/ped-movement-collision.md`):
@@ -217,6 +217,14 @@ Game facts used (Seq 27's answers, `docs/re/ped-movement-collision.md`):
   left the junction over the kerb and lost its route. While the flag is up, the car is turned
   8 more Ang16 units per tick (about 2 degrees) toward `CarAI.turnExitDir` (+0x44), never past it.
   Measured on the same route: 22-33 unstick ticks and a lost route before, none after.
+- **No U-turn routes** (`ctl_find_route`, a CALLHOOK on the `RoadNetwork_FindRoute` call in
+  `CarAI_SetRouteTarget`, 0x42AD41): the car AI never executes a route that leaves a junction
+  back the way the car came (`CarAI_ApplyRouteTurn` only notes it, +0x38 / flag 0x800), so it
+  drove straight on and re-planned from each next junction (Seq 27: 23% of routes on wil). For
+  our car the search marks the junction behind as visited (the segment's kind-0 end when it
+  lies behind the car's heading, remembered while the car is inside a junction); with no route
+  that way the game's own search runs. Measured: the U-turn flag in 541 of the debug samples
+  before, 6 after.
 - **sms**: `Hud_Brief_Enqueue` 0x4C6690 (stdcall, ECX = `g_HudManager` [0x672F40] + 0xE4) with
   the key `ctlsms`, private priority 4, after `ClearAllBriefsWithPriority(4)` 0x4C6860; the
   `Gxt_FindTextW_thunk` calls in `Hud_Brief_PrepareCurrentText` answer our text (low arena,
@@ -225,11 +233,13 @@ Game facts used (Seq 27's answers, `docs/re/ped-movement-collision.md`):
 ## Limits
 
 - `goto --straight` walks straight: anything in the way ends in `stuck`. Plain `goto` routes.
-- `drive_to` is experimental. It goes the game planner's way, which follows one-way streets
-  and can be a long loop: measured 2026-10-23 over 5 legs in Downtown, 4 arrived (1467-4087
-  frames), one 45-block leg drove 303 blocks, and a far one timed out halfway. The car waits at
-  lights and in jams like traffic. A target off the road (a courtyard) ends next to its fence.
-  `face` on foot only.
+- `drive_to` is experimental. It goes the game planner's way (best-first, not shortest, along
+  one-way streets), with U-turn routes removed for our car (below). Measured 2026-10-23, the
+  same 4 legs in Downtown: 11190 frames before the U-turn fix, 6807 after, all arrived. The car
+  waits at lights and in jams like traffic, so a gridlock ends in `stuck`; a long drive through
+  gang turf can end with the player `WASTED` (`out of the car`). A target must be a road tile
+  with arrows: off the road (a courtyard, a pavement) the game finds no route and the AI drives
+  straight at it, over peds. `face` on foot only.
 - After `teleport` on foot the camera does not follow at once: it stayed where it was for 250
   frames and snapped back on entering a car (Seq 59, 2026-10-22). Wait a while before a `shot`,
   or teleport only where needed.

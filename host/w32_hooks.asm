@@ -398,6 +398,7 @@ hooks:
     CALLHOOK 0x4A78F3, "DriveCar", 0x4A4C40             ; ctl_hooks.asm (gta2ctl drive_to)
     CALLHOOK 0x4C6561, "BriefText", 0x4C23A0            ; ctl_hooks.asm (gta2ctl sms)
     CALLHOOK 0x4C65C2, "BriefTextNum", 0x4C23A0         ; the same, show_brief_number path
+    CALLHOOK 0x42AD41, "FindRoute", 0x40E0F0            ; ctl_hooks.asm (gta2ctl drive_to)
     dq 0
 
 shimtab_gta2:
@@ -412,6 +413,7 @@ shimtab_gta2:
     SHIM "DriveCar", 4, hk_DriveCar
     SHIM "BriefText", 4, hk_BriefText
     SHIM "BriefTextNum", 4, hk_BriefText
+    SHIM "FindRoute", 0x1C, hk_FindRoute
     dq 0
 
 hook_kinds: dq s_hk_entry, s_hk_call, s_hk_jmp, s_hk_patch

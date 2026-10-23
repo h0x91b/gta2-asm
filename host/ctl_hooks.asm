@@ -1,6 +1,6 @@
 ; ctl_hooks.asm — the game hooks gta2ctl (docs/gta2ctl.md) needs beyond on-foot steering
 ; (which runs from c32/player_move.c). They lived in player_move.asm until it moved to C32
-; (Seq 62) and are unchanged; their CALLHOOK rows are in w32_hooks.asm.
+; (Seq 62); their CALLHOOK rows are in w32_hooks.asm.
 ;
 ; gta2ctl drive_to (host/c/ctl_game.c) lets the car AI drive the player's car. Two gates
 ; keep the AI off a player's car (Seq 27, 2026-10-22): Car_Update 0x429E50 runs
@@ -56,6 +56,29 @@ hk_DriveCar:
     mov edi, 0x4A4C40
     mov rsi, rbx
     mov edx, 1
+    xor ecx, ecx
+    mov r8d, r12d
+    xor r9d, r9d
+    call call32
+.out:
+    HRET
+
+
+; FindRoute @0x42AD41 (CALLHOOK in CarAI_SetRouteTarget): RoadNetwork_FindRoute 0x40E0F0,
+; thiscall (ECX = RoadNetwork*, 7 stack args, short slot or -1). ctl_find_route
+; (host/c/ctl_game.c) plans gta2ctl drive_to's car without a U-turn and answers the slot, or
+; 0x10000 for "not ours / no such route": then the original runs.
+hk_FindRoute:
+    HENTER
+    mov r12d, [abs G_ECX]
+    mov edi, r12d
+    mov rsi, rbx
+    call _ctl_find_route
+    cmp eax, 0x10000
+    jne .out
+    mov edi, 0x40E0F0
+    mov rsi, rbx
+    mov edx, 7
     xor ecx, ecx
     mov r8d, r12d
     xor r9d, r9d
