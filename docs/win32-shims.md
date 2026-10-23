@@ -202,7 +202,9 @@ and not yet exercised by the game.
 
 64-bit host C import handlers (docs/host-c.md, "Import shims in C") on top of the pak VFS
 `host/c/vfs.c` (index, `win_path`, overlay, copy-out, `vfs_load`; unit test
-`host/test/vfs_test.c`). Ported from NASM in Seq 64 with identical log lines.
+`host/test/vfs_test.c`). Ported from NASM in Seq 64 with identical log lines. End to end:
+`tests/ctl/quick_save.sh` (a fresh overlay under its own `HOME`, a K menu quick save:
+files served from the pak, the save and the CRT logs in the overlay, data.pak untouched).
 
 | import | semantics / shortcut |
 |---|---|
