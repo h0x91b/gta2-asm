@@ -50,6 +50,7 @@ extern char *r_shot_path NASM(r_shot_path);
  * past the goal, so a car often goes by the target in the other carriageway (~3.6 blocks off) */
 #define DRIVE_RADIUS  (int32_t)(4.0 * SCR_ONE)
 #define DRIVE_STUCK_MOVE (int32_t)(0.5 * SCR_ONE)    /* drive_to: moved, so not stuck */
+#define DRIVE_STUCK_FRAMES 900                    /* drive_to: 30 s still = stuck (lights, jams) */
 #define ENTER_WALK    900               /* frames to reach a door after the order */
 
 enum { K_NONE, K_DRIVE, K_WALK, K_GOTO, K_FACE, K_ENTER, K_EXIT, K_KEY, K_WAIT, K_WAIT_FRAMES };
@@ -834,6 +835,7 @@ static void step(client_t *c)
             return reply_error(c, "player gone");
         ctl_pos(&x, &y, &z);
         Car *dc = GP(Car, ped->currentCar);
+        ctl_drive_assist();
         if (c->straight && r_frames % 15 == 0)  /* drive_to --debug */
             ctl_drive_debug();
         snprintf(extra, sizeof extra, ",\"objective\":%u,\"status\":%u,\"ai\":%u,\"order\":%u"
@@ -864,7 +866,7 @@ static void step(client_t *c)
             c->moved_x = x;
             c->moved_y = y;
             c->progress_frame = r_frames;
-        } else if (r_frames - c->progress_frame > 300)
+        } else if (r_frames - c->progress_frame > DRIVE_STUCK_FRAMES)
             return ctl_drive_stop(), reply_result(c, 0, "stuck", extra);
         return;
     }

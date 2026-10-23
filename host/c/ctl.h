@@ -44,6 +44,7 @@ int ctl_order_walk(int32_t x, int32_t y, int32_t z, const char **why);   /* expe
 void ctl_clear_objective(void);
 void ctl_autopilot_off(void);
 void ctl_drive_debug(void);
+void ctl_drive_assist(void);
 int ctl_sms(const char *text);
 uint32_t ctl_brief_text(gptr key);
 int ctl_order_drive(int32_t x, int32_t y, int32_t z, const char **why);  /* experimental */               /* a pending ENTER_CAR, before the door */

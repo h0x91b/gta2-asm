@@ -15,6 +15,7 @@
 #include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "ctl.h"
 
@@ -430,6 +431,44 @@ int ctl_sms(const char *text)
     return 1;
 }
 
+/* drive_to turn assist. The car AI turns at a junction by steering for a while (CarAI flag 0x80,
+ * CarAI_UpdateJunctionTurn 0x430650 / CarAI_TryStartTurn 0x42ADA0 set turnExitDir +0x44), but at
+ * the player's car's handling the turn is too wide: measured 2026-10-22, 30 ticks gave ~60 of
+ * 90 degrees, the car left the junction over the kerb and the route was lost. While the flag
+ * is up, rotate the car a little further toward the exit heading each tick. Exit dirs as
+ * travelDir: 1 north (-y), 2 south, 3 east, 4 west; Ang16 1440 per turn, 0 faces +y. */
+#define ASSIST_STEP 8                   /* Ang16 units per tick on top of the car's own */
+static int assist_tick = -1;
+static const short exit_heading[5] = { 0, 720, 0, 360, 1080 };
+
+void ctl_drive_assist(void)
+{
+    if (!autopilot_car)
+        return;
+    Car *car = GP(Car, autopilot_car);
+    CarAI *ai = GP(CarAI, car->ai);
+    CarPhysics *ph = GP(CarPhysics, car->physics);
+    Sprite *s = GP(Sprite, car->body);
+    gptr fc = rd32(0x5E8108);                             /* g_FrameCounter: once per tick */
+    if (!ai || !ph || !s || !fc || (int)rd32(fc) == assist_tick)
+        return;
+    assist_tick = (int)rd32(fc);
+    if (!(ai->flags & 0x80) || ai->turnExitDir < 1 || ai->turnExitDir > 4)
+        return;
+    int d = (exit_heading[ai->turnExitDir] - ph->heading) % 1440;
+    if (d > 720)
+        d -= 1440;
+    if (d < -720)
+        d += 1440;
+    if (d > ASSIST_STEP)
+        d = ASSIST_STEP;
+    if (d < -ASSIST_STEP)
+        d = -ASSIST_STEP;
+    short h = (short)((ph->heading + d + 1440) % 1440);
+    ph->heading = h;
+    s->rotation = h;
+}
+
 /* drive_to debug: the AI's state, one line to the game log */
 void ctl_drive_debug(void)
 {
@@ -451,6 +490,24 @@ void ctl_drive_debug(void)
            o ? o->targetX / 16384.0 : 0, o ? o->targetY / 16384.0 : 0, o ? o->targetZ / 16384.0 : 0,
            ph ? ph->isForwardGasOn : 0, ph ? ph->isBrakeOn : 0, ph ? ph->steering : 0,
            ai ? ai->targetSpeed : 0, (int)car->driverClass, car->aiFlags);
+    if (ai && ai->obstacleHit) {
+        Sprite *ob = GP(Sprite, ai->obstacleHit);       /* Sprite_GetKind: +0x30, 2 car 3 ped */
+        printf("ctl: drv obstacle kind %d at %.2f,%.2f\n", ob->collisionKind, ob->x / 16384.0, ob->y / 16384.0);
+    }
+    /* the route: junction ids at RoadNetwork [0x5D351C] + 0x2218 + (slot*0x100 + i)*2,
+     * junction rects (minX, minY, maxX, maxY bytes) at +0x8 + id*0x10 + 0xC (Seq 27) */
+    gptr rn = rd32(0x5D351C);
+    if (rn && ai && ai->routeSlot > 0) {
+        printf("ctl: drv route");
+        for (int i = 0; i < 4; i++) {
+            uint16_t id = *(uint16_t *)(uintptr_t)(rn + 0x2218 + ((uint32_t)ai->routeSlot * 0x100 + i) * 2);
+            if (!id)
+                break;
+            const uint8_t *r = (const uint8_t *)(uintptr_t)(rn + 0x8 + id * 0x10u + 0xC);
+            printf(" j%u[%u..%u,%u..%u]", id, r[0], r[2], r[1], r[3]);
+        }
+        printf("\n");
+    }
 }
 
 int ctl_order_drive(int32_t x, int32_t y, int32_t z, const char **why)

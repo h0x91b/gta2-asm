@@ -92,7 +92,7 @@ Coordinates are blocks (floats, 1.0 = one map block); headings are degrees, **0 
 | `walk_to X Y [TIMEOUT]` | | the same as `goto` (routed) |
 | `enter_car nearest\|ID [TIMEOUT] [--straight] [--key] [--passenger]` | default 1800 frames | walks to within 1.5 blocks of the car by the game's routing (re-aimed every 30 frames, so it follows a moving car; `--straight`: our straight walk instead), then gives the game's own enter order; the game walks the ped to a door and gets in, jacking a driver if there is one. `"result":"driver"` / `"passenger"`, `car_id`, `car_model`, `target_car` (false = it ended up in another car). Failures: `stuck`, `no reachable door` (3 tries, 300 frames each), `enter failed`, `car gone`, `timeout`. `--key` presses RETURN instead (the game then picks the car half a block in front). `--passenger`: get in as a passenger (no jack): the order with the passenger flag and door 1 (`no passenger door` on doorless models), or with `--key` LSHIFT+RETURN, the passenger mod's key ([passenger.md](passenger.md)) |
 | `exit_car [TIMEOUT] [--key]` | default 600 frames | `"result":"on foot"`; refused while the car is too fast to leave (`Car_CanExitCar`, \|v\| ≥ 0.3) |
-| `drive_to X Y [TIMEOUT] [--debug]` | default 5400 frames | **experimental**: the game's own car AI drives the player's car there (as ambulances and fire engines go to a call): the player gets GO_TO_AREA_IN_CAR (14), the car gets a CarAI and a drive order, and for the run the car counts as a mission car with AI physics (see "Where the code is"). `arrived` (within 4 blocks, or the objective passed), `stuck` (moved < 0.5 block in 300 frames), `out of the car`, `objective lost`, `timeout`. The car keeps its lane and follows the road arrows, so it may drive away from the target (one-way streets) before it comes back. `--debug`: the AI state every 15 frames into the game log (`ctl: drv …`). Driver only |
+| `drive_to X Y [TIMEOUT] [--debug]` | default 5400 frames | **experimental**: the game's own car AI drives the player's car there (as ambulances and fire engines go to a call): the player gets GO_TO_AREA_IN_CAR (14), the car gets a CarAI and a drive order, and for the run the car counts as a mission car with AI physics (see "Where the code is"). `arrived` (within 4 blocks, or the objective passed), `stuck` (moved < 0.5 block in 900 frames: lights and jams take a while), `out of the car`, `objective lost`, `timeout`. The car keeps its lane and follows the road arrows, so it may drive away from the target (one-way streets) before it comes back. `--debug`: the AI state every 15 frames into the game log (`ctl: drv …`). Driver only |
 | `key NAME [FRAMES]` | FRAMES (default 4) | a tap: down now, up FRAMES later; names as in `--keys` (`RETURN`, `UP`, `LCONTROL`, `A`, …) |
 | `keydown NAME` / `keyup NAME` | | hold / release (e.g. drive: `keydown UP` … `keyup UP`) |
 | `spawn car MODEL [REMAP]` | | REMAP -1 random (default), 0 none, i = the model's i-th remap; `id` = the car id for `enter_car` |
@@ -211,6 +211,11 @@ Game facts used (Seq 27's answers, `docs/re/ped-movement-collision.md`):
   stop undoes all of it: objective 0, `CarDriveOrderPool_Free` 0x446290, `Car_HaltAI`
   0x421540, `Car_FreeAI` 0x4266F0, class and physics mode back. The route is re-planned every
   tick (`CarAI_UpdateDriveOrder` 0x42D390).
+- **Turn assist** (`ctl_drive_assist`): with the player's car the AI's junction turn was too
+  wide (measured: ~60 of 90 degrees in the time the turn steers, CarAI flag 0x80), so the car
+  left the junction over the kerb and lost its route. While the flag is up, the car is turned
+  8 more Ang16 units per tick (about 2 degrees) toward `CarAI.turnExitDir` (+0x44), never past it.
+  Measured on the same route: 22-33 unstick ticks and a lost route before, none after.
 - **sms**: `Hud_Brief_Enqueue` 0x4C6690 (stdcall, ECX = `g_HudManager` [0x672F40] + 0xE4) with
   the key `ctlsms`, private priority 4, after `ClearAllBriefsWithPriority(4)` 0x4C6860; the
   `Gxt_FindTextW_thunk` calls in `Hud_Brief_PrepareCurrentText` answer our text (low arena,
@@ -219,13 +224,11 @@ Game facts used (Seq 27's answers, `docs/re/ped-movement-collision.md`):
 ## Limits
 
 - `goto --straight` walks straight: anything in the way ends in `stuck`. Plain `goto` routes.
-- `drive_to` is experimental: the game's route planner picks the start junction from the
-  tile's arrows, not from the car's heading (Seq 27, `RoadNetwork_FindVSegmentJunction`
-  0x40D450), so a car in the "other" lane of a two-way road can turn the wrong way at the first
-  junction; and a car AI blocked at a junction picks a random turn. Measured 2026-10-22: it
-  drives lanes and turns fine, but on a 30-block trip from the start road it went the wrong way
-  at the first junction. A target off the road (a courtyard) ends next to its fence. `face` on
-  foot only.
+- `drive_to` is experimental. It goes the game planner's way, which follows one-way streets
+  and can be a long loop: measured 2026-10-23 over 5 legs in Downtown, 4 arrived (1467-4087
+  frames), one 45-block leg drove 303 blocks, and a far one timed out halfway. The car waits at
+  lights and in jams like traffic. A target off the road (a courtyard) ends next to its fence.
+  `face` on foot only.
 - After `teleport` on foot the camera does not follow at once: it stayed where it was for 250
   frames and snapped back on entering a car (Seq 59, 2026-10-22). Wait a while before a `shot`,
   or teleport only where needed.
