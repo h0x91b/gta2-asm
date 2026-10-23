@@ -2,9 +2,9 @@
 
 How a GTA2 ped decides what to do each tick: the two AI slots (objective and task), the
 `PED_OBJECTIVE` values and their handlers, the `(state, state2)` pair, `PED_FLAGS` and
-`PED_CLASS`. Ped movement itself (the walker, collision) is in
-[ped-movement-collision.md](ped-movement-collision.md); groups, gangs and ped spawning are in
-[gangs-and-peds.md](gangs-and-peds.md).
+`PED_CLASS`, and the on-foot pathfinder that serves the "go to" objectives (§8). Ped movement
+itself (the walker, collision) is in [ped-movement-collision.md](ped-movement-collision.md); groups,
+gangs and ped spawning are in [gangs-and-peds.md](gangs-and-peds.md).
 
 Every address is a VA in vanilla `gta2.exe` 11.44 (base `0x3F0000`); every name is in the Ghidra
 DB (`gta-2-recovered.gpr`, program `gta2.segments.fixed.exe`) and therefore in `re/`.
@@ -122,7 +122,8 @@ per-class offscreen/despawn tick, plus the player's WALK/STAYING toggle.
 
 The knockdown meter: `Ped_UpdateKnockdownMeter` 0x435CE0 (every tick from `Ped_Update`) drops the
 ped to (8, 0x1B ELECTROCUTED) when `+0x210 knockdownMeter >= +0x212 knockdownThreshold`, decays
-the meter, and for a ped with `PED_FLAG_ELECTROFINGERS` runs `Weapon_TaserFindTarget`.
+the meter, and for a ped with `PED_FLAG_ELECTROFINGERS` runs `Ped_ElectroFingersZap` 0x4CEF40
+(call at 0x435D6E).
 
 ## 4. PED_FLAGS (Ped+0x21C)
 
@@ -136,7 +137,9 @@ Bits that were misnamed before this pass, or whose meaning is not obvious from t
 | 0x20 | ARRESTED | read by `HAS_CHAR_BEEN_ARRESTED`; set by a cop beating a player ped, cleared in `Player_OnBusted` |
 | 0x80 | USE_CAR_WEAPON | script 385; turret objectives |
 | 0x100 | ZAPPED | held by an electro-gun beam, cleared each tick |
+| 0x4000 | PATH_REQUEST_PENDING | ped is in the pathfinder request queue (§8) |
 | 0x10000 | PATH_STEP_TAKEN | one pathfinder step per tick for all peds (round-robin budget) |
+| 0x20000 | PATH_FAILED | the search gave `path[0]` = (0,0): the ped steers straight (PURSUE) (§8) |
 | 0x80000 | THREAT_SCAN_DONE | one line-of-sight threat scan per tick (round-robin) |
 | 0x800000 | SPOTTED_PLAYER | read by `HAS_CHAR_SPOTTED_PLAYER` through `Ped_HasSpottedPlayer`; cleared each tick |
 | 0x4000000 | ELECTROFINGERS | power-up 9 |
@@ -174,7 +177,157 @@ Game+0x20..0x22: `playerIterCursor`, `cameraIterPlayer`, `cameraIterAux` (iterat
 
 ## 7. Open questions
 
+- Pathfinder questions: §8 "Still unknown".
+
 - Objectives 10, 11, 15, 22 and 51 have handlers but no setter in game code: dead, or script-only.
 - `PED_CLASS` 4 and 6 names are guesses that fit every writer.
 - `PedGameObject+0x10` (movement sub-state: 0xF jump, 0x24 entering a car) and `+0x6C` (body
   animation state, 5 = jump) are not decoded; the old `PED_STATE4` enum was meant for `+0x6C`.
+
+## 8. Ped pathfinding (`PedPathfinder`, Seq H3)
+
+Source: Seq H3 (2026-10-23), decompile and asm of every `PedPathfinder_*` function,
+`Ped_MoveTowardTarget` 0x4380D0, `Ped_Update` 0x4455ED / 0x445817, `Ped_Remove` 0x43E650,
+`Game_Ctor` 0x45CD91 and the `FindSpawnTile` call sites. Nothing was measured at runtime.
+
+**One pathfinder for the whole game.** `Game_Ctor` allocates `operator_new(0x2FD4)` at 0x45CD91,
+calls `PedPathfinder_Ctor` 0x45C130 and stores it in `g_PedPathfinder` 0x66A7E4; `Game_Dtor` frees
+it (`PedPathfinder_ScalarDeletingDtor` 0x45BE20). There is exactly one search state, and peds take
+turns on it.
+
+**Request queue.** `Ped_MoveTowardTarget` 0x4380D0 runs for every on-foot "go to" objective (23
+callers: GoToArea, GoToChar, FollowLeader, EnterCar, Guard, …). Each call:
+
+1. sets `DAT_005e5b90` = 1 ("this ped asked for movement this tick"; suggested name
+   `g_PedMoveRequestedThisTick`) and state FOLLOW_ROUTE;
+2. if `PED_FLAG_PATH_REQUEST_PENDING` (0x4000) is clear, appends the ped to the FIFO
+   `requestQueueHead` (+0x3C, `PedList_AddUniqueAtTail`) and sets the flag;
+3. if the ped is the queue head (`PedPathfinder_IsRequestHead` 0x49CB40), calls
+   `PedPathfinder_FindPath(g, ped->id, ped->path, pos x/y/z, goal x/y/z,
+   Ang16_ToHeadingClass(angle to goal), &ped->pathLength)` (call at 0x4384F2). It returns false
+   while the search is still running, so the ped keeps waiting. On true the ped is dequeued
+   (`PedList_Remove`), the flag is cleared, and `pathCursor` moves to the path entry matching the
+   ped's current tile (or `path[0]`). The ped then follows `path[]` step by step (`moveTarget` =
+   tile + 0.5). If `path[0]` is (0,0) the ped gets `PED_FLAG_PATH_FAILED` and falls back to PURSUE
+   (straight-line steering);
+4. non-head peds keep following their old `pathCursor`, or steer straight (PURSUE) if they have none.
+
+`Ped_Update` clears `DAT_005e5b90` at 0x4455ED. At 0x445817, if the ped did not call
+MoveTowardTarget this tick and still has the pending flag, it is removed from the queue
+(`PedList_RemoveDuplicate`, 0x445834) and the flag is cleared. `Ped_Remove` does the same and also
+calls `PedPathfinder_ReleaseIfOwner(ped->id)`.
+
+**The search (`PedPathfinder_FindPath` 0x49CF70)** is an incremental **greedy best-first search**,
+not A* and not BFS:
+
+- **Window**: a 33×33 grid centred on the start (grid (16,16) = start, world = start ±16). Storage is
+  `nodes[33][34]` (8 B each, stride 34). Grid coordinates are u8 (`nbrGridX/Y`, 0..0x20 valid).
+  8 neighbours: dir 1 −y, 2 +x, 3 +y, 4 −x, 5 +x−y, 6 +x+y, 7 −x+y, 8 −x−y. The start is marked
+  with dir 0x42.
+- **Two z levels per cell**: a cell visited at one z can be visited once more at another z
+  (`hasSecondLevel`, slot 2 = `parentDir2` / `z2`); a third level is dropped. This covers bridges
+  and stairs.
+- **Priority** (`PedPathfinder_PushOpenNode` 0x49C820) = `dx² + dy²` to the goal, ×2 when the
+  neighbour's z ≠ goal z. The step count g is stored (`stepCount`) but never added: pure greedy.
+- **Open list**: `openList[400]` at +0x2350, unsorted. Each pop is a linear scan for the minimum and
+  a swap-remove with the last entry. Pushes have **no bound check**.
+- **Walkability** (`PedPathfinder_CanStepToTile` 0x49CB60): a cardinal step →
+  `PedPathfinder_CanCrossEdge(dir)` 0x49C680 → `!MapBlocks_IsBlockEdgeCrossingBlocked(cur, dir,
+  &g_PedPathStepDz, 1)`; the out-byte is the z change, which goes into the neighbour's z (stairs,
+  slopes). A diagonal step is refused if the current tile or either orthogonal tile is a slope
+  (`MapBlocks_IsSlope1to44At`), and all four edge crossings must be open (no corner cutting).
+  `CanCrossEdge` also refuses any tile with x or y outside 2..0xFD (map-border guard).
+- **Budget**: at most 100 pops per call (`iterBudget` +0x2E), then it returns false ("call me next
+  tick"). Each call increments `callCount` (+0x2FD1); past 200 calls the search aborts with
+  `ready = 1`, returns true and writes **no path**.
+- **Termination**: (a) goal reached, exact (x, y, z) equality with the popped node; (b) the goal is
+  outside the window and startZ == goalZ: `PedPathfinder_ClassifyNode` 0x49C760 returns 2 when a
+  neighbour leaves the window on the side picked by `fallbackDir` (1 −y, 2 +y, 3 +x, 4 −x); the path
+  goes to that border and the ped asks again from there; (c) the open list runs dry:
+  `PedPathfinder_SelectFallbackGoal` 0x49C9D0 uses the last node pushed on that window edge
+  (`g_PedPathEdgeBest*`), else `ReleaseIfOwner` and return true with **no output**.
+- **Output**: backtracks `parentDir` from the end node to the start, using `openList` as the stack,
+  copies up to **100** (x, y, z) steps into `ped->path` from the start side, then a (0,0,0)
+  terminator at `path[count]`, and writes the count to `*outLength`. Then `ready = 1`,
+  `searchInProgress = 0`, `callCount = 0`.
+- **Throughput**: only the queue head searches, at ≤ 100 pops per tick, so the whole city is served
+  one path request at a time.
+
+**`PedPathfinder_FindSpawnTile` 0x49D7A0** (now returns `bool`) is not path finding. It reuses the
+grid and open list with `floodMode = 1`: priority = `floodRing` (the pop counter, so roughly BFS),
+4 neighbours, the same walkability test. It accepts the first popped tile whose ground type (z − 1)
+== `kind` (kind 1 also needs road-arrow bits), refuses when `searchInProgress && !wide`, and without
+`wide` gives up after **7 popped tiles** (not "rings"). `PedPathfinder_CanStepFromTile` 0x49DCE0 is
+the same step test for `Car_IsDoorExitClear`.
+
+### `PedPathfinder` (0x2FD4, 38 fields)
+
+| Off | Type | Name | Evidence |
+|---|---|---|---|
+| 0x00 | int | `requesterPedId` | FindPath stores arg 1 (= `Ped.id`, 0x4384EA); ReleaseIfOwner compares it |
+| 0x04 | byte | `floodMode` | 0 in FindPath, 1 in FindSpawnTile; PushOpenNode picks the priority from it |
+| 0x08 | `PedPathOpenEntry*` | `openCursor` | PushOpenNode / pop scan |
+| 0x0C | word | `openCount` | ++ in PushOpenNode, −− on pop; no 400 cap |
+| 0x0E–0x10 | byte ×3 | `startX/Y/Z` | FindPath args 4–6; z snapped by `MapBlocks_GetGroundZBelow` |
+| 0x11–0x13 | byte ×3 | `goalX/Y/Z` | FindPath args 7–9 |
+| 0x14 | byte | `unsure_budgetPending` | set per pop while the list is non-empty; no reader |
+| 0x16 | short | `floodRing` | FindSpawnTile pop counter = priority |
+| 0x18 | byte | `searching` | loop condition |
+| 0x19 / 0x1A | byte | `unsure_goalReached` / `2` | set on goal / edge hit; no reader |
+| 0x1B | byte | `stepDir` | 1..8 / 0x42 |
+| 0x1C | word | `nodeIndex` | gridX + gridY·34 |
+| 0x1E | short | `curStepCount` | from node +6 |
+| 0x20–0x22 | byte ×3 | `nbrX/Y/Z` | neighbour world tile |
+| 0x23 / 0x24 | byte | `nbrGridX/Y` | window coordinates |
+| 0x25–0x27 | byte ×3 | `curX/Y/Z` | from-tile for CanStepToTile / CanCrossEdge |
+| 0x28 / 0x29 | byte | `unsure_windowOriginX/Y` | FindSpawnTile writes x−16, y−16; never read |
+| 0x2E | short | `iterBudget` | = 100 per call |
+| 0x34 / 0x36 / 0x3A | short | `unsure_init34/36/3a` | InitFields only (1, 0, 0) |
+| 0x38 | byte | `searchInProgress` | set in the pop loop, cleared on success / abort; FindSpawnTile gate |
+| 0x3C | `PedListNode*` | `requestQueueHead` | `PedQueue_Ctor`, `PedList_AddUniqueAtTail` / `Remove` |
+| 0x40 | `PedPathNode[33][34]` | `nodes` | ClearNodes 0x8C4 dwords; index `x + y*0x22`; start node = index 0x230 |
+| 0x2350 | `PedPathOpenEntry[400]` | `openList` | `openCursor = this+0x2350`; also the reconstruction stack |
+| 0x2FD0 | byte | `ready` | 1 = idle |
+| 0x2FD1 | byte | `callCount` | > 200 → abort |
+
+Sub-types: `PedPathNode` (8 B: `hasSecondLevel, parentDir, z, parentDir2, z2, pad5, short
+stepCount`), `PedPathOpenEntry` (8 B: `gridX, gridY, x, y, z, pad5, short priority`),
+`PedPathEdgeBest` (5 B: `gridX, gridY, x, y, z`). Globals, used only by `PedPathfinder_*`:
+`g_PedPathCurNode` 0x66A7B4, `g_PedPathEdgeBestPosX` 0x66A7BC, `g_PedPathEdgeBestNegY` 0x66A7C4,
+`g_PedPathEdgeBestNegX` 0x66A7CC, `g_PedPathFallbackDir` 0x66A7D4, `g_PedPathEdgeBestPosY`
+0x66A7D8, `g_PedPathStepDz` 0x66A7E0.
+
+Prototypes (all set in Ghidra): `PedPathfinder_FindPath` is `bool __thiscall (PedPathfinder*, int
+requesterPedId, S3Bytes* outPath, byte startX, startY, startZ, goalX, goalY, goalZ, int fallbackDir,
+byte* outLength)`; `CanCrossEdge(this, int dir)`, `CanStepToTile(this, byte toX, toY)`,
+`CanStepFromTile(this, fromX, fromY, fromZ, toX, toY)`, `IsRequestHead(this, Ped*)`,
+`ReleaseIfOwner(this, int pedId)` are `__thiscall`; `ClearNodes`, `InitFields`, `ClassifyNode`,
+`PushOpenNode`, `SelectFallbackGoal`, `TryExpandNeighbor` are `__fastcall(this)`.
+
+### Why peds get stuck: pathfinder bugs (Seq H3)
+
+| # | VA | What | Trigger | Severity | Confidence |
+|---|---|---|---|---|---|
+| 1 | 0x445817 / 0x49CF70 | **A ped can inherit an orphaned search.** `Ped_Update` drops a ped from the queue when it did not call MoveTowardTarget this tick, but never calls `ReleaseIfOwner`. If that ped was the head mid-search (`ready == 0`), FindPath for the next head skips init, keeps searching the **old ped's start → goal**, and writes that path into the new ped's `path[]`; the new ped walks toward a tile near the old ped (cursor = `path[0]`) | the head ped changes objective or reaches its goal while its search spans more than one tick | high (wrong-direction walking) | static V; not observed at runtime |
+| 2 | 0x49C7E6–0x49C803 | **Window-edge exit is u8-asymmetric.** Dirs 2 (+y) and 3 (+x) fire on both opposite borders (−1 wraps to 0xFF > 0x20); dirs 1 (−y) and 4 (−x) only in window corners | goal > 16 tiles away, same z | medium: 2/3 can lead away from the goal; 1/4 never exit early → full flood up to 200 ticks → fallback | V (asm) |
+| 3 | 0x49CA6D | **SelectFallbackGoal case 2 copy-paste bug**: the grid cell comes from `g_PedPathEdgeBestPosX` instead of `PosY`, so reconstruction starts at the east-edge cell with the south-edge node's world coordinates → garbage path or a `default:` dir → fail | open list exhausted, fallbackDir == 2 | medium | V (asm) |
+| 4 | 0x49C740 / 0x49D4C0 / 0x49D71F | **Failure exits leave `searchInProgress = 1`.** `ReleaseIfOwner` does not clear +0x38, so `FindSpawnTile(wide = 0)` keeps failing (ambulance, fire truck, police, CarAI) until a later search completes or aborts. Matches the "bodies get dropped" note in [gangs-and-peds.md](gangs-and-peds.md) | any failed FindPath (unreachable goal, no edge record) | medium | static V |
+| 5 | 0x49D4C0, 0x49D71F, > 200 abort | **"Done" with no output**: FindPath returns true but writes neither `path[]` nor `*outLength`; the caller searches the stale `path[]` of the previous request and may follow it, or finds (0,0) → PATH_FAILED → straight-line PURSUE (walking into walls) | unreachable goal, budget abort | medium | static V; the stale-path effect is a hypothesis |
+| 6 | 0x49D7A0 | **`FindSpawnTile(wide = 1)` clobbers a running FindPath**: clears nodes, open list and sets floodMode = 1 while `ready == 0`; FindPath resumes on the wreck. wide = 1 callers: `Ped_Obj1_GoToAreaAnyMeans` 0x43C83C / 0x43C9D5, `Ped_Obj1_BustedTakenAwayInCopCar` 0x43D01D, `Sprite_ClearObstaclesForSpawn` 0x4BDB95 (0x43CD2A passes EBP, unknown) | spawn search during a multi-tick ped search | medium | static V |
+| 7 | 0x49D6xx (output loop) | **Off-by-one into Ped**: with count == 100 the terminator goes to `path[100]` = Ped+0x12C..0x12E (`rotation`, low byte of `aimRotation`) | path ≥ 100 steps | low–medium (effect unknown) | write V |
+| 8 | 0x49C820 / 0x49D645 | **No bounds on `openList[400]`**: the push and the reconstruction stack can run past +0x2FD0 into `ready` / `callCount` and the heap | very large frontier, or a path > 400 nodes in a 33×33 window | low | static |
+| 9 | design | **Greedy, not A***: paths are not shortest, U-shaped obstacles cause long detours; every ped waits its turn in one global FIFO at ≤ 100 pops per tick, so crowds steer straight (PURSUE) for seconds → "peds walking into walls" | many on-foot objectives at once | design | V |
+
+### Still unknown
+
+- How often bug 1 happens in play: needs a runtime trace (watch `requesterPedId` change while
+  `ready == 0`, e.g. a gta2ctl / K-menu probe on `g_PedPathfinder`).
+- Heading-class axes: the pathfinder treats `fallbackDir` as 1 −y, 2 +y, 3 +x, 4 −x. Seq H1 proved
+  `Ang16_ToHeadingClass` 0x472C00 = 1 N (−y), 2 S (+y), 3 E (+x), 4 W (−x)
+  ([cars-and-car-ai.md](cars-and-car-ai.md) §4), which agrees, so the edge choice is on the right
+  axis. (H3 itself did not resolve the Ang16 threshold constants.)
+- What +0x14, +0x19, +0x1A, +0x28/0x29, +0x34/0x36/0x3A are for: no readers found (dead or debug;
+  they keep `unsure_`).
+- The `PushOpenNode` early return when `hasSecondLevel` is set and z matches slot 2 (clears the flag,
+  pushes nothing): intent unclear.
+- Whether `FindSpawnTile`'s `wide = EBP` at 0x43CD2A is 0 or 1.

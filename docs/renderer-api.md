@@ -211,6 +211,17 @@ What **gta2.exe** reads/writes (must be right in a reimplementation):
 | +0x50/+0x54 | `surface`/`pitch` | after `Vid_GetSurface`: Bink copies video frames straight into it (`0x481e00`), `MakeScreenTable` |
 | +0x5c/+0x64/+0x6c | R/G/B bit counts | Bink: `5,5,5` → 555 else 565 |
 
+In the gta2.exe Ghidra program this layout is now the type `/gta2_renderer/VidCtx` (44 fields;
+was seuko's `SVideo`, rebuilt in Seq H5, 2026-10-23), with `VidMode` (0x40, was `SDisplayMode`)
+and `VidDevice` (0x2c fixed part, strings follow; was `SDevice`). An xref scan of `g_VidCtx` 0x673D20 found exactly the reads
+listed above ({+0x4 ×7, +0x40 ×2, +0x48 ×7, +0x4C ×9, +0x50 ×2, +0x54 ×3, +0x5C, +0x64}). Seuko's
+layout had real errors: +0x40 was `full_screen` (it is `mode_id`, compared with −2 at 0x4CAEE6 /
+0x4CB15A), RGB `g/r/b` at +0x60/+0x64/+0x68 (really the shift/bits pairs +0x58..+0x74; `PlayMovie`
+0x481F61 reads the bits at +0x5C/+0x64/+0x6C), +0x84 `Vid_GetVersion` (it is the slot table passed
+to `Vid_InitDLL`), +0x80 `fullscreen` missing, and `VidDevice` description / name swapped. Never
+read by gta2.exe (DLL-private, still `unsure_`): +0x38, +0x44, +0x90..+0x11F, +0x124..+0x133,
++0x1BC..+0x1C7, and `VidDevice` +0x2C (seuko `end_buffer`).
+
 What **d3ddll** additionally uses: `+0x7c hmodule`, `+0x84 slot_table`,
 `+0x8c/+0x120` DD objects, `+0x134/+0x138` surfaces, `+0x13c` lock desc,
 `+0x1c8` HAL caps, `+0x58..+0x6c` pixel format. Irrelevant once both DLLs are ours.
@@ -398,10 +409,10 @@ primitives in `gbh_BeginScene`.
 
 Collected for `gta2.segments.fixed.exe`. **Applied 2026-10-20** where the address had no
 name yet; addresses that already carried a name kept it, so in Ghidra (and `re/`) look for:
-slots `d3ddll_<export>` / `dmavideo_<export>` (not `pgbh_*` / `pVid_*`), `SVideoPtr` (type
-`SVideo *`, = `VidCtx`, 0x4c4 B) for `g_VidCtx`, `ptrToMainWindow` / `hInstance` (now typed),
+slots `d3ddll_<export>` / `dmavideo_<export>` (not `pgbh_*` / `pVid_*`), `g_VidCtx` (was
+`SVideoPtr`; type `VidCtx *`, 0x4c4 B), `ptrToMainWindow` / `hInstance` (now typed),
 `rendername` / `dmavideo.dll` (now `char[256]`), `GBHGraphicsError`, `InitVideoDll` (=
-LoadDmaVideo), `ApplyGammaAndWindowSize` (= SetVideoMode), `SetFullscreenMode`,
+LoadDmaVideo), `ApplyGammaAndWindowSize` (= SetVideoMode, now `Video_ReloadSettingsAndRemode`), `SetFullscreenMode`,
 `SetWindowedMode`, `d3ddll_ConvertColourBank` (function at 0x4caeb0), `d3d` (= BeginFrame2D),
 `SetGamma` / `gamma`, `DrawGTAText` (seuko name, = DrawText2D), `TextureCache_RegisterAllTextures`,
 `eachFrame`, `draw`. `g_GbhStats` is typed `void *` (GbhGlobals is not modelled yet).

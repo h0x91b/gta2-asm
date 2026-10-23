@@ -25,7 +25,7 @@
  */
 #include "overlay.h"
 
-#define G_PEDMGR     0x5E5BBC           /* PedManager_S25* */
+#define G_PEDMGR     0x5E5BBC           /* g_PedManager: PedManager* */
 #define PED_ALIVE    99
 #define SCR_NONE     (-0x4000)          /* -1.0: no moveTarget */
 #define MAXPEDS      400                /* the pool has 200; a broken list cannot hang us */
@@ -35,7 +35,7 @@
 #define CYAN  0xFF20E0FFu
 #define GREY  0xC0C0C0C0u
 
-C32_OFFSET(PedManager_S25, activeListHead, 0x4);
+C32_OFFSET(PedManager, activeListHead, 0x4);
 C32_OFFSET(Ped, path, 0x0);
 C32_OFFSET(Ped, rotation, 0x12C);       /* short, 1440 = a full turn */
 C32_OFFSET(Ped, objectiveTargetPed, 0x148);
@@ -124,7 +124,7 @@ uint32_t G2_STDCALL dp_draw(uint32_t frame)
     if (!ov_setup())
         return 0;
     dp_stats = (struct dp_stats){ 0 };
-    PedManager_S25 *mgr = *(PedManager_S25 **)G_PEDMGR;
+    PedManager *mgr = *(PedManager **)G_PEDMGR;
     if (!mgr)
         return 1;
 #ifdef DP_TEST

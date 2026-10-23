@@ -128,7 +128,7 @@ InitFrontend / LoadGMP_and_STY_Files 0x45B469 (sets g_Patch1144 flag 0x676204 = 
 
 Numeric keys: 2184 in each main file (ranges 801–8002: wil briefs 1001–1624, ste 2900–6186, bil
 3230–3753, kill-frenzy/race 5000–5063, 7000–7235, `8001`/`8002`); 411 named keys. Keys `8011–8013`
-are requested by `FUN_004C1F80` but absent (blank). 36 named keys and the `psx*` set have no
+are requested by `Player_RunDebugKeyAction` but absent (blank). 36 named keys and the `psx*` set have no
 reference in the exe (H: unused on PC).
 
 **Debug aid**: registry/ini flag `show_brief_number` (`g_showBriefNumber` 0x5EADA5) draws every
@@ -354,7 +354,7 @@ not yet applied: needs a Structure Editor Clear of HudManager +0x2854..+0x2A1B).
 - Real size of `wcharBuf` 0x5E9F08; exact brief anchor and clipping (0x4C9430).
 - Purpose of speaker icons 6–9 (0x216B, 0x216D, 0x216E, 0x2170) — gang assignment H.
 - Font roles Fe5–Fe13 (xref-based), and whether the frontend ever reads `DefaultFontId`.
-- `FUN_00456820` (bonus-rating text, `Script_Op_SET_BONUS_RATING_TEXT_ID`) and `FUN_004568C0`
+- `FrontEnd_DrawBonusRatingText` (bonus-rating text, `Script_Op_SET_BONUS_RATING_TEXT_ID`) and `FrontEnd_DrawKeyHint`
   (key-help labels) have no direct callers: dead or indirect.
 - Why 2066 of 2184 numeric keys are not referenced by the display opcodes of the shipped scripts
   (other opcodes, or unused/placeholder briefs such as `3001…` "REPORT DEAD BRIEF").

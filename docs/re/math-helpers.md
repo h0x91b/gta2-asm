@@ -212,7 +212,7 @@ Read as source: `if (|v| > cap) v = clampTowardsZero(v, polar(cap, angle(v)))`. 
 `Ang16_ATan2(&y, &x)` = 90° − atan(1) = 180 units (45°; ±1 unit depending on where the binary
 search of the `fptan` table lands); `Vec2_FromPolar(0x2000, 180)` = `(0x2000·sin, 0x2000·cos)`
 = `(0x16A0, 0x16A0)` (0.354 each), and the clamp replaces both components because they are
-smaller. Before this pass the same body read `FUN_0041e260(param_1 + 0x40, &local_10)` with
+smaller. Before this pass the same body read `Fix16Vec2_GetLength(param_1 + 0x40, &local_10)` with
 `void *` operands and a hidden ECX.
 
 The prototypes are also exact at the binary level, which matters for host code that calls these

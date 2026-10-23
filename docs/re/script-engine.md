@@ -23,8 +23,8 @@ startGame ─► MissionScript_Load(g_MissionScript, "data\wil.scr")         0x4
              ├─ 12000 B pointer table, 65536 B code, u16 strlen, strings
              ├─ MissionScript_ParseStrings  0x475D30  (string index → Script4k)
              └─ MissionScript_LoadSubScripts 0x476070 (one .scr per "*.mis" string)
-           ScriptLevelStart 0x481890
-             ├─ FindScrCmdByType(LEVELSTART)
+           MissionScript_StartLevelThread 0x481890
+             ├─ MissionScript_FindCmdByType(LEVELSTART)  0x47F230
              ├─ ScriptThread_PreExecOpCode 0x481400   ← declaration pass, once
              └─ ScriptThread_Init(thread, LEVELSTART)  ← the main thread
 GameTick ─► MissionScript_ExecuteScriptThreads 0x481900      every frame
@@ -47,29 +47,36 @@ All little-endian. Checked against the 85 `.scr` files in `data.pak`. Decoder:
 | `0x0000` | 12000 | `u16 ptr[6000]`: byte offset into the code of each pointer index (0 = unused) | `MissionScript+0x46C` `base_pointers` |
 | `0x2EE0` | 65536 | code: commands, each starting with `SCR_CMD_HEADER` | `MissionScript+0x334C` `script` |
 | `0x12EE0` | 2 | `u16` total size of the string area | local, passed to `ParseStrings` |
-| `0x12EE2` | 5118 | strings: `{u16 id; u16 index; u32 type; u8 len; char text[len]}`, 9-byte header | `MissionScript+0x1334C` `ptrToStrings` |
+| `0x12EE2` | 5118 | strings: `{u16 id; u16 index; u32 type; u8 len; char text[len]}`, 9-byte header | `MissionScript+0x1334C` `strings_raw` (malloc 5120) |
 
 `MissionScript_GetCmd` (`0x476200`) resolves a pointer index: `ptr[i] ? script + ptr[i] : NULL`.
 Commands refer to each other, to variables and to objects only by **pointer index**, never by
 byte offset.
 
 `MissionScript_ParseStrings` walks the string area (`len + 9` per entry), resolves each name
-through `FUN_00464d00(g_MapBlocks, …)` into the `u16` at +2, and stores the entry pointers in a
-4000-byte `Script4k` (`u16 count; SCR_STRING_HEADER* strings[999]`).
+through `MapBlocks_FindZoneIndexByNameNoCase` (`0x464D00`) into the `u16` at +2, and stores the entry
+pointers in a 4000-byte `Script4k` (`u16 count; SCR_STRING_HEADER* strings[999]`) at
+`MissionScript.string_table` (+0x13350). `MissionScript_SetNameFromPath` `0x475E00` then writes the
+file stem into `map_name[9]` (+0x45C).
 
 ### Sub-scripts (`data/<map>/<name>.scr`)
 
 `MissionScript_LoadSubScripts` scans the strings for type `FILE_NAME_MISSIONS` (21): each such
 string is a mission file name like `wil_tra.mis`. It rewrites the extension to `SCR` and loads
-`data\<map name>\<file>`. Up to 30 sub-scripts; the first one found becomes slot 0, and so on.
+`data\<map name>\<file>`. Up to **31** sub-scripts (the Ctor's zeroing loops size every per-slot
+array to 31; the old "30" was wrong); the first one found becomes slot 0, and so on. After loading
+it **overwrites the string's index field with the slot number**, which is how
+`MissionScript_LoadMissionScriptByName` finds the mission again by name. It runs only when
+`preload_sub_scripts == 1`, which the Ctor always sets; the disk-reading branch of
+`LoadMissionScriptByName` is dead code.
 
 | Offset | Size | Content | Lands in (slot `i`) |
 |---|---|---|---|
-| 0 | 2 | `u16 first`: global pointer index of local entry 0 | `+0xC1D72` `base_script_max_pointers[i]` |
-| 2 | 2 | `u16 start`: global pointer index of the sub-script's `MISSIONSTART` (opcode 272 in all 67 files) | `+0xC1D34` `unk[i]` |
-| 4 | 4 | `u32 size` of the code | `+0xC1DB0` `mission_script_size[i]` |
-| 8 | 3072 | `u16 ptr[1536]`: local entry `j` is global pointer index `first + j` (every command's `cmd_this` equals `first + j`); values are **absolute** offsets in the shared code space | `+0xAA934` `missionScript[i]` |
-| 3080 | `size` | code; its absolute origin is the smallest non-zero `ptr[j]`, so subtract that when parsing the file alone | `File_ReadRest` |
+| 0 | 2 | `u16 first`: global pointer index of local entry 0 | `+0xC1D72` `sub_script_first_ptr[i]` |
+| 2 | 2 | `u16 start`: global pointer index of the sub-script's `MISSIONSTART` (opcode 272 in all 67 files) | `+0xC1D34` `sub_script_start_cmd[i]` |
+| 4 | 4 | `u32 size` of the code | `+0xC1DB0` `sub_script_size[i]` |
+| 8 | 3072 | `u16 ptr[1536]`: local entry `j` is global pointer index `first + j` (every command's `cmd_this` equals `first + j`); values are **absolute** offsets in the shared code space | `+0xAA934` `sub_script_ptrs[i]` |
+| 3080 | `size` | code; its absolute origin is the smallest non-zero `ptr[j]`, so subtract that when parsing the file alone | `File_ReadRest` → `sub_script_code[i]` (+0x13354, 20000-byte slots) |
 
 File size = `8 + 3072 + size`, `cmd_this == first + j` and `start` → `MISSIONSTART` hold for all 67
 sub-scripts in the pak (e.g. `bil/bil_end.scr`: first 1129, start 1330, size 2380, file 5460).
@@ -113,20 +120,148 @@ At most **8 threads** live at once. `ScriptThreadPool_Ctor` (`0x481310`, was `In
 free list; `ScriptThreadPool_UpdateNoDeallocate` runs every active thread and moves finished ones
 (`ScriptThread_Update` returned 1) back to the free list.
 
-### `MissionScript` (`g_MissionScript`, `0x6644BC`; gta2_re `ScriptManager_C1EA8`)
+### `MissionScript` (`g_MissionScript`, `0x6644BC`; gta2_re `ScriptManager_C1EA8`) (V)
 
-0xC1EA8 bytes in 10.5. The fields used here are in the tables above (`base_pointers +0x46C`,
-`script +0x334C`, `ptrToStrings +0x1334C`, `pScript4k +0x13350`, the sub-script arrays at
-`+0xAA934…+0xC1DB0`), plus `pathToScriptFile +0x35C` and `name +0x45C` (map name used for the
-sub-script directory). The rest of the struct (car/phone triggers, weapon-hit records, flags at
-`+0xC1E2C…`) is only partly typed. Not retyped in this pass.
+0xC1EA8 bytes, **fully typed** (54 fields, Seq H2, 2026-10-23). gta2_re's 10.5 layout was used as a
+hypothesis only; every offset below has at least one 11.44 access VA (decompile of the 52
+MissionScript / VM functions plus a scan of all instructions for the displacements), and array
+counts come from the Ctor's zeroing loops (`MissionScript_Ctor` `0x481960`). 11.44 matches 10.5
+offset for offset.
+
+**There is no variable area.** Every script variable is a declaration command in the code space, and
+its value lives inline at **cmd+8**: an s32 for COUNTER / SAVED_COUNTER, a `Ped*` / `Car*` /
+`WorldObject*` for CHAR / CAR / OBJ_DATA (`MissionScript_RestoreSavedCounters` `0x47EF10` writes
+cmd+8, `MissionScript_SaveScriptCounters` `0x47EE70` reads it for types 0x113 / 0x114, every handler
+reads `*(Ped**)(GetCmd(i)+1)`). "Flags" such as `mission_flag` are `int*` into those slots. Timers and
+onscreen counters are HUD pager slots whose index is stored back into cmd+8 (DO_BASIC_KF_TEMPLATE
+`0x47E7F0`).
+
+| Off | Type | Name | Evidence VA |
+|---|---|---|---|
+| 0x0 | s16 | `car_trigger_count` | `0x476280` ++, `0x47F340` −− |
+| 0x4 | `ScriptThreadTrigger[32]` | `car_triggers` | `0x476240` (≤ 0x1F) |
+| 0x184 | s16 | `phone_trigger_count` | `0x476370`, `0x4763B0` |
+| 0x188 | `ScriptThreadTrigger[20]` | `phone_triggers` | `0x476320` (≤ 0x13) |
+| 0x278 | s16 | `weapon_hit_watch_count` | `0x476400`, `0x4764D0` |
+| 0x27C | `WeaponHitWatch[15]` | `weapon_hit_watches` | `0x476400` (≤ 0xE) |
+| 0x2F4 | s32 | `preload_sub_scripts` | `0x481AE5` (= 1, only writer); read `0x475EA6` / `0x4760C8` |
+| 0x2F8 | `Box3` | `car_area_scratch` | `0x479A51`.. (IS_CAR_IN_BLOCK_AREA) |
+| 0x310 | s32 | `finish_score` | `0x4755BD` |
+| 0x314 | s32 | `total_missions` | `0x47550D`, read `0x47D724` |
+| 0x318 | s32 | `total_secrets` | `0x47551F` |
+| 0x31C..0x324 | s32 ×3 | `gang1..3_missions_total` | `0x475532` / `0x475545` / `0x475557` |
+| 0x328..0x334 | s32* ×4 | `missions_passed_flag`, `gang1..3_passed_flag` | `0x4781A9`..`0x4781D0`, read `0x47D71A` |
+| 0x338 | s32* | `secrets_passed_flag` | `0x4781DD`, ++ `0x47E9CE` (KF pass) |
+| 0x33C | s32* | `secrets_failed_flag` | `0x4781E9`, ++ `0x47EA55` (KF fail) |
+| 0x340 | u8* | `powerup_car_list` | `0x4755DD`, read `0x47D9F7` (`Generator_DecidePowerupForCrane`) |
+| 0x344 | s32* | `mission_flag` | `0x4759E4` (DECLARE_MISSION_FLAG, only writer), read `0x47F567` / `0x47FEBF` / `0x4C7350` |
+| 0x348..0x350 | s32* ×3 | `gang1..3_mission_flag` | `0x4759F4`..`0x475A14`, read `0x47F5EC`.. |
+| 0x354 | u8 | `next_gang_slot` | `0x477CA1`..`0x477CC2` (++ per SET_GANG_INFO) |
+| 0x355 | u8 | `death_arrest_enabled` | `0x47DDD7` (op 432 SET_DEATHARREST_STATE), read `0x47F559` |
+| 0x356..0x35A | s16 ×3 | `gang1..3_death_base_brief` | `0x475668`.., read `0x47F5FB`.. |
+| 0x35C | char[256] | `scr_path` | `0x47F296` |
+| 0x45C | char[9] | `map_name` | `0x475E19`, `0x4760D7` |
+| 0x465 | u8[3] | `unused_465` | — |
+| 0x468 | s32 | `unused_468` | Ctor only (`0x481B8C`) |
+| 0x46C | u16[6000] | `base_pointers` | Load / GetCmd `0x476200` |
+| 0x334C | u8[65536] | `script` | Load |
+| 0x1334C | `SCR_STRINGS*` | `strings_raw` | Ctor malloc(5120), Dtor free |
+| 0x13350 | `Script4k*` | `string_table` | ParseStrings malloc(4000) |
+| 0x13354 | u8[31][20000] | `sub_script_code` | `0x4761AE`, `0x476028`; Ctor zeroes 155000 dwords |
+| 0xAA934 | u16[31][1536] | `sub_script_ptrs` | `0x476189`, `0x475FF8`; Ctor zeroes 23808 dwords |
+| 0xC1D34 | u16[31] | `sub_script_start_cmd` | `0x47615C`, `0x475FD4` |
+| 0xC1D72 | u16[31] | `sub_script_first_ptr` | `0x47613C`, `0x475FC8` |
+| 0xC1DB0 | u32[31] | `sub_script_size` | `0x476178`, `0x476012` |
+| 0xC1E2C | u8 | `loaded_from_save` | `0x47F1E4` |
+| 0xC1E2D | u8 | `kill_frenzy_active` | `0x475A44` |
+| 0xC1E2E | u8 | `death_arrest_executed` | `0x47F6E6` (= 1), `0x47FBB6` (= 0), read `0x47EB49` |
+| 0xC1E2F | u8[3] | `saved_gang_respect` | `0x47EC23` / `0x47EC68` |
+| 0xC1E32 | u16[31] | `gang_phone_cmds` | `0x476FDF`, `0x47F966`, `0x481209` |
+| 0xC1E70 | s32 | `recycle_model_wanted` | `0x47EB30`; 87 by default (Ctor, CleanUp) |
+| 0xC1E74 | u16[25] | `basic_kf_cmds` | `0x4756E1`, `0x480563`, `0x481279` |
+| 0xC1EA6 | u16 | `unused_c1ea6` | — |
+
+Sub-structs (`/_scripts`):
+
+- `ScriptThreadTrigger` (0xC): `+0 s32 ped_id`, `+4 s32 entity_id` (car id / phone object +0x14),
+  `+8 u16 cmd_idx` (0 = free), `+A u16 unused_a` (`0x476240` / `0x476280` / `0x4763E0` /
+  `0x47F340`). That `ped_id` is a ped id is a hypothesis (gta2_re's name and the `(ped, car)` call
+  shape in `Car_OnDriverEnter`; the callers' argument sources were not read).
+- `WeaponHitWatch` (8): `+0 s32 entity_id`, `+4 u8 weapon` (0x17 = any), `+5 u8 hit_weapon`, `+6 u8
+  flags` (1 hit, 2 ped watch, 4 car watch), `+7 pad` (`0x476400`: flags = 2 + 2·isCar; `0x476530`:
+  |= 1, +5).
+
+#### Life cycle (V)
+
+1. **Construction.** `Game_Ctor` allocates `g_MissionScript`. `MissionScript_Ctor` `0x481960` zeroes
+   `script`, `base_pointers` and the 31 sub-script slots, `malloc(5120)`s `strings_raw`, creates
+   `g_ScriptThreadPool` (operator_new(2284) = 8 × 0x11C + links) and `g_MissionCleanup` (0x25C),
+   sets `preload_sub_scripts = 1` and `recycle_model_wanted = 87`, and opens `test\MISS_LOG.TXT`
+   when `g_doMissLogging` is set.
+2. **Load.** `MissionScript_Load` `0x47F280` copies the path into `scr_path` and reads the file
+   (layout above), then `ParseStrings`, `SetNameFromPath` and `LoadSubScripts`.
+3. **Declaration pass.** `MissionScript_StartLevelThread` `0x481890` (was `ScriptLevelStart`)
+   allocates the main thread, finds `LEVELSTART` with `MissionScript_FindCmdByType` `0x47F230`
+   (linear over 6000 pointers; aborts with "No LEVELSTART declaration"), runs
+   `ScriptThread_PreExecOpCode` once over the whole script, then `ScriptThread_Init(main, 0,
+   levelstart.cmd_this)`. The `Script_Decl_*` handlers fill most scalars: totals (+0x310..0x324),
+   the counter-slot pointers (+0x328..0x33C, +0x344..0x350), `powerup_car_list`,
+   `gangN_death_base_brief`, `next_gang_slot`, `gang_phone_cmds[31]` (OBJ_DATA_SET of gang-phone
+   objects), `basic_kf_cmds[25]` (START_BASIC_KF_TEMPLATE) and the car / phone thread triggers.
+4. **Run.** See [Dispatch](#dispatch-v).
+5. **Event-started threads.** `Car_OnDriverEnter` → `MissionScript_StartCarEnterThread` `0x47F340`
+   matches `(ped_id, car_id)` in `car_triggers[32]`, spawns a thread at the command's `return_value`
+   field (cmd+6, reused as a start command by the THREAD_WAIT_* commands) and stores the thread
+   pointer / id into the command. `PedGameObject_TryAnswerPhone` →
+   `MissionScript_StartPhoneAnswerThread` `0x47F3B0` does the same with `phone_triggers[20]`: cmd
+   type 0xA8 ANSWER_PHONE sets a byte flag in the command, 0xD5 THREAD_WAIT_FOR_ANSWER_PHONE spawns a
+   thread. Weapon-hit watches are registered by the CHECK_WEAPON_* handlers and filled by
+   `MissionScript_RecordWeaponHit` `0x476530` from `Car_OnDamage` / `Ped_OnProjectileHit` / particles /
+   electrogun.
+6. **Missions.** LAUNCH_MISSION / DO_PHONE_TEMPLATE → `ScriptThread_LaunchMissionByName` `0x47ECE0`
+   → `MissionScript_LoadMissionScriptByName` `0x475E90`: slot = `FindStringByName(name)->index`;
+   copies `sub_script_ptrs[slot]` (0xC00 B) to `base_pointers[first]` and `sub_script_size[slot]`
+   bytes of code to `script + base_pointers[first]`. A sub-script is therefore **copied into the
+   shared 64 KB code space at its absolute offsets**, then GOSUBed at `sub_script_start_cmd[slot]`.
+7. **Mission fail.** `ScriptThread_MissionFailOnArrest` `0x47F550` runs at the start of every thread
+   step. If `death_arrest_enabled`, `*mission_flag == 1` and the player is wasted or busted, it pops
+   the GOSUB stack to depth 2 and RETURNs, shows brief `gangN_death_base_brief + (wasted ? 0 : 5) +
+   rand` (or 8001), plays "mfail" / JOB FAILED, sets `*mission_flag = 0` and
+   `death_arrest_executed = 1`. Mission end: `Script_Op_MISSION_HAS_FINISHED` →
+   `MissionCleanup_CleanUpMission` `0x476BC0` on `g_MissionCleanup` (ECX = `[0x6644B8]` at
+   `0x47E1F3`, not MissionScript).
+8. **Save / load.** `MissionScript_SaveGame` `0x47EF40` (was `SaveGame`) packs the SAVED_COUNTER
+   values, player checkpoint, pickups and map deltas into `plyslotN.svg`.
+   `MissionScript_LoadSaveGame` `0x47F0B0` restores them and sets `loaded_from_save`;
+   `MissionScript_IsLoadedFromSave` `0x475A20` (was `?isPlayerAlive`) lets `Player_OnLevelStart` /
+   `Script_Decl_PLAYER_PED` keep the saved state. Dead phones (`g_SavedAnsweredPhoneBits`) and
+   finished kill frenzies (`g_SavedDoneBasicKfBits`) are replayed by
+   `MissionScript_RestoreAnsweredPhones` `0x481200` / `ScriptThread_DisableBasicKfsFromSave`
+   `0x481270` through `gang_phone_cmds` / `basic_kf_cmds`.
+
+#### Hazards (Seq H2)
+
+| VA | What | Trigger | Severity | Conf |
+|---|---|---|---|---|
+| `0x48116A` (`ScriptThread_Update`) | GetCmd NULL → only `sprintf("Miss2: accessing nonexistant mission line")` into a buffer nobody shows, then `cmd->type` is read → NULL deref | next / jump to a pointer index with `base_pointers[i] == 0` (bad / modded .scr) | medium (crash, mods only) | V (asm `0x481146`–`0x48116A`) |
+| `0x4767A4` (`ScriptThreadPool_Allocate`) | no free-list check; the 9th concurrent thread faults on NULL | > 8 live threads (CREATE_THREAD, car / phone triggers, KF threads at once) | medium | V (asm) |
+| `0x476070` (`LoadSubScripts`) | slot index unbounded (31 slots), file `size` not checked against 20000 | a level with > 31 mission files or a sub-script > 20000 B; shipped max ≈ 23 | low (mods) | V |
+| `0x475E90` (`LoadMissionScriptByName`) | no check `first + 1536 ≤ 6000` or `offset + size ≤ 65536`; an overflow would hit `strings_raw` (+0x1334C) | malformed sub-script header | low | V |
+| `0x47EBE0` (SAVE_RESTORE_RESPECT) | one byte per gang into `saved_gang_respect[3]` with no bound; 4+ gangs spill into `gang_phone_cmds[0..]` (ste has 5, bil 4) | opcodes 445 / 446 — no shipped .scr uses them (all 85 counted) | low (mods) | V |
+| `0x481200` (`RestoreAnsweredPhones`) | loops 32 bits over a 31-entry table; bit 31 reads the low word of `recycle_model_wanted` (87) as a cmd index | crafted save only (SET_PHONE_DEAD sets bits ≤ 30) | low | V |
+| `0x47F3B0` / `0x47F340` | the NULL checks of the spawned thread are dead (Allocate never returns NULL, it crashes) | — | info | V |
+
+Still unknown: `SCR_STRING_HEADER` +4 / +6 (gta2_re `field_4_type`, `field_6`; our `datatype` is
+used, the other is not); the `LoadMissionScriptByName` disk branch decompiles as reading the
+pointer table into `base_pointers + 0` (probably aliasing of the `first` local; dead code anyway);
+`ScriptThread.flag_6` (copied by `SpawnThread`).
 
 ### `MissionCleanupList` (0x25C bytes; `g_MissionCleanup` `0x6644B8`; gta2_re `Miss2_25C`) (V)
 
 `MissionCleanupEntry entries[50]` at 0 and `u8 count` at `+0x258`. Each 12-byte entry is
 `{void* entity; u8 type; u8 pad[3]; s32 entity_id}`. `type` is 1 for a car, 2 for an object and
 3 for a ped (gta2_re `push_type_*`). `MissionCleanup_PushObject` stores type 2 and takes the id
-from `obj+0x14`. The list holds what a mission created; `MissionCleanUp` deletes it when the
+from `obj+0x14`. The list holds what a mission created; `MissionCleanup_CleanUpMission` `0x476BC0` deletes it when the
 mission ends. Helpers: `MissionCleanup_Ctor` `0x474E50`, `MissionCleanup_FindFreeEntry`
 `0x474E80` (the first slot with `entity == NULL`).
 
@@ -134,6 +269,8 @@ mission ends. Helpers: `MissionCleanup_Ctor` `0x474E50`, `MissionCleanup_FindFre
 
 | VA | Name | gta2_re 10.5 |
 |---|---|---|
+| `0x6644B0` | `g_ScriptStoredCar` (was `relToS15`), `Car*` | `gStoredCar` |
+| `0x6644B4` | `g_ScriptStoredCarId` (was `relToS15_2`), `int` | `gStoredCarId` |
 | `0x6644B8` | `g_MissionCleanup` (was `ptrToS17Mission`) | `gMiss2_25C_6F805C` |
 | `0x6644BC` | `g_MissionScript` | `gScriptManager_6F8060` |
 | `0x6644C0` | `g_ScriptThreadPool` (was `ptrToS16_missions`) | `miss2_0x11C_Pool_6F8064` |
@@ -153,7 +290,7 @@ passed in EDX. Index = `type - 0x29` (range 0..0x195, opcodes 41..446). A byte t
 case `default` → `0x480C46`, which just calls `ScriptThread_Next`.
 
 **Declaration pass: `ScriptThread_PreExecOpCode` `0x481400`** (gta2_re `PreExecOpCode_5108D0`).
-Runs once from `ScriptLevelStart`, over every command, before the first frame. Tables: byte
+Runs once from `MissionScript_StartLevelThread`, over every command, before the first frame. Tables: byte
 `0x4816B0[type-5]` (≤ 0xE1) → jump `0x481658`; type `0xF0` → `0x481583`; byte
 `0x4817E8[type-0x113]` (≤ 0xA4) → jump `0x481794`; default `0x48162C`. 79 opcodes reach 36
 handlers (`Script_Decl_*`): they create the level's static objects (cars, peds, objects, cranes,
@@ -753,12 +890,12 @@ getter), so those were **not** applied; they are listed further down.
 | `0x478240` | ScriptThread_DisableThread | miss2_0x11C::DisableThread_505790 | 2 handlers agree |
 | `0x478450` | ScriptThread_GetBonusResult | miss2_0x11C::GetBonusResult_505EA0 | 2 handlers agree |
 | `0x47a860` | ScriptThread_EnableThread | miss2_0x11C::EnableThread_50A9E0 | 2 handlers agree |
-| `0x483c50` | Object_PoolGiveAndMarkDone | Object_2C::PoolGiveAndMarkDone_5291D0 | 3 handlers agree |
-| `0x483c60` | Object_PoolGiveAndSetDone | Object_2C::PoolGiveAndSetDone_5291E0 | 2 handlers agree |
+| `0x483c50` | Object_TakeOffListAndSetPendingType1 (was Object_PoolGiveAndMarkDone) | Object_2C::PoolGiveAndMarkDone_5291D0 | 3 handlers agree |
+| `0x483c60` | Object_TakeOffListAndSetPendingType (was Object_PoolGiveAndSetDone) | Object_2C::PoolGiveAndSetDone_5291E0 | 2 handlers agree |
 | `0x485320` | Object_NewWithPedRefIdx | Object_5C::NewWithPedRefIdx_5299F0 | 2 handlers agree |
 | `0x485480` | Object_NewPhysicsObjUnlessBlocked | Object_5C::NewPhysicsObjUnlessBlocked_529BC0 | 2 handlers agree |
 | `0x485540` | Object_CreateExplosion | Object_5C::CreateExplosion_52A3D0 | 2 handlers agree |
-| `0x4af660` | PublicTransport_TrainStationForZone | PublicTransport_181C::TrainStationForZone_57B4B0 | 2 handlers agree |
+| `0x4af660` | PublicTransportManager_FindStopByZone (was PublicTransport_TrainStationForZone) | PublicTransport_181C::TrainStationForZone_57B4B0 | 2 handlers agree |
 | `0x4c5e60` | Hud_Arrow_SetArrowColour | Hud_Arrow_7C::SetArrowColour_5D0510 | 2 handlers agree |
 | `0x4c6860` | Hud_Brief_ClearAllBriefsWithPriority | Hud_Brief_704::ClearAllBriefsWithPriority_5D4890 | 2 handlers agree |
 | `0x4c9310` | Hud_Pager_C_Array_CreateTimer | Hud_Pager_C_Array::CreateTimer_5D31F0 | 2 handlers agree |
@@ -769,76 +906,79 @@ getter), so those were **not** applied; they are listed further down.
 
 | VA | current | gta2_re candidate |
 |---|---|---|
-| `0x40e2f0` | FUN_0040e2f0 | RouteFinder::RoadOn_588950 |
-| `0x410580` | FUN_00410580 | root_sound::DeclareRadioStation_40F030 |
-| `0x4119b0` | FUN_004119b0 | gtx_0x106C::get_car_info_5AA3B0 |
+| `0x40e2f0` | RoadNetwork_OpenRoadAt | RouteFinder::RoadOn_588950 |
+| `0x410580` | SoundMgr_AddRadioStation_Thunk | root_sound::DeclareRadioStation_40F030 |
+| `0x4119b0` | Car_HasBomb | gtx_0x106C::get_car_info_5AA3B0 |
 | `0x411a00` | Crane_GetBasePosition | Game_0x40::IsSpriteInAnyPlayerView_4B9890 |
-| `0x414f80` | FUN_00414f80 | SpriteList_4::GetSpriteForModel_5A6A50 |
+| `0x414f80` | Car_IsSirenActive | SpriteList_4::GetSpriteForModel_5A6A50 |
 | `0x41de40` | ComboList_AddBonusCheck | BonusTracker_1C0::AllocRule_431FE0 |
-| `0x421c00` | FUN_00421c00 | CarPhysics_B0::get_car_velocity_4211C0 |
-| `0x421df0` | FUN_00421df0 | Car_BC::IsBeingCrushed_43DD50 |
+| `0x421c00` | Car_GetMaxSpeed | CarPhysics_B0::get_car_velocity_4211C0 |
+| `0x421df0` | Car_IsOnSurface6 | Car_BC::IsBeingCrushed_43DD50 |
 | `0x422e00` | Car_SetNumberGraphic | Car_BC::SetCarGraphic_43CDF0 |
 | `0x4230d0` | Car_IsDamagePosBroken | Car_BC::IsAreaDamaged_43D1C0 |
-| `0x4340f0` | FUN_004340f0 | Map_0x370::FindGroundZForCoord_4E5B60 |
-| `0x445bb0` | FUN_00445bb0 | Ped_List_4::GetPedsCount_4716B0 |
-| `0x446120` | FUN_00446120 | Ped_List_4::KillAndClearAllPeds_4715A0 |
-| `0x4497d0` | FUN_004497d0 | Crane_15C::GetCarFromCrane_480DA0 |
-| `0x44a3e0` | FUN_0044a3e0 | Car_BC::AddFlags_421890 |
-| `0x44c760` | FUN_0044c760 | Door_4D4::RegisterDoorInfo_49D2D0 |
-| `0x45a480` | FUN_0045a480 | Game_0x40::ExitGame_4B8BD0 |
+| `0x4340f0` | WorldObject_GetPosZ | Map_0x370::FindGroundZForCoord_4E5B60 |
+| `0x445bb0` | PedList_Count | Ped_List_4::GetPedsCount_4716B0 |
+| `0x446120` | PedList_KillAndFreeAll | Ped_List_4::KillAndClearAllPeds_4715A0 |
+| `0x4497d0` | Crane_GetHeldCar | Crane_15C::GetCarFromCrane_480DA0 |
+| `0x44a3e0` | Car_SetNoCollide | Car_BC::AddFlags_421890 |
+| `0x44c760` | DoorInfo_Register | Door_4D4::RegisterDoorInfo_49D2D0 |
+| `0x45a480` | Game_ScheduleLevelExit | Game_0x40::ExitGame_4B8BD0 |
 | `0x45bb50` | Game_AnyPlayerCameraSeesPosition | Crane_15C::GetRotorSprite_411A00 |
-| `0x45da20` | FUN_0045da20 | Gang_144::SetRespect_4BEE30 |
-| `0x45db20` | FUN_0045db20 | Gang_144::SetGangKillReaction_4BEF50 |
-| `0x45e5f0` | FUN_0045e5f0 | GameSession_578::SetBonusRatingTextIdx_4C5AB0 |
-| `0x462ce0` | FUN_00462ce0 | Map_0x370::SetZoneCarDensity_4DF9D0 |
-| `0x462d00` | FUN_00462d00 | Map_0x370::SetZoneBadCarRatio_4DFA10 |
-| `0x462d20` | FUN_00462d20 | Map_0x370::SetZonePedDensity_4DFA70 |
-| `0x462d40` | FUN_00462d40 | Map_0x370::SetZoneCarThiefRatio_4DFAB0 |
-| `0x462d80` | FUN_00462d80 | Map_0x370::SetZoneGangCharRatio_4DFAF0 |
-| `0x462da0` | FUN_00462da0 | Map_0x370::SetZoneGangCarRatio_4DFA50 |
-| `0x462ea0` | FUN_00462ea0 | Ang16::MultiplyByFix16_401CB0 |
-| `0x463f60` | FUN_00463f60 | Map_0x370::ChangeBlock_4E8620 |
-| `0x464060` | FUN_00464060 | Map_0x370::AddNewBlock_4E87C0 |
-| `0x464110` | FUN_00464110 | Map_0x370::RemoveBlock_4E8940 |
-| `0x464210` | FUN_00464210 | Map_0x370::LowerLevel_4E8B70 |
-| `0x465280` | FUN_00465280 | Map_0x370::SetZoneInfo_4DF8C0 |
-| `0x46c140` | FUN_0046c140 | MapRenderer::SetAmbientLevel_4E9D50 |
+| `0x45da20` | Gang_SetRespect | Gang_144::SetRespect_4BEE30 |
+| `0x45db20` | Gang_SetKillReaction | Gang_144::SetGangKillReaction_4BEF50 |
+| `0x45e5f0` | Menu_SetBonusRatingTextId | GameSession_578::SetBonusRatingTextIdx_4C5AB0 |
+| `0x462ce0` | MapBlocks_SetZoneCarDensity | Map_0x370::SetZoneCarDensity_4DF9D0 |
+| `0x462d00` | MapBlocks_SetZoneGoodCarRatio | Map_0x370::SetZoneBadCarRatio_4DFA10 |
+| `0x462d20` | MapBlocks_SetZoneBadCarRatio | Map_0x370::SetZonePedDensity_4DFA70 |
+| `0x462d40` | MapBlocks_SetZonePoliceCarRatio | Map_0x370::SetZoneCarThiefRatio_4DFAB0 |
+| `0x462d80` | MapBlocks_SetZonePedDensity | Map_0x370::SetZoneGangCharRatio_4DFAF0 |
+| `0x462da0` | MapBlocks_SetZoneMuggerRatio | Map_0x370::SetZoneGangCarRatio_4DFA50 |
+| `0x462ea0` | Fix16_Floor | Ang16::MultiplyByFix16_401CB0 |
+| `0x463f60` | MapBlocks_ChangeBlockField | Map_0x370::ChangeBlock_4E8620 |
+| `0x464060` | MapBlocks_AddBlockAt | Map_0x370::AddNewBlock_4E87C0 |
+| `0x464110` | MapBlocks_RemoveBlockAt | Map_0x370::RemoveBlock_4E8940 |
+| `0x464210` | MapBlocks_LowerColumnsInRect | Map_0x370::LowerLevel_4E8B70 |
+| `0x465280` | MapBlocks_SetZoneInfoAll | Map_0x370::SetZoneInfo_4DF8C0 |
+| `0x46c140` | MapRenderer_SetAmbientTarget | MapRenderer::SetAmbientLevel_4E9D50 |
 | `0x474ed0` | MissionCleanup_AddObject | Miss2_25C::push_type_2_503050 |
-| `0x474fb0` | FUN_00474fb0 | miss2_8::add_503160 |
-| `0x4751d0` | FUN_004751d0 | miss2_0x11C::StopThread_503610 |
-| `0x475910` | FUN_00475910 | Gang_144::SetKillRespectChange_475950 |
-| `0x475950` | FUN_00475950 | GangPool_CA8::SwapGangSlots_4BF230 |
-| `0x475b20` | FUN_00475b20 | PedGroup::IsAllMembersInSomeCar_4CAA20 |
-| `0x475b70` | FUN_00475b70 | miss2_0x11C::InitThread_511930 |
-| `0x475c30` | FUN_00475c30 | CarManager_6C::SpawnCar_426E10 |
-| `0x476270` | FUN_00476270 | Sprite::DispatchCollisionEvent_5A3100 |
-| `0x476280` | FUN_00476280 | Car_BC::SetCarThreadPending_476360 |
+| `0x474fb0` | ScriptStack_Push | miss2_8::add_503160 |
+| `0x4751d0` | ScriptThread_MarkStopped | miss2_0x11C::StopThread_503610 |
+| `0x475910` | Gang_SetArrowTarget | Gang_144::SetKillRespectChange_475950 |
+| `0x475950` | Gang_SetHasRespectMeter | GangPool_CA8::SwapGangSlots_4BF230 |
+| `0x475b20` | Ped_IsGroupInCar | PedGroup::IsAllMembersInSomeCar_4CAA20 |
+| `0x475b70` | ScriptThread_Init | miss2_0x11C::InitThread_511930 |
+| `0x475c30` | Car_SetLockedPermanently | CarManager_6C::SpawnCar_426E10 |
+| `0x476270` | Car_AddFlag10 | Sprite::DispatchCollisionEvent_5A3100 |
+| `0x476280` | MissionScript_AddCarEnterThreadEntry | Car_BC::SetCarThreadPending_476360 |
 | `0x4764a0` | CarManager_SpawnCarScript | Car_BC::UpdateSpriteNum_4435F0 |
-| `0x4766e0` | FUN_004766e0 | Map_0x370::GetZoneAtPosOfType_4DF4D0 |
-| `0x476a30` | FUN_00476a30 | DoorData_10::Close_49C590 |
-| `0x476a60` | FUN_00476a60 | DoorData_10::Open_49C4E0 |
-| `0x476bc0` | FUN_00476bc0 | Miss2_25C::MissionCleanUp_502DC0 |
-| `0x476df0` | FUN_00476df0 | miss2_8::AllocFrame_5031A0 |
-| `0x47ecb0` | FUN_0047ecb0 | miss2_0x11C::SpawnThread_511960 |
-| `0x47f420` | FUN_0047f420 | ScriptManager_C1EA8::RemovePhoneThreadByObjId_512AA0 |
-| `0x47f760` | FUN_0047f760 | miss2_0x11C::DeallocOrDeleteItem_505B10 |
-| `0x485290` | FUN_00485290 | Object_2C::SetConveyorSpeed_529030 |
-| `0x4af460` | FUN_004af460 | TrainStation_34::CalculateWagonCount_578820 |
-| `0x4af5f0` | FUN_004af5f0 | PublicTransport_181C::KillAllPassengers_579B20 |
+| `0x4766e0` | Player_GetLocalNavZone | Map_0x370::GetZoneAtPosOfType_4DF4D0 |
+| `0x476a30` | Door_CloseBothFaces | DoorData_10::Close_49C590 |
+| `0x476a60` | Door_OpenBothFaces | DoorData_10::Open_49C4E0 |
+| `0x476bc0` | MissionCleanup_CleanUpMission | Miss2_25C::MissionCleanUp_502DC0 |
+| `0x476df0` | ScriptStack_AllocNode | miss2_8::AllocFrame_5031A0 |
+| `0x47ecb0` | ScriptThread_SpawnThread | miss2_0x11C::SpawnThread_511960 |
+| `0x47f420` | MissionScript_RemovePhoneThreadForObj | ScriptManager_C1EA8::RemovePhoneThreadByObjId_512AA0 |
+| `0x47f760` | MissionScript_DeleteItemByCmd | miss2_0x11C::DeallocOrDeleteItem_505B10 |
+| `0x485290` | ObjectSpawner_SpawnAtXYZAndInsertIntoGrid | Object_2C::SetConveyorSpeed_529030 |
+| `0x4af460` | TransportStop_SetWagonPlan | TrainStation_34::CalculateWagonCount_578820 |
+| `0x4af5f0` | PublicTransportManager_KillAllBusPassengers | PublicTransport_181C::KillAllPassengers_579B20 |
 | `0x4b9d50` | Sprite_AttachChildToParent | Sprite::ResolveCollisionWithCarPedOrObject_5A2A30 |
 | `0x4bea90` | SpriteList_FindSpriteOfKind | SpriteList_4::FirstSpriteOfType_5A6CA0 |
-| `0x4c93b0` | FUN_004c93b0 | Hud_Pager_C_Array::ClearPager_5D3280 |
-| `0x4c93f0` | FUN_004c93f0 | Hud_Pager_C_Array::AddTime_5D32F0 |
+| `0x4c93b0` | Hud_Pager_C_Array_ClearSlot | Hud_Pager_C_Array::ClearPager_5D3280 |
+| `0x4c93f0` | Hud_Pager_C_Array_AddTimeToTimer | Hud_Pager_C_Array::AddTime_5D32F0 |
 
 **Existing names that gta2_re contradicts.** Told to the owners, not renamed:
 
-- `Ped_AttachToGame` `0x4411B0`: the only callee of `Script_Op_KILL_CHAR`, aligned to
-  `Ped::Kill_46F9D0`.
-- `Ped_GetField20e` `0x4039F0` = `Ped::GetOffscreenCounter_4039F0` (same address).
-- `unsure_Ped_GetBit11` `0x433CA0` = `Ped::GetAttacking_433CA0` (same address, 2 handlers).
+- `Ped_OnDeath` `0x4411B0` (was `Ped_AttachToGame`): the only callee of `Script_Op_KILL_CHAR`,
+  aligned to `Ped::Kill_46F9D0`.
+- `Ped_GetOffscreenTicks` `0x4039F0` (was `Ped_GetField20e`) = `Ped::GetOffscreenCounter_4039F0`
+  (same address).
+- `Ped_IsAttacking` `0x433CA0` (was `unsure_Ped_GetBit11`) = `Ped::GetAttacking_433CA0` (same
+  address, 2 handlers).
 - `unclear` `0x44C840` = `gmp_block_info::init_44C840`.
-- `?isPlayerAlive` `0x475A20` = `ScriptManager::get_field_C1E2C_475A20` (kept; the gta2_re name
-  says less).
+- `MissionScript_IsLoadedFromSave` `0x475A20` (was `?isPlayerAlive`) =
+  `ScriptManager::get_field_C1E2C_475A20`: returns `loaded_from_save` (+0xC1E2C), set only by
+  `MissionScript_LoadSaveGame` (Seq H2).
 
 ## 10.5 ↔ 11.44 address coincidences
 
@@ -914,7 +1054,7 @@ M medium (inferred from callers / field use), U `unsure_` (see the comment in Gh
 | 0x475B10 / 0x475B20 | `Ped_GetLastCharPunched` / `Ped_IsGroupInCar` | V | `Ped+0x188`; opcode 254 |
 | 0x475B60 | `Camera_SetFollowStateFollow` (was `Player_InvalidateNavZone`) | V | `Camera->followState = 1` on the player camera (Player+0x90) on wasted/busted/teleport/warp; it does not touch Player+0x3C |
 | 0x475C10 / C30 / C40 / C60 / C80 | `Car_SetLocked` / `Car_SetLockedPermanently` / `Car_SetLockoutThief` / `Car_SetLockoutPlayer` / `Car_SetUnlocked` | V | `Car+0x98` := 1 / 4 / 2 / 5 / 3 = `CAR_LOCK_STATE`; CHANGE_CAR_LOCK cases 1,4,2,5,3 |
-| 0x475CA0 | `SaveGame_CopyMenuPathsToHeader` | V | copies gmp/sty/scr paths into the save header, caller `SaveGame` |
+| 0x475CA0 | `SaveGame_CopyMenuPathsToHeader` | V | copies gmp/sty/scr paths into the save header, caller `MissionScript_SaveGame` |
 | 0x475E60 | `Car_IsTrailerAttachedTo` | M | `car+0x64` link `+0xC == other`; IS_TRAILER_ATTACHED |
 | 0x475E90 | `MissionScript_LoadMissionScriptByName` | V | reads the sub-script file or copies the preloaded slot |
 | 0x47ECE0 | `ScriptThread_LaunchMissionByName` | V | loads it, copies name to thread `+0x14`, pushes subroutine call |
@@ -934,9 +1074,9 @@ M medium (inferred from callers / field use), U `unsure_` (see the comment in Gh
 | 0x476AD0 | `ParkingZone_SetNoRespawn` | V | `ParkingZone+0x3F`, PARK_NO_RESPAWN (0x118) |
 | 0x476B10 | `Menu_SetBonusTokenCount` | U | save load writes `Menu+0x574` |
 | 0x476B20 / B30 / B80 / 0x47F520 | `PlayerCheckpoint_Ctor` / `InitSubE4` / `InitSub5E4` / `SaveGameHeader_Ctor` | U | static-init ctor chain of a Fix16/Ang16 aggregate (probably the 0x748-byte save header) |
-| 0x476BC0 | `MissionScript_CleanupMissionEntities` | V | MISSION_HAS_FINISHED: removes the 50 tracked cars / objects / peds |
+| 0x476BC0 | `MissionCleanup_CleanUpMission` (was `MissionScript_CleanupMissionEntities`) | V | `this` = `MissionCleanupList*` (`g_MissionCleanup`); MISSION_HAS_FINISHED: removes the 50 tracked cars / objects / peds |
 | 0x477D00 | `MissLogStream_Ctor` | U | `ofstream_Ctor`, no callers |
-| 0x47EE70 / 0x47EF10 | `SaveGame_CollectSavedCounters` / `MissionScript_RestoreSavedCounters` | V | commands 0x113 / 0x114 (SAVED_COUNTER, SAVED_COUNTER_SET) <-> 300-slot table |
+| 0x47EE70 / 0x47EF10 | `MissionScript_SaveScriptCounters` (was `SaveGame_CollectSavedCounters`) / `MissionScript_RestoreSavedCounters` | V | commands 0x113 / 0x114 (SAVED_COUNTER, SAVED_COUNTER_SET) <-> 300-slot table |
 | 0x47F4D0 | `ScriptThreadPool_LogActiveThreads` | V | `MissLogCommand` per active thread |
 | 0x4797BB | `Script_Op_GIVE_WEAPON_Frag` | V | tail after 11.44 patch JMP to 0x3F1xxx; Ghidra split of `Script_Op_GIVE_WEAPON` |
 | 0x47AB91 | `Script_Op_CHANGE_GANG_CHAR_RESPECT_Frag` | V | tail after 11.44 patch JMP to 0x3F1xxx; Ghidra split (opcodes 0xE1 / 0x106 / 0x189) |

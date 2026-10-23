@@ -101,6 +101,9 @@ typedef struct ParticleStatePool40 ParticleStatePool40;
 typedef struct PatrolRoute PatrolRoute;
 typedef struct PedListNode PedListNode;
 typedef struct PedListNodePool PedListNodePool;
+typedef struct PedPathEdgeBest PedPathEdgeBest;
+typedef struct PedPathNode PedPathNode;
+typedef struct PedPathOpenEntry PedPathOpenEntry;
 typedef struct PedPathfinder PedPathfinder;
 typedef struct PedPatrolRoutePool PedPatrolRoutePool;
 typedef struct PlayerScore PlayerScore;
@@ -153,7 +156,7 @@ typedef struct Game Game;
 typedef struct Menu Menu;
 typedef struct Player Player;
 typedef struct Ped Ped;
-typedef struct PedManager_S25 PedManager_S25;
+typedef struct PedManager PedManager;
 typedef struct _s_FuncInfo _s_FuncInfo;
 typedef struct _s_HandlerType _s_HandlerType;
 typedef struct _s_TryBlockMapEntry _s_TryBlockMapEntry;
@@ -161,6 +164,8 @@ typedef struct _s_UnwindMapEntry _s_UnwindMapEntry;
 typedef struct SCR_PLAYER_PED SCR_PLAYER_PED;
 typedef struct SCR_STRINGS SCR_STRINGS;
 typedef struct SCR_STRING_HEADER SCR_STRING_HEADER;
+typedef struct ScriptThreadTrigger ScriptThreadTrigger;
+typedef struct WeaponHitWatch WeaponHitWatch;
 typedef struct WEAPON_STRUCT WEAPON_STRUCT;
 typedef struct WeaponPool WeaponPool;
 typedef struct CarSpriteCache CarSpriteCache;
@@ -231,8 +236,10 @@ typedef struct TextureTable TextureTable;
 typedef struct TrafficLights TrafficLights;
 typedef struct Vec2i Vec2i;
 typedef struct filebuf filebuf;
+typedef struct VidCtx VidCtx;
+typedef struct VidDevice VidDevice;
+typedef struct VidMode VidMode;
 typedef struct ObjectMotionState ObjectMotionState;
-typedef struct PedManager PedManager;
 typedef struct S34 S34;
 typedef struct CarSprite CarSprite;
 typedef struct PedSprite PedSprite;
@@ -264,10 +271,6 @@ typedef struct PedGroup PedGroup;
 typedef struct RenderDistanceArrayItem RenderDistanceArrayItem;
 typedef struct SCR_Vector2 SCR_Vector2;
 typedef struct SCR_Vector3 SCR_Vector3;
-typedef struct SDevice SDevice;
-typedef struct SDisplayMode SDisplayMode;
-typedef struct SMission SMission;
-typedef struct SVideo SVideo;
 typedef struct TrailerController TrailerController;
 typedef struct TrailerControllerPool TrailerControllerPool;
 typedef struct WorldObject WorldObject;
@@ -320,6 +323,27 @@ enum CAR_DOOR_STATE_values {
     CAR_DOOR_CLOSE_PENDING_2 = 4,
     CAR_DOOR_CLOSE_PENDING_1 = 5,
     CAR_DOOR_CLOSED = 6,
+};
+
+// /CAR_DRIVE_MANEUVER
+typedef uint32_t CAR_DRIVE_MANEUVER;
+enum CAR_DRIVE_MANEUVER_values {
+    MANEUVER_TAIL = 0,
+    MANEUVER_TAIL_B = 1,
+    MANEUVER_TAIL_OFFSET = 2,
+    MANEUVER_FLANK_WAIT_A = 3,
+    MANEUVER_FLANK_WAIT_B = 4,
+    MANEUVER_FOLLOW = 5,
+    MANEUVER_ALONGSIDE_A = 6,
+    MANEUVER_ALONGSIDE_B = 7,
+    MANEUVER_SIDE_PUSH_A = 8,
+    MANEUVER_SIDE_PUSH_B = 9,
+    MANEUVER_OVERTAKE_A = 10,
+    MANEUVER_OVERTAKE_B = 11,
+    MANEUVER_CUT_IN = 12,
+    MANEUVER_BLOCK_SPIN = 13,
+    MANEUVER_UNUSED_14 = 14,
+    MANEUVER_STOPPED = 15,
 };
 
 // /CAR_DRIVE_ORDER_MODE
@@ -402,9 +426,9 @@ enum OBJECT_KIND_values {
     OBJECT_KIND_PICKUP_PHYSICS = 7,
     OBJECT_KIND_PICKUP_ANIMATED = 8,
     OBJECT_KIND_PICKUP_PHYSICS_ANIMATED = 9,
-    OBJECT_KIND_UNK_A = 10,
+    OBJECT_KIND_SHOP = 10,
     OBJECT_KIND_LIGHT = 11,
-    OBJECT_KIND_UNK_C = 12,
+    OBJECT_KIND_SOUND_EMITTER = 12,
 };
 
 // /PED_CLASS
@@ -1779,6 +1803,10 @@ enum OBJECT_TYPE_values {
     OBJECT_TYPE_BENCH = 22,
     OBJECT_TYPE_PACKAGE = 23,
     OBJECT_TYPE_TOWER = 25,
+    OBJECT_TYPE_DESTROY_EXPLODE_SMALL = 39,
+    OBJECT_TYPE_DESTROY_EXPLODE_GRENADE = 40,
+    OBJECT_TYPE_DESTROY_EXPLODE_MEDIUM = 41,
+    OBJECT_TYPE_DESTROY_EXPLODE_LARGE = 42,
     OBJECT_TYPE_MOVING_PACKAGE = 43,
     OBJECT_TYPE_DEAD_PACKAGE = 44,
     OBJECT_TYPE_MOVING_BENCH = 45,
@@ -1846,7 +1874,7 @@ enum OBJECT_TYPE_values {
     OBJECT_TYPE_MOVING_COLLECT_43_LETTER_P = 107,
     OBJECT_TYPE_MOVING_COLLECT_44_LETTER_Q = 108,
     OBJECT_TYPE_SMALL_ARROW = 109,
-    OBJECT_TYPE_VEHICLE_CONE = 110,
+    OBJECT_TYPE_PED_FLING_BODY = 110,
     OBJECT_TYPE_BLOOD_SPARK = 111,
     OBJECT_TYPE_WHITE_DOT = 112,
     OBJECT_TYPE_PARTICLE_SYSTEM = 113,
@@ -1862,7 +1890,7 @@ enum OBJECT_TYPE_values {
     OBJECT_TYPE_BIG_WHITE_SKID = 124,
     OBJECT_TYPE_MEDIUM_WHITE_SKID = 125,
     OBJECT_TYPE_SMALL_WHITE_SKID = 126,
-    OBJECT_TYPE_UNSURE_EXPLOSION_FRAGMENT = 127,
+    OBJECT_TYPE_BLAST_FIRE_CARRIER = 127,
     OBJECT_TYPE_ROCKET = 128,
     OBJECT_TYPE_BUS_STOP_MARKER = 129,
     OBJECT_TYPE_CAR_SHOP = 130,
@@ -1871,39 +1899,40 @@ enum OBJECT_TYPE_values {
     OBJECT_TYPE_CRANE_WIRE = 134,
     OBJECT_TYPE_CRANE_BASE = 135,
     OBJECT_TYPE_CRANE_HEAD_A = 136,
-    OBJECT_TYPE_UNK_137 = 137,
+    OBJECT_TYPE_CRANE_TRIGGER = 137,
     OBJECT_TYPE_MOLOTOV_MOVING = 138,
     OBJECT_TYPE_CONVEYOR_BELT = 139,
     OBJECT_TYPE_CRANE_PART_A = 140,
     OBJECT_TYPE_CONVEYOR_BELT_END = 141,
     OBJECT_TYPE_CAR_CRUSHER = 142,
-    OBJECT_TYPE_UNK_143 = 143,
+    OBJECT_TYPE_CRUSHER_TRIGGER = 143,
     OBJECT_TYPE_HUGE_RED_SKID = 144,
     OBJECT_TYPE_HUGE_WHITE_SKID = 145,
     OBJECT_TYPE_HUGE_BROWN_SKID = 146,
     OBJECT_TYPE_HUGE_GREY_SKID = 147,
     OBJECT_TYPE_TANKTOP = 148,
     OBJECT_TYPE_ANTENNA = 149,
+    OBJECT_TYPE_CRUSHER_PART = 150,
     OBJECT_TYPE_ANIMATING_RUBBISH = 151,
     OBJECT_TYPE_DEAD_RUBBISH = 152,
-    OBJECT_TYPE_FLAMETHROWER_FLAME = 154,
+    OBJECT_TYPE_BULLET_PROBE = 154,
     OBJECT_TYPE_MOVING_CONE = 155,
     OBJECT_TYPE_MOVING_BLASTER = 156,
     OBJECT_TYPE_MOVING_BIN = 157,
     OBJECT_TYPE_MOVING_BIN_LID = 158,
-    OBJECT_TYPE_UNK_ROCKET = 159,
+    OBJECT_TYPE_ROCKET_PROBE = 159,
     OBJECT_TYPE_SAVE_POINT = 161,
     OBJECT_TYPE_PHONE = 163,
     OBJECT_TYPE_PHONE_RINGING = 164,
-    OBJECT_TYPE_UNSURE_LIGHT_OBJECT = 165,
+    OBJECT_TYPE_LIGHT = 165,
     OBJECT_TYPE_DIAGONAL_COLLISION_DUMMY = 166,
-    OBJECT_TYPE_UNK_167 = 167,
+    OBJECT_TYPE_DOOR_TRIGGER = 167,
     OBJECT_TYPE_UNK_168 = 168,
-    OBJECT_TYPE_UNK_169 = 169,
+    OBJECT_TYPE_DOOR_BLOCKER = 169,
     OBJECT_TYPE_TRAFFIC_LIGHT_CASING = 170,
-    OBJECT_TYPE_UNK_171 = 171,
-    OBJECT_TYPE_UNK_172 = 172,
-    OBJECT_TYPE_UNK_173 = 173,
+    OBJECT_TYPE_ROOF_LIGHT_B = 171,
+    OBJECT_TYPE_ROOF_LIGHT_REAR_A = 172,
+    OBJECT_TYPE_ROOF_LIGHT_REAR_B = 173,
     OBJECT_TYPE_PHONE_DEAD = 174,
     OBJECT_TYPE_BRIEFCASE = 175,
     OBJECT_TYPE_RED_PHONE = 176,
@@ -1923,12 +1952,12 @@ enum OBJECT_TYPE_values {
     OBJECT_TYPE_GREEN_PHONE_CALL_END = 190,
     OBJECT_TYPE_GREEN_PHONE_CALL = 191,
     OBJECT_TYPE_SHOT = 192,
-    OBJECT_TYPE_UNK_193 = 193,
+    OBJECT_TYPE_SHOT_PROBE = 193,
     OBJECT_TYPE_FLAMING_BULLET = 194,
-    OBJECT_TYPE_UNK_SHOT_195 = 195,
+    OBJECT_TYPE_FLAME_PROBE = 195,
     OBJECT_TYPE_FIRE = 197,
     OBJECT_TYPE_WATER_BULLET = 198,
-    OBJECT_TYPE_UNK_199 = 199,
+    OBJECT_TYPE_WATER_PROBE = 199,
     OBJECT_TYPE_COLLECT_00_PISTOL = 200,
     OBJECT_TYPE_COLLECT_01_S_UZI = 201,
     OBJECT_TYPE_COLLECT_02_ROCKET_LAUNCHER = 202,
@@ -1994,7 +2023,7 @@ enum OBJECT_TYPE_values {
     OBJECT_TYPE_PISTOL_BULLET = 265,
     OBJECT_TYPE_BONUS_TOKEN = 266,
     OBJECT_TYPE_TASSER_BULLET = 277,
-    OBJECT_TYPE_UNK_278 = 278,
+    OBJECT_TYPE_UNSURE_SOUND_AMBIENT = 278,
     OBJECT_TYPE_SOUND_INSTANT = 279,
     OBJECT_TYPE_INVISIBLE_TARGET = 280,
     OBJECT_TYPE_POWERGEN = 281,
@@ -2249,6 +2278,7 @@ enum SPRITE_TYPE_values {
     SPRITE_TYPE_MAP_OBJ = 5,
     SPRITE_TYPE_USER = 6,
     SPRITE_TYPE_FONT = 7,
+    SPRITE_TYPE_PARTICLE = 8,
 };
 
 // /imported/seuko-mod/TILE_ENUM1
@@ -2311,7 +2341,6 @@ typedef _s_UnwindMapEntry UnwindMapEntry;
 typedef uint32_t DWORD;
 typedef uint32_t /* HINSTANCE__ * */ HINSTANCE;
 typedef uint32_t /* HWND__ * */ HWND;
-typedef uint8_t MissionCode[3072];
 /* function type dt_b293fec6 omitted */
 typedef char INT8;
 typedef uint32_t UINT32;
@@ -2329,7 +2358,6 @@ typedef uint16_t Uint16;
 typedef uint8_t Uint8;
 typedef char CHAR;
 typedef uint32_t /* void * */ HANDLE;
-typedef int32_t HRESULT;
 typedef uint16_t WCHAR;
 
 /* ---- composites, dependency order */
@@ -2396,8 +2424,8 @@ struct CarDriveOrder {
     uint8_t _gap_0x1[0x3];
     uint32_t /* Ped * */ driver; /* 0x4 */
     CAR_DRIVE_ORDER_MODE mode; /* 0x8 */
-    int unsure_maneuver; /* 0xc */
-    uint8_t unsure_driveFlag; /* 0x10 */
+    CAR_DRIVE_MANEUVER maneuver; /* 0xc CAR_DRIVE_MANEUVER; written by CarDriveOrder_Drive state machine, Ped objectives, CarAI_UpdateDriveOrder (0 on urgent teleport) */
+    uint8_t unsure_ramArmed; /* 0x10 set 1 by SIDE_PUSH (8/9) when it goes for the ram; CarAI_ReactToNearbyCar then gives the target car 500 damage on contact (Car_AddDamage) */
     uint8_t _gap_0x11[0x3];
     SCR_f targetX; /* 0x14 */
     SCR_f targetY; /* 0x18 */
@@ -2408,12 +2436,14 @@ struct CarDriveOrder {
     uint8_t _gap_0x23[0x3];
     uint8_t arrived; /* 0x26 */
     uint8_t _gap_0x27[0x3];
-    uint16_t unsure_counter2a; /* 0x2a */
-    uint16_t unsure_counter2c; /* 0x2c */
-    uint16_t unsure_counter2e; /* 0x2e */
+    uint16_t unsure_approachTicks; /* 0x2a CarDriveOrder_Drive: counts to 10 in TAIL states, set 100 on FOLLOW; also a cooldown counted down when far (>=2.0) */
+    uint16_t unsure_phaseTicks; /* 0x2c CarDriveOrder_Drive: per-state wait counter (FLANK_WAIT 10, FOLLOW 10/80/100/400 by allied count and cop level) */
+    uint16_t unsure_sideTicks; /* 0x2e CarDriveOrder_Drive SIDE_PUSH: ticks spent alongside before the ram (limit 0/1/10/50 by allied cop count) */
     uint32_t /* Ped * */ targetPed; /* 0x30 */
     uint16_t retryCooldown; /* 0x34 */
-    uint8_t _gap_0x36[0x9];
+    uint8_t _gap_0x36[0x6];
+    uint8_t unsure_blockAttempts; /* 0x3c CarDriveOrder_Drive: ++ each time CUT_IN gets within 1.5 of the target (-> BLOCK_SPIN); SIDE_PUSH gives up the ram when > 3 */
+    uint8_t _gap_0x3d[0x2];
     uint8_t end; /* 0x3f */
 };
 
@@ -2721,7 +2751,7 @@ struct FrameCounter {
 // /FrameTimer  size 0xc
 // Wall-clock accumulator, 5 of them in FrameTimingStats +0x18..+0x48 (FrameTimingStats_Ctor). Seq27 W2.
 struct FrameTimer {
-    int unsure_field0; /* 0x0 zeroed by FrameTimer_Clear 0x4C36A0 only */
+    int loadPercent; /* 0x0 elapsedMs*100/windowMs, written every 100 logic ticks by FrameTimingStats_EndFrame 0x4C3760 */
     DWORD startTime; /* 0x4 timeGetTime() at Timer_StoreStartTime 0x4C3670 */
     DWORD elapsedMs; /* 0x8 += now - startTime in Timer_AddElapsedSinceStart 0x4C3680 */
 };
@@ -2959,15 +2989,15 @@ struct HudDebugLabel {
     int invisibility; /* 0xb8 */
     uint8_t alpha; /* 0xbc */
     uint8_t pad1d[3]; /* 0xbd */
-    uint32_t /* void * */ next; /* 0xc0 */
+    uint32_t /* HudDebugLabel * */ next; /* 0xc0 */
 };
 
 // /HudDebugLabelPool  size 0x1700
+// HudManager+0x818: 30 HudDebugLabel nodes + active/free list heads (Hud_DebugLabelPool_Init 0x4C6250).
 struct HudDebugLabelPool {
-    uint8_t _gap_0x0[0x16f4];
-    int count; /* 0x16f4 */
-    uint32_t /* HudDebugLabel * */ activeHead; /* 0x16f8 */
-    uint32_t /* HudDebugLabel * */ freeHead; /* 0x16fc */
+    HudDebugLabel nodes[30]; /* 0x0 free list built by Hud_DebugLabelPool_Init 0x4C6250 (29 links, stride 0xC4); its store to +0x16F4 is nodes[29].next = NULL, not a counter */
+    uint32_t /* HudDebugLabel * */ activeHead; /* 0x16f8 shown labels, newest first (Hud_DebugLabel_Show 0x4C8C20) */
+    uint32_t /* HudDebugLabel * */ freeHead; /* 0x16fc popped without a NULL check by Hud_DebugLabel_Show */
 };
 
 // /HudKillFeedLine  size 0xd0
@@ -3276,13 +3306,83 @@ struct PedListNodePool {
     PedListNode nodes[100]; /* 0x4 */
 };
 
+// /PedPathEdgeBest  size 0x5
+struct PedPathEdgeBest {
+    uint8_t gridX; /* 0x0 */
+    uint8_t gridY; /* 0x1 */
+    uint8_t x; /* 0x2 */
+    uint8_t y; /* 0x3 */
+    uint8_t z; /* 0x4 */
+};
+
+// /PedPathNode  size 0x8
+struct PedPathNode {
+    uint8_t hasSecondLevel; /* 0x0 1 = cell holds a second z level (slot 2 = +3/+4) */
+    uint8_t parentDir; /* 0x1 direction code 1..8 the cell was reached by (0 = unvisited, 0x42 = start) */
+    uint8_t z; /* 0x2 z of level 1 */
+    uint8_t parentDir2; /* 0x3 parentDir of level 2 */
+    uint8_t z2; /* 0x4 z of level 2 */
+    uint8_t pad5; /* 0x5 */
+    short stepCount; /* 0x6 steps from start (g); copied to curStepCount when popped, not used as priority */
+};
+
+// /PedPathOpenEntry  size 0x8
+struct PedPathOpenEntry {
+    uint8_t gridX; /* 0x0 window-local x 0..32 (start = 16) */
+    uint8_t gridY; /* 0x1 */
+    uint8_t x; /* 0x2 world block x */
+    uint8_t y; /* 0x3 */
+    uint8_t z; /* 0x4 */
+    uint8_t pad5; /* 0x5 */
+    short priority; /* 0x6 FindPath: (dx*dx+dy*dy) to goal, x2 if z != goal z (greedy, no g); FindSpawnTile: floodRing */
+};
+
 // /PedPathfinder  size 0x2fd4
 struct PedPathfinder {
-    uint8_t _gap_0x0[0x3c];
-    uint32_t /* void * */ requestQueueHead; /* 0x3c */
-    uint8_t _gap_0x40[0x2f90];
-    uint8_t ready; /* 0x2fd0 */
-    uint8_t _gap_0x2fd1[0x3];
+    int requesterPedId; /* 0x0 Ped.id of the ped owning the search (set on every FindPath call) */
+    uint8_t floodMode; /* 0x4 0 = FindPath (greedy priority), 1 = FindSpawnTile (priority = floodRing) */
+    uint8_t _gap_0x5[0x3];
+    uint32_t /* PedPathOpenEntry * */ openCursor; /* 0x8 scan/append cursor into openList */
+    uint16_t openCount; /* 0xc entries in openList; NO bound check against 400 */
+    uint8_t startX; /* 0xe */
+    uint8_t startY; /* 0xf */
+    uint8_t startZ; /* 0x10 snapped to ground below unless slope */
+    uint8_t goalX; /* 0x11 */
+    uint8_t goalY; /* 0x12 */
+    uint8_t goalZ; /* 0x13 */
+    uint8_t unsure_budgetPending; /* 0x14 1 while a FindPath call loops with a non-empty open list; 0 before path output; no reader found */
+    uint8_t _gap_0x15[0x1];
+    short floodRing; /* 0x16 FindSpawnTile pop counter, used as priority */
+    uint8_t searching; /* 0x18 search loop runs while != 0 */
+    uint8_t unsure_goalReached; /* 0x19 set 1 with 0x1a on goal / edge hit; no reader found */
+    uint8_t unsure_goalReached2; /* 0x1a */
+    uint8_t stepDir; /* 0x1b direction code of the neighbour being pushed: 1 -y,2 +x,3 +y,4 -x,5 +x-y,6 +x+y,7 -x+y,8 -x-y; 0x42 = start node */
+    uint16_t nodeIndex; /* 0x1c gridX + gridY*34 of current/neighbour node */
+    short curStepCount; /* 0x1e stepCount of popped node */
+    uint8_t nbrX; /* 0x20 neighbour world x */
+    uint8_t nbrY; /* 0x21 */
+    uint8_t nbrZ; /* 0x22 */
+    uint8_t nbrGridX; /* 0x23 neighbour window-local x */
+    uint8_t nbrGridY; /* 0x24 */
+    uint8_t curX; /* 0x25 current (from) tile world x for step tests */
+    uint8_t curY; /* 0x26 */
+    uint8_t curZ; /* 0x27 */
+    uint8_t unsure_windowOriginX; /* 0x28 FindSpawnTile only: x-16; never read */
+    uint8_t unsure_windowOriginY; /* 0x29 */
+    uint8_t _gap_0x2a[0x4];
+    short iterBudget; /* 0x2e pops left in this FindPath call (100 per call) */
+    uint8_t _gap_0x30[0x4];
+    short unsure_init34; /* 0x34 =1 in InitFields, no reader found */
+    short unsure_init36; /* 0x36 =0 in InitFields, no reader found */
+    uint8_t searchInProgress; /* 0x38 1 from the first pop until success/abort; FindSpawnTile(wide=0) refuses while set */
+    uint8_t _gap_0x39[0x1];
+    short unsure_init3a; /* 0x3a =0 in InitFields, no reader found */
+    uint32_t /* PedListNode * */ requestQueueHead; /* 0x3c FIFO of peds waiting for a path; only the head may call FindPath */
+    PedPathNode nodes[33][34]; /* 0x40 [gridY][gridX], 33 rows x 34 (x,y used 0..32), start at [16][16] */
+    PedPathOpenEntry openList[400]; /* 0x2350 also reused as the reconstruction stack */
+    uint8_t ready; /* 0x2fd0 1 = idle, next FindPath call starts a new search */
+    uint8_t callCount; /* 0x2fd1 FindPath calls for this search; >200 aborts */
+    uint8_t _gap_0x2fd2[0x2];
 };
 
 // /PedPatrolRoutePool  size 0x1d7e
@@ -3444,11 +3544,11 @@ struct RandomDebugLog {
 
 // /RoadJunction  size 0x10
 struct RoadJunction {
-    uint16_t linkN; /* 0x0 */
+    uint16_t linkN; /* 0x0 link u16: bits0-8 junction id, 9-14 length (tiles), 15 open. Slot +0 leads N, +2 S, +4 E, +6 W (verified from RGEN geometry); directed (87 of 731 wil links one-way) */
     uint16_t linkS; /* 0x2 */
     uint16_t linkE; /* 0x4 */
     uint16_t linkW; /* 0x6 */
-    uint32_t arrowKind; /* 0x8 */
+    uint32_t arrowKind; /* 0x8 1 green-arrow junction, 2 red-arrow (special route) junction, 3 both (wil: 262/31/18). RoadJunction_MatchesKind: layer 1 rejects 2, layer 2 rejects 1, layer 3 takes all */
     uint8_t minX; /* 0xc */
     uint8_t minY; /* 0xd */
     uint8_t maxX; /* 0xe */
@@ -3467,8 +3567,8 @@ struct RoadSearchNode {
 
 // /RoadSegment  size 0x8
 struct RoadSegment {
-    uint16_t junction1; /* 0x0 */
-    uint16_t junction2; /* 0x2 */
+    uint16_t junction1; /* 0x0 west end (H segment) / north end (V segment): verified on all 366 H + 365 V segments of wil.gmp RGEN (H1) */
+    uint16_t junction2; /* 0x2 east end (H) / south end (V) */
     uint8_t minX; /* 0x4 */
     uint8_t minY; /* 0x5 */
     uint8_t maxX; /* 0x6 */
@@ -4327,8 +4427,9 @@ struct Ped {
     int lastAttackerWeapon; /* 0x290 */
 };
 
-// /_ped/PedManager_S25  size 0x203ac
-struct PedManager_S25 {
+// /_ped/PedManager  size 0x203ac
+// Ped pool: 200 x Ped (0x294) with free/active lists. operator_new(0x203AC) + InitPedManager 0x43E0E0 in DummyPedManager_Ctor 0x4416B0; global ptrToPedManager 0x5E5BBC. Merged gta2-mouse PedManager (0x2053C, wrong size) and gzf PedsManager into it. Was PedManager_S25.
+struct PedManager {
     uint32_t /* Ped * */ freeListHead; /* 0x0 */
     uint32_t /* Ped * */ activeListHead; /* 0x4 */
     Ped peds[200]; /* 0x8 Created by retype action */
@@ -4376,6 +4477,23 @@ struct SCR_STRING_HEADER {
     Uint16 unk2; /* 0x6 */
     Uint8 len; /* 0x8 */
     char textStart; /* 0x9 */
+};
+
+// /_scripts/ScriptThreadTrigger  size 0xc
+struct ScriptThreadTrigger {
+    int ped_id; /* 0x0 key 1: ped id (Ped_GetId) of the char the trigger waits for */
+    int entity_id; /* 0x4 key 2: car id / phone object id (+0x14) */
+    uint16_t cmd_idx; /* 0x8 pointer index of the THREAD_WAIT_FOR_* / ANSWER_PHONE command; 0 = free slot */
+    uint16_t unused_a; /* 0xa */
+};
+
+// /_scripts/WeaponHitWatch  size 0x8
+struct WeaponHitWatch {
+    int entity_id; /* 0x0 ped id or car id watched (0 = free) */
+    uint8_t weapon; /* 0x4 weapon code asked for; 0x17 = any weapon */
+    uint8_t hit_weapon; /* 0x5 kill-weapon code that actually hit (MissionScript_RecordWeaponHit) */
+    uint8_t flags; /* 0x6 1 = hit recorded, 2 = ped watch, 4 = car watch (WeaponHitRec_IsPedWatch / IsCarWatch) */
+    uint8_t pad; /* 0x7 */
 };
 
 // /_weapon/WEAPON_STRUCT  size 0x30
@@ -4475,18 +4593,19 @@ struct DummyPedManager {
 };
 
 // /auto_structs/FrameTimingStats  size 0x54
+// Frame timing / FPS profiler (0x54), g_FrameTimingStats 0x671E9C, built in Game_Ctor, ticked by drawAndLimitFrames 0x462B67.
 struct FrameTimingStats {
-    uint32_t updateFrameCount; /* 0x0 */
+    int updateFrameCount; /* 0x0 logic ticks in the current 100-tick window */
     DWORD updateWindowStart; /* 0x4 */
-    uint32_t updateFps; /* 0x8 */
-    uint32_t drawFrameCount; /* 0xc */
+    int updateFps; /* 0x8 100000 / window ms, every 100 logic ticks (FrameTimingStats_EndFrame 0x4C3760) */
+    int drawFrameCount; /* 0xc drawn frames in the current 100-frame window */
     DWORD drawWindowStart; /* 0x10 */
-    uint32_t drawFps; /* 0x14 */
-    FrameTimer logicTimer; /* 0x18 Timer_AddElapsedSinceStart in Game_RunLogicStep */
-    FrameTimer unsure_timer1; /* 0x24 */
-    FrameTimer unsure_timer2; /* 0x30 */
-    FrameTimer unsure_timer3; /* 0x3c */
-    FrameTimer unsure_timer4; /* 0x48 */
+    int drawFps; /* 0x14 shown as 'update/draw fps' by do_show_timing 0x4C36C0 */
+    FrameTimer logicTimer; /* 0x18 only timer ever fed: Game_RunLogicStep 0x461947 adds, but FrameTimer_StoreStartTime has no callers, so startTime stays 0 and loadPercent is garbage */
+    FrameTimer unusedTimer1; /* 0x24 never started/stopped in this build (only cleared in ctor, read in EndFrame): loadPercent stays 0 */
+    FrameTimer unusedTimer2; /* 0x30 never started/stopped in this build (only cleared in ctor, read in EndFrame): loadPercent stays 0 */
+    FrameTimer unusedTimer3; /* 0x3c never started/stopped in this build (only cleared in ctor, read in EndFrame): loadPercent stays 0 */
+    FrameTimer unusedTimer4; /* 0x48 never started/stopped in this build (only cleared in ctor, read in EndFrame): loadPercent stays 0 */
 };
 
 // /auto_structs/GangRespect  size 0x144
@@ -4714,72 +4833,62 @@ struct MissionCleanupList {
 };
 
 // /auto_structs/MissionScript  size 0xc1ea8
-// Map or something related to missions
+// Mission-script manager (gta2_re ScriptManager, 0xC1EA8; g_MissionScript 0x6644BC, Ctor 0x481960). Every field verified against 11.44 code (H2 pass 2026-10-23).
 struct MissionScript {
-    short f0; /* 0x0 */
-    uint8_t _gap_0x2[0x2];
-    int arr96i[96]; /* 0x4 */
-    short field4_0x184; /* 0x184 */
-    uint8_t _gap_0x186[0x2];
-    int arr60i[60]; /* 0x188 */
-    short field8_0x278; /* 0x278 */
-    uint8_t _gap_0x27a[0x2];
-    int arr30i[30]; /* 0x27c */
-    uint32_t shouldBeEqTo1; /* 0x2f4 */
-    uint8_t _gap_0x2f8[0x18];
-    uint32_t field37_0x310; /* 0x310 */
-    uint32_t field38_0x314; /* 0x314 */
-    uint32_t field39_0x318; /* 0x318 */
-    uint32_t field40_0x31c; /* 0x31c */
-    uint32_t field41_0x320; /* 0x320 */
-    uint32_t field42_0x324; /* 0x324 */
-    uint32_t field43_0x328; /* 0x328 */
-    uint32_t field44_0x32c; /* 0x32c */
-    uint32_t field45_0x330; /* 0x330 */
-    uint32_t field46_0x334; /* 0x334 */
-    uint32_t field47_0x338; /* 0x338 */
-    uint32_t field48_0x33c; /* 0x33c */
-    uint32_t field49_0x340; /* 0x340 */
-    uint32_t /* DWORD * */ missionPtrMaybe; /* 0x344 */
-    uint32_t field51_0x348; /* 0x348 */
-    uint32_t field52_0x34c; /* 0x34c */
-    uint32_t field53_0x350; /* 0x350 */
-    uint8_t field54_0x354; /* 0x354 */
-    uint8_t field55_0x355; /* 0x355 */
-    uint16_t field56_0x356; /* 0x356 */
-    uint16_t field57_0x358; /* 0x358 */
-    uint16_t field58_0x35a; /* 0x35a */
-    char pathToScriptFile[256]; /* 0x35c */
-    char name[4]; /* 0x45c */
-    uint32_t field61_0x460; /* 0x460 */
-    uint8_t field62_0x464; /* 0x464 */
-    uint8_t _gap_0x465[0x3];
-    uint32_t field66_0x468; /* 0x468 */
-    Uint16 base_pointers[6000]; /* 0x46c */
-    Uint8 script[65536]; /* 0x334c */
-    uint32_t /* SCR_STRINGS * */ ptrToStrings; /* 0x1334c Created by retype action */
-    uint32_t /* Script4k * */ pScript4k; /* 0x13350 */
-    uint8_t _20kArray[4][2000]; /* 0x13354 */
-    uint8_t _gap_0x15294[0x956a0];
-    MissionCode missionScript[30]; /* 0xaa934 Created by retype action */
-    uint8_t _gap_0xc1134[0xc00];
-    uint16_t unk[30]; /* 0xc1d34 */
-    uint8_t _gap_0xc1d70[0x2];
-    uint16_t base_script_max_pointers[30]; /* 0xc1d72 */
-    short len2; /* 0xc1dae */
-    uint32_t mission_script_size[30]; /* 0xc1db0 */
-    uint8_t _gap_0xc1e28[0x4];
-    uint8_t _isPlayerAlive; /* 0xc1e2c */
-    uint8_t field615156_0xc1e2d; /* 0xc1e2d */
-    uint8_t field615157_0xc1e2e; /* 0xc1e2e */
-    short field615158_0xc1e2f; /* 0xc1e2f */
-    uint8_t field615159_0xc1e31; /* 0xc1e31 */
-    int arr15i_3[15]; /* 0xc1e32 */
-    short field615161_0xc1e6e; /* 0xc1e6e */
-    int field615162_0xc1e70; /* 0xc1e70 */
-    int arr12i[12]; /* 0xc1e74 */
-    short field615164_0xc1ea4; /* 0xc1ea4 */
-    uint8_t _gap_0xc1ea6[0x2];
+    short car_trigger_count; /* 0x0 live entries in car_triggers (MissionScript_AddCarEnterThreadEntry 0x476280) */
+    short unused_2; /* 0x2 */
+    ScriptThreadTrigger car_triggers[32]; /* 0x4 THREAD_WAIT_FOR_CHAR_IN_CAR triggers, started by MissionScript_StartCarEnterThread 0x47F340 from Car_OnDriverEnter */
+    short phone_trigger_count; /* 0x184 live entries in phone_triggers (0x476370) */
+    short unused_186; /* 0x186 */
+    ScriptThreadTrigger phone_triggers[20]; /* 0x188 ANSWER_PHONE / THREAD_WAIT_FOR_ANSWER_PHONE triggers, MissionScript_StartPhoneAnswerThread 0x47F3B0 */
+    short weapon_hit_watch_count; /* 0x278 0x476400 / 0x4764D0 */
+    short unused_27a; /* 0x27a */
+    WeaponHitWatch weapon_hit_watches[15]; /* 0x27c CHECK_WEAPON_TYPE_HIT_CHAR / CHECK_WEAPON_HIT_CAR watches */
+    int preload_sub_scripts; /* 0x2f4 Ctor sets 1 and nothing writes it: sub-scripts are always preloaded (LoadSubScripts 0x476070); the disk path in LoadMissionScriptByName is dead */
+    Box3 car_area_scratch; /* 0x2f8 Box3 scratch built by Script_Op_IS_CAR_IN_BLOCK_AREA 0x4799D0 */
+    int finish_score; /* 0x310 DECLARE_FINISH_SCORE 0x4755B0 */
+    int total_missions; /* 0x314 DECLARE_TOTAL_MISSIONS; read by FINISH_LEVEL 0x47D6E0 */
+    int total_secrets; /* 0x318 DECLARE_TOTAL_SECRETS */
+    int gang1_missions_total; /* 0x31c DECLARE_GANG_ONE_MISSIONS_TOTAL */
+    int gang2_missions_total; /* 0x320 */
+    int gang3_missions_total; /* 0x324 */
+    uint32_t /* int * */ missions_passed_flag; /* 0x328 -> value slot (cmd+8) of the counter named by DECLARE_MISSIONS_PASSED_FLAG 0x478170 */
+    uint32_t /* int * */ gang1_passed_flag; /* 0x32c */
+    uint32_t /* int * */ gang2_passed_flag; /* 0x330 */
+    uint32_t /* int * */ gang3_passed_flag; /* 0x334 */
+    uint32_t /* int * */ secrets_passed_flag; /* 0x338 ++ when a kill frenzy passes (DO_BASIC_KF_TEMPLATE 0x47E7F0) */
+    uint32_t /* int * */ secrets_failed_flag; /* 0x33c ++ when a kill frenzy fails */
+    uint32_t /* byte * */ powerup_car_list; /* 0x340 -> DECLARE_POWERUP_CARLIST cmd+8: 19 u8 car models (Generator_DecidePowerupForCrane 0x47ED20) */
+    uint32_t /* int * */ mission_flag; /* 0x344 -> counter of DECLARE_MISSION_FLAG; *p==1 while on a mission (MissionScript_IsOnMission 0x4C7350, MissionFailOnArrest 0x47F550 clears it) */
+    uint32_t /* int * */ gang1_mission_flag; /* 0x348 DECLARE_GANG_ONE_MISSION_FLAG; picks the gang-1 death-base brief on fail */
+    uint32_t /* int * */ gang2_mission_flag; /* 0x34c */
+    uint32_t /* int * */ gang3_mission_flag; /* 0x350 */
+    uint8_t next_gang_slot; /* 0x354 Script_Decl_SET_GANG_INFO 0x477BD0: gang slot for the next SET_GANG_INFO, ++ each */
+    uint8_t death_arrest_enabled; /* 0x355 SET_DEATHARREST_STATE (Script_Op_SET_CHAR_FLAG 0x47DCF0); gates MissionFailOnArrest */
+    short gang1_death_base_brief; /* 0x356 DECLARE_GANG_ONE_DEATH_BASE_BRIEF 0x475650: brief id base shown on mission fail */
+    short gang2_death_base_brief; /* 0x358 */
+    short gang3_death_base_brief; /* 0x35a */
+    char scr_path[256]; /* 0x35c full path of the main .scr (MissionScript_Load 0x47F280) */
+    char map_name[9]; /* 0x45c file stem of scr_path, sub-script dir data\<map_name>\ (SetNameFromPath 0x475E00) */
+    uint8_t unused_465[3]; /* 0x465 */
+    int unused_468; /* 0x468 Ctor zeroes it, no other use */
+    uint16_t base_pointers[6000]; /* 0x46c pointer index -> byte offset in script (0 = none); main .scr bytes 0..12000 */
+    uint8_t script[65536]; /* 0x334c shared code space: main script + the launched sub-script copied in at its absolute offsets */
+    uint32_t /* SCR_STRINGS * */ strings_raw; /* 0x1334c malloc(5120) in Ctor; string area of the .scr */
+    uint32_t /* Script4k * */ string_table; /* 0x13350 malloc(4000) in ParseStrings 0x475D30 */
+    uint8_t sub_script_code[31][20000]; /* 0x13354 preloaded sub-script code, one 20000-byte slot per FILE_NAME_MISSIONS string (LoadSubScripts 0x476070) */
+    uint16_t sub_script_ptrs[31][1536]; /* 0xaa934 preloaded sub-script pointer tables (3072 B each); copied to base_pointers[first..] on LAUNCH_MISSION */
+    uint16_t sub_script_start_cmd[31]; /* 0xc1d34 pointer index of each sub-script's MISSIONSTART */
+    uint16_t sub_script_first_ptr[31]; /* 0xc1d72 global pointer index of each sub-script's local entry 0 */
+    uint32_t sub_script_size[31]; /* 0xc1db0 code size of each sub-script */
+    uint8_t loaded_from_save; /* 0xc1e2c set 1 by MissionScript_LoadSaveGame 0x47F0B0; read via 0x475A20 by Player_OnLevelStart / Script_Decl_PLAYER_PED */
+    uint8_t kill_frenzy_active; /* 0xc1e2d 0x475A30/0x475A40, START/DO_BASIC_KF_TEMPLATE */
+    uint8_t death_arrest_executed; /* 0xc1e2e 1 after MissionFailOnArrest failed a mission; CHECK_DEATHARREST_EXECUTED reads it; DO_PHONE_TEMPLATE clears */
+    uint8_t saved_gang_respect[3]; /* 0xc1e2f STORE_CURRENT_RESPECT / RESTORE_SAVED_RESPECT 0x47EBE0 (no bound: >3 gangs spill into gang_phone_cmds) */
+    uint16_t gang_phone_cmds[31]; /* 0xc1e32 OBJ_DATA cmd idx of each gang phone (Script_Decl_OBJ_DATA_SET 0x476EA0); bit i of g_SavedAnsweredPhoneBits = phone i dead */
+    int recycle_model_wanted; /* 0xc1e70 SET_RECYCLE_MODEL_WANTED 0x47EB00; 87 (0x57) = none */
+    uint16_t basic_kf_cmds[25]; /* 0xc1e74 START_BASIC_KF_TEMPLATE cmd idx per kill frenzy (decl 0x4756B0); bit i of g_SavedDoneBasicKfBits = KF i done */
+    uint16_t unused_c1ea6; /* 0xc1ea6 */
 };
 
 // /auto_structs/MssBankEntry  size 0x18
@@ -5337,7 +5446,7 @@ struct Sprite {
     int layer; /* 0x28 */
     uint8_t field16_0x2c; /* 0x2c */
     uint8_t _gap_0x2d[0x3];
-    int collisionKind; /* 0x30 */
+    SPRITE_TYPE spriteType; /* 0x30 SPRITE_TYPE of the sprite (was collisionKind): the style sprite base Sprite_Draw 0x4BE060 passes to TextureCache_GetSpriteTexture; set by Sprite_SetSpriteType 0x4206F0 (cars 2, peds 3, objects = ObjectPrefab.defaultSpriteType 1/4/5, particles 8); also the 'what is this sprite' tag read by Sprite_GetSpriteType 0x416B40 (58 callers). [H4, 2026-10-23] */
     int paletteKind; /* 0x34 render palette kind, 1-based: 2 sprite, 3 car remap, 4 ped remap, 8 font (Sprite_SetRemap / Sprite_SetNoRemapState 0x420700) */
     uint8_t field22_0x38; /* 0x38 */
     uint8_t cachedZLayer; /* 0x39 */
@@ -5480,14 +5589,90 @@ struct filebuf {
     int x_fOpened; /* 0x34 */
 };
 
-// /imported/gta2-mouse/PedManager  size 0x2053c
-struct PedManager {
-    uint32_t /* Ped * */ firstPedInArray; /* 0x0 */
-    uint32_t /* Ped * */ lastPedInArray; /* 0x4 */
-    uint8_t _gap_0x8[0x20530];
-    short MaybePedsInUse; /* 0x20538 */
-    uint8_t _gap_0x2053a[0x1];
-    uint8_t field_0x2053b; /* 0x2053b */
+// /gta2_renderer/VidCtx  size 0x4c4
+// dmavideo.dll video context (Vid_Init_SYS heap block 0x4C4), global SVideoPtr 0x673D20. Layout from disassembling dmavideo/d3ddll (docs/renderer_api.h); gta2.exe reads only +0x04 +0x1C +0x40 +0x48..+0x54 +0x5C +0x64 +0x6C. Was seuko SVideo.
+struct VidCtx {
+    int one; /* 0x0 = 1 */
+    uint32_t flags; /* 0x4 VID_F_*: 0x10 triple buffer (SetWindowedMode_Apply 0x4CB837), 0x40 d3d 3D device, 0x100 OR'd before every Vid_SetMode */
+    int found_width; /* 0x8 result of the last Vid_Find/CheckMode */
+    int found_height; /* 0xc */
+    int found_bpp; /* 0x10 */
+    int next_mode_id; /* 0x14 starts at 1 */
+    int next_device_id; /* 0x18 starts at 2 (primary = 1) */
+    int num_modes; /* 0x1c bound check in the resolution list */
+    int num_devices; /* 0x20 */
+    uint32_t /* VidMode * */ modes; /* 0x24 list head */
+    uint32_t /* VidMode * */ modes_tail; /* 0x28 */
+    uint32_t /* VidDevice * */ devices; /* 0x2c list head */
+    uint32_t /* VidDevice * */ devices_tail; /* 0x30 */
+    int device_id; /* 0x34 current device (0 = none; d3ddll SetMode hook zeroes it) */
+    int unsure_38; /* 0x38 */
+    uint32_t /* VidMode * */ find_iter; /* 0x3c Vid_FindFirst/NextMode cursor */
+    int mode_id; /* 0x40 current mode id; -2 = windowed (BeginFrame2D 0x4CAEE6, Video_SyncCameraDimsAndTime 0x4CB15A); 0 none */
+    int unsure_44; /* 0x44 */
+    int width; /* 0x48 current screen width (draw 0x4619A4, InitVideo 0x4CC782) */
+    int height; /* 0x4c */
+    uint32_t /* void * */ surface; /* 0x50 locked back buffer pixels after Vid_GetSurface (Movie_UpdateFrame 0x481E49 blits Bink frames here) */
+    int pitch; /* 0x54 bytes per row of the locked back buffer */
+    int r_shift; /* 0x58 screen pixel format, copied from the VidMode */
+    int r_bits; /* 0x5c PlayMovie 0x481F61: 5,5,5 -> Bink 555 else 565 */
+    int g_shift; /* 0x60 */
+    int g_bits; /* 0x64 */
+    int b_shift; /* 0x68 */
+    int b_bits; /* 0x6c */
+    int x_shift; /* 0x70 */
+    int x_bits; /* 0x74 */
+    HINSTANCE hinstance; /* 0x78 Vid_Init_SYS arg 1 */
+    HINSTANCE hmodule; /* 0x7c dmavideo's own HMODULE (Vid_InitDLL arg 1); d3ddll GetProcAddress's on it */
+    int fullscreen; /* 0x80 1 fullscreen, 0 windowed */
+    uint32_t /* void *** */ slot_table; /* 0x84 Vid_InitDLL arg 2: gta2.exe table of 22 pointers to its Vid_* slots (0x675300) */
+    int hresult; /* 0x88 last DirectDraw HRESULT */
+    uint32_t /* void * */ ddraw; /* 0x8c IDirectDraw* */
+    uint8_t _gap_0x90[0x90];
+    uint32_t /* void * */ ddraw4; /* 0x120 IDirectDraw4* (QI from +0x8c) */
+    uint8_t _gap_0x124[0x10];
+    uint32_t /* void * */ primary; /* 0x134 IDirectDrawSurface4* primary */
+    uint32_t /* void * */ back; /* 0x138 IDirectDrawSurface4* back buffer */
+    uint8_t lock_desc[124]; /* 0x13c DDSURFACEDESC2 of the last Lock: lPitch @+0x10, lpSurface @+0x24 */
+    uint32_t /* void * */ clipper; /* 0x1b8 IDirectDrawClipper* (windowed) */
+    uint8_t _gap_0x1bc[0xc];
+    uint8_t hal_caps[380]; /* 0x1c8 DDCAPS (HAL) */
+    uint8_t hel_caps[380]; /* 0x344 DDCAPS (HEL) */
+    HWND hwnd; /* 0x4c0 HWND given to Vid_SetMode */
+};
+
+// /gta2_renderer/VidDevice  size 0x2c
+// dmavideo DirectDraw device node: fixed 0x2c part; the description/name strings follow it in the same allocation (dmavideo.dll). Was seuko SDevice.
+struct VidDevice {
+    int id; /* 0x0 1 = primary display driver (GUID NULL), then 2,3,... */
+    uint32_t flags; /* 0x4 bit0 = can render windowed (DDCAPS2_CANRENDERWINDOWED); the only field gta2.exe reads (CanRenderWindowed 0x4CB6F0) */
+    uint32_t /* char * */ description; /* 0x8 */
+    uint32_t /* char * */ name; /* 0xc */
+    uint32_t /* VidDevice * */ next; /* 0x10 */
+    uint32_t /* GUID * */ guid_ptr; /* 0x14 -> guid below, NULL for the primary device */
+    g2_GUID guid; /* 0x18 */
+    uint32_t vid_mem; /* 0x28 DDCAPS.dwVidMemTotal */
+};
+
+// /gta2_renderer/VidMode  size 0x40
+// dmavideo display mode node (0x40), IDirectDraw4::EnumDisplayModes. Was seuko SDisplayMode.
+struct VidMode {
+    int id; /* 0x0 1,2,...; -2 (windowed) is never a node */
+    int device_id; /* 0x4 VidDevice.id it belongs to */
+    int width; /* 0x8 */
+    int height; /* 0xc */
+    int pitch; /* 0x10 */
+    int bpp; /* 0x14 dwRGBBitCount */
+    int r_shift; /* 0x18 lowest set bit of the red mask */
+    int r_bits; /* 0x1c */
+    int g_shift; /* 0x20 */
+    int g_bits; /* 0x24 */
+    int b_shift; /* 0x28 */
+    int b_bits; /* 0x2c */
+    int x_shift; /* 0x30 unused bits (bit 15 of 555), 0 if none */
+    int x_bits; /* 0x34 */
+    uint32_t /* VidMode * */ next; /* 0x38 */
+    int valid; /* 0x3c always 1 */
 };
 
 // /imported/gta2-mouse/S34  size 0x8
@@ -5558,7 +5743,7 @@ struct CarAI {
     uint8_t haltTimer; /* 0x30 */
     uint8_t _gap_0x31[0x3];
     int unsure_initOnly34; /* 0x34 Zeroed. Only written by CarAI_Ctor / CarAI_Reinit 0x42AAC0; no reader in a decompile scan of every Car* / CarAI* / CarDriveOrder* function (Seq 27 R3). */
-    int routeExitCode; /* 0x38 */
+    int routeUTurnExitDir; /* 0x38 heading class of a U-turn exit asked by the route (CarAI_ApplyRouteTurn, with flags 0x800). WRITE-ONLY: no reader of +0x38 or flag 0x800 in the whole exe (H1 2026-10-23) - the AI never executes route U-turns */
     int unsure_unstickState; /* 0x3c */
     int unsure_laneDir; /* 0x40 */
     int turnExitDir; /* 0x44 */
@@ -5770,12 +5955,12 @@ struct ObjectPrefab {
     int gridKind; /* 0x40 */
     int impactMode; /* 0x44 */
     int explosiveClass; /* 0x48 */
-    int unsure_solidityVsCar; /* 0x4c */
-    int unsure_solidityVsPed; /* 0x50 */
-    uint8_t _gap_0x54[0x4];
+    int wallResponse; /* 0x4c Response when the move is blocked (wall/sprite): 0/1 only ImpactEvent_Dispatch, 2/3 physical bounce via Object_ResolveCollisionByKind, 4 settle on the hit sprite's z (Object_OnMoveBlocked 0x486D70, Object_MoveFlatWithCollision 0x4874D0). 3 = movable furniture (ApplyPatches): not solid while resting (Object_ShouldCollide), random rest state on impulse (Object_AddVelocityImpulseRandomizeState). Was unsure_solidityVsCar. [H4, 2026-10-23] */
+    int groundResponse; /* 0x50 Response on landing (Object_StepCollisionFalling 0x4843A0 / Rising 0x484260): 1 stop dead (vz = speed = 0), 4 stick without bounce, otherwise bounce vz = -vz*k. Was unsure_solidityVsPed. [H4, 2026-10-23] */
+    int hitFilter; /* 0x54 Which sprites a moving object may hit (Projectile_PrefabAllowsHitSprite 0x482FA0): 0 all, 1 not cars, 2 not peds, 3 not objects (sprite types 1/4/5), 4 nothing. Row arg 23 (ObjectPrefabRow126_Construct); 2 for PED_FLING_BODY / BLAST_FIRE_CARRIER (InitPickupClones). [H4, 2026-10-23] */
     int usesGravity; /* 0x58 */
     int category; /* 0x5c */
-    uint8_t unsure_killOnOverlap; /* 0x60 */
+    uint8_t diesOnConveyorEnd; /* 0x60 Only reader Object_OnOverlapConveyorBelt 0x484DD0: object is killed when it overlaps CONVEYOR_BELT_END. Was unsure_killOnOverlap. [H4, 2026-10-23] */
     uint8_t onActiveList; /* 0x61 */
     uint8_t _gap_0x62[0x2];
     uint8_t ticksPerFrame; /* 0x64 */
@@ -5892,97 +6077,6 @@ struct PedGroup {
     int unsure_enterCarFlag; /* 0x3c UpdateEnterCar 0x4052f5 sets 1, 0x405313 clears */
     uint8_t active; /* 0x40 PedGroup_SetActive/IsActive; pool slot in use */
     uint8_t _gap_0x41[0x3];
-};
-
-// /imported/seuko-mod/SDevice  size 0x30
-struct SDevice {
-    uint32_t id; /* 0x0 */
-    uint32_t flags; /* 0x4 */
-    uint32_t /* char * */ name; /* 0x8 */
-    uint32_t /* char * */ desc; /* 0xc */
-    uint32_t /* SDevice * */ next_ptr; /* 0x10 */
-    uint32_t /* GUID * */ pDeviceGuid; /* 0x14 */
-    g2_GUID guid; /* 0x18 */
-    uint32_t dwVidMemTotal; /* 0x28 */
-    uint32_t end_buffer; /* 0x2c */
-};
-
-// /imported/seuko-mod/SDisplayMode  size 0x40
-struct SDisplayMode {
-    uint32_t display_mode_idx; /* 0x0 */
-    uint32_t deviceId; /* 0x4 */
-    uint32_t width; /* 0x8 */
-    uint32_t height; /* 0xc */
-    uint32_t pitch; /* 0x10 */
-    uint32_t rgb_bit_count; /* 0x14 */
-    uint8_t _gap_0x18[0x20];
-    uint32_t /* SDisplayMode * */ pnext; /* 0x38 */
-    uint8_t _gap_0x3c[0x3];
-    uint8_t field_0x3f; /* 0x3f */
-};
-
-// /imported/seuko-mod/SMission  size 0x300
-struct SMission {
-    uint8_t _gap_0x0[0x168];
-    uint32_t /* SMission * */ ptrToStructRel2Bonus2; /* 0x168 */
-    int field_0x16c; /* 0x16c */
-    uint8_t _gap_0x170[0x3c];
-    uint8_t x; /* 0x1ac */
-    uint8_t _gap_0x1ad[0x3];
-    uint8_t y; /* 0x1b0 */
-    uint8_t _gap_0x1b1[0x6b];
-    uint32_t mask; /* 0x21c */
-    uint8_t _gap_0x220[0x28];
-    int field_0x248; /* 0x248 */
-    uint8_t _gap_0x24c[0xb3];
-    uint8_t field_0x2ff; /* 0x2ff */
-};
-
-// /imported/seuko-mod/SVideo  size 0x4c4
-struct SVideo {
-    uint8_t _gap_0x0[0x4];
-    uint32_t mask1; /* 0x4 */
-    uint32_t found_width; /* 0x8 */
-    uint32_t found_height; /* 0xc */
-    uint32_t found_rgb_bit_count; /* 0x10 */
-    uint32_t display_mode_count_2_q; /* 0x14 */
-    uint32_t num_guids; /* 0x18 */
-    uint32_t num_display_modes; /* 0x1c */
-    uint32_t num_enums; /* 0x20 */
-    uint32_t /* SDisplayMode * */ head_ptr; /* 0x24 */
-    uint32_t /* SDisplayMode * */ display_mode_array; /* 0x28 */
-    uint32_t /* SDevice * */ device_info_head_ptr; /* 0x2c */
-    uint32_t /* SDevice * */ device_info_last; /* 0x30 */
-    uint32_t active_device_id; /* 0x34 */
-    uint8_t _gap_0x38[0x4];
-    uint32_t /* SDisplayMode * */ current_enum_ptr; /* 0x3c */
-    uint32_t full_screen; /* 0x40 */
-    uint8_t _gap_0x44[0x4];
-    uint32_t rect_right; /* 0x48 */
-    uint32_t rect_bottom; /* 0x4c */
-    uint32_t /* void * */ surface_pixels_ptr; /* 0x50 */
-    uint32_t surface_pixels_pitch; /* 0x54 */
-    uint8_t _gap_0x58[0x8];
-    uint32_t g; /* 0x60 */
-    uint32_t r; /* 0x64 */
-    uint32_t b; /* 0x68 */
-    uint8_t _gap_0x6c[0x10];
-    HINSTANCE self_dll_handle; /* 0x7c */
-    uint8_t _gap_0x80[0x4];
-    uint32_t /* void * */ Vid_GetVersion; /* 0x84 */
-    HRESULT last_error; /* 0x88 */
-    uint32_t /* void * */ DirectDraw7; /* 0x8c */
-    uint8_t _gap_0x90[0x90];
-    uint32_t /* void * */ IDDraw4; /* 0x120 */
-    g2_GUID field_0x124; /* 0x124 */
-    uint32_t /* void * */ SurfacePrimary; /* 0x134 */
-    uint32_t /* void * */ Surface; /* 0x138 */
-    uint8_t DDSurfaceDesc7[124]; /* 0x13c */
-    uint32_t /* void * */ clipper; /* 0x1b8 */
-    uint8_t _gap_0x1bc[0xc];
-    uint8_t device_caps[380]; /* 0x1c8 */
-    uint8_t hel_caps[380]; /* 0x344 */
-    HWND hwnd; /* 0x4c0 */
 };
 
 // /imported/seuko-mod/TrailerController  size 0x10

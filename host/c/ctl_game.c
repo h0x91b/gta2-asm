@@ -530,8 +530,8 @@ void ctl_drive_debug(void)
            ph ? ph->isForwardGasOn : 0, ph ? ph->isBrakeOn : 0, ph ? ph->steering : 0,
            ai ? ai->targetSpeed : 0, (int)car->driverClass, car->aiFlags);
     if (ai && ai->obstacleHit) {
-        Sprite *ob = GP(Sprite, ai->obstacleHit);       /* Sprite_GetKind: +0x30, 2 car 3 ped */
-        printf("ctl: drv obstacle kind %d at %.2f,%.2f\n", ob->collisionKind, ob->x / 16384.0, ob->y / 16384.0);
+        Sprite *ob = GP(Sprite, ai->obstacleHit);       /* Sprite_GetSpriteType: +0x30, 2 car 3 ped */
+        printf("ctl: drv obstacle kind %d at %.2f,%.2f\n", ob->spriteType, ob->x / 16384.0, ob->y / 16384.0);
     }
     /* the route: junction ids at RoadNetwork [0x5D351C] + 0x2218 + (slot*0x100 + i)*2,
      * junction rects (minX, minY, maxX, maxY bytes) at +0x8 + id*0x10 + 0xC (Seq 27) */

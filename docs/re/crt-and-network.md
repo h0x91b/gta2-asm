@@ -179,7 +179,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x4029A0` | `File_Write` | high | fastcall wrapper over fwrite(buf,size,count,FILE); mirror of fread at 0x402980 |
 | `0x4029C0` | `File_GetSize` | high | ftell/fseek END/ftell/fseek back with DisplayError File.cpp lines 0x38-0x3e; used by ReadWholeFile |
 | `0x402CF0` | `File_WriteWhole` | high | copyScriptNameToBuffer, fopen "wb", write once, fclose, DisplayError File.cpp |
-| `0x402DA0` | `File_AppendWhole` | high | same as File_WriteWhole but fopen "ab"; only SaveGame calls it |
+| `0x402DA0` | `File_AppendWhole` | high | same as File_WriteWhole but fopen "ab"; only MissionScript_SaveGame calls it |
 | `0x402F00` | `File_CloseGlobal` | medium | fcloses g_File if g_FileIsOpen then clears flag; called from error() |
 | `0x403130` | `File_GetCharSkipBlanks` | medium | getc loop skipping space/CR/tab; returns 0 on newline/EOF; caller Seq_ReadLabelLine |
 | `0x4035A0` | `PedGroup_ResetDoorCursor` | high | sets DAT_0058f512=1; that byte is the seat/door cursor used in PedGroup enter-car update 0x405240 |
@@ -196,8 +196,8 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x403950` | `Ped_SetEngaged` | high | flags |
 | `0x403960` | `Ped_ClearEngaged` | high | flags &= ~4 (PED_FLAG_ENGAGED) |
 | `0x4039C0` | `Ped_GetEnterCarAsPassenger` | high | returns Ped+0x248 enterCarAsPassenger; pair of Ped_SetEnterCarAsPassenger |
-| `0x4039D0` | `Ped_GetCarEnterExitStage` | high | returns byte +0x226 (unsure_carEnterExitStage) |
-| `0x403A20` | `Ped_ClearField228` | medium | zeroes byte Ped+0x228 (field82_0x228); caller Ped_ElvisHandling |
+| `0x4039D0` | `Ped_GetTaskStatus` (was `Ped_GetCarEnterExitStage`) | high | returns byte +0x226 (unsure_carEnterExitStage) |
+| `0x403A20` | `Ped_ClearMeleeHitCount` (was `Ped_ClearField228`) | medium | zeroes byte Ped+0x228 (field82_0x228); caller Ped_ElvisHandling |
 | `0x403A50` | `Ped_SetGameObjectField3C` | medium | writes gameObject(+0x168)+0x3c; caller Ped_ElvisHandling |
 | `0x403A90` | `Ped_GetTask` | high | returns Ped+0x25c task; Ped_GetObjective is +0x258 |
 | `0x403AB0` | `Ped_GetObjectiveTargetCar` | high | returns Ped+0x150 objectiveTargetCar |
@@ -206,7 +206,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x403B10` | `Ped_GetTaskTargetCar` | high | returns Ped+0x154 taskTargetCar (setter Ped_SetTargetCar) |
 | `0x403B20` | `Ped_GetTaskTimer` | high | returns short Ped+0x21a taskTimer |
 | `0x403B30` | `Ped_GetObjectiveTimer` | high | returns short Ped+0x218 objectiveTimer |
-| `0x403B50` | `Ped_SetCarEnterExitStage` | high | writes byte Ped+0x226; pair of getter 0x4039d0 |
+| `0x403B50` | `Ped_SetTaskStatus` (was `Ped_SetCarEnterExitStage`) | high | writes byte Ped+0x226; pair of getter 0x4039d0 |
 | `0x403B70` | `Ped_HasGameObject` | high | returns Ped+0x168 gameObject != 0 |
 | `0x403B90` | `Ped_IsEngaged` | high | returns (flags>>2)&1 = PED_FLAG_ENGAGED |
 | `0x403BC0` | `Car_IsBankVanOrSwatVan` | medium | Car+0x84 carModel is 4 (BANKVAN) or 0x34 (SWATVAN) |
@@ -216,7 +216,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x404450` | `PedGroup_FindMemberNotEngaged` | medium | scans members from last to first, returns first with Ped_IsEngaged false else 0 |
 | `0x404480` | `PedGroup_LeaderIsEngaged` | high | Ped_IsEngaged(group+0x2c leader) |
 | `0x404490` | `PedGroup_FindFarthestMember` | medium | max Chebyshev Fix16 distance of members to leader; returns ped, out distance |
-| `0x4045D0` | `unsure_PedGroup_MakeMembersFollowLeader` | unsure | if leader on foot: sets members task 9 and Ped_SetTarget2Ped leader/neighbour, clears bit 11 |
+| `0x4045D0` | `PedGroup_MakeMembersFollowLeader` (was `unsure_PedGroup_MakeMembersFollowLeader`) | unsure | if leader on foot: sets members task 9 and Ped_SetTarget2Ped leader/neighbour, clears bit 11 |
 | `0x4046F0` | `PedGroup_UpdateMemberFollowLeader` | high | member idx: if leader has gameObject and dist<DAT_005d304c sets task 9 follow, else resets task |
 | `0x404840` | `PedGroup_AllMembersInCar` | medium | no members: leader in car; else all members Ped_GetState==10 |
 | `0x4048A0` | `PedGroup_AllMembersInCarOrDead` | medium | all members have state 10 or 9 |
@@ -226,7 +226,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x404CE0` | `PedGroup_PromoteLeader` | medium | adds old leader as member, sets new leader slot 99, resets all member tasks; caller PedGroupSetLeader |
 | `0x404EF0` | `PedGroup_ReactToAttacker` | medium | sets members/leader to kill attacker (KILL_CHAR_ON_FOOT, Ped_SetTarget2Ped); caller Ped_ReactToAttacker |
 | `0x405240` | `PedGroup_UpdateEnterCar` | medium | leader state 3/10/5: sends members to enter car (ENTER_CAR task, door cursor 0x58f512); caller Ped_UpdateAI |
-| `0x405760` | `unsure_PedGroup_UpdateMember` | unsure | per-member AI: Ped_SetEngaged, follow/attack by task, uses 0x4045d0 and 0x404ad0; caller Ped_UpdateAI |
+| `0x405760` | `PedGroup_UpdateMember` (was `unsure_PedGroup_UpdateMember`) | unsure | per-member AI: Ped_SetEngaged, follow/attack by task, uses 0x4045d0 and 0x404ad0; caller Ped_UpdateAI |
 | `0x405A40` | `NetDlg_Dtor` | high | sets vtable PTR_0056e598 only; called by 0x406bc0 scalar-deleting dtor |
 | `0x405A50` | `NetDlg_SetHwnd` | high | stores HWND at this+0x20218; called from NetDlg_OnInitDialog |
 | `0x405A60` | `NetDlg_GetHwnd` | high | returns this+0x20218, used as hDlg in SendDlgItemMessage/GetDlgItem |
@@ -259,7 +259,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x406C92` | `NetDlg_EnableJoinButton_Frag` (was `NetDlg_EnableControlFragment`, Seq 27 net pass) | high | mid-function tail in 0x56dec0: EnableWindow(GetDlgItem(hDlg,id),flag) |
 | `0x406E40` | `NetDlg_OnTimer` | high | if exit flag EndDialog(1) and frees locale; else listbox 1000 get sel text, Network refresh 0x40c380, reselect |
 | `0x407070` | `NetDlg_InitControls` (was `NetDlg_InitListColumns`, Seq 27 net pass) | high | Adds "Player Name"/"Ping" columns to list controls 0x400/0x41a (LVM_INSERTCOLUMN), then combo init; called by NetDlg_OnInitDialog |
-| `0x40720D` | `NetDlg_InitControls_Frag` | medium | Detached tail of NetDlg_InitListColumns: fills map list 0x402 (stride 0x518) and combo 0x40c with netui19/20/22 |
+| `0x40720D` | `NetDlg_InitControls_Frag` | medium | Detached tail of NetDlg_InitControls: fills map list 0x402 (stride 0x518) and combo 0x40c with netui19/20/22 |
 | `0x407362` | `NetDlg_UpdateSettingTexts_Frag` | medium | Detached fragment calling NetDlg_Set{PlayersRequired,ScoreLimit,GameSpeed}Text on dialog state |
 | `0x4073D0` | `NetDlg_ApplyRemoteSettings` (was `NetDlg_SetSessionDesc`, Seq 27 net pass) | medium | Copies 0x120-byte game-settings blob into dialog+0x1ff84 |
 | `0x407402` | `NetDlg_FindMapByName_Frag` | medium | Detached loop: wcscmp over map table stride 0x518, copies match to +0x1ff84, sets selected index +0x20088 |
@@ -268,7 +268,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x4075C0` | `NetDlg_SetSetting` | high | switch(1..7): map, score limit, game type, speed, police, time limit; saves to registry (Reg_Network_SetDword) and syncs |
 | `0x407605` | `NetDlg_SelectMap_Frag` | medium | Detached tail: copies map name, players-required text, Reg "map_index", pushes 0x120 settings blob |
 | `0x407C90` | `NetDlg_OnHScroll` | high | WM_HSCROLL handler (0x114): trackbar 0x407 -> NetDlg_SetSetting(5=game speed) |
-| `0x407D10` | `NetDlg_Ctor` | high | Sets vtable 0x56e598, zeroes dialog state, GetTickCount; called by FUN_004d0ed0 init |
+| `0x407D10` | `NetDlg_Ctor` | high | Sets vtable 0x56e598, zeroes dialog state, GetTickCount; called by Startup_ConnectMultiplayerFromRegistry init |
 | `0x407D8B` | `NetDlg_Ctor_Frag` | medium | Detached ctor tail: zero loop, NetDlg_LoadPlayerNameFromRegistry + NetDlg_ReadMmpMapFiles |
 | `0x407DB0` | `NetDlg_OnCommand` | high | WM_COMMAND big switch: create/join/start/chat buttons, Network_HostSession, CloseSession, EndDialog |
 | `0x408920` | `NetDlg_DialogProc` | high | DLGPROC: WM_INITDIALOG(0x110), WM_COMMAND(0x111), WM_TIMER(0x113), WM_HSCROLL(0x114) |
@@ -285,9 +285,9 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x409680` | `Network_DecodeReceivedMessage` (was `Network_PackMessage`, Seq 27 net pass) | high | Rewrites a received wire message (types 1..9) in place into the 5-byte internal header form; DisplayError "NetworkX.cpp" |
 | `0x409890` | `NetPlayerTable_FreeSlot` (was `Network_FreePlayerSlot`, Seq 27 net pass) | high | _free two buffers of 0x2c player slot, zero it, decrement player count |
 | `0x4099B0` | `Network_SetPlayerAddedHandler` (was `Network_SetEventHandler2`, Seq 27 net pass) | high | Stores callback+ctx in slot 2 (+0x60); event 2 = player added |
-| `0x4099D0` | `Network_AddEnumeratedPlayer` (was `Network_AddPlayerFromEvent`, Seq 27 net pass) | medium | Unused: calls Network_AddPlayerRecord on args, returns success |
+| `0x4099D0` | `Network_AddEnumeratedPlayer` (was `Network_AddPlayerFromEvent`, Seq 27 net pass) | medium | Unused: calls NetPlayerTable_AddPlayer on args, returns success |
 | `0x409A30` | `Network_SetGroupId` | high | this+0x754 is the idGroup of DeletePlayerFromGroup/SetGroupData |
-| `0x409A40` | `NetPlayerTable_Clear` (was `Network_FreeAllPlayerSlots`, Seq 27 net pass) | high | Loops Network_FreePlayerSlot, frees +0x150 buffer, zeroes block |
+| `0x409A40` | `NetPlayerTable_Clear` (was `Network_FreeAllPlayerSlots`, Seq 27 net pass) | high | Loops NetPlayerTable_FreeSlot, frees +0x150 buffer, zeroes block |
 | `0x409A90` | `NetPlayerTable_FindByDpid` (was `Network_FindPlayerIndexByDpid`, Seq 27 net pass) | high | Scans 6 slots stride 0x2c comparing +0x20; returns 0xEEEEEEEE if none |
 | `0x409AC0` | `Network_SetPlayerRemovedHandler` (was `Network_SetEventHandler3`, Seq 27 net pass) | high | Stores callback+ctx in slot 3 (+0x6c) |
 | `0x409AE0` | `Network_SetSessionClosedHandler` (was `Network_SetEventHandler1`, Seq 27 net pass) | high | Stores callback+ctx in slot 1 (+0x54) |
@@ -309,7 +309,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x40A2C0` | `Network_Ctor` | high | Sets vtable 0x56e740, CreateEvent, allocs 0x1800/0x800 buffers, inits tables |
 | `0x40A3A0` | `Network_Dtor` | high | Releases DirectPlay via vtbl 0x24/0x20/0x10, frees lists and buffers, CloseHandle |
 | `0x40A7F0` | `Network_EncodePacket` | medium | Converts internal packet (types 1..4 / subtypes) into wire bytes 1..9; DisplayError NetworkX.cpp 0x8df |
-| `0x40AAA0` | `NetPlayerTable_PromotePlayer` (was `Network_PromotePendingPlayer`, Seq 27 net pass) | medium | Matches pending slot by dpid, Network_AddPlayerRecord, frees slot |
+| `0x40AAA0` | `NetPlayerTable_PromotePlayer` (was `Network_PromotePendingPlayer`, Seq 27 net pass) | medium | Matches pending slot by dpid, NetPlayerTable_AddPlayer, frees slot |
 | `0x40AB90` | `Network_SendStartAndLockSession` | high | Sends start packet, sets session flags |
 | `0x40AC50` | `Network_BroadcastSyncReady` (was `Network_SendSyncPacket`, Seq 27 net pass) | medium | Encodes type-2 packet and Sends broadcast; used by WaitForAllPlayersSync |
 | `0x40ACC0` | `Network_SendFrameDataToPlayer` | medium | Encodes type-3 frame packet with seq, sends to one player; called from game loop |
@@ -372,7 +372,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x4D4B4E` | `ofstream_CtorOpen` | high | ofstream(const char*,mode,prot): ctor plus filebuf::open(mode OR ios::out), sets failbit |
 | `0x4D4C03` | `ofstream_CtorFd` | high | ofstream(int fd): allocs filebuf(fd) |
 | `0x4D4C8C` | `ofstream_CtorFdBuf` | high | ofstream(int fd,char*,int): allocs filebuf(fd,buf,len) |
-| `0x4D4D1B` | `ofstream_DtorVbaseFixup` | unsure | sets ios-relative vptrs only; called from FUN_0044dbf0 dtor path |
+| `0x4D4D1B` | `ofstream_DtorVbaseFixup` | unsure | sets ios-relative vptrs only; called from ofstream_Dtor dtor path |
 | `0x4D4D2E` | `ofstream_Setbuf` | medium | ofstream::setbuf-like: if filebuf fd==-1 call vfn[2]; else set failbit |
 | `0x4D4D97` | `ofstream_Open` | high | ofstream::open(name,mode,prot): filebuf::open(mode OR out) else failbit; caller do_miss_logging |
 | `0x4D4DD2` | `ofstream_Close` | high | calls filebuf::close; clears state or sets failbit |

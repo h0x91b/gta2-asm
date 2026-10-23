@@ -54,7 +54,7 @@ C32_OFFSET(Ped, lifeState, 0x234);
 C32_OFFSET(Ped, pedClass, 0x238);
 C32_OFFSET(Ped, objective, 0x258);
 C32_OFFSET(Ped, state, 0x278);
-C32_OFFSET(PedManager_S25, activeListHead, 0x4);
+C32_OFFSET(PedManager, activeListHead, 0x4);
 C32_OFFSET(Car, next, 0x4C);
 C32_OFFSET(Car, body, 0x50);
 C32_OFFSET(Car, driver, 0x54);
@@ -113,7 +113,7 @@ C32_ASSERT(sizeof(RoadJunction) == 0x10 && sizeof(EmergencyVehicleSlot) == 0x30)
 #define CLASS_MISSION   5               /* PED_CLASS_UNSURE_MISSION */
 
 #define G_GAME          0x5EB4FC        /* Game* */
-#define G_PEDMGR        0x5E5BBC        /* PedManager_S25* */
+#define G_PEDMGR        0x5E5BBC        /* g_PedManager: PedManager* */
 #define G_CARPOOL       0x5E4CA0        /* CarPool* */
 #define G_TRAFFIC       0x5E4CA4        /* TrafficManager*, SpawnCar's ecx */
 #define G_CARSCALE      0x5E4D4C
@@ -299,7 +299,7 @@ static const char *call_ambulance(void)
         return "Ambulances are off";
     int best_live_d = DE_RANGE + 1, best_body_d = DE_RANGE + 1;
     Ped *best_live = 0, *best_body = 0;
-    PedManager_S25 *pm = GLOBAL(PedManager_S25, G_PEDMGR);
+    PedManager *pm = GLOBAL(PedManager, G_PEDMGR);
     int n = DE_MAXPEDS;
     for (Ped *p = pm ? pm->activeListHead : 0; p && n-- > 0; p = p->nextPed) {
         if (p == me || !p->gameObject || p->currentCar || p->group)

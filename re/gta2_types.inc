@@ -76,6 +76,24 @@ CAR_DOOR_STATE.CAR_DOOR_CLOSE_PENDING_2 equ 4
 CAR_DOOR_STATE.CAR_DOOR_CLOSE_PENDING_1 equ 5
 CAR_DOOR_STATE.CAR_DOOR_CLOSED equ 6
 
+; enum /CAR_DRIVE_MANEUVER  (4 bytes)
+CAR_DRIVE_MANEUVER.MANEUVER_TAIL equ 0
+CAR_DRIVE_MANEUVER.MANEUVER_TAIL_B equ 1
+CAR_DRIVE_MANEUVER.MANEUVER_TAIL_OFFSET equ 2
+CAR_DRIVE_MANEUVER.MANEUVER_FLANK_WAIT_A equ 3
+CAR_DRIVE_MANEUVER.MANEUVER_FLANK_WAIT_B equ 4
+CAR_DRIVE_MANEUVER.MANEUVER_FOLLOW equ 5
+CAR_DRIVE_MANEUVER.MANEUVER_ALONGSIDE_A equ 6
+CAR_DRIVE_MANEUVER.MANEUVER_ALONGSIDE_B equ 7
+CAR_DRIVE_MANEUVER.MANEUVER_SIDE_PUSH_A equ 8
+CAR_DRIVE_MANEUVER.MANEUVER_SIDE_PUSH_B equ 9
+CAR_DRIVE_MANEUVER.MANEUVER_OVERTAKE_A equ 10
+CAR_DRIVE_MANEUVER.MANEUVER_OVERTAKE_B equ 11
+CAR_DRIVE_MANEUVER.MANEUVER_CUT_IN equ 12
+CAR_DRIVE_MANEUVER.MANEUVER_BLOCK_SPIN equ 13
+CAR_DRIVE_MANEUVER.MANEUVER_UNUSED_14 equ 14
+CAR_DRIVE_MANEUVER.MANEUVER_STOPPED equ 15
+
 ; enum /CAR_DRIVE_ORDER_MODE  (4 bytes)
 CAR_DRIVE_ORDER_MODE.DRIVE_ORDER_NONE equ 0
 CAR_DRIVE_ORDER_MODE.DRIVE_ORDER_GO_TO_POINT equ 1
@@ -124,8 +142,8 @@ struc CarDriveOrder
     resb 3
     .driver                           resb 4      ; 0x4 Ped *
     .mode                             resb 4      ; 0x8 CAR_DRIVE_ORDER_MODE
-    .unsure_maneuver                  resb 4      ; 0xc int
-    .unsure_driveFlag                 resb 1      ; 0x10 byte
+    .maneuver                         resb 4      ; 0xc CAR_DRIVE_MANEUVER
+    .unsure_ramArmed                  resb 1      ; 0x10 byte
     resb 3
     .targetX                          resb 4      ; 0x14 SCR_f
     .targetY                          resb 4      ; 0x18 SCR_f
@@ -136,12 +154,14 @@ struc CarDriveOrder
     resb 3
     .arrived                          resb 1      ; 0x26 bool
     resb 3
-    .unsure_counter2a                 resb 2      ; 0x2a ushort
-    .unsure_counter2c                 resb 2      ; 0x2c ushort
-    .unsure_counter2e                 resb 2      ; 0x2e ushort
+    .unsure_approachTicks             resb 2      ; 0x2a ushort
+    .unsure_phaseTicks                resb 2      ; 0x2c ushort
+    .unsure_sideTicks                 resb 2      ; 0x2e ushort
     .targetPed                        resb 4      ; 0x30 Ped *
     .retryCooldown                    resb 2      ; 0x34 ushort
-    resb 9
+    resb 6
+    .unsure_blockAttempts             resb 1      ; 0x3c byte
+    resb 2
     .end                              resb 1      ; 0x3f byte
 endstruc
 
@@ -449,7 +469,7 @@ endstruc
 
 ; /FrameTimer  (12 bytes)
 struc FrameTimer
-    .unsure_field0                    resb 4      ; 0x0 int
+    .loadPercent                      resb 4      ; 0x0 int
     .startTime                        resb 4      ; 0x4 DWORD
     .elapsedMs                        resb 4      ; 0x8 DWORD
 endstruc
@@ -673,13 +693,12 @@ struc HudDebugLabel
     .invisibility                     resb 4      ; 0xb8 int
     .alpha                            resb 1      ; 0xbc byte
     .pad1d                            resb 3      ; 0xbd byte[3]
-    .next                             resb 4      ; 0xc0 void *
+    .next                             resb 4      ; 0xc0 HudDebugLabel *
 endstruc
 
 ; /HudDebugLabelPool  (5888 bytes)
 struc HudDebugLabelPool
-    resb 5876
-    .count                            resb 4      ; 0x16f4 int
+    .nodes                            resb 5880   ; 0x0 HudDebugLabel[30]
     .activeHead                       resb 4      ; 0x16f8 HudDebugLabel *
     .freeHead                         resb 4      ; 0x16fc HudDebugLabel *
 endstruc
@@ -838,9 +857,9 @@ OBJECT_KIND.OBJECT_KIND_PICKUP_STATIC equ 6
 OBJECT_KIND.OBJECT_KIND_PICKUP_PHYSICS equ 7
 OBJECT_KIND.OBJECT_KIND_PICKUP_ANIMATED equ 8
 OBJECT_KIND.OBJECT_KIND_PICKUP_PHYSICS_ANIMATED equ 9
-OBJECT_KIND.OBJECT_KIND_UNK_A equ 10
+OBJECT_KIND.OBJECT_KIND_SHOP equ 10
 OBJECT_KIND.OBJECT_KIND_LIGHT equ 11
-OBJECT_KIND.OBJECT_KIND_UNK_C equ 12
+OBJECT_KIND.OBJECT_KIND_SOUND_EMITTER equ 12
 
 ; /ObjectPrefabRow24  (84 bytes)
 struc ObjectPrefabRow24
@@ -1166,13 +1185,83 @@ struc PedListNodePool
     .nodes                            resb 800    ; 0x4 PedListNode[100]
 endstruc
 
+; /PedPathEdgeBest  (5 bytes)
+struc PedPathEdgeBest
+    .gridX                            resb 1      ; 0x0 byte
+    .gridY                            resb 1      ; 0x1 byte
+    .x                                resb 1      ; 0x2 byte
+    .y                                resb 1      ; 0x3 byte
+    .z                                resb 1      ; 0x4 byte
+endstruc
+
+; /PedPathNode  (8 bytes)
+struc PedPathNode
+    .hasSecondLevel                   resb 1      ; 0x0 byte
+    .parentDir                        resb 1      ; 0x1 byte
+    .z                                resb 1      ; 0x2 byte
+    .parentDir2                       resb 1      ; 0x3 byte
+    .z2                               resb 1      ; 0x4 byte
+    .pad5                             resb 1      ; 0x5 byte
+    .stepCount                        resb 2      ; 0x6 short
+endstruc
+
+; /PedPathOpenEntry  (8 bytes)
+struc PedPathOpenEntry
+    .gridX                            resb 1      ; 0x0 byte
+    .gridY                            resb 1      ; 0x1 byte
+    .x                                resb 1      ; 0x2 byte
+    .y                                resb 1      ; 0x3 byte
+    .z                                resb 1      ; 0x4 byte
+    .pad5                             resb 1      ; 0x5 byte
+    .priority                         resb 2      ; 0x6 short
+endstruc
+
 ; /PedPathfinder  (12244 bytes)
 struc PedPathfinder
-    resb 60
-    .requestQueueHead                 resb 4      ; 0x3c void *
-    resb 12176
-    .ready                            resb 1      ; 0x2fd0 byte
+    .requesterPedId                   resb 4      ; 0x0 int
+    .floodMode                        resb 1      ; 0x4 byte
     resb 3
+    .openCursor                       resb 4      ; 0x8 PedPathOpenEntry *
+    .openCount                        resb 2      ; 0xc word
+    .startX                           resb 1      ; 0xe byte
+    .startY                           resb 1      ; 0xf byte
+    .startZ                           resb 1      ; 0x10 byte
+    .goalX                            resb 1      ; 0x11 byte
+    .goalY                            resb 1      ; 0x12 byte
+    .goalZ                            resb 1      ; 0x13 byte
+    .unsure_budgetPending             resb 1      ; 0x14 byte
+    resb 1
+    .floodRing                        resb 2      ; 0x16 short
+    .searching                        resb 1      ; 0x18 byte
+    .unsure_goalReached               resb 1      ; 0x19 byte
+    .unsure_goalReached2              resb 1      ; 0x1a byte
+    .stepDir                          resb 1      ; 0x1b byte
+    .nodeIndex                        resb 2      ; 0x1c word
+    .curStepCount                     resb 2      ; 0x1e short
+    .nbrX                             resb 1      ; 0x20 byte
+    .nbrY                             resb 1      ; 0x21 byte
+    .nbrZ                             resb 1      ; 0x22 byte
+    .nbrGridX                         resb 1      ; 0x23 byte
+    .nbrGridY                         resb 1      ; 0x24 byte
+    .curX                             resb 1      ; 0x25 byte
+    .curY                             resb 1      ; 0x26 byte
+    .curZ                             resb 1      ; 0x27 byte
+    .unsure_windowOriginX             resb 1      ; 0x28 byte
+    .unsure_windowOriginY             resb 1      ; 0x29 byte
+    resb 4
+    .iterBudget                       resb 2      ; 0x2e short
+    resb 4
+    .unsure_init34                    resb 2      ; 0x34 short
+    .unsure_init36                    resb 2      ; 0x36 short
+    .searchInProgress                 resb 1      ; 0x38 byte
+    resb 1
+    .unsure_init3a                    resb 2      ; 0x3a short
+    .requestQueueHead                 resb 4      ; 0x3c PedListNode *
+    .nodes                            resb 8976   ; 0x40 PedPathNode[33][34]
+    .openList                         resb 3200   ; 0x2350 PedPathOpenEntry[400]
+    .ready                            resb 1      ; 0x2fd0 byte
+    .callCount                        resb 1      ; 0x2fd1 byte
+    resb 2
 endstruc
 
 ; /PedPatrolRoutePool  (7550 bytes)
@@ -2512,8 +2601,8 @@ struc Ped
     .lastAttackerWeapon               resb 4      ; 0x290 int
 endstruc
 
-; /_ped/PedManager_S25  (132012 bytes)
-struc PedManager_S25
+; /_ped/PedManager  (132012 bytes)
+struc PedManager
     .freeListHead                     resb 4      ; 0x0 Ped *
     .activeListHead                   resb 4      ; 0x4 Ped *
     .peds                             resb 132000 ; 0x8 Ped[200]
@@ -2821,6 +2910,23 @@ struc SCR_STRING_HEADER
     .textStart                        resb 1      ; 0x9 char
 endstruc
 
+; /_scripts/ScriptThreadTrigger  (12 bytes)
+struc ScriptThreadTrigger
+    .ped_id                           resb 4      ; 0x0 int
+    .entity_id                        resb 4      ; 0x4 int
+    .cmd_idx                          resb 2      ; 0x8 ushort
+    .unused_a                         resb 2      ; 0xa ushort
+endstruc
+
+; /_scripts/WeaponHitWatch  (8 bytes)
+struc WeaponHitWatch
+    .entity_id                        resb 4      ; 0x0 int
+    .weapon                           resb 1      ; 0x4 byte
+    .hit_weapon                       resb 1      ; 0x5 byte
+    .flags                            resb 1      ; 0x6 byte
+    .pad                              resb 1      ; 0x7 byte
+endstruc
+
 ; enum /_weapon/WEAPON_INDEX  (4 bytes)
 WEAPON_INDEX.PISTOL equ 0
 WEAPON_INDEX.SMG equ 1
@@ -2946,17 +3052,17 @@ endstruc
 
 ; /auto_structs/FrameTimingStats  (84 bytes)
 struc FrameTimingStats
-    .updateFrameCount                 resb 4      ; 0x0 undefined4
+    .updateFrameCount                 resb 4      ; 0x0 int
     .updateWindowStart                resb 4      ; 0x4 DWORD
-    .updateFps                        resb 4      ; 0x8 undefined4
-    .drawFrameCount                   resb 4      ; 0xc undefined4
+    .updateFps                        resb 4      ; 0x8 int
+    .drawFrameCount                   resb 4      ; 0xc int
     .drawWindowStart                  resb 4      ; 0x10 DWORD
-    .drawFps                          resb 4      ; 0x14 undefined4
+    .drawFps                          resb 4      ; 0x14 int
     .logicTimer                       resb 12     ; 0x18 FrameTimer
-    .unsure_timer1                    resb 12     ; 0x24 FrameTimer
-    .unsure_timer2                    resb 12     ; 0x30 FrameTimer
-    .unsure_timer3                    resb 12     ; 0x3c FrameTimer
-    .unsure_timer4                    resb 12     ; 0x48 FrameTimer
+    .unusedTimer1                     resb 12     ; 0x24 FrameTimer
+    .unusedTimer2                     resb 12     ; 0x30 FrameTimer
+    .unusedTimer3                     resb 12     ; 0x3c FrameTimer
+    .unusedTimer4                     resb 12     ; 0x48 FrameTimer
 endstruc
 
 ; /auto_structs/GangRespect  (324 bytes)
@@ -3169,70 +3275,60 @@ endstruc
 
 ; /auto_structs/MissionScript  (794280 bytes)
 struc MissionScript
-    .f0                               resb 2      ; 0x0 short
-    resb 2
-    .arr96i                           resb 384    ; 0x4 int[96]
-    .field4_0x184                     resb 2      ; 0x184 short
-    resb 2
-    .arr60i                           resb 240    ; 0x188 int[60]
-    .field8_0x278                     resb 2      ; 0x278 short
-    resb 2
-    .arr30i                           resb 120    ; 0x27c int[30]
-    .shouldBeEqTo1                    resb 4      ; 0x2f4 undefined4
-    resb 24
-    .field37_0x310                    resb 4      ; 0x310 undefined4
-    .field38_0x314                    resb 4      ; 0x314 undefined4
-    .field39_0x318                    resb 4      ; 0x318 undefined4
-    .field40_0x31c                    resb 4      ; 0x31c undefined4
-    .field41_0x320                    resb 4      ; 0x320 undefined4
-    .field42_0x324                    resb 4      ; 0x324 undefined4
-    .field43_0x328                    resb 4      ; 0x328 undefined4
-    .field44_0x32c                    resb 4      ; 0x32c undefined4
-    .field45_0x330                    resb 4      ; 0x330 undefined4
-    .field46_0x334                    resb 4      ; 0x334 undefined4
-    .field47_0x338                    resb 4      ; 0x338 undefined4
-    .field48_0x33c                    resb 4      ; 0x33c undefined4
-    .field49_0x340                    resb 4      ; 0x340 undefined4
-    .missionPtrMaybe                  resb 4      ; 0x344 DWORD *
-    .field51_0x348                    resb 4      ; 0x348 undefined4
-    .field52_0x34c                    resb 4      ; 0x34c undefined4
-    .field53_0x350                    resb 4      ; 0x350 undefined4
-    .field54_0x354                    resb 1      ; 0x354 byte
-    .field55_0x355                    resb 1      ; 0x355 byte
-    .field56_0x356                    resb 2      ; 0x356 undefined2
-    .field57_0x358                    resb 2      ; 0x358 undefined2
-    .field58_0x35a                    resb 2      ; 0x35a undefined2
-    .pathToScriptFile                 resb 256    ; 0x35c char[256]
-    .name                             resb 4      ; 0x45c char[4]
-    .field61_0x460                    resb 4      ; 0x460 undefined4
-    .field62_0x464                    resb 1      ; 0x464 byte
-    resb 3
-    .field66_0x468                    resb 4      ; 0x468 undefined4
-    .base_pointers                    resb 12000  ; 0x46c Uint16[6000]
-    .script                           resb 65536  ; 0x334c Uint8[65536]
-    .ptrToStrings                     resb 4      ; 0x1334c SCR_STRINGS *
-    .pScript4k                        resb 4      ; 0x13350 Script4k *
-    ._20kArray                        resb 8000   ; 0x13354 byte[4][2000]
-    resb 612000
-    .missionScript                    resb 92160  ; 0xaa934 MissionCode[30]
-    resb 3072
-    .unk                              resb 60     ; 0xc1d34 ushort[30]
-    resb 2
-    .base_script_max_pointers         resb 60     ; 0xc1d72 ushort[30]
-    .len2                             resb 2      ; 0xc1dae short
-    .mission_script_size              resb 120    ; 0xc1db0 uint[30]
-    resb 4
-    ._isPlayerAlive                   resb 1      ; 0xc1e2c bool
-    .field615156_0xc1e2d              resb 1      ; 0xc1e2d byte
-    .field615157_0xc1e2e              resb 1      ; 0xc1e2e byte
-    .field615158_0xc1e2f              resb 2      ; 0xc1e2f short
-    .field615159_0xc1e31              resb 1      ; 0xc1e31 byte
-    .arr15i_3                         resb 60     ; 0xc1e32 int[15]
-    .field615161_0xc1e6e              resb 2      ; 0xc1e6e short
-    .field615162_0xc1e70              resb 4      ; 0xc1e70 int
-    .arr12i                           resb 48     ; 0xc1e74 int[12]
-    .field615164_0xc1ea4              resb 2      ; 0xc1ea4 short
-    resb 2
+    .car_trigger_count                resb 2      ; 0x0 short
+    .unused_2                         resb 2      ; 0x2 short
+    .car_triggers                     resb 384    ; 0x4 ScriptThreadTrigger[32]
+    .phone_trigger_count              resb 2      ; 0x184 short
+    .unused_186                       resb 2      ; 0x186 short
+    .phone_triggers                   resb 240    ; 0x188 ScriptThreadTrigger[20]
+    .weapon_hit_watch_count           resb 2      ; 0x278 short
+    .unused_27a                       resb 2      ; 0x27a short
+    .weapon_hit_watches               resb 120    ; 0x27c WeaponHitWatch[15]
+    .preload_sub_scripts              resb 4      ; 0x2f4 int
+    .car_area_scratch                 resb 24     ; 0x2f8 Box3
+    .finish_score                     resb 4      ; 0x310 int
+    .total_missions                   resb 4      ; 0x314 int
+    .total_secrets                    resb 4      ; 0x318 int
+    .gang1_missions_total             resb 4      ; 0x31c int
+    .gang2_missions_total             resb 4      ; 0x320 int
+    .gang3_missions_total             resb 4      ; 0x324 int
+    .missions_passed_flag             resb 4      ; 0x328 int *
+    .gang1_passed_flag                resb 4      ; 0x32c int *
+    .gang2_passed_flag                resb 4      ; 0x330 int *
+    .gang3_passed_flag                resb 4      ; 0x334 int *
+    .secrets_passed_flag              resb 4      ; 0x338 int *
+    .secrets_failed_flag              resb 4      ; 0x33c int *
+    .powerup_car_list                 resb 4      ; 0x340 byte *
+    .mission_flag                     resb 4      ; 0x344 int *
+    .gang1_mission_flag               resb 4      ; 0x348 int *
+    .gang2_mission_flag               resb 4      ; 0x34c int *
+    .gang3_mission_flag               resb 4      ; 0x350 int *
+    .next_gang_slot                   resb 1      ; 0x354 byte
+    .death_arrest_enabled             resb 1      ; 0x355 byte
+    .gang1_death_base_brief           resb 2      ; 0x356 short
+    .gang2_death_base_brief           resb 2      ; 0x358 short
+    .gang3_death_base_brief           resb 2      ; 0x35a short
+    .scr_path                         resb 256    ; 0x35c char[256]
+    .map_name                         resb 9      ; 0x45c char[9]
+    .unused_465                       resb 3      ; 0x465 byte[3]
+    .unused_468                       resb 4      ; 0x468 int
+    .base_pointers                    resb 12000  ; 0x46c ushort[6000]
+    .script                           resb 65536  ; 0x334c byte[65536]
+    .strings_raw                      resb 4      ; 0x1334c SCR_STRINGS *
+    .string_table                     resb 4      ; 0x13350 Script4k *
+    .sub_script_code                  resb 620000 ; 0x13354 byte[31][20000]
+    .sub_script_ptrs                  resb 95232  ; 0xaa934 ushort[31][1536]
+    .sub_script_start_cmd             resb 62     ; 0xc1d34 ushort[31]
+    .sub_script_first_ptr             resb 62     ; 0xc1d72 ushort[31]
+    .sub_script_size                  resb 124    ; 0xc1db0 uint[31]
+    .loaded_from_save                 resb 1      ; 0xc1e2c byte
+    .kill_frenzy_active               resb 1      ; 0xc1e2d byte
+    .death_arrest_executed            resb 1      ; 0xc1e2e byte
+    .saved_gang_respect               resb 3      ; 0xc1e2f byte[3]
+    .gang_phone_cmds                  resb 62     ; 0xc1e32 ushort[31]
+    .recycle_model_wanted             resb 4      ; 0xc1e70 int
+    .basic_kf_cmds                    resb 50     ; 0xc1e74 ushort[25]
+    .unused_c1ea6                     resb 2      ; 0xc1ea6 ushort
 endstruc
 
 ; /auto_structs/MssAudio  (10008 bytes)
@@ -3689,7 +3785,7 @@ struc Sprite
     .layer                            resb 4      ; 0x28 int
     .field16_0x2c                     resb 1      ; 0x2c byte
     resb 3
-    .collisionKind                    resb 4      ; 0x30 int
+    .spriteType                       resb 4      ; 0x30 SPRITE_TYPE
     .paletteKind                      resb 4      ; 0x34 int
     .field22_0x38                     resb 1      ; 0x38 byte
     .cachedZLayer                     resb 1      ; 0x39 byte
@@ -3813,6 +3909,89 @@ struc filebuf
     .x_fOpened                        resb 4      ; 0x34 int
 endstruc
 
+; /gta2_renderer/VidCtx  (1220 bytes)
+struc VidCtx
+    .one                              resb 4      ; 0x0 int
+    .flags                            resb 4      ; 0x4 uint
+    .found_width                      resb 4      ; 0x8 int
+    .found_height                     resb 4      ; 0xc int
+    .found_bpp                        resb 4      ; 0x10 int
+    .next_mode_id                     resb 4      ; 0x14 int
+    .next_device_id                   resb 4      ; 0x18 int
+    .num_modes                        resb 4      ; 0x1c int
+    .num_devices                      resb 4      ; 0x20 int
+    .modes                            resb 4      ; 0x24 VidMode *
+    .modes_tail                       resb 4      ; 0x28 VidMode *
+    .devices                          resb 4      ; 0x2c VidDevice *
+    .devices_tail                     resb 4      ; 0x30 VidDevice *
+    .device_id                        resb 4      ; 0x34 int
+    .unsure_38                        resb 4      ; 0x38 int
+    .find_iter                        resb 4      ; 0x3c VidMode *
+    .mode_id                          resb 4      ; 0x40 int
+    .unsure_44                        resb 4      ; 0x44 int
+    .width                            resb 4      ; 0x48 int
+    .height                           resb 4      ; 0x4c int
+    .surface                          resb 4      ; 0x50 void *
+    .pitch                            resb 4      ; 0x54 int
+    .r_shift                          resb 4      ; 0x58 int
+    .r_bits                           resb 4      ; 0x5c int
+    .g_shift                          resb 4      ; 0x60 int
+    .g_bits                           resb 4      ; 0x64 int
+    .b_shift                          resb 4      ; 0x68 int
+    .b_bits                           resb 4      ; 0x6c int
+    .x_shift                          resb 4      ; 0x70 int
+    .x_bits                           resb 4      ; 0x74 int
+    .hinstance                        resb 4      ; 0x78 HINSTANCE
+    .hmodule                          resb 4      ; 0x7c HINSTANCE
+    .fullscreen                       resb 4      ; 0x80 int
+    .slot_table                       resb 4      ; 0x84 void * * *
+    .hresult                          resb 4      ; 0x88 int
+    .ddraw                            resb 4      ; 0x8c void *
+    resb 144
+    .ddraw4                           resb 4      ; 0x120 void *
+    resb 16
+    .primary                          resb 4      ; 0x134 void *
+    .back                             resb 4      ; 0x138 void *
+    .lock_desc                        resb 124    ; 0x13c byte[124]
+    .clipper                          resb 4      ; 0x1b8 void *
+    resb 12
+    .hal_caps                         resb 380    ; 0x1c8 byte[380]
+    .hel_caps                         resb 380    ; 0x344 byte[380]
+    .hwnd                             resb 4      ; 0x4c0 HWND
+endstruc
+
+; /gta2_renderer/VidDevice  (44 bytes)
+struc VidDevice
+    .id                               resb 4      ; 0x0 int
+    .flags                            resb 4      ; 0x4 uint
+    .description                      resb 4      ; 0x8 char *
+    .name                             resb 4      ; 0xc char *
+    .next                             resb 4      ; 0x10 VidDevice *
+    .guid_ptr                         resb 4      ; 0x14 GUID *
+    .guid                             resb 16     ; 0x18 GUID
+    .vid_mem                          resb 4      ; 0x28 uint
+endstruc
+
+; /gta2_renderer/VidMode  (64 bytes)
+struc VidMode
+    .id                               resb 4      ; 0x0 int
+    .device_id                        resb 4      ; 0x4 int
+    .width                            resb 4      ; 0x8 int
+    .height                           resb 4      ; 0xc int
+    .pitch                            resb 4      ; 0x10 int
+    .bpp                              resb 4      ; 0x14 int
+    .r_shift                          resb 4      ; 0x18 int
+    .r_bits                           resb 4      ; 0x1c int
+    .g_shift                          resb 4      ; 0x20 int
+    .g_bits                           resb 4      ; 0x24 int
+    .b_shift                          resb 4      ; 0x28 int
+    .b_bits                           resb 4      ; 0x2c int
+    .x_shift                          resb 4      ; 0x30 int
+    .x_bits                           resb 4      ; 0x34 int
+    .next                             resb 4      ; 0x38 VidMode *
+    .valid                            resb 4      ; 0x3c int
+endstruc
+
 ; enum /imported/gta2-mouse/CAR_TYPE_COUNTER  (4 bytes)
 CAR_TYPE_COUNTER.COUNTER_RECYCLED_CAR equ 1
 CAR_TYPE_COUNTER.COUNTER_PROT_RECYCLED_CAR equ 2
@@ -3858,16 +4037,6 @@ struc ObjectMotionState
     .packedPushOffsets                resb 1      ; 0x38 byte
     resb 2
     .field_0x3b                       resb 1      ; 0x3b undefined1
-endstruc
-
-; /imported/gta2-mouse/PedManager  (132412 bytes)
-struc PedManager
-    .firstPedInArray                  resb 4      ; 0x0 Ped *
-    .lastPedInArray                   resb 4      ; 0x4 Ped *
-    resb 132400
-    .MaybePedsInUse                   resb 2      ; 0x20538 short
-    resb 1
-    .field_0x2053b                    resb 1      ; 0x2053b undefined1
 endstruc
 
 ; /imported/gta2-mouse/S34  (8 bytes)
@@ -4267,7 +4436,7 @@ struc CarAI
     .haltTimer                        resb 1      ; 0x30 byte
     resb 3
     .unsure_initOnly34                resb 4      ; 0x34 int
-    .routeExitCode                    resb 4      ; 0x38 int
+    .routeUTurnExitDir                resb 4      ; 0x38 int
     .unsure_unstickState              resb 4      ; 0x3c int
     .unsure_laneDir                   resb 4      ; 0x40 int
     .turnExitDir                      resb 4      ; 0x44 int
@@ -4525,6 +4694,10 @@ OBJECT_TYPE.OBJECT_TYPE_ROADBLOCK equ 21
 OBJECT_TYPE.OBJECT_TYPE_BENCH equ 22
 OBJECT_TYPE.OBJECT_TYPE_PACKAGE equ 23
 OBJECT_TYPE.OBJECT_TYPE_TOWER equ 25
+OBJECT_TYPE.OBJECT_TYPE_DESTROY_EXPLODE_SMALL equ 39
+OBJECT_TYPE.OBJECT_TYPE_DESTROY_EXPLODE_GRENADE equ 40
+OBJECT_TYPE.OBJECT_TYPE_DESTROY_EXPLODE_MEDIUM equ 41
+OBJECT_TYPE.OBJECT_TYPE_DESTROY_EXPLODE_LARGE equ 42
 OBJECT_TYPE.OBJECT_TYPE_MOVING_PACKAGE equ 43
 OBJECT_TYPE.OBJECT_TYPE_DEAD_PACKAGE equ 44
 OBJECT_TYPE.OBJECT_TYPE_MOVING_BENCH equ 45
@@ -4592,7 +4765,7 @@ OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_42_LETTER_O equ 106
 OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_43_LETTER_P equ 107
 OBJECT_TYPE.OBJECT_TYPE_MOVING_COLLECT_44_LETTER_Q equ 108
 OBJECT_TYPE.OBJECT_TYPE_SMALL_ARROW equ 109
-OBJECT_TYPE.OBJECT_TYPE_VEHICLE_CONE equ 110
+OBJECT_TYPE.OBJECT_TYPE_PED_FLING_BODY equ 110
 OBJECT_TYPE.OBJECT_TYPE_BLOOD_SPARK equ 111
 OBJECT_TYPE.OBJECT_TYPE_WHITE_DOT equ 112
 OBJECT_TYPE.OBJECT_TYPE_PARTICLE_SYSTEM equ 113
@@ -4608,7 +4781,7 @@ OBJECT_TYPE.OBJECT_TYPE_MOVING_BUSH equ 123
 OBJECT_TYPE.OBJECT_TYPE_BIG_WHITE_SKID equ 124
 OBJECT_TYPE.OBJECT_TYPE_MEDIUM_WHITE_SKID equ 125
 OBJECT_TYPE.OBJECT_TYPE_SMALL_WHITE_SKID equ 126
-OBJECT_TYPE.OBJECT_TYPE_UNSURE_EXPLOSION_FRAGMENT equ 127
+OBJECT_TYPE.OBJECT_TYPE_BLAST_FIRE_CARRIER equ 127
 OBJECT_TYPE.OBJECT_TYPE_ROCKET equ 128
 OBJECT_TYPE.OBJECT_TYPE_BUS_STOP_MARKER equ 129
 OBJECT_TYPE.OBJECT_TYPE_CAR_SHOP equ 130
@@ -4617,39 +4790,40 @@ OBJECT_TYPE.OBJECT_TYPE_CAR_BOMB equ 132
 OBJECT_TYPE.OBJECT_TYPE_CRANE_WIRE equ 134
 OBJECT_TYPE.OBJECT_TYPE_CRANE_BASE equ 135
 OBJECT_TYPE.OBJECT_TYPE_CRANE_HEAD_A equ 136
-OBJECT_TYPE.OBJECT_TYPE_UNK_137 equ 137
+OBJECT_TYPE.OBJECT_TYPE_CRANE_TRIGGER equ 137
 OBJECT_TYPE.OBJECT_TYPE_MOLOTOV_MOVING equ 138
 OBJECT_TYPE.OBJECT_TYPE_CONVEYOR_BELT equ 139
 OBJECT_TYPE.OBJECT_TYPE_CRANE_PART_A equ 140
 OBJECT_TYPE.OBJECT_TYPE_CONVEYOR_BELT_END equ 141
 OBJECT_TYPE.OBJECT_TYPE_CAR_CRUSHER equ 142
-OBJECT_TYPE.OBJECT_TYPE_UNK_143 equ 143
+OBJECT_TYPE.OBJECT_TYPE_CRUSHER_TRIGGER equ 143
 OBJECT_TYPE.OBJECT_TYPE_HUGE_RED_SKID equ 144
 OBJECT_TYPE.OBJECT_TYPE_HUGE_WHITE_SKID equ 145
 OBJECT_TYPE.OBJECT_TYPE_HUGE_BROWN_SKID equ 146
 OBJECT_TYPE.OBJECT_TYPE_HUGE_GREY_SKID equ 147
 OBJECT_TYPE.OBJECT_TYPE_TANKTOP equ 148
 OBJECT_TYPE.OBJECT_TYPE_ANTENNA equ 149
+OBJECT_TYPE.OBJECT_TYPE_CRUSHER_PART equ 150
 OBJECT_TYPE.OBJECT_TYPE_ANIMATING_RUBBISH equ 151
 OBJECT_TYPE.OBJECT_TYPE_DEAD_RUBBISH equ 152
-OBJECT_TYPE.OBJECT_TYPE_FLAMETHROWER_FLAME equ 154
+OBJECT_TYPE.OBJECT_TYPE_BULLET_PROBE equ 154
 OBJECT_TYPE.OBJECT_TYPE_MOVING_CONE equ 155
 OBJECT_TYPE.OBJECT_TYPE_MOVING_BLASTER equ 156
 OBJECT_TYPE.OBJECT_TYPE_MOVING_BIN equ 157
 OBJECT_TYPE.OBJECT_TYPE_MOVING_BIN_LID equ 158
-OBJECT_TYPE.OBJECT_TYPE_UNK_ROCKET equ 159
+OBJECT_TYPE.OBJECT_TYPE_ROCKET_PROBE equ 159
 OBJECT_TYPE.OBJECT_TYPE_SAVE_POINT equ 161
 OBJECT_TYPE.OBJECT_TYPE_PHONE equ 163
 OBJECT_TYPE.OBJECT_TYPE_PHONE_RINGING equ 164
-OBJECT_TYPE.OBJECT_TYPE_UNSURE_LIGHT_OBJECT equ 165
+OBJECT_TYPE.OBJECT_TYPE_LIGHT equ 165
 OBJECT_TYPE.OBJECT_TYPE_DIAGONAL_COLLISION_DUMMY equ 166
-OBJECT_TYPE.OBJECT_TYPE_UNK_167 equ 167
+OBJECT_TYPE.OBJECT_TYPE_DOOR_TRIGGER equ 167
 OBJECT_TYPE.OBJECT_TYPE_UNK_168 equ 168
-OBJECT_TYPE.OBJECT_TYPE_UNK_169 equ 169
+OBJECT_TYPE.OBJECT_TYPE_DOOR_BLOCKER equ 169
 OBJECT_TYPE.OBJECT_TYPE_TRAFFIC_LIGHT_CASING equ 170
-OBJECT_TYPE.OBJECT_TYPE_UNK_171 equ 171
-OBJECT_TYPE.OBJECT_TYPE_UNK_172 equ 172
-OBJECT_TYPE.OBJECT_TYPE_UNK_173 equ 173
+OBJECT_TYPE.OBJECT_TYPE_ROOF_LIGHT_B equ 171
+OBJECT_TYPE.OBJECT_TYPE_ROOF_LIGHT_REAR_A equ 172
+OBJECT_TYPE.OBJECT_TYPE_ROOF_LIGHT_REAR_B equ 173
 OBJECT_TYPE.OBJECT_TYPE_PHONE_DEAD equ 174
 OBJECT_TYPE.OBJECT_TYPE_BRIEFCASE equ 175
 OBJECT_TYPE.OBJECT_TYPE_RED_PHONE equ 176
@@ -4669,12 +4843,12 @@ OBJECT_TYPE.OBJECT_TYPE_YELLOW_PHONE_CALL equ 189
 OBJECT_TYPE.OBJECT_TYPE_GREEN_PHONE_CALL_END equ 190
 OBJECT_TYPE.OBJECT_TYPE_GREEN_PHONE_CALL equ 191
 OBJECT_TYPE.OBJECT_TYPE_SHOT equ 192
-OBJECT_TYPE.OBJECT_TYPE_UNK_193 equ 193
+OBJECT_TYPE.OBJECT_TYPE_SHOT_PROBE equ 193
 OBJECT_TYPE.OBJECT_TYPE_FLAMING_BULLET equ 194
-OBJECT_TYPE.OBJECT_TYPE_UNK_SHOT_195 equ 195
+OBJECT_TYPE.OBJECT_TYPE_FLAME_PROBE equ 195
 OBJECT_TYPE.OBJECT_TYPE_FIRE equ 197
 OBJECT_TYPE.OBJECT_TYPE_WATER_BULLET equ 198
-OBJECT_TYPE.OBJECT_TYPE_UNK_199 equ 199
+OBJECT_TYPE.OBJECT_TYPE_WATER_PROBE equ 199
 OBJECT_TYPE.OBJECT_TYPE_COLLECT_00_PISTOL equ 200
 OBJECT_TYPE.OBJECT_TYPE_COLLECT_01_S_UZI equ 201
 OBJECT_TYPE.OBJECT_TYPE_COLLECT_02_ROCKET_LAUNCHER equ 202
@@ -4740,7 +4914,7 @@ OBJECT_TYPE.OBJECT_TYPE_CRANE_HEAD_B equ 263
 OBJECT_TYPE.OBJECT_TYPE_PISTOL_BULLET equ 265
 OBJECT_TYPE.OBJECT_TYPE_BONUS_TOKEN equ 266
 OBJECT_TYPE.OBJECT_TYPE_TASSER_BULLET equ 277
-OBJECT_TYPE.OBJECT_TYPE_UNK_278 equ 278
+OBJECT_TYPE.OBJECT_TYPE_UNSURE_SOUND_AMBIENT equ 278
 OBJECT_TYPE.OBJECT_TYPE_SOUND_INSTANT equ 279
 OBJECT_TYPE.OBJECT_TYPE_INVISIBLE_TARGET equ 280
 OBJECT_TYPE.OBJECT_TYPE_POWERGEN equ 281
@@ -4782,12 +4956,12 @@ struc ObjectPrefab
     .gridKind                         resb 4      ; 0x40 int
     .impactMode                       resb 4      ; 0x44 int
     .explosiveClass                   resb 4      ; 0x48 int
-    .unsure_solidityVsCar             resb 4      ; 0x4c int
-    .unsure_solidityVsPed             resb 4      ; 0x50 int
-    resb 4
+    .wallResponse                     resb 4      ; 0x4c int
+    .groundResponse                   resb 4      ; 0x50 int
+    .hitFilter                        resb 4      ; 0x54 int
     .usesGravity                      resb 4      ; 0x58 int
     .category                         resb 4      ; 0x5c int
-    .unsure_killOnOverlap             resb 1      ; 0x60 byte
+    .diesOnConveyorEnd                resb 1      ; 0x60 byte
     .onActiveList                     resb 1      ; 0x61 byte
     resb 2
     .ticksPerFrame                    resb 1      ; 0x64 byte
@@ -5102,50 +5276,6 @@ struc SCR_Vector3
     .z                                resb 4      ; 0x8 SCR_f
 endstruc
 
-; /imported/seuko-mod/SDevice  (48 bytes)
-struc SDevice
-    .id                               resb 4      ; 0x0 dword
-    .flags                            resb 4      ; 0x4 dword
-    .name                             resb 4      ; 0x8 char *
-    .desc                             resb 4      ; 0xc char *
-    .next_ptr                         resb 4      ; 0x10 SDevice *
-    .pDeviceGuid                      resb 4      ; 0x14 GUID *
-    .guid                             resb 16     ; 0x18 GUID
-    .dwVidMemTotal                    resb 4      ; 0x28 dword
-    .end_buffer                       resb 4      ; 0x2c dword
-endstruc
-
-; /imported/seuko-mod/SDisplayMode  (64 bytes)
-struc SDisplayMode
-    .display_mode_idx                 resb 4      ; 0x0 undefined4
-    .deviceId                         resb 4      ; 0x4 undefined4
-    .width                            resb 4      ; 0x8 undefined4
-    .height                           resb 4      ; 0xc undefined4
-    .pitch                            resb 4      ; 0x10 undefined4
-    .rgb_bit_count                    resb 4      ; 0x14 undefined4
-    resb 32
-    .pnext                            resb 4      ; 0x38 SDisplayMode *
-    resb 3
-    .field_0x3f                       resb 1      ; 0x3f undefined1
-endstruc
-
-; /imported/seuko-mod/SMission  (768 bytes)
-struc SMission
-    resb 360
-    .ptrToStructRel2Bonus2            resb 4      ; 0x168 SMission *
-    .field_0x16c                      resb 4      ; 0x16c int
-    resb 60
-    .x                                resb 1      ; 0x1ac undefined1
-    resb 3
-    .y                                resb 1      ; 0x1b0 undefined1
-    resb 107
-    .mask                             resb 4      ; 0x21c uint
-    resb 40
-    .field_0x248                      resb 4      ; 0x248 int
-    resb 179
-    .field_0x2ff                      resb 1      ; 0x2ff undefined1
-endstruc
-
 ; enum /imported/seuko-mod/SPRITE_BIT1  (1 bytes)
 SPRITE_BIT1.SPRITE_BIT1_1 equ 1
 SPRITE_BIT1.SPRITE_BIT1_TELEPORT_PENDING equ 32
@@ -5165,53 +5295,7 @@ SPRITE_TYPE.SPRITE_TYPE_CODE_OBJ equ 4
 SPRITE_TYPE.SPRITE_TYPE_MAP_OBJ equ 5
 SPRITE_TYPE.SPRITE_TYPE_USER equ 6
 SPRITE_TYPE.SPRITE_TYPE_FONT equ 7
-
-; /imported/seuko-mod/SVideo  (1220 bytes)
-struc SVideo
-    resb 4
-    .mask1                            resb 4      ; 0x4 uint
-    .found_width                      resb 4      ; 0x8 undefined4
-    .found_height                     resb 4      ; 0xc undefined4
-    .found_rgb_bit_count              resb 4      ; 0x10 undefined4
-    .display_mode_count_2_q           resb 4      ; 0x14 undefined4
-    .num_guids                        resb 4      ; 0x18 undefined4
-    .num_display_modes                resb 4      ; 0x1c undefined4
-    .num_enums                        resb 4      ; 0x20 undefined4
-    .head_ptr                         resb 4      ; 0x24 SDisplayMode *
-    .display_mode_array               resb 4      ; 0x28 SDisplayMode *
-    .device_info_head_ptr             resb 4      ; 0x2c SDevice *
-    .device_info_last                 resb 4      ; 0x30 SDevice *
-    .active_device_id                 resb 4      ; 0x34 dword
-    resb 4
-    .current_enum_ptr                 resb 4      ; 0x3c SDisplayMode *
-    .full_screen                      resb 4      ; 0x40 undefined4
-    resb 4
-    .rect_right                       resb 4      ; 0x48 dword
-    .rect_bottom                      resb 4      ; 0x4c dword
-    .surface_pixels_ptr               resb 4      ; 0x50 void *
-    .surface_pixels_pitch             resb 4      ; 0x54 undefined4
-    resb 8
-    .g                                resb 4      ; 0x60 dword
-    .r                                resb 4      ; 0x64 dword
-    .b                                resb 4      ; 0x68 dword
-    resb 16
-    .self_dll_handle                  resb 4      ; 0x7c HINSTANCE
-    resb 4
-    .Vid_GetVersion                   resb 4      ; 0x84 void *
-    .last_error                       resb 4      ; 0x88 HRESULT
-    .DirectDraw7                      resb 4      ; 0x8c void *
-    resb 144
-    .IDDraw4                          resb 4      ; 0x120 void *
-    .field_0x124                      resb 16     ; 0x124 GUID
-    .SurfacePrimary                   resb 4      ; 0x134 void *
-    .Surface                          resb 4      ; 0x138 void *
-    .DDSurfaceDesc7                   resb 124    ; 0x13c undefined1[124]
-    .clipper                          resb 4      ; 0x1b8 void *
-    resb 12
-    .device_caps                      resb 380    ; 0x1c8 undefined1[380]
-    .hel_caps                         resb 380    ; 0x344 undefined1[380]
-    .hwnd                             resb 4      ; 0x4c0 HWND
-endstruc
+SPRITE_TYPE.SPRITE_TYPE_PARTICLE equ 8
 
 ; enum /imported/seuko-mod/TILE_ENUM1  (4 bytes)
 TILE_ENUM1.TILE_ENUM1_1 equ 1

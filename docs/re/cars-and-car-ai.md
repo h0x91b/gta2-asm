@@ -90,20 +90,45 @@ filled by crime-report / car-description / location builders and drained by
 `Car_Update` → `CarAI_PreUpdate` 0x4327A0 (scratch reset, heading = body rotation, travelDir =
 heading class, halt handling) → `CarAI_Update` 0x432370:
 
-1. `DAT_5E53D8 / 5E5320 / 5E50EC` ← car body x / y / z (scratch globals every helper reads);
+1. `g_CarAI_carX/Y/Z` (0x5E53D8 / 0x5E5320 / 0x5E50EC) ← car body x / y / z (scratch globals every
+   helper reads);
 2. if `car->driveOrder && ai->unsure_unstickState == 0`: **`CarAI_UpdateDriveOrder` 0x42D390 every
-   tick**, `DAT_5E507E = 1`;
+   tick**, sets `g_CarAI_driveOrderActive` 0x5E507E = 1 and `g_CarAI_hasDriveOrder` 0x5E5081;
 3. unstick handling (`offRoadTurn` +0x50: steer ±, reverse), `stuckTicks > 200` → abandoned;
-4. `CarAI_DriveStep` 0x431C10, `CarAI_ReactToNearbyCar`;
-5. drive order with `followRoadActive == 0` → `CarDriveOrder_Drive` 0x42D820 (direct driving);
-6. `routeSlot > 0 && ai->flags & 0x10 && followRoadActive == 1` → **`CarAI_FollowRoute` 0x430320**;
+4. `CarAI_DriveStep` 0x431C10 probes ahead (`g_CarAI_probeX/Y` 0x5E5244 / 0x5E5198);
+   `CarAI_ReactToNearbyCar` 0x42FB80 (flags 0x1000) and `CarAI_HandleCarAhead` 0x431770. All three
+   clear `g_CarAI_driveOrderActive` on a car ahead / obstacle / map collision; when it got cleared
+   (and the order is not FOLLOW_TARGET) `CarAI_Update` also drops `flags & 0x10`;
+5. drive order with `followRoadActive == 0` → `CarDriveOrder_Drive` 0x42D820 (direct driving, §5b);
+6. `routeSlot > 0 && ai->flags & 0x10 && followRoadActive == 1` → **`CarAI_FollowRoute` 0x430320**
+   → `CarAI_ApplyRouteTurn` 0x4300E0;
 7. `CarAI_FollowLane` 0x430CC0 (lane keeping, `CarAI_UpdateJunctionTurn` → `CarAI_TryStartTurn` /
    `CarAI_ReserveJunction`; ambient traffic picks turns at random with `CarAI_PickRandomTurn`).
+   FollowLane sets flags 0x10 when the car's tile has a green or red arrow in `travelDir`.
 
 `ai->flags` (+0x24): 0x02 inside the current junction rect, 0x10 on a lane tile whose arrows match
-travelDir, 0x40 unstick / reverse, 0x80 turn committed, 0x800 straight / U-turn code valid
-(`routeExitCode` +0x38), 0x20000 junction reserved, 0x40000 / 0x80000 steer into the target's lane,
-0x100000 halted, 0x200000 copy of a driver flag.
+travelDir (set by `CarAI_FollowLane`, cleared by `CarAI_Update` / `CarAI_DriveStep`), 0x40 unstick /
+reverse, 0x80 turn committed, 0x800 route U-turn pending (`routeUTurnExitDir` +0x38; never read, see
+§6b), 0x1000 reacting to a nearby car, 0x20000 junction reserved, 0x40000 / 0x80000 steer into the
+target's lane, 0x100000 halted, 0x200000 copy of a driver flag.
+
+**Direction conventions** (verified in Seq H1, 2026-10-23):
+
+- Tile arrow byte = block_info +0xA: bit0 green left (W), bit1 green right (E), bit2 green up (N),
+  bit3 green down (S), bits 4–7 the same in red. `MapBlock_HasArrow(block, layer, dir)` 0x40C6D0:
+  dir 1 N, 2 S, 3 W, 4 E; layer 1 green, 2 red, 3 either.
+- Heading class (`Ang16_ToHeadingClass` 0x472C00): **1 N, 2 S, 3 E, 4 W** (N = −y). Proven by the
+  `CarAI_ApplyRouteTurn` turn table, `MapBlock_HasArrowHeadingClass` 0x40C810 (class 3 → arrow 4 E)
+  and `Rail_StepPosByHeadingClass` 0x4630D0. The older plate of `CarAI_IsExitDirRightTurn`
+  (1 = −x, 2 = +x, 3 = −y, 4 = +y) was wrong and is fixed.
+- Link direction (`RoadJunction_GetLinkDirTo` 0x40D0C0): 1 N, 2 S, 3 W, 4 E. `RoadJunction` link
+  slots +0 N, +2 S, +4 E, +6 W (all 312 wil junctions checked against geometry). Links are directed:
+  87 of 731 on wil are one-way.
+- `RoadSegment.junction1` = west (H segment) / north (V) end, `junction2` = east / south end (366/366
+  H and 365/365 V wil segments). Segment rects include the junction tiles at both ends.
+- Ang16 = 4 units per degree; the CRT static init (0x5009A0…) builds angle constants as `deg × 4`:
+  0x5E5110 4°, 0x5E5120 10°, 0x5E518C 12°, 0x5E5354 32°, 0x5E51A0 45°, 0x5E53D4 90°, 0x5E52A4 180°,
+  0x5E51CC 270°, 0x5E50F8 0. Sprite rotation 0 faces +y (S), 90° E, 180° N, 270° W.
 
 ## 5. Drive orders and route finding
 
@@ -122,7 +147,9 @@ gives the car a `CarDriveOrder` (0x40 bytes, pool of 20): `+8 mode` (1 GO_TO_POI
 - urgent orders never route: when no player camera sees the car, it is teleported onto the target's
   arrow tile (`Car_TryPlaceOnArrowTileAt`), repaired, crew despawned.
 - otherwise: `RoadNetwork_FreeRoute`, find a road block with arrows at the target (x, y, z) or
-  (x, y, z − 1), else `PedPathfinder_FindSpawnTile`; then `CarAI_SetRouteTarget(x, y, blockZ, 3)`,
+  (x, y, z − 1), else `PedPathfinder_FindSpawnTile(kind 1, wide 0)` (call at 0x42D689: fails while
+  the ped pathfinder's `searchInProgress` is stuck at 1, and takes the first of ≤ 7 BFS-popped tiles
+  with any road arrow, whatever its direction; see [ped-ai.md](ped-ai.md) §8); then `CarAI_SetRouteTarget(x, y, blockZ, 3)`,
   `followRoadActive = 1`. **The route is recomputed from scratch every tick**, so `routeStep`
   (+0x56) stays 0 — it is written only by `CarAI_Ctor`, `CarAI_Reinit` and `SetRouteTarget`.
 
@@ -130,16 +157,42 @@ gives the car a `CarDriveOrder` (0x40 bytes, pool of 20): `+8 mode` (1 GO_TO_POI
 target x, y, z, 3)` → `ai->routeSlot`; on success writes the order's target x/y and **target z =
 the original order z (`DAT_5E5218`), not the road block's z**.
 
-**`RoadNetwork_FindRoute` 0x40E030** = `InitSearch` 0x40D690 + `RunSearch` 0x40DFA0 + `StoreRoute`:
-a best-first search over the RGEN junction graph (4 links per junction; closed links and
-incompatible arrow kinds skipped). Start = the junction of the car's segment
-(`RoadNetwork_FindSegmentJunctionAtTile` kind 0, then kind 1 = the one ahead if the car is outside
-the first one's rect); goal = the junction ahead of the target tile; if start == goal the start
-reverts to the first (behind) junction. The route is stored as u16 junction ids in
-`routes[slot*0x100 + i]` (`RoadNetwork+0x2218`), 0-terminated, slots 1..49. A car already on the
-target's segment therefore gets the pair [junction behind, junction ahead] with the target inside
-its bounding box — the "route growing with the junctions behind it" seen in Seq 39 is this per-tick
-re-plan, not a moving goal.
+**`RoadNetwork_FindRoute` 0x40E030** (`short __thiscall (RoadNetwork*, carTileX, Y, Z, targetTileX,
+Y, Z, int arrowLayer)`, via thunk 0x40E0F0) = `InitSearch` 0x40D690 + `RunSearch` 0x40DFA0 +
+`StoreRoute` 0x40CC10: a best-first search over the RGEN junction graph (4 links per junction).
+The route is stored as u16 junction ids in `routes[slot*0x100 + i]` (`RoadNetwork+0x2218`),
+0-terminated, slots 1..49 (`RoadNetwork_FindFreeRouteSlot` 0x40CB90). A car already on the target's
+segment therefore gets the pair [junction behind, junction ahead] with the target inside its bounding
+box — the "route growing with the junctions behind it" seen in Seq 39 is this per-tick re-plan, not a
+moving goal.
+
+- **Start and goal come from tile arrows only** (`RoadNetwork_InitSearch`). The car's heading is
+  not an input. `RoadNetwork_FindSegmentJunctionAtTile` picks the V segment table if the tile has an
+  up or down arrow, else H if it has left / right, else none. Kind 1 = the segment end *ahead* in the
+  tile's arrow direction (V: up arrow → junction1 / N, else junction2 / S; H: left arrow → junction1 /
+  W, else junction2 / E), kind 0 = the end behind. Start = kind 0; if the car is outside that
+  junction's rect, kind 1 (the normal case on a segment: the junction ahead). Goal = kind 1 of the
+  target tile. If goal == start, the start reverts to the kind-0 result.
+- **Cost** (`RoadNetwork_NewSearchNode` 0x40C9D0, from the disassembly): `parent.cost + linkLength +
+  h(node)`, h = |ΔminX| + |ΔminY| to the goal junction. The parent cost already contains the parent's
+  h, so heuristics **accumulate**: this is neither A* nor a shortest path. The start node
+  (`RoadNetwork_NewStartNode` 0x40CA70) costs h.
+- **Open list** sorted ascending (`RoadNetwork_InsertOpenSorted` 0x40CB00). A junction is marked
+  visited when it is inserted, so the first path to reach it wins. `RoadNetwork_NextOpenNode`
+  0x40CBF0 = first unclosed node. `RoadNetwork_ExpandNode` 0x40DB70 tries links N, S, W, E and
+  returns as soon as the goal is **pushed** (accepted on discovery). Closed links (bit 15 clear =
+  SWITCH_ROAD) and junctions of the wrong kind (`RoadJunction_MatchesKind` 0x40C5D0: arrowKind 1
+  green, 2 red, 3 both; wil has 262 / 31 / 18) are skipped.
+
+**Following the route.** Because `routeStep` stays 0, only `routes[0]` (the junction ahead) and
+`routes[1]` matter. `CarAI_ApplyRouteTurn` 0x4300E0 maps (heading class, link dir) to Car TurnLeft /
+TurnRight / nothing (straight) and asks for a lane change toward the turn side (`Car_CountLaneTiles`,
+Car route bits 2/3). When the best path leaves the start junction backwards it only writes
+`routeUTurnExitDir` (+0x38) and flags 0x800 (§6b, B1). `CarAI_UpdateJunctionTurn` 0x430650 probes
+0.5 ahead; on a junction surface it reads the turn bits, and `CarAI_TryStartTurn` 0x42ADA0 starts
+the turn only if the next block carries the exit arrow (green; red too with a drive order) and the
+car is still more than 45° away from the exit heading → `turnExitDir`, flags 0x80, `turnTimer`
+0x14. No turn bits and a block with a single perpendicular arrow = forced turn (bends, T ends).
 
 **Arrival.** `driveOrder->arrived` has one writer, `CarAI_FollowRoute` 0x430320 (stores at
 0x4304DE, 0x43053C, 0x430626). It arrives when
@@ -153,6 +206,37 @@ re-plan, not a moving goal.
   `ai->flags` 0x40000 / 0x80000 to steer into the target's lane.
 
 On arrival: `CarPhysics_SteerPlus`, `followRoadActive = 0`, `Car_HaltAIIfHasAI`, `arrived = 1`.
+
+### 5b. `CarDriveOrder_Drive` 0x42D820: direct driving and close pursuit
+
+Typed `void __fastcall CarDriveOrder_Drive(CarAI *ai)` (the caller passes ESI = ai in ECX; the old
+signature had no parameter, so the decompile showed a Car with door fields). It is the
+**close-range pursuit state machine** used whenever `followRoadActive == 0`. GO_TO_POINT only ever
+uses maneuver 0 (aim straight at the point). The state is `CarDriveOrder.maneuver` (+0xC), enum
+`CAR_DRIVE_MANEUVER`. T = the target ped's car (`g_CarAI_targetCar` 0x5E5084), R = its rotation;
+side A = R − 90°, side B = R + 90° (which one is left is not verified).
+
+| # | `MANEUVER_` | aim point (pass 1) | exit (pass 2, distance to the aim point) |
+|---|---|---|---|
+| 0 | TAIL | 3.0 behind T (no car: the order point) | after 10 near ticks → 5 (bumps an ally already in 5 to 3) |
+| 1 | TAIL_B | 3.0 behind T | no pass-2 case; no writer of 1 found in Drive (who sets it: unknown) |
+| 2 | TAIL_OFFSET | 3.0 behind + 0.5 to side B | as 0 |
+| 3 / 4 | FLANK_WAIT_A/B | 1.0 to side A/B + 0.5 ahead | after 10 ticks, side spot free → 6 / 7 |
+| 5 | FOLLOW | cops vs ≤ 1 star: 1.0 behind; else T | waits `unsure_phaseTicks` (400/0 by cop level, 80, 10; FOLLOW_TARGET 100), then free side → 6 / 7 |
+| 6 / 7 | ALONGSIDE_A/B | 0.75 to side A/B, honks (`CarAI_HonkIfAllowed` 0x42A5B0) | < 0.625 → 8 / 9 |
+| 8 / 9 | SIDE_PUSH_A/B | alongside for `unsure_sideTicks`, then `unsure_ramArmed` = 1 and aim 1.0 ahead of T (ram) | gives up the ram when `unsure_blockAttempts` > 3 → 10 / 11 |
+| 10 / 11 | OVERTAKE_A/B | 0.75 to the side + 1.5 ahead | < 0.25 → 12 |
+| 12 | CUT_IN | 3.0 ahead of T | < 1.5 → `blockAttempts`++, 13 |
+| 13 | BLOCK_SPIN | 3.0 ahead, steers back toward the order point, handbrake when \|heading − R\| ≤ 12° | target speed < 0.03 → 15 |
+| 14 | UNUSED_14 | — | — |
+| 15 | STOPPED | `Car_HaltAI`, flags 0x100000 | — |
+
+Far away (≥ 2.0) or unsticking: `unsure_approachTicks` counts down, then the chase modes reset to 2
+or 0 depending on allies already in 0 / 5 (`CarDriveOrderPool_FindAlliedDriverByManeuverTargetingPed`
+0x446340, `CarDriveOrderPool_CountAlliedDriversTargetingPed` 0x4463C0). While `ramArmed` is set,
+`CarAI_ReactToNearbyCar` gives T 500 damage on contact (`Car_AddDamage`). Steering: ATan2 to the aim
+point, straight within ±8°, small random corrections (`Random_S16(4)`), sign flipped when reversing
+(flags 0x40). Speed: match T (`Car_GetPhysicsSpeed`) with gas / coast / FullStop.
 
 ## 6. Why dispatched services drive past their target (Seq 43 bug hunt)
 
@@ -196,22 +280,118 @@ duration of the call and restores it afterwards (`CarAI_UpdateDriveOrder` must k
 sprite z). Every other car runs the vanilla path. With it the MEDICAR stops at the body and the crew
 revives it; the fire truck reaches the wreck, hoses (slot states 3 → 4 → 5) and leaves.
 
+## 6b. Why `gta2ctl drive_to` takes a wrong turn (seq:58, Seq H1)
+
+Seq 58 saw `drive_to` cars turn the wrong way at the first junction. The hypothesis was "the
+start junction is chosen by the tile's arrow, not the car's heading". Checked in code and with an
+offline simulation of the game's exact search over the real wil.gmp RGEN and DMAP arrows (no live
+run). Three causes are possible:
+
+1. **B1: route U-turns are never executed (most likely).** When the best path leaves the start
+   junction back the way the car came, `CarAI_ApplyRouteTurn` 0x4300E0 only writes
+   `routeUTurnExitDir` (+0x38, at 0x430204 / 0x430249 / 0x43027C / 0x4302B9) and sets flags 0x800.
+   Nothing in `.text` reads +0x38 or tests bit 0x800 of `CarAI.flags` (every `test` of 0x800 /
+   `ah,8` checked; the other 12 hits are Ped +0x21C). No turn bit is set, so the car drives
+   **straight through** the junction, away from the target, and the per-tick re-plan retries from
+   the next junction. Simulation, 4000 random wil trips: **23 % of routes start with a U-turn**;
+   treating "U-turn" as "straight", every trip still arrives, median detour 1.0×, p90 1.36×, worst
+   21× the planned hop count. A target behind the car = "went the wrong way at the first junction,
+   then came back".
+2. **B6: start junction ignores the heading (confirmed, but rarely the cause).** Start and goal come
+   from tile arrows only (§5). Over every wil lane tile, with the car heading along its own tile's
+   arrow, the start is the junction ahead on 13435 of 13437 single-arrow tiles (exceptions at
+   (218..219, 167)), and the car's own junction when it is inside one. It only bites when the car
+   **faces against its tile's arrows** (other lane of a two-way road, parked backwards, reversing):
+   the route is planned from the junction behind the car, and `ApplyRouteTurn` applies that
+   junction's turn, relative to the car's heading, at the junction actually ahead: a mirrored turn.
+3. **B2: random turn when blocked.** `CarAI_UpdateJunctionTurn` 0x430650 calls
+   `CarAI_PickRandomTurn` when `g_CarAI_driveOrderActive` is false at a junction entry. The flag is
+   set by `UpdateDriveOrder` every tick and cleared in the same tick by `ReactToNearbyCar`,
+   `HandleCarAhead` and `DriveStep` (car ahead / obstacle in the probe); `CarAI_Update` then also drops
+   flags 0x10, so FollowRoute is skipped. A routed car queued behind another car at a junction where
+   its route goes **straight** (turn bits clear) gets a random left / right that `TryStartTurn`
+   commits. With a route turn pending the bits stay from the previous tick, so only "straight" hops
+   are hit.
+
+Which one caused the seq:58 run is **unknown** (no log of heading vs arrow, target bearing or a car
+ahead). Likelihood from the code: B1, then B6, then B2.
+
+**Deterministic test** with `drive_to --debug`: (a) a target straight behind the car in its own lane
+on an empty road — expect straight on and a loop around; (b) the same target, car turned 180° in the
+opposite lane — expect a mirrored turn; (c) a target ahead past a junction with a parked car in the
+lane — expect an occasional random turn. The debug line should print `routes[0..1]`, the link dir and
+`ai->flags & 0x800`.
+
+**Workaround options** (host side, none done):
+
+- (a) when flags 0x800 is set, feed `routeUTurnExitDir` as a turn (two same-side turns, or a hook that
+  sets TurnLeft twice);
+- (b) mark the junction behind as visited before the search (a hook in `RoadNetwork_InitSearch` that
+  sets `visited[kind-0 junction] = 1`): no U-turn routes at all. **The smallest change.**
+- (c) give the drive_to car a heading-based start junction (hook `FindSegmentJunctionAtTile` for that
+  car).
+
+The developers had a native precedent: `SomeSwitch` 0x41D0B0 is their debug key handler. Key 6 runs
+two `RoadNetwork_FindRoute` tests; key 7 makes the player's car auto-drive to (3, 3, 1)
+(`Car_InitAIWithRouteTarget` + `Car_StartDriving`) and logs its junction list ("Junc: %d"); 8 level
+exit, 9 save, 10 fire engine, 11 quit.
+
+### Route and car-AI bugs (Seq H1)
+
+| # | VA | what | trigger | severity | confidence |
+|---|---|---|---|---|---|
+| B1 | 0x4300E0 (+0x38, 0x800) | route U-turn written, never executed | best path leaves the start junction backwards (23 % of random wil trips) | medium (detours, "drives away first") | high (static: no reader anywhere) |
+| B2 | 0x430650 + 0x42FB80 / 0x431770 / 0x431C10 | routed car gets a random turn when blocked at a junction where the route goes straight | car ahead / obstacle at the junction entry | medium | high (code); frequency unmeasured |
+| B3 | 0x40C9D0 | accumulating heuristic + goal-on-push + first-path-wins → routes are not shortest | always | low (quality) | high |
+| B4 | 0x446340 | `FindAlliedDriverByManeuverTargetingPed` tests the alliance of each driver **with the target ped** (`Ped_AreAllied(targetPed, driver)`), not with the caller, so for cops chasing the player the "ally in maneuver 0/5" branches of 0x42D820 probably never match | police pursuit | low | medium (depends on `Ped_AreAllied` 0x4462F0: both cops, or same Ped+0x17C) |
+| B5 | 0x40C9D0 | node pool index has no bound check against 0x884 nodes | cannot overflow: ≤ 545 junctions, each pushed once | none | high |
+| B6 | 0x40D690 | start junction ignores the heading | car facing against its tile's arrows | medium for drive_to / mission cars placed backwards | high |
+| B7 | 0x40D510 | arrow tiles outside every RGEN segment give no start → no route (route slot −1, the car only lane-follows) | 1321 arrow tiles on wil | low | high (simulation) |
+
+`Ped_AreAllied` 0x4462F0 is `__stdcall`, but every caller also sets ECX = pool (harmless).
+
+**Measured fix (seq:58, 2026-10-23).** Option (b) applied for the `drive_to` car only: a call hook
+at 0x42AD41 runs `InitSearch`, sets `visited` of the kind-0 junction behind the car's heading (kept
+while the car is inside a junction), then `RunSearch` and `StoreRoute`; the original path is the
+fallback. Over the same 4 legs: 11190 → 6807 frames, samples with U-turn flag 0x800 541 → 6. The
+remaining missed turns were not routing: with the player car's handling the AI turn was too wide,
+fixed by nudging the heading toward `turnExitDir` while `CarAI.flags & 0x80` (turn in progress).
+
 ## 7. Structures (DB state after Seq 43)
 
 - `CarAI` (0x78): `+0 parentCar`, `+8 turnTimer`, `+9/+A turnTileX/Y`, `+0xC nextFree`, `+0x10 heading`,
   `+0x14/18/1C` speed cur / goal / step, `+0x24 flags` (§4), `+0x28 routeSlot` (s8, −1 none),
-  `+0x2A stillTicks`, `+0x2C avoidTimer`, `+0x38 routeExitCode` (new), `+0x3C unsure_unstickState`,
+  `+0x2A stillTicks`, `+0x2C avoidTimer`, `+0x38 routeUTurnExitDir` (was `routeExitCode`; written
+  only by `CarAI_ApplyRouteTurn`, ctor and reinit, never read), `+0x3C unsure_unstickState`,
   `+0x44 turnExitDir`, `+0x4C travelDir`, `+0x50 offRoadTurn`, `+0x54 laneFollowCooldown`,
   `+0x56 routeStep` (always 0, §5), `+0x74 targetSpeed`.
-- `CarDriveOrder` (0x40): see §5; new in Seq 43: `+0x10 unsure_driveFlag`, `+0x2A/2C/2E
-  unsure_counter*`, `+0x34 retryCooldown`.
+- `CarDriveOrder` (0x40): see §5; `+0xC maneuver` (`CAR_DRIVE_MANEUVER`, was `unsure_maneuver`),
+  `+0x10 unsure_ramArmed` (was `unsure_driveFlag`), `+0x2A unsure_approachTicks`, `+0x2C
+  unsure_phaseTicks`, `+0x2E unsure_sideTicks` (were `unsure_counter2a/2c/2e`), `+0x34 retryCooldown`,
+  `+0x3C unsure_blockAttempts` (new), all from §5b.
+- `RoadSegment` (8): `+0 junction1` (W / N end), `+2 junction2` (E / S end). `RoadJunction`: link
+  slots +0 N, +2 S, +4 E, +6 W; `+8 arrowKind` 1 green / 2 red / 3 both. RGEN tail: `junctionCount`
+  (312 on wil, +4), then `hSegCount` (+0xCC62, 366) and `vSegCount` (+0xCC64, 365); the two 545 × 8
+  arrays are the H and V `RoadSegment` tables (see [loader-map.md](../formats/loader-map.md)).
 - `CarManager` (0x6C): §3. `CarDoor`: §3. `SoundManager` layout: §2 (filled in the DB 2026-10-22, ~55 fields + `radioSlots[5]` `RadioStationSlot` @0x5468; the existing `S5` slot type is the 0xC slot record, `SoundClient` is 16 bytes — the 0x30
   layout currently in the DB is the weapon's).
 
 ## 8. Open questions
 
-- Who sets `ai->flags & 0x10` (not `CarAI_Update`; probably `CarAI_FollowLane`).
-- `CarDriveOrder_Drive` maneuver numbers 1..0xF in detail; `DAT_5E5084` for GO_TO_POINT.
+- Answered in Seq H1: flags 0x10 is set by `CarAI_FollowLane` (tile arrow in travelDir) and
+  cleared by `CarAI_Update` / `CarAI_DriveStep`; the maneuver table is §5b; 0x5E5084 is
+  `g_CarAI_targetCar`.
+- Which of B1 / B6 / B2 caused the seq:58 wrong turn (test recipe in §6b).
+- Side A / B = left / right of the target car (needs the `Ang16_PolarToXY` convention vs sprite
+  rotation; the angle table suggests R + 90° = the car's left, unverified).
+- Who sets `CarDriveOrder.mode` 3 and 5 (`DRIVE_ORDER_UNSURE_ATTACK_B`); only writers of 1, 2, 4 were
+  found (`Ped_Obj1_GoToAreaInCar`, the FollowCarInCar / Unk10 objectives, `Ped_Obj1_DriveAttackTarget`).
+  Who sets maneuver 1.
+- `CarAI_ReserveJunction` 0x42B350, `CarAI_TryLaneChange` 0x42C8B0, `CarAI_SteerByArrowAheadOffLane`
+  0x42B8A0, `CarAI_UpdateLaneChangeAlign` 0x42C030: names from Seq 43, not re-read in H1.
+- Still without a good name: 0x5E507D (set when Drive / FollowLane is on heading, then flags
+  0x2000), 0x420350 (horn start; no function defined there; the horn gate is `Car_IsPoliceModel`
+  0x41F6E0), `SomeSwitch` 0x41D0B0 (the debug key handler, §6b).
 - Sound source kinds 8 / 9, car info indices 0x36 / 0x3C, sample bank ids → cue names.
 - Camera `+0x30` (shake amplitude vs `CAMERA_MOVEMENT` bitmask) and the `+0x60/+0x64` split: medium
   confidence, struct left unchanged.
@@ -240,7 +420,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x4105C0 | Sound_SetSFXVolume | V | clamp 0x7f -> SFXVolume |
 | 0x410630 | Sound_GetCDVolume | V | returns CDVol |
 | 0x410640 | MssAudio_ReleaseDevice_Thunk | V | _AIL_digital_handle_release_4; WndProc only |
-| 0x410650 | SoundMgr_ReacquireDevice_Thunk | V | FUN_00416d60(g_SoundManager) = reacquire; WndProc |
+| 0x410650 | SoundMgr_ReacquireDevice_Thunk | V | SoundMgr_ReacquireAudioDevice(g_SoundManager) = reacquire; WndProc |
 | 0x410660 | unsure_Audio_GetCdDriveLetter | H | byte global read by intro-movie funcs |
 | 0x410690 | SoundClientPool_Dtor | V | *p=0 (only a thunk caller) |
 | 0x4106A0 | SoundClientPool_InitFreeList | V | 1000 nodes x16, link +0xc |
@@ -317,7 +497,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 
 | address | name | V/H | evidence |
 |---|---|---|---|
-| 0x414E50 | SoundMgr_UpdateOnScreenCounterSource | V | called from UpdateSource for kind 0xB; sample 0x39, vol by value of FUN_00411A40 (thresholds 0x97/0x12D) |
+| 0x414E50 | SoundMgr_UpdateOnScreenCounterSource | V | called from UpdateSource for kind 0xB; sample 0x39, vol by value of HudPagerEntry_GetTimerTicks (thresholds 0x97/0x12D) |
 | 0x414F80 | Car_IsSirenActive | V | IsCarHasEmergencyLights && lightsBitstate SIREN_ON |
 | 0x414FA0 | SoundMgr_ResolveRequestParams | V | switch on request category (+0x58): picks sample, freq, radius, loop, bank fields B0/B8/BC |
 | 0x4150E0 | SoundMgr_PickEventSample | V | event id (+0x18) + category 1/3/7/9 -> sample id (SoundManager+0x44), pitch (SoundManager+0x50) from random SoundManager+0x1454/58 |
@@ -327,7 +507,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x415880 | SoundMgr_UpdateCarHorn | V | Car_IsHonking; request type 8, cat 5; skips fire truck/tank/siren cases |
 | 0x415A90 | SoundMgr_UpdateCarSiren | V | Car_IsSirenActive + engine on; type 7, cat 4, vol 0x46 |
 | 0x415BE0 | SoundMgr_ResolveEventCategory1 | V | PickEventSample(..,1) |
-| 0x415BF0 | SoundMgr_ResolveEventCategory3 | V | ids 200..244 / 0x40..0x6C -> FUN_00410800, else (..,3) |
+| 0x415BF0 | SoundMgr_ResolveEventCategory3 | V | ids 200..244 / 0x40..0x6C -> Sound_PlayStreamTrackByCode, else (..,3) |
 | 0x415C30 | SoundMgr_ResolveEventCategory7 | V | same ranges, (..,7) |
 | 0x415C70 | SoundMgr_UpdateCarSource_Model3C | V | dispatcher branch for car info idx 0x3C |
 | 0x415CC0 | SoundMgr_UpdateCarSource_Model36 | V | branch for idx 0x36 |
@@ -371,7 +551,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x4181C0 | SoundObj_GetAmbientType | V | byte +0x26 |
 | 0x4181D0 | SoundObj_IsAmbientEmitter | V | *(info+8)+0x34 == 0xC |
 | 0x4181E0 | SoundMgr_UpdateAmbientObjectSource | V | 8 KB switch types 3..0x33; per-type cooldowns DAT_005E24xx |
-| 0x41A3C0 | SoundMgr_UpdateObjectSourceByType | V | switch on FUN_0040FEF0(obj) (5,0x71,0x80,0x8B,0xA4..,0xB9..,0xC5) |
+| 0x41A3C0 | SoundMgr_UpdateObjectSourceByType | V | switch on Object_GetModel(obj) (5,0x71,0x80,0x8B,0xA4..,0xB9..,0xC5) |
 | 0x41B030 | SoundMgr_UpdateObjectSource | V | picks 4181E0 or 41A3C0 |
 | 0x41B060 | SoundMgr_TickPedSpeechCooldown | V | DAT_005E2B98 6->0 |
 | 0x41B090 | PedGameObject_GetState2 | H | returns +0xC; sole caller UpdatePedSource |
@@ -389,7 +569,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x41C240 | PoliceRadio_QueueLocationPhrases | V | compass 0x73..0x77 + district 0x79+n |
 | 0x41C350 | PoliceRadio_QueueCarDescription | V | colour (sprite id) + model class; caller PoliceRadio_Update |
 | 0x41C5A0 | PoliceRadio_QueueCrimeReport | V | caller PoliceRadio_Update |
-| 0x41CC70 | Weapon_GetField04 | V | int at +4, must be 0 in UpdateWeaponSource; also used by unsure_Ped_FollowTarget |
+| 0x41CC70 | Weapon_GetField04 | V | int at +4, must be 0 in UpdateWeaponSource; also used by Ped_Obj2_ApproachAndAttackTarget |
 | 0x41CC80 | Weapon_ConsumeFiredFlag | V | read +0x2C then zero |
 | 0x41CC90 | Weapon_GetWeaponType | V | +0x1C |
 | 0x41CCA0 | SoundMgr_UpdateWeaponSource | V | kind 7; sample 0x137..0x13F by weapon type |
@@ -438,7 +618,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x41F8A0 | Car_OpenAllDoors | V | loop CarDoor_RequestOpen |
 | 0x41F8F0 | Car_CloseAllDoors | V | loop CarDoor_RequestClose |
 | 0x41F9B0 | DamageFire_GetEffectTypeForStage | V | 1->0xc,2->0xd,3->0xe; Car_SpawnDamageFireEffect |
-| 0x41FA60 | Car_IsInCrusherList | V | wrapper of FUN_0044a3a0 (crusher array, count +0x90, stride 0x30, car at +0x14) |
+| 0x41FA60 | Car_IsInCrusherList | V | wrapper of CrusherManager_ContainsCar (crusher array, count +0x90, stride 0x30, car at +0x14) |
 | 0x41FAB0 | Car_GetTrailerCabOrSelf | V | Car+0x64 ? (*+0x64)+8 : this |
 | 0x41FAC0 | Car_GetCornerAngle | V | atan2(h/2,w/2) of CarInfo |
 | 0x41FBD0 | Car_AttachGangDecal | V | ObjectSpawner_SpawnObject(KILL_FRENZY+p), attach to sprite(0x50) |
@@ -457,7 +637,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x420590 | Fix16Holder_Load | V | *out = *this; callers 420720/420740/Ped_React... |
 | 0x420660 | Sprite_SetZ | V | +0x1c + Sprite_MarkBoundsDirty |
 | 0x4206E0 | Sprite_SetField22 | V | short +0x22 |
-| 0x4206F0 | Sprite_SetCollisionKind | V | +0x30 + SetDefaultField28ByKind |
+| 0x4206F0 | Sprite_SetSpriteType (was Sprite_SetCollisionKind) | V | +0x30 spriteType + Sprite_SetDefaultLayerByKind |
 | 0x420710 | Sprite_SetOwner | V | CarManager_SpawnCar: FUN(car2->body, car2) writes body+8 = car |
 | 0x420720 | Sprite_GetFrameWidth | H | Fix16Holder_Load(*(this+4)); Car_IsSpriteZDifferent |
 | 0x420740 | Sprite_GetBodyWidth | H | Fix16Holder_Load(*(this+0xc)); CrusherSlot_Update, Car_IsSpriteZDifferent |
@@ -468,15 +648,15 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x420D80 | CarDeltas_Ctor | V | Car_Ctor: FUN(&car->deltasBitstate) |
 | 0x420D90 | CarDeltas_Reset | V | Car_Reset, Car_BecomeWreck on &deltasBitstate |
 | 0x420DA0 | TrafficSpawner_ScalarDeletingDtor | V | TrafficSpawner_Dtor + free; CarManager_FreePools |
-| 0x420E00 | Sprite_ScalarDeletingDtor | V | thunk_FUN_004bbd10 + free; CarManager_FreePools |
+| 0x420E00 | Sprite_ScalarDeletingDtor | V | thunk_Sprite_ReleaseSoundClient + free; CarManager_FreePools |
 | 0x420E40 | CarAIPool_ClearLast | V | *this=0 from CarAIPool_ScalarDeletingDtor |
 | 0x420E60 | TrailerControllerPool_ClearHead | V | *this=0 from TrailerControllerPool_ScalarDeletingDtor |
 | 0x420EA0 | PedQueue_IsEmpty | V | *p==0; Car_IsTaxiAvailableForHire, AmbulanceSlot_Update, Ped_UpdateTaxiPassenger |
 | 0x420FF0 | WorldObject_GetOwnerSlot | V | byte +0x26, passed to OwnerSlotTable_GetPedId; Object type 0x84 (projectile) |
 | 0x421020 | WorldObject_GetShopId | V | byte +0x26 of object type 0x82; only Car_OnEnterShop |
-| 0x421030 | SpritePool_Free | V | unlink (FUN_004bdc40) + push, +0xc = next |
+| 0x421030 | SpritePool_Free | V | unlink (Sprite_DtorBody) + push, +0xc = next |
 | 0x421050 | WorldObject_GetParamByte26 | V | byte +0x26; bonusTokenAllowed[], DoorManager_ShouldDoorBlock, surface code |
-| 0x421080 | unsure_WorldObject_KindHasOwnerSlot | H | (*(this+8))+0x34 not in {1,6,7,8,9,10,12} |
+| 0x421080 | WorldObject_KindHasOwnerSlot (was unsure_WorldObject_KindHasOwnerSlot) | H | (*(this+8))+0x34 not in {1,6,7,8,9,10,12} |
 | 0x4210B0 | WorldObject_IsPrefabGridKind3 | V | (*(this+8))+0x40 == 3; Sprite_ShouldCollideWithSprite |
 | 0x4210C0 | CarAI_ClearParentCar | V | *p=0; CarAIPool_Free |
 | 0x421150 | CarPhysics_GetLinearVelocity | V | Vec2 at +0x40 |
@@ -505,7 +685,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x4217C0 | Car_IsApc | V | ==3 |
 | 0x4217D0 | Car_IsGt24640 | V | ==19 |
 | 0x4217E0 | Car_IsTvVan | V | ==67 |
-| 0x421810 | Car_SetRoofDecalDelta | H | CarDeltas_SetBit(0xf), from SpawnCar |
+| 0x421810 | Car_SetRoofDecalDelta | H | CarDeltas_SetBit(0xf), from CarManager_SpawnCar |
 | 0x421870 | Car_GetDriverPlayer | V | driver+0x15c |
 | 0x421950 | Car_SetShopReaction | V | Car+0xb4 |
 | 0x4219A0 | Player_IsWeaponAmmoFull | V | this+0x718+idx*4 -> Weapon_IsAmmoFull |
@@ -574,8 +754,8 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x429FC0 | Car_UpdateSystemsAndWreckTimer | V |  |
 | 0x429FF0 | Car_FollowParentSpritePose | V |  |
 | 0x42A500 | CarManager_ResetJunctionReserveCooldown | V | DAT_5e5090=0 (ReserveJunction counter) |
-| 0x42A5B0 | Car_StartHonkIfAllowed | V | if Car_IsPoliceModel(0x41F6E0): Car.hornState(+0xa7)=0x2d |
-| 0x42A5D0 | CarAI_IsExitDirRightTurn | V | (travelDir,turnExitDir) = (1,3)(2,4)(3,2)(4,1) |
+| 0x42A5B0 | CarAI_HonkIfAllowed (was Car_StartHonkIfAllowed) | V | arg is the CarAI ([ecx] = parentCar); if Car_IsPoliceModel(0x41F6E0): Car.hornState(+0xa7)=0x2d |
+| 0x42A5D0 | CarAI_IsExitDirRightTurn | V | (travelDir,turnExitDir) = (1,3)(2,4)(3,2)(4,1); heading class 1 N, 2 S, 3 E, 4 W (H1) |
 | 0x42A620 | Fix16_AssignFromChar | V | *this = c<<14 |
 | 0x42A630 | Fix16_Frac | V | *y & 0x3fff |
 | 0x42A660 | HeadingClass_Opposite | V | 1<->2, 3<->4, else 0 |

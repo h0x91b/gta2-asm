@@ -193,11 +193,11 @@ Game facts used (Seq 27's answers, `docs/re/ped-movement-collision.md`):
   (`isDeadOrBusted`, `controlState`: the game drives the corpse then), in a cutscene
   (`controlsDisabled`), or while the ENTER_CAR objective walks the ped to a door.
 - **Entering** is the enter branch of `Player_HandleControls` 0x4A76D0 with our car instead of
-  `Ped_FindEnterableCarInFront`: `Ped_SetTask(NO_OBJ)`, `PedSetObjective(ENTER_CAR 35, 9999)`,
+  `CarManager_FindEnterableCarInFront`: `Ped_SetTask(NO_OBJ)`, `Ped_SetObjective(ENTER_CAR 35, 9999)`,
   `Ped_SetObjCar`, not as a passenger, door 0 (`--passenger`: passenger flag 1, door 1). No
   key and no focus needed. Vanilla 11.44 has no passenger key; the passenger mod adds
   Shift+Enter ([passenger.md](passenger.md)).
-- **Exiting**: `Car_CanExitCar` 0x4222A0, then `PedSetObjective(LEAVE_CAR 36)` and
+- **Exiting**: `Car_CanExitCar` 0x4222A0, then `Ped_SetObjective(LEAVE_CAR 36)` and
   `Ped_SetObjCar`.
 - `Ped.currentCar` is set only when seated; a seated ped has no game object (position from
   the car).
@@ -206,7 +206,7 @@ Game facts used (Seq 27's answers, `docs/re/ped-movement-collision.md`):
   gas key starts it otherwise), `Car.driverClass` (+0x7C) = 5 MISSION (`CarAI_DriveStep` drops
   the route flag for 2 PLAYER), `Car.aiFlags` &= ~3 (stale turn bits), `CarPhysics.mode`
   (+0x8C) = 1 AI (in 2 PLAYER the drive force needs the gear logic of `Player_DriveCar`, and the
-  car did not move at all), then `PedSetObjective(GO_TO_AREA_IN_CAR 14)` with the target before
+  car did not move at all), then `Ped_SetObjective(GO_TO_AREA_IN_CAR 14)` with the target before
   and after the call. Two hooks for the run: `Ped_GetPedClass` in `Car_Update` answers 3 for
   the player (else `CarAI_PreUpdate` is skipped) and `Player_DriveCar` is skipped (keys). The
   stop undoes all of it: objective 0, `CarDriveOrderPool_Free` 0x446290, `Car_HaltAI`
@@ -239,7 +239,9 @@ Game facts used (Seq 27's answers, `docs/re/ped-movement-collision.md`):
   waits at lights and in jams like traffic, so a gridlock ends in `stuck`; a long drive through
   gang turf can end with the player `WASTED` (`out of the car`). A target must be a road tile
   with arrows: off the road (a courtyard, a pavement) the game finds no route and the AI drives
-  straight at it, over peds. `face` on foot only.
+  straight at it, over peds. Why U-turn routes had to go (the game stores route U-turns in
+  `CarAI.routeUTurnExitDir` but never executes them): [re/cars-and-car-ai.md](re/cars-and-car-ai.md) §6b.
+  `face` on foot only.
 - After `teleport` on foot the camera does not follow at once: it stayed where it was for 250
   frames and snapped back on entering a car (Seq 59, 2026-10-22). Wait a while before a `shot`,
   or teleport only where needed.
@@ -257,13 +259,13 @@ Game facts used (Seq 27's answers, `docs/re/ped-movement-collision.md`):
 
 - Pathfinding (done in `goto`): the ped AI walks routes itself (`Ped_MoveTowardTarget`) once
   the player ped has GO_TO_AREA_ON_FOOT; `ctl_order_walk` sets the target after
-  `PedSetObjective` (which zeroes `objectiveTargetPosition` +0x1DC) as well as before.
+  `Ped_SetObjective` (which zeroes `objectiveTargetPosition` +0x1DC) as well as before.
 - Driving: in a car `turnRate`/`moveSpeed` are unused; `Player_DriveCar` 0x4A4C40 reads the
   key bools (`keyForward` gas, `keyBackward` brake/reverse, `keyLeft`/`keyRight` steering,
   `keyJump` handbrake). Steer by OR-ing `Player.inputWord` bits (0x1 fwd, 0x2 back, 0x4 left,
   0x8 right, 0x40 jump; 0x20 enter/exit) after `SetKeyState`, before the logic step — the
   real key path, focus-independent. Car heading `CarPhysics.heading` (+0x58).
-- Determinism: the RNG is the CRT seed `random_seed` 0x595410, seeded 1 by `Game_Ctor`
+- Determinism: the RNG is the CRT seed `g_CrtRandSeed` 0x595410, seeded 1 by `Game_Ctor`
   (`ResetRandomSeedTo1`); pacing is `drawAndLimitFrames` 0x462A30 (33 ms steps against
   `timeGetTime`). Registry `max_frame_rate = 0` (with `min_frame_rate = 0`) should make one
   logic tick per flip, untested; or give the `timeGetTime` shim a virtual clock (+33 ms per

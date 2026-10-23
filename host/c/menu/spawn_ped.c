@@ -41,7 +41,7 @@
 #define GANGS      0x5EB898             /* GangRespectContainer* */
 
 /* game functions, calling conventions from the disassembly (Seq 27 seq51_answer.md) */
-#define PED_POOL        0x5E5BBC        /* PedManager_S25*: +0 freeListHead */
+#define PED_POOL        0x5E5BBC        /* PedManager* (g_PedManager): +0 freeListHead */
 #define PED_SPAWN       0x43DB40        /* Ped_Spawn stdcall(SCR_f x, y, z, PED_REMAP, Ang16 rot) -> Ped* */
 #define PED_SETCLASS    0x403920        /* Ped_SetPedClass thiscall(Ped*; class) */
 #define PED_SETOCC      0x403970        /* Ped_SetOccupation thiscall(Ped*; OCUPATION) */

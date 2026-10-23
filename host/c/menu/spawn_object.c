@@ -14,7 +14,7 @@
  * g_ObjectPrefabsContainer @0x665B40 -> +0x87F4 ObjectPrefab* byId[300] (ObjectPrefabs_Get
  * @0x488170). ObjectPrefab +0x1C remap, +0x1E defaultSpriteId (relative to the type's
  * sprite base), +0x28 sprite type (4 code obj, 5 map obj; ObjectPrefab_ApplyToPosition
- * @0x4883A0 hands it to Sprite_SetCollisionKind), +0x30 palette kind, +0x34 kind, +0x40
+ * @0x4883A0 hands it to Sprite_SetSpriteType), +0x30 palette kind, +0x34 kind, +0x40
  * gridKind (4 = obstacles grid: solid), +0x44 impactMode (2 = pushed away), +0x48
  * explosiveClass, +0x64 ticks per frame, +0x6C frame count. The style's map objects are
  * added by ObjectPrefabs_InitFromStyle @0x488450 (id = the OBJI model).

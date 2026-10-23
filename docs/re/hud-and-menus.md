@@ -42,13 +42,24 @@ who keeps or renames them.
 Two clocks drive the HUD (V, disassembly + decompile):
 
 - **Logic tick**, about 30 Hz: `drawAndLimitFrames` 0x462A30 → `Game_RunLogicStep` →
-  `Game_StepByStatus` 0x45C3B0. Running: `GameTick` 0x45C1F0. Paused: `FUN_0045A690` only
+  `Game_StepByStatus` 0x45C3B0. Running: `GameTick` 0x45C1F0. Paused: `Game_TickPaused` only
   (cameras + `Hud_PauseOverlay_Tick` 0x4C6D90). So **`DrawGUI` (the HUD tick) does not run while
   paused**: timers, briefs, stars and arrows freeze, but they are still drawn.
   `GameTick` → … `MissionScript_ExecuteScriptThreads` … → **`DrawGUI` 0x4CAB50** → FrameCounter,
   FloatingScore update.
 - **Render**, variable rate: `drawAndLimitFrames` → `draw` 0x461960 → **`eachFrame` 0x45A5A0** →
   `Vid_FlipBuffers`.
+- **FPS counter** (Seq H5, V): `FrameTimingStats` (0x54, `g_FrameTimingStats` 0x671E9C, ctor
+  `FrameTimingStats_Ctor` 0x4C3700 from `Game_Ctor`) is ticked once per `drawAndLimitFrames` call
+  (0x462B67) by `FrameTimingStats_EndFrame(this, drewFrame, ranLogicStep)` 0x4C3760: every 100
+  logic ticks `updateFps` (+0x8) = 100000 / windowMs and each `FrameTimer.loadPercent` =
+  elapsedMs·100 / windowMs; every 100 drawn frames `drawFps` (+0x14). `do_show_timing` 0x4C36C0
+  (debug flag 0x5EAD79, from `GameTick`) prints "%d/%d fps". Only the timer at +0x18 is fed
+  (`Game_RunLogicStep` 0x461947 → `FrameTimer_AddElapsedSinceStart`), and its start time is never
+  set (`FrameTimer_StoreStartTime` 0x4C3670 has no references), so its `loadPercent` is garbage;
+  nothing shows it. The four timers at +0x24..+0x48 are dead instrumentation (`unusedTimer1..4`;
+  hypothesis: per-subsystem profiling compiled out). In multiplayer the draw / logic flags stay 0,
+  so `show_timing` shows 0/0 fps (cosmetic).
 
 ```
 eachFrame 0x45A5A0
@@ -142,8 +153,15 @@ Earlier docs say the debug-label pool is "29 × 82 wchar". It is actually 30 nod
 - `HudPagerEntry` (0xC) {timerTicks (×30 per second, −1 free), counterPtr (int* to a script
   variable), sound}.
 - `HudDebugLabel` (0xC4) {text wchar[82], timer (−3 sticky), x, y (0xFFFF = centre), fontId,
-  paletteBase, remap, invisibility, alpha, next @0xC0}; `HudDebugLabelPool` {nodes[30], count
-  @0x16F4, activeHead @0x16F8, freeHead @0x16FC}.
+  paletteBase, remap, invisibility, alpha, `HudDebugLabel* next` @0xC0}; `HudDebugLabelPool`
+  (0x1700) {nodes[30] @0, activeHead @0x16F8, freeHead @0x16FC}. There is no count: the old
+  "count @0x16F4" is `nodes[29].next`, which `Hud_DebugLabelPool_Init` 0x4C6250 sets to NULL after
+  linking 29 nodes at stride 0xC4 (the only store to +0x16F4, 0x4C6274; Seq H5). Hazard:
+  `Hud_DebugLabel_Show` 0x4C8C20 pops `freeHead` (0x4C8C2D) and reads `+0xC0` (0x4C8C39) with no
+  NULL check, so a 31st *distinct* live debug label crashes (an identical older label is expired
+  first by 0x4C8BE0). Debug overlay only; low. `Hud_DebugLabel_ExpireFinished` 0x4C6170 still
+  decompiles with `extraout_ECX/EDX`: its callee `Hud_DebugLabel_TickIsExpired` 0x4C60F0 preserves
+  ECX/EDX but Ghidra assumes they are clobbered (not fixed).
 - `HudPickupLabel` (0x88) {timer, text wchar[65], textWidth}; `HudKillFeedLine` (0xD0) {timer,
   text wchar[101], textWidth}; `HudCarNameLabel` (0x4C) {timer, text wchar[33], textWidth,
   slideY}; `HudZoneNameLabel` (0x98) {timer, text wchar[65], textWidth, zoneType1 @0x88,
@@ -260,8 +278,8 @@ HUD font roles (`Font_AssignRolesByLocale` 0x4CA520; Japanese switches to kanji 
 - The multiplier is halved (minimum 1) by `Player_OnBusted` when the player respawns without a
   get-out-of-jail card. Lives: +5 at level start (+1 in MP); game over at ≤ 0.
 - Per-event payouts (`PlayerScore_OnPedKilled`, `_OnCarDestroyed`, `_OnCarjack`,
-  `unsure_PlayerScore_OnCarWrecked`, `unsure_PlayerScore_OnCarStolen`,
-  `unsure_PlayerScore_OnCrimeKind4`) use tables by weapon and victim class. Kill and car combos
+  `PlayerScore_OnCarRammed`, `PlayerScore_OnFullBusDestroyed`,
+  `PlayerScore_OnBusHijacked`) use tables by weapon and victim class. Kill and car combos
   (×1..5 within 16 frames) apply.
 - Bonuses in `PlayerScore_Update` (each pays and shows a big label): EXPEDITIOUS EXECUTION
   (`excutin`, 20-kill streak, 100 000), Elvis (`elvis_d`), MEDICAL EMERGENCY (`em_dest`), GENOCIDE
@@ -396,9 +414,9 @@ Background images (`g_FrontendImages` @ 0x591F68, 25 × 0x88, all `data\frontend
    - `Menu.profileSlot`, set earlier by the profile selector.
    `FrontEnd_LoadSeq` fills that table from `data\*.seq` ("MAIN"/"BONUS" blocks, 3 file names each; max 3 areas × 4 levels).
 3. `FE.backgroundId=0x10`, `FE.mode=2` → the next tick `FrontEnd_RequestGameStart` (0x451F60) sets `resultCode=3`.
-4. `WinMain` 0x4D1170 gets 3 from `FUN_0045A320` → `isExit=0` → `InitGame` (0x461DE0) → `LoadGMP_and_STY_Files` (reads `Menu_GetGmpPath/StyPath/ScrPath/SavePath`) → `startGame`.
+4. `WinMain` 0x4D1170 gets 3 from `FrontEnd_Tick` → `isExit=0` → `InitGame` (0x461DE0) → `LoadGMP_and_STY_Files` (reads `Menu_GetGmpPath/StyPath/ScrPath/SavePath`) → `startGame`.
 5. `InitGame` also reads `Menu_GetGameTimeLimit` and `Menu_SetPlayerName` (MP).
-6. Return to the frontend: `WinMain` after `Game_GetQuitReason(game)` → `DeinitGame`, `isExit=1`, `doPlayMovies`/page id = 2 (player quit): page 0xb (6 if bonus); 3 (dead): page 2 (6); 4 (level done): page 3 (6); 5: page 7 (MP results); 6: page 0. Then `FrontEnd_GotoPage(page)` after `Init()`. `FUN_0045A480` (called from `Script_Op_FINISH_LEVEL`, `quitGame`) writes `Game.field11_0x28/relatedToQuitGame` and `Menu.levelEndReason`.
+6. Return to the frontend: `WinMain` after `Game_GetQuitReason(game)` → `DeinitGame`, `isExit=1`, `doPlayMovies`/page id = 2 (player quit): page 0xb (6 if bonus); 3 (dead): page 2 (6); 4 (level done): page 3 (6); 5: page 7 (MP results); 6: page 0. Then `FrontEnd_GotoPage(page)` after `Init()`. `Game_ScheduleLevelExit` (called from `Script_Op_FINISH_LEVEL`, `quitGame`) writes `Game.field11_0x28/relatedToQuitGame` and `Menu.levelEndReason`.
 7. Between levels `Menu_CopyPlayerCrimeStats` fills `Menu.crimeStats/totalEarned/wantedStarSeconds` for the stats panel.
 
 
@@ -413,7 +431,7 @@ Background images (`g_FrontendImages` @ 0x591F68, 25 × 0x88, all `data\frontend
 | `Menu_LoadDebugLevelFromRegistry` 0x45E8D0 | `Reg_Debug_GetString` 0x4B5420 | `"mapname"`, `"stylename"`, `"scriptname"`, `"savename"` (only the debug-skip-frontend path) |
 
   The frontend does not read the sound/video/key options itself; those live in gta2manager.
-- Everything else the frontend persists is in the save files (`player\plyslotN.sgv`, via `FUN_004a89e0` / `FUN_004a8700` from `FrontEnd_CommitProfileName` / `FrontEnd_DeleteCurrentProfile`); format in §8.
+- Everything else the frontend persists is in the save files (`player\plyslotN.sgv`, via `PlayerData_SaveProfileSlot` / `ProfileSlot_Reset` from `FrontEnd_CommitProfileName` / `FrontEnd_DeleteCurrentProfile`); format in §8.
 
 The frontend does not read the sound, video or key options itself: gta2manager edits those in the registry, and the game reads them at startup (§7). Profile progress and high scores live in files (§8).
 
@@ -436,13 +454,13 @@ gta2manager (`gta2manager.ebin`): its strings contain the key paths Debug, Scree
 | window_width / window_height | DWORD | 640 / 480 | 0x3C0/0x2D0 (960×720); **host overrides in memory to 1280×960 or --window=WxH** (`reg_window_override`) | RenderSettings_LoadWindowMode 0x4CB290 | GM; the game rewrites them to 640×480 if `SetWindowedMode` fails (Video_ReloadSettingsAndRemode) | `window_width` 0x673578, `window_height` 0x6732E8 | client area size when windowed |
 | full_width / full_height | DWORD | 640 / 480 | 0x3C0/0x2D0 | RenderSettings_LoadWindowMode | GM; SetFullscreenMode rewrites 640×480 when `Vid_CheckMode` rejects the pair | `full_width` 0x6732E4, `full_height` 0x6732E0 | fullscreen size (16 bpp, `Vid_CheckMode(...,0x10)`) |
 | start_mode | DWORD | 1 | 0 | RenderSettings_LoadWindowMode | Screen_SetStartMode 0x4CB4D0, Screen_ToggleStartMode 0x4CB4F0 (WndProc), Video_ReloadSettingsAndRemode (fallback) | `start_mode` 0x595014 | 0 windowed, 1 fullscreen |
-| tripple_buffer | DWORD | 0 (forced 1 when `g_RendererKind`==0) | 0 | RenderSettings_LoadWindowMode | GM | `tripple_buffer` 0x67359C → `SVideo.mask1` bit 0x10 | triple buffering |
+| tripple_buffer | DWORD | 0 (forced 1 when `g_RendererKind`==0) | 0 | RenderSettings_LoadWindowMode | GM | `tripple_buffer` 0x67359C → `VidCtx.flags` (was `SVideo.mask1`) bit 0x10 | triple buffering |
 | max_frame_rate | DWORD | 1 (forced 1 in multiplayer) | 1 | RenderSettings_LoadFrameRateLighting 0x4CB1D0 | GM | `max_frame_rate` 0x595010 (byte) | cap the frame rate |
 | min_frame_rate | DWORD | 0 (forced 1 in multiplayer) | 1 | same | GM? (not in GM strings; only max_frame_rate is) | `min_frame_rate` 0x673598 | |
 | lighting | DWORD | 1 | 1 | same | GM | `lighting` 0x67358C (=0x8000 if on, else 0); `isNight` 0x595011 | dynamic lighting |
 | exploding_on | DWORD | 1 | 0 | same | GM | `g_cheatCocktart` = (value != 1) | name suggests "exploding pedestrians" cheat flag (hypothesis); seed 0 → flag on |
 | gamma | DWORD | 10 | 10 (0x0A) | Gamma_ApplyFromRegistry 0x4CB990, Gamma_RetryTick 0x4CB9C0 | GM | `SetGamma` 0x4CB930: value × 0.1f → `Vid_SetGamma(r,g,b)`; `relatedToGamma` 0x673594 | gamma ×10 |
-| do_play_movie | DWORD | 1 | 0 | WinMain (only if `FrontEnd_IntroMovieExists`), FUN_00459660 | the game's own option writer FUN_00459660 (sets `regSet("do_play_movie",1)`) | selects start page of the frontend | play intro movies |
+| do_play_movie | DWORD | 1 | 0 | WinMain (only if `FrontEnd_IntroMovieExists`), FrontEnd_OnCodeEntered | the game's own option writer FrontEnd_OnCodeEntered (sets `regSet("do_play_movie",1)`) | selects start page of the frontend | play intro movies |
 | curr_dll_id | DWORD | – | 1 | **not read by gta2.exe** (string absent from the exe, checked with strings) | GM | – | legacy renderer index |
 | special_recognition | DWORD | – | 1 | **not read by gta2.exe** | GM | – | legacy |
 
@@ -453,9 +471,9 @@ Value *names* are decimal action indexes "0".."11" (12 actions). Value = `scanco
 
 | value | type | default | seed | reader | writer | consumer |
 |---|---|---|---|---|---|---|
-| CDVol | DWORD | 0x7F | 0x7F | FUN_00461880 (`Reg_Sound_GetDwordOrInit`) | `Reg_Sound_SetDword` 0x4B5110 from Player_OnKeyDown (debug key), GM | `SetCDVolume((byte)v)` |
-| SFXVol | DWORD | 0x7F | **0x0B** | FUN_00461880 | GM | `FUN_004105c0((byte)v)` (SFX master volume) |
-| do_3d_sound | presence flag (value 0 = on, absent = off) | absent | absent | `Reg_Sound_HasFlag` 0x4B5000 in FUN_00461880, WinMain, WndProc, InitGame, Debug_LoadFlagsFromRegistry | `Reg_Sound_SetFlag` 0x4B5180 (WinMain/InitGame/WndProc/FUN_00461880 write back the actually active state) | `Sound_Set3DSoundEnabled(&DAT_005d85a0, v)` |
+| CDVol | DWORD | 0x7F | 0x7F | InitInputAndAudio (`Reg_Sound_GetDwordOrInit`) | `Reg_Sound_SetDword` 0x4B5110 from Player_OnKeyDown (debug key), GM | `SetCDVolume((byte)v)` |
+| SFXVol | DWORD | 0x7F | **0x0B** | InitInputAndAudio | GM | `Sound_SetSFXVolume((byte)v)` (SFX master volume) |
+| do_3d_sound | presence flag (value 0 = on, absent = off) | absent | absent | `Reg_Sound_HasFlag` 0x4B5000 in InitInputAndAudio, WinMain, WndProc, InitGame, Debug_LoadFlagsFromRegistry | `Reg_Sound_SetFlag` 0x4B5180 (WinMain/InitGame/WndProc/InitInputAndAudio write back the actually active state) | `Sound_Set3DSoundEnabled(&DAT_005d85a0, v)` |
 
 SFXVol seed 0x0B is much lower than the 0x7F default — probably the installer's own choice; if audio sounds quiet, this is why (hypothesis, not verified in a run).
 
@@ -463,7 +481,7 @@ SFXVol seed 0x0B is much lower than the 0x7F default — probably the installer'
 
 **Player** (opener `Reg_OpenPlayerKey` 0x4B5BF0): `plyrslot` DWORD = last used profile slot (`Reg_Player_GetDwordOrZero` in FrontEnd_GotoPage; written with `Reg_Player_SetDword` 0x4B5D10 from FrontEnd_UpdateMenuMode 0x4597C0). **Not seeded** by the host: key is created on first open, value reads as 0 → slot 0 (harmless).
 
-**Network** (opener `Reg_OpenNetworkKey` 0x4B58E0, root hive handle in `DAT_00593E6C`, unverified that it is HKCU 0x80000001): `map_index`(0), `game_time_limit`(1), `game_speed`(1), `game_type`(1), `police`(0), `f_limit`(3, only if game_type==1), `s_limit`(10000, otherwise) — all read by FUN_00406470 through `Reg_Network_GetDwordOrInit` 0x4B5AE0, `map_index` written back by FUN_00407605 (`Reg_Network_SetDword` 0x4B5B80); `show_player_names` (default 1, Debug_LoadFlagsFromRegistry, same getter). Blobs `UseProtocol` (16 B GUID) and `UseConnection` via `Reg_GetBlobSize`/`Reg_ReadSizedBlob` ("<name>s" = size, "<name>d" = data) in FUN_004D0ED0 (multiplayer connect). `PlayerName` is read by a *different* code path (the exe contains a second string `Software\DMA Design Ltd\GTA2\Network` at 0x57xxxx near the network code). Seeded: f_limit, game_speed, game_time_limit, game_type, map_index, PlayerName, police, protocol_selected (not read by the exe), show_player_names, TCPIPAddrString(d/s) (not read by the exe), UseConnection(d/s), UseProtocol(d/s).
+**Network** (opener `Reg_OpenNetworkKey` 0x4B58E0, root hive handle in `DAT_00593E6C`, unverified that it is HKCU 0x80000001): `map_index`(0), `game_time_limit`(1), `game_speed`(1), `game_type`(1), `police`(0), `f_limit`(3, only if game_type==1), `s_limit`(10000, otherwise) — all read by NetDlg_LoadSettingsFromRegistry through `Reg_Network_GetDwordOrInit` 0x4B5AE0, `map_index` written back by NetDlg_SelectMap_Frag (`Reg_Network_SetDword` 0x4B5B80); `show_player_names` (default 1, Debug_LoadFlagsFromRegistry, same getter). Blobs `UseProtocol` (16 B GUID) and `UseConnection` via `Reg_GetBlobSize`/`Reg_ReadSizedBlob` ("<name>s" = size, "<name>d" = data) in Startup_ConnectMultiplayerFromRegistry (multiplayer connect). `PlayerName` is read by a *different* code path (the exe contains a second string `Software\DMA Design Ltd\GTA2\Network` at 0x57xxxx near the network code). Seeded: f_limit, game_speed, game_time_limit, game_type, map_index, PlayerName, police, protocol_selected (not read by the exe), show_player_names, TCPIPAddrString(d/s) (not read by the exe), UseConnection(d/s), UseProtocol(d/s).
 
 **Debug** (opener `Reg_OpenDebugKey` 0x4B51F0): ~75 presence flags (`Reg_Debug_HasValue` 0x4B53B0) read once by `Debug_LoadFlagsFromRegistry` 0x451930 (full list: `host/c/config.c` `keys[]`; the host seeds `do_blood`, `do_debug_keys`, `bob_debug_display`, `do_blood`, `do_debug_keys`, `mapname`, `replaynum`); strings via `Reg_Debug_GetString` 0x4B5420: `carname` (LoadGMP_and_STY_Files; seeded none → game default), `mapname`, `stylename`, `scriptname`, `savename` (Menu_LoadDebugLevelFromRegistry 0x45E8D0). `replaynum` is a DWORD read in Menu_LoadDebugLevelFromRegistry (seed 9); `bob_debug_display` appears in the seed but not in that list and we did not find its reader (hypothesis: read as a flag by Debug_LoadFlagsFromRegistry under another spelling).
 
@@ -473,7 +491,7 @@ SFXVol seed 0x0B is much lower than the 0x7F default — probably the installer'
 
 ### 7.2 When settings are read and written
 
-1. **`WinMain` 0x4D1170**: `GetGameVersion` → `Debug_LoadFlagsFromRegistry` (Debug flags, Network `show_player_names`, Sound `do_3d_sound`) → `Menu_LoadDebugLevelFromRegistry` (Debug mapname/stylename/scriptname/savename) → `RegisterClass` → **`ReadRendererSettings`** (Screen: renderdevice, videodevice, rendername, videoname, then LoadFrameRateLighting + LoadWindowMode) → parse args → `FUN_004D0ED0` (multiplayer connect, Network UseProtocol/UseConnection) → create window sized from `window_width/height` → `diutil` (DirectInput; **controls loaded in `DInput_InitDevices` → 0x44BF30**) → **`InitVideo`** (`Video_ReloadSettingsAndRemode` re-reads Screen settings and applies mode/gamma; then InitRenderer, `Gamma_ApplyFromRegistry`) → `InitRendererDevice` → **`FUN_00461880`** (keybrd, plydat = profile .dat files, then Sound CDVol/SFXVol/do_3d_sound) → intro-movie check (`do_play_movie`).
+1. **`WinMain` 0x4D1170**: `GetGameVersion` → `Debug_LoadFlagsFromRegistry` (Debug flags, Network `show_player_names`, Sound `do_3d_sound`) → `Menu_LoadDebugLevelFromRegistry` (Debug mapname/stylename/scriptname/savename) → `RegisterClass` → **`ReadRendererSettings`** (Screen: renderdevice, videodevice, rendername, videoname, then LoadFrameRateLighting + LoadWindowMode) → parse args → `Startup_ConnectMultiplayerFromRegistry` (multiplayer connect, Network UseProtocol/UseConnection) → create window sized from `window_width/height` → `diutil` (DirectInput; **controls loaded in `DInput_InitDevices` → 0x44BF30**) → **`InitVideo`** (`Video_ReloadSettingsAndRemode` re-reads Screen settings and applies mode/gamma; then InitRenderer, `Gamma_ApplyFromRegistry`) → `InitRendererDevice` → **`InitInputAndAudio`** (keybrd, plydat = profile .dat files, then Sound CDVol/SFXVol/do_3d_sound) → intro-movie check (`do_play_movie`).
 2. **Frontend** (isExit): `?Intro`/`FrontEnd_GotoPage` read Player\plyrslot; `LocaleSettings_Ctor` reads Option\language; `get_text_speed` reads Option\text_speed on demand. Options screens write through the same getters/setters (none found in the exe).
 3. **InitGame 0x461DE0**: re-checks Sound\do_3d_sound and writes the active state back (`Reg_Sound_SetFlag`).
 4. **Per frame**: `Gamma_RetryTick` (GameTick) retries `SetGamma` while `relatedToGamma` counts down from 0x1E; `Video_ReloadSettingsIfChanged` is called after each InitGame/Init (WinMain) and compares newly read values with the old globals.
@@ -489,7 +507,7 @@ SFXVol seed 0x0B is much lower than the 0x7F default — probably the installer'
   * video mode: write `screen\window_width/height/full_width/full_height/start_mode/tripple_buffer`, then call **`Video_ReloadSettingsAndRemode` 0x4CC5C0** (cdecl, 2 dummy args; re-reads, closes the screen, applies windowed/fullscreen, falls back to 640×480, re-applies gamma) followed by **`Video_ReapplyColourBankAndCameraDims` 0x4CB880** — exactly what `Video_ReloadSettingsIfChanged` 0x4CC6A0 does when `RenderSettings_LoadWindowMode` reports a change. In this port the real mode switch is our `dmavideo.dll` replacement (`Vid_SetMode`), so the host must make `Vid_SetMode/Vid_CheckMode` tolerate the size changes (not checked).
   * frame-rate/lighting/exploding: write `screen\max_frame_rate|min_frame_rate|lighting|exploding_on`, call **`RenderSettings_LoadFrameRateLighting` 0x4CB1D0** (cdecl, 1 dummy arg).
   * gamma: write `screen\gamma` (value = gamma × 10), call **`Gamma_ApplyFromRegistry` 0x4CB990**; `SetGamma` 0x4CB930 takes the ×10 integer directly. Our `Vid_SetGamma` is currently a stub (`vid_set_gamma`, `host/c/renderer.c`), so gamma is a visual no-op until that is implemented.
-  * audio: `SetCDVolume(byte)` (0x4105xx, call it directly), `FUN_004105C0(byte)` = SFX volume (still unnamed), persist with `Reg_Sound_SetDword` 0x4B5110 (CDVol only) / write the value yourself; 3D sound via `Sound_Set3DSoundEnabled(&DAT_005D85A0, flag)` + `Reg_Sound_SetFlag(&g_Registry,"do_3d_sound",flag)`.
+  * audio: `SetCDVolume(byte)` (0x4105xx, call it directly), `Sound_SetSFXVolume(byte)` 0x4105C0 = SFX volume, persist with `Reg_Sound_SetDword` 0x4B5110 (CDVol only) / write the value yourself; 3D sound via `Sound_Set3DSoundEnabled(&DAT_005D85A0, flag)` + `Reg_Sound_SetFlag(&g_Registry,"do_3d_sound",flag)`.
   * controls: write `control\<idx>` DWORD (scancode | flags<<15) and call the loop at **0x44BF30** (cdecl, no args; fills `Controls` 0x5E8F5C and table 0x5E8F1C).
   * fullscreen/windowed toggle at runtime: `Screen_ToggleStartMode` 0x4CB4F0 (cdecl, 3 dummy args) then `Video_ReloadSettingsAndRemode`.
 * **Calling convention notes:** the `__cdecl` entries with dummy arguments (`Video_ReloadSettingsAndRemode`, `RenderSettings_LoadFrameRateLighting`, `Gamma_ApplyFromRegistry`, `Screen_*`) are Ghidra prototype artefacts of unused register garbage; they take no real arguments (decompiled bodies never read them except `loadRender…`'s unused `param_1`). Cleaning the prototypes is a follow-up we did not do.
@@ -497,36 +515,36 @@ SFXVol seed 0x0B is much lower than the 0x7F default — probably the installer'
 
 ## 8. Save games and profiles
 
-* **Savegame file:** `player\plyslot<N>.svg`, N = `Menu_GetProfileSlot` (0..7). Built in SaveGame (0x47EF40) with `sprintf("player\\plyslot%d.svg")` when the caller passes an empty name; `FrontEnd_BuildSaveSlotPath` does the same for the frontend. When a caller gives a path (`Menu_GetSavePath` = `Menu.unk2`/savePath, set by `Menu_SetSavePath`) that is used instead. Writes through `FUN_00402CF0` (create "wb") + `FUN_00402DA0` ("ab"), reads through `File_Open/File_Read`; the host serves the first from its overlay (`~/Library/Application Support/gta2-resurrected/player/`).
-* **Format:** `[0x748-byte SaveGameHeader]` then three sections `[u32 size][size bytes]`, each possibly size 0 (the data block is skipped when size==0): (1) `g_MapBlocks` delta A = `*(MapBlocks+0x40008) + *(MapBlocks+0x40000)*4`, size `(this+0x360 - off)*4`; (2) delta B = `*(+0x4000C)+*(+0x40004)*0xC`, size `(this+0x354-off)*0xC`; (3) `this+4`, size `*(this+0x324) << 3`. These are the *dynamic tail* of the map's block/column tables (blocks added at runtime, i.e. modified map). Extracted by `FUN_004642A0`, re-applied by `FUN_00464250`. Layout semantics = hypothesis (Seq 37/map owner can confirm). No checksum, no version.
-* **Functions:** save: `SaveGame` 0x47EF40 ← `Script_Op_SAVE_GAME` 0x47FE50 (opcode 277, unused in bil.scr), `Script_Op_PERFORM_SAVE_GAME` 0x47FE80 (opcode 438: the church/save point; costs $50000, "svmiss"/"svscore"/"svdone" HUD messages via `Hud_Brief_EnqueueNoArg`, refuses when a mission is active), `SomeSwitch` 0x41D0B0 case 9 (debug key via Player_OnKeyDown); helpers FUN_0047EE70 (collect patched script commands), FUN_00475CA0 (fill the three path strings + area/bonus bytes), FUN_00483D90 (collect weapon pickups), `Player::Player_SaveCheckpoint`. Load: `FrontEnd_LoadSavedGameSlot` 0x455850 (reads the first 0x52 header bytes, validates that each path starts with `data\`, calls `Menu_SetSavePath/GmpPath/StyPath/ScrPath/StartArea/BonusLevelId/IsBonusLevel`; DisplayError codes 0xA6/0xA7/0xA8 on a bad path) → game start → `InitGame` → `LoadGMP_and_STY_Files` 0x45B469 → `MissionScript_LoadSaveGame` 0x47F0B0 when `Menu_GetSavePath` is non-empty. Other callers of `Menu_SetSavePath`: `FrontEnd_SelectLevel`/`FrontEnd_UpdateMenuMode` clear it (`DAT_0056E5B4` = ""), `Replay_ReadHeader`, `Menu_LoadDebugLevelFromRegistry` (Debug\savename).
-* **Other persistent files**: `player\plyslot<N>.dat` — profile/unlock data, 0x7E bytes, written by `FUN_004A89E0` (callers FrontEnd_CommitProfileName, FrontEnd_DeleteCurrentProfile, UnlockAllLevels, WinMain-via-FUN_004A8F90 on level end, PlayerData_Ctor); `player\hiscores.hsc` — 0xF0 + 3×0x3F0 bytes of high scores, `FUN_004A8D80` (`FUN_004A8B60` builds the name). Both go through `FUN_00402CF0`. Owner: whoever takes `plydat`/`PlayerData_Ctor` (0x4A8xxx).
-* **K menu quick save** (`host/c/menu/root.c`) calls `SaveGame` 0x47EF40 directly (credit seuko-mod `save-game.cpp`); that is the full "save here" entry point for mods.
+* **Savegame file:** `player\plyslot<N>.svg`, N = `Menu_GetProfileSlot` (0..7). Built in `MissionScript_SaveGame` (0x47EF40) with `sprintf("player\\plyslot%d.svg")` when the caller passes an empty name; `FrontEnd_BuildSaveSlotPath` does the same for the frontend. When a caller gives a path (`Menu_GetSavePath` = `Menu.unk2`/savePath, set by `Menu_SetSavePath`) that is used instead. Writes through `File_WriteWhole` (create "wb") + `File_AppendWhole` ("ab"), reads through `File_Open/File_Read`; the host serves the first from its overlay (`~/Library/Application Support/gta2-resurrected/player/`).
+* **Format:** `[0x748-byte SaveGameHeader]` then three sections `[u32 size][size bytes]`, each possibly size 0 (the data block is skipped when size==0): (1) `g_MapBlocks` delta A = `*(MapBlocks+0x40008) + *(MapBlocks+0x40000)*4`, size `(this+0x360 - off)*4`; (2) delta B = `*(+0x4000C)+*(+0x40004)*0xC`, size `(this+0x354-off)*0xC`; (3) `this+4`, size `*(this+0x324) << 3`. These are the *dynamic tail* of the map's block/column tables (blocks added at runtime, i.e. modified map). Extracted by `MapBlocks_GetEditBuffersForSave`, re-applied by `MapBlocks_RestoreEditsFromSave`. Layout semantics = hypothesis (Seq 37/map owner can confirm). No checksum, no version.
+* **Functions:** save: `MissionScript_SaveGame` 0x47EF40 (was `SaveGame`) ← `Script_Op_SAVE_GAME` 0x47FE50 (opcode 277, unused in bil.scr), `Script_Op_PERFORM_SAVE_GAME` 0x47FE80 (opcode 438: the church/save point; costs $50000, "svmiss"/"svscore"/"svdone" HUD messages via `Hud_Brief_EnqueueNoArg`, refuses when a mission is active), `SomeSwitch` 0x41D0B0 case 9 (debug key via Player_OnKeyDown); helpers MissionScript_SaveScriptCounters (collect patched script commands), SaveGame_CopyMenuPathsToHeader (fill the three path strings + area/bonus bytes), SaveGame_CollectPickups (collect weapon pickups), `Player::Player_SaveCheckpoint`. Load: `FrontEnd_LoadSavedGameSlot` 0x455850 (reads the first 0x52 header bytes, validates that each path starts with `data\`, calls `Menu_SetSavePath/GmpPath/StyPath/ScrPath/StartArea/BonusLevelId/IsBonusLevel`; DisplayError codes 0xA6/0xA7/0xA8 on a bad path) → game start → `InitGame` → `LoadGMP_and_STY_Files` 0x45B469 → `MissionScript_LoadSaveGame` 0x47F0B0 when `Menu_GetSavePath` is non-empty. Other callers of `Menu_SetSavePath`: `FrontEnd_SelectLevel`/`FrontEnd_UpdateMenuMode` clear it (`DAT_0056E5B4` = ""), `Replay_ReadHeader`, `Menu_LoadDebugLevelFromRegistry` (Debug\savename).
+* **Other persistent files**: `player\plyslot<N>.dat` — profile/unlock data, 0x7E bytes, written by `PlayerData_SaveProfileSlot` (callers FrontEnd_CommitProfileName, FrontEnd_DeleteCurrentProfile, UnlockAllLevels, WinMain-via-PlayerData_UpdateProfileLevelScore on level end, PlayerData_Ctor); `player\hiscores.hsc` — 0xF0 + 3×0x3F0 bytes of high scores, `PlayerData_SaveHiScores` (`HiScores_BuildPath` builds the name). Both go through `File_WriteWhole`. Owner: whoever takes `plydat`/`PlayerData_Ctor` (0x4A8xxx).
+* **K menu quick save** (`host/c/menu/root.c`) calls `MissionScript_SaveGame` 0x47EF40 directly (credit seuko-mod `save-game.cpp`); that is the full "save here" entry point for mods.
 
 
 `SaveGameHeader` (0x748 bytes, struct created in the DB, not yet applied to `buf466` 0x664590):
 
 | off | type | field | evidence |
 |---|---|---|---|
-| 0x00 | char[25] | gmpPath | FUN_00475ca0 copies Menu_GetGmpPath here; `DAT_006645a8`(=+0x18)=10 is its trailing marker (0x0A) |
+| 0x00 | char[25] | gmpPath | SaveGame_CopyMenuPathsToHeader copies Menu_GetGmpPath here; `DAT_006645a8`(=+0x18)=10 is its trailing marker (0x0A) |
 | 0x19 | char[25] | styPath | `DAT_006645a9`; marker `DAT_006645c1`=10 |
 | 0x32 | char[25] | scrPath | `DAT_006645c2`; marker `DAT_006645da`=10 |
 | 0x4B | byte | startArea | `DAT_006645db` = Menu_GetStartArea; FrontEnd_LoadSavedGameSlot reads the first 0x52 bytes and uses it |
 | 0x4C | byte | bonusLevelId | `DAT_006645dc` |
 | 0x4D | byte | isBonusLevel | `DAT_006645dd` |
-| 0x4E | 6 bytes | (unknown, not written by FUN_00475ca0) | gap to the checkpoint |
+| 0x4E | 6 bytes | (unknown, not written by SaveGame_CopyMenuPathsToHeader) | gap to the checkpoint |
 | 0x54 | byte[214] | playerCheckpoint | `Player::Player_SaveCheckpoint(currentPlayer, &DAT_006645e4)`; size = 0x6646BA-0x6645E4 (Seq 27 owns the layout; counterpart Player_LoadCheckpoint 0x4A6C80) |
-| 0x12A | uint | patchCount | `_DAT_006646ba` written by FUN_0047ee70 (count of patched script commands). Width of the write is a decompiler guess (hypothesis) |
-| 0x134 | ushort[600] | patchEntries | `DAT_006646c4`: 300 × {cmdIndex, value}; FUN_0047ee70 collects script commands of type 0x113/0x114 and stores `cmd_this` and the next command's `cmd_this`; FUN_0047ef10 writes them back on load |
-| 0x5E4 | int[20] | pickupX | FUN_00483d90 (weapon pickups, ≤0x14, scans object table 0xEF1 × 0x2C) → `0x664b74` |
+| 0x12A | uint | patchCount | `_DAT_006646ba` written by MissionScript_SaveScriptCounters (count of patched script commands). Width of the write is a decompiler guess (hypothesis) |
+| 0x134 | ushort[600] | patchEntries | `DAT_006646c4`: 300 × {cmdIndex, value}; MissionScript_SaveScriptCounters collects script commands of type 0x113/0x114 and stores `cmd_this` and the next command's `cmd_this`; MissionScript_RestoreSavedCounters writes them back on load |
+| 0x5E4 | int[20] | pickupX | SaveGame_CollectPickups (weapon pickups, ≤0x14, scans object table 0xEF1 × 0x2C) → `0x664b74` |
 | 0x634 | int[20] | pickupY | +0x50 |
 | 0x684 | int[20] | pickupZ | +0xA0 |
 | 0x6D4 | ushort[20] | pickupType | +0xF0 (`object+0x18`) |
-| 0x6FC | byte[20] | pickupAmmo | +0x118 (FUN_004340a0); FUN_00485640 respawns them with ObjectSpawner_SpawnObject + Pickup_SetAmmo on load |
+| 0x6FC | byte[20] | pickupAmmo | +0x118 (WorldObject_GetPickupAmmo); SaveGame_RestorePickups respawns them with ObjectSpawner_SpawnObject + Pickup_SetAmmo on load |
 | 0x710 | byte[50] | spawnerState | 12 dwords + 1 word copied from `g_ObjectSpawner+0x20` (→ `DAT_00664ca0`) |
-| 0x744 | uint | menuField574 | `DAT_00664cd4` = `Menu+0x574` (`Menu_GetBonusTokenCount`); restored by FUN_00476b10 |
+| 0x744 | uint | menuField574 | `DAT_00664cd4` = `Menu+0x574` (`Menu_GetBonusTokenCount`); restored by Menu_SetBonusTokenCount |
 
-Verified: sum of the sections == 0x748 == the length passed to the writer (`local_10 = 0x748` in SaveGame, `iParm1 = 0x748` in MissionScript_LoadSaveGame) and the read of the first 0x52 bytes in FrontEnd_LoadSavedGameSlot lines up with +0x00/+0x19/+0x32/+0x4B..+0x4D.
+Verified: sum of the sections == 0x748 == the length passed to the writer (`local_10 = 0x748` in MissionScript_SaveGame, `iParm1 = 0x748` in MissionScript_LoadSaveGame) and the read of the first 0x52 bytes in FrontEnd_LoadSavedGameSlot lines up with +0x00/+0x19/+0x32/+0x4B..+0x4D.
 
 
 ## 9. Hooks for mods
@@ -625,7 +643,7 @@ Recommendation: 1. What the screen has to write and how each setting is re-appli
   ammo text; `Hud_IsMpGameNotTag`; `MissionScript+0x344`; `Menu+0x574` and
   `levelEndReason`; the kill-frenzy payout path; the 30 Hz tick rate (taken from `CreateTimer`'s
   × 30, not measured).
-- Unnamed callees on the edges: `FUN_004105C0` (SFX master volume), `FUN_00463850` (block-column
+- Callees on the edges, unnamed when this page was written and named since: `Sound_SetSFXVolume` 0x4105C0 (SFX master volume), `MapBlocks_IsPointCoveredByLid` 0x463850 (block-column
   query used by the player marker).
 - The prototypes of the video/gamma functions still carry dummy cdecl parameters (they take none).
 - gta2manager.ebin was not decompiled; "GM writes X" in §7 means only that X appears in its strings.
@@ -899,7 +917,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4B7500 | `PlayerScore_GetCarValue` | old |
 | 0x4B7570 | `PlayerScore_GetFrags` | old |
 | 0x4B7580 | `PlayerScore_AddFrags` | old |
-| 0x4B7590 | `unsure_Game_IsExitReasonSet` | H |
+| 0x4B7590 | `Game_IsExitScheduled` (was `unsure_Game_IsExitReasonSet`) | H |
 | 0x4B75B0 | `PlayerScore_RecomputeCarModelFlags` | old |
 | 0x4B7660 | `PlayerScore_AddMoney` | old |
 | 0x4B76A0 | `PlayerScore_TrackAccuracy` | V |
@@ -909,12 +927,12 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4B7E90 | `PlayerScore_MarkCarModel` | old |
 | 0x4B7EB0 | `PlayerScore_OnPedKilled` | old |
 | 0x4B85B0 | `PlayerScore_OnCarDestroyed` | old |
-| 0x4B8870 | `unsure_PlayerScore_OnCarWrecked` | H |
-| 0x4B89B0 | `unsure_PlayerScore_OnCarOccupantKilled` | H |
-| 0x4B8A60 | `unsure_PlayerScore_GiveCarKillFlat20` | H |
+| 0x4B8870 | `PlayerScore_OnCarRammed` (was `unsure_PlayerScore_OnCarWrecked`) | H |
+| 0x4B89B0 | `PlayerScore_OnCarDamaged` (was `unsure_PlayerScore_OnCarOccupantKilled`) | H |
+| 0x4B8A60 | `PlayerScore_GiveCarDestroyedBonus` (was `unsure_PlayerScore_GiveCarKillFlat20`) | H |
 | 0x4B8A70 | `PlayerScore_OnCarjack` | old |
-| 0x4B8BD0 | `unsure_PlayerScore_OnCrimeKind4` | H |
-| 0x4B8C80 | `unsure_PlayerScore_OnCarStolen` | H |
+| 0x4B8BD0 | `PlayerScore_OnBusHijacked` (was `unsure_PlayerScore_OnCrimeKind4`) | H |
+| 0x4B8C80 | `PlayerScore_OnFullBusDestroyed` (was `unsure_PlayerScore_OnCarStolen`) | H |
 | 0x4B8D60 | `FloatingScoreManager_NextColor` | V |
 | 0x4B8D80 | `FloatingScoreManager_IncFreeCount` | V |
 | 0x4B8DC0 | `FloatingScore_ClearDigits` | V |
@@ -1068,7 +1086,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4C72F0 | `ChatInput_AppendChar` | old |
 | 0x4C7320 | `ChatInput_Backspace` | old |
 | 0x4C7340 | `Player_GetArrowBlockerZone` | V |
-| 0x4C7350 | `MissionScript_IsOnMission` | H |
+| 0x4C7350 | `MissionScript_IsOnMission` | V (`*mission_flag != 0`; +0x344 written only by DECLARE_MISSION_FLAG 0x4759E4, cleared by MissionFailOnArrest — Seq H2) |
 | 0x4C7370 | `Hud_IsMpGameNotTag` | V |
 | 0x4C7380 | `MultiplayerTag_GetPlayerTimeValue` | V |
 | 0x4C73A0 | `Hud_PlayerMarker_Update` | V |
@@ -1196,7 +1214,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 |---|---|---|
 | 0x455850 | `FrontEnd_LoadSavedGameSlot` | V |
 | 0x45A5A0 | `eachFrame` | old |
-| 0x47EF40 | `SaveGame` | old |
+| 0x47EF40 | `MissionScript_SaveGame` (was `SaveGame`) | old |
 | 0x47F0B0 | `MissionScript_LoadSaveGame` | old |
 | 0x4B90E0 | `Camera_WorldToScreen` | V |
 | 0x4D0820 | `FrontEnd_LaunchGta2Manager` | V |
@@ -1211,7 +1229,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4A4FE0 | `Weapon_GetAmmo` | high | returns WEAPON_STRUCT.ammo; Player_BeginKfCarWeapon stores as kfSavedAmmo |
 | 0x4A4FF0 | `Weapon_SetAmmoRaw` | high | writes ammo short without *10; Player_EndKfWeapon restores kfSavedAmmo |
 | 0x4A5090 | `Camera_GetPosZPlusTwo` | med | Fix16_Add(camera+0xa0, 2.0 const DAT_0066b1d0); Player_GetPos/GetBlockPos |
-| 0x4A5190 | `CarDeltas_GetBits` | med | returns *this of Car.deltasBitstate; sprite draw FUN_004be060 |
+| 0x4A5190 | `CarDeltas_GetBits` | med | returns *this of Car.deltasBitstate; sprite draw Sprite_Draw |
 | 0x4A51A0 | `CarDeltas_SetBits` | med | *this=*p; sprite draw + Player_RestoreSavedCars |
 | 0x4A51B0 | `Car_SetDamage` | high | writes Car+0x74 (damage short); Player_RestoreSavedCars |
 | 0x4A52B0 | `Player_BeginKfWeapon` | high | on-foot twin of BeginKfCarWeapon; callers SET_KF_WEAPON / START_BASIC_KF_TEMPLATE |

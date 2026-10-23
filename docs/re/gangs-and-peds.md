@@ -15,11 +15,10 @@ verified here), struct names from gta2-seuko-mod / gta2-resurection / gta2-mouse
 [CREDITS.md](../../CREDITS.md)), gang data decoded from `data.pak` with
 `tools/formats` (`scr --gangs`, `gmp --gangs`).
 
-> **Misleading enum names in the DB.** `Ped_CheckBitState2` / `Ped_SetBitState2` (0x4333a0 /
-> 0x403920) compare / write **`Ped.pedClass` (+0x238)**, not a bit field. A decompiled
-> `Ped_CheckBitState2(ped, FIRING_FROM_GUN)` is really `pedClass == 2 (PLAYER)`;
-> `PED_BIT_STATE2_3_COP_RELATED` = 3 (AMBIENT), `UNK_4_POLICE` = 4 (SPECIAL_AI), `UNK_6` = 6
-> (CAR_DRIVER). Reported to Seq 27 (Ped owner) for renaming. This document uses the real meaning.
+> **Ped class, not a bit state.** `Ped_IsPedClass` / `Ped_SetPedClass` (0x4333a0 / 0x403920; were
+> `Ped_CheckBitState2` / `Ped_SetBitState2`) compare / write **`Ped.pedClass` (+0x238)**, not a bit
+> field; the enum is `PED_CLASS` (2 PLAYER, 3 AMBIENT, 4 UNSURE_CREW, 5 MISSION, 6 UNSURE_DRIVER_NPC,
+> see [ped-ai.md](ped-ai.md) §5).
 
 ## 1. Structures
 
@@ -50,7 +49,7 @@ types (2026-10-22).
 
 ### Ped pool and `DummyPedManager` (V)
 
-- **Pool**: `PedManager_S25` (gzf `PedsManager` merged into it, 0x203AC bytes, `ptrToPedManager` 0x5E5BBC, built by
+- **Pool**: `PedManager` (was `PedManager_S25`; gzf `PedsManager` and the gta2-mouse `PedManager` merged into it, 0x203AC bytes, `g_PedManager` 0x5E5BBC (was `ptrToPedManager`), built by
   `DummyPedManager_Ctor` 0x4416b0): `+0 freeListHead`, `+4 activeListHead`, `+8 peds[200]` (660 B
   each, linked by `Ped.nextPed`), `+0x203A8 activeCountLastTick`. **200 peds** for everyone
   (ambient, cops, mission, gang drivers, player). `PedManager_AllocPed` 0x403890 pops the free list
@@ -73,7 +72,7 @@ types (2026-10-22).
 ### `MapZoneInfo` (22 bytes, new) (V)
 
 Per-zone traffic/population record, 11 × u16, reached through `GetDensity` 0x465250 (first zone of
-type 10/1/15 at the point, else default slot 0 at `MapBlocks+0x334`). Defaults set by `processS11`:
+type 10/1/15 at the point, else default slot 0 at `MapBlocks+0x334`). Defaults set by `MapBlocks_BuildZoneInfoSlots`:
 
 | off | field | default | script op |
 |---|---|---|---|
@@ -114,7 +113,7 @@ Setters: `MapBlocks_SetZone*` 0x462ce0..0x462e20; MAP_ZONE decl → `MapBlocks_S
 
 - `PedSprite` (gzf 2021, 0x20) is a truncated view of **`Sprite`** (0x3C), the collision/render
   body (`PedGameObject+0x80`), pool `SpritePool` (5031 × 0x3C), used by peds,
-  cars and objects: `+8` owner, `+0x22` frame, `+0x24` remap, `+0x30` kind (2 car, 3 ped),
+  cars and objects: `+8` owner, `+0x22` frame, `+0x24` remap, `+0x30` `spriteType` (2 car, 3 ped, 4/5 objects, 8 particle; see objects-and-weapons.md §2),
   `+0x34` render state.
 - `S32` (gta2-mouse) = existing `WorldObject` (3825 × 0x2C, object.cpp); `S31` (merged) =
   `WorldObjectPool`.
@@ -171,7 +170,7 @@ Every writer:
 
 | source | function | change |
 |---|---|---|
-| player kills a gang ped | `Ped_OnKilled` 0x43d880 → `unsure_Ped_NotifyPlayerOfEvent` 0x434ff0 → `Gang_ApplyKillRespect` 0x45de10 | delta **5** (1 if victim `Ped+0x290` ∈ {1,3}); victim gang = `Ped+0x17C`, or `+0x19C gangAffiliation` for gang-skinned civilians; requires `killAffectsRespect` |
+| player kills a gang ped | `Ped_OnKilled` 0x43d880 → `Ped_ApplyKillRespectToGang` 0x434ff0 → `Gang_ApplyKillRespect` 0x45de10 | delta **5** (1 if victim `Ped+0x290` ∈ {1,3}); victim gang = `Ped+0x17C`, or `+0x19C gangAffiliation` for gang-skinned civilians; requires `killAffectsRespect` |
 | `Gang_ApplyKillRespect(gang, p, d)` | 0x45de10 | own gang `-= hasRespectMeter × d`; every other gang j: `+= gang.killReaction[j] × d`, saturating at +100 (a negative reaction would also end at +100 — overflow check) |
 | player wrecks / blows up / jacks a gang-model car | `Car_Explode` 0x426fa0, `Car_OnWrecked` 0x427290, `Ped_Obj2_EnterCar` 0x43d1c0, gang from `GangRespectContainer_FindByCarModel` 0x45dce0 | delta 1 (any car of that model) |
 | op 225 SET_CHAR_RESPECT | `Gang_SetRespect` 0x45da20 | absolute `arg × 20` |
@@ -202,7 +201,7 @@ Call graph (every tick, no divisor):
 GameTick 0x45c1f0
 └─ DummyPedManager_Update 0x445a20
    ├─ PedManager_UpdateActivePeds 0x445960      each active ped: Ped_Update 0x4454e0 (counts per class,
-   │                                            Ped_UpdateState 0x43ecc0 = despawn rules); finished → free list
+   │                                            Ped_TickLifecycle 0x43ecc0 = despawn rules); finished → free list
    ├─ copies the per-tick counters into DummyPedManager
    └─ DummyPedManager_SpawnForAllCameras 0x4415e0   (skipped by debug flag g_skipDummies 0x5ead69)
       └─ for each player camera (Game_CameraIter_Begin/Next 0x45a800/0x45a850: main + aux)
@@ -252,7 +251,7 @@ Cheats: `g_cheatElvisPeds` forces type 3; `g_noAnnoyingChars` forces type 0 exce
 `makeAllCharsMuggers` turns 50 % of spawns into occ 40 (class 4, AREA / REACT_AS_NORMAL).
 Spawn is cancelled (ped removed) if the collision grid reports an obstacle at the point.
 
-**Despawn** (`Ped_UpdateState` 0x43ecc0; `Ped+0x20E offscreenTicks` +1 per tick, reset while the
+**Despawn** (`Ped_TickLifecycle` 0x43ecc0; `Ped+0x20E offscreenTicks` +1 per tick, reset while the
 ped or its car is in any camera). There is **no distance-based despawn**:
 
 | pedClass | rule |
@@ -314,7 +313,7 @@ them (§4, §7).
 | 31 | ARMY_ON_FOOT | foot soldier |
 | 32 | GUARD_AGAINST_PLAYER | script |
 | 33 / 34 | CRIMINAL_TYPE1 / 2 | script; the two types ignore each other in the hostility test |
-| 35 | SPECIAL_GROUP_MEMBER | recruited group member (`unsure_Ped_JoinGroupAsMember`) |
+| 35 | SPECIAL_GROUP_MEMBER | recruited group member (`Ped_InitAsGroupMemberCloneOf`) |
 | 36 | TANK_DRIVER | script (H) |
 | 37 | ROAD_BLOCK_GUARD | `PoliceManager_SpawnRoadblockGuard` 0x4a9b40 |
 | 38 | FIREMAN | fire truck driver |
@@ -325,7 +324,7 @@ them (§4, §7).
 | 43 | STAND_STILL_BLOKE | script |
 | 44 | ELVIS_LEADER | Elvis group leader |
 | 45..49 | REFUGEES, ANY_* | script bonus checks |
-| 50 | DRIVER_ABANDONING_CAR | `unsure_PedManager_CreateDriverFor` 0x43e270 (damaged car) |
+| 50 | DRIVER_ABANDONING_CAR | `PedManager_CreateAbandoningDriver` 0x43e270 (damaged car) |
 | 51 | NO_OCCUPATION | script bonus checks |
 
 6, 20, 21, 30: no setter found. `Ped_IsPoliceLikeOccupation` 0x4331e0 = 23..27 or 37 (includes
@@ -338,7 +337,7 @@ objectives), switch on `Ped.threatReaction` (+0x28C):
 
 - **Target search** (`Ped.threatSearch` +0x288): `Ped_FindThreatArea` 0x43beb0 (mode 1) /
   `Ped_FindThreatLineOfSight` 0x43bed0 (mode 5, cone) scan the collision grid around the observer
-  through `unsure_Ped_ThreatGridCandidateFilter` 0x4b9a10 (skips AMBIENT-class candidates and dead
+  through `Ped_ThreatSearchCandidateFilter` 0x4b9a10 (skips AMBIENT-class candidates and dead
   peds), then fall back to the nearest ped in the per-tick **threat list**
   (`PedThreatList_FindNearest` 0x445c30, Chebyshev < 4.0 blocks, |dz| < 1). The target is any ped
   that passes the predicate below — not only the player.
@@ -353,7 +352,7 @@ objectives), switch on `Ped.threatReaction` (+0x28C):
 - **Giving up**: GANG_MEMBER drops the kill task when the target is armed and respect ≥ −19
   (`Ped_UpdateOccupationBehaviour` 0x442de0); target lost after 15 misses or > 6.0 blocks.
 
-**The predicate** `unsure_Ped_ShouldReactToPed(observer, candidate)` 0x4371d0, gang branch
+**The predicate** `Ped_ShouldReactToPed(observer, candidate)` 0x4371d0, gang branch
 (observer has `Ped.gang`):
 
 | candidate | observer attacks when |
@@ -378,8 +377,7 @@ respect > 79 already attack cops. What does **not** exist: police *pursuit* of n
 
 ## 7. Emergency services (V)
 
-**Ambulance** — trigger is a death: the death handler (named `Ped_AttachToGame` 0x4411b0 in the
-DB; it is really the kill handler) sets objective 28 on the corpse (sprite, no group, not mission,
+**Ambulance** — trigger is a death: the death handler `Ped_OnDeath` 0x4411b0 (was `Ped_AttachToGame`) sets objective 28 on the corpse (sprite, no group, not mission,
 not player); `Ped_SetObjective` case 28 (0x43bde1) → `AmbulanceManager_EnqueuePed` 0x472f20 (cap
 **25**; player-class corpses refused). `AmbulanceManager_Update` 0x4740b0 (skipped by
 `g_skipAmbulance` 0x5EAD6B; the queue still fills):
@@ -456,13 +454,15 @@ Used by the K menu's "Call ambulance" / "Call fire truck" (`host/c32/emergency.c
 
 - **Bodies get dropped.** `PedPathfinder_FindSpawnTile` 0x49d7a0 (thiscall on
   `g_PedPathfinder` 0x66A7E4; `(char kind, u8* x, u8* y, u8* z, char wide)`) returns 0 at
-  once while `PedPathfinder+0x38` is set and `wide == 0`; the flag flips every frame
-  (1, 0, 1, …). `AmbulanceManager_DispatchForQueuedPed` passes `wide = 0`, so a body
+  once while `PedPathfinder+0x38` (`searchInProgress`) is set and `wide == 0`; the flag
+  flips every frame (1, 0, 1, …) while a ped search runs, and a failed ped search leaves it
+  stuck at 1 (pathfinder bug 4 in [ped-ai.md](ped-ai.md) §8). `AmbulanceManager_DispatchForQueuedPed` passes `wide = 0`, so a body
   popped on a busy tick is dropped. Its give-up `Ped_SetObjective(50)` is ignored for a
   dead ped (`Ped_SetObjective` only takes objective 28 while WASTED), so the body keeps
   objective 28 and no ambulance ever comes. Queueing it again a frame later works.
-  Without `wide` the search stops after 6 rings: the Downtown start square has no road
-  in range, so no ambulance can come there at all.
+  Without `wide` the search gives up after **7 popped tiles** (a BFS flood, not "rings";
+  Seq H3): the Downtown start square has no road in range, so no ambulance can come there
+  at all.
 - **Fire-truck targets on a junction never get reached.** A drive order routes to "the
   junction ahead of the goal tile" (`RoadNetwork_FindRoute` 0x40e030), so a target
   inside a `RoadJunction` rectangle makes the truck drive through it and round the block
@@ -493,7 +493,7 @@ Used by the K menu's "Call ambulance" / "Call fire truck" (`host/c32/emergency.c
 | respect cheats | `*(s8*)(*(u32*)0x5EB898 + i*0x144 + 0x11C + player)`; or the immediates in `Gang_IsHostileToPlayer` 0x45dae0 (−19), `Gang_PickWeaponByRespect` 0x45db70 (−59/−100), kill deltas 5/1 in 0x434ff0 and 1 in 0x426fa0 / 0x427290 / 0x43d1c0 |
 | ambient crowd size | `DummyPedManager.targetCount` (50), the `>>1` at `copLevel > 3` in 0x4415e0, `zone.pedDensity` (on-screen limit = density / 25) |
 | spawn mix | `MapZoneInfo` +0xC..+0x14 (or the SET_*_RATIO ops), the `random(50) == 25` Elvis gate, the `random(25)` dummy remap |
-| despawn time | `g_PedOffscreenTicksLimit` 0x5E5D80 (40); immediates 100/200/60 in `Ped_UpdateState` 0x43ecc0 |
+| despawn time | `g_PedOffscreenTicksLimit` 0x5E5D80 (40); immediates 100/200/60 in `Ped_TickLifecycle` 0x43ecc0 |
 | disable systems | debug flags `g_skipDummies` 0x5EAD69, `g_skipAmbulance` 0x5EAD6B, `g_skipFireEngines` 0x5EAD8B |
 | call services from a mod | `AmbulanceManager_EnqueuePed(g_AmbulanceManager, ped)` or `Ped_SetObjective(ped, 28)`; `FireEngineManager_RequestForCar(g_FireEngineManager, car)` |
 | roadblocks from a mod | `PoliceManager_TryCreateRoadblockAt(fake manager, x, y, dir)` on your own `PoliceRoadblock` (Ctor first) with `copLevel` at −0x10: as many as you like, never despawned because the game only updates its own 2 (`host/c32/roadblocks.c`) |
@@ -506,33 +506,33 @@ pass verified them.
 
 | address | name | role |
 |---|---|---|
-| 0x403920 | Ped_SetBitState2 (really SetPedClass, reported) | writes `pedClass` |
+| 0x403920 | Ped_SetPedClass (was Ped_SetBitState2) | writes `pedClass` |
 | 0x403b40 / 0x450cb0 | Ped_SetObjectiveDone / Ped_GetObjectiveStatus | `Ped+0x225` |
-| 0x404120 | unsure_PedGroup_SwapMemberWithLeader | dead leader/medic replacement |
+| 0x404120 | PedGroup_SwapMemberWithLeader (was unsure_PedGroup_SwapMemberWithLeader) | dead leader/medic replacement |
 | 0x40fea0 | Sprite_GetOwnerSpriteIfPed | body kind 3 → owner |
 | 0x41f9f0 | Car_RequestFireTruckAndSpawnFlames | wreck → fire truck |
 | 0x433430 | MapBlocks_IsSlope45to52At | spawn test |
 | 0x433b30 | Gang_GetKillAffectsRespect | +0x111 |
-| 0x433e90 | Camera_HasFollowTarget | |
+| 0x433e90 | Camera_HasTarget (was Camera_HasFollowTarget) | |
 | 0x4350a0 | Ped_RegisterAsThreat | threat list push |
 | 0x436830 / 0x43ad10 | Ped_FreeSelectedWeapon / Ped_SetAltWeapon | |
-| 0x436890 | unsure_Ped_TickOnScreenCounter | on-screen count, offscreen reset |
+| 0x436890 | Ped_UpdateOnScreenCount (was unsure_Ped_TickOnScreenCounter) | on-screen count, offscreen reset |
 | 0x43beb0 / 0x43bed0 | Ped_FindThreatArea / Ped_FindThreatLineOfSight | target search |
 | 0x43dbd0 | PedManager_CreateSpritelessDriver | |
 | 0x43dc60 | Car_CreateGangDriverPed | gang driver |
 | 0x43dd80 | PedManager_CreateDummyTrafficDriver | shared traffic driver |
 | 0x43deb0 | PedManager_CreateTrainPassenger | |
 | 0x43e8b0 / 0x43eaf0 / 0x442420 / 0x442a40 | Ped_UpdateMugger / _TrainPassenger / _TaxiPassenger / _EjectedDriver | occupation handlers |
-| 0x442050 / 0x4427e0 | unsure_Ped_UpdateCarThief / unsure_Ped_UpdateBusPassenger | |
+| 0x442050 / 0x4427e0 | Ped_UpdateCarThief / Ped_UpdateBusPassenger (`unsure_` dropped) | |
 | 0x442de0 | Ped_UpdateOccupationBehaviour | per-occupation AI switch |
 | 0x4404f0 | DummyPedManager_SpawnAmbientPed | kind roll + setup |
 | 0x440cc0 | DummyPedManager_TrySpawnAtCameraEdge | spawn point tests |
 | 0x4415e0 | DummyPedManager_SpawnForAllCameras | cap + camera loop |
 | 0x445960 | PedManager_UpdateActivePeds | update + free |
 | 0x445c30 | PedThreatList_FindNearest | |
-| 0x445f10 / 0x446100 / 0x446060 | PedQueue_Push / PedQueue_Pop / unsure_PedQueue_PurgeNotWasted | |
-| 0x4460d0 | unsure_PedList_FreeAll | |
-| 0x41dfc0 / 0x41e620 | unsure_Camera_GetTargetSpeed / unsure_Camera_GetTargetHeading | |
+| 0x445f10 / 0x446100 / 0x446060 | PedQueue_Push / PedQueue_Pop / PedQueue_RemoveUnlessWasted (was unsure_PedQueue_PurgeNotWasted) | |
+| 0x4460d0 | PedList_Clear (was unsure_PedList_FreeAll) | |
+| 0x41dfc0 / 0x41e620 | Camera_GetTargetSpeed / Camera_GetTargetHeading (`unsure_` dropped) | |
 | 0x450bc0 / 0x450c10 / 0x450c30 / 0x450c40 / 0x450ca0 | FireEngineSlot_Abort / _Reset / _Release, FireEngineManager_FindFreeSlot / _ResetSerial | |
 | 0x450cc0 | FireEngineSlot_TargetHasFlames | |
 | 0x450cd0 | FireEngineSlot_UpdateWatchdog | |
@@ -561,10 +561,10 @@ pass verified them.
 | 0x473320 | AmbulanceSlot_UpdateActiveStage | |
 | 0x473ce0 / 0x473e00 | AmbulanceSlot_Update / AmbulanceManager_DispatchForQueuedPed | |
 | 0x475910 / 0x475950 | Gang_SetArrowTarget / Gang_SetHasRespectMeter | |
-| 0x482540 | unsure_Object_IsActiveFlame | object type 0x71 |
+| 0x482540 | Object_IsBurningFlame (was unsure_Object_IsActiveFlame) | object type 0x71 |
 | 0x497df0 | PedGameObject_UpdateAnimFrame | frame = graphicType base (0/158/316) + anim, remap re-applied |
 | 0x497c20 / 0x4338e0 / 0x433880 / 0x4355c0 | PedGameObject_Init / Sprite_SetOwnerPed / PedGameObject_PlaceBody / PedGameObjectPool_Release | |
-| 0x4b9a10 | unsure_Ped_ThreatGridCandidateFilter | |
+| 0x4b9a10 | Ped_ThreatSearchCandidateFilter (was unsure_Ped_ThreatGridCandidateFilter) | |
 | 0x4b9b00 / 0x420700 / 0x4206c0 / 0x4bafd0 | Sprite_SetRemap / _SetNoRemapState / _SetFrame / Sprite_ResizeToFrame | |
 | 0x4bf430 | StyleData_GetPaletteIndex | ped remap → palette |
 | 0x4c5480 / 0x4c54c0 / 0x4c54f0 / 0x4c5a00 | EmergencyVehicleSlot_Reset / _RemoveDriverFromGroup / _IsDriverNotWasted / _UpdateLeaving | |
@@ -591,7 +591,7 @@ missing ones added.
   that rival gangs actually fight in a shipped map.
 - Reader of `highRespectFlag` besides the cop branch.
 - `Ped+0x290` values 1/3 (reduce the respect kill delta to 1): meaning unknown.
-- `PoliceCrew_Update` 0x4ad600 and `FUN_00446b80` (caller of the threat-grid filter) not read.
+- `PoliceCrew_Update` 0x4ad600 and `NearestSprite_ScanCellList` (caller of the threat-grid filter) not read.
 - Per-edge spawn heading constants (Ang16 copies set by CRT stubs at 0x5052d0..) not resolved.
 - Empty ped pool (200) and empty sprite pool (400): `PedManager_AllocPed` has no empty check;
   behaviour untested.
@@ -624,7 +624,7 @@ missing ones added.
 | 0x435510 / 0x435550 | PedGameObjectPool_Dtor / _Ctor | V | 400 x 0xB4 PedGameObject (g_PedGameObjectPool); DummyPedManager_Ctor/Dtor |
 | 0x43ADD0 | PedGameObjectPool_ScalarDeletingDtor | V | calls 0x435510, free if flag&1 |
 | 0x435540 / 0x43ADF0 | PedListNodePool_Dtor / _ScalarDeletingDtor | V | g_PedListNodePool 0x5E5FBC: free list of 100 {Ped*, next} nodes for PedQueue_*/PedList_* (PedListNodePool_Init 0x4355E0, _Alloc 0x445EF0, _Free 0x445F00); DummyPedManager_Ctor/Dtor. Same 0x324 template as TaxiNodePool (g_TaxiNodePool 0x5E580C) |
-| 0x43AE40 / 0x43DB20 | PedManager_Dtor / PedManager_ScalarDeletingDtor | V | 200 x Ped (0x294) in ptrToPedManager; callers DummyPedManager_Dtor, Game_Dtor |
+| 0x43AE40 / 0x43DB20 | PedManager_Dtor / PedManager_ScalarDeletingDtor | V | 200 x Ped (0x294) in g_PedManager; callers DummyPedManager_Dtor, Game_Dtor |
 | 0x3F154C / 0x3F1574 | Replay_CreateEmptyFile / Replay_TruncateReplayFiles | V | fopen "wb" of "test\replay.rep", "test\replay0.rep" |
 
 The ten 0x3F10B0–0x3F1AFA stubs first named `*_Chunk` are 11.44 patch code-cave hooks; they are now `Patch1144_*` and listed in crt-and-network.md section 4.

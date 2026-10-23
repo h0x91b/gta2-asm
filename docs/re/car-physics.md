@@ -41,7 +41,7 @@ from the disassembly where that mattered.
   `33 − (Game+0x30 ? 22 : 0)` in single player, always 33 in multiplayer). With
   `Game.compensationFPSTime` set the tick is 11 ms (writer not found).
 * `drawAndLimitFrames` 0x462A30 (called from `WinMain`'s idle loop) uses `timeGetTime()` only.
-  Default registry `max_frame_rate=1`, `min_frame_rate=0` (`loadRenderSettings1` 0x4CB1D0): at most
+  Default registry `max_frame_rate=1`, `min_frame_rate=0` (`RenderSettings_LoadFrameRateLighting` 0x4CB1D0): at most
   one tick per drawn frame and the deadline is re-based to "now" before each tick, so a slow machine
   runs the game slower instead of dropping ticks. `min_frame_rate=1` allows up to 8 catch-up ticks.
 * There is no `dt` anywhere: every velocity and acceleration is "per tick" (dt = 1).
@@ -168,7 +168,7 @@ The same external-velocity trick carries object pushes (`CarPhysics_ApplyConveyo
   |---|---|---|
   | car–wall (`CarPhysics_ApplyWallImpulse` 0x4A32D0) | 0x66AE38 = **0.25** | immovable |
   | car–car (`CarPhysics_CollideWithCar` 0x4A34A0) | 0x66B04C = **0.5** | other car's mass/inertia, equal and opposite `ApplyImpact` |
-  | car–ped (`CarPhysics_CollideWithSprite` 0x4A0A30) | 0x66AE88 = 1.0 | ped mass 0.5 (0x66AC44), inertia 1.0; the **car gets no impulse**, the ped reacts by impulse tiers (`unsure_PedSprite_HandleCarImpact` 0x497570) |
+  | car–ped (`CarPhysics_CollideWithSprite` 0x4A0A30) | 0x66AE88 = 1.0 | ped mass 0.5 (0x66AC44), inertia 1.0; the **car gets no impulse**, the ped reacts by impulse tiers (`PedGameObject_HandleCarImpact` 0x497570) |
   | car–object (`CarPhysics_CollideWithObject` 0x4A3A40) | 0x66AEA4 = 1.0 | object inertia 1.0 |
 * `CarPhysics_ApplyImpact` 0x4A31B0 applies it (threshold-gated), wakes the car
   (`KeepActiveFor` 15 ticks for walls, 0x32 for car–car), and stores `g_CollisionImpactMagnitude`
@@ -280,7 +280,7 @@ Existing DB names changed in this pass (was → now, reason in the plate comment
 `relToPlayerPosZ` → `Fix16_IsEqual`; `TogglesEmergencyLightsAndBrakes` → `CarDeltas_SetBit`;
 `unsure_Car_AttachDeltaSprites` → `Car_AttachEmergencyLights`; `unsure_Car_ExplodeIfGrounded` →
 `Car_TriggerExplosion`; `unsure_CarPhysics_ComputeSweepFraction` → `CarPhysics_ComputeRequiredSweepSteps`;
-`unsure_Fix16Vec2_Ctor` → `Fix16Vec2_MulAssign`; `unsure_` dropped from `Collision_FindObstacle`,
+`unsure_Fix16Vec2_Ctor` → `Fix16Vec2_MulAssign` (now `Vec2_MulAssignFix16`); `unsure_` dropped from `Collision_FindObstacle`,
 `Gci_ParseText`, `CarPhysics_ComputeRelativePointVelocity`, `CarPhysics_ComputeCollisionImpulse`;
 global `g_CollisionContactRelCm` → `g_CollisionNormal`; field `unsure_partlyAirborne` →
 `unsure_someCornersUnsupported`. `CarPhysics_CollideWithSprite` is kept but handles **peds** only.
@@ -307,7 +307,7 @@ comment in Ghidra has the evidence.
 | `0x461930` | `Game_RunLogicStep` | one logic tick | verified |
 | `0x462A30` | `drawAndLimitFrames` | the 33 ms fixed-step scheduler + draw | verified |
 | `0x4A4570` | `CarPhysics_Update` | per-car tick state machine (section 2) | verified |
-| `0x4CB1D0` | `loadRenderSettings1` | reads registry max_frame_rate (default 1) / min_frame_rate (default 0) used by the scheduler | verified |
+| `0x4CB1D0` | `RenderSettings_LoadFrameRateLighting` (was `loadRenderSettings1`) | reads registry max_frame_rate (default 1) / min_frame_rate (default 0) used by the scheduler | verified |
 | `0x4D1170` | `WinMain` | main loop; idle -> drawAndLimitFrames (`0x4D11B8` is the false split `WinMain_AfterNoppedMutexCheck_Frag`) | verified |
 
 #### 2. Integration, pose, Z and trailers (69)
@@ -320,8 +320,8 @@ comment in Ghidra has the evidence.
 | `0x420FD0` | `CarPhysicsPool_Alloc` | pop the head of the free list (firstFree = head->next), CarPhysics_Init(head), return it. NO empty-check (306 slots; the caller… | verified |
 | `0x421130` | `CarPhysics_IsKeptActive` | `frame < activeUntilFrame` | verified |
 | `0x425D90` | `Car_CreatePhysics` | if car has no physics: Car_AllocPhysicsIfNeeded -> CarPhysics_AttachCar -> CarPhysics_InitFromSprite(sprite); if it exists and car is a… | verified |
-| `0x425DD0` | `Car_EnsurePhysics` | physics on demand: trailer rig -> FUN_0040F450(trailerController) (creates physics for both), else Car_CreatePhysics. 12 callers (driver… | verified |
-| `0x426120` | `Car_FreePhysics` | return car->physics to the pool (FUN_004254F0(ptrToCarPhysicsPool, physics)) and set car->physics=NULL. Called from Car_Destroy,… | verified |
+| `0x425DD0` | `Car_EnsurePhysics` | physics on demand: trailer rig -> TrailerController_CreatePhysics(trailerController) (creates physics for both), else Car_CreatePhysics. 12 callers (driver… | verified |
+| `0x426120` | `Car_FreePhysics` | return car->physics to the pool (CarAIPool_PushFree(ptrToCarPhysicsPool, physics)) and set car->physics=NULL. Called from Car_Destroy,… | verified |
 | `0x4262E0` | `Car_UpdateArticulatedCabTrailerSearch` |  | verified |
 | `0x49DD10` | `CarPhysics_UpdateTrailerAlignment` | -> TrailerController_UpdateAlignment | verified |
 | `0x49DE40` | `CarPhysics_RestoreStartPose` | inverse of SaveStartPose: restores car+trailer fields +30,+34,+6c,+58,+38,+3c,+70,+68 from DAT_0066acd0.. block. | verified |
@@ -350,7 +350,7 @@ comment in Ghidra has the evidence.
 | `0x49F660` | `CarPhysics_GetMass` | Car_GetMass, or cab+trailer when towing | verified |
 | `0x49F6C0` | `CarPhysics_GetInertia` | physicsData.inertia, or cab+trailer sum | verified |
 | `0x49F760` | `CarPhysics_SetVelocityTowardTarget` | kinematic placement: linVel = (target + R(heading)*cmOffset) - cmPos, angVel = targetAngle - Ang16_ToFix16(heading) unwrapped by turn… | verified |
-| `0x49F930` | `CarPhysics_ComputeRequiredSweepSteps` | returns the NUMBER OF SWEEP STEPS (distance in car half-width units, caller takes `FixedToIntB`), not a 0..1 fraction | verified |
+| `0x49F930` | `CarPhysics_ComputeRequiredSweepSteps` | returns the NUMBER OF SWEEP STEPS (distance in car half-width units, caller takes `Fix16_ToIntC`), not a 0..1 fraction | verified |
 | `0x49FAC0` | `CarPhysics_ClearForces` | zero +0x48,+0x50,+0x7C,+0x80 | verified |
 | `0x49FBE0` | `CarPhysics_ComputeSlopeCorrection` | z gained along a slope this step (two outputs) | verified |
 | `0x49FDC0` | `CarPhysics_UpdateZOnRailway` | train Z (railway height + slope correction) | verified |
@@ -364,13 +364,13 @@ comment in Ghidra has the evidence.
 | `0x4A1BE0` | `CarPhysics_Reset` | reset dynamic state (mode=1 AI, cachedModelId=0xFF, ...) | verified |
 | `0x4A1CF0` | `CarPhysics_Init` | initialise a pool slot: cmPos=0, heading(+0x58)=DAT_0066AC08 (0), centerPos=0, next(+0xC)=NULL, Reset, cmDelta(+0)=0. Called by… | verified |
 | `0x4A1D30` | `CarPhysics_AttachCar` | physics->car(+0x5C)=car; mode := PLAYER(2) if Car_HasPlayerDriver else AI(1). Called by Car_CreatePhysics. gta2_re 10.5: SetCar_5638C0. | verified |
-| `0x4A1D60` | `CarPhysics_Ctor` | CarPhysics constructor for the pool vector-ctor: constructs the 4 skid Vec2 members (+0x10..+0x2F, 8 bytes each, FUN_0040F5B0),… | verified |
+| `0x4A1D60` | `CarPhysics_Ctor` | CarPhysics constructor for the pool vector-ctor: constructs the 4 skid Vec2 members (+0x10..+0x2F, 8 bytes each, Nop_ReturnThis),… | verified |
 | `0x4A20E0` | `CarPhysics_ApplySlopeGravity` | slope gravity force | verified |
 | `0x4A2240` | `CarPhysics_UpdateGroundZ` | per-step Z following (air / water / ground / slope); prototype fixed `(CarPhysics*, int step)` | verified |
 | `0x4A2640` | `CarPhysics_UpdateZWithTrailer` | UpdateGroundZ for cab + trailer, both get the higher z/zStep | verified |
 | `0x4A2980` | `CarPhysics_UpdateSurfaceAndEmitLanding` | surface update + landing particles | verified |
 | `0x4A2A30` | `CarPhysics_NudgeOutOfWallY` | Y twin of NudgeOutOfWallX (uses contact rel-cm x). | verified |
-| `0x4A2B40` | `CarPhysics_NudgeOutOfWallX` | wall-X stuck fix: from heading (+0x58, half-turn flip if +0x94), compares contact rel-cm y (g_CollisionContactRelCm+4) sign with heading… | verified |
+| `0x4A2B40` | `CarPhysics_NudgeOutOfWallX` | wall-X stuck fix: from heading (+0x58, half-turn flip if +0x94), compares contact rel-cm y (g_CollisionNormal+4) sign with heading… | verified |
 | `0x4A2C70` | `CarPhysics_NudgeOutOfSprite` | stuck-vs-sprite nudge: kick strength chosen by hit sprite (obj type 0xA6 weak DAT_0066aea8, player driver DAT_0066af80, AI… | verified |
 | `0x4A2D70` | `CarPhysics_NudgeOutOfCollision` | called by MoveAndCollide after a hit when engine accelerates: switch g_CollisionResult.kind 1 -> NudgeOutOfWallX, 2 -> WallY, 3 ->… | verified |
 | `0x4A2DB0` | `CarPhysics_CheckPendingCollision` | if Car flag 0x2000: overlap check vs sprites (mask 2), else clear flag | verified |
@@ -402,7 +402,7 @@ comment in Ghidra has the evidence.
 | `0x421B90` | `Car_GetDamageFactorOnSpeed` | damage (Car+0x74) -> 1.0 … 0 power scale | verified |
 | `0x4221A0` | `Car_FullStop` | Car(+0x58 physics): footbrake on (+0x91=1), gas/reverse/coast off. Used by AI/scripts to stop a car. Compare Car_BrakeHard (also sets… | verified |
 | `0x4221B0` | `Car_BrakeHard` | CarPhysics_SetHandbrake + footbrake on, gas/reverse/coast off. | verified |
-| `0x4222A0` | `Car_CanExitCar` | may the player leave this car now? false if FUN_00421d80(car); true if car has no CarPhysics (+0x58); else /physics.linVel/ <… | verified |
+| `0x4222A0` | `Car_CanExitCar` | may the player leave this car now? false if Car_HasSpriteZoom(car); true if car has no CarPhysics (+0x58); else /physics.linVel/ <… | verified |
 | `0x426030` | `Car_UpdateEngineState` | Car engineState machine tick. ENGINE_OFF: if physics exists and IsEngineAccelerates -> state 'REL_TO_CAR_SIREN' (=starting; enum name… | verified |
 | `0x426E00` | `Car_EngineOn` | engineState=ENGINE_ON(3) + EngineStartedLightsOn. | verified |
 | `0x429810` | `Car_ApplyDriverControls` | Car-level input, roof turret/horn/trailer, then SetControls | verified |
@@ -484,7 +484,7 @@ comment in Ghidra has the evidence.
 
 | address | name | role | confidence |
 |---|---|---|---|
-| `0x426580` | `unsure_Car_ApplyExplosionKnockback` | ApplyImpact from explosion | hypothesis |
+| `0x426580` | `Car_ApplyExplosionKnockback` (was `unsure_Car_ApplyExplosionKnockback`) | ApplyImpact from explosion | hypothesis |
 | `0x446740` | `Collision_GetRowStripList` | row (0..255) -> first strip node in visible range | verified |
 | `0x446F30` | `Collision_CheckRowAndNotify` | row step: CollisionCheck + OnOverlapNotify | verified |
 | `0x4470B0` | `Collision_FindObstacleInRow` | row scan for it | verified |
@@ -492,20 +492,20 @@ comment in Ghidra has the evidence.
 | `0x447480` | `Collision_CheckAndNotifyAllForSprite` | broad phase over rows DAT_00662bac..bfc | verified |
 | `0x447740` | `Collision_FindObstacle` | returns first obstacle sprite overlapping arg, 16 callers | verified |
 | `0x482CC0` | `CarPhysics_CollideWithObjectAtPoint` | sets contact pos, calls CollideWithObject | verified |
-| `0x497570` | `unsure_PedSprite_HandleCarImpact` | ped reaction to being hit (Seq 27 domain) | hypothesis |
+| `0x497570` | `PedGameObject_HandleCarImpact` (was `unsure_PedSprite_HandleCarImpact`) | ped reaction to being hit (Seq 27 domain) | hypothesis |
 | `0x49E270` | `CarPhysics_CheckCarAndTrailerCollisions` | grid query for car and trailer sprites on g_CollisionGridNotify | verified |
 | `0x49E330` | `CarPhysics_ApplyAngularImpulse` | torqueAccum(+0x7C) -= arg * g_CurCarPhysicsData->inertia (CarPhysicsData+0). Callers: the three unsure_CarPhysics_NudgeOutOf* (collision… | verified |
-| `0x49E360` | `unsure_Fix16Vec2_DivScalar` | Vec2 / scalar | hypothesis |
+| `0x49E360` | `Vec2_DivInt` (was `unsure_Fix16Vec2_DivScalar`) | Vec2 / scalar | hypothesis |
 | `0x49EF10` | `CollisionResult_SetMoverSprite` | record +0x24 = sprite (g_CollisionResult struct, +0x24 = g_CollisionResult.moverSprite). Caller CarPhysics_TestCollision. | verified |
-| `0x49EF20` | `CollisionResult_IsHitPed` | kind(+0) == 3 (sprite hit) && unsure_Sprite_GetPedSprite(hit sprite +0x20) != 0. Caller CarPhysics_StepAndResolveCollisions (ped hits… | verified |
+| `0x49EF20` | `CollisionResult_IsHitPed` | kind(+0) == 3 (sprite hit) && Sprite_GetOwnerSpriteIfPed(hit sprite +0x20) != 0. Caller CarPhysics_StepAndResolveCollisions (ped hits… | verified |
 | `0x49EFC0` | `Car_AddFlag2000` |  | verified |
 | `0x49EFD0` | `Car_ClearFlag2000` |  | verified |
-| `0x49EFE0` | `Car_CanCrushCars` | IsCollideOver(car) (CARI flag) && (IsTank // !FUN_004214f0). Caller CarPhysics_CollideWithCar: vehicles that drive over / flatten other… | hypothesis |
+| `0x49EFE0` | `Car_CanCrushCars` | IsCollideOver(car) (CARI flag) && (IsTank // !Car_IsDrivenByNonPlayer). Caller CarPhysics_CollideWithCar: vehicles that drive over / flatten other… | hypothesis |
 | `0x4A0020` | `CarPhysics_TestCollision` | map + sprite test for car and trailer sprite, records mover | verified |
 | `0x4A0080` | `CarPhysics_DebugAssertCollisionKind` | dead debug assert (physics.cpp 0x7a0/0x7a9), 0 callers | verified |
 | `0x4A05C0` | `CarPhysics_ComputeCollisionImpulse` | the impulse maths, 7 callers; mass -1 = immovable | verified |
 | `0x4A0900` | `CarPhysics_ApplyAccelerationAsForce` | forceAccum(+0x48) += accel * g_CurCarEngineData->mass (+4): turns an acceleration into a force (Seq 48; not a table kick). Only caller 0x4A0960. | verified |
-| `0x4A0960` | `CarPhysics_ApplyAccelerationWithTrailerRedirect` | wrapper of 0x4A0900 with trailer redirect (FUN_00421720 => apply to linked CarPhysics). Callers: UpdateSurface, NudgeAndWake. | verified |
+| `0x4A0960` | `CarPhysics_ApplyAccelerationWithTrailerRedirect` | wrapper of 0x4A0900 with trailer redirect (Car_IsOnTrailer => apply to linked CarPhysics). Callers: UpdateSurface, NudgeAndWake. | verified |
 | `0x4A09B0` | `CarPhysics_NudgeAndWake` | post-contact kick + KeepActiveFor + release handbrake (not for trains) | verified |
 | `0x4A0A30` | `CarPhysics_CollideWithSprite` | car-ped: impulse, sets ped fields, calls ped handler | verified |
 | `0x4A3140` | `CarPhysics_ApplyImpulseWithTrailerRedirect` | redirect to linked trailer/cab physics | verified |
@@ -518,7 +518,7 @@ comment in Ghidra has the evidence.
 | `0x4A4270` | `CarPhysics_OnCollision` | replays pose at hit fraction, dispatches | verified |
 | `0x4B9A30` | `Sprite_ShouldCollideWithSprite` | collision filter by entry type 1..5 | verified |
 | `0x4BCAC0` | `Sprite_CollisionCheck` | narrow phase: z overlap + rect corners both ways | verified |
-| `0x4BCB40` | `Sprite_UpdateBoundsIfDirty` | if sprite bounds (+0xc obj) not yet current (flag +0x48==0) recompute corners via FUN_004bbd40. 17 callers, called before every… | verified |
+| `0x4BCB40` | `Sprite_UpdateBoundsIfDirty` | if sprite bounds (+0xc obj) not yet current (flag +0x48==0) recompute corners via SpriteBounds_RecomputeCorners. 17 callers, called before every… | verified |
 | `0x4BD8A0` | `Sprite_ComputeCollisionContactPoint` | contact point of two sprites (1 corner or midpoint of 2) | verified |
 
 #### 6. Damage, deformation, wreck, skids, surface (53)
@@ -565,7 +565,7 @@ comment in Ghidra has the evidence.
 | `0x49E100` | `CarPhysics_GetSkidObjectType` | (surface type, length) -> object id | verified |
 | `0x49EA30` | `Sprite_GetBoundingBoxCorner` | corner idx -> world xy | verified |
 | `0x49EBE0` | `MapBlocks_GetCarSurfaceTypeAt` | tile -> CAR_SURFACE (7/9/5/slope) | verified |
-| `0x49F460` | `CarPhysics_ApplyConveyorPush` | direction bytes of a touched object (FUN_00493090) * DAT_0066AC10 added to g_CarExternalLinVel (x) and 0x66B008 (y), KeepActiveFor(15).… | verified |
+| `0x49F460` | `CarPhysics_ApplyConveyorPush` | direction bytes of a touched object (WorldObject_GetConveyorOffsets) * DAT_0066AC10 added to g_CarExternalLinVel (x) and 0x66B008 (y), KeepActiveFor(15).… | verified |
 | `0x49FF80` | `CarPhysics_EmitImpactParticles` | landing puffs at corners | verified |
 | `0x4A0120` | `CarPhysics_SpawnSkidSegment` | anchor to new point -> skid object | verified |
 | `0x4A0290` | `CarPhysics_UpdateSkidmarks` | skid emission rule (section 5) | verified |
@@ -583,9 +583,9 @@ comment in Ghidra has the evidence.
 
 | address | name | role | confidence |
 |---|---|---|---|
-| `0x401AD0` | `WriteToFirstArg` | raw store `*this = v` (used to build raw Q14 constants, RET 8) | verified |
+| `0x401AD0` | `Fix16_FromRaw` (was `WriteToFirstArg`) | raw store `*this = v` (used to build raw Q14 constants, RET 8) | verified |
 | `0x401AE0` | `Fix16_FromInt16` | `*this = (int16)v << 14` | verified |
-| `0x401AF0` | `bitShiftLeft14` | `*this = v << 14` (kept, comment added) | verified |
+| `0x401AF0` | `Fix16_FromInt` (was `bitShiftLeft14`) | `*this = v << 14` (kept, comment added) | verified |
 | `0x401B20` | `Fix16_Add` | out = a + b | verified |
 | `0x401B40` | `Fix16_Sub` | out = a - b | verified |
 | `0x401B60` | `Fix16_Mul` | out = (int64 a*b) >> 14 (floor) | verified |
@@ -633,19 +633,19 @@ comment in Ghidra has the evidence.
 | `0x48A1A0` | `Fix16_DivAssign` | this = (this<<14)/p | verified |
 | `0x49E0E0` | `Fix16_Square` | out = Fix16_Mul(x, x) (decompiler hides the ECX operand; both operands are the same stack arg). Used by… | verified |
 | `0x49E240` | `Ang16_FormatDegrees` | swprintf("%3.2f", ang16 * 0.25) into a static buffer: Ang16 -> degrees text for show_physics. Confirms 1 Ang16 unit = 0.25 degree. | verified |
-| `0x49E2C0` | `Fix16_Median3` | median of three, used by ComputeRequiredSweepSteps | verified |
-| `0x49E3A0` | `Fix16Vec2_MulAssign` | vec2 *= scalar (calls Fix16_MulAssign on x,y) | verified |
+| `0x49E2C0` | `Fix16_Max3` (was `Fix16_Median3`) | median of three, used by ComputeRequiredSweepSteps | verified |
+| `0x49E3A0` | `Vec2_MulAssignFix16` (was `Fix16Vec2_MulAssign`) | vec2 *= scalar (calls Fix16_MulAssign on x,y) | verified |
 | `0x49E3C0` | `Vec2_ApplyDeadZone` | \ | verified |
-| `0x49E420` | `Vec2_Perpendicular` | out = (-v.y, v.x) (rotate +90). Used by unsure_CarPhysics_ComputeCollisionImpulse for the 2D cross product. | verified |
+| `0x49E420` | `Vec2_Perpendicular` | out = (-v.y, v.x) (rotate +90). Used by CarPhysics_ComputeCollisionImpulse for the 2D cross product. | verified |
 | `0x49E450` | `Vec2_HasZeroComponent` | `x==0 \ | verified |
 | `0x49E480` | `Fix16Vec2_ClampTowardsZero` | per-axis min( | verified |
-| `0x49E500` | `Vec2_Dot` | out = a.x*b.x + a.y*b.y (Fix16_Mul twice + Fix16_Add). Used by unsure_CarPhysics_ComputeCollisionImpulse. | verified |
+| `0x49E500` | `Vec2_Dot` | out = a.x*b.x + a.y*b.y (Fix16_Mul twice + Fix16_Add). Used by CarPhysics_ComputeCollisionImpulse. | verified |
 
 ## 8. Static-initialiser constants
 
 `re/tools/static_constants.py gta2.ebin > re/static_constants.csv` disassembles `.text` with
 `xcrun llvm-objdump` and evaluates every CRT initialiser thunk built only from
-`push imm; mov ecx,&G; call WriteToFirstArg/bitShiftLeft14`, `G = [S]` copies and
+`push imm; mov ecx,&G; call Fix16_FromRaw/Fix16_FromInt`, `G = [S]` copies and
 `Fix16_Add/Sub/Mul/Div` of two globals: 13 625 globals, values for 13 539. Thunks with any other
 instruction are skipped (e.g. the 0.985 air damping, the 0.13 assist factor and the 1/256
 angular dead zone at 0x6658DC, which was read from its initialiser by hand), and a global that
@@ -657,7 +657,7 @@ is rewritten at run time is not detected — check for writers before calling on
 * Ang16 convention: `Fix16Vec2_GetAngle` is atan2(y, x) while wheel points (0, off) rotate as if
   heading 0 were +Y; this decides which compass directions the assist's 90°/270° are. Needs a runtime sample.
 * Object types behind damage/oil codes (8/9, 10, 0x80, 0x8A, 0xC2, 0x109).
-* `CarPhysics+0xAB`, `0xAA` semantics; `FUN_00469B00`, `FUN_004214F0` (model substitution condition).
+* `CarPhysics+0xAB`, `0xAA` semantics; `MapBlocks_IsPointOnGroundSurface`, `Car_IsDrivenByNonPlayer` (model substitution condition).
 * Velocity clamp after an impulse: none found as a separate step (gta2_re's
   `ProcessCollisionAndClampVelocity` corresponds to `MoveAndCollide`, which only zeroes the velocity
   when the car could not move at all).

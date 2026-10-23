@@ -76,48 +76,8 @@ R_SDL_FNS(R_DECL)
 #define VID_MODE_WINDOWED   (-2)
 
 #pragma pack(push, 1)
-typedef struct {                        /* 0x40 */
-    int32_t id, device_id, width, height, pitch, bpp;
-    int32_t r_shift, r_bits, g_shift, g_bits, b_shift, b_bits, x_shift, x_bits;
-    gptr next;                          /* VidMode* */
-    int32_t valid;
-} VidMode;
-
-typedef struct {                        /* 0x2c */
-    int32_t id, flags;                  /* flags bit 0: can render windowed */
-    gptr description, name, next, guid_ptr;
-    uint32_t guid[4];
-    uint32_t vid_mem;
-} VidDevice;
-
-typedef struct {                        /* 0x4c4 */
-    int32_t one;
-    uint32_t flags;                     /* VID_F_* */
-    int32_t found_width, found_height, found_bpp;
-    int32_t next_mode_id, next_device_id, num_modes, num_devices;
-    gptr modes, modes_tail, devices, devices_tail;
-    int32_t device_id, unk_38;
-    gptr find_iter;                     /* VidMode* */
-    int32_t mode_id;                    /* -2 windowed */
-    int32_t unk_44;
-    int32_t width, height;
-    gptr surface;
-    int32_t pitch;
-    int32_t r_shift, r_bits, g_shift, g_bits, b_shift, b_bits, x_shift, x_bits;
-    gptr hinstance, hmodule;
-    int32_t fullscreen;
-    gptr slot_table;
-    uint32_t hresult, ddraw;
-    uint8_t unk_090[0x90];
-    uint32_t ddraw4;
-    uint8_t unk_124[0x10];
-    uint32_t primary, back;
-    uint8_t lock_desc[0x7c];
-    uint32_t clipper;
-    uint8_t unk_1bc[0xc];
-    uint8_t hal_caps[0x17c], hel_caps[0x17c];
-    gptr hwnd;
-} VidCtx;
+/* VidMode, VidDevice (fixed 0x2c part, strings follow) and VidCtx come from re/gta2_types_c64.h
+ * (via game.h): the Ghidra types are the same dmavideo ABI. */
 
 typedef struct {                        /* 0x20 = D3DTLVERTEX */
     float x, y, z, rhw;

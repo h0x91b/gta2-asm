@@ -145,7 +145,7 @@ them from the SDK headers by itself (`nm -u host/c/vfs.o`); NASM would need
   then must exist). A YAML subset: `section:` headers, indented `key: value`, `#` comments,
   spaces only; a syntax error or a bad value stops the loader with the line number (and
   `section.key:` for a value), unknown sections and keys only warn. Section `debug:`:
-  the game's own developer flags, which HiddenDebugFlags (`0x451930`) reads once from `HKCU\SOFTWARE\DMA Design Ltd\GTA2\Debug`
+  the game's own developer flags, which `Debug_LoadFlagsFromRegistry` (`0x451930`) reads once from `HKCU\SOFTWARE\DMA Design Ltd\GTA2\Debug`
   (a flag is on when its value exists, so `false` deletes the value; `show_player_names` is
   value-based). Every flag with comments: `config.example.yaml`. Section `mods:` goes to
   `c32_cfg_mods` (`host/c/c32_host.c`, C32 mods). Section `camera:`,
@@ -285,7 +285,7 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
 |---|---|---|
 | `0x4031C0` | `GetDXVersion(DWORD* ver, DWORD* platform)` — Microsoft's DirectX SDK sample (Ghidra name `LoadDirectInputFuncs`) | it creates DirectDraw objects and surfaces only to measure the DirectX version, and WinMain refuses anything below `0x601` (`0x4D11DB`, "ERROR: Incorrect version of DirectX"). The hook answers `0x801` / NT. |
 | `0x41F3E9` | `CameraPosApply` (JMPHOOK, 7 bytes) — inside the camera update, `cameraPosTarget` (camera+0x10) is copied into `cameraPosTarget2` (camera+0), which `cameraPos` then follows; `esi` = Camera* | multiplies the target zoom (+0x1c) by `camera.zoom` from config.yaml (default 70%) and skips the original copy. The view scale is `cameraPos.zoom`, not `uiScale`: forcing `uiScale` = 1.0 at 1280×960 only halved the HUD (measured). (seuko-mod `camera-pos-apply.cpp`) |
-| `0x4BE394` | `call ScaleScrf` (CALLHOOK) — thiscall `0x401BD0`, out = main camera `uiScale` × shadow offset | scales the shadow offset by the same zoom, so shadows stay under their sprites (seuko-mod `scale-shadow.cpp`). |
+| `0x4BE394` | `call Fix16_MulInt` (CALLHOOK) — thiscall `0x401BD0`, out = main camera `uiScale` × shadow offset | scales the shadow offset by the same zoom, so shadows stay under their sprites (seuko-mod `scale-shadow.cpp`). |
 | `0x472535` | `call DrawMapLayer` (CALLHOOK) — fastcall `0x4720E0(S12*)`, per map layer, after its blocks are queued: inline queue at S12+0x1c, count +0x2efc, 1500 entries, no bounds check | safety valve: above 1200 entries the zoom-out is reduced 5 points per layer (Downtown street level: 99 at 100%, 357 at 50%, 1271 at 25%). (seuko-mod `draw-map-layer.cpp`) |
 | `0x45A61F` | `call DrawUI` (CALLHOOK) — fastcall `0x4CA440`, the HUD, once per gameplay frame | before it run the modules' `DM_FRAME` hooks (the Ped paths and Road network overlays, `host/c/menu/overlays.c` calling C32 `debug_paths.c` / `debug_roads.c`, our persistent police roadblocks (`host/c/menu/roadblocks.c` calling C32 `roadblocks.c`) with `PoliceManager_TryCreateRoadblockAt` `0x4AEE70` on our own slots, see `docs/re/gangs-and-peds.md` §7, the emergency calls of C32 `emergency.c`) and the menu's deferred actions; right after it our debug menu (`host/c/menu/`, glue in `debug_menu.asm`, `docs/debug-menu.md`) with the game's `DrawGTAText` (`0x4CC100`), `DrawFlatRect2D` (`0x474110`) and `DrawSprite2D` (`0x4CBA50`); its key handling sits in front of `input_key`. (seuko-mod `draw-ui.cpp`) |
 | `0x4CA4F9` | `call Hud_PauseOverlay_Draw` (CALLHOOK) — stdcall `0x4C9FA0`, the game's pause screen, called by DrawUI while paused | skipped while the K menu holds the pause (`host/c/menu/core.c` `dm_pause_sync`, `docs/debug-menu.md` "Pause"); else the original |
@@ -315,7 +315,7 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
   `WM_ACTIVATE` (focus gate above, exclusive mouse), `WM_SETFOCUS`/`WM_KILLFOCUS` (audio,
   video restore/close), `WM_DESTROY` → `PostQuitMessage`. Window close: SDL quit/close →
   `WM_CLOSE` → DefWindowProc → DestroyWindow → `WM_DESTROY` → `WM_QUIT`.
-- **Mouse: never read.** `InitMouseExclusive` `@0x4CAD30` (from `fullScreenProbably`)
+- **Mouse: never read.** `InitMouseExclusive` `@0x4CAD30` (from `SetFullscreenMode`)
   creates `GUID_SysMouse` (`c_dfDIMouse` @`0x5782C4`) into `0x6735A8` with coop `5`
   (EXCLUSIVE|FOREGROUND) and acquires it: only to hide/capture the cursor in full
   screen. No `GetDeviceState`/`GetDeviceData` on it anywhere (all 8 references are in

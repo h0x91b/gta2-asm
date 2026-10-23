@@ -165,10 +165,21 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e507e,g_CarAI_driveOrderActive,,USER_DEFINED,.data.exp,,/bool,1
 0x005e507f,g_CarAI_followLaneAllowed,,USER_DEFINED,.data.exp,,/bool,1
 0x005e5080,g_CarAI_gasAllowed,,USER_DEFINED,.data.exp,,/bool,1
+0x005e5081,g_CarAI_hasDriveOrder,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005e5083,g_CarAI_forwardAllowed,,USER_DEFINED,.data.exp,,/bool,1
+0x005e5084,g_CarAI_targetCar,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e5088,g_CarAI_tileArrowHeadingClass,,USER_DEFINED,.data.exp,,/undefined,1
 0x005e508c,g_CarAIPool,,USER_DEFINED,.data.exp,,/imported/seuko-mod/CarAIPool *,4
 0x005e5090,g_CarAI_junctionReserveCooldown,,USER_DEFINED,.data.exp,,/short,2
+0x005e50ec,g_CarAI_carZ,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e5168,g_CarAI_targetX,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e5198,g_CarAI_probeY,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e5218,g_CarAI_targetZ,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e5244,g_CarAI_probeX,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e5320,g_CarAI_carY,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e5338,g_CarAI_targetSpeed,,USER_DEFINED,.data.exp,,/scr_structs.h/SCR_f,4
+0x005e538c,g_CarAI_targetY,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e53d8,g_CarAI_carX,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e5430,g_CarAI_curSpeed,,USER_DEFINED,.data.exp,,/scr_structs.h/SCR_f,4
 0x005e5448,g_CarModelTable_GciPath,,USER_DEFINED,.data.exp,,/undefined1,1
 0x005e5488,g_CarModelTable,,USER_DEFINED,.data.exp,,/CarModelTable *,4
@@ -176,7 +187,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e5514,g_Fix16OneCarModelTable,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e56e0,g_Fix16InertiaQuarter,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e580c,g_TaxiNodePool,,USER_DEFINED,.data.exp,,/TaxiNodePool *,4
-0x005e5bbc,ptrToPedManager,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e5bbc,g_PedManager,,USER_DEFINED,.data.exp,,/_ped/PedManager *,4
 0x005e5bc0,g_DummyPedManager,,USER_DEFINED,.data.exp,,/auto_structs/DummyPedManager *,4
 0x005e5bc4,ptrToPed,,USER_DEFINED,.data.exp,,/_ped/Ped *,4
 0x005e5bcc,g_AmbientSpawnCounter,,USER_DEFINED,.data.exp,,/short,2
@@ -433,8 +444,8 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00663de4,g_AmbulanceManager,,USER_DEFINED,.data.exp,,/AmbulanceManager *,4
 0x00664164,g_AmbulancePickupRange,,USER_DEFINED,.data.exp,,/scr_structs.h/SCR_f,4
 0x00664168,g_MikeDebug,,USER_DEFINED,.data.exp,,/auto_structs/MikeDebug *,4
-0x006644b0,relToS15,,USER_DEFINED,.data.exp,,/undefined4,4
-0x006644b4,relToS15_2,,USER_DEFINED,.data.exp,,/undefined4,4
+0x006644b0,g_ScriptStoredCar,,USER_DEFINED,.data.exp,,/_car/Car *,4
+0x006644b4,g_ScriptStoredCarId,,USER_DEFINED,.data.exp,,/int,4
 0x006644b8,g_MissionCleanup,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006644bc,g_MissionScript,,USER_DEFINED,.data.exp,,/auto_structs/MissionScript *,4
 0x006644c0,g_ScriptThreadPool,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -445,9 +456,10 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x006646bc,g_SavedAnsweredPhoneBits,,USER_DEFINED,.data.exp,,/undefined4,4
 0x006646c0,g_SavedDoneBasicKfBits,,USER_DEFINED,.data.exp,,/undefined4,4
 0x00664f58,ptrRelatedToPlayerPosZ,,USER_DEFINED,.data.exp,,/undefined,1
-0x00664ff0,unk1,,USER_DEFINED,.data.exp,,/int,4
-0x00664ff4,unk2,,USER_DEFINED,.data.exp,,/int,4
-0x00665078,unk3,,USER_DEFINED,.data.exp,,/byte,1
+0x00664ff0,g_MovieBinkBuffer,,USER_DEFINED,.data.exp,,/int,4
+0x00664ff4,g_MovieBink,,USER_DEFINED,.data.exp,,/int,4
+0x00664ff8,g_MovieBinkSurfaceType,,USER_DEFINED,.data.exp,,/undefined4,4
+0x00665078,g_MovieState,,USER_DEFINED,.data.exp,,/byte,1
 0x00665704,g_MultiplayerTag,,USER_DEFINED,.data.exp,,/auto_structs/MultiplayerTag,40
 0x0066577c,g_ObjectAnimStatePool,,USER_DEFINED,.data.exp,,/auto_structs/ObjectAnimStatePool *,4
 0x00665780,g_ObjectMotionStatePool,,USER_DEFINED,.data.exp,,/auto_structs/ObjectMotionStatePool *,4
@@ -466,6 +478,13 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x0066a3b9,relToS24_unk34,,USER_DEFINED,.data.exp,,/undefined,1
 0x0066a3bc,nextSpriteId,,USER_DEFINED,.data.exp,,/uint,4
 0x0066a480,playerPedX?,,USER_DEFINED,.data.exp,,/undefined4,4
+0x0066a7b4,g_PedPathCurNode,,USER_DEFINED,.data.exp,,/PedPathOpenEntry,8
+0x0066a7bc,g_PedPathEdgeBestPosX,,USER_DEFINED,.data.exp,,/PedPathEdgeBest,5
+0x0066a7c4,g_PedPathEdgeBestNegY,,USER_DEFINED,.data.exp,,/PedPathEdgeBest,5
+0x0066a7cc,g_PedPathEdgeBestNegX,,USER_DEFINED,.data.exp,,/PedPathEdgeBest,5
+0x0066a7d4,g_PedPathFallbackDir,,USER_DEFINED,.data.exp,,/int,4
+0x0066a7d8,g_PedPathEdgeBestPosY,,USER_DEFINED,.data.exp,,/PedPathEdgeBest,5
+0x0066a7e0,g_PedPathStepDz,,USER_DEFINED,.data.exp,,/byte,1
 0x0066a7e4,g_PedPathfinder,,USER_DEFINED,.data.exp,,/PedPathfinder *,4
 0x0066ab70,g_CurCarEngineData,,USER_DEFINED,.data.exp,,/undefined4,4
 0x0066ab78,g_CurCarPhysicsData,,USER_DEFINED,.data.exp,,/undefined4,4
@@ -583,7 +602,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00673948,g_WeaponManager,,USER_DEFINED,.data.exp,,/WeaponManager *,4
 0x00673d18,ptrToMainWindow,,USER_DEFINED,.data.exp,,/WinDef.h/HWND,4
 0x00673d1c,mutex,,USER_DEFINED,.data.exp,,/undefined4,4
-0x00673d20,SVideoPtr,,USER_DEFINED,.data.exp,,/imported/seuko-mod/SVideo *,4
+0x00673d20,g_VidCtx,,USER_DEFINED,.data.exp,,/gta2_renderer/VidCtx *,4
 0x00673d28,cwd,,USER_DEFINED,.data.exp,,/undefined,1
 0x00673e28,hInstance,,USER_DEFINED,.data.exp,,/WinDef.h/HINSTANCE,4
 0x00673e2c,isMultiplayer,,USER_DEFINED,.data.exp,,/undefined4,4

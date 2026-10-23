@@ -11,6 +11,8 @@ in the disassembly (`ret N`, registers); "hypothesis" = the name carries `unsure
 Sources: Seq 37 analysis (five slices: input → motion, ped vs map, ped vs sprites, move API,
 heading/mouse), the prior mods listed in §8, and the car pipeline in
 [car-physics.md](car-physics.md) (shared collision services).
+On-foot path finding (`PedPathfinder`, the request queue and why NPCs walk into walls) is in
+[ped-ai.md](ped-ai.md) §8.
 
 ## 1. Units and the main objects
 
@@ -79,7 +81,7 @@ GameTick 0x45C1F0
  │       └ Player_MoveOnFoot 0x4A5C50   thiscall(Player*, Ped*) ret 4
  │            writes only Player.turnRate and Player.moveSpeed (+ jump, special key)
  └ … PedManager_UpdateActivePeds → Ped_Update 0x4454E0
-       ├ Ped_UpdateState 0x43ECC0       player: STAYING↔WALK from moveSpeed / turnRate
+       ├ Ped_TickLifecycle 0x43ECC0      player: STAYING↔WALK from moveSpeed / turnRate
        └ Ped_TickGameObjectAndSeatInCar 0x43F180   fastcall(Ped*)
            ├ PedGameObject.state1/state2 := Ped.state/state2
            ├ PedGameObject_Tick 0x49C460   thiscall(PedGameObject*, arg) ret 4
@@ -123,7 +125,7 @@ free    → pos += Ang16_PolarToXY(heading, speed) + push; SetPosition   0x49AE9
 blocked → player: PedGameObject_SlideAlongWallPlayer 0x4995A0 (re-test at octant
           headings, half step); npc: PedGameObject_TurnAwayFromWallNpc 0x4994D0
 push := 0                                                              0x49AF09
-z follow FUN_00494180; Ped_ResolveSpriteObstacle 0x499F00 (cars/peds/objects, §4)
+z follow PedGameObject_UpdateGroundZ; Ped_ResolveSpriteObstacle 0x499F00 (cars/peds/objects, §4)
 0x49B0A5: if the heading was changed for this move, restore it
 ```
 
@@ -151,7 +153,7 @@ filled by `MapBlocks_InitSlopeTable` 0x52B3B0): 1–44 gradients, 45–52 diagon
 Ped body: w = h = 0.2 block, zsize 0.25 (`Ped_CreateSprite` 0x4360C0). Because w == h ≤ 0.2, the
 bounds code ignores the rotation: the ped is an **axis-aligned box**.
 
-Z: `FUN_00494180` snaps z to the level or to the slope surface (`MapBlocks_GetSlopeSurfaceZ`
+Z: `PedGameObject_UpdateGroundZ` snaps z to the level or to the slope surface (`MapBlocks_GetSlopeSurfaceZ`
 0x466B70). Ground height queries: `MapBlocks_GetGroundZBelow` 0x469570 (level aware), `FindMaxZ`
 0x46A420 (topmost). Walking onto air → `FALL_ON_GROUND`.
 
@@ -193,8 +195,8 @@ a mask) → `Sprite_ShouldCollideWithSprite` 0x4B9A30 (filter) → `Sprite_Colli
 
 | obstacle | response |
 |---|---|
-| car | body back to the last good pose, then "walk around" along a tangent of the car (`+0x69`, `FUN_0049A080`); never knocked down by walking into a car (knock-down is the car's side: `unsure_PedSprite_HandleCarImpact` 0x497570) |
-| light object | pushed (`FUN_004867E0`); heavy object → as a car |
+| car | body back to the last good pose, then "walk around" along a tangent of the car (`+0x69`, `PedGameObject_WalkAroundObstacle`); never knocked down by walking into a car (knock-down is the car's side: `PedGameObject_HandleCarImpact` 0x497570) |
+| light object | pushed (`Object_ResolveCollisionWithPed`); heavy object → as a car |
 | another player | blocked |
 | civilian / special / driver, mission ped | the player **walks through**; the other ped steps aside (`+0x6A = 4`, `+0x74`); `STAND_STILL_BLOKE` blocks |
 
@@ -210,8 +212,8 @@ and `Sprite_OnOverlapNotifyImpactEvent` 0x4BAB70 (sounds, object notifications).
 
 **There is no raycast.** `Ped_FindThreatLineOfSight` 0x43BED0 is a 12-byte stub (`mode = 5; jmp
 0x437BE0`) into the shared threat search, a spiral walk over collision-grid cells around the ped
-(`FUN_00447540`) with a distance test and a camera visibility check. Bullets are projectile
-objects (`FireFromGun` 0x4D0530) moving and colliding per tick, no hitscan.
+(`NearestSprite_SpiralSearch`) with a distance test and a camera visibility check. Bullets are projectile
+objects (`Weapon_Fire` 0x4D0530) moving and colliding per tick, no hitscan.
 
 ## 5. Function table
 
@@ -220,7 +222,7 @@ objects (`FireFromGun` 0x4D0530) moving and colliding per tick, no hitscan.
 | 0x4A76D0 | `Player_HandleControls` | `void __thiscall(Player*, Ped*)` ret 4 | enter/exit, attack, DriveCar / MoveOnFoot | verified |
 | 0x4A5C50 | `Player_MoveOnFoot` | `void __thiscall(Player*, Ped*)` ret 4 | keys → turnRate, moveSpeed | verified |
 | 0x43E1E0 | `Ped_CancelEnterCarOnPlayerMove` (was `Ped_MovePlayer`) | `void __fastcall(Ped*)` | cancels a pending ENTER_CAR when a move key is pressed; moves nothing | verified |
-| 0x43ECC0 | `Ped_UpdateState` | `uint __fastcall(Ped*)` | player: WALK↔STAYING from moveSpeed / turnRate | verified |
+| 0x43ECC0 | `Ped_TickLifecycle` (was `Ped_UpdateState`) | `uint __fastcall(Ped*)` | player: WALK↔STAYING from moveSpeed / turnRate | verified |
 | 0x436140 / 0x4348E0 | `Ped_GetPlayerTurnRate` / `Player_GetTurnRate` | thiscall, out pointer | Player+8 | verified |
 | 0x436200 / 0x4348F0 | `Ped_GetPlayerMoveSpeed` / `Player_GetMoveSpeed` | thiscall, out pointer | Player+0xC | verified |
 | 0x43F180 | `Ped_TickGameObjectAndSeatInCar` | `void __fastcall(Ped*)` | state → body object, tick, copy pose back | verified |
@@ -314,7 +316,7 @@ state machine stays in WALK and the walk animation plays. Disable strafe when th
 `Player.turnRate` is the per-tick heading delta and the player has no separate target heading, so
 writing `turnRate` after `Player_MoveOnFoot` turns the ped smoothly by any amount through the
 game's own code (`StateWalk` and `StateStaying` both apply it). Writing PedGameObject+0x40 directly
-also works, but `Ped_UpdateState` keys WALK↔STAYING on `turnRate`, so the delta path keeps the
+also works, but `Ped_TickLifecycle` keys WALK↔STAYING on `turnRate`, so the delta path keeps the
 state machine honest.
 
 ## 7. Open questions

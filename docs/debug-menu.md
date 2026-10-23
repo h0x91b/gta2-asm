@@ -320,12 +320,12 @@ Files are in `host/c/menu/` unless a path is given.
     palette), the preview is the object's sprite up to 4x, animated for the animated
     kinds, with type, sprite id, size, frames, kind and solid / pushable / explosive. RETURN
     spawns it 1.5 blocks in front of the player through the script's own call (pickups
-    200..244 `Object_NewPhysicsObjUnlessBlocked`, the rest `SpawnObject`), so it gets the
+    200..244 `Object_NewPhysicsObjUnlessBlocked`, the rest `ObjectSpawner_SpawnObject`), so it gets the
     collision grid, a pickup its default ammo and is collectable; "Blocked here" when the
     game refuses (something in the way, a full pool). Not offered: projectiles, particle
     systems, lights, logic and car-shop objects, crane / crusher parts, the moving pickup
     clones 64..108, the bonus token (it would use up one of the level's token flags), the
-    bonus letters (GXT "na"; picking one up would call AddWeapon with a letter's index) and
+    bonus letters (GXT "na"; picking one up would call Ped_AddWeapon with a letter's index) and
     ringing / in-call phones (touching one answers it through the mission script). Seq 27's
     notes on what is safe: `seq52_prep.md` (Seq 27 report).
 - **Mods** (`mods.c`): Car entry bonus and Passenger (registered by `host/c/c32_host.c`).
@@ -416,12 +416,12 @@ first divergence in traffic are byte-identical.
 | `Ped_SetObjective` thiscall(Ped*; objective, timer) RET 8 (clears the target), `Ped_SetObjTargetPed` thiscall(Ped*; Ped*) | `0x43BBC0`, `0x403AC0` | Seq 27, SET_CHAR_OBJECTIVE handler 0x47A1E0 |
 | `PedGroupCreate` fastcall(Ped* leader, edx; byte n), `PedGroupAddPed` fastcall(PedGroup*, 0; Ped*), `Ped.group` +0x164, `PedGroup.membersCount` +0x34 (max 8) | `0x440350`, `0x404C90` | Seq 27, re/gta2_types.h |
 | Ped frames: graphicType * 158 + anim, walk = 0..7; DrawSprite2D palette kind 4 takes the raw PED_REMAP | `0x497DF0`, `0x4C2AC0` | Seq 27 + style render (`bun tools/formats/cli.ts sty --sprite`) |
-| ped pool `PedManager_S25*` +0 freeListHead; Ped +0x238 class, +0x240 occupation, +0x17C gang, +0x288 / +0x28C threat search / reaction | `0x5E5BBC` | re/gta2_types.h, Seq 27 |
-| `SpawnCar`, TrafficManager, CarsScale | `0x426AC0`, `0x5E4CA4`, `0x5E4D4C` | gta2-seuko-mod `spawn-car.cpp` |
+| ped pool `PedManager*` +0 freeListHead; Ped +0x238 class, +0x240 occupation, +0x17C gang, +0x288 / +0x28C threat search / reaction | `0x5E5BBC` | re/gta2_types.h, Seq 27 |
+| `CarManager_SpawnCar`, TrafficManager, CarsScale | `0x426AC0`, `0x5E4CA4`, `0x5E4D4C` | gta2-seuko-mod `spawn-car.cpp` |
 | `g_ObjectPrefabsContainer` (+0x87F4 `ObjectPrefab* byId[300]`), `ObjectPrefabs_Get` | `0x665B40`, `0x488170` | re/globals.csv, re/gta2_types.h, docs/re/objects-and-weapons.md |
-| `ObjectPrefab`: +0x1C remap, +0x1E sprite id, +0x28 sprite type (4 / 5), +0x30 palette kind, +0x34 kind, +0x40 grid, +0x44 impact, +0x48 explosive, +0x64 ticks/frame, +0x6C frames | — | re/gta2_types.h; +0x28 goes to `Sprite_SetCollisionKind` in `ObjectPrefab_ApplyToPosition` `0x4883A0` (own decompile) |
+| `ObjectPrefab`: +0x1C remap, +0x1E sprite id, +0x28 sprite type (4 / 5), +0x30 palette kind, +0x34 kind, +0x40 grid, +0x44 impact, +0x48 explosive, +0x64 ticks/frame, +0x6C frames | — | re/gta2_types.h; +0x28 goes to `Sprite_SetSpriteType` in `ObjectPrefab_ApplyToPosition` `0x4883A0` (own decompile) |
 | Style map objects become prefabs, id = OBJI model | `0x488450` `ObjectPrefabs_InitFromStyle` | own decompile |
-| `SpawnObject` / `Object_NewPhysicsObjUnlessBlocked` thiscall(`g_ObjectSpawner` `0x665788`; type, x, y, z, rot), ret 0x14, insert into the grid; the script picks by type 200..244 | `0x4852E0`, `0x485480`; `Script_Decl_OBJ_DATA_SET` `0x476EA0` | own disassembly + decompile |
+| `ObjectSpawner_SpawnObject` / `Object_NewPhysicsObjUnlessBlocked` thiscall(`g_ObjectSpawner` `0x665788`; type, x, y, z, rot), ret 0x14, insert into the grid; the script picks by type 200..244 | `0x4852E0`, `0x485480`; `Script_Decl_OBJ_DATA_SET` `0x476EA0` | own disassembly + decompile |
 | `ObjectSpawner_CreateObject`: default ammo for weapon pickups, bonus-token flags | `0x484E00` | own decompile |
 | `StyleData` +0x10 palette counts (`PaletteBase`: +8 code obj, +0xA map obj remaps) | `0x670684` | re/gta2_types.h |
 

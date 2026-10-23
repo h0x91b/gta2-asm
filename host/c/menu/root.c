@@ -10,12 +10,12 @@
 struct dm_page dmp_root DM_SECT("__dm_pages") = { .title = "Debug menu  (K)" };
 
 /* dm_quick_save: save the game where the player stands (seuko-mod
- * src/modules/modmenu/utils/save-game.cpp): refused during a mission; SaveGame @0x47EF40
+ * src/modules/modmenu/utils/save-game.cpp): refused during a mission; MissionScript_SaveGame @0x47EF40
  * thiscall(S15_Script* = [0x6644BC]; char* file = Menu 0x5EC070 +0x300), ret 4. The
  * player's position.y is moved 1.0 back around the call as seuko does. S15 +0x344 = mission
  * flag pointer.
  * From gta2-seuko-mod by izawartka (https://github.com/izawartka/gta2-seuko-mod),
- * src/modules/modmenu/utils/save-game.cpp @25b1985 — SaveGame 0x47EF40. */
+ * src/modules/modmenu/utils/save-game.cpp @25b1985 — MissionScript_SaveGame 0x47EF40. */
 #define SAVE_FILE (0x5EC070 + 0x300)
 static void dm_quick_save(void)
 {

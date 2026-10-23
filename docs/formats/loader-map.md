@@ -9,10 +9,9 @@ way round too: when you meet one of these functions or globals in Ghidra, the on
 
 - Addresses are VAs in vanilla `gta2.exe` (ImageBase `0x3F0000`), 1:1 with the Ghidra program
   `gta2.segments.fixed.exe` and with `re/`.
-- **Name** is the current name in the live Ghidra project `gta-2-recovered` (read on
-  2026-10-21). Several of them (`delta_index`, `UNK_SPEC`, `car_recycling_info`,
-  `CarEngineData_LoadGci`, `startGame`, …) are newer than the `re/` export and are not in
-  `re/functions.csv` yet. `FUN_xxxxxxxx` means unnamed. Names that are wrong are flagged and
+- **Name** is the name in the live Ghidra project `gta-2-recovered`, refreshed from `re/` on
+  2026-10-23; "(was X)" gives the name this page was first written with (2026-10-21).
+  `FUN_xxxxxxxx` means unnamed at the time. Names that are wrong are flagged and
   get a proposal in [the last section](#proposed-names-for-seq-27).
 - **V** = verified: I read the code (Ghidra disassembly/decompile, or `llvm-objdump` on
   `gta2.ebin` unpacked from `data.pak`) and saw it read that chunk/field into that place. The
@@ -40,15 +39,15 @@ name string `"File.cpp"` (`0x56E3D8`).
 
 | VA | Ghidra name | What it does | Status |
 |---|---|---|---|
-| `0x403160` | `fopen` (misnamed) | `File_Open(path)`: closes a previous file, `copyScriptNameToBuffer(path)` (`0x44DBB0`, remembers the name for error messages), CRT `fopen(path, "rb")` (`0x4D68DE`, mode string `0x56E3EC`), stores `FILE*` in `0x5D25F0`, sets `0x5D25F4 = 1` | V |
-| `0x402EB0` | `fclose` | `File_Close()`: `fclose(g_File)`, clears `0x5D25F4` | V |
-| `0x402FB0` | `fread` (misnamed) | `File_Read(void *dst, uint *size)`: reads exactly `*size` bytes or errors (code `0xF`) | V |
-| `0x403000` | `readChunkHeader` | `File_TryRead(void *dst, uint *size)`: same, but returns `false` at EOF instead of failing — used for chunk headers, which is how every chunk loop ends | V |
-| `0x402F60` | `FUN_00402f60` | `File_Skip(uint *size)`: `fseek(g_File, *size, SEEK_CUR)`. The default branch of every chunk dispatcher: unknown chunks are skipped by size | V |
-| `0x403040` | `File_ReadAll` | `File_ReadRest(dst, uint *max)`: reads from the current position to EOF, errors `0x3FE` if that is more than `*max`, returns the byte count | V |
+| `0x403160` | `File_Open` (was `fopen`) (misnamed) | `File_Open(path)`: closes a previous file, `copyScriptNameToBuffer(path)` (`0x44DBB0`, remembers the name for error messages), CRT `fopen(path, "rb")` (`0x4D68DE`, mode string `0x56E3EC`), stores `FILE*` in `0x5D25F0`, sets `0x5D25F4 = 1` | V |
+| `0x402EB0` | `File_Close` (was `fclose`) | `File_Close()`: `fclose(g_File)`, clears `0x5D25F4` | V |
+| `0x402FB0` | `File_Read` (was `fread`) (misnamed) | `File_Read(void *dst, uint *size)`: reads exactly `*size` bytes or errors (code `0xF`) | V |
+| `0x403000` | `File_TryRead` (was `readChunkHeader`) | `File_TryRead(void *dst, uint *size)`: same, but returns `false` at EOF instead of failing — used for chunk headers, which is how every chunk loop ends | V |
+| `0x402F60` | `File_Skip` (was `FUN_00402f60`) | `File_Skip(uint *size)`: `fseek(g_File, *size, SEEK_CUR)`. The default branch of every chunk dispatcher: unknown chunks are skipped by size | V |
+| `0x403040` | `File_ReadRest` (was `File_ReadAll`) | `File_ReadRest(dst, uint *max)`: reads from the current position to EOF, errors `0x3FE` if that is more than `*max`, returns the byte count | V |
 | `0x402980` | `fread` | low-level read loop under the above | V (called) |
-| `0x460EE0` | `FUN_00460ee0` | `Header_CheckMagic(expected)`: `strncmp(this, expected, 4)`, error `0x5D` | V |
-| `0x460EC0` | `FUN_00460ec0` | `Header_CheckVersion(u16)`: compares `this+4`, error `0x5E` | V |
+| `0x460EE0` | `FileHeader_CheckMagic` (was `FUN_00460ee0`) | `Header_CheckMagic(expected)`: `strncmp(this, expected, 4)`, error `0x5D` | V |
+| `0x460EC0` | `FileHeader_CheckVersion` (was `FUN_00460ec0`) | `Header_CheckVersion(u16)`: compares `this+4`, error `0x5E` | V |
 
 Allocation helpers used by the readers: `0x4059B0` (`malloc`, error on NULL) and `0x4059F0`
 (named `malloc` too, really `malloc_aligned64k(size, void **raw)`: allocates `size+0x10000`,
@@ -68,26 +67,26 @@ The current level's file names live in the `Menu` object at `0x5EC070` (`ptrToMe
 
 | Slot | Getter | Setter | Holds | Status |
 |---|---|---|---|---|
-| `+0x000` | `0x45E4E0` `getGmpPath` | `0x45E410` | `data\wil.gmp` | V |
-| `+0x100` | `0x45E4F0` `GetStyFilePath` | `0x45E430` | `data\wil.sty` | V |
-| `+0x200` | `0x45E500` `GetStyPath2` (misnamed: it is the **.scr** path) | `0x45E450` | `data\wil.scr` | V |
+| `+0x000` | `0x45E4E0` `Menu_GetGmpPath` (was `Menu_GetGmpPath`) | `0x45E410` | `data\wil.gmp` | V |
+| `+0x100` | `0x45E4F0` `Menu_GetStyPath` (was `Menu_GetStyPath`) | `0x45E430` | `data\wil.sty` | V |
+| `+0x200` | `0x45E500` `Menu_GetScrPath` (was `Menu_GetScrPath`) (misnamed: it is the **.scr** path) | `0x45E450` | `data\wil.scr` | V |
 | `+0x300` | `0x45E510` | `0x45E470` | save-game name, empty for a new game | V |
 
 Writers of those slots (xrefs to the setters, all V):
 
-- **`.seq` (single player).** `FUN_00455340`, called from `InitFrontend` (`0x456A60`):
+- **`.seq` (single player).** `FrontEnd_LoadSeq`, called from `InitFrontend` (`0x456A60`):
   `FindFirstFile("data\*.seq")` (error `0x98` if none, `0x99` if more than one), `fopen(…, "rt")`,
-  reads `label = value` lines with `FUN_00452530(label_index, buf, FILE*)` (labels built inline
+  reads `label = value` lines with `Seq_ReadLabelLine(label_index, buf, FILE*)` (labels built inline
   from `.rdata` `0x573394`…: `MainOrBonus`, `GMPFile`, `STYFile`, `SCRFile`, `Description`),
   accepts `MAIN`/`BONUS` blocks (at most 3 MAIN, 3 BONUS per MAIN) and stores each entry with
-  `FUN_004527A0` into the FrontEnd's level table. `FUN_004556A0` later copies the chosen
+  `FrontEnd_AddSeqLevel` into the FrontEnd's level table. `FrontEnd_SelectLevel` later copies the chosen
   entry into the Menu slots (it calls all four setters). V for the parse loop and limits; the
   layout of the FrontEnd level table is **H**.
-- **Debug registry override.** `FUN_0045E8D0`: `regGet("mapname" / "stylename" /
+- **Debug registry override.** `Menu_LoadDebugLevelFromRegistry`: `regGet("mapname" / "stylename" /
   "scriptname" / "savename")`, prefixed with `data\`; defaults `data\jointmap.gmp`,
   `data\style.sty`, `data\q.scr`. V.
-- **Multiplayer.** `FUN_004D0ED0`: after connecting, `wsprintf("data\%s", …)` with the
-  map/style/script names from the session; `FUN_00407930` reads them from the `.mmp` ini,
+- **Multiplayer.** `Startup_ConnectMultiplayerFromRegistry`: after connecting, `wsprintf("data\%s", …)` with the
+  map/style/script names from the session; `NetDlg_ReadMmpMapFiles` reads them from the `.mmp` ini,
   `GetPrivateProfileStringA("MapFiles", "GMPFile"/"STYFile"/"SCRFile", …)`. V.
 - **Replays.** `Replay_ReadHeader` (`0x45F270`) sets all four. V (xref only).
 
@@ -96,14 +95,14 @@ The actual load sequence is **`LoadGMP_and_STY_Files` (`0x45B469`)**, called fro
 11.44 patch, which is why the function starts at an odd address. In order (V, disassembly):
 
 1. `LoadGXT(g_LocaleSettings)` — `.gxt`.
-2. unless the byte `0x5EAD72` is set (H: the debug `skip_audio` flag): `0x410550(GetStyFilePath())` — loads the
+2. unless the byte `0x5EAD72` is set (H: the debug `skip_audio` flag): `0x410550(Menu_GetStyPath())` — loads the
    district **sound bank** named after the style (`wil.sty` → `data\audio\wil.sdt/.raw`).
-3. `LoadSty(g_StyleData, GetStyFilePath())`.
-4. `LoadMAP_GMPFile(g_MapBlocks, getGmpPath())`.
+3. `LoadSty(g_StyleData, Menu_GetStyPath())`.
+4. `LoadMAP_GMPFile(g_MapBlocks, Menu_GetGmpPath())`.
 5. `0x489530` on `g_ObjectPrefabsContainer`, `TextureCache_RegisterAllTextures` (`0x4C30A0`) on
    `g_TextureCache` (post-load passes, not traced).
-6. `loadScript(g_MissionScript, GetStyPath2())` — `.scr`.
-7. if the save slot is non-empty: `FUN_0047F0B0(g_MissionScript, save path)` — the save file.
+6. `MissionScript_Load(g_MissionScript, Menu_GetScrPath())` — `.scr`.
+7. if the save slot is non-empty: `MissionScript_LoadSaveGame(g_MissionScript, save path)` — the save file.
 8. `CarModelTable_Load(g_CarModelTable, path)` — `nyc.gci` (path `0x676EEC`, default
    `data\nyc.gci`; the 11.44 patch can override it, see GXT below).
 
@@ -120,33 +119,33 @@ overlay first. See `docs/win32-shims.md` ("KERNEL32 — files").
 ## `.sty` — style (`LoadSty`, `0x4C0820`)
 
 `LoadSty(path)` on `g_StyleData` (`0x670684`, a `StyleData*`, 0x106C bytes, built by
-`StyleData_Ctor` `0x4C08D0`): `File_Open`, read the 6-byte header, `Header_CheckMagic("GBST")`
-(`0x5754E0`), `Header_CheckVersion(700)` (so DMA's documented 600 would be rejected), then loop
+`StyleData_Ctor` `0x4C08D0`): `File_Open`, read the 6-byte header, `FileHeader_CheckMagic("GBST")`
+(`0x5754E0`), `FileHeader_CheckVersion(700)` (so DMA's documented 600 would be rejected), then loop
 `File_TryRead(8-byte chunk header)`; a chunk with size 0 is skipped without dispatch, anything
-else goes to **`readChunk` (`0x4C05B0`)**, a `strncmp` ladder. After the loop: `File_Close`, then
-`FUN_004C0100` (post-load fixups). V.
+else goes to **`StyleData_ReadChunk` (`0x4C05B0`)**, a `strncmp` ladder. After the loop: `File_Close`, then
+`StyleData_PostLoadFixups` (post-load fixups). V.
 
 Shipped chunk sets: `wil/ste/bil.sty` = TILE PPAL SPRB FONB DELX DELS PALX OBJI RECY SPRG SPRX
 PALB CARI SPEC (SPEC is always last); `fstyle.sty` = PPAL SPRB FONB PALX SPRG SPRX PALB.
 
 | Chunk | Reader (VA, name) | Destination | Status | Evidence |
 |---|---|---|---|---|
-| PALB | `0x4BFF20` `palette_base` | `this+0x10` raw counts (`PaletteBase`, 16 B); `this+0x0C` a copy turned into **bases** (exclusive prefix sum, `0x4BF7B0`); `this+0x00` (u16) = sum of the 8 counts = total virtual palettes | V | asserts size == 0x10 (error `0x409`); `0x4BF790` sums 8 u16; prefix sum in place. wil: total 3202. Note the type names are swapped: `paletteBase2` (`+0x0C`) holds bases, `paletteBase` (`+0x10`) counts |
-| SPRB | `0x4BFE70` `sprites_bases` | `this+0x18` raw counts (`SpriteBase`, 12 B); `this+0x14` prefix-summed bases | V | asserts size == 0xC; `0x4BF7B0` with count 6. No total stored |
-| FONB | `0x4BFDD0` `font_base` | `this+0x1C` = malloc'd chunk (u16 count, count × u16), the per-font counts prefix-summed **in place**; `this+0x02` = sum (total font sprites); then `FUN_004BFCC0(count)` | V | asserts size ≥ 2 and size == 2·count+2 (wil 16 = 7 fonts, fstyle 30 = 14). `0x4BFCC0` accepts only 7 or 14 and writes font-role ids to globals `0x670640`–`0x670680`; what each role is, **H** |
-| SPRX | `0x4BFC60` `sprite_index` | `this+0x20` = malloc(size+8) holding the 8-byte entries; `this+0x04` (u16) = size/8 **+ 1** | V | count asserted ≤ 0xFFFF. Post-load (`0x4C0100`) adds `this+0x34` (SPRG base) to each entry's u32 offset → absolute pointer; it loops `count` = size/8+1 times, so the 8 spare bytes get fixed up too (harmless) |
-| OBJI | `0x4BFBE0` `map_object_info` | `this+0x24` = malloc'd chunk; `this+0x06` (u16) = size/2 | V | 2-byte records (u8 model, u8 sprite count — field meaning from the DMA spec, **H**); asserts size even, count < 0x10000. wil: 24 records |
-| PALX | `0x4BFB80` `palette_index` | `this+0x28` = new(0x8000) `PaletteIndex` (u16[16384]) | V | asserts size == 0x8000. wil max value 274 < 320 physical palettes |
-| PPAL | `0x4BFB50` `physical_palettes` | `this+0x2C` = 64 KB-aligned buffer, `this+0x30` raw pointer (for free); `this+0x08` (u16) = size >> 10 = physical palette count (wil 320) | V | `0x4059F0` aligned alloc, `File_Read` of the whole chunk. Column-interleaved BGRA layout untouched in memory |
-| TILE | `0x4BFAD0` `tiles` | `this+0x3C` = 64 KB-aligned buffer, `this+0x44` raw pointer; then `FUN_004BF7F0` | V | `0x4BF7F0` allocates `this+0x40` = u16[1024]: identity for 0…991, 0 for 992…1023. **H**: the tile-number remap table that ANIM tile animations rewrite (992 = PALB tile count) |
-| SPRG | `0x4BFB20` `sprite_graphics` | `this+0x34` = 64 KB-aligned buffer, `this+0x38` raw pointer | V | whole chunk read. 256-byte stride rows as on disk |
-| DELS | `0x4BFAB0` `delta_store` | `this+0x48` = malloc'd chunk (concatenated delta streams) | V | raw read |
-| DELX | `0x4BFA60` `delta_index` | raw chunk to `this+0x4C` (temporary, freed and zeroed at the end); `FUN_004BF840` expands it into `this+0x50` with size `this+0x60`; `FUN_004BF980` builds `this+0x54`; post-load `FUN_004BF900` | V | on disk `{u16 sprite, u8 n, u8 pad, n × u16 len}` (4+2n). In memory `{u16 sprite, u8 n, u8 0, n × {u32 offset, u16 len, u16 pad}}` (4+8n), offsets running sums of `len`; `0x4BF900` adds `this+0x48` (DELS base) → pointers. `this+0x54` = `{u16 max_sprite+1, …, u32 entry_ptr[sprite]}` (lookup by sprite id; error `0x3EA` on a duplicate sprite). wil: DELX 2004 B |
-| CARI | `0x4C0580` `car_info` | `this+0x58` = malloc'd chunk (variable-size `CarInfo` records, in place); `parseCarInfoChunk` (`0x4C0410`) builds `this+0x5C` = new `AllCarsInfo` (1028 B: `CarInfo *cars[256]` by model, u8 total at `+0x400`) | V | per record: asserts w,h ≤ 0x80, num_remaps ≤ 0x40, `sprite` ∈ {0,1}, ≤ 256 cars, door count ≤ 5 (error `0x453` + model); **rewrites `CarInfo.sprite` in place from the 0/1 flag to the accumulated sprite index**. Record length = 0xE + num_remaps + 1 + 2·num_doors |
-| RECY | `0x4C0010` `car_recycling_info` | `this+0x64` = malloc'd chunk, `this+0x68` (u16) = size | V | raw read. wil: 21 bytes, car models terminated by 255 (content from data, consumer not traced) |
-| SPEC | `0x4C00A0` `UNK_SPEC` | `this+0x6C` `int[1024]` (indexed by tile number) | V | **Ignores the chunk size and reads from the file itself**: `FUN_004C0040(n)` for n = 2…10 reads u16 tile ids until a 0 and stores `this[0x6C + tile*4] = n`. So SPEC = 9 zero-terminated tile lists, the list index + 2 being a surface type. Verified on data: wil/ste/bil SPEC have exactly 9 zeros, the last one at the chunk end; the chunk only works because it is last. Which n means which surface, **H** (DMA spec order) |
-| PSXT | `0x4BFB10` `PSX_tiles` | — | V | `File_Skip(size)` (PlayStation tiles, not used on PC). Absent from shipped PC styles |
-| OVLY | `0x4BFB00` `UNK_OVLY` | — | V | `File_Skip(size)`. Not in shipped styles |
+| PALB | `0x4BFF20` `StyleChunk_PALB` (was `palette_base`) | `this+0x10` raw counts (`PaletteBase`, 16 B); `this+0x0C` a copy turned into **bases** (exclusive prefix sum, `0x4BF7B0`); `this+0x00` (u16) = sum of the 8 counts = total virtual palettes | V | asserts size == 0x10 (error `0x409`); `0x4BF790` sums 8 u16; prefix sum in place. wil: total 3202. Note the type names are swapped: `paletteBase2` (`+0x0C`) holds bases, `paletteBase` (`+0x10`) counts |
+| SPRB | `0x4BFE70` `StyleChunk_SPRB` (was `sprites_bases`) | `this+0x18` raw counts (`SpriteBase`, 12 B); `this+0x14` prefix-summed bases | V | asserts size == 0xC; `0x4BF7B0` with count 6. No total stored |
+| FONB | `0x4BFDD0` `StyleChunk_FONB` (was `font_base`) | `this+0x1C` = malloc'd chunk (u16 count, count × u16), the per-font counts prefix-summed **in place**; `this+0x02` = sum (total font sprites); then `StyleData_SetFontRoles(count)` | V | asserts size ≥ 2 and size == 2·count+2 (wil 16 = 7 fonts, fstyle 30 = 14). `0x4BFCC0` accepts only 7 or 14 and writes font-role ids to globals `0x670640`–`0x670680`; what each role is, **H** |
+| SPRX | `0x4BFC60` `StyleChunk_SPRX` (was `sprite_index`) | `this+0x20` = malloc(size+8) holding the 8-byte entries; `this+0x04` (u16) = size/8 **+ 1** | V | count asserted ≤ 0xFFFF. Post-load (`0x4C0100`) adds `this+0x34` (SPRG base) to each entry's u32 offset → absolute pointer; it loops `count` = size/8+1 times, so the 8 spare bytes get fixed up too (harmless) |
+| OBJI | `0x4BFBE0` `StyleChunk_OBJI` (was `map_object_info`) | `this+0x24` = malloc'd chunk; `this+0x06` (u16) = size/2 | V | 2-byte records (u8 model, u8 sprite count — field meaning from the DMA spec, **H**); asserts size even, count < 0x10000. wil: 24 records |
+| PALX | `0x4BFB80` `StyleChunk_PALX` (was `palette_index`) | `this+0x28` = new(0x8000) `PaletteIndex` (u16[16384]) | V | asserts size == 0x8000. wil max value 274 < 320 physical palettes |
+| PPAL | `0x4BFB50` `StyleChunk_PPAL` (was `physical_palettes`) | `this+0x2C` = 64 KB-aligned buffer, `this+0x30` raw pointer (for free); `this+0x08` (u16) = size >> 10 = physical palette count (wil 320) | V | `0x4059F0` aligned alloc, `File_Read` of the whole chunk. Column-interleaved BGRA layout untouched in memory |
+| TILE | `0x4BFAD0` `StyleChunk_TILE` (was `tiles`) | `this+0x3C` = 64 KB-aligned buffer, `this+0x44` raw pointer; then `StyleData_InitTileRemap` | V | `0x4BF7F0` allocates `this+0x40` = u16[1024]: identity for 0…991, 0 for 992…1023. **H**: the tile-number remap table that ANIM tile animations rewrite (992 = PALB tile count) |
+| SPRG | `0x4BFB20` `StyleChunk_SPRG` (was `sprite_graphics`) | `this+0x34` = 64 KB-aligned buffer, `this+0x38` raw pointer | V | whole chunk read. 256-byte stride rows as on disk |
+| DELS | `0x4BFAB0` `StyleChunk_DELS` (was `delta_store`) | `this+0x48` = malloc'd chunk (concatenated delta streams) | V | raw read |
+| DELX | `0x4BFA60` `StyleChunk_DELX` (was `delta_index`) | raw chunk to `this+0x4C` (temporary, freed and zeroed at the end); `StyleData_ExpandDeltaIndex` expands it into `this+0x50` with size `this+0x60`; `StyleData_BuildDeltaBySprite` builds `this+0x54`; post-load `StyleData_ResolveDeltaPointers` | V | on disk `{u16 sprite, u8 n, u8 pad, n × u16 len}` (4+2n). In memory `{u16 sprite, u8 n, u8 0, n × {u32 offset, u16 len, u16 pad}}` (4+8n), offsets running sums of `len`; `0x4BF900` adds `this+0x48` (DELS base) → pointers. `this+0x54` = `{u16 max_sprite+1, …, u32 entry_ptr[sprite]}` (lookup by sprite id; error `0x3EA` on a duplicate sprite). wil: DELX 2004 B |
+| CARI | `0x4C0580` `StyleChunk_CARI` (was `car_info`) | `this+0x58` = malloc'd chunk (variable-size `CarInfo` records, in place); `parseCarInfoChunk` (`0x4C0410`) builds `this+0x5C` = new `AllCarsInfo` (1028 B: `CarInfo *cars[256]` by model, u8 total at `+0x400`) | V | per record: asserts w,h ≤ 0x80, num_remaps ≤ 0x40, `sprite` ∈ {0,1}, ≤ 256 cars, door count ≤ 5 (error `0x453` + model); **rewrites `CarInfo.sprite` in place from the 0/1 flag to the accumulated sprite index**. Record length = 0xE + num_remaps + 1 + 2·num_doors |
+| RECY | `0x4C0010` `StyleChunk_RECY` (was `car_recycling_info`) | `this+0x64` = malloc'd chunk, `this+0x68` (u16) = size | V | raw read. wil: 21 bytes, car models terminated by 255 (content from data, consumer not traced) |
+| SPEC | `0x4C00A0` `StyleChunk_SPEC` (was `UNK_SPEC`) | `this+0x6C` `int[1024]` (indexed by tile number) | V | **Ignores the chunk size and reads from the file itself**: `StyleData_ReadSurfaceList(n)` for n = 2…10 reads u16 tile ids until a 0 and stores `this[0x6C + tile*4] = n`. So SPEC = 9 zero-terminated tile lists, the list index + 2 being a surface type. Verified on data: wil/ste/bil SPEC have exactly 9 zeros, the last one at the chunk end; the chunk only works because it is last. Which n means which surface, **H** (DMA spec order) |
+| PSXT | `0x4BFB10` `StyleChunk_PSXT` (was `PSX_tiles`) | — | V | `File_Skip(size)` (PlayStation tiles, not used on PC). Absent from shipped PC styles |
+| OVLY | `0x4BFB00` `StyleChunk_OVLY` (was `UNK_OVLY`) | — | V | `File_Skip(size)`. Not in shipped styles |
 | other | `0x402F60` | — | V | default branch skips by size |
 
 `StyleData` fields not written by any chunk reader: `+0x6A` (byte), `+0x0A` gap — unknown.
@@ -159,7 +158,7 @@ Consumers of the sprite tables (`StyleData_GetSpriteEntry` `0x4BF280`, `StyleDat
 `LoadMAP_GMPFile(path)` on `g_MapBlocks` (`0x662C08`, `MapBlocks*`, 0x370 bytes, built by
 `MapBlocks_Ctor` `0x464A40`): `File_Open`, read the 6-byte header **without checking it** (no
 `GBMP`/500 check at all — any 6 bytes pass), loop chunk headers, dispatch non-empty chunks to
-**`mapSegment` (`0x464890`)**, then `File_Close`, `processS11` (`0x464980`, ZONE post-pass), and
+**`MapBlocks_ReadChunk` (`0x464890`)**, then `File_Close`, `MapBlocks_BuildZoneInfoSlots` (`0x464980`, ZONE post-pass), and
 error `0x84` if `this+0` (the DMAP grid) is still NULL — DMAP is the one mandatory chunk. V.
 
 Shipped chunk set: CMAP DMAP ZONE [MOBJ] PSXM [ANIM] LGHT EDIT RGEN (note **EDIT**, not EDGE;
@@ -167,14 +166,14 @@ no UMAP/THSR in any shipped map).
 
 | Chunk | Reader (VA, name) | Destination | Status | Evidence |
 |---|---|---|---|---|
-| DMAP | `0x4646A0` `DMAP_section` | `this+0x000` → new(0x40010) grid object (ctor `0x4630B0` zeroes the tail): `+0x00000` u32 base[256×256] (read 0x40000 B), `+0x40000` u32 column-word count, `+0x40008` → column words, `+0x40004` u32 block count, `+0x4000C` → 12-byte `block_info` array. `MapBlocks+0x358`/`+0x360` = column-word count, `+0x35C` = its capacity (count + 0x400); `+0x34C`/`+0x354` = block count, `+0x350` = capacity (count + 200) | V | limits: count+0x400 ≤ 0x20000 (error `0x467`), count+200 ≤ 0x20000 (`0x469`); asserts chunk size == 0x40008 + 4·columns + 12·blocks (`0x409`). The slack lets the game add blocks/columns at runtime (save games, `FUN_0047F0B0`). Base values stay word offsets, not pointers |
-| ZONE | `0x464640` `ZONE_section` | `this+0x328` = malloc'd raw chunk; `FUN_004644E0` builds `this+0x32C` = `{u16 count, pad, u32 ptr[count]}` pointing at each record | V | record stride = 6 + byte[5] (name length) — matches `{u8 type, x, y, w, h, u8 name_len, name}`. Typed `ushort len` at `+0x32C`, really a pointer |
-| (ZONE post) | `0x464980` `processS11` | `this+0x330` = u8[count] zone → info-slot index; `this+0x334` = (slots+1) × 22-byte records | V (code) / H (meaning) | only zones of type 1, 10, 15 get a slot (same name ⇒ same slot, by `strncmp` of names); each slot initialised to 11 u16 `{500,300,300,100,0,500,50,40,10,200,40}`. **H**: per-navigation-zone car/ped density info that `SET_ZONE_*_INFO` script commands edit (types 1 nav, 10 info, 15 local nav per DMA spec) |
-| MOBJ | `0x464590` `FUN_00464590` | `this+0x338` = malloc'd chunk, `this+0x344` = size/6 | V | asserts size % 6 == 0 (error `0x28`). Consumer `FUN_0046A4D0` (from `startGame` `0x45B5F0`): per record u16 x, u16 y (→ fixed via `0x462ED0`), u8 rotation (`0x462EF0`), u8 object type; `FindMaxZ` for z; `ObjectSpawner_SpawnObject(g_ObjectSpawner, …)`. V |
-| ANIM | `0x464670` `ANIM_section` | `this+0x340` = malloc'd chunk; `FUN_00464550` walks it | V | stride = 6 + 2·byte[4] ⇒ `{u16 base, u8 frame_rate, u8 repeat, u8 anim_length, u8 pad, u16 tiles[anim_length]}`. Each record → `FUN_004C3470`: allocate from `g_TileAnimPool` (`0x671C0C`, 50 × 0x18 entries) and initialise from the record (`0x4C32A0`, `0x4C32E0`) |
-| LGHT | `0x4645F0` `FUN_004645f0` | `this+0x33C` = malloc'd chunk, `this+0x348` = size/16 | V | asserts size % 16 == 0 (error `0x33`). Consumer `FUN_004692B0` (from `startGame`): per record `+0` u32 colour, `+4/+6/+8` u16 x, y, z, `+0xA` u16 radius, `+0xC` u8 intensity, `+0xD` u8 shape, `+0xE` u8 on-time, `+0xF` u8 off-time → `FUN_00469010(g_LightManager, …)`, and `FUN_00469070` (flicker) when on-time ≠ 0. Field roles from argument order + DMA spec: **H** for the exact names |
-| RGEN | `0x464880` `FUN_00464880` | `g_RoadNetwork` (`0x5D351C`, `RoadNetwork`, 0xCC68 B) via `FUN_0040D250` | V | **ignores the chunk size and reads fixed sizes**: 0x2210 B → `+0x8` (`nodes[545]`, 16 B each), 0x1108 B → `+0xA830`, 0x1108 B → `+0xB938` (545 × 8 B each), u16 → `+0x4`, u16 → `+0xCC62`, u16 → `+0xCC64`; then zeroes `+0x0` (`routeCount`); debug flag `0x5EAD99` dumps the junctions. Total 0x4426 = 17446 = the RGEN size in every shipped map. What the two 545×8 arrays and three u16 are: unknown |
-| CMAP, UMAP, PSXM, EDIT, EDGE, THSR | `0x402F60` | — | V | not matched by `mapSegment` → skipped by size. So the PC game ignores CMAP (it only uses DMAP) and the PSX/editor chunks |
+| DMAP | `0x4646A0` `DMAP_section` | `this+0x000` → new(0x40010) grid object (ctor `0x4630B0` zeroes the tail): `+0x00000` u32 base[256×256] (read 0x40000 B), `+0x40000` u32 column-word count, `+0x40008` → column words, `+0x40004` u32 block count, `+0x4000C` → 12-byte `block_info` array. `MapBlocks+0x358`/`+0x360` = column-word count, `+0x35C` = its capacity (count + 0x400); `+0x34C`/`+0x354` = block count, `+0x350` = capacity (count + 200) | V | limits: count+0x400 ≤ 0x20000 (error `0x467`), count+200 ≤ 0x20000 (`0x469`); asserts chunk size == 0x40008 + 4·columns + 12·blocks (`0x409`). The slack lets the game add blocks/columns at runtime (save games, `MissionScript_LoadSaveGame`). Base values stay word offsets, not pointers |
+| ZONE | `0x464640` `ZONE_section` | `this+0x328` = malloc'd raw chunk; `MapBlocks_IndexZones` builds `this+0x32C` = `{u16 count, pad, u32 ptr[count]}` pointing at each record | V | record stride = 6 + byte[5] (name length) — matches `{u8 type, x, y, w, h, u8 name_len, name}`. Typed `ushort len` at `+0x32C`, really a pointer |
+| (ZONE post) | `0x464980` `MapBlocks_BuildZoneInfoSlots` (was `MapBlocks_BuildZoneInfoSlots`) | `this+0x330` = u8[count] zone → info-slot index; `this+0x334` = (slots+1) × 22-byte records | V (code) / H (meaning) | only zones of type 1, 10, 15 get a slot (same name ⇒ same slot, by `strncmp` of names); each slot initialised to 11 u16 `{500,300,300,100,0,500,50,40,10,200,40}`. **H**: per-navigation-zone car/ped density info that `SET_ZONE_*_INFO` script commands edit (types 1 nav, 10 info, 15 local nav per DMA spec) |
+| MOBJ | `0x464590` `MapChunk_MOBJ` (was `FUN_00464590`) | `this+0x338` = malloc'd chunk, `this+0x344` = size/6 | V | asserts size % 6 == 0 (error `0x28`). Consumer `MapBlocks_SpawnMapObjects` (from `startGame` `0x45B5F0`): per record u16 x, u16 y (→ fixed via `0x462ED0`), u8 rotation (`0x462EF0`), u8 object type; `FindMaxZ` for z; `ObjectSpawner_SpawnObject(g_ObjectSpawner, …)`. V |
+| ANIM | `0x464670` `ANIM_section` | `this+0x340` = malloc'd chunk; `MapBlocks_StartTileAnims` walks it | V | stride = 6 + 2·byte[4] ⇒ `{u16 base, u8 frame_rate, u8 repeat, u8 anim_length, u8 pad, u16 tiles[anim_length]}`. Each record → `TileAnimPool_AddFromMap`: allocate from `g_TileAnimPool` (`0x671C0C`, 50 × 0x18 entries) and initialise from the record (`0x4C32A0`, `0x4C32E0`) |
+| LGHT | `0x4645F0` `MapChunk_LGHT` (was `FUN_004645f0`) | `this+0x33C` = malloc'd chunk, `this+0x348` = size/16 | V | asserts size % 16 == 0 (error `0x33`). Consumer `MapBlocks_CreateLights` (from `startGame`): per record `+0` u32 colour, `+4/+6/+8` u16 x, y, z, `+0xA` u16 radius, `+0xC` u8 intensity, `+0xD` u8 shape, `+0xE` u8 on-time, `+0xF` u8 off-time → `Light_Init(g_LightManager, …)`, and `Light_SetFlashing` (flicker) when on-time ≠ 0. Field roles from argument order + DMA spec: **H** for the exact names |
+| RGEN | `0x464880` `MapChunk_RGEN` (was `FUN_00464880`) | `g_RoadNetwork` (`0x5D351C`, `RoadNetwork`, 0xCC68 B) via `FUN_0040D250` | V | **ignores the chunk size and reads fixed sizes**: 0x2210 B → `+0x8` (`nodes[545]`, 16 B each), 0x1108 B → `+0xA830`, 0x1108 B → `+0xB938` (545 × 8 B each), u16 → `+0x4`, u16 → `+0xCC62`, u16 → `+0xCC64`; then zeroes `+0x0` (`routeCount`); debug flag `0x5EAD99` dumps the junctions. Total 0x4426 = 17446 = the RGEN size in every shipped map. `nodes` are the junctions; the two 545×8 arrays are the H and V `RoadSegment` tables (`junction1` = W/N end, `junction2` = E/S end); the u16s are `junctionCount` (+0x4, 312 on wil), `hSegCount` (+0xCC62, 366) and `vSegCount` (+0xCC64, 365) — verified against wil geometry in Seq H1, see [cars-and-car-ai.md](../re/cars-and-car-ai.md) §5/§7 |
+| CMAP, UMAP, PSXM, EDIT, EDGE, THSR | `0x402F60` | — | V | not matched by `MapBlocks_ReadChunk` → skipped by size. So the PC game ignores CMAP (it only uses DMAP) and the PSX/editor chunks |
 
 ## `.gxt` — text (`LoadGXT`, `0x4C2540`)
 
@@ -187,13 +186,13 @@ multiplayer (`isMultiplayer` `0x673E2C`) reads `[MapFiles] GCIFile` / `GXTFile` 
 `.mmp` ini with `GetPrivateProfileStringA` into the GCI path and `strPathToGXT`. If the
 `.mmp` names `e.gxt`, the player's own language letter is put back into the path; any other
 GXT name forces the language to `e` (and the expected magic to `GBLE`). It returns through `0x3F1664` (clears the flag) to
-`File_Open(strPathToGXT)`. Header: 6 bytes, `Header_CheckMagic("GBLE"…)`,
-`Header_CheckVersion(100)`. Chunks via `parseChunk` (`0x4C2330`); after `File_Close`,
-`FUN_004C20B0`. All V.
+`File_Open(strPathToGXT)`. Header: 6 bytes, `FileHeader_CheckMagic("GBLE"…)`,
+`FileHeader_CheckVersion(100)`. Chunks via `LocaleSettings_ReadGxtChunk` (`0x4C2330`); after `File_Close`,
+`Gxt_ResolveKeyPointers`. All V.
 
 | Chunk | Reader | Destination | Status | Evidence |
 |---|---|---|---|---|
-| TKEY | `0x4C2060` | `this+0x0` = new(n·12) array of `LocaleSingle {u32 offset → WCHAR *text, char id[8]}`, `this+0x4` = n = size/12 | V | `FUN_004C20B0` then adds the TDAT base to every `offset` → pointer. Lookup `FindLocale` (`0x4C2120`) = `bsearch` on `id` (entries must be sorted), fallback string `0x575540` |
+| TKEY | `0x4C2060` | `this+0x0` = new(n·12) array of `LocaleSingle {u32 offset → WCHAR *text, char id[8]}`, `this+0x4` = n = size/12 | V | `Gxt_ResolveKeyPointers` then adds the TDAT base to every `offset` → pointer. Lookup `Gxt_FindTextW` (`0x4C2120`) = `bsearch` on `id` (entries must be sorted), fallback string `0x575540` |
 | TDAT | `0x4C2150` | `this+0x8` = new(size) u16 text, `this+0xC` = size/2 | V | raw read |
 | other | `0x402F60` | — | V | skipped |
 
@@ -203,13 +202,13 @@ Shipped: `e/f/g/i/s.gxt` (and `bob_*.gxt`) = header `GBL?` + u16 100, TKEY then 
 offsets are byte offsets, keys ≤ 7 chars sorted by `strcmp`, `textLength` is 32-bit, font code
 page, control codes, limits): `docs/re/gxt.md`.
 
-## `.sdt` + `.raw` — district sound bank (`FUN_004B6B40`)
+## `.sdt` + `.raw` — district sound bank (`MssAudio_LoadBank`)
 
 Not via the File module and **not via `mss32`**: plain CRT `fopen`/`fread`.
 `0x410550` (Ghidra name `LoadSty` — wrong, it is a sound thunk) sets ECX = `g_SoundManager`
-(`0x5DCBC8`) and jumps to `FUN_00416D30`: if sound is enabled, `FUN_00416570` cuts the style
+(`0x5DCBC8`) and jumps to `SoundManager_LoadLevelBank`: if sound is enabled, `PathToStem` cuts the style
 path to its stem (after the last `\`, before the `.`, into `0x5DCB08`: `wil`) and jumps to
-**`FUN_004B6B40`** on `g_MssAudioDevice` (`0x66C950`). V:
+**`MssAudio_LoadBank`** on `g_MssAudioDevice` (`0x66C950`). V:
 
 1. `"data\audio\" + stem + ".RAW"` (`0x5752E0` + `0x5752D8`), `fopen(…, "rb")`; if missing,
    `data\audio\BIL.RAW`. `fseek(END)`/`ftell` for the size, refuse > 0x5D1420 bytes
@@ -219,7 +218,7 @@ path to its stem (after the last `\`, before the `.`, into `0x5DCB08`: `wil`) an
    ctor defaults).
 3. `this+0xA4 = 1` (bank loaded).
 
-The ctor (`FUN_004B6CE0`) initialises the 320 entries to `{0, 0, 11025, 0, 0, -1}` — which
+The ctor (`MssAudio_Ctor`) initialises the 320 entries to `{0, 0, 11025, 0, 0, -1}` — which
 confirms the entry layout `u32 offset, u32 size, u32 rate, u32 rate variation, i32 loop start,
 i32 loop end`. V. The RAW buffer at `this+0x1EA8` is `AIL_mem_alloc_lock` memory and samples
 are later pointed into it with `AIL_set_sample_address` (per `docs/win32-shims.md`, "Audio";
@@ -230,14 +229,14 @@ not re-traced here). The individual calls from SDT entry to `mss32` sample handl
 ## `.scr` — mission script (`MissionScript_Load`, `0x47F280`)
 
 On `g_MissionScript` (`0x6644BC`), skipped entirely when `g_skipMission` (`0x5EADAE`). Copies
-the path into `this+0x35C` (`pathToScriptFile[256]`), `File_Open`, then (V):
+the path into `this+0x35C` (`scr_path[256]`), `File_Open`, then (V):
 
 | Part | Size | Destination |
 |---|---|---|
 | base pointers | 12000 B (6000 × u16) | `this+0x46C` `base_pointers` |
-| script code | 65536 B | `this+0x334C` |
+| script code | 65536 B | `this+0x334C` `script` |
 | strings length | u16 | local, passed to `ParseStrings` (`0x475D30`) |
-| strings | rest of file, ≤ 5118 B (`File_ReadRest`) | `*(this+0x1334C)` `ptrToStrings` |
+| strings | rest of file, ≤ 5118 B (`File_ReadRest`) | `*(this+0x1334C)` `strings_raw` |
 
 Every shipped top-level `.scr` is exactly 82656 = 12000 + 65536 + 2 + 5118 bytes. Then
 `MissionScript_ParseStrings`, `MissionScript_SetNameFromPath` (`0x475E00`) and
@@ -252,10 +251,10 @@ On `g_CarModelTable` (`0x5E5488`). Copies the path to `0x5E5448`, then
 `CarEngineData_LoadGci` (`0x432D10`), `CarModelTable_ValidateEngineData` (`0x432CD0`),
 `CarModelTable_BuildPhysicsData` (`0x432EA0`). In `CarEngineData_LoadGci` (V):
 
-- n = `g_StyleData->allCarsInfo->totalCars` (`FUN_00432850`: `[this+0x5C]+0x400`) — the GCI
+- n = `g_StyleData->allCarsInfo->totalCars` (`StyleData_GetTotalCars`: `[this+0x5C]+0x400`) — the GCI
   must describe exactly as many models as the style's CARI.
-- `FUN_00402B20` reads the whole text file (CRT `fopen "rb"`, `File.cpp` errors);
-  new(n × 0x48) records → `CarModelTable+0x804`; the text parser `FUN_0041D800` fills them;
+- `ReadWholeFile` reads the whole text file (CRT `fopen "rb"`, `File.cpp` errors);
+  new(n × 0x48) records → `CarModelTable+0x804`; the text parser `Gci_ParseText` fills them;
   error if the parser reports a problem (`carinfo.cpp` line 0xBC), if the output is not a
   multiple of 0x48, or if the count ≠ n.
 - `CarModelTable+0x404 + model*4` ← record pointer (by the record's first byte, the model).
@@ -278,22 +277,22 @@ reloads images through the same function.
 
 | File | Reader | Status | Note |
 |---|---|---|---|
-| `.seq` | `FUN_00455340` | V | see "Who builds the paths" |
-| save game (`player\…`) | `FUN_0047F0B0` | V (structure) | 0x748 B into `buf466`, then three u32-counted blocks into the DMAP grid's spare capacity (`FUN_004642A0` hands out the buffers, `FUN_00464250` commits counts) — saves carry map edits |
+| `.seq` | `FrontEnd_LoadSeq` | V | see "Who builds the paths" |
+| save game (`player\…`) | `MissionScript_LoadSaveGame` | V (structure) | 0x748 B into `buf466`, then three u32-counted blocks into the DMAP grid's spare capacity (`MapBlocks_GetEditBuffersForSave` hands out the buffers, `MapBlocks_RestoreEditsFromSave` commits counts) — saves carry map edits |
 | `data\kanji.dat` | `KanjiFont_LoadKanjiDat` (`0x460F10`) | H | File module (xref), Japanese only |
 | replays `.rep` | `Replay_ReadHeader` (`0x45F270`), `Keyboard_InitAttractReplay` | H | File module (xref) |
-| unknown 0x52-byte header | `FUN_00452D00` | unknown | File module; reads 82 bytes, keeps 3 |
+| unknown 0x52-byte header | `FrontEnd_ReadSaveSlotInfo` | unknown | File module; reads 82 bytes, keeps 3 |
 
 ## Coverage summary
 
 | Format | Units | Verified reader + destination | Hypothesis | Unknown |
 |---|---|---|---|---|
 | `.sty` | 16 tags (14 shipped + PSXT, OVLY) | 16 | meanings of: tile remap table (`+0x40`), FONB font roles, SPEC surface numbering, OBJI field names | `StyleData+0x6A` |
-| `.gmp` | 12 tags (8 shipped + UMAP, EDGE, THSR, CMAP-as-skip) | 12 (6 parsed, 6 confirmed skipped) | ZONE slot info meaning, LGHT field names | RGEN's two 545×8 arrays and three u16 |
+| `.gmp` | 12 tags (8 shipped + UMAP, EDGE, THSR, CMAP-as-skip) | 12 (6 parsed, 6 confirmed skipped) | ZONE slot info meaning, LGHT field names | — (RGEN arrays and counts resolved in Seq H1) |
 | `.gxt` | header + 2 chunks | 3 | — | — |
 | `.sdt`/`.raw` | 2 files | 2 | — | path into mss32 samples (not traced) |
 | `.scr` | 4 parts + sub-scripts | 4 | sub-script layout | — |
-| `nyc.gci` | 1 | 1 (container, count, index) | field scaling (0x4000) | `FUN_0041D800` parser internals |
+| `nyc.gci` | 1 | 1 (container, count, index) | field scaling (0x4000) | `Gci_ParseText` parser internals |
 | `.tga` | 1 | 1 | — | — |
 | `.seq` | 1 | 1 (parse + limits) | FrontEnd level-table layout | — |
 
@@ -445,8 +444,8 @@ u32 blockCount; u32 *columns; BlockInfo *blocks;`, 0x40010 B), `+0x328` `zoneDat
 `CarModelTable`: `+0x404` `GciRecord *byModel[256]` (not `CarInfo*`), `+0x804` `GciRecord
 *records` (not `countB`); new type `GciRecord`, 0x48 B.
 
-`RoadNetwork`: `+0x4`, `+0xCC62`, `+0xCC64` u16 from RGEN; `+0xA830`, `+0xB938` `u8[545][8]`
-from RGEN (meaning unknown).
+`RoadNetwork`: `+0x4` junction count, `+0xCC62` / `+0xCC64` H / V segment counts (u16 from RGEN);
+`+0xA830`, `+0xB938` the H and V `RoadSegment[545]` tables (8 B each) from RGEN (Seq H1).
 
 `MssAudioDevice` (`0x66C950`, new type): `+0xA4` `bankLoaded`, `+0xA8` `SdtEntry entries[320]`
 (24 B: offset, size, rate, rateVariation, loopStart, loopEnd), `+0x1EA8` `u8 *raw`.
