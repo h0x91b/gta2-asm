@@ -59,7 +59,12 @@ int c32_passenger_wanted(void)
 #define MAX_TRAMPS 32
 #define DETOUR_MAX 16
 
-static uint8_t tramps[MAX_TRAMPS][TRAMP_SIZE]; /* the image is mapped rwx */
+/* Code written at init and run later: in its own page-aligned section (c32.ld), so no
+ * variable shares its page. Rosetta treats a write into a page it has translated code from
+ * as self-modifying code; a store to a neighbouring variable every frame made a trampoline
+ * jump into garbage (measured 2026-10-23, docs/c32.md "Pitfalls"). */
+__attribute__((section(".c32.tramp")))
+static uint8_t tramps[MAX_TRAMPS][TRAMP_SIZE];
 static unsigned n_tramps;
 
 static int bytes_equal(const uint8_t *a, const uint8_t *b, unsigned n)

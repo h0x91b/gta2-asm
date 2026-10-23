@@ -19,6 +19,8 @@ SECTIONS
     c32_base = .;
     .head : { KEEP(*(.c32.head)) }      /* struct c32_header, first */
     .text : { *(.text .text.*) }
+    /* hook trampolines (rt.c): code written once at init, on pages of their own */
+    .tramp : ALIGN(4096) { KEEP(*(.c32.tramp)) . = ALIGN(4096); }
     .rodata : {
         *(.rodata .rodata.*)
         . = ALIGN(4);
@@ -29,7 +31,9 @@ SECTIONS
         KEEP(*(.c32.exports))
         c32_exports_end = .;
     }
-    .data : { *(.data .data.*) }
+    /* everything written at run time starts on a fresh page: no code shares it (Rosetta
+     * retranslates a code page on every store into it; docs/c32.md "Pitfalls") */
+    .data : ALIGN(4096) { *(.data .data.*) }
     . = ALIGN(4);
     c32_image_end = .;
     .bss : {
