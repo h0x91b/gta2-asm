@@ -26,8 +26,11 @@
  *   `slot - 0x664` (it reads nothing else of the manager) and does the crew pick and the z
  *   of the original. Once per gameplay frame rb_frame drops car pointers whose driverClass
  *   is no longer 4 and guards that left the game or are no longer ROAD_BLOCK_GUARD (their
- *   slots get reused), as Update does, so Remove only touches what is still ours. A new
- *   Game* (another level) forgets them.
+ *   slots get reused), as Update does, so Remove only touches what is still ours. Leaving
+ *   a level forgets them: a detour on DeinitGame 0x462060 (quit to the frontend, the end
+ *   of a level). Watching Game* is not enough: quit + "Replay previous area" gets a new Game
+ *   at the same address (measured 2026-10-23: the old slot survived, and "Remove roadblocks"
+ *   then ran PoliceRoadblock_Remove on the previous level's cars and peds).
  *
  * Placement: from the player (or their car) along its rotation, every half block from 1 to
  * 12 blocks ahead, else ring by ring around them out to 16 tiles (the nearest road first),
@@ -90,7 +93,6 @@ C32_ASSERT(offsetof(struct slot, rb) - offsetof(struct slot, cop_level) ==
 
 static struct slot slots[RB_SLOTS];
 static int inited;                      /* the Ctors ran (lazily: the game's heap is up) */
-static Game *rb_game;                   /* Game* the slots belong to */
 static const uint8_t kind_cop[] = { 3, 5, 6 };  /* copLevel: police, FBI, army */
 
 /* active slots, for the host's "Remove roadblocks: N" row */
@@ -131,7 +133,6 @@ static void ensure(void)
     if (inited)
         return;
     inited = 1;
-    rb_game = *(Game *volatile *)G_GAME;
     for (int i = 0; i < RB_SLOTS; i++)
         PoliceRoadblock_Ctor(&slots[i].rb);
 }
@@ -279,11 +280,6 @@ static void prune(void)
 const char *G2_STDCALL rb_frame(uint32_t req, uint32_t kind)
 {
     const char *t = 0;
-    if (inited && *(Game *volatile *)G_GAME != rb_game) {
-        rb_game = *(Game *volatile *)G_GAME;
-        forget();
-        count_up();
-    }
     if (req == 1)
         t = place(kind < sizeof kind_cop ? (int)kind : 0);
     else if (req == 2)
@@ -293,3 +289,25 @@ const char *G2_STDCALL rb_frame(uint32_t req, uint32_t kind)
     return t;
 }
 C32_EXPORT(rb_frame);
+
+typedef void (G2_STDCALL *deinit_fn)(void);
+static deinit_fn DeinitGame;            /* the original, through the detour's trampoline */
+
+/* DeinitGame (stdcall, no arguments): the level's cars, peds and objects go next */
+static void G2_STDCALL hk_deinit_game(void)
+{
+    if (inited) {
+        if (rb_up)
+            c32_log("roadblocks: level ends, forgetting %u", rb_up);
+        forget();
+        count_up();
+    }
+    DeinitGame();
+}
+
+static void roadblocks_init(void)
+{
+    static const uint8_t orig[] = { 0xB9, 0xC8, 0xCA, 0x5E, 0x00 };   /* mov ecx, 0x5ECAC8 */
+    DeinitGame = (deinit_fn)c32_detour(0x462060, orig, sizeof orig, (void *)hk_deinit_game);
+}
+C32_INIT(roadblocks_init);

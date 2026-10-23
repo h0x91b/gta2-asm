@@ -377,6 +377,12 @@ becomes the menu's last car) are exported variables. The `CarAI_FollowRoute` arr
 workaround is a `c32_callhook` on 0x432678 now, not a NASM `CALLHOOK`. Same rows, orders,
 keys, toasts and log lines; the lines now carry the `c32: ` prefix of `c32_log`.
 
+One change on purpose: leaving a level forgets our roadblocks through a detour on
+`DeinitGame` 0x462060. The NASM watched `Game*` for a change, but quit + "Replay previous
+area" gets a new `Game` at the same address: measured on master (2026-10-23), the slot
+survived the replay and "Remove roadblocks" ran `PoliceRoadblock_Remove` on the previous
+level's freed cars and peds ("Removed 1 roadblocks" in a level that had none).
+
 Test builds: `C32FLAGS_EXTRA=-DDE_TRACE` (the per-frame slot / route trace, formerly
 `NASMFLAGS=-DDE_TRACE`). Dropped: `DE_TEST_TP` (teleport at a frame) and `RB_TRACE` (the
 player's position every 50 frames) — `gta2ctl teleport` / `state` do both.
