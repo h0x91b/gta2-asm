@@ -39,7 +39,7 @@
 default rel
 
 extern _printf, _puts, _mmap, _mprotect, _i386_set_ldt, ___error, _setvbuf, _exit
-extern _sigaction, _open, _close, _pread, _lseek, _malloc, _memcpy, _memset, _strcmp, ___stdoutp
+extern _sigaction, _sigaltstack, _open, _close, _pread, _lseek, _malloc, _memcpy, _memset, _strcmp, ___stdoutp
 
 ; ---- PE layout (winnt.h) ------------------------------------------------
 IMAGE_BASE      equ 0x3F0000        ; gta2.exe ImageBase; no relocs, so exact
@@ -111,6 +111,8 @@ EXIT_CRASH  equ 4
 SIGBUS      equ 10
 SIGSEGV     equ 11
 SA_SIGINFO  equ 0x40
+SA_ONSTACK  equ 0x1
+CRASH_STACK equ 0x10000             ; crash_handler's own stack (sigaltstack)
 
 section .text
 
@@ -948,7 +950,16 @@ _main:
 
     lea rax, [crash_handler]
     mov [sa_handler], rax
-    mov dword [sa_flags], SA_SIGINFO
+    ; the handler runs on a stack of its own: a fault with a wild esp (32-bit code on a
+    ; garbage stack) otherwise re-faults in _sigtramp forever at 100% CPU, printing nothing
+    mov dword [sa_flags], SA_SIGINFO | SA_ONSTACK
+    lea rax, [crash_stack]
+    mov [crash_ss], rax                 ; stack_t: ss_sp, ss_size, ss_flags
+    mov qword [crash_ss + 8], CRASH_STACK
+    mov dword [crash_ss + 16], 0
+    lea rdi, [crash_ss]
+    xor esi, esi
+    call _sigaltstack
     mov edi, SIGSEGV
     lea rsi, [sa_handler]
     xor edx, edx
@@ -1184,6 +1195,8 @@ file_size:   resq 1
 nt:          resq 1
 exe_path:    resq 1
 win_arg_end: resq 1                 ; --window: strtol end pointer
+crash_ss:    resq 3                 ; stack_t for sigaltstack (crash_handler)
+crash_stack: resb CRASH_STACK
 sa_handler:  resq 1                 ; struct sigaction (macOS): handler, mask, flags
 sa_mask:     resd 1
 sa_flags:    resd 1
