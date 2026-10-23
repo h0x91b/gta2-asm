@@ -23,7 +23,7 @@ struct vfs_file vfs_load(const char *path)
     struct vfs_file f = { 0, 0 };
     if (!file)
         return f;
-    f.data = calloc(1, file_len + 16);          /* +16 bytes of slack, like w32_vfs.asm */
+    f.data = calloc(1, file_len + 16);          /* +16 bytes of slack, like c/vfs.c */
     memcpy(f.data, file, file_len);
     f.size = file_len;
     return f;

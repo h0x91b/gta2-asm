@@ -15,7 +15,7 @@
 ;             3 the game called an unimplemented import, 4 SIGSEGV/SIGBUS.
 ;
 ; How it works (see spike/ for the proof of each mechanism):
-;   1. gta2.ebin is read from data.pak (w32_vfs.asm) into a malloc buffer and validated (MZ, PE, i386, PE32,
+;   1. gta2.ebin is read from data.pak (c/vfs.c) into a malloc buffer and validated (MZ, PE, i386, PE32,
 ;      ImageBase 0x3F0000 — there are no relocations, so no other base is possible).
 ;   2. SizeOfImage is mmap'ed at 0x3F0000 (hint + verify, never blind MAP_FIXED), the
 ;      headers and every section are copied to ImageBase+VA (raw bytes up to the
@@ -39,7 +39,7 @@
 default rel
 
 extern _printf, _puts, _mmap, _mprotect, _i386_set_ldt, ___error, _setvbuf, _exit
-extern _sigaction, _sigaltstack, _open, _close, _pread, _lseek, _malloc, _memcpy, _memset, _strcmp, ___stdoutp
+extern _sigaction, _sigaltstack, _close, _malloc, _memcpy, _memset, _strcmp, ___stdoutp
 
 ; ---- PE layout (winnt.h) ------------------------------------------------
 IMAGE_BASE      equ 0x3F0000        ; gta2.exe ImageBase; no relocs, so exact
@@ -1103,7 +1103,7 @@ s_gta2:     db "GTA2", 0
 s_long:     db "Anywhere City: Downtown, Residential, Industrial", 0
 strs_end:
 
-default_exe: db "data.pak", 0        ; the game folder as a Stored zip (w32_vfs.asm)
+default_exe: db "data.pak", 0        ; the game folder as a Stored zip (c/vfs.c)
 arg_entry:   db "--entry", 0
 arg_trace:   db "--trace", 0
 arg_hold:    db "--hold", 0
@@ -1170,8 +1170,7 @@ section .text
 %include "c_bridge.asm"            ; symbols shared with host/c/*.c
 %include "c32_blob.asm"            ; the C32 image + its host services
 %include "w32_kernel32.asm"
-%include "w32_files.asm"
-%include "w32_vfs.asm"
+%include "w32_files.asm"           ; KERNEL32 file shim table -> host/c/files.c
 %include "w32_locale.asm"
 %include "w32_user32.asm"
 %include "w32_advapi32.asm"

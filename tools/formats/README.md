@@ -1,7 +1,7 @@
 # tools/formats — GTA2 file-format decoders
 
 TypeScript decoders for the game's data files, run with Bun (no npm dependencies). They
-read straight from `data.pak` (`pak.ts`, same rules as `host/w32_vfs.asm`: Stored entries
+read straight from `data.pak` (`pak.ts`, same rules as `host/c/vfs.c`: Stored entries
 only, case-insensitive paths) and document the on-disk layouts that `gta2.exe` parses into
 memory — the starting point for reversing its loaders (`docs/formats/loader-map.md`).
 

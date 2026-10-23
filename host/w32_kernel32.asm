@@ -1,5 +1,5 @@
 ; w32_kernel32.asm — KERNEL32 shims: process, modules, heap, memory, time, misc.
-; Files live in w32_files.asm, locale/strings in w32_locale.asm. See docs/win32-shims.md.
+; Files live in c/files.c + c/vfs.c (table: w32_files.asm), locale/strings in w32_locale.asm. See docs/win32-shims.md.
 
 VIRT_EXE_PATH equ 0                 ; (documentation) the game sees itself as C:\GTA2\gta2.exe
 
@@ -726,5 +726,4 @@ low_env:      resd 1
 low_envw:     resd 1
 std_handles:  resd 3
 unhandled_filter: resd 1
-stat_buf:     resb 256
 section .text

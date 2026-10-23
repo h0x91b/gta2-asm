@@ -44,5 +44,17 @@ global mouse_dx, take_axis, mouse_capture_on, mouse_capture_off, dik_str ; w32_d
 extern _setup_audio, _audio_dump_open, _audio_pump, _audio_focus, _aud_bg_audio
 global sdl_lib                      ; w32_user32.asm: the dlopen'ed SDL3
 global focus_poll                   ; w32_user32.asm: polls the window focus -> _audio_focus
-global vfs_load                     ; w32_vfs.asm: a whole game file (overlay, then pak)
 global heap_alloc, heap_free        ; w32_core.asm: low-memory heap (AIL_mem_alloc_lock)
+
+; the pak VFS and the KERNEL32 file shims (c/vfs.c, c/files.c; table: w32_files.asm)
+extern vfs_open_pak, vfs_find, vfs_read_at  ; loader.asm read_image
+extern vfs_resolve                  ; w32_kernel32.asm LoadLibraryA: overlay or pak
+extern vfs_load                     ; w32_advapi32.asm registry seed (and c/audio_wav.c)
+extern enter_overlay_dir            ; loader.asm
+extern pak_ents, pak_path           ; C storage, NASM names: the index, the pak's path
+PAK_ENT_SIZE equ 24                 ; struct pak_ent {name* 0, data offset 8, u32 size 16, u32 flags 20}
+VFS_NONE     equ -2                 ; vfs_resolve: neither overlay nor pak (c/vfs.h)
+global handle_new, handle_get       ; w32_core.asm: the handle table
+global last_error                   ; w32_core.asm
+global std_handles                  ; w32_kernel32.asm
+global trace                        ; loader.asm: --trace

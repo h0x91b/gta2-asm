@@ -146,8 +146,12 @@ Rules:
   `global` in c_bridge.asm), never `malloc`.
 
 Users: `c32_svc_log` (`shimtab_c32`, c32_blob.asm) and the whole `mss32` shim
-(`host/c/audio.c`, table `w32_mss32.asm`; ported from NASM in Seq 57). The NASM shims'
-`HENTER`/`ARG(n)` is the same contract (`rbx = rdi = args`).
+(`host/c/audio.c`, table `w32_mss32.asm`; ported from NASM in Seq 57), and the KERNEL32
+file shims (`host/c/files.c`, table `w32_files.asm`; with the pak VFS `host/c/vfs.c`, whose
+`vfs_load`/`vfs_resolve`/`vfs_open_pak`/... NASM still calls under their NASM names,
+Seq 64). The NASM shims' `HENTER`/`ARG(n)` is the same contract (`rbx = rdi = args`).
+A C handler may use the NASM handle table directly: `handle_new` / `handle_get`
+(w32_core.asm) touch only `rax, rcx, r8`, so they are SysV-clean as they are.
 
 ### C → game (C calls a 32-bit game function)
 
@@ -225,6 +229,9 @@ pak or SDL. The test stubs every NASM symbol the module uses under the same `NAS
 (`test/config_test.c`: an in-memory registry, a short `key_table`, `fail` that `longjmp`s
 back with its message). It cannot cover the NASM itself; parity runs of the loader do that. `test/audio_wav_test.c` feeds `audio_wav.c` synthetic WAVs through a
 `vfs_load` stub and checks the IMA ADPCM decoder against hand-worked values.
+`test/vfs_test.c` writes small Stored zips (and a deflated one) into a temp dir and checks
+`vfs.c`'s index, lookup, `win_path` and the overlay; the refused paks run in a forked
+child, since `vfs_open_pak` exits.
 
 ## Pitfalls
 

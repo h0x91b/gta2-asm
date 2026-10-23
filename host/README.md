@@ -39,7 +39,7 @@ low regions first and then `dlopen`s SDL3 (`$GTA2_SDL3_LIB`, default
 What it does (`loader.asm`; SDL is dlopen'ed by the shims):
 
 1. Opens `data.pak` (first argument, default `data.pak`; `build.sh --load` passes
-   `../data.pak`), indexes it (`w32_vfs.asm`), reads its `gta2.ebin` (vanilla
+   `../data.pak`), indexes it (`c/vfs.c`), reads its `gta2.ebin` (vanilla
    `gta2.exe`, renamed) and `chdir`s into the overlay
    `~/Library/Application Support/gta2-resurrected/`. Validates MZ / PE / i386 /
    PE32 / ImageBase `0x3F0000` (no relocations, so no other base), `mmap`s SizeOfImage at `0x3F0000` (hint + verify).

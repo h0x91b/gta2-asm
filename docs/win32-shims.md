@@ -116,12 +116,14 @@ a window titled "GTA2", 1280×960 client area, black).
    vanished after running". Hence the dlopen route.
 
 Also: on x86_64 macOS, `stat`/`opendir`/`readdir` must be the `$INODE64` symbols to
-match the 64-bit-inode struct layouts; the plain names are the legacy ABI.
+match the 64-bit-inode struct layouts; the plain names are the legacy ABI. Host C gets
+them from the SDK headers by itself (`nm -u host/c/vfs.o`); NASM would need
+`extern _stat$INODE64` by hand.
 
 ## Policies (decisions with long-term impact)
 
 - **Paths.** Game files come from `data.pak` (a Stored zip, indexed once by
-  `w32_vfs.asm`) plus a writable overlay, `~/Library/Application Support/gta2-resurrected/`,
+  `host/c/vfs.c`) plus a writable overlay, `~/Library/Application Support/gta2-resurrected/`,
   which is the host's cwd. The game is told it lives in `C:\GTA2`
   (`GetModuleFileNameA` → `C:\GTA2\gta2.exe`, `GetCurrentDirectoryA` → `C:\GTA2`).
   `C:\GTA2\x` and relative paths map to the game root, any other absolute path is
@@ -196,7 +198,11 @@ and not yet exercised by the game.
 | lstrlenA, FormatMessageA | strlen / produces no text (0) |
 | SetHandleCount ✓, SetConsoleCtrlHandler, SetEnvironmentVariableA, SetStdHandle | return arg / TRUE |
 
-### KERNEL32 — files (`w32_files.asm`)
+### KERNEL32 — files (`host/c/files.c`, table `w32_files.asm`)
+
+64-bit host C import handlers (docs/host-c.md, "Import shims in C") on top of the pak VFS
+`host/c/vfs.c` (index, `win_path`, overlay, copy-out, `vfs_load`; unit test
+`host/test/vfs_test.c`). Ported from NASM in Seq 64 with identical log lines.
 
 | import | semantics / shortcut |
 |---|---|

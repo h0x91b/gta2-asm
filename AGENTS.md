@@ -131,7 +131,7 @@ Option 1 is implemented for the frontend in `host/w32_renderer.asm`
 - For an experiment that needs loose files, unpack it into your worktree
   (`unzip -q data.pak -d gta2`; `/gta2/` stays git-ignored) and never commit the result.
   `tools/mkpak.sh [dir [out]]` rebuilds a pak from such a folder (`zip -0 -r -X`).
-- **The loader runs from the pak alone** (`host/w32_vfs.asm`): it indexes the central
+- **The loader runs from the pak alone** (`host/c/vfs.c`): it indexes the central
   directory once, maps `gta2.ebin` from it, and serves every game file read (Win32
   file shims, registry seed, mss32 streams, `LoadLibraryA` probes) from it,
   case-insensitively. It refuses a pak with any non-Stored entry. **Writes** go to the
@@ -150,7 +150,7 @@ Option 1 is implemented for the frontend in `host/w32_renderer.asm`
 
 TypeScript decoders for `.sty`, `.gmp`, `.sdt`/`.raw`, `nyc.gci`, `.scr`, `.gxt` and frontend `.tga`, run
 with Bun (`/opt/homebrew/bin/bun`, no npm deps), reading straight from `data.pak` with the
-same rules as `w32_vfs.asm`. Use them to learn what
+same rules as `host/c/vfs.c`. Use them to learn what
 a loader function in `gta2.exe` is parsing: `bun tools/formats/cli.ts help`, e.g.
 `sty data/wil.sty --summary`, `gmp data/wil.gmp --block 40,135,3`, `scr data/bil.scr --mis --out formats-out/bil`
 (mission scripts back to `.mis`), `gxt data/e.gxt --export`/`--import` (edit game text, `docs/re/gxt.md`). Tests: `bun test

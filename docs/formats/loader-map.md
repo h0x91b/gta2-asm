@@ -113,8 +113,8 @@ The frontend uses a fixed style: `InitFrontend` calls `LoadGXT` then `LoadSty(�
 
 **Down to the host.** Every open above ends in the CRT (`fopen` → `_fsopen` → `__openfile` →
 `CreateFileA`; `.seq` additionally `FindFirstFileA`), so the game never sees our pak: the Win32
-shims in `host/w32_files.asm` (`CreateFileA`, `ReadFile`, `SetFilePointer`, `FindFirstFileA`,
-…) resolve `data\…` through `host/w32_vfs.asm` (`vfs_find`/`vfs_read_at`) against `data.pak`,
+shims in `host/c/files.c` (`CreateFileA`, `ReadFile`, `SetFilePointer`, `FindFirstFileA`,
+…) resolve `data\…` through `host/c/vfs.c` (`vfs_find`/`vfs_read_at`) against `data.pak`,
 overlay first. See `docs/win32-shims.md` ("KERNEL32 — files").
 
 ## `.sty` — style (`LoadSty`, `0x4C0820`)

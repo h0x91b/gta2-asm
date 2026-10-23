@@ -16,15 +16,9 @@
 
 extern _strcasecmp, _strncasecmp, _strlen, _strcpy, _strrchr, _atoi, _strtol, _strdup
 extern _memcmp, _putchar
-extern _usleep, _getpid, _clock_gettime_nsec_np, _write, _read, _fflush
-; x86_64 macOS: the 64-bit-inode struct stat / struct dirent layouts we use need the
-; $INODE64 symbol variants (the plain names are the legacy 32-bit-inode ABI).
-extern _stat$INODE64, _opendir$INODE64, _readdir$INODE64
-%define _stat _stat$INODE64
-%define _opendir _opendir$INODE64
-%define _readdir _readdir$INODE64
-extern _closedir, _chdir, _getcwd, _time, _gmtime_r
-extern _strncmp, _snprintf, _strncpy, _strchr, _fopen, _fgets, _fclose, _strtoul
+extern _usleep, _getpid, _clock_gettime_nsec_np, _fflush
+extern _getcwd, _time, _gmtime_r
+extern _strncmp, _snprintf, _strchr, _fopen, _fgets, _fclose, _strtoul
 
 ; ---- handler frame -------------------------------------------------------
 ; HENTER [locals]: saves rbp/rbx/r12-r14 (keeps rsp 16-aligned), rbx = args.

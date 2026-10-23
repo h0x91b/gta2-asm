@@ -21,7 +21,7 @@ RV_NAME equ 16
 RV_DATA equ 24
 RV_SIZEOF equ 32
 
-extern _fgets, _strcat, _strtoul
+extern _fgets, _strcat, _strtoul, _fmemopen, _free
 
 section .text
 

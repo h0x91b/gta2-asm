@@ -6,11 +6,8 @@
 
 #include "game.h"
 #include "audio.h"
+#include "vfs.h"                    /* vfs_load: a whole game file, overlay then pak */
 
-/* w32_vfs.asm: the whole file in a malloc'ed buffer (+16 zero bytes of slack) and its
- * size (rax:rdx, i.e. a two-word struct in SysV); data 0 if it is in neither place */
-struct vfs_file { uint8_t *data; uint64_t size; };
-struct vfs_file vfs_load(const char *path) NASM(vfs_load);
 
 static const int8_t ima_index[16] = {
     -1, -1, -1, -1, 2, 4, 6, 8, -1, -1, -1, -1, 2, 4, 6, 8
