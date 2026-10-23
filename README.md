@@ -47,7 +47,7 @@ stand (not during a mission), all weapons, +$100000, live camera zoom (70% by de
 or lock the wanted level, skin and body type; place real police, FBI or army roadblocks on the
 nearest road ahead, which stay until you remove them; call an ambulance or a fire truck the
 game's own way: a nearby body is queued, or a ped killed, for the ambulance; a parked car
-mid-lane is set alight for the fire truck — `host/debug_emergency.asm`), a Vehicle page (colour,
+mid-lane is set alight for the fire truck — `host/c32/emergency.c`), a Vehicle page (colour,
 invincibility, repair or explode the car you are in or left last), a Spawn page with **Spawn >
 Car**: every car of the level by its in-game name, LEFT / RIGHT picks the remap (random, none or
 each of the model's own) with a big rotating preview of the car in it, RETURN spawns it in front

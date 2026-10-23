@@ -12,7 +12,7 @@ for growing it.
   `hk_DrawUI`), the Player and Vehicle features, and **four central tables**: `dmp_main`,
   `dmp_player`, `dmp_vehicle`, `dmp_flags` (`DMITEM kind, "label", data`).
 - Feature modules (`debug_paths.asm`, `debug_roads.asm` — both C32 now, see "World overlays" —, `debug_roadblocks.asm`,
-  `debug_emergency.asm`, `player_move.asm`) exported `dm_<name>_change` / `dm_<name>_fmt`
+  `debug_emergency.asm` — C32 now, see "Roadblocks and emergency services" —, `player_move.asm`) exported `dm_<name>_change` / `dm_<name>_fmt`
   pairs or flag bytes, and **debug_menu.asm listed them** in its tables. Their per-frame work
   (`rb_frame`, `de_run`, `dm_draw_paths`, `dr_draw`) was called by name from `hk_DrawUI`.
 - Item kinds: action (an id dispatched by a `cmp`/`call` chain in `hk_DrawUI`), flag byte,
@@ -286,7 +286,8 @@ Files are in `host/c/menu/` unless a path is given.
 - **root** (`root.c`): Quick save, Get all weapons, Add $100000, Camera zoom; Ped
   paths (`overlays.c`, drawn by C32 `debug_paths.c`), Mouse turning and Strafe (`player_move.asm`); links.
 - **Player** (`player.c`): wanted level and lock, skin, body; roadblocks
-  (`debug_roadblocks.asm` registers them), ambulance / fire truck (`debug_emergency.asm`).
+  (`roadblocks.c`, C32 `host/c32/roadblocks.c`), ambulance / fire truck (`emergency.c`, C32
+  `host/c32/emergency.c`); see "Roadblocks and emergency services" below.
 - **Vehicle** (`vehicle.c`): the current / last car, colour, invincible, repair, explode.
 - **Spawn** (`spawn.c`): a group page for spawners.
   - **Car** (`spawn_car.c`): every spawnable car model of the current style, its
@@ -358,6 +359,38 @@ record mode, and compared the `DrawFlatRect2D` argument streams: 0 mismatches ov
 overlay frame of the test (roads 200+ frames / 40 060 boxes, paths 200+ frames / 22 007 boxes,
 and the same with every ped on a path); the screenshots of a normal run match master's
 byte for byte where the game itself repeats (two master runs differ after ~frame 1000).
+
+### Roadblocks and emergency services (C32, Seq 60)
+
+"Place roadblock" / "Remove roadblocks" and "Call ambulance" / "Call fire truck" (Player page)
+moved from NASM (`debug_roadblocks.asm` 654 + `debug_emergency.asm` 1311 lines) to C
+(2026-10-23), split like the overlays: the game logic — ped and car pool walks, map block
+and road network reads, `Ped_SetObjective`, `Ped_OnDeath`, `SpawnCar`,
+`Car_RequestFireTruckAndSpawnFlames`, `PoliceManager_TryCreateRoadblockAt` on our own slots —
+is C32 (`host/c32/roadblocks.c`, `host/c32/emergency.c`, game structs from
+`re/gta2_types.h`, every field pinned with `C32_OFFSET`); the four rows and two `DM_FRAME`
+hooks are host C (`host/c/menu/roadblocks.c`, `host/c/menu/emergency.c`). Each hook does one
+`call32` a frame into the exported `rb_frame(req, kind)` / `de_frame(req, frame, model,
+last_car)`, which return the toast (a C32 string, read in place: the image is mapped 1:1);
+`rb_up` (the "Remove roadblocks: N" count) and `de_spawned` (a car put on the road, which
+becomes the menu's last car) are exported variables. The `CarAI_FollowRoute` arrival
+workaround is a `c32_callhook` on 0x432678 now, not a NASM `CALLHOOK`. Same rows, orders,
+keys, toasts and log lines; the lines now carry the `c32: ` prefix of `c32_log`.
+
+Test builds: `C32FLAGS_EXTRA=-DDE_TRACE` (the per-frame slot / route trace, formerly
+`NASMFLAGS=-DDE_TRACE`). Dropped: `DE_TEST_TP` (teleport at a frame) and `RB_TRACE` (the
+player's position every 50 frames) — `gta2ctl teleport` / `state` do both.
+
+End to end: `tests/ctl/emergency.sh` (an ambulance and a fire truck next to the road east of
+the start: the "emerg:" lines through the slot states, screenshots) and
+`tests/ctl/roadblocks.sh` (one on foot, one from a car, driving into it, remove, quit to the
+frontend and replay), both through the menu's own keys.
+Parity with the NASM (same scenarios on master and on the port): emergency, all 11 `emerg:`
+lines identical apart from frame numbers (ambulance queued for the same ped, slot stages
+3 → 6 → 5, fire truck for the same car, states 1 → 2 → 3 → 4 → 5 → 0); roadblocks, every
+`menu:` line identical (same tiles, cars, cops, first-car positions; the car stops at the
+roadblock, y 151.5 → 146.988 both), apart from the Replay fix below. Screenshots up to the
+first divergence in traffic are byte-identical.
 
 ## 7. RE facts used (sources)
 

@@ -8,12 +8,11 @@
 
 const char *km_spawn_why;
 const char s_dm_noplayer2[] = "No player";
-const char fmt_dm_int[] NASM(fmt_dm_int) = "%d";    /* debug_roadblocks.asm */
 static const char s_dm_incar[] = "Get out of the car first";
 static const char s_dm_nospawn[] = "Cannot spawn here";
 
 int32_t dm_model;
-gptr dm_last_car NASM(dm_last_car);     /* debug_emergency.asm sets them too */
+gptr dm_last_car NASM(dm_last_car);     /* emergency.c sets them too */
 uint32_t dm_last_car_id NASM(dm_last_car_id);
 
 /* CAR_MODEL4 names by id (seuko-mod src/game/gta2.h) */

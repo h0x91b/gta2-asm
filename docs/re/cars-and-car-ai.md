@@ -157,7 +157,8 @@ On arrival: `CarPhysics_SteerPlus`, `followRoadActive = 0`, `Car_HaltAIIfHasAI`,
 ## 6. Why dispatched services drive past their target (Seq 43 bug hunt)
 
 **Verdict: native 11.44 behaviour, not a port bug.** Evidence chain (traces from a `-DDE_TRACE`
-build of `host/debug_emergency.asm`, Downtown, 2026-10-22):
+build of `host/debug_emergency.asm`, since ported to C32 `host/c32/emergency.c`, where the same
+trace is `C32FLAGS_EXTRA=-DDE_TRACE`; Downtown, 2026-10-22):
 
 1. Both services get a GO_TO_POINT order, `isUrgent = 0` (paramedics: `Ped+0x26C` = 0, written at
    0x47323A). Trace: `ai flags 00012012 order mode 1 followRoad 1 arrived 0 urgent 0` — flag 0x10 is
@@ -188,7 +189,7 @@ without the K menu (the K entries only enqueue the body or light the car; everyt
 game's own code, so the menu path *is* the native dispatch). Arrival on slopes / bridges
 (fractional z) is untested.
 
-**Workaround** (`host/debug_emergency.asm`, `hk_FollowRoute`): a call hook on the
+**Workaround** (`host/c32/emergency.c`, `hk_follow_route`, a `c32_callhook`): a call hook on the
 `call CarAI_FollowRoute` in `CarAI_Update` (0x432678) that, after the first K-menu call and only for
 the vehicles held by the ambulance / fire-engine slots, sets the order's z to car z − 1.0 for the
 duration of the call and restores it afterwards (`CarAI_UpdateDriveOrder` must keep planning with the

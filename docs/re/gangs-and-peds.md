@@ -445,14 +445,14 @@ guards[6] +0x88, collisionRect +0xA0 from `PoliceRoadblock_Ctor` 0x4ac040).
   to traffic (`Car_RequestRemove` + driverClass 3), deletes barriers, removes off-screen guards
   and makes on-screen ones AMBIENT. The cars are never recycled on their own:
   `Car_CanBeRecycled` 0x424030 refuses driverClass 4.
-- The K menu's persistent roadblocks (`host/debug_roadblocks.asm`) use 8 slots of our own,
+- The K menu's persistent roadblocks (`host/c32/roadblocks.c`) use 8 slots of our own,
   each with a fake `copLevel` 16 bytes in front. They call `TryCreateRoadblockAt` on
   `slot − 0x664` and never `Update`. Verified in Downtown: two of them stayed through ~1300
   frames out of view at wanted level 0.
 
 ### Calling the services on demand (Seq 39, measured 2026-10-21)
 
-Used by the K menu's "Call ambulance" / "Call fire truck" (`host/debug_emergency.asm`).
+Used by the K menu's "Call ambulance" / "Call fire truck" (`host/c32/emergency.c`).
 
 - **Bodies get dropped.** `PedPathfinder_FindSpawnTile` 0x49d7a0 (thiscall on
   `g_PedPathfinder` 0x66A7E4; `(char kind, u8* x, u8* y, u8* z, char wide)`) returns 0 at
@@ -479,7 +479,7 @@ Used by the K menu's "Call ambulance" / "Call fire truck" (`host/debug_emergency
   and `CarAI_FollowRoute` 0x430320 only steers into the target's lane / arrives when
   `floor(car z - 1) == floor(order z)`, which never holds for ground-level orders, so the
   car arrives only on the exact target tile. Full chain and the K-menu workaround
-  (`hk_FollowRoute`): [cars-and-car-ai.md](cars-and-car-ai.md) §5–6.
+  (`hk_follow_route`): [cars-and-car-ai.md](cars-and-car-ai.md) §5–6.
 
 ## 8. Hooks for mods
 
@@ -496,7 +496,7 @@ Used by the K menu's "Call ambulance" / "Call fire truck" (`host/debug_emergency
 | despawn time | `g_PedOffscreenTicksLimit` 0x5E5D80 (40); immediates 100/200/60 in `Ped_UpdateState` 0x43ecc0 |
 | disable systems | debug flags `g_skipDummies` 0x5EAD69, `g_skipAmbulance` 0x5EAD6B, `g_skipFireEngines` 0x5EAD8B |
 | call services from a mod | `AmbulanceManager_EnqueuePed(g_AmbulanceManager, ped)` or `Ped_SetObjective(ped, 28)`; `FireEngineManager_RequestForCar(g_FireEngineManager, car)` |
-| roadblocks from a mod | `PoliceManager_TryCreateRoadblockAt(fake manager, x, y, dir)` on your own `PoliceRoadblock` (Ctor first) with `copLevel` at −0x10: as many as you like, never despawned because the game only updates its own 2 (`host/debug_roadblocks.asm`) |
+| roadblocks from a mod | `PoliceManager_TryCreateRoadblockAt(fake manager, x, y, dir)` on your own `PoliceRoadblock` (Ctor first) with `copLevel` at −0x10: as many as you like, never despawned because the game only updates its own 2 (`host/c32/roadblocks.c`) |
 | emergency tuning | revive 50 (`0x32` in 0x473410), ambulance delay 300 and give-up 500, pickup range 0x664164, slot count 2, queue 25 |
 
 ## 9. Functions named in this pass

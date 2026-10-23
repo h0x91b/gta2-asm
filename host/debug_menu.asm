@@ -3,12 +3,11 @@
 ;
 ; - the DrawUI / pause-overlay call hooks (CALLHOOK handlers, w32_hooks.asm),
 ; - entry points with the register contracts the NASM callers were written against
-;   (dbgmenu_key for input_key, dm_player_ped, dm_call_car), each a thin shim into C,
+;   (dbgmenu_key for input_key, dm_player_ped), each a thin shim into C,
 ; - dm_cb, through which C calls functions that may be NASM (DM_FRAME hooks, DM_VALUE
 ;   change / format, DM_ACTION, low_alloc, input_release_all),
 ; - the record macros (DM_ITEM, DM_FRAME, DMVALUE) and constants the not-yet-ported
-;   feature modules (debug_paths/roads/roadblocks/emergency.asm, player_move.asm) use to
-;   register their rows and frame hooks. The records have the layout of host/c/menu/dm.h
+;   feature modules (player_move.asm) use to register their rows and frame hooks. The records have the layout of host/c/menu/dm.h
 ;   (struct dm_item, struct dm_frame) and land in the same linker sets as the C ones.
 
 DM_ACTION  equ 0                    ; item kinds (dm.h): data = fn, run on the game's side
@@ -20,18 +19,6 @@ DM_TOAST_FRAMES equ 120
 ; re/gta2_types.h)
 PED_CAR      equ 0x16c
 PED_GAMEOBJ  equ 0x168              ; PedGameObject*, sprite at +0x80
-PED_OCC      equ 0x240
-CAR_SPRITE   equ 0x50
-CAR_ID       equ 0x6c
-; Ped fields and the ped pool, for debug_roadblocks / debug_emergency (were in
-; debug_paths.asm, now C32: host/c32/debug_paths.c)
-PED_NEXT     equ 0x160
-PED_POS      equ 0x1ac
-PED_ROT      equ 0x12c              ; short, 1440 = full turn
-PED_LIFE     equ 0x234
-PED_ALIVE    equ 99
-PEDMGR       equ 0x5E5BBC           ; PedManager*, in-use list at +4 through PED_NEXT
-DP_MAXPEDS   equ 400                ; a pool walk's bound (the pool has 200)
 ; MainCamera, WindowedWidth: gta2-seuko-mod src/game/memory.h @25b1985
 UI_CAMERA  equ 0x5E3CC4             ; Camera* (main), uiScale at +0xa8
 WINDOW_W   equ 0x673578
@@ -63,8 +50,6 @@ dmv_%1: dq dm_%1_change, dm_%1_fmt
 ; host/c/menu: pages and data under their NASM names (dm.h)
 extern dmp_root, dmp_player, dmp_vehicle, dmp_spawn, dmp_flags
 extern dm_toast, dm_toast_left, dm_paused
-extern dm_model, dm_spawnable, dm_last_car, dm_last_car_id
-extern s_dm_noplayer2, fmt_dm_int
 extern _dm_key, _dm_on_drawui, _dm_player_pair
 
 section .text
@@ -103,18 +88,6 @@ dm_player_ped:
     pop rsi
     pop rdx
     pop rbp
-    ret
-
-; dm_call_car(edi = fastcall function taking only ecx = car, esi = car)
-dm_call_car:
-    sub rsp, 8
-    mov r8d, esi
-    xor esi, esi
-    xor edx, edx
-    xor ecx, ecx
-    xor r9d, r9d
-    call call32
-    add rsp, 8
     ret
 
 ; rax = dm_cb(rdi = fn, rsi = a, rdx = b): fn(a, b) with rbx, rbp, r12-r15 kept and the
@@ -168,7 +141,3 @@ hk_PauseOverlay:
 .out:
     HRET
 
-section .data
-align 8
-f_dm_rot2rad:  dq 0x3F71DF46A2529D39 ; 2*pi / 1440 (Sprite.rotation units; debug_paths, roadblocks)
-section .text

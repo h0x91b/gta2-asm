@@ -1,6 +1,7 @@
 /* player.c — the K menu's Player page: wanted level and its lock, skin (ped remap) and
- * body (graphicType). Police roadblocks (debug_roadblocks.asm) and the ambulance / fire
- * truck calls (debug_emergency.asm) register their rows here from their own files.
+ * body (graphicType). Police roadblocks (roadblocks.c) and the ambulance / fire truck calls
+ * (emergency.c) register their rows here from their own files; their game logic is C32
+ * (host/c32/roadblocks.c, host/c32/emergency.c).
  * Ped fields (gta2-seuko-mod src/game/gta2.h @25b1985): copValue +0x20a (short; 1..6 stars
  * from 600/1600/3000/5000/8000/12000, src/game/utils/cop-value-utils.cpp), remap +0x244
  * (byte, PED_REMAP, 255 = default), graphicType +0x26c (0 dummy, 1 gang, 2 emergency). A

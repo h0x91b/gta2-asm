@@ -11,7 +11,7 @@
  * y = cos(h); Player.turnRate (+8) is added to the PedGameObject heading (+0x40) and
  * Player.moveSpeed (+0xC) = +1.0 makes the walker step forward, both every tick.
  * Car pool g_CarPool 0x5E4CA0 (+4 used list, Car.next), ped list PedManager 0x5E5BBC (+4,
- * Ped.nextPed): host/debug_emergency.asm, host/debug_paths.asm. */
+ * Ped.nextPed): host/c32/emergency.c, host/c32/debug_paths.c. */
 #include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
