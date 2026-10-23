@@ -181,7 +181,7 @@ Also measured by hand: jacking a stopped driven car (`teleport` next to it, `ent
 | socket, protocol, commands, telemetry, options | `host/c/ctl.c` | a host feature (64-bit host C, `docs/host-c.md`) |
 | state, nearest lists, teleport, enter/exit orders, steering | `host/c/ctl_game.c` | the game side of the same feature; its per-tick work is two `Player` fields, written after the C32 on-foot hook (`c32/player_move.c`) calls it back through a host service. A C32 half would need the command state twice, shared through exports |
 | spawning | `host/c/spawn.h`, implemented by the K menu (`host/c/menu/helpers.c`, `spawn_ped.c`, `spawn_object.c`, `docs/debug-menu.md`) | the K menu's recipes |
-| hooks into the host | `vid_FlipBuffers` → `ctl_frame` (`w32_renderer.asm`), `hk_move_on_foot` → service `ctl_on_foot` (`c32/player_move.c` → `c32_host.c`), `_main` → `ctl_arg` / `ctl_init` (`loader.asm`), `input_push_key` (`w32_dinput.asm`) | |
+| hooks into the host | `vid_flip_buffers` → `ctl_frame` (`renderer.c`), `hk_move_on_foot` → service `ctl_on_foot` (`c32/player_move.c` → `c32_host.c`), `_main` → `ctl_arg` / `ctl_init` (`loader.asm`), `input_push_key` (`w32_dinput.asm`) | |
 | game hooks (`w32_hooks.asm` CALLHOOKs, handlers in `ctl_hooks.asm`) | `CarDriverClass` 0x429EDC, `DriveCar` 0x4A78F3, `FindRoute` 0x42AD41 (drive_to); `BriefText` 0x4C6561 / 0x4C65C2 (sms) | call-site detours that only change anything while gta2ctl uses them |
 | client | `tools/gta2ctl/gta2ctl.c` | native, no Rosetta |
 

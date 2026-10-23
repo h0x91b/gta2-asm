@@ -3,7 +3,7 @@
 How vanilla GTA2 holds the `.gmp` city in memory, how one frame of the city is drawn (which
 blocks, in which order, with which camera, shading and `gbh_*` calls), and how the world
 objects tied to tiles work: doors, cranes, lights, animated tiles. Written for two uses: our SDL
-renderer (`host/w32_renderer.asm`, [renderer-api.md](../renderer-api.md)) and mods (§9).
+renderer (`host/c/renderer*.c`, [renderer-api.md](../renderer-api.md)) and mods (§9).
 
 Every address is a VA in vanilla `gta2.exe` 11.44 (base `0x3F0000`). Every name is in the Ghidra
 DB (`gta-2-recovered.gpr`, program `gta2.segments.fixed.exe`) and therefore in `re/`.
@@ -273,7 +273,7 @@ shows black — not checked on screen.
   sets a linear fade, `StepAmbient` advances it once per drawn frame; passed as float to
   `gbh_SetAmbient`. The ctor's default (`eq_1638`) was not decoded.
 - **Point lights:** §5. Applied inside the renderer plugin (d3ddll `ApplyPointLightsToVertices`,
-  our `apply_lights` in `w32_renderer.asm`) only for faces with flag 0x8000.
+  our `apply_lights` in `host/c/renderer_gbh.c`) only for faces with flag 0x8000.
 - With `lighting` off none of SetAmbient/ResetLights/SetCamera/AddLight is called.
 
 ### 3.5 MapRenderer (0x2F04, applied)
@@ -324,7 +324,7 @@ and slopes come from `MapBlocks_ScanBoxFacesForWalls` 0x46A570 ([ped-movement-co
 - **Per frame, layer 0 only (re-checked):** `LightGrid_SubmitLightsToRenderer` 0x461400 widens the
   visible block rect by 2 cells (8 blocks), clamps to 0..63 and calls `gbh_AddLight(&{packed,
   float x, float y, float z, colour})` (20 bytes, = seuko-mod `SLight`) for every light in those
-  cells. Our host keeps at most `MAX_LIGHTS` = 1024 per frame (`w32_renderer.asm:53`); the pool is 3000.
+  cells. Our host keeps at most `MAX_LIGHTS` = 1024 per frame (`host/c/renderer_gbh.c`); the pool is 3000.
 
 ## 6. Layer draw queues: how sprites interleave with map layers
 

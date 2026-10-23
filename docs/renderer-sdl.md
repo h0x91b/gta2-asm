@@ -1,6 +1,8 @@
-# SDL3 renderer: dmavideo.dll + d3ddll.dll in NASM
+# SDL3 renderer: dmavideo.dll + d3ddll.dll in host C
 
-`host/w32_renderer.asm` replaces both renderer plugins the game loads with
+`host/c/renderer.c` (SDL setup, the `Vid_*` half, the frame loop: present, `--shot`,
+`--frames`) and `host/c/renderer_gbh.c` (the `gbh_*` half: textures, palettes, drawing,
+lighting, images) replace both renderer plugins the game loads with
 `LoadLibraryA` (API recovered in [`renderer-api.md`](renderer-api.md)). With it,
 `host/build.sh --load --entry` runs vanilla `gta2.exe` into its **frontend loop and
 draws the original main menu** in the SDL3 window: background TGAs, the GTA2 logo,
@@ -12,7 +14,8 @@ slopes, peds, cars, HUD and the original per-vertex point lighting (see "Gamepla
 ## How the game reaches it
 
 The plugins are ordinary shim tables, `shimtab_dmavideo` and `shimtab_d3ddll` (listed in
-`w32_tables.asm`). Every name in a shim table is a "system" module, so
+`w32_tables.asm`), kept in NASM in `host/w32_renderer.asm`; each handler is a C import
+handler `uint64_t f(const uint32_t *args)` (`docs/host-c.md`, "Import shims in C"). Every name in a shim table is a "system" module, so
 `LoadLibraryA("dmavideo.dll")` returns a fake HMODULE and each of the 22 + 41
 `GetProcAddress` calls gets a stub bound to our handler with the right stdcall pop. No
 DLL code runs. The d3ddll↔dmavideo coupling (d3ddll patching four of gta2.exe's
@@ -87,6 +90,37 @@ game never calls (renderer-api.md §2.2): `gbh_DrawQuadClipped`, `gbh_ConvertCol
 | `--window=WxH` | (`win32-shims.md`) override `screen\window_width/height` for the run: window size and gameplay resolution |
 
 Example: `host/build.sh --load --entry --frames=300 --shot=/tmp/menu.bmp`.
+
+## Parity harness (Seq 63, 2026-10-23)
+
+`tests/ctl/render_parity.sh [OUT_DIR]` (gta2ctl) takes 18 screenshots at fixed presented
+frames: the main menu (60, 120), PLAY's screen (200), Downtown's first seconds (270-420), the
+K menu root and its Debug flags page (440, 460), a teleport to the plaza (740), a spawned car
+(760), driving it (860), on foot again (900), the road overlay on and off (960, 1020) and the
+in-game quit prompt (1040, 1060). Every input is frame-scheduled and the level starts from the
+same seed, so two runs of one build give byte-identical BMPs: compare two builds with `cmp`
+(`LOADER=/path/to/other/loader` runs another binary, `WINDOW=640x480` another size). It also
+writes `time.txt` (`/usr/bin/time -l`) and `flips.txt` (the wall time of every 120-frame
+stats line).
+
+The NASM → C port (Seq 63) was accepted on it: two master runs identical to each other, two
+port runs identical to master (all 18 shots at 1280x960 and at 640x480, plus `--frames=300
+--shot` in the menu and `--frames=500 --shot` in play at 960x720), and every `[vid]`/`[gbh]`
+log line identical, counters included (flip 960: 193 661 quads, 499 blits, 748 texture
+uploads). The C keeps the asm's single-precision operation order (`FP_CONTRACT OFF`, the same
+`1/255` constant `0x3b808081`, multiply by reciprocals where the asm did). Time in the
+renderer's import handlers (everything but `Vid_FlipBuffers`), measured with the same
+temporary probe in `host_dispatch` for both builds: 2.379 ms/frame (master) vs 2.388 ms/frame
+(C), 12 windows of 120 frames each, within the run-to-run spread (2.34-2.44); nearly all of it
+is SDL/Metal itself, at ~300 renderer calls per in-game frame. The game paces itself to
+~30 fps (`drawAndLimitFrames` busy-waits), so process CPU time (32 s user both) says nothing.
+
+Missing building faces (open bug): a counting build of the same run dropped **no** primitive
+in `draw_prim`: no `v[0].z <= 0` cull, no texture that failed to build (zero size, > 256,
+no cache entry). Whatever leaves holes is either not submitted by the game's map renderer or
+drawn and then overdrawn (there is no depth buffer, primitives land back to front); the
+renderer itself discards nothing. The `gbh_SetWindow` cull rect is stored and ignored, so we
+draw more than the original, never less.
 
 ## Real output (2026-10-20)
 

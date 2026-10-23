@@ -45,7 +45,7 @@ uint32_t game_fastcall(gptr fn, uint32_t ecx, uint32_t edx, int nargs, ...);
 
 /* ---- NASM host data ------------------------------------------------------------------ */
 
-extern uint32_t r_frames NASM(r_frames);    /* presented frames (w32_renderer.asm) */
+extern uint32_t r_frames NASM(r_frames);    /* presented frames (renderer.c) */
 
 /* C32 (c32_host.c): the address of a C32_EXPORT'ed global or function, or 0 */
 void *c32_find(const char *name);

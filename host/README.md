@@ -25,7 +25,7 @@ host/build.sh --load --input-test      # same code, ~15 s of real keys in a test
 
 The Win32 shim layer (`w32_*.asm`, included by `loader.asm`) is documented in
 [`docs/win32-shims.md`](../docs/win32-shims.md); the SDL3 renderer that replaces
-`dmavideo.dll`/`d3ddll.dll` (`w32_renderer.asm`) in
+`dmavideo.dll`/`d3ddll.dll` (`c/renderer.c`, `c/renderer_gbh.c`; tables in `w32_renderer.asm`) in
 [`docs/renderer-sdl.md`](../docs/renderer-sdl.md).
 
 Both are linked with `-pagezero_size 0x1000 -no_pie -image_base 0x200000000` through

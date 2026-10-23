@@ -8,9 +8,14 @@
 ; rbx/rbp/r12-r15 kept. Every HENTER handler already has that alignment.
 
 global call32                       ; loader.asm: C -> 32-bit game code (game.h)
-global r_frames                     ; w32_renderer.asm: presented frames
-global r_save_shot                  ; w32_renderer.asm: --shot's BMP writer (gta2ctl shot)
-global r_shot_path
+; the renderer (host/c/renderer.c, renderer_gbh.c; tables in w32_renderer.asm): C storage
+; and functions under NASM names
+extern setup_renderer               ; loader.asm: dlsym the SDL renderer functions
+extern r_frames                     ; presented frames
+extern r_save_shot                  ; --shot's BMP writer (also gta2ctl shot)
+extern r_shot_path, r_exit_frame    ; --shot=PATH, --frames=N (loader.asm)
+global sdl_ensure, win_get, main_hwnd   ; w32_user32.asm: SDL_Init, the window table
+global input_keys_frame             ; w32_dinput.asm: --keys, once per flip
 global key_table                    ; w32_dinput.asm: --keys names (gta2ctl key)
 global input_push_key
 global input_mouse_motion           ; w32_dinput.asm (gta2ctl mouse)

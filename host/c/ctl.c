@@ -3,7 +3,7 @@
  * --ctl[=PATH] opens a Unix domain socket (default $TMPDIR/gta2ctl-<pid>.sock). Protocol:
  * one request line "cmd arg ..." -> one JSON reply line, {"ok":true,...} or
  * {"ok":false,"error":"..."}. Nothing is done on the socket's own schedule: ctl_frame runs
- * once per presented frame from Vid_FlipBuffers (w32_renderer.asm), on the game thread
+ * once per presented frame from Vid_FlipBuffers (renderer.c), on the game thread
  * between two game frames, accepts clients, reads their lines, starts commands and steps
  * the blocking ones (goto, enter_car, wait, ...), which reply when done or on timeout.
  * One command per client at a time; several clients may be connected (an agent's script
@@ -35,7 +35,7 @@ struct key_entry { uint16_t scancode; uint8_t dik, vk; uint32_t pad; const char 
 extern const struct key_entry key_table[] NASM(key_table);   /* w32_dinput.asm */
 void input_push_key(int scancode, int down) NASM(input_push_key);
 void input_mouse_motion(float dx, float dy) NASM(input_mouse_motion);  /* w32_dinput.asm */
-void r_save_shot(void) NASM(r_save_shot);                    /* w32_renderer.asm */
+void r_save_shot(void) NASM(r_save_shot);                    /* renderer.c */
 extern char *r_shot_path NASM(r_shot_path);
 
 #define MAX_CLIENTS   8

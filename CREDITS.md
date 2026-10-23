@@ -67,7 +67,7 @@ License terms below are quoted as each source states them; this is not legal adv
   - **Native debug flags** (`host/c/config.c`, `config.example.yaml`): the idea, the flag list
     (`categorized-native-cheats-data.cpp`, `Cheats` at 0x5EAD51), and which flags are risky.
   - **Game lifecycle:** `InitGame` 0x461DE0 / `DeinitGame` 0x462060 and `ptrToGame` 0x5EB4FC
-    (`host/w32_renderer.asm`); its DeinitGame call-site map (six sites) was surveyed for the
+    (`host/c/renderer.c`); its DeinitGame call-site map (six sites) was surveyed for the
     quit-to-menu work.
   - **Mouse control** (`src/modules/modmenu/cheats/mouse-control/`,
     `src/events/keyboard-state-update.cpp`, hook 0x4A4934 inside `SetKeyState`): reviewed as

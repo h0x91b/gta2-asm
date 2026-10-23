@@ -116,8 +116,9 @@ Ways to port the renderer, in order of preference:
    Direct3D (immediate mode, DX5-era) COM vtables on SDL. Much larger surface.
 3. Patch the game's draw call sites directly. Fragile; only for odd cases.
 
-Option 1 is implemented for the frontend in `host/w32_renderer.asm`
-(`docs/renderer-sdl.md`); the full API is in `docs/renderer-api.md`.
+Option 1 is implemented in host C, `host/c/renderer.c` + `renderer_gbh.c` (export
+tables in `host/w32_renderer.asm`, `docs/renderer-sdl.md`); the full API is in
+`docs/renderer-api.md`.
 
 ## Game files (`data.pak`)
 
@@ -336,6 +337,7 @@ ok/error/timeout. Keep `--keys` only for the frontend. Commands, fields and a wo
 - **Where code goes.** Game logic (mods, detours into game functions) is **C32**: i386 C99
   in `host/c32/`, run inside the game's segment (`docs/c32.md`). Host features (K menu,
   config, SDL, logs) are **64-bit host C** in `host/c/`, game pointers as `uint32_t`
-  (`docs/host-c.md`). Hooks, thunks, Win32 shims, the loader and the renderer stay NASM.
+  (`docs/host-c.md`). Hooks, thunks, Win32 shims and the loader stay NASM; the shim
+  handlers themselves may be host C (`host/c/audio.c`, `host/c/renderer*.c`).
 - Keep the execution model above in sync with what the spike proves. If it changes,
   update this file in the same change.

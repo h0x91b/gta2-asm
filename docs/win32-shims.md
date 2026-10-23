@@ -6,7 +6,7 @@ with `%include` (one NASM unit).
 
 ## Current stopping point (2026-10-20)
 
-**Update:** with the renderer plugins implemented (`host/w32_renderer.asm`,
+**Update:** with the renderer plugins implemented (`host/c/renderer.c`, `renderer_gbh.c`,
 [`renderer-sdl.md`](renderer-sdl.md)) the game no longer stops: it loads both plugins,
 initialises the audio (real since the mss32 shim, `host/c/audio.c`, see "Audio"), loads the frontend and **runs the frontend loop,
 drawing the main menu**, until the window is closed (or `--frames=N`). The section
@@ -523,8 +523,8 @@ Listen live: `host/build.sh --load --entry` and move through the menu.
 
 ## What the game needs next (notes for later work)
 
-- **Renderer**: done for the frontend — shim tables `dmavideo` / `d3ddll` in
-  `w32_renderer.asm`, see `renderer-sdl.md`. Gameplay drawing (tiles, lighting) is next.
+- **Renderer**: done (frontend and gameplay) — shim tables `dmavideo` / `d3ddll` in
+  `host/w32_renderer.asm`, handlers in `host/c/renderer*.c`, see `renderer-sdl.md`.
 - **Input**: done (keyboard + mouse, see "Input"). Joysticks (EnumDevices
   `DI8DEVCLASS_GAMECTRL`) are not offered; WM_CHAR is not generated.
 - **Audio**: frontend done (see "Audio"); music needs the `data\gtaudio` files.

@@ -120,7 +120,7 @@ setup_user32:
     test rax, rax
     jz .no_lib
     mov rbx, rax
-    mov [sdl_lib], rax              ; w32_renderer.asm resolves its own SDL functions
+    mov [sdl_lib], rax              ; renderer.c and audio.c resolve their own SDL functions
 %macro SDLFN 1
     mov rdi, rbx
     lea rsi, [%%n]
@@ -1346,6 +1346,7 @@ alignb 8
 sdl_%1: resq 1
 %endmacro
 SDLFNS
+sdl_lib:     resq 1          ; the dlopen'ed SDL3 (renderer.c and audio.c dlsym from it)
 sdl_path:    resb 1024
 windows:     resb WN_SIZE * MAX_WINDOWS
 class_name:  resq MAX_CLASSES

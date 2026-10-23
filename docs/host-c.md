@@ -1,7 +1,7 @@
 # Host C modules (`host/c/*.c`)
 
 Logic-heavy host code may be written in plain **C99** and linked into the loader next to
-the NASM. Hooks, thunks, Win32 shims, the loader and the renderer stay in NASM. C here is
+the NASM. Hooks, thunks, Win32 shim tables and the loader stay in NASM. C here is
 **64-bit host code**, exactly like the NASM it sits next to: it runs on the host stack
 between two stretches of 32-bit game code, may use libc, and reaches the game only through
 its memory and through `call32`. Code that runs *inside* the 32-bit segment is the other C
@@ -145,7 +145,9 @@ Rules:
 - Memory handed to the game must come from the low arena (`heap_alloc`, w32_core.asm,
   `global` in c_bridge.asm), never `malloc`.
 
-Users: `c32_svc_log` (`shimtab_c32`, c32_blob.asm) and the whole `mss32` shim
+Users: `c32_svc_log` (`shimtab_c32`, c32_blob.asm), the renderer plugins `dmavideo` /
+`d3ddll` (`host/c/renderer.c`, `renderer_gbh.c`, tables `w32_renderer.asm`; Seq 63), the
+whole `mss32` shim
 (`host/c/audio.c`, table `w32_mss32.asm`; ported from NASM in Seq 57), and the KERNEL32
 file shims (`host/c/files.c`, table `w32_files.asm`; with the pak VFS `host/c/vfs.c`, whose
 `vfs_load`/`vfs_resolve`/`vfs_open_pak`/... NASM still calls under their NASM names,
