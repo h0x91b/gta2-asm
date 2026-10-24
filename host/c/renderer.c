@@ -39,6 +39,8 @@ extern uint32_t main_hwnd NASM(main_hwnd);
 void input_keys_frame(uint32_t frame) NASM(input_keys_frame);
 void ctl_frame(void);
 void ctl_exit(void);
+void map_frame(void);                   /* map.c: the radar / the full map */
+void map_shutdown(void);
 
 #define R_DEF(ret, name, args) ret (*r_##name) args;
 R_SDL_FNS(R_DEF)
@@ -384,6 +386,7 @@ uint64_t vid_flip_buffers(const uint32_t *a)
         r_upload_fb();
     }
     r_frames++;
+    map_frame();                        /* radar / full map over the finished frame (map.c) */
     input_keys_frame(r_frames);         /* --keys=FRAME:KEY,... */
     ctl_frame();                        /* gta2ctl commands and telemetry (ctl.c) */
     if (r_frames == 1 || r_frames % 120 == 0)
@@ -410,6 +413,7 @@ uint64_t vid_flip_buffers(const uint32_t *a)
     r_SDL_SetRenderTarget(r_renderer, r_target);
     if (last) {
         printf("  [vid] --frames: %u frames presented, exiting\n", r_frames);
+        map_shutdown();
         ctl_exit();                     /* _exit skips atexit: remove the gta2ctl socket */
         _exit(0);
     }

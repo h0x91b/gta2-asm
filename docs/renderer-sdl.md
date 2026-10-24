@@ -81,6 +81,12 @@ game never calls (renderer-api.md §2.2): `gbh_DrawQuadClipped`, `gbh_ConvertCol
 `gbh_Convert16BitGraphic`, `gbh_PrintBitmap`, `Vid_GetVersion`. None of them fired in a
 900-frame gameplay run.
 
+## Overlays drawn at the flip
+
+`vid_flip_buffers` calls `map_frame` (`host/c/map.c`) before shots and the present: in
+gameplay it draws the radar or the full-screen M map straight into the back buffer with
+`SDL_RenderGeometry` ([map.md](map.md)).
+
 ## Loader flags added
 
 | flag | effect |

@@ -57,6 +57,8 @@ int32_t dm_toast_left;
 uint8_t dm_paused NASM(dm_paused);      /* the game is paused by us (hk_PauseOverlay reads it) */
 
 static uint8_t dm_open, dm_ui_seen, dm_built;
+int map_key(int dik, int down);         /* ../map.c */
+int map_is_open(void);
 static gptr dm_low;                     /* low memory: palette kinds, GXT key, line buffers */
 static const void *dm_defer_q[DM_DEFER_MAX];
 static int dm_defer_n;
@@ -149,6 +151,11 @@ static void dm_activate(int dir)
     }
 }
 
+int dm_is_open(void)
+{
+    return dm_open;
+}
+
 /* called first by input_key (w32_dinput.asm, through dbgmenu_key): 1 = consumed */
 int dm_key(int dik, int down)
 {
@@ -156,6 +163,8 @@ int dm_key(int dik, int down)
         dm_open = 0;                    /* left gameplay with the menu open */
         return 0;
     }
+    if (!dm_open && map_key(dik, down)) /* the full map (map.c) takes M and, while up, all */
+        return 1;
     if (!down)
         return 0;                       /* releases always reach the game */
     if (!dm_open) {
@@ -517,7 +526,7 @@ static void dm_pause_sync(void)
     Game *g = game();
     if (!g)
         return;
-    if (dm_open) {
+    if (dm_open || map_is_open()) {     /* the full map (map.c) pauses the same way */
         if (dm_paused || g->gameStatus != 1 || g->playerCount != 1)  /* +0x23 */
             return;
         g->gameStatus = 2;

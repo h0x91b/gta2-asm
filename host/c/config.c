@@ -44,6 +44,8 @@
  *          shows the same part of the city as 640x480, only magnified (measured), so
  *          auto = 640 / window width keeps the original 640x480 pixel scale at any size.
  *          Without the key it is 70%; `zoom: 100` is the vanilla view.
+ *   map    the radar and the full-screen map (map.c, docs/map.md): minimap, rotate (heading-
+ *          up radar), fog (fog of war; false shows the whole city), key (opens the map, M).
  *   mods   gameplay mods (C32, docs/c32.md): passenger_enter (Shift+Enter gets in as a
  *          passenger, docs/passenger.md; a BOOL here), city_fights (cops and rival gangs fight
  *          each other, docs/city-fights.md; a BOOL here), and the rest through c32_cfg_mods
@@ -90,6 +92,9 @@ int c32_cfg_mods(const char *key, const char *val, const char **msg);
 extern uint8_t mods_passenger_enter;    /* c32_host.c, read by c32/passenger.c */
 extern uint8_t mods_city_fights;        /* c32_host.c, copied into c32/city_fights.c */
 
+/* map.c: the radar and the full map (map: section) */
+extern uint8_t map_minimap_on, map_rotate, map_fog_on, map_key_dik;
+
 /* camera.zoom for hk_CameraPosApply (w32_hooks.asm): ZOOM_AUTO or percent */
 int32_t cam_zoom_cfg NASM(cam_zoom_cfg);
 
@@ -115,6 +120,10 @@ static const struct cfg_key keys[] = {
     { "controls", "strafe_left",       T_KEY,  F_QUIET, &pm_key_left,   0x10, 0, 0,   0 }, /* DIK_Q */
     { "controls", "strafe_right",      T_KEY,  F_QUIET, &pm_key_right,  0x12, 0, 0,   0 }, /* DIK_E */
     { "controls", "mouse_sensitivity", T_INT,  F_QUIET, &pm_mouse_sens, 100, 10, 1000, "a percentage" },
+    { "map",      "minimap",           T_BOOL, 0,       &map_minimap_on, 1, 0,  1,    0 },
+    { "map",      "rotate",            T_BOOL, 0,       &map_rotate,    1,  0,  1,    0 },
+    { "map",      "fog",               T_BOOL, 0,       &map_fog_on,    1,  0,  1,    0 },
+    { "map",      "key",               T_KEY,  0,       &map_key_dik,   0x32, 0, 0,   0 }, /* DIK_M */
     { "mods",     "passenger_enter",   T_BOOL, 0,       &mods_passenger_enter, 1, 0, 1, 0 },
     { "mods",     "city_fights",       T_BOOL, 0,       &mods_city_fights, 0, 0, 1,  0 },
     { "mods",     0,                   T_MODS, 0,       0,              0,  0,  0,    0 },

@@ -65,8 +65,11 @@ static struct handle *pak_handle(uint32_t h)
  * Overlay file (or nothing anywhere): host open(), created in the overlay as asked.
  * Pak file: read-only access gets an HT_PAK handle; write access copies the entry to the
  * overlay first (unless it is about to be truncated). */
+void map_on_open(const char *name);     /* map.c: a .gmp names the level */
+
 uint64_t k32_CreateFileA(const uint32_t *args)
 {
+    map_on_open(STR(args[0]));
     uint32_t access = args[1], disp = args[4], h;
     int r = vfs_resolve(STR(args[0]));
     if (r == VFS_REFUSED)

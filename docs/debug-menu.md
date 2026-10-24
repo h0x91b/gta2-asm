@@ -328,6 +328,8 @@ Files are in `host/c/menu/` unless a path is given.
     bonus letters (GXT "na"; picking one up would call Ped_AddWeapon with a letter's index) and
     ringing / in-call phones (touching one answers it through the mission script). Seq 27's
     notes on what is safe: `seq52_prep.md` (Seq 27 report).
+- **Map** (`host/c/map.c`): Minimap, Minimap turns with you, Fog of war, Reveal the whole
+  map, Forget explored map ([map.md](map.md)).
 - **Mods** (`mods.c`): Car entry bonus, Passenger and City fights (registered by
   `host/c/c32_host.c`; City fights: [city-fights.md](city-fights.md)).
 - **Debug flags** (`flags.c`): the game's own flags; Road network (`overlays.c`, drawn by C32

@@ -153,7 +153,16 @@ License terms below are quoted as each source states them; this is not legal adv
 - **What we take:** ideas for our minimap and explored-area city map, and the source of the
   game's radio music: the 2004 Rockstar Classics freeware installer it downloads from the
   [Internet Archive](https://archive.org/details/gta2_rockstar-classics) (`docs/reference.md`).
-- **License:** MIT.
+  The radar and the M map (`host/c/map.c`, [docs/map.md](docs/map.md)) follow its design,
+  read at commit `66d3462`: the map image built from each column's topmost lid tile,
+  box-filtered, with see-through flat lids showing the lid below (`port/platform/map_web.cpp`,
+  `gta2_port_map_render_rows`, including its lid rotation / flip table), a one-byte-per-tile
+  "seen" mask over the 256×256 grid that clears what has been on screen and is saved per
+  level, a round radar with markers on its rim, and the HUD's own arrows as the markers
+  (`gta2_port_map_arrows`; `web/map.js` `markSeen`, `drawMinimap`). Our code is written anew
+  in C against 11.44's addresses (theirs are `gta2_re`'s 10.5); no code was copied.
+- **License:** MIT (Copyright (c) 2026 M1sterMo) — code reuse is allowed with the copyright
+  notice kept; we reuse ideas only.
 
 ### OpenGTA2 — ikkentim
 

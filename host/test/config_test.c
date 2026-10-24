@@ -72,6 +72,7 @@ static int reports;
 void pm_report(void) { reports++; }
 
 uint8_t mods_passenger_enter;
+uint8_t map_minimap_on, map_rotate, map_fog_on, map_key_dik;   /* map.c */
 
 static long mods_bonus = -1;
 int c32_cfg_mods(const char *key, const char *val, const char **msg)
@@ -125,6 +126,7 @@ int main(void)
     CHECK(cam_zoom_cfg == 70 && pm_strafe_on == 1 && pm_mouse_on == 0);
     CHECK(pm_key_left == 0x10 && pm_key_right == 0x12 && pm_mouse_sens == 100);
     CHECK(mods_passenger_enter == 1);
+    CHECK(map_minimap_on == 1 && map_rotate == 1 && map_fog_on == 1 && map_key_dik == 0x32);
 
     CHECK(run("# a comment\n"
               "camera:\n"
