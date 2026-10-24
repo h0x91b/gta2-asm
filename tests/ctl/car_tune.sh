@@ -21,6 +21,7 @@ export GTA2_CTL="${TMP%/}/gta2ctl-car-tune-$$.sock"
 [ -x "$CTL" ] && [ -x "$ROOT/host/loader" ] || { echo "build first: host/build.sh" >&2; exit 1; }
 LOG="$OUT/game.log"
 X0=184 Y0=228.5 X1=238
+ROW_PLAYER=8 ROW_VEHICLE=9          # root rows: 7 entries, Map..., Player..., Vehicle...
 
 step() {
     printf '$ gta2ctl %s\n' "$*"
@@ -35,9 +36,9 @@ key() {         # key NAME [N]: N taps, a few frames apart
         i=$((i + 1))
     done
 }
-# tune ROW KEY N SHOT: K, root row 8 (Vehicle...), row 5 (Tuning...), row ROW, KEY x N, K
+# tune ROW KEY N SHOT: K, root row ROW_VEHICLE (Vehicle...), row 5 (Tuning...), row ROW, KEY x N, K
 tune() {
-    key K; key HOME; key DOWN 8; key RETURN
+    key K; key HOME; key DOWN $ROW_VEHICLE; key RETURN
     key HOME; key DOWN 5; key RETURN
     key HOME; key DOWN "$1"; key "$2" "$3"
     "$CTL" wait frames 6 >/dev/null
@@ -89,6 +90,11 @@ r=$("$CTL" spawn car "$MODEL" 0 --at=$X0,$Y0 --rot=90) || { echo "FAIL: spawn: $
 step enter_car "$(echo "$r" | jq -r .id)"
 step wait in_car == 1 300
 step wait frames 30
+# Vehicle → Invincible (row 2) and Player → Lock wanted (row 1, at 0): at these speeds the
+# car rams traffic on that road, which over five runs set it on fire and blew it up with the
+# player in it, or got cops (wanted 2) to drag the player out
+key K; key HOME; key DOWN $ROW_VEHICLE; key RETURN; key HOME; key DOWN 2; key RETURN; key BACK
+key HOME; key DOWN $ROW_PLAYER; key RETURN; key HOME; key DOWN 1; key RETURN; key BACK; key K
 
 run A; a=$peak
 tune 1 RIGHT 5 tune-B-top

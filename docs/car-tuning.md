@@ -74,12 +74,14 @@ x 184 → 238), full throttle, peak `speed` per run, tuning through the menu's o
 
 | Run | Tuning | Peak speed (blocks/tick) |
 |---|---|---|
-| A | stock (`max_speed` 0.240) | 0.237 |
-| B | Top speed and Acceleration +5 steps (160%: 0.386 / 0.225) | 0.376 (the new cap 0.386 is reached on a longer road: 0.386 in an earlier run) |
+| A | stock (`max_speed` 0.240) | 0.238 |
+| B | Top speed and Acceleration +5 steps (160%: 0.386 / 0.225) | 0.386 (exactly the new cap) |
 | C | Reset this model | 0.240 |
 | D | Top speed −7 steps (51%: 0.123) | 0.123 (exactly the new cap) |
 | E | Reset all models | log: `reset 1 models to stock` |
 
-Measured 2026-10-24: PASS, ~3.5 min. One earlier run failed in D with the player out of the
-car before x 238 (not reproduced; traffic on that road is the likely cause, the failure line
-now prints the `state`). The speed cap matches `max_speed` to the third decimal in B and D.
+Measured 2026-10-24: PASS, ~3.5 min. The car is made invincible and the wanted level locked at
+0 first (Vehicle → Invincible, Player → Lock wanted, through the menu too): at these speeds it
+rams traffic on that road, and without them two runs failed in C / D — the car caught fire and
+exploded with the player in it, and cops (wanted 2) dragged the player out. The speed cap
+matches `max_speed` to the third decimal in B and D.
