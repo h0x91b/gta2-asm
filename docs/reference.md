@@ -11,6 +11,7 @@ the copies downloaded on 2026-09-04.
 | Game manual | https://gtamp.com/GTA2/gta2manual.pdf | 650 951 | `76cd15ddc1e703b647516e24bfffbca0eb8140391a7ee0861d71de366184be05` |
 | District maps (geography, not the binary format) | https://gtamp.com/GTA2/gta2maps.pdf | 2 017 382 | `1a6786ea5d54b177c0dabbe8e32b3f18ae1e8831ea3d5024ae33b2f9a29cf9ff` |
 | Text/font generator page snapshot | https://gtamp.com/text/ | 4 670 | `19b742ad595a416c703ad5c8271919af9b42011ca5b82107c50be17ba299cfb7` |
+| Rockstar Classics freeware installer (2004), the only official source of the radio music; the user keeps it as `setup.ebin` in the main checkout, git-ignored | https://archive.org/details/gta2_rockstar-classics (as used by [gta2-browser](https://github.com/M1sterMo/gta2-browser)) | ~346 MB | not recorded |
 
 When a note cites `formats/GTA2 Map Format.txt` or `formats/GTA2 Style Format.txt`, the
 file is now `docs/formats/specs/GTA2 Map Format.txt` / `GTA2 Style Format.txt`.

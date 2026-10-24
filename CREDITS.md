@@ -144,6 +144,17 @@ License terms below are quoted as each source states them; this is not legal adv
 - **License:** T.M.'s custom licence: non-commercial use, altered versions must be marked and
   their source published, credit required (this entry). Valps' fork: GPL-3.0.
 
+### gta2-browser — M1sterMo
+
+- **URL:** https://github.com/M1sterMo/gta2-browser — GTA2 in a browser tab: the `gta2_re`
+  decompilation compiled to WebAssembly, with widescreen, a fog-of-war map (M), a round radar,
+  smooth high-refresh rendering and up to 6-player co-op / Gang Wars. Play it at
+  [m1stermo.github.io/gta2](https://m1stermo.github.io/gta2/).
+- **What we take:** ideas for our minimap and explored-area city map, and the source of the
+  game's radio music: the 2004 Rockstar Classics freeware installer it downloads from the
+  [Internet Archive](https://archive.org/details/gta2_rockstar-classics) (`docs/reference.md`).
+- **License:** MIT.
+
 ### OpenGTA2 — ikkentim
 
 - **URL:** https://github.com/ikkentim/opengta2 — an open-source GTA2 re-implementation (C#,

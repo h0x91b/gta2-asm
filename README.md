@@ -75,6 +75,7 @@ Format notes: [docs/formats/](docs/formats/README.md).
 ## Credits
 
 Built on other people's work: gta2-seuko-mod by izawartka, the user's earlier
-gta2-resurection and gta2-mouse, DMA Design's format documents via gtamp.com, gta2_re,
+gta2-resurection and gta2-mouse, M1sterMo's [gta2-browser](https://github.com/M1sterMo/gta2-browser)
+(GTA2 in the browser — [play it](https://m1stermo.github.io/gta2/)), DMA Design's format documents via gtamp.com, gta2_re,
 SDL3, NASM, Ghidra and more. Every source, what was taken from it and its terms:
 [CREDITS.md](CREDITS.md).
