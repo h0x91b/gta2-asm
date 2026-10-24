@@ -32,7 +32,7 @@ key() {         # key NAME [N]: N taps, a few frames apart
     done
 }
 player_row() {  # player_row N: K, root row 7 (Player...), row N of the Player page, RETURN, K
-    key K; key HOME; key DOWN 7; key RETURN
+    key K; key HOME; key DOWN 8; key RETURN   # root row 8: Player... (Map is 7)
     key HOME; key DOWN "$1"; key RETURN
     "$CTL" wait frames 6 >/dev/null
     step shot "$OUT/$2.bmp"
