@@ -121,7 +121,7 @@ static const struct cfg_key keys[] = {
     { "controls", "strafe_right",      T_KEY,  F_QUIET, &pm_key_right,  0x12, 0, 0,   0 }, /* DIK_E */
     { "controls", "mouse_sensitivity", T_INT,  F_QUIET, &pm_mouse_sens, 100, 10, 1000, "a percentage" },
     { "map",      "minimap",           T_BOOL, 0,       &map_minimap_on, 1, 0,  1,    0 },
-    { "map",      "rotate",            T_BOOL, 0,       &map_rotate,    1,  0,  1,    0 },
+    { "map",      "rotate",            T_BOOL, 0,       &map_rotate,    0,  0,  1,    0 },
     { "map",      "fog",               T_BOOL, 0,       &map_fog_on,    1,  0,  1,    0 },
     { "map",      "key",               T_KEY,  0,       &map_key_dik,   0x32, 0, 0,   0 }, /* DIK_M */
     { "mods",     "passenger_enter",   T_BOOL, 0,       &mods_passenger_enter, 1, 0, 1, 0 },

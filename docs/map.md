@@ -3,11 +3,13 @@
 GTA2 has no map. We add two (not in the original game), both in `host/c/map.c`:
 
 - **Radar**: a round minimap in the bottom-right corner, drawn every gameplay frame. It
-  follows the player and by default turns with them (facing is always up; a small white
-  arrowhead on the rim points north). Range 11 tiles on foot, 17 in a car, eased. It shows the
+  follows the player with north fixed at the top, marked by an "N" badge on the rim
+  (`map.rotate: true` turns it with the player instead, facing up, and the badge then moves
+  round the rim to stay on north). Range 11 tiles on foot, 17 in a car, eased. It shows the
   city's roofs and streets, the player as a white arrow and the HUD's arrows as markers:
   inside the circle where they are, on the rim pointing their way when out of range.
-- **Full map**: M opens a full-screen map of the level, north up, centred on the player at
+- **Full map**: M opens a full-screen map of the level, north up (an "N" compass in the
+  top-right corner), centred on the player at
   2.5× the fit-to-screen zoom; the game is paused while it is up.
 
 | Key (map open) | Does |

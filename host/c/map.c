@@ -65,7 +65,7 @@ enum {
 
 /* config.yaml map: (config.c sets the defaults before main) */
 uint8_t map_minimap_on;                 /* map.minimap */
-uint8_t map_rotate;                     /* map.rotate: heading-up radar, else north-up */
+uint8_t map_rotate;                     /* map.rotate: heading-up radar; default off = north up */
 uint8_t map_fog_on;                     /* map.fog: false = the whole city is shown */
 uint8_t map_key_dik;                    /* map.key, DIK (default M) */
 
@@ -555,6 +555,15 @@ static int markers(struct marker *out, int max)
     return n;
 }
 
+/* an "N" on a dark badge centred at (x, y) */
+static void compass_n(float x, float y, float k)
+{
+    float px = 1.4f * k;
+    disc(x, y, 8.5f * k, 20, 0xF0050608u);
+    ring(x, y, 7.6f * k, 8.5f * k, 20, 0xC0E8E8E8u);
+    text("N", x - 2.5f * px, y - 3.5f * px, px, 0xFFFFFFFFu);
+}
+
 /* ---- the radar ---------------------------------------------------------------------- */
 
 static void radar_draw(const struct player_view *pv, float bw, float bh)
@@ -601,11 +610,10 @@ static void radar_draw(const struct player_view *pv, float bw, float bh)
             break;
     }
     ring(cx, cy, R - 1.2f * k, R, MP_SEG, 0x40FFFFFFu);
-    /* north on the rim */
+    /* north on the rim: an "N" badge (at the top unless the radar turns with the player) */
     double nx = TO_SX(0, -1) - cx, ny = TO_SY(0, -1) - cy, nl = hypot(nx, ny);
     nx /= nl, ny /= nl;
-    arrow(cx + (float)(nx * (R + rim * 0.3)), cy + (float)(ny * (R + rim * 0.3)), nx, ny,
-          9 * k, 0xFFE8E8E8u);
+    compass_n(cx + (float)(nx * (R + rim * 0.5)), cy + (float)(ny * (R + rim * 0.5)), k);
     /* markers: inside where they are, else on the rim pointing their way */
     struct marker m[17];
     int nm = markers(m, 17);
@@ -684,6 +692,12 @@ static void full_draw(const struct player_view *pv, float bw, float bh)
     ring(SX(pv->x), SY(pv->y), (9 + 5 * pulse) * k, (10.5f + 5 * pulse) * k, 32,
          (uint32_t)(255 * (1 - pulse)) << 24 | 0xFFFFFF);
     arrow(SX(pv->x), SY(pv->y), pv->fx, pv->fy, 13 * k, 0xFFFFFFFFu);
+    /* north is up: a compass in the top-right corner */
+    float nx = bw - 30 * k, ny = 24 * k + 30 * k;
+    disc(nx, ny, 17 * k, 32, 0xD0050608u);
+    ring(nx, ny, 16 * k, 17 * k, 32, 0xA0E8E8E8u);
+    arrow(nx, ny + 6 * k, 0, -1, 11 * k, 0xFFE8E8E8u);
+    text("N", nx - 3.5f * k, ny - 14 * k, 1.4f * k, 0xFFFFFFFFu);
     /* the two text lines */
     char top[96], help[] = "M CLOSE  |  ARROWS MOVE  |  +/- ZOOM  |  SPACE YOU";
     snprintf(top, sizeof top, "%s  |  EXPLORED %u%%", mp_level[0] ? mp_level : "MAP",

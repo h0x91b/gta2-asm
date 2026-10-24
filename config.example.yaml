@@ -34,14 +34,15 @@ controls:
 
 # The radar and the city map (host/c/map.c, docs/map.md); not in the original game.
 # minimap: a round radar in the bottom-right corner (roads, buildings, you, the HUD's gang and
-# mission arrows). rotate: the radar turns so that you always face up; false = north up.
+# mission arrows). rotate: false (the default) keeps north up, marked N on the rim;
+# true turns the radar so that you always face up.
 # fog: fog of war on the radar and on the full map — the city shows only where your camera
 # has been, saved per level in maps/<level>.fog next to this file; false shows everything.
 # key: opens and closes the full-screen map (key names as in --keys; M is unused by the game).
 # Also on the debug menu's (K) Map page, with "Reveal the whole map" / "Forget explored map".
 map:
   minimap: true
-  rotate: true
+  rotate: false
   fog: true
   key: M
 
