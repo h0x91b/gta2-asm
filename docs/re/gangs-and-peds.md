@@ -536,6 +536,7 @@ Used by the K menu's "Call ambulance" / "Call fire truck" (`host/c32/emergency.c
 | **Gang wars on/off** | `gang_i + 0x112 + id_j` (default 1 = war). Peace: write 0. Wars only happen between armed members (≤ 4 alive, `CMP g_ArmedGangPedCount,4` in 0x4404f0) near zone borders: raise that cap / the outer `< 8`, or give gang-skinned civilians LOS + REACT_AS_NORMAL |
 | **Gangs vs cops** | set `highRespectFlag` (+0x110) to 1 per gang for a permanent war on cops, or patch the branch in 0x4371d0 |
 | **Cops vs gangs, shooting** | already native for attacking gangsters (`flags & 0x800`); to make cops attack any gang member add `cand.gang != 0` to the cop branch of 0x4371d0 |
+| **City fights (implemented)** | the K menu / config mod `host/c32/city_fights.c`: detours on 0x4371d0 and 0x4404f0 plus raiders, see [../city-fights.md](../city-fights.md) |
 | **Cops vs gangs, pursuit with stars** | NOP the `JNZ` at 0x44571c and `JZ` at 0x445728 in `Ped_Update`, give gang peds wanted points (e.g. after `Ped_UpdateWeaponFiring`), and guard `CrimeEvent_Report` 0x44a200 against `ped->player == NULL` first; `PoliceCrew_Update` 0x4ad600 is not yet checked for player-only assumptions |
 | max attackers per victim | `attackersLastTick < 4` / `attackersThisTick < 4` in 0x4371d0 |
 | respect cheats | `*(s8*)(*(u32*)0x5EB898 + i*0x144 + 0x11C + player)`; or the immediates in `Gang_IsHostileToPlayer` 0x45dae0 (−19), `Gang_PickWeaponByRespect` 0x45db70 (−59/−100), kill deltas 5/1 in 0x434ff0 and 1 in 0x426fa0 / 0x427290 / 0x43d1c0 |

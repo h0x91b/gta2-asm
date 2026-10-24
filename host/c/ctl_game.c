@@ -248,6 +248,22 @@ gptr ctl_car_by_id(uint32_t id)
     return 0;
 }
 
+/* one entry of `peds` / the `ped` command: where, who, and what it is doing (task target
+ * = the ped it is attacking or following, -1 none) */
+static void ped_json(jbuf *b, Ped *ped, const char *sep, double dist)
+{
+    int32_t px, py, pz;
+    ped_pos(ped, &px, &py, &pz);
+    gptr target = ped->taskTargetPed;
+    jb_printf(b, "%s{\"id\":%d,\"remap\":%u,\"occupation\":%u,\"x\":%.3f,\"y\":%.3f,"
+              "\"z\":%.3f,\"dist\":%.3f,\"in_car\":%s,\"alive\":%s,\"health\":%d,"
+              "\"state\":%u,\"objective\":%u,\"task\":%u,\"target\":%d}", sep,
+              ped->id, ped->remap, ped->occupation, scr_to_f(px), scr_to_f(py),
+              scr_to_f(pz), dist, ped->currentCar ? "true" : "false",
+              ped->lifeState == PED_ALIVE ? "true" : "false", ped->health, ped->state,
+              ped->objective, ped->task, target ? GP(Ped, target)->id : -1);
+}
+
 void ctl_lists_json(jbuf *b)
 {
     Ped *me = ctl_ped();
@@ -278,18 +294,31 @@ void ctl_lists_json(jbuf *b)
         near_add(list, &n, p, ctl_dist(x, y, px, py));
     }
     jb_printf(b, "],\"peds\":[");
-    for (int i = 0; i < n; i++) {
-        Ped *ped = GP(Ped, list[i].p);
+    for (int i = 0; i < n; i++)
+        ped_json(b, GP(Ped, list[i].p), i ? "," : "", scr_to_f(list[i].d));
+    jb_printf(b, "]");
+}
+
+/* `ped ID`: ,"ped":{...} for the live ped with that id; 0 = none (removed, or never) */
+int ctl_ped_json(jbuf *b, int id)
+{
+    Ped *me = ctl_ped();
+    int32_t x = 0, y = 0, z;
+    int guard = 400;
+    gptr mgr = rd32(G_PED_MGR);
+    if (me)
+        ctl_pos(&x, &y, &z);
+    for (gptr p = mgr ? rd32(mgr + 4) : 0; p && guard--; p = GP(Ped, p)->nextPed) {
+        Ped *ped = GP(Ped, p);
+        if (ped->id != id)
+            continue;
         int32_t px, py, pz;
         ped_pos(ped, &px, &py, &pz);
-        jb_printf(b, "%s{\"id\":%d,\"remap\":%u,\"occupation\":%u,\"x\":%.3f,\"y\":%.3f,"
-                  "\"z\":%.3f,\"dist\":%.3f,\"in_car\":%s,\"alive\":%s}", i ? "," : "",
-                  ped->id, ped->remap, ped->occupation, scr_to_f(px), scr_to_f(py),
-                  scr_to_f(pz), scr_to_f(list[i].d),
-                  ped->currentCar ? "true" : "false",
-                  ped->lifeState == PED_ALIVE ? "true" : "false");
+        jb_printf(b, ",\"ped\":");
+        ped_json(b, ped, "", me ? scr_to_f(ctl_dist(x, y, px, py)) : 0.0);
+        return 1;
     }
-    jb_printf(b, "]");
+    return 0;
 }
 
 /* ---- actions -------------------------------------------------------------------------- */

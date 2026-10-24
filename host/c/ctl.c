@@ -314,7 +314,7 @@ static int timeout_arg(const char *s, int def)
 /* ---- commands -------------------------------------------------------------------- */
 
 static const char help_text[] =
-    "ping | state | teleport X Y [Z] | face DEG | goto X Y [TIMEOUT] [--straight [--radius=R]] | "
+    "ping | state | ped ID | teleport X Y [Z] | face DEG | goto X Y [TIMEOUT] [--straight [--radius=R]] | "
     "walk_to X Y (= goto) | drive_to X Y [TIMEOUT] [--debug] | "
     "enter_car nearest|ID [TIMEOUT] [--straight] [--key] [--passenger] | exit_car [TIMEOUT] [--key] | "
     "key NAME [FRAMES] | keydown NAME | keyup NAME | mouse DX [DY] | "
@@ -452,6 +452,14 @@ static void start_command(client_t *c, char *line)
         done(c, &b);
     } else if (!strcmp(cmd, "state")) {
         cmd_state(c);
+    } else if (!strcmp(cmd, "ped")) {
+        double id;
+        if (argc < 2 || !num(argv[1], &id))
+            return reply_error(c, "usage: ped ID");
+        begin_ok(&b);
+        if (!ctl_ped_json(&b, (int)id))
+            return reply_error(c, "no such ped (removed)");
+        done(c, &b);
     } else if (!strcmp(cmd, "teleport")) {
         double x, y, z = 0;
         const char *why;

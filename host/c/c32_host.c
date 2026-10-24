@@ -1,7 +1,8 @@
 /* c32_host.c — the 64-bit side of C32 (docs/c32.md): maps the 32-bit image that
  * the host/c32 sources are linked into, binds its host services, runs its initialisers, and owns
  * the car bonus's config key and K menu row, the passenger mod's switch, and the keyboard,
- * mouse, settings and K menu rows of on-foot strafe and mouse turning (64-bit host C
+ * mouse, settings and K menu rows of on-foot strafe and mouse turning, the city-fights
+ * switch (64-bit host C
  * serving C32 code).
  *
  * The image (c32.bin, raw, linked at its header's base) is embedded in the loader by
@@ -231,9 +232,28 @@ static void c32_passenger_fmt(char *end)
     snprintf(end, 32, "%s", mods_passenger_enter ? "on" : "off");
 }
 
+/* ---- city fights (c32/city_fights.c): the switch, copied into the image every frame -- */
+
+uint8_t mods_city_fights;               /* config.c key table (default off), K menu row */
+static uint8_t *cf_on;                  /* exported city_fights */
+
+/* DM_FRAME: the C32 hooks read their own byte (thousands of predicate calls a tick, no
+ * mode switch each); the host byte is the one the config and the menu write */
+static void c32_city_fights_sync(void)
+{
+    if (!cf_on && !(cf_on = c32_find("city_fights")))
+        c32_fail("the image exports no city_fights");
+    if (*cf_on != mods_city_fights) {
+        *cf_on = mods_city_fights;
+        printf("c32: city_fights %s\n", mods_city_fights ? "on" : "off");
+    }
+}
+DM_FRAME(5, c32_city_fights_sync);
+
 /* the Mods page rows (menu/mods.c) */
 DM_VALUE_FNS(c32_carbonus);
 DM_VALUE_FNS(c32_passenger);
 DM_PAGE_EXTERN(dmp_mods);
 DM_ITEM(dmp_mods, 10, DM_VALUE, "Car entry bonus: ", &dmv_c32_carbonus);
 DM_ITEM(dmp_mods, 20, DM_VALUE, "Passenger: ", &dmv_c32_passenger);
+DM_ITEM(dmp_mods, 30, DM_FLAG, "City fights: ", &mods_city_fights);

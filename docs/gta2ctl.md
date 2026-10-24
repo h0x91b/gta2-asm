@@ -86,6 +86,7 @@ Coordinates are blocks (floats, 1.0 = one map block); headings are degrees, **0 
 | `ping` | | `{"ok":true,"frame":N}` |
 | `help` | | the command list |
 | `state` | | the state fields below, plus `cars` / `peds`: the 5 nearest of each |
+| `ped ID` | | `"ped":{...}`: one ped by id, the fields of `peds[]` below, wherever it is; `"error":"no such ped (removed)"` once the game has removed it (despawned off screen, a body taken away) |
 | `teleport X Y [Z]` | | on foot: `Ped_Teleport` (ground z) or, with Z, `TeleportGameObject`; in a car: `TeleportCar` (moves the car). Takes effect on the next tick |
 | `face DEG` | ≤ 60 frames | on foot; `"result":"facing"` |
 | `goto X Y [TIMEOUT] [--straight [--radius=R]]` | default 3000 frames | walks there by the game's own routing: gives the player the GO_TO_AREA_ON_FOOT (12) objective, so the ped AI goes around walls and parked cars; our steering stays off. `arrived` (within 0.5 or objective passed), `objective lost`, `stuck`, `timeout`. Measured 2026-10-22: start (159.5, 139.5) → road (168.5, 133.5) in ~175 frames along a bent path, and back out of the start courtyard in 347 frames. `--straight`: the old straight walk (our steering), `arrived` within R (default 0.3), `stuck` = no 0.05-block gain in 90 unpaused frames. On foot only. `--run` is accepted and ignored |
@@ -136,7 +137,11 @@ The flat fields of `state`, of every telemetry line and of `wait`. Outside a gam
 | `dead` | bool | `Player.isDeadOrBusted` (wasted or busted, ~70 ticks until the respawn) |
 
 `cars[]`: `id model remap x y z dist has_driver speed`, nearest first, the player's car left
-out. `peds[]`: `id remap occupation x y z dist in_car alive`, the player left out.
+out. `peds[]`: `id remap occupation x y z dist in_car alive health state objective task target`,
+the player left out. `alive` is `Ped.lifeState == 99` and stays true for a corpse: a ped that
+died has `state` 9 (WASTED) and, until the ambulance, `objective` 28. `task` / `target`: the AI
+task (`PED_OBJECTIVE`, 20 = KILL_CHAR_ON_FOOT) and the ped id it is aimed at (`taskTargetPed`, −1
+none) — who is attacking whom.
 
 Telemetry example (`--telemetry=t.jsonl,every=30`):
 
