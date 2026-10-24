@@ -286,6 +286,10 @@ Files are in `host/c/menu/` unless a path is given.
   (`roadblocks.c`, C32 `host/c32/roadblocks.c`), ambulance / fire truck (`emergency.c`, C32
   `host/c32/emergency.c`); see "Roadblocks and emergency services" below.
 - **Vehicle** (`vehicle.c`): the current / last car, colour, invincible, repair, explode.
+  - **Tuning** (`car_tune.c`, C32 `host/c32/car_tune.c`): live handling of the car the player
+    is in — top speed, acceleration, turbo, mass, brakes, steering lock, turn-in, rear grip,
+    handbrake slide, front drive, damage taken (LEFT / RIGHT), reset this model, reset all
+    models. Per model, so traffic of that model changes too: [car-tuning.md](car-tuning.md).
 - **Spawn** (`spawn.c`): a group page for spawners.
   - **Car** (`spawn_car.c`): every spawnable car model of the current style, its
     name from the GXT, sorted by the style's rating (99 special first, then good, average,
