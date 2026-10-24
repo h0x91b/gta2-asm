@@ -438,8 +438,12 @@ import handlers listed in `host/w32_mss32.asm` (docs/host-c.md, "Import shims in
 - **Music**: `AIL_open_stream(drv, "data\gtaudio\<n>[A].wav")`, `loop_count 0`
   (forever), `set_stream_volume` from the `CDVol` setting (measured `0x4C`). The
   frontend asks for `data\gtaudio\d.wav` and retries every frame while it is missing.
-  **This install has no `data\gtaudio` folder at all** (neither the task copy nor the
-  main checkout), so the menu has no music until those files are added.
+  The 11.44 install has no `data\gtaudio` folder; `tools/add-music.sh` adds the 22 files
+  from the freeware installer to the pak. Stations `<n>.wav` are IMA ADPCM stereo, the
+  `<n>a.wav` variants IMA ADPCM mono, `d.wav` / `a.wav` PCM s16 stereo, all 22050 Hz, up
+  to 24 min (`1.wav`, 32 MB). There is no `m.wav`, and not every station has an `a`
+  variant (1-4 and 12 have none, `101a.wav` has no plain one): those opens return 0, as on
+  Windows.
 - **Voices**: `data\audio\vocals\*.wav`, IMA ADPCM (format 0x11, 4-bit, stereo,
   block align 1024), played as streams.
 - Volumes: SFX samples come out at vol 10 (registry `SFXVol` = 11), master 127.
@@ -496,9 +500,12 @@ reimplementation sees. The game-side mixer above it is in
   = `0xA0D000` (tokens, never dereferenced by the game). Per voice: 8/16-bit, mono/
   stereo, signed/unsigned 8-bit, rate (16.16 step, nearest-sample resampling), volume
   and pan 0..127 (linear, pan 64 = both sides full), loop count and loop block.
-- **Streams** are loaded whole on `AIL_open_stream` (PCM WAV, or IMA ADPCM decoded up
-  front to s16) — the files are small. Missing/unsupported file → 0, logged once per
-  name.
+- **Streams**: `AIL_open_stream` reads the whole file. PCM plays from that buffer; IMA
+  ADPCM is decoded one block (~1017 frames) at a time as the mixer reaches it, into a
+  block buffer behind the file. Decoding a whole station up front took 42-196 ms of the
+  game thread per open (measured, `1.wav` = 121 MB of s16), at every car entry and radio
+  band change; block decode opens in 1-7 ms and gives byte-identical PCM (checked on all
+  22 music files and 20 vocals). Missing/unsupported file → 0, logged once per name.
 - **Focus (the game's own)**: `AIL_digital_handle_release/reacquire` pause/resume the
   device. The game calls them only from WndProc `0x4D0A00` on `WM_KILLFOCUS`
   (`0x4D0B2B` → `0x410640` → `0x416620` → `0x4B6670`) and `WM_SETFOCUS` (`0x4D0A39` →
@@ -551,12 +558,14 @@ number of sample starts / streams and peak + rms per second. Measured:
   `vocals\gta.wav`, IMA ADPCM, removed again): the dump matches macOS `afconvert`'s
   decode of the same file with correlation 0.9999997, gain 0.596 (= stream volume
   76/127). It looped every 3.3 s, as the game asks for (`loop_count 0`).
+- Radio, with the music pak: entering a parked Downtown car opens a station
+  (`data\gtaudio\6.WAV` / `2.WAV`, random per car), leaving it switches to `12.WAV` faded
+  out. Dump rms in the car ~3500-4100 against ~600 (engine only) with the vanilla pak.
 
 Listen live: `host/build.sh --load --entry` and move through the menu.
 
 ### Gaps
 
-- Music: no `data\gtaudio` files in this install (see above).
 - 3D samples / EAX / A3D (in-game positional sound) — not offered.
 - Bink video audio (`binkw32` is still silent; no movies are shipped either).
 - Resampling is nearest-sample; every rate the frontend uses is 22050 Hz = the mix
@@ -568,7 +577,7 @@ Listen live: `host/build.sh --load --entry` and move through the menu.
   `host/w32_renderer.asm`, handlers in `host/c/renderer*.c`, see `renderer-sdl.md`.
 - **Input**: done (keyboard + mouse, see "Input"). Joysticks (EnumDevices
   `DI8DEVCLASS_GAMECTRL`) are not offered; WM_CHAR is not generated.
-- **Audio**: frontend done (see "Audio"); music needs the `data\gtaudio` files.
+- **Audio**: frontend, menu music and car radio done (see "Audio").
   In-game: 3D samples (no provider offered, so the game should stay on 2D — unverified
   in gameplay), Bink video audio.
 - **Not done**: SEH dispatch (`RtlUnwind`), WM_TIMER, dialogs, INI files, registry

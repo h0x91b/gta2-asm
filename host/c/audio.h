@@ -30,10 +30,21 @@ struct voice {
     uint32_t left;              /* plays left in the current start (0 = forever) */
     uint64_t pos;               /* frame position << 16 */
     void *buf;                  /* stream: malloc'd buffer to free */
+    /* IMA ADPCM stream (ima != 0): data/len/fmt describe the decoded s16 frames, which
+     * are made one block at a time into blk_pcm (inside buf) as the mixer reaches them */
+    const uint8_t *ima;         /* the WAV's data chunk */
+    uint32_t ima_size;          /* its bytes */
+    uint32_t ima_align;         /* bytes per block */
+    uint32_t ima_spb;           /* frames per full block */
+    uint32_t blk;               /* block decoded in blk_pcm, -1 none */
+    int16_t *blk_pcm;           /* ima_spb frames */
 };
 
-/* Fill data/len/fmt/rate/buf from a WAV (PCM 8/16-bit, or IMA ADPCM decoded to 16-bit
- * up front). 1 ok, 0 unreadable or unsupported. */
+/* Fill data/len/fmt/rate/buf from a WAV (PCM 8/16-bit as is, IMA ADPCM through the ima
+ * fields). 1 ok, 0 unreadable or unsupported. */
 int aud_load_wav(const char *path, struct voice *v);
+
+/* frame fr (< len / bytes per frame) of an IMA ADPCM stream, as s16 bytes */
+const uint8_t *aud_ima_frame(struct voice *v, uint32_t fr);
 
 #endif

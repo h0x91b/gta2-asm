@@ -1,8 +1,8 @@
 /* audio_wav_test.c — host test of the mss32 stream loader (host/c/audio_wav.c), without
  * the loader: vfs_load is a stub that hands out the synthetic WAV under test. Checks the
  * chunk walk (odd-sized chunk padding, a data chunk longer than the file), PCM formats and
- * the IMA ADPCM decoder (nibble order, stereo interleave, a short last block) against
- * values worked out by hand from the IMA tables. `host/build.sh --test`.
+ * the IMA ADPCM block decoder (nibble order, stereo interleave, a short last block, frames
+ * asked for out of order) against values worked out by hand from the IMA tables. `host/build.sh --test`.
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -113,14 +113,18 @@ int main(void)
                                               the right one is read from the +16 slack (zeros),
                                               as in the NASM original */
     check(load(&v) == 1, "ima stereo loads");
-    check(v.fmt == 3 && v.rate == 22050 && v.data == v.buf, "ima -> s16 stereo, own buffer");
+    check(v.fmt == 3 && v.rate == 22050 && v.ima && v.ima_spb == 9, "ima -> s16 stereo, 9 frames per block");
     check(v.len == (9 + 5) * 2 * 2, "ima length: 9 + 5 frames");
     static const int16_t want_l[14] = { 0, 11, 5, 6, 7, 8, 9, 10, 11, 0, 11, 5, 6, 7 };
-    const int16_t *s = (const int16_t *)v.data;
+    /* decoded a block at a time as frames are asked for: in order, then across the block
+     * boundary backwards and forwards again */
+    static const uint8_t order[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13, 8, 9, 0, 12, 4 };
     int ok = v.len == sizeof want_l * 2;
-    for (int i = 0; ok && i < 14; i++) {
-        if (s[2 * i] != want_l[i] || s[2 * i + 1] != 100) {
-            printf("  frame %d: got %d,%d want %d,100\n", i, s[2 * i], s[2 * i + 1], want_l[i]);
+    for (unsigned k = 0; ok && k < sizeof order; k++) {
+        int i = order[k];
+        const int16_t *s = (const int16_t *)aud_ima_frame(&v, (uint32_t)i);
+        if (s[0] != want_l[i] || s[1] != 100) {
+            printf("  frame %d: got %d,%d want %d,100\n", i, s[0], s[1], want_l[i]);
             ok = 0;
         }
     }

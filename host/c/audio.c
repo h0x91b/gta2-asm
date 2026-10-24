@@ -180,6 +180,7 @@ static uint32_t aud_new_voice(uint32_t kind)
         v->kind = kind;
         v->data = 0;
         v->buf = 0;
+        v->ima = 0;
         v->len = 0;
         aud_init_voice(v);
         return AUD_HBASE + 16 * i;
@@ -247,7 +248,7 @@ static void mix_voice(struct voice *v, uint32_t frames)
             pos -= (uint64_t)(end - lstart) << 16;
             continue;
         }
-        const uint8_t *p = v->data + fr * bpf;
+        const uint8_t *p = v->ima ? aud_ima_frame(v, fr) : v->data + fr * bpf;
         int32_t l, r;
         switch (v->fmt) {
         case 1:  l = r = (int16_t)(p[0] | p[1] << 8); break;

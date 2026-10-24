@@ -152,7 +152,9 @@ License terms below are quoted as each source states them; this is not legal adv
   [m1stermo.github.io/gta2](https://m1stermo.github.io/gta2/).
 - **What we take:** ideas for our minimap and explored-area city map, and the source of the
   game's radio music: the 2004 Rockstar Classics freeware installer it downloads from the
-  [Internet Archive](https://archive.org/details/gta2_rockstar-classics) (`docs/reference.md`).
+  [Internet Archive](https://archive.org/details/gta2_rockstar-classics) (`docs/reference.md`), and
+  how to unpack it: the offsets of its three InstallShield cabinets inside the self-extractor
+  and the `unshield` file group (`web/installer-worker.js`), reused in `tools/add-music.sh`.
   The radar and the M map (`host/c/map.c`, [docs/map.md](docs/map.md)) follow its design,
   read at commit `66d3462`: the map image built from each column's topmost lid tile,
   box-filtered, with see-through flat lids showing the lid below (`port/platform/map_web.cpp`,

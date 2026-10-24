@@ -1,6 +1,8 @@
 /* audio_wav.c — WAV files for mss32 streams (AIL_open_stream): PCM 8/16-bit as is, IMA
- * ADPCM decoded to s16 up front (the files are small). Read through the VFS (overlay,
- * then data.pak), like every other game file. */
+ * ADPCM decoded to s16 one block at a time while it plays. The radio stations are up to
+ * 24 minutes long (data\gtaudio\1.wav: 32 MB of ADPCM, 121 MB as s16): decoding a whole
+ * file on open took 50-230 ms of the game thread at every station switch. Read through
+ * the VFS (overlay, then data.pak), like every other game file. */
 #include <stdlib.h>
 #include <string.h>
 
@@ -100,24 +102,39 @@ int aud_load_wav(const char *path, struct voice *v)
     uint32_t align = le16(fmt + 12), hdr = ch * 4;
     if (align <= hdr)
         goto bad;
-    /* worst case output: every block full -> (blocks + 1) * spb * ch * 2 */
-    uint32_t spb = (align - hdr) * 2 / ch + 1;
-    int16_t *out = malloc((uint64_t)((dsize / align + 1) * spb * ch) * 2), *w = out;
-    for (uint32_t left = dsize; left > hdr; ) {
-        uint32_t n = left < align ? left : align;
-        uint32_t samples = (n - hdr) * 2 / ch + 1;
-        ima_block(data, w, ch, samples);
-        w += samples * ch;
-        data += n;
-        left -= n;
-    }
-    free(b);
-    v->data = (const uint8_t *)out;
-    v->buf = out;
-    v->len = (uint32_t)((uint8_t *)w - (uint8_t *)out);
+    uint32_t spb = (align - hdr) * 2 / ch + 1, rest = dsize % align;
+    uint64_t frames = (uint64_t)(dsize / align) * spb + (rest > hdr ? (rest - hdr) * 2 / ch + 1 : 0);
+    /* the block buffer goes after the file (+16 slack, 16-aligned), freed with it */
+    uint64_t at = (f.size + 31) & ~(uint64_t)15, doff = (uint64_t)(data - b);
+    uint8_t *nb = realloc(b, at + (uint64_t)spb * ch * 2);
+    if (!nb)
+        goto bad;
+    b = nb;
+    v->ima = b + doff;
+    v->ima_size = dsize;
+    v->ima_align = align;
+    v->ima_spb = spb;
+    v->blk = 0xFFFFFFFFu;
+    v->blk_pcm = (int16_t *)(b + at);
+    v->data = b;                                        /* non-zero: the mixer plays it */
+    v->buf = b;
+    v->len = (uint32_t)(frames * ch * 2);
     v->fmt = ch == 2 ? 3 : 1;
     return 1;
 bad:
     free(b);
     return 0;
+}
+
+const uint8_t *aud_ima_frame(struct voice *v, uint32_t fr)
+{
+    uint32_t ch = v->fmt == 3 ? 2 : 1, blk = fr / v->ima_spb;
+    if (blk != v->blk) {
+        uint32_t off = blk * v->ima_align, n = v->ima_size - off;
+        if (n > v->ima_align)
+            n = v->ima_align;
+        ima_block(v->ima + off, v->blk_pcm, ch, (n - ch * 4) * 2 / ch + 1);
+        v->blk = blk;
+    }
+    return (const uint8_t *)(v->blk_pcm + (fr - blk * v->ima_spb) * ch);
 }

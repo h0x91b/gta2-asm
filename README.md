@@ -28,6 +28,15 @@ The script leaves your game folder untouched. Inside the pak it renames every `.
 to `.ebin`, and it warns if `gta2.exe` is not vanilla 11.44 (SHA-256 `dd5381c7…a5a2`).
 `data.pak` is git-ignored: never commit it.
 
+The 11.44 install has no radio or menu music (`data/GTAudio/`). It is in the 2004
+Rockstar Classics freeware installer ([archive.org](https://archive.org/details/gta2_rockstar-classics),
+`GTA2INSTALLER.exe`, 345 MB). Keep it as `setup.ebin` in the repository root (git-ignored;
+it is never run) and add its 22 music files to your pak (needs `brew install unshield`):
+
+```sh
+tools/add-music.sh setup.ebin data.pak data.pak
+```
+
 ## Build and run
 
 ```sh

@@ -7,3 +7,6 @@ __pycache__/
 /formats-out/
 /ghidra-docs/
 /tools/gta2ctl/gta2ctl
+/setup.ebin
+/data-*.pak
+/data.pak.bak

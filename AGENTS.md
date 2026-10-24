@@ -132,6 +132,9 @@ tables in `host/w32_renderer.asm`, `docs/renderer-sdl.md`); the full API is in
 - For an experiment that needs loose files, unpack it into your worktree
   (`unzip -q data.pak -d gta2`; `/gta2/` stays git-ignored) and never commit the result.
   `tools/mkpak.sh [dir [out]]` rebuilds a pak from such a folder (`zip -0 -r -X`).
+- The canonical pak includes the radio / menu music `data/GTAudio/*.wav` (22 files, 320 MB),
+  which the 11.44 install lacks: `tools/add-music.sh` takes it from the freeware installer
+  `setup.ebin` (InstallShield 7, unpacked with `unshield`; git-ignored, in the main checkout).
 - **The loader runs from the pak alone** (`host/c/vfs.c`): it indexes the central
   directory once, maps `gta2.ebin` from it, and serves every game file read (Win32
   file shims, registry seed, mss32 streams, `LoadLibraryA` probes) from it,
