@@ -32,11 +32,11 @@ renderer.
 | back buffer | an `ARGB8888` render-target texture of the game's windowed size, `window_width × window_height` (1280×960 by default, never smaller than 640×480; see "Resolution"). All drawing goes into it. |
 | present | `Vid_FlipBuffers`: the top-left 640×480 of the render target in the frontend, all of it in gameplay → window, letterboxed by `SDL_SetRenderLogicalPresentation(w, h, LETTERBOX)` on the window target (re-set when the size changes), linear scaling, vsync on. The window is exactly the size the game asked for. |
 | 2D surface | an `RGB565` CPU buffer of the back buffer's size (pitch = width × 2) in low memory, handed out as `ctx->surface` by `Vid_GetSurface` (Bink writes there). If the game locked it since the last upload, it is uploaded to a streaming texture and drawn into the back buffer at `gbh_BeginScene` (under the 3D primitives) or at `Vid_FlipBuffers` (Bink-only frames). `Vid_ClearScreen` clears both. |
-| textures | up to 262 143 (`MAX_TEX`; `wil` registers 73 104, plus ~29 000 for the frontend, which are not freed). `gbh_RegisterTexture` allocates a real 0x20-byte `GbhTexture` in low memory (the game pokes `width/height/pixels`) plus a host cache entry (index in `GbhTexture.cache`). On draw, the 8-bit indices (pitch 256) are expanded through the palette into an `ARGB8888` SDL texture of exactly `w×h`, index 0 = alpha 0. The cache key is (pixels, width, height, palette, palette generation), and Lock/Unlock/AssignPalette mark it dirty, so retargeted textures rebuild. |
+| textures | up to 262 143 (`MAX_TEX`; `wil` registers 73 104, plus ~29 000 for the frontend, which are not freed). `gbh_RegisterTexture` allocates a real 0x20-byte `GbhTexture` in low memory (the game pokes `width/height/pixels`) plus a host cache entry (index in `GbhTexture.cache`). On draw, the 8-bit indices (pitch 256) are expanded through the palette into an `ARGB8888` SDL texture of exactly `w×h`, index 0 = `0x00000000` (transparent only in the blended modes, see below). The cache key is (pixels, width, height, palette, palette generation), and Lock/Unlock/AssignPalette mark it dirty, so retargeted textures rebuild. |
 | palettes | `gbh_RegisterPalette` copies the 256 colours (stride 64 dwords) into a host table as `0xFF000000 \| rgb`, and applies the original's in-place edits to the game's data (`pal[0] = 0`, other zeros → `0x10000`). Re-registering bumps the palette's generation. |
 | tiles | `gbh_DrawTile` (= `gbh_DrawTilePart`, d3ddll `0xe043f0`): unless `GBH_F_TILE_CUSTOM_UV`, UVs = 0.5…63.4999 of the 64×64 tile; rotate `0x20` (new[i] = old[i+3]), `0x40` (= both mirrors), `0x60` (new[i] = old[i+1]), FLIPX swaps the (u,v) of vertices 0↔1 / 2↔3, FLIPY 0↔3 / 1↔2; written back into the caller's vertices like the original; then the DrawQuad path. |
 | lighting | `GBH_F_LIGHTING` and ambient ≠ 1.0 (as the original): per vertex `c' = min(1, c · brightness/255 · Σ light.c · I · (r − d)/r + ambient)` over the type-1 lights of `gbh_AddLight` with d ≤ r; the vertex's world position is `v[i+4].x/y/z` (d3ddll `ApplyPointLightsToVertices`). `gbh_AddLight` precomputes I = packed&0xff /255, r = (packed>>8 &0xff)/255·8, r², 1/r, rgb/255; `gbh_ResetLights` empties the list (≤ 1024, logged once if exceeded). The original's table square root is `sqrtss`. |
-| quads | `gbh_DrawQuad` / `gbh_DrawTriangle` → `SDL_RenderGeometry` (fan of 4 = indices `0 1 2 0 2 3`). Fix-ups from §2.3: cull on `v[0].z <= 0`; UVs are texels → divided by the texture size; `GBH_F_SPRITE_RECT` builds the `w×h` quad from `v[0].x/y`; diffuse = brightness grey unless `GBH_F_VERTEX_COLOUR` (alpha from diffuse only in the blended modes); blend `BLEND` (opaque mode too, it doubles as the index-0 alpha test) or `ADD` for `0x200`; `NEAREST` for `GBH_F_NO_FILTER`/`SPRITE_RECT`, else `LINEAR`. `rhw` ignored (screen-space, affine). |
+| quads | `gbh_DrawQuad` / `gbh_DrawTriangle` → `SDL_RenderGeometry` (fan of 4 = indices `0 1 2 0 2 3`). Fix-ups from §2.3: cull on `v[0].z <= 0`; UVs are texels → divided by the texture size; `GBH_F_SPRITE_RECT` builds the `w×h` quad from `v[0].x/y`; diffuse = brightness grey unless `GBH_F_VERTEX_COLOUR` (alpha from diffuse only in the blended modes); blend `NONE` in opaque mode (`flags & 0x380 == 0`), `BLEND` for `0x80`/`0x100`, `ADD` for `0x200` (see "Index 0: transparent only when blended"); `NEAREST` for `GBH_F_NO_FILTER`/`SPRITE_RECT`, else `LINEAR`. `rhw` ignored (screen-space, affine). |
 | flat rects | `gbh_DrawFlatRect` → untextured geometry, alpha-blended by the colour's alpha. |
 | images | `gbh_LoadImage` parses the in-memory TGA (type 2, 16 bpp, bottom-up unless descriptor bit 5) into an `XRGB1555` texture; `gbh_BlitImage` checks the source rect like the original (−1 bad handle, −2 bad rect) and does `SDL_RenderTexture`. Never returns −10 (surface lost). |
 
@@ -115,12 +115,30 @@ temporary probe in `host_dispatch` for both builds: 2.379 ms/frame (master) vs 2
 is SDL/Metal itself, at ~300 renderer calls per in-game frame. The game paces itself to
 ~30 fps (`drawAndLimitFrames` busy-waits), so process CPU time (32 s user both) says nothing.
 
-Missing building faces (open bug): a counting build of the same run dropped **no** primitive
-in `draw_prim`: no `v[0].z <= 0` cull, no texture that failed to build (zero size, > 256,
-no cache entry). Whatever leaves holes is either not submitted by the game's map renderer or
-drawn and then overdrawn (there is no depth buffer, primitives land back to front); the
-renderer itself discards nothing. The `gbh_SetWindow` cull rect is stored and ignored, so we
-draw more than the original, never less.
+Running two games in parallel (two `render_parity.sh` at once) is **not** deterministic: from
+frame 740 on the camera lands elsewhere. Compare builds with sequential runs.
+
+### Index 0: transparent only when blended (Seq 65, 2026-10-24)
+
+d3ddll uploads a texture in the format of the draw's blend mode (`UploadTextureToCacheSlot`
+`0xe02810` → `ConvertIndexedPixelsToSurface` `0xe061d0`): with `flags & 0x380 == 0` it goes to
+an opaque page through the palette's opaque table with an alpha mask of 0, so index 0 is drawn
+as `pal[0]` = solid black and nothing is keyed; with `0x80`/`0x100`/`0x200` it goes to an alpha
+page and index 0 becomes alpha 0, culled by the alpha test. We keep the one ARGB texture
+(index 0 = `0x00000000`) and get the same result from the blend mode: `SDL_BLENDMODE_NONE` for
+opaque draws writes index 0 as black, `BLEND`/`ADD` make it transparent. (d3ddll keeps a cached
+page in its first format until evicted, unless the texture's byte `+0x13` has bit `0x80`; we
+follow each draw's flags instead.)
+
+Map faces get `0x80` from face bit 12 ("flat"), so flat walls and lids stay see-through. In a
+gameplay run 126 k of 141 k blended draws have index-0 texels (flat faces, sprites) and only 29
+of 259 k opaque ones do: diagonal faces (`0xc005`), which never test bit 12. The parity harness
+changed by 24 pixels (a see-through sliver of a diagonal wall in the start view, frames 270-480),
+nothing else. The "missing building faces" report was not explained by this: a counting build
+of the same run dropped **no** primitive in `draw_prim` (no `v[0].z <= 0` cull, no texture that
+failed to build) either, so any remaining hole is either not submitted by the game's map renderer
+or overdrawn (no depth buffer, primitives land back to front). The `gbh_SetWindow` cull rect is
+stored and ignored, so we draw more than the original, never less.
 
 ## Real output (2026-10-20)
 

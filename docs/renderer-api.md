@@ -176,11 +176,13 @@ Per call, in order (d3ddll `0xe02cc0`, `0xe04020`):
    `texture.width × texture.height` pixels at (x, y) with UV = whole texture, and
    forces `GBH_F_NO_FILTER`. (RIVA quirk: x/y rounded.)
 3. Filter: `0x20000` → point sampling, else bilinear (`TEXTUREMAG/MIN`).
-4. Blend (`flags & 0x380`): 0 → opaque (alpha test still culls index 0);
+4. Blend (`flags & 0x380`): 0 → opaque (the texture goes to an opaque page: index 0 is
+   black `pal[0]`, nothing culled; `renderer-sdl.md`, "Index 0");
    `0x80`/`0x100` → `SRCALPHA/INVSRCALPHA`, `MODULATEALPHA`; `0x200` → additive
    `ONE/ONE`.
 5. Texture: lazily uploaded into a cache page (power-of-two 8…256, edge texels
-   duplicated), palette entry 0 → fully transparent, others opaque.
+   duplicated); in an alpha page (blended draws) palette entry 0 → fully transparent,
+   others opaque; in an opaque page (blend 0) entry 0 is black.
 6. Vertex fix-up: `rhw = z`; `u,v *= 1/page_size` (game UVs are **texels**);
    `specular = 0`; unless `GBH_F_VERTEX_COLOUR (0x2000)`:
    `diffuse = 0xFF000000 | b<<16 | b<<8 | b` with `b = brightness` arg.

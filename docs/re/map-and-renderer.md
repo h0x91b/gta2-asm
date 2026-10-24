@@ -255,9 +255,10 @@ Rotation/flip tables (8 × u32, index `face >> 13`): left 0x5930D4, right 0x5930
 bottom 0x593134, lid 0x593154, sloped lid 0x593174, diagonals 0x593194/0x5931B4, diagonal lids 0x5931D4.
 
 Seq 27 found that d3ddll caches one texture per tile in the format of its first draw, and that
-tiles used both flat and opaque with index-0 pixels exist (wil 74, ste 93, bil 144). Our host
-always keys index 0 with BLEND, so opaque faces of those tiles may show holes where the original
-shows black — not checked on screen.
+tiles used both flat and opaque with index-0 pixels exist (wil 74, ste 93, bil 144). Opaque
+draws show index 0 as black in the original; the host matches that since Seq 65 (blend NONE for
+opaque draws, `docs/renderer-sdl.md` "Index 0"). On screen it changed only diagonal faces, which
+never get 0x80.
 
 ### 3.4 Shading: baked direction + ambient + point lights
 

@@ -410,9 +410,14 @@ static uint64_t draw_prim(const uint32_t *a, int n)
     if (t) {
         if (!(tex = tex_get(t)))
             return 0;
-        r_SDL_SetTextureBlendMode(tex, (flags & GBH_F_ALPHA_MASK) == GBH_F_ADDITIVE
-                                       ? SDL_BLENDMODE_ADD
-                                       : SDL_BLENDMODE_BLEND);   /* also the alpha test of index 0 */
+        /* Opaque mode (no 0x380 bit) draws index 0 as the solid black of pal[0]: d3ddll
+         * uploads such a texture to an opaque page with no alpha (UploadTextureToCacheSlot
+         * 0xe02810 -> ConvertIndexedPixelsToSurface 0xe061d0, alpha mask 0), so nothing is
+         * keyed. Only the blended modes make index 0 transparent. */
+        uint32_t mode = flags & GBH_F_ALPHA_MASK;
+        r_SDL_SetTextureBlendMode(tex, !mode ? SDL_BLENDMODE_NONE
+                                       : mode == GBH_F_ADDITIVE ? SDL_BLENDMODE_ADD
+                                       : SDL_BLENDMODE_BLEND);
         r_SDL_SetTextureScaleMode(tex, flags & (GBH_F_NO_FILTER | GBH_F_SPRITE_RECT)
                                        ? SDL_SCALEMODE_NEAREST : SDL_SCALEMODE_LINEAR);
     }
