@@ -158,7 +158,10 @@ The same external-velocity trick carries object pushes (`CarPhysics_ApplyConveyo
   0x5E668C/90/94) → filter `Sprite_ShouldCollideWithSprite` 0x4B9A30 → narrow phase
   `Sprite_CollisionCheck` 0x4BCAC0 (z overlap + rotated-rect corners both ways) → time of impact
   (stepped sweep, then 3 bisections) → replay pose at the hit → contact point → impulse.
-  Result record at `g_CollisionResult` 0x5E6874 (1 wall X, 2 wall Y, 3 sprite).
+  Result record at `g_CollisionResult` 0x5E6874 (`COLLISION_RESULT_KIND`: 1 wall X, 2 wall Y, 3 sprite,
+  4 floor, 5 ceiling — 4 / 5 only from ballistic objects); full layout (`wallMin/MaxX/Y`, `contactX/Y`,
+  `hitZ`, `hitSprite`, `moverSprite`) in [ped-movement-collision.md](ped-movement-collision.md)
+  "`CollisionResult`".
 * Impulse (`CarPhysics_ComputeCollisionImpulse` 0x4A05C0, verified):
   `j = −(1+e)·(v_rel·n̂) / ((n·n)(1/mA + 1/mB) + (rA⊥·n)²/IA + (rB⊥·n)²/IB)`, impulse = `n̂·j`;
   an immovable body passes mass −1 (`g_Fix16MinusOne`) and its terms are dropped.
@@ -315,7 +318,7 @@ comment in Ghidra has the evidence.
 | address | name | role | confidence |
 |---|---|---|---|
 | `0x40F900` | `TrailerController_UpdateAlignment` | hitch constraint between cab (+8) and trailer (+0xC) | verified |
-| `0x414F70` | `Car_HasFlag2000` | `Car_HasFlags(car,0x2000)` | verified |
+| `0x414F70` | `Car_HasFlag2000` | `Car_HasFlags(car,0x2000)`. Flag 0x2000 (Car+0x78) = "touching another car this tick": set **only** by `CarPhysics_CollideWithCar` (0x4A36C2, 0x4A37A6 via `Car_AddFlag2000` 0x49EFC0), cleared by `CarPhysics_CheckPendingCollision` (U1, 2026-10-24) | verified |
 | `0x420F80` | `CarPhysicsPool_Ctor` | CarPhysicsPool ctor: 306 (0x132) CarPhysics objects of 0xB0 bytes constructed in place (arr306), chained into a free list through… | verified |
 | `0x420FD0` | `CarPhysicsPool_Alloc` | pop the head of the free list (firstFree = head->next), CarPhysics_Init(head), return it. NO empty-check (306 slots; the caller… | verified |
 | `0x421130` | `CarPhysics_IsKeptActive` | `frame < activeUntilFrame` | verified |
@@ -512,8 +515,8 @@ comment in Ghidra has the evidence.
 | `0x4A32D0` | `CarPhysics_ApplyWallImpulse` | wall response: impulse vs infinite mass, ApplyImpact(0xF), damage | verified |
 | `0x4A34A0` | `CarPhysics_CollideWithCar` | car-car response, equal-and-opposite ApplyImpact (0x32 ticks), damage, train explode | verified |
 | `0x4A3A40` | `CarPhysics_CollideWithObject` | car vs map object (lamp posts etc.), reaction on object | verified |
-| `0x4A3DF0` | `CarPhysics_CollideWithWallX` | car vs map wall on X | verified |
-| `0x4A3FB0` | `CarPhysics_CollideWithWallY` | Y twin (same body, +0x3c, 0x5E6880..8C, ContactPointY) | verified |
+| `0x4A3DF0` | `CarPhysics_CollideWithWallX` | car vs map wall on X (reads `wallMinX` / `wallMaxX` 0x5E6878 / 0x5E687C, `contactX/Y`; snaps the contact to the nearer face end) | verified |
+| `0x4A3FB0` | `CarPhysics_CollideWithWallY` | Y twin (same body, +0x3c, 0x5E6880..8C = `wallMinY` / `wallMaxY` / `contactX` / `contactY`, ContactPointY) | verified |
 | `0x4A4170` | `CarPhysics_DispatchCollision` | switch on g_CollisionResult.kind 1/2/3 -> wall X / wall Y / sprite; then sound event | verified |
 | `0x4A4270` | `CarPhysics_OnCollision` | replays pose at hit fraction, dispatches | verified |
 | `0x4B9A30` | `Sprite_ShouldCollideWithSprite` | collision filter by entry type 1..5 | verified |

@@ -53,9 +53,160 @@ Car sources: `SoundMgr_UpdateCarSource` 0x415DF0 dispatches on the car's info in
 special); the default chain adds engine, heavy-vehicle slide / idle, speed loops, tyre slip, doors,
 alarm, horn (`SoundMgr_UpdateCarHorn` 0x415880, `Car_IsHonking`), siren (`SoundMgr_UpdateCarSiren`
 0x415A90, `Car_IsSirenActive` 0x414F80 = emergency lights && `SIREN_ON` bit), damaged engine, shop
-and bomb ticks. Police radio: a ring of 15 phrase ids (`SoundManager+0x552C`, read `+0x5528`, write `+0x5529`)
-filled by crime-report / car-description / location builders and drained by
-`PoliceRadio_Update` 0x41C600.
+and bomb ticks. Police radio: a ring of 15 phrase ids (`policeQueue`, **15 dwords** at
+`SoundManager+0x552C`, read index `+0x5528`, write index `+0x5529`) filled by crime-report /
+car-description / location builders and drained by `PoliceRadio_Update` 0x41C600 (§2d).
+
+### 2a. Layers, top to bottom (U1 pass, 2026-10-24)
+
+"Verified" in §2a–§2f = read in code at the quoted VA; nothing here was reproduced at runtime.
+
+1. **Game objects → SoundClient.** Every object that makes sound owns a 16-byte `SoundClient`
+   (`kind, disabled, sourceSlot, owner`) from `g_SoundClientPool` 0x5D85A0 (`SoundClientPool_Create`
+   0x410750), plus three embedded or static ones: `SoundManager.vocalClient` +0x5454 (kind 10, slot in
+   `vocalSourceSlot` +0x5450), `SoundManager.radioClient` +0x550C (kind 3, slot in `radioSourceSlot`
+   +0x5508) and `g_FrontendMusicSoundClient` 0x5EAF40 (kind 2, owner `MainMenuSoundPlay`).
+   `SoundMgr_AttachClient` 0x417DB0 hands out a 1-based source slot (1..1019, table +0x147C, stride
+   0xC); `SoundMgr_DetachSource` 0x416C10 releases it.
+2. **Per frame.** `SoundMgr_Update` 0x418050 runs via `SoundMgr_Update_Thunk` 0x410520, called from
+   `FrontEnd_UpdateMode` and `Game_StepByStatus`. When the game is not paused it increments
+   `frameCounter` +0x5448 (every 5th frame sets `slowTick`) and calls `SoundMgr_UpdateFrame` 0x417EA0
+   → `SoundMgr_UpdateListenerAndSources` 0x417030 → `SoundMgr_UpdateSource` 0x4163A0, a switch on the
+   client kind: sprite (ped / car / object), music, radio (`SoundManager_UpdateRadio` 0x4B2D50, which
+   also runs `PoliceRadio_Update`), event queue, weapon, crane, crusher, vocal, HUD counter. Each
+   branch fills `pendingRequest` (+0x30, 0x68 bytes: sample / category, position, volume, radius,
+   loop) and calls `SoundMgr_QueueRequest` 0x4171A0 after the audibility test
+   `SoundMgr_IsVoiceInRange(this, maxDistSq)` 0x4116B0. `SoundMgr_ApplyRequestsToVoices` 0x417410
+   maps the sorted requests onto `voiceCount` voices: 16 2D, or `num3DVoices` +0x1C when a 3D
+   provider is open.
+3. **MssAudio wrapper (`g_MssAudioDevice` 0x66C950) → mss32.** Every wrapper indexes a handle array
+   and tail-jumps to the AIL import with the remaining arguments unchanged. The call contract the
+   host has to honour is in [win32-shims.md](../win32-shims.md) "How the game uses mss32".
+4. **Radio** (§2c) and **police radio** (§2d) ride on the same request / stream machinery.
+5. **Startup:** `initSound` 0x416490 → `MssAudio_Startup2D(this, &sm+0x5440)` 0x4B7250 (AIL_startup,
+   waveOutOpen 22050 Hz, 16 2D samples, master volume 0x7F). The +0x5440 out-param is never written.
+
+Doppler: `SoundMgr_ApplyDopplerToFrequency` 0x416F20, f' = f·c/(c+v) with c = `speedOfSound` +0x4
+(5.0) and v the per-tick distance change divided by `ticksPerSecondFix` +0xC (30.0); no shift when
+|v| ≥ c. Pan: `SoundMgr_CalcPan(radius, relX)` 0x416E50, slewed ±10 per frame. Pitch: SDT rate ±
+`SoundMgr_GetPitchJitter`. Sample length in ticks = entry size · `ticksPerSecond` (+0x8, 30) / rate
+(0x416890, 0x417410).
+
+### 2b. SoundManager / MssAudio / MssBankEntry fields settled in U1
+
+`SoundManager` is still 0x5578 bytes, `MssAudio` 0x2718, `MssBankEntry` 0x18. Conf. = confidence.
+
+| struct+off | name (was) | type | meaning | evidence VA | conf. |
+|---|---|---|---|---|---|
+| SM+0x3 | `musicLoopTrackD` (unsure_musicMode) | byte | 1 → frontend music client loops `d.wav`, 0 → `m.wav` | 0x411A50; Ctor 0x417EF0 = 1; cleared 0x411A50 / 0x416C10 | high |
+| SM+0x4 | `speedOfSound` (unsure_fix16_4) | Fix16 | Doppler c = 5.0 | 0x416F20 | high |
+| SM+0x8 | `ticksPerSecond` (unsure_int8) | byte | 30 (+0x9..0xB unused) | 0x416890, 0x417410, 0x4B1D40 (cap 30·90000) | high |
+| SM+0xC | `ticksPerSecondFix` (unsure_fix16_c) | Fix16 | 30.0, Doppler divisor | Ctor `Fix16_FromUChar(30)`, 0x416F20 | high |
+| SM+0x18/19/1A/1B | `unusedInit18/19/1a/1b` (unsure_flag18..1b) | byte | Ctor writes 1/1/1/0, no reader | Ctor 0x417EF0 | high (unread) |
+| SM+0x1C | `num3DVoices` (unsure_flag1c) | byte | out-param of `Mss_Init3DSamples` 0x4B72B0 (provider max, capped 16, < 8 = fail); copied to `voiceCount` | via `SoundMgr_Set3DSoundEnabled` 0x416640 | high |
+| SM+0x1D | `sound3DActive` | byte | the global label `g_sound3DActive` 0x5DCBE5 duplicates this field (safe to delete) | — | high |
+| SM+0x1450 | `unusedFlag1450` (unsure_int1450) | byte | written 0, no reader | 0x417F98 / 0x416D80 | high |
+| SM+0x5440 | `startup2DOutUnused` (unsure_int5440) | int | `LEA EAX,[ESI+0x5440]; PUSH`, callee ignores it | 0x41649D | high |
+| SM+0x5444 | `unusedInt5444` (unsure_int5444) | int | Ctor only | 0x417FEB | high |
+| SM+0x5448 | `frameCounter` (unsure_int5448) | uint | ++ per unpaused update; %5 slowTick, %10 PumpQueue retry, &1, %0x82 | 0x4180B9..CD | high |
+| SM+0x5450 | `vocalSourceSlot` (relToAudio) | int | slot of the vocal client (the client itself is +0x5454) | 0x4112B0, 0x4105B0 | high |
+| SM+0x5468 | `radioSlots` | RadioStationSlot[5] | 5 stations, stride 0x1C; base+0x544C+i·0x1C = slot i−1 (1-based addressing) | 0x4B2350 loop | high |
+| SM+0x54F4 | `radioWasInCar` (unsure_radioFlag54f4) | byte | previous-frame copy of +0x54F5 | 0x4B2DC3 | high |
+| SM+0x54F5 | `radioInCar` (gap) | byte | 1 in a radio car (not train, not wrecked) | 0x4B2E16 / 0x4B2EB5 | high |
+| SM+0x54F8 | `radioPrevSlot` (unsure_radioFlag54f8) | byte | previous-frame copy of `radioCurrentSlot` +0x54F7 | 0x4B2DBA | high |
+| SM+0x54FC | `radioBand` | byte → **int** | 0/1: which file variant is streamed | 0x4B26CE, 0x4B2AD0, 0x4B2830 | high |
+| SM+0x5500 | `radioPrevBand` (gap) | int | previous-frame copy; a change re-opens the stream | 0x4B2DC9 / 0x4B26CE | high |
+| SM+0x5508 | `radioSourceSlot` (radioStreamId) | int | return of `SoundMgr_AttachClient` — a slot, not a stream | 0x4B2FD5 | high |
+| SM+0x550C | `radioClient` (unsure_radioClientKind/Byte10/Int18) | SoundClient | kind 3, disabled 0, owner 0 | 0x4B2FB5..0x4B2FCA | high |
+| SM+0x5522 | `policeLastCopStars` (gap) | short | wanted level seen last frame | 0x41C772 / 0x41CB8B / 0x41CBF4 | high |
+| SM+0x5524 | `policeHighestCrimeKind` (gap) | CRIME_KIND | highest kind since `PoliceRadio_Reset` 0x41C200; phrase 0x49+kind | 0x41C211, 0x41CC04 | high |
+| SM+0x552C | `policeQueue` | byte[15] → **uint[15]** | phrase ring, index ·4, ends exactly at 0x5568 | 0x41BF90 / 0x41C000 | high |
+| SM+0x5568/69 | `policeCopKillTileX/Y` (policeType8TileX/Y) | byte | tile of the last kind-8 event (CRIME_KILL_LAW_ENFORCEMENT) | 0x41C600 | high |
+| SM+0x556A | `policeCopKillFollowUpTimer` (policeStandbyTimer) | ushort | (rand%10+15)·100 ticks; at 1→0 the follow-up fires | 0x41C600 | high |
+| SM+0x556C | `policeShotsFiredCooldown` (unsure_policeTimer556c) | ushort | 600..2129 ticks, case 2 (CRIME_FIRE_WEAPON) | 0x41C600 | medium-high (phrase wording unheard) |
+| SM+0x556E | `policeCarDescCooldown` (unsure_policeTimer556e) | ushort | 300..1299 ticks, gates `PoliceRadio_QueueCarDescription` | 0x41C600 case 0 | high |
+| SM+0x5570 | `policeLocationReportCooldown` (unsure_policeTimer5570) | ushort | 150..1216 ticks, case 3 + case 7 | 0x41C600 | medium-high |
+| SM+0x5574 | `policeLastDescribedCarModel` (unsure_policeCarDescState) | int | car info index last described; 0x57 = on foot | 0x41C350 | high |
+| MssAudio+0x4 | `unsure_cdDriveLetter` (unsure_musicVolume) | byte | Ctor = 99 = `'c'`, only reader 0x416630 | Ctor 0x4B6CE0 | low (guess; "volume" disproved) |
+| MssAudio+0x26B4 | `selected3DProviderIdx` (unsure_selectedProvider) | int | open 3D provider, −1 none | 0x4B655B | high |
+| MssAudio+0x26B8 | `eaxSupported` (unsure_eaxAvailable) | int | provider answers "EAX environment selection" != −1 | 0x4B6550 | high |
+| MssBankEntry+0xC/0x10/0x14 | `rateVariation` / `loopStart` / `loopEnd` (unsure_fieldB4/B8/BC) | int | SDT fields ([lessons.md](../formats/lessons.md)); loop end −1 = none | getters 0x4B6040/60/80 | high |
+
+### 2c. Radio
+
+Five station slots `radioSlots` +0x5468, added by script RADIO_STATION
+(`SoundManager_Radio_AddStation(this, stationId, x, y)` 0x4B2BC0, thunk 0x410580) and removed by
+`SoundManager_Radio_RemoveStationAt(x, y)` 0x410590 (body 0x4B2350, caller
+`MissionScript_DeleteItemByCmd`). Each frame `SoundManager_UpdateRadio` 0x4B2D50 copies current →
+previous state (`radioInCar` → `radioWasInCar`, `radioCurrentSlot` → `radioPrevSlot`, `radioBand` →
+`radioPrevBand`), then picks or keeps a station. Signal strength sets `radioBand` with hysteresis
+0x6F / 0x59; a band change re-opens `<id>.wav` (band 1) vs `<id>A.wav` (band 0) and mixes in static
+(samples 0x89 / 0x8A). In an emergency car the special track 0x65 plays. On foot, in a train or in
+a wrecked car the radio is "off" (slot 0x66 → track 0xC with a 0x3C fade).
+
+### 2d. Police radio
+
+`PoliceRadio_Update` 0x41C600 runs every unpaused frame. It drains `g_CrimeEventQueue` (entries are
+`CRIME_KIND`, pushed by `CrimeEvent_Report` 0x44A200), keeps the highest kind (9 only as a fallback)
+and reacts to wanted-level changes against `policeLastCopStars`. Three cooldowns throttle the reports
+(`policeShotsFiredCooldown`, `policeCarDescCooldown`, `policeLocationReportCooldown`). A cop kill
+(kind 8) arms `policeCopKillFollowUpTimer`; on expiry `PoliceRadio_QueueCopKillFollowUp` 0x41C100
+queues 0x79, 0x5F, 0x5B, 0x78 (when > 3 slots are free). Phrase ids 0x45..0x88 go into the 15-dword
+`policeQueue` and are played one by one on the extra sample (`PoliceRadio_PumpQueue` 0x41C000 →
+`ExtraSample_PlayEntry`).
+
+### 2e. Functions settled in U1
+
+| VA | name (was) | signature |
+|---|---|---|
+| 0x410520 | `SoundMgr_Update_Thunk` (audio) | `void __stdcall (void)` |
+| 0x410540 | `SoundMgr_DetachSource_Thunk` (relatedToS6) | `void __stdcall (uint slot)` |
+| 0x416C10 | `SoundMgr_DetachSource` (relatedToS6) | `void __thiscall (SoundManager*, uint slot)` |
+| 0x416750 | `SoundMgr_ClearSourceSlot` (ff2) | `void __thiscall (SoundManager*, uint slot)` |
+| 0x410590 | `SoundManager_Radio_RemoveStationAt` (SoundMgr_CancelVocalAt) | `void __stdcall (Fix16 x, Fix16 y)` |
+| 0x410660 | `unsure_Sound_GetCdDriveLetter` (unsure_Audio_GetCdDriveLetter) | `byte __stdcall (void)` |
+| 0x41C100 | `PoliceRadio_QueueCopKillFollowUp` (unsure_PoliceRadio_QueueType8FollowUpPhrases) | unchanged |
+| 0x4156C0 | `CarSound_AddTankCarContactLoop` (unsure_) | unchanged; Car flag 0x2000 = touching another car this tick |
+| 0x414200 | `CarSound_AddAiCarSpeedLoop` (unsure_CarSound_AddSpeedLoopC) | unchanged; runs only without a player driver |
+| 0x417D90 | `SoundManager_RadioSlots_Ctor` (SoundMgr_VocalSlots_Ctor) | unchanged |
+| 0x4B2F20 / 0x410560 | `SoundManager_Radio_InitOnce(_Thunk)` (SoundManager_InitOnce) | unchanged |
+| 0x4B6020/40/60/80 | `MssAudio_GetBankEntrySampleRate / _RateVariation / _LoopStart / _LoopEnd` (…FieldB0OrOne/B4/B8/BC) | `int __thiscall (MssAudio*, int entry)` |
+| 0x4116B0 | `SoundMgr_IsVoiceInRange` | `bool __thiscall (SoundManager*, Fix16 maxDistSq)` (argument was missing: RET 4) |
+| 0x4107B0 / 0x410A70 | `SoundMgr_PickImpactSample3Tier / 2Tier` | `bool __thiscall (SoundManager*, byte impactVolume)` |
+| 0x416640 | `SoundMgr_Set3DSoundEnabled` | `bool __thiscall (SoundManager*, bool enable)` |
+| 0x410670 / 0x410680 | `Sound_Set3DSoundEnabled` / `Sound_Is3DSoundActive` | `bool __stdcall (bool)` / `bool __stdcall (void)` |
+| 0x416E50 | `SoundMgr_CalcPan` | `byte __stdcall (Fix16 radius, Fix16 relX)` (RET 8) |
+| 0x4B25A0 | `SoundManager_Radio_IsTrainCarModel` | `bool __stdcall (Car*)` |
+| 0x4B2BC0 / 0x410580 | `SoundManager_Radio_AddStation` / `SoundMgr_AddRadioStation_Thunk` | `(SoundManager*,) int stationId, Fix16 x, Fix16 y` (RET 0xC) |
+| 0x41C0D0 | `PoliceRadio_GetFreeQueueSlots` | `byte __fastcall (SoundManager*)` |
+
+MssAudio wrapper prototypes are listed with the call contract in win32-shims.md.
+
+### 2f. Sound hazards and open questions (U1)
+
+| VA | what | trigger | severity | status |
+|---|---|---|---|---|
+| 0x41C000 | `PoliceRadio_PumpQueue` clamps `if (read > 14) read = 15`, which would read `policeQueue[15]` (= +0x5568, the cop-kill tile / timer) as a phrase id | none: `read` is always kept % 15, the clamp is dead | none | verified by code (decompile + QueuePhrase / ClearQueue modulo) |
+| 0x4B2FD5 | the radio client is attached once and never detached (`SoundManager_Reset` skips it) | permanent: 1 of the 1019 slots stays used | none | verified by code (two xrefs of +0x5508, both in InitOnce) |
+| 0x416630 / MssAudio+4 | the "CD drive letter" (`'c'`) is read by the intro-movie path builders and ignored | — | none (dead remnant) | verified by code (0x452990..0x4529DA) |
+| 0x4B6890 | `MssAudio_Stream_SetVolume` masks the volume `&0xFF` | — | info for `host/c/audio.c` | verified by code |
+
+Open:
+
+- What the samples sound like: tank car-contact loop = level bank 0x24, AI speed loop = bank 0,
+  police phrases 0x45..0x88. The "shots fired" / location phrase meanings are inferred from
+  `CRIME_KIND`, not heard (`bun tools/formats/cli.ts` can extract the SDT entries).
+- MssAudio+4 as a CD drive letter is a hypothesis (value `'c'` + movie-path callers); proven: it is
+  not a volume and has no effect.
+- +0x18..0x1B, +0x1450, +0x5444: unread in every scan run (absolute refs, typed `this` accesses in
+  196 functions, disp ≥ 0x100 in sound functions); a read through an unusual base register is not
+  ruled out 100 %.
+- `Mss_Init2DSamples(arg)` (callers pass 1) and `MssAudio_Eax_SetEffectParams` are typed but their
+  arguments are not named by meaning. `MssAudio.unsure_listenerPos[3]` (+0x2704) is only set to −1.0.
+- Decompiler artefact: callers of `PoliceRadio_GetFreeQueueSlots` show `QueuePhrase(this_0x, …)`
+  because Ghidra assumes the fastcall callee clobbers ECX; it only reads it.
+- Duplicate names: `CarSound_AddDoors` is at both 0x4143B0 and 0x4156B0 (the thunk); global label
+  `g_sound3DActive` 0x5DCBE5 duplicates SoundManager+0x1D.
 
 ## 3. Camera, doors, CarManager
 
@@ -92,9 +243,10 @@ heading class, halt handling) → `CarAI_Update` 0x432370:
 
 1. `g_CarAI_carX/Y/Z` (0x5E53D8 / 0x5E5320 / 0x5E50EC) ← car body x / y / z (scratch globals every
    helper reads);
-2. if `car->driveOrder && ai->unsure_unstickState == 0`: **`CarAI_UpdateDriveOrder` 0x42D390 every
+2. if `car->driveOrder && ai->isOffRoad == 0`: **`CarAI_UpdateDriveOrder` 0x42D390 every
    tick**, sets `g_CarAI_driveOrderActive` 0x5E507E = 1 and `g_CarAI_hasDriveOrder` 0x5E5081;
-3. unstick handling (`offRoadTurn` +0x50: steer ±, reverse), `stuckTicks > 200` → abandoned;
+3. off-road mode (`isOffRoad` +0x3C, §4a): steer by `offRoadTurn` +0x50, count `offRoadTicks` +0x58;
+   `> 200` → `car.isAbandoned` (mission drivers exempt; the counter is **cumulative**, see §4b);
 4. `CarAI_DriveStep` 0x431C10 probes ahead (`g_CarAI_probeX/Y` 0x5E5244 / 0x5E5198);
    `CarAI_ReactToNearbyCar` 0x42FB80 (flags 0x1000) and `CarAI_HandleCarAhead` 0x431770. All three
    clear `g_CarAI_driveOrderActive` on a car ahead / obstacle / map collision; when it got cleared
@@ -104,11 +256,14 @@ heading class, halt handling) → `CarAI_Update` 0x432370:
    → `CarAI_ApplyRouteTurn` 0x4300E0;
 7. `CarAI_FollowLane` 0x430CC0 (lane keeping, `CarAI_UpdateJunctionTurn` → `CarAI_TryStartTurn` /
    `CarAI_ReserveJunction`; ambient traffic picks turns at random with `CarAI_PickRandomTurn`).
-   FollowLane sets flags 0x10 when the car's tile has a green or red arrow in `travelDir`.
+   FollowLane sets flags 0x10 when the car's tile has a green or red arrow in `travelDir` (jump table
+   0x431744, arrow byte block+0xA) — except heading W, which tests the wrong red bit (§4b).
 
 `ai->flags` (+0x24): 0x02 inside the current junction rect, 0x10 on a lane tile whose arrows match
-travelDir (set by `CarAI_FollowLane`, cleared by `CarAI_Update` / `CarAI_DriveStep`), 0x40 unstick /
-reverse, 0x80 turn committed, 0x800 route U-turn pending (`routeUTurnExitDir` +0x38; never read, see
+travelDir (set by `CarAI_FollowLane`, cleared by `CarAI_Update` / `CarAI_DriveStep`), 0x08 no arrow on the
+probe tile ahead (off lane), 0x40 reverse / off-road turn (U2 reads 0x40 / 0x80 as the off-road turn
+bits; the off-road *state* is `isOffRoad` +0x3C, not a flag), 0x80 turn committed, 0x100 lane change in
+progress (`laneChangeTargetLane`), 0x800 route U-turn pending (`routeUTurnExitDir` +0x38; never read, see
 §6b), 0x1000 reacting to a nearby car, 0x20000 junction reserved, 0x40000 / 0x80000 steer into the
 target's lane, 0x100000 halted, 0x200000 copy of a driver flag.
 
@@ -129,6 +284,43 @@ target's lane, 0x100000 halted, 0x200000 copy of a driver flag.
 - Ang16 = 4 units per degree; the CRT static init (0x5009A0…) builds angle constants as `deg × 4`:
   0x5E5110 4°, 0x5E5120 10°, 0x5E518C 12°, 0x5E5354 32°, 0x5E51A0 45°, 0x5E53D4 90°, 0x5E52A4 180°,
   0x5E51CC 270°, 0x5E50F8 0. Sprite rotation 0 faces +y (S), 90° E, 180° N, 270° W.
+
+### 4a. Off-road mode, lane change, junction reservation (U2 pass, 2026-10-24)
+
+Read in code (typed p-code scan of all functions + untyped `Sprite.owner → Car.ai` scan + byte-operand
+scan), not reproduced at runtime.
+
+- **Off-road mode** (`CarAI.isOffRoad` +0x3C, was `unsure_unstickState`). `CarAI_FollowLane`
+  0x430CC0 sets flags 0x10 only when the car's own tile carries an arrow in its `travelDir`. Without
+  it, `CarAI_SteerByArrowAheadOffLane` 0x42B8A0 looks at the tile ahead: arrow there → steer onto it
+  (and, if the car was off-road, clear `isOffRoad` and re-enable `driveOrder.followRoadActive`); no
+  arrow → flags 8, and the *first* time set `isOffRoad = 1` (0x42BE47) and probe the four neighbour
+  tiles for any arrow, storing the way back in `offRoadTurn` (+0x50). While `isOffRoad`:
+  `CarAI_Update` skips `CarAI_UpdateDriveOrder`, counts `offRoadTicks` (+0x58, was `stuckTicks`;
+  > 200 → `car.isAbandoned`, mission drivers exempt) and steers by `offRoadTurn`;
+  `CarDriveOrder_Drive` skips aim / steer and treats the target as "far". Contact with another car
+  (`CarAI_ReactToNearbyCar` 0x42FBB8) also clears `isOffRoad`.
+- **Lane change.** `CarAI_TryLaneChange` 0x42C8B0: no change during the first 21 ticks
+  (`ageTicks` +0x2B < 0x15), on ramps, off lane or while turning; only around a slower car ahead that
+  is not itself changing lane. Uses `Car_CountLaneTiles` (lane index + lane count); sets flags 0x100
+  and `laneChangeTargetLane` (+0x2F, lane ± 1). `CarAI_UpdateLaneChangeAlign` 0x42C030 steers until
+  the current lane equals it. +0x2D / +0x2E are written alongside (lane index / 0) and never read.
+- **Junction reservation (left turns).** `CarAI_ReserveJunction` 0x42B350 writes `leftTurnExitDir`
+  (+0x48, left of travelDir: N→W, S→E, E→N, W→S) and scans the cross street; other cars whose own
+  +0x48 differs are told to yield (their `blockingCar` = us, `avoidTimer` = 5).
+
+`CarAI_ReserveJunction`, `CarAI_TryLaneChange`, `CarAI_SteerByArrowAheadOffLane` and
+`CarAI_UpdateLaneChangeAlign` were re-read in this pass; the names stand.
+
+### 4b. CarAI / drive-order hazards (U2)
+
+| VA | what | trigger | severity | status |
+|---|---|---|---|---|
+| 0x430DD5 → 0x430DE3 (`CarAI_FollowLane`, jump table 0x431744) | **West lane test uses the wrong red bit**: case W tests green-left 0x01, then falls into the N case's red test 0x40 (red up) instead of 0x10 (red left) | car heading W on a tile whose only W arrow is red (not "on lane" → off-lane steer, may enter off-road mode); car heading W on a tile with a red N arrow counts as on lane | low–medium (red arrows = special roads) | verified by code (disassembly + jump-table bytes); effect on traffic is a hypothesis |
+| 0x43250F (`CarAI_Update`) | `offRoadTicks` is never reset when the car returns to a lane (only Ctor / Reinit): the > 200 abandonment counts the **lifetime total** | AI car that leaves the road network several times | low (earlier abandonment) | verified by code (+0x58 written only by Ctor / Reinit / Update) |
+| 0x42E31D / 0x42E727, 0x42FBCF | `ramArmed` is sticky for the order's life: after one SIDE_PUSH ram, every later contact with the target does 500 damage, even after the chase re-planned to TAIL / FOLLOW | chase that reached SIDE_PUSH once | low–medium (maybe by design) | verified by code (writers: 2× set 1, `CarDriveOrder_Reset` 0) |
+| 0x4ABC66 / 0x4ABCC3 (`PoliceCrew_UpdateChaseDriveOrder` 0x4ABAE0) | `blockHitCount` is seeded from `Ped.chaseHitCount` every tick (if non-zero) and on STOPPED **added back** to it → the ped's count roughly doubles per finished chase | wanted player stopped by a cop car twice | low | arithmetic verified by code; intent is a hypothesis |
+| 0x42B80E | `leftTurnExitDir` is never cleared after the turn; other cars compare against a stale value | car that turned left long ago, standing in cross traffic | low | verified by code (writes only in ReserveJunction + Ctor / Reinit) |
 
 ## 5. Drive orders and route finding
 
@@ -222,16 +414,16 @@ side A = R − 90°, side B = R + 90° (which one is left is not verified).
 | 1 | TAIL_B | 3.0 behind T | no pass-2 case; no writer of 1 found in Drive (who sets it: unknown) |
 | 2 | TAIL_OFFSET | 3.0 behind + 0.5 to side B | as 0 |
 | 3 / 4 | FLANK_WAIT_A/B | 1.0 to side A/B + 0.5 ahead | after 10 ticks, side spot free → 6 / 7 |
-| 5 | FOLLOW | cops vs ≤ 1 star: 1.0 behind; else T | waits `unsure_phaseTicks` (400/0 by cop level, 80, 10; FOLLOW_TARGET 100), then free side → 6 / 7 |
+| 5 | FOLLOW | cops vs ≤ 1 star: 1.0 behind; else T | waits `maneuverTicks` (400/0 by cop level, 80, 10; FOLLOW_TARGET 100), then free side → 6 / 7 |
 | 6 / 7 | ALONGSIDE_A/B | 0.75 to side A/B, honks (`CarAI_HonkIfAllowed` 0x42A5B0) | < 0.625 → 8 / 9 |
-| 8 / 9 | SIDE_PUSH_A/B | alongside for `unsure_sideTicks`, then `unsure_ramArmed` = 1 and aim 1.0 ahead of T (ram) | gives up the ram when `unsure_blockAttempts` > 3 → 10 / 11 |
+| 8 / 9 | SIDE_PUSH_A/B | alongside for `sidePushTicks`, then `ramArmed` = 1 and aim 1.0 ahead of T (ram) | gives up the ram when `blockHitCount` > 3 → 10 / 11 |
 | 10 / 11 | OVERTAKE_A/B | 0.75 to the side + 1.5 ahead | < 0.25 → 12 |
-| 12 | CUT_IN | 3.0 ahead of T | < 1.5 → `blockAttempts`++, 13 |
+| 12 | CUT_IN | 3.0 ahead of T | < 1.5 → `blockHitCount`++, 13 |
 | 13 | BLOCK_SPIN | 3.0 ahead, steers back toward the order point, handbrake when \|heading − R\| ≤ 12° | target speed < 0.03 → 15 |
 | 14 | UNUSED_14 | — | — |
 | 15 | STOPPED | `Car_HaltAI`, flags 0x100000 | — |
 
-Far away (≥ 2.0) or unsticking: `unsure_approachTicks` counts down, then the chase modes reset to 2
+Far away (≥ 2.0) or off-road: `targetLockTicks` counts down, then the chase modes reset to 2
 or 0 depending on allies already in 0 / 5 (`CarDriveOrderPool_FindAlliedDriverByManeuverTargetingPed`
 0x446340, `CarDriveOrderPool_CountAlliedDriversTargetingPed` 0x4463C0). While `ramArmed` is set,
 `CarAI_ReactToNearbyCar` gives T 500 damage on contact (`Car_AddDamage`). Steering: ATan2 to the aim
@@ -359,16 +551,47 @@ fixed by nudging the heading toward `turnExitDir` while `CarAI.flags & 0x80` (tu
 
 ## 7. Structures (DB state after Seq 43)
 
-- `CarAI` (0x78): `+0 parentCar`, `+8 turnTimer`, `+9/+A turnTileX/Y`, `+0xC nextFree`, `+0x10 heading`,
-  `+0x14/18/1C` speed cur / goal / step, `+0x24 flags` (§4), `+0x28 routeSlot` (s8, −1 none),
-  `+0x2A stillTicks`, `+0x2C avoidTimer`, `+0x38 routeUTurnExitDir` (was `routeExitCode`; written
-  only by `CarAI_ApplyRouteTurn`, ctor and reinit, never read), `+0x3C unsure_unstickState`,
-  `+0x44 turnExitDir`, `+0x4C travelDir`, `+0x50 offRoadTurn`, `+0x54 laneFollowCooldown`,
-  `+0x56 routeStep` (always 0, §5), `+0x74 targetSpeed`.
-- `CarDriveOrder` (0x40): see §5; `+0xC maneuver` (`CAR_DRIVE_MANEUVER`, was `unsure_maneuver`),
-  `+0x10 unsure_ramArmed` (was `unsure_driveFlag`), `+0x2A unsure_approachTicks`, `+0x2C
-  unsure_phaseTicks`, `+0x2E unsure_sideTicks` (were `unsure_counter2a/2c/2e`), `+0x34 retryCooldown`,
-  `+0x3C unsure_blockAttempts` (new), all from §5b.
+- `CarAI` (0x78, alloc stride in CarAIPool 0x8F74 = 4 + 306·0x78): `+0 parentCar`, `+8 turnTimer`,
+  `+9/+A turnTileX/Y`, `+0xC nextFree`, `+0x10 heading`, `+0x14/18/1C` speed cur / goal / step,
+  `+0x24 flags` (§4), `+0x28 routeSlot` (s8, −1 none), `+0x2A stillTicks`, `+0x2C avoidTimer`,
+  `+0x38 routeUTurnExitDir` (was `routeExitCode`; written only by `CarAI_ApplyRouteTurn`, ctor and
+  reinit, never read), `+0x44 turnExitDir`, `+0x4C travelDir`, `+0x50 offRoadTurn`,
+  `+0x54 laneFollowCooldown`, `+0x56 routeStep` (always 0, §5), `+0x74 targetSpeed`. Fields settled
+  in U2 (2026-10-24; no `unsure_` left in CarAI or CarDriveOrder):
+
+  | off | name (was) | type | meaning | evidence VA | conf. |
+  |---|---|---|---|---|---|
+  | 0x04 / 0x20 / 0x29 | `unusedZeroed04 / 20 / 29` (gap) | uint / uint / byte | zeroed by Ctor / Reinit only | 0x42A9F2 / 0x42AA35 / 0x42AA40, Reinit 0x42AAC5 / 0x42AB00 / 0x42AB11 | high |
+  | 0x2B | `ageTicks` (unsure_ticksSinceReset) | byte | ticks since Ctor / Reinit, ++ saturating 0xFF; < 0x15 → no lane change | `CarAI_PreUpdate` 0x4327BF; read 0x42C8E0 | high |
+  | 0x2D / 0x2E | `laneChangeStartLaneA / B` (gap) | byte | write-only: lane index (change toward lane−1) or 0; same value in both | 0x42CFC7 / 0x42CFCA, 0x42D343 / 0x42D346 | high (write-only); name = what is written |
+  | 0x2F | `laneChangeTargetLane` (unsure_laneTarget) | byte | lane being moved to while flags 0x100 | set 0x42CFD4 / 0x42D35C; compared 0x42C094 | high |
+  | 0x34 | `unusedZeroed34` (unsure_initOnly34) | int | Ctor / Reinit only | 0x42AA74 / 0x42AB45 | high |
+  | 0x3C | `isOffRoad` (unsure_unstickState) | int 0/1 | off-road mode, §4a | set 0x42BE47; cleared 0x42B965 / 0x42FBB8; read 0x4323BF / 0x432506, 0x42D8E8 | high |
+  | 0x40 | `laneAlignDir` (unsure_laneDir) | int | write-only: heading class the lane follower aligns to (travelDir or turnExitDir) | 0x430E91..0x43152A | high |
+  | 0x48 | `leftTurnExitDir` (unsure_leftTurnExitDir) | int | exit heading after a left turn; read on other cars | written 0x42B3F8..0x42B6D5; read 0x42B80E | high |
+  | 0x58 | `offRoadTicks` (stuckTicks) | ushort | ++ only while `isOffRoad`; > 200 → abandoned; never reset (§4b) | 0x43250F / 0x43252E | high |
+  | 0x5C / 0x60 / 0x64 | `unusedZeroed5C / 60 / 64` (unsure_initOnly5C/60/64) | SCR_f | Ctor / Reinit only | 0x42AA59/62/6B, 0x42AB2A/33/3C | high |
+
+  Untouched gaps (no access in any scan → padding): 0x0B, 0x12–0x13, 0x31–0x33.
+- `CarDriveOrder` (0x40 = pool stride, pool 0x500 = 20): see §5; `+0xC maneuver`
+  (`CAR_DRIVE_MANEUVER`, was `unsure_maneuver`), `+0x34 retryCooldown`. Settled in U2:
+
+  | off | name (was) | type | meaning | evidence VA | conf. |
+  |---|---|---|---|---|---|
+  | 0x10 | `ramArmed` (unsure_ramArmed, earlier unsure_driveFlag) | byte | set by SIDE_PUSH; then contact with the target = 500 damage; sticky (§4b) | set 0x42E31D / 0x42E727; read 0x42FBCF; cleared only `CarDriveOrder_Reset` 0x4461A4 | high |
+  | 0x21 / 0x24 / 0x25 | `unusedZeroed21 / 24 / 25` (gap) | byte | Reset only (the `[ESI+0x24]` byte tests elsewhere are `CarAI.flags`) | 0x4461CA / 0x4461D3 / 0x4461D6 | high |
+  | 0x23 | `unusedInit23` (gap) | byte | Reset writes **1**, no reader | 0x4461D0 | high |
+  | 0x2A | `targetLockTicks` (unsure_approachTicks) | ushort | ++ to 10 while close in TAIL, = 100 in FOLLOW, −− while far; at 0 the chase re-plans (grace period) | 0x42EF8A, 0x42F0DF, 0x42F05C / 0x42F71E; zeroed 0x42D545, 0x42FC32/46 | high (mechanics); name = interpretation |
+  | 0x2C | `maneuverTicks` (unsure_phaseTicks) | ushort | FLANK_WAIT / FOLLOW wait counter; read / zeroed on an ally | 0x42F2AA…0x42F868, 0x42F03E | high |
+  | 0x2E | `sidePushTicks` (unsure_sideTicks) | ushort | ticks alongside before the ram | 0x42E101 / 0x42E50F; zeroed 0x42FC25 | high |
+  | 0x38 | `unusedZeroed38` (gap) | uint | Reset only | 0x4461F5 | high |
+  | 0x3C | `blockHitCount` (unsure_blockAttempts) | byte | ++ when CUT_IN / BLOCK reaches 1.5 of the target; SIDE_PUSH gives up the ram at > 3; shared with `Ped.chaseHitCount` by `PoliceCrew_UpdateChaseDriveOrder` | ++ 0x42FA1B; read 0x42E268 / 0x42E672; 0x4ABC66 / 0x4ABCC3 | high |
+  | 0x3F | `unused3F` (end) | byte | no access; seuko-mod `end` marker | — | high |
+
+  Untouched gaps: 0x01–0x03, 0x11–0x13, 0x27–0x29, 0x36–0x37, 0x3D–0x3E. U2 also fixed the
+  prototypes of `CarAI_Ctor`, `_Reinit`, `_ReserveJunction`, `_SteerByArrowAheadOffLane` (`void (CarAI*
+  ai)`) and the return type (`void`) of `_UpdateLaneChangeAlign`, `_TryLaneChange`,
+  `_UpdateDriveOrder`, `_ReactToNearbyCar`, `_FollowLane`, `_PreUpdate`; no caller uses their EAX.
 - `RoadSegment` (8): `+0 junction1` (W / N end), `+2 junction2` (E / S end). `RoadJunction`: link
   slots +0 N, +2 S, +4 E, +6 W; `+8 arrowKind` 1 green / 2 red / 3 both. RGEN tail: `junctionCount`
   (312 on wil, +4), then `hSegCount` (+0xCC62, 366) and `vSegCount` (+0xCC64, 365); the two 545 × 8
@@ -380,19 +603,24 @@ fixed by nudging the heading toward `turnExitDir` while `CarAI.flags & 0x80` (tu
 
 - Answered in Seq H1: flags 0x10 is set by `CarAI_FollowLane` (tile arrow in travelDir) and
   cleared by `CarAI_Update` / `CarAI_DriveStep`; the maneuver table is §5b; 0x5E5084 is
-  `g_CarAI_targetCar`.
+  `g_CarAI_targetCar`. Answered in U2: off-road mode / lane change / junction reservation (§4a),
+  every CarAI and CarDriveOrder field (§7).
 - Which of B1 / B6 / B2 caused the seq:58 wrong turn (test recipe in §6b).
 - Side A / B = left / right of the target car (needs the `Ang16_PolarToXY` convention vs sprite
   rotation; the angle table suggests R + 90° = the car's left, unverified).
 - Who sets `CarDriveOrder.mode` 3 and 5 (`DRIVE_ORDER_UNSURE_ATTACK_B`); only writers of 1, 2, 4 were
   found (`Ped_Obj1_GoToAreaInCar`, the FollowCarInCar / Unk10 objectives, `Ped_Obj1_DriveAttackTarget`).
   Who sets maneuver 1.
-- `CarAI_ReserveJunction` 0x42B350, `CarAI_TryLaneChange` 0x42C8B0, `CarAI_SteerByArrowAheadOffLane`
-  0x42B8A0, `CarAI_UpdateLaneChangeAlign` 0x42C030: names from Seq 43, not re-read in H1.
+- `offRoadTurn` 1 vs 2: which is left / right (SteerPlus vs SteerMinus sign) — not checked (U2).
+- `laneChangeStartLaneA/B` (+0x2D / +0x2E) and `CarDriveOrder.unusedInit23`: written, never read;
+  whatever they were for was removed. Other unnamed bits of `CarAI.flags` were out of U2's scope.
+- Whether the West red-bit slip in `CarAI_FollowLane` (§4b) visibly changes traffic on red-arrow
+  roads (not observed live).
 - Still without a good name: 0x5E507D (set when Drive / FollowLane is on heading, then flags
   0x2000), 0x420350 (horn start; no function defined there; the horn gate is `Car_IsPoliceModel`
   0x41F6E0), `SomeSwitch` 0x41D0B0 (the debug key handler, §6b).
-- Sound source kinds 8 / 9, car info indices 0x36 / 0x3C, sample bank ids → cue names.
+- Sound source kinds 8 / 9, car info indices 0x36 / 0x3C, sample bank ids → cue names (see also
+  §2f for the U1 sound open questions).
 - Camera `+0x30` (shake amplitude vs `CAMERA_MOVEMENT` bitmask) and the `+0x60/+0x64` split: medium
   confidence, struct left unchanged.
 - `copCalledCars` (+0x48) heap garbage: runtime value never dumped.
@@ -416,17 +644,17 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x410500 | SoundMgr_Init_Thunk | V | initSound(&g_SoundManager) |
 | 0x410570 | SoundMgr_Reset_Thunk | V | SoundManager_Reset(g_SoundManager), from Game_Dtor |
 | 0x410580 | SoundMgr_AddRadioStation_Thunk | V | caller Script_Decl_RADIO_STATION |
-| 0x410590 | SoundMgr_CancelVocalAt | V | clears vocal-table entry (stride 0x1c @5e2014) matching an (x,y) pair |
+| 0x410590 | SoundManager_Radio_RemoveStationAt (was SoundMgr_CancelVocalAt) | V | removes the radio station slot at an (x,y) pair (body 0x4B2350; 0x5E2014 = radio slot i−1 addressing, stride 0x1C); caller MissionScript_DeleteItemByCmd |
 | 0x4105C0 | Sound_SetSFXVolume | V | clamp 0x7f -> SFXVolume |
 | 0x410630 | Sound_GetCDVolume | V | returns CDVol |
 | 0x410640 | MssAudio_ReleaseDevice_Thunk | V | _AIL_digital_handle_release_4; WndProc only |
 | 0x410650 | SoundMgr_ReacquireDevice_Thunk | V | SoundMgr_ReacquireAudioDevice(g_SoundManager) = reacquire; WndProc |
-| 0x410660 | unsure_Audio_GetCdDriveLetter | H | byte global read by intro-movie funcs |
+| 0x410660 | unsure_Sound_GetCdDriveLetter (was unsure_Audio_GetCdDriveLetter) | H | returns MssAudio+4 = `'c'` (99); read by the intro-movie path builders and ignored |
 | 0x410690 | SoundClientPool_Dtor | V | *p=0 (only a thunk caller) |
 | 0x4106A0 | SoundClientPool_InitFreeList | V | 1000 nodes x16, link +0xc |
 | 0x4106F0 | SoundClientPool_Ctor | V | wraps 4106a0, no callers (static init) |
 | 0x410700 | thunk → SoundClientPool_Dtor_Thunk | V | thunk |
-| 0x410710 | SoundClient_FreeVoice | V | relatedToS6 on node+8; called by 40fe60 (pool free) |
+| 0x410710 | SoundClient_FreeVoice | V | SoundMgr_DetachSource on node+8; called by 40fe60 (pool free) |
 | 0x410790 | Sound_NopPreInit | V | empty; from initSound |
 | 0x4107A0 | Sound_NopPreShutdown | V | empty; from 4164d0 |
 | 0x4107B0 | SoundMgr_PickImpactSample3Tier | V | vol<0xf none; <0x28 ->0x25; <0x5a ->0x26; else 0x27; writes SoundManager+0x44/0x50 |
@@ -440,8 +668,8 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x410F00 | CarModel_GetHornSample | V | -> 0x10..0x17 |
 | 0x410FC0 | CarModel_GetHornBaseFreq | V | returns sample rates (0x5622 = 22050 ...) |
 | 0x411120 | CarModel_IsHeavyVehicle | V | set {3,7,0xb,0x11,0x15,0x3a,0x3f,0x40,0x56}; same set as 413eb0 idle |
-| 0x4112B0 | SoundMgr_CreateVocalClient | V | SoundMgr_AttachClient type-10 client into SoundManager+0x5450 |
-| 0x4112F0 | SoundMgr_DestroyVocalClient | V | frees SoundManager+0x5450 |
+| 0x4112B0 | SoundMgr_CreateVocalClient | V | SoundMgr_AttachClient of the type-10 client at SoundManager+0x5454; slot into vocalSourceSlot +0x5450 |
+| 0x4112F0 | SoundMgr_DestroyVocalClient | V | detaches vocalSourceSlot (+0x5450) |
 | 0x411330 | SoundMgr_UpdateVocalClient | V | VOCAL id SoundManager+0x5464 -> MssAudio_Stream_OpenTrack, clears it |
 | 0x4116B0 | SoundMgr_IsVoiceInRange | V | dist2(+0x28) < arg, lazy sqrt -> +0x58, flag +0x2c |
 | 0x4116F0 | SoundMgr_ComputeVoiceVolume | V | 416da0 attenuation -> +0x54, halved if muffled |
@@ -488,7 +716,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x413DF0 | CarSound_PickDoorSample | V | model -> 0x1a..0x1f |
 | 0x413EB0 | CarSound_AddHeavyVehicleIdle | V | speed==0 & heavy model, sample 7, layer 2 |
 | 0x414030 | CarSound_AddHeavyVehicleSlide | V | !IsVelocityAlignedWithHeading & heavy model, layer 0xb |
-| 0x414200 | unsure_CarSound_AddSpeedLoopC | H | sample 2, layer 2 |
+| 0x414200 | CarSound_AddAiCarSpeedLoop (was unsure_CarSound_AddSpeedLoopC) | V | sample 2, layer 2; runs only when the car has no player driver |
 | 0x4143B0 | CarSound_AddDoors | V | per door: IsOpeningStart->layer 9, IsClosingAtFrame1->layer 0xa |
 | 0x414780 | CarSound_AddSiren | V | engineState==4, layer 0xc, sample 1/2 by carInfo parity |
 | 0x4148D0 | CarSound_AddTyreSlip | V | front/rear slip, wheelSpinTimer vs CarPhysicsData thresholds, layer 0xd |
@@ -503,7 +731,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x4150E0 | SoundMgr_PickEventSample | V | event id (+0x18) + category 1/3/7/9 -> sample id (SoundManager+0x44), pitch (SoundManager+0x50) from random SoundManager+0x1454/58 |
 | 0x415520 | SoundMgr_ResolveEventCategory9 | V | id filter then PickEventSample(..,9) |
 | 0x4156B0 | thunk → CarSound_AddDoors | V | thunk |
-| 0x4156C0 | unsure_CarSound_AddTankCarContactLoop | H | needs Car_IsEngineOn + Car_HasFlag2000; request type 0xE, cat 0xD |
+| 0x4156C0 | CarSound_AddTankCarContactLoop (was unsure_) | V | needs Car_IsEngineOn + Car_HasFlag2000 (touching another car this tick); request type 0xE, cat 0xD, level bank 0x24 |
 | 0x415880 | SoundMgr_UpdateCarHorn | V | Car_IsHonking; request type 8, cat 5; skips fire truck/tank/siren cases |
 | 0x415A90 | SoundMgr_UpdateCarSiren | V | Car_IsSirenActive + engine on; type 7, cat 4, vol 0x46 |
 | 0x415BE0 | SoundMgr_ResolveEventCategory1 | V | PickEventSample(..,1) |
@@ -543,7 +771,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x417260 | SoundMgr_RequeueRepeatingRequests | V | replays previous buffer entries with remaining counter (+0x4C of record) |
 | 0x417410 | SoundMgr_ApplyRequestsToVoices | V | MssAudio_Sample[3D]_* calls |
 | 0x417CE0 | SoundMgr_Apply3DDistanceFade | V | only when 3D; __ftol2 + 416960 |
-| 0x417D90 | SoundMgr_VocalSlots_Ctor | V | vector_constructor_iterator(+0x5468,0x1C,5) |
+| 0x417D90 | SoundManager_RadioSlots_Ctor (was SoundMgr_VocalSlots_Ctor) | V | vector_constructor_iterator(+0x5468,0x1C,5) = radioSlots |
 | 0x417EA0 | SoundMgr_UpdateFrame | V | flip buffer, UpdateListener, Requeue, Fade, Apply, age slots |
 | 0x417EF0 | SoundMgr_Ctor | V | defaults |
 | 0x418050 | SoundMgr_Update | V | pause handling + every-5th-frame flag +0x544C |
@@ -563,7 +791,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x41C000 | PoliceRadio_PumpQueue | V | plays next phrase when ExtraSample finished |
 | 0x41C0D0 | PoliceRadio_GetFreeQueueSlots | V |  |
 | 0x41C0F0 | SoundMgr_NoOp | V | single ret |
-| 0x41C100 | unsure_PoliceRadio_QueueType8FollowUpPhrases | H | queues 0x79,0x5F,0x5B,0x78 when >3 free |
+| 0x41C100 | PoliceRadio_QueueCopKillFollowUp (was unsure_PoliceRadio_QueueType8FollowUpPhrases) | V | queues 0x79,0x5F,0x5B,0x78 when >3 free; fired by policeCopKillFollowUpTimer |
 | 0x41C150 | PoliceRadio_FindDistrictAtPos | V | zone type 3 named m## |
 | 0x41C200 | PoliceRadio_Reset | V |  |
 | 0x41C240 | PoliceRadio_QueueLocationPhrases | V | compass 0x73..0x77 + district 0x79+n |
@@ -787,4 +1015,4 @@ All "HasAlliedManeuver…" scan the 20-entry `CarDriveOrderPool` for an in-use o
 | 0x4465B0 | CarDriveOrderPool_HasAlliedManeuver07090B | V | maneuver 7/9/0xB |
 | 0x446620 | CarDriveOrderPool_HasAlliedManeuver06To09Or0D | V | maneuver 6..9 or 0xD |
 | 0x446690 | CarDriveOrderPool_HasAlliedManeuver04To05 | V | maneuver 4..5 |
-| 0x446AA0 | unsure_CollisionHit_IsObjectPrefabSolidVsCar3 | U | hit kind==3 and obj->+8->+0x4C==3; caller CarPhysics_StepAndResolveCollisions |
+| 0x446AA0 | CollisionResult_IsHitObjectWallResponse3 (was unsure_CollisionHit_IsObjectPrefabSolidVsCar3) | V | hit kind==3 and prefab wallResponse (+0x4C) == 3; caller CarPhysics_StepAndResolveCollisions (raises the iteration cap) |

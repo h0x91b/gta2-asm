@@ -107,7 +107,7 @@ The actual load sequence is **`LoadGMP_and_STY_Files` (`0x45B469`)**, called fro
    `data\nyc.gci`; the 11.44 patch can override it, see GXT below).
 
 The frontend uses a fixed style: `InitFrontend` calls `LoadGXT` then `LoadSty(…, "data\fstyle.sty")`
-(`0x456BC2`/`0x456BD2`); `Init` (`0x457830`) loads the frontend sound bank with the same path
+(`0x456BC2`/`0x456BD2`); `FrontEnd_CreateGlobal` (`0x457830`, was `Init`) loads the frontend sound bank with the same path
 (`0x4578CF` → `0x410550`). V.
 
 **Down to the host.** Every open above ends in the CRT (`fopen` → `_fsopen` → `__openfile` →

@@ -320,7 +320,45 @@ Per-iteration driver, called by `WinMain` 0x4D1170 while in the frontend:
 `FrontEnd_Tick` 0x45A320 (movie pages, a 60 s idle timeout → attract demo, logic every 33 ms,
 otherwise `DrawFrontendFrame`) → `FrontEnd_UpdateMode` 0x45A250 → a switch on `FrontEnd.mode`.
 
-| `FrontEnd.mode` (+0x110) | Meaning | Handler |
+**Lifetime (U5, V).** `WinMain` calls `FrontEnd_CreateGlobal` 0x457830 (was `Init`) every time it
+enters the frontend: `operator_new(0x1EB40)` → `ptrToFrontEnd` 0x5EB160 (now typed `FrontEnd *`),
+`InitFrontend` 0x456A60, attach the menu-music SoundClient, load the `fstyle.sty` sound bank, Bink
+init. On every way out (3 sites in `WinMain`, also `Game_ShutdownOnce`) it calls
+`FrontEnd_DestroyGlobal` 0x459760 (was `relatedToAudio`): detach the menu-music client, free the
+FrontEnd, `g_LocaleSettings`, the StyleData and the TextureCache, close Bink. **So the GXT,
+`fstyle.sty`, the `.seq` file and all page texts are reloaded each time the player returns to the
+menu**, and a language switch takes effect on the next frontend entry without a restart
+(`InitFrontend` creates a new `g_LocaleSettings` and calls `LoadGXT`).
+
+`InitFrontend` 0x456A60, in order: vector ctors (17 `FrontendPage`, 8 `FrontendSaveSlotInfo`,
+`CreditsLineList_Ctor` at +0xEDFA); `keyboardActive = 1`; `LocaleSettings` (0x14) / `StyleData`
+(0x106C) / `TextureCache` (0x15D8); `FrontEnd_CreateKeyboardDevice` 0x453D80; `LoadGXT`,
+`LoadSty("data\fstyle.sty")`, textures, `ConvertColourBank`; `mode = 1`, `resultCode = 2`;
+**`nextLogicTickMs = timeGetTime()` at 0x456C57**; `FrontEnd_InitPages` 0x453E20 (pages from GXT,
+credits parsed at its tail 0x455323); `FrontEnd_LoadSeq`, `FrontEnd_LoadSaveSlotInfos`,
+`LoadFrontendImages` (25 TGAs).
+
+**Tick scheduler** (`FrontEnd_Tick` 0x45A320, V). Pages 8 and 15 are movie pages (Bink frame; movie
+end or a key → page 8 or 0). Page 0 has a 60 s idle timeout that returns 4 (never stored in
+`resultCode`). Otherwise: if `now >= nextLogicTickMs` **or** `logicTicksSinceDraw == 3`, run
+`FrontEnd_UpdateMode`, `logicTicksSinceDraw++`, `nextLogicTickMs += 33`; else, if
+`logicTicksSinceDraw != 0`, `DrawFrontendFrame` and reset the counter. A frame is drawn only after
+at least one logic tick, and only on a call where no tick is due (hazards in §6.7).
+`FrontEnd_UpdateMode` 0x45A250: keys, background id, the mode switch below, then
+`SoundMgr_Update_Thunk` 0x410520 (was `audio`).
+
+**Draw.** `DrawFrontendFrame` 0x4585F0 = BeginScene, background, `FrontEnd_DrawPage` 0x458590,
+EndScene, flip. `FrontEnd_DrawPage` is only a mode switch: 2 → `FrontEnd_DrawLoadingScreen` (the
+"loading" text), 4 → delete confirm; for 1/3/5, page 9 → `FrontEnd_DrawCredits`, every other page →
+**`FrontEnd_DrawMenuPage` 0x457920** (function created in U5; it was undefined code reached only by
+the tail JMP at 0x4585B9). That is the real page renderer: version string on page 0, page panels
+(hi-scores, stats, MP scores), items (selected item in `g_FontRole_Fe5`, else `item.fontId`, or
+`defaultFontId` when 0xFFFF; `remap != 0xFFFF` → FONT_REMAP palette; kind 2 text via
+`FrontEnd_GetItemDisplayText`), decor (kind 1 text via `FrontEnd_GetDecorDisplayText`, kind 3 =
+arrow sprite `DrawSprite2D(6, id)` chosen by `text[0]`), and the blinking `_` cursor for name / code
+entry.
+
+| `FrontEnd.mode` (+0x110, enum `FRONTEND_MODE`) | Meaning | Handler |
 |---|---|---|
 | 1 | menu (credits scroll on page 9) | `FrontEnd_UpdateMenuMode` 0x4597C0 / `FrontEnd_UpdateCreditsScroll` |
 | 2 | starting a level → `resultCode = 3` | `FrontEnd_RequestGameStart` 0x451F60 |
@@ -328,8 +366,9 @@ otherwise `DrawFrontendFrame`) → `FrontEnd_UpdateMode` 0x45A250 → a switch o
 | 4 | delete-profile confirm | `FrontEnd_UpdateDeleteProfileConfirm` |
 | 5 | parental code entry (page 0xE) | `FrontEnd_UpdateCodeEntryMode` 0x45A010 |
 
-`FrontEnd.resultCode` (+0x108), returned by `FrontEnd_Tick`: 2 running, 1 quit the application,
-3 start the game (`WinMain` → `InitGame` 0x461DE0), 4 attract replay.
+`FrontEnd.resultCode` (+0x108, enum `FRONTEND_RESULT`), returned by `FrontEnd_Tick`: 2 running, 1 quit
+the application, 3 start the game (`WinMain` → `InitGame` 0x461DE0), 4 attract replay. `pageId`
+(+0x11E) is enum `FRONTEND_PAGE` (0..16, §6.2).
 
 Item dispatch (`FrontEnd_UpdateMenuMode`): an item `action` (+0x80) below 0x100 is a page id
 (→ `FrontEnd_GotoPage`); 0x101..0x10C go through the **jump table at 0x459DE0**. ESC uses the
@@ -337,10 +376,11 @@ jump table 0x459E10 with a per-page index byte table at **0x459E20**.
 
 ### 6.1 Structs
 
-- `FrontendPageItem` (0x82): kind @0 (1 button, 2 selector), enabled @1, x @2, y @4,
-  label wchar[50] @6, fontId @0x6A (0xFFFF = default), remap @0x6C, choice @0x6E, choice2 @0x70,
+- `FrontendPageItem` (0x82): kind @0 (`FRONTEND_ITEM_KIND`: 1 button, 2 selector), enabled @1, x @2, y @4,
+  label wchar[50] @6, fontId @0x6A (0xFFFF = default), remap @0x6C, choice @0x6E, choiceOnEntry @0x70
+  (was `choice2`; write-only copy of `choice` taken on page entry, page 1 = `plyrslot`),
   choiceEnabled[12] @0x72, choiceMax @0x7E, **action @0x80**.
-- `FrontendPageDecor` (0x6E): kind (1 text, 3 sprite), enabled, x, y, text[50], fontId, remap.
+- `FrontendPageDecor` (0x6E): kind (`FRONTEND_DECOR_KIND`: 1 text, 3 sprite; no kind 2 is written), enabled, x, y, text[50], fontId, remap.
 - `FrontendPageCursor` (6): x, y, enabled (UP/DOWN only stop on enabled cursors).
 - `FrontendPage` (0xBCA): itemCount @0, decorCount @2, items[10] @4, decor[15] @0x518,
   cursors[10] @0xB8A, selected @0xBC6, defaultSelected @0xBC8. The old gzf `FrontendS1*` structs (wrong
@@ -348,9 +388,44 @@ jump table 0x459E10 with a per-page index byte table at **0x459E20**.
 - `FrontendLevelPaths` (0x300: gmp, sty, scr paths) × 12 at FrontEnd+0xC9D4 (index = stage +
   area × 4), filled by `FrontEnd_LoadSeq` from `data\*.seq`; `FrontendSaveSlotInfo` (4) × 8 at
   +0xEDD4.
-- `FrontEnd` (0x1EB40): about 40 fields named (mode, resultCode, pageId, key edge/prev bytes,
-  code entry, credits, per-profile area/bonus selection, arrows, areaCount, levelCountPerArea …).
-  The page array and level paths are not typed in yet (§10).
+- `FrontEnd` (0x1EB40, size from `operator_new` in `FrontEnd_CreateGlobal`): **fully typed** since
+  U5 (2026-10-24). The only undefined bytes left are 8 bytes of alignment padding (0x10E–0x10F,
+  0xC9C6–0xC9C7, 0xC9CE–0xC9CF, 0xEDF5, 0x1EB1E–0x1EB1F) that no instruction touches. Fields
+  settled in U5 (V = verified by code, H = hypothesis):
+
+  | off | name (was) | type | meaning | evidence VA | conf. |
+  |---|---|---|---|---|---|
+  | 0x0 | `directInput` (undefined) | IDirectInput8* | copy of `g_DirectInput8` 0x5E8FA4 | 0x453D80, vtbl+0xC CreateDevice | V |
+  | 0x4 | `keyboardDevice` (undefined) | IDirectInputDevice8* | own keyboard (c_dfDIKeyboard, coop 6) | 0x451FB3 / 0x451FE3 / 0x452004 / 0x453D8B | V |
+  | 0x8 | `keyState` (`field8_0x8` + strays `field12_0xf`, `field24_0x1b`, `field252_0xff`) | byte[256] | DIK state from GetDeviceState | 0x452000; reads 0x452050 | V |
+  | 0x108 | `resultCode` | FRONTEND_RESULT | §6 | 0x451F60, 0x4534B6, 0x4599AB, 0x456C3A, 0x45A376 | V |
+  | 0x10C | `keyboardAcquireFailed` (`field259_0x10c`) | bool | set on a failed Acquire; never read | 0x451FF4 (=1), 0x456C34 (=0) | V (write-only) |
+  | 0x10D | `keyboardActive` | byte | WndProc WM_ACTIVATE via `FrontEnd_SetKeyboardActive` 0x453A30 | — | V |
+  | 0x110 | `mode` | FRONTEND_MODE | §6 | 0x45A250, 0x458590 | V |
+  | 0x11C | `defaultFontId` | ushort | font when `item.fontId == 0xFFFF` | `FrontEnd_DrawMenuPage` | V |
+  | 0x11E | `pageId` | FRONTEND_PAGE | set only by `FrontEnd_GotoPage` | 0x4587B0 | V |
+  | 0x120 | `unsure_lastPageId` (undefined) | ushort | only write `= 0x10` (16 = last index of pages[17]), no reader | 0x453E30 | H (name) |
+  | 0xC98C | `playerName` (`WCHAR playerName[8]` + `field272_0xc99c`) | wchar16[9] | profile-name edit buffer, 8 + NUL | wcsncpy(..,9) 0x452490; tail clear 0x4524C0; NUL 0x456CB2 | V |
+  | 0xC9A4 | `codeBuffer` (`field277..281`) | wchar16[9] | parental code entry | 0x45A12D; clear 0x4538F0 / 0x456CB9..CD1; wcscmp "WFUSDFCF" 0x459668 | V |
+  | 0xC9B8..0xC9C5 | `key*Edge` / `key*Prev` | byte | 7 edge-detected keys; `keyDeletePrev` 0xC9C5 was the mistyped dword `time` | 0x45214B / 0x452155 / 0x452166, 0x456C2E | V |
+  | 0xC9C8 | `nextLogicTickMs` (inside `time` + `field298_0xc9c9`, `field299_0xc9ca`) | dword | deadline of the next 33 ms logic tick | 0x456C57 = timeGetTime(), 0x45A383 cmp, 0x45A3D9 += 0x21 | V |
+  | 0xC9CC | `logicTicksSinceDraw` (undefined) | byte | §6 tick scheduler | 0x45A38B / 0x45A3AA / 0x45A3CD, 0x456C5D | V |
+  | 0xC9CD | `cheatsAreActive` | byte | `ApplyCheats` 0x459137 | — | V |
+  | 0xEDFA | `credits` (0xFD22 undefined bytes) | CreditsLineList | GXT `credits` parsed into lines | ctor 0x456ABD; parse 0x455323; read 0x453480 / 0x453590 | V |
+  | 0x1EB20 | `creditsScrollY` (int) | Fix16 | screen y of line `creditsLineIndex` | Fix16_* in 0x453480 / 0x453590 | V |
+
+  The pages (`FrontendPage pages[17]` at 0x122), `levelPaths[12]` at 0xC9D4, `saveSlots`,
+  `idleTimerStart` 0xC9D0 and the other named fields were re-checked against the decompile.
+- `CreditsLine` (0x6C, new): `active` u8 @0, pad @1, `x` u16 @2 (always 300, ignored: the draw
+  centres the text), `gapAbove` u16 @4 (20 px per `*`), `style` u16 @6 (0..4), `text` wchar16[50] @8
+  (ctor 0x449CA0, parsed by `Credits_ParseText` 0x449D70, drawn by `FrontEnd_DrawCredits` 0x453590).
+  `CreditsLineList` (0xFD22, new): `count` u16 + `lines[600]` (`CreditsLineList_Ctor` 0x449CE0 =
+  `eh_vector_constructor_iterator(+2, 0x6C, 600)`, dtor 0x449D10).
+- Enums (new, /_game): `FRONTEND_MODE` (1 MENU, 2 STARTING_GAME, 3 NAME_ENTRY,
+  4 DELETE_PROFILE_CONFIRM, 5 CODE_ENTRY), `FRONTEND_RESULT` (1 QUIT_APP, 2 RUNNING, 3 START_GAME,
+  4 ATTRACT_DEMO), `FRONTEND_PAGE` (2 bytes, 0 MAIN_MENU … 14 PARENTAL_CODE, 15 PREINTRO_MOVIE,
+  12 / 13 / 16 UNUSED_*), `FRONTEND_ITEM_KIND` (0 NONE, 1 BUTTON, 2 SELECTOR), `FRONTEND_DECOR_KIND`
+  (0 NONE, 1 TEXT, 3 SPRITE).
 - `Menu` (0x578, global `ptrToMenu` 0x5EC070), now fully laid out: gmpFile/styFile/scrFile/savePath
   (4 × char[256]), startArea @0x400, bonusLevelId @0x401 (`area<<4 | stage`), isBonusLevel @0x402,
   profileSlot @0x403, levelEndReason @0x404 (H), crimeStats[10] @0x408, totalEarned @0x430,
@@ -416,7 +491,7 @@ Background images (`g_FrontendImages` @ 0x591F68, 25 × 0x88, all `data\frontend
 3. `FE.backgroundId=0x10`, `FE.mode=2` → the next tick `FrontEnd_RequestGameStart` (0x451F60) sets `resultCode=3`.
 4. `WinMain` 0x4D1170 gets 3 from `FrontEnd_Tick` → `isExit=0` → `InitGame` (0x461DE0) → `LoadGMP_and_STY_Files` (reads `Menu_GetGmpPath/StyPath/ScrPath/SavePath`) → `startGame`.
 5. `InitGame` also reads `Menu_GetGameTimeLimit` and `Menu_SetPlayerName` (MP).
-6. Return to the frontend: `WinMain` after `Game_GetQuitReason(game)` → `DeinitGame`, `isExit=1`, `doPlayMovies`/page id = 2 (player quit): page 0xb (6 if bonus); 3 (dead): page 2 (6); 4 (level done): page 3 (6); 5: page 7 (MP results); 6: page 0. Then `FrontEnd_GotoPage(page)` after `Init()`. `Game_ScheduleLevelExit` (called from `Script_Op_FINISH_LEVEL`, `quitGame`) writes `Game.field11_0x28/relatedToQuitGame` and `Menu.levelEndReason`.
+6. Return to the frontend: `WinMain` after `Game_GetQuitReason(game)` → `DeinitGame`, `isExit=1`, `page` = 2 (player quit): page 0xb (6 if bonus); 3 (dead): page 2 (6); 4 (level done): page 3 (6); 5: page 7 (MP results); 6: page 0. Then `FrontEnd_GotoPage(page)` after `FrontEnd_CreateGlobal()` (was `Init`). `Game_ScheduleLevelExit` (called from `Script_Op_FINISH_LEVEL`, `quitGame`) writes `Game.field11_0x28/relatedToQuitGame` and `Menu.levelEndReason`.
 7. Between levels `Menu_CopyPlayerCrimeStats` fills `Menu.crimeStats/totalEarned/wantedStarSeconds` for the stats panel.
 
 
@@ -434,6 +509,78 @@ Background images (`g_FrontendImages` @ 0x591F68, 25 × 0x88, all `data\frontend
 - Everything else the frontend persists is in the save files (`player\plyslotN.sgv`, via `PlayerData_SaveProfileSlot` / `ProfileSlot_Reset` from `FrontEnd_CommitProfileName` / `FrontEnd_DeleteCurrentProfile`); format in §8.
 
 The frontend does not read the sound, video or key options itself: gta2manager edits those in the registry, and the game reads them at startup (§7). Profile progress and high scores live in files (§8).
+
+### 6.6 Keyboard, strings, credits, levels (U5, 2026-10-24)
+
+**Keyboard** (V). The frontend has its own DirectInput keyboard. `directInput` (+0) is a copy of
+`g_DirectInput8` 0x5E8FA4 (was the garbled `relatedToFronte?d`), shared with in-game input.
+`FrontEnd_CreateKeyboardDevice` 0x453D80 (was `dInput8`) creates `keyboardDevice` (+4) with
+`GUID_SysKeyboard`, SetDataFormat `c_dfDIKeyboard`, coop level 6. `FrontEnd_AcquireKeyboard`
+0x451FE0 (was `dInput`) sets `keyboardAcquireFailed` (+0x10C) on failure, which nothing reads;
+`FrontEnd_ReleaseKeyboard` 0x451FB0 (was `DInputDevice_UnacquireAndRelease`) undoes it. Each logic
+tick `FrontEnd_UpdateMenuKeys` 0x452050 runs `FrontEnd_ReadKeyboardState` 0x452000 (GetDeviceState(256)
+into `keyState` +8, re-Acquire on INPUTLOST / NOTACQUIRED), edge-detects 7 keys into `key*Edge`
+(+0xC9B8..BE) / `key*Prev` (+0xC9BF..C5), and scans the whole `keyState` for "any key" (idle timer,
+movie skip, credits, name / code entry with auto-repeat `lastKeyDik` / `keyRepeatCounter`).
+`keyboardActive` (+0x10D) is written by WndProc WM_ACTIVATE through `FrontEnd_SetKeyboardActive`
+0x453A30. Host side: [win32-shims.md](../win32-shims.md) "Input".
+
+**Where the strings come from** (matters for a translation, see also
+[fonts-localization.md](fonts-localization.md)):
+
+- All menu text is copied **once**, at `FrontEnd_InitPages` time, with
+  `_wcsncpy(label, Gxt_FindTextW_thunk(g_LocaleSettings, key), 0x32)` into `label[50]` / `text[50]`.
+  Nothing is static in `.data`. Key list: §6.2.
+- Dynamic texts are built into `g_BriefDebugTextBuf` with swprintf at draw time: profile name or
+  "PLAYER n", `hi_for`, the hi-score table number, the code buffer.
+- Credits: the single GXT key `credits` is parsed by `Credits_ParseText` 0x449D70 (char reader
+  `Credits_NextChar` 0x449D30) into `FrontEnd.credits` (`CreditsLineList`, +0xEDFA). Grammar: `*` =
+  20 px gap (`gapAbove`); `#X` sets the style: W or none = 0, B = 2, G = 3, C = 4, any other letter =
+  1; the text runs to the next `*`; the texts `BINKLOGO` / `MILESLOGO` become sprites (6, 1) /
+  (6, 0x19). Shipped data: max 28 chars per line, ≤ 535 entries.
+- Fonts: `defaultFontId` (+0x11C) and the `g_FontRole_Fe4..Fe13` globals (`FrontEnd_InitFontRole`
+  0x453D40).
+- Name entry: typed chars come from `SKeyboard_GetCharForScancode` (layout table `g_SKeyboard`) and
+  are **accepted only when the glyph width is > 2 px** (0x459EB5), so a Cyrillic layout also needs
+  real glyphs: the 2-px placeholder glyphs cannot be typed. `FrontEnd_LoadProfileNameForEdit`
+  0x452490 (was `copyPlayerName`) copies the profile name into `playerName` (wcsncpy 9).
+
+**Levels.** `FrontEnd_LoadSeq` 0x455340 runs `_findfirst("data\*.seq")`, then `_findnext`: **a
+second `.seq` is the fatal `DisplayError(0x99)`**, exactly one is allowed (matters for our VFS
+FindFirst/FindNext merge and for mods; `host/c/files.c` already skips pak entries the overlay
+shadows). The `.seq` is parsed in `MAIN` / `BONUS` blocks (label=value lines: gmp, sty, scr,
+Description) through `Seq_ReadLabelLine`, then `FrontEnd_AddSeqLevel` 0x4527A0 stores them in
+`levelPaths[stage + area*4]` (`FrontEnd_GetLevelPaths` 0x452810 reads them back, only caller
+0x4556D5). Limits, all fatal: max 3 areas (0x9B), max 3 bonus levels per area (0x9D).
+
+### 6.7 Frontend hazards and open questions (U5)
+
+Static analysis only; nothing was reproduced live.
+
+| VA | what | trigger | severity | status |
+|---|---|---|---|---|
+| 0x449D70 / 0x449D30 | **Credits parser has no bounds checks**: `Credits_NextChar` does not stop at NUL, nothing limits a line to 50 wchars, `count` / line index are not limited to 600. A text without a final `*` reads past the GXT string and keeps writing; a too-long line or > 600 entries writes past `lines[600]`, i.e. past the end of FrontEnd (only 0x24 bytes follow) into the heap | modded / translated `credits` key: missing final `*`, a line ≥ 50 chars, > 600 entries | medium (mods / localisation only; shipped data fits) | verified by code (decompile 0x449D70, disassembly 0x449D30: no NUL test) |
+| 0x453E20 | menu labels use `_wcsncpy(dst, gxt, 50)` into wchar[50]: a GXT string of ≥ 50 chars is left **without a NUL** and the read runs on into `fontId` / `remap` / … of the same item | a translated label ≥ 50 chars | low–medium (garbage text; keep labels ≤ 49 chars) | verified by code (every item / decor in InitPages) |
+| 0x45A320 + 0x456C57 | **the logic clock never resyncs**: `nextLogicTickMs` is set once in InitFrontend, *before* InitPages / LoadSeq / LoadFrontendImages, and only advances 33 ms per tick — not on the movie pages (8 / 15), not in GotoPage. After a stall (asset loading, the intro movie, a host hiccup) the menu runs a catch-up burst of back-to-back logic ticks and draws nothing until it has caught up (30 s intro ≈ 900 ticks, each reads DirectInput and runs the sound update) | every frontend entry and every return from the intro movie | low (short frozen menu; for our host the per-tick cost of GetDeviceState / audio decides how visible it is) | verified by code (no writer of +0xC9C8 except 0x456C57 / 0x45A3D9, whole-program scan) |
+| 0x45A391 | `logicTicksSinceDraw == 3` *forces* an extra logic tick even when none is due; looks like an inverted "draw at least every 3 ticks" cap. Only adds a tick at the end of a catch-up | catch-up bursts | very low | verified by code (`CMP AL,3; JZ update`) |
+| 0x455340 | a second `*.seq` in `data\` → fatal `DisplayError(0x99)` | a mod / overlay adds a .seq; FindFirst/FindNext must not list pak + overlay copies twice | info / compat | verified by code |
+| 0x451FF4 | `keyboardAcquireFailed` is set but never read: no fallback for a failed Acquire beyond the re-Acquire in ReadKeyboardState | DInput Acquire failure | info | verified by code (whole-program displacement scan for 0x10C) |
+
+Open:
+
+- `unsure_lastPageId` (+0x120): value 0x10 verified, no reader anywhere; the name is a guess.
+- Decor kind 3 arrow-sprite ids (`text[0]` 0..4 → ids around 0x24–0x29) read only from the decompile
+  switch (variable typed as PALETTE_BASE), the case-0 id is not confirmed. Credits sprite ids 1 /
+  0x19 are from the decompile.
+- `FrontEnd_UpdateNameEntryMode`: after ENTER, BACKSPACE or ESC control falls into the "append typed
+  char" path for that scancode (LAB_00459EB5). Whether `SKeyboard_GetCharForScancode` returns 0 for
+  0x1C / 0x0E / 0x01 is **not checked** — a possible stray char on commit (hypothesis).
+- `Frontend_DrawText` 0x4539F0, `FrontEnd_DrawKeyHint` 0x4568C0, `Frontend_DrawTextInCells` 0x4566C0
+  still have weak prototypes (Fix16 arguments come out as `extraout_ECX`).
+- Decompiler artefact: credits reads in `FrontEnd_UpdateCreditsScroll` / `FrontEnd_DrawCredits`
+  show as `saveSlots[idx*0x1b+0xb]` (`[ESI+EAX*4+0xEE00]` resolved against the 4-byte `saveSlots`);
+  the real target is `credits.lines[idx].gapAbove`.
+- `ApplyCheats` 0x4590F0 still has calling convention `default` with custom storage (not touched).
 
 ## 7. Settings: registry
 
@@ -631,12 +778,8 @@ Recommendation: 1. What the screen has to write and how each setting is re-appli
     place `HudCarNameLabel carName` at 0x0. (`zoneName` @0x4C and `bigLabel` @0x2854 went in
     without a Clear: `modify_struct_field` with a new type and name absorbs the following undefined
     bytes, re-checked with `get_struct_layout`.)
-  - `FrontEnd` 0xD5E-0xD61 (`plyrslot`/`plyrslot2`, really page 1 item 0's choice fields),
-    0x4DD8-0x4E3B (an unnamed wchar[50] = `pages[6].decor[2].text`) and 0xEDB5 (a 1-byte retype
-    artefact). After them, add `FrontendPage pages[17]` at 0x122 and `FrontendLevelPaths
-    levelPaths[12]` at 0xC9D4. Optional: 0x8-0xF, 0x1B, 0xFF-0x102 (stray fields inside the
-    keyboard state[256] at 0x8), 0xC9A4-0xC9B5 (`wchar_t codeBuffer[9]`), 0xC9C5-0xC9C8 (the wrong
-    dword `time`; the real next-tick time is the dword at 0xC9C8).
+  - `FrontEnd`: done (U5, 2026-10-24) — pages, levelPaths, keyState, codeBuffer, nextLogicTickMs
+    and credits are typed in, see §6.1.
   - `SaveGameHeader` (§8) is created but not applied to `buf466` 0x664590, because the buffer
     interior carries its own `DAT_` labels.
 - Hypotheses: the player marker at HudManager+0x2844; the arrow respect thresholds; "K.F." in the
@@ -659,12 +802,14 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 
 | Address | Name | |
 |---|---|---|
+| 0x451FB0 | `FrontEnd_ReleaseKeyboard` (was `DInputDevice_UnacquireAndRelease`) | V |
+| 0x451FE0 | `FrontEnd_AcquireKeyboard` (was `dInput`) | V |
 | 0x452000 | `FrontEnd_ReadKeyboardState` | V |
 | 0x452050 | `FrontEnd_UpdateMenuKeys` | V |
 | 0x4521B0 | `Text_GetCenteredX` | old |
 | 0x452200 | `FrontEnd_GetItemDisplayText` | V |
 | 0x452380 | `FrontEnd_GetDecorDisplayText` | V |
-| 0x452490 | `copyPlayerName` | old |
+| 0x452490 | `FrontEnd_LoadProfileNameForEdit` (was `copyPlayerName`) | V |
 | 0x4524C0 | `FrontEnd_ClearPlayerNameTail` | V |
 | 0x452500 | `FrontEnd_GetCurrentProfileLevelTable` | V |
 | 0x452530 | `Seq_ReadLabelLine` | old |
@@ -715,10 +860,13 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x453B60 | `FrontEnd_DrawLoadingScreen` | V |
 | 0x453BD0 | `FrontEnd_DrawDeleteProfileConfirm` | V |
 | 0x453D40 | `FrontEnd_InitFontRole` | V |
-| 0x453D80 | `dInput8` | old |
+| 0x453D80 | `FrontEnd_CreateKeyboardDevice` (was `dInput8`) | V |
 | 0x453E20 | `FrontEnd_InitPages` | V |
 | 0x455340 | `FrontEnd_LoadSeq` | old |
 | 0x4556A0 | `FrontEnd_SelectLevel` | V |
+| 0x449CA0 / 0x449CD0 | `CreditsLine_Ctor` / `CreditsLine_Dtor` (created U5) | V |
+| 0x449CE0 / 0x449D10 | `CreditsLineList_Ctor` / `_Dtor` (was `unsure_FrontEndItemList_Ctor` / `_Dtor`) | V |
+| 0x449D30 / 0x449D70 | `Credits_NextChar` / `Credits_ParseText` | V |
 | 0x455850 | `FrontEnd_LoadSavedGameSlot` | V |
 | 0x455C20 | `FrontEnd_LoadSaveSlotInfos` | V |
 | 0x455C90 | `FrontEnd_DrawMultiplayerScores` | V |
@@ -744,17 +892,18 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x457140 | `FrontEnd_DrawLevelStatsPanel` | V |
 | 0x457750 | `FrontEnd_BonusSelectorLeft` | V |
 | 0x4577C0 | `FrontEnd_BonusSelectorRight` | V |
-| 0x457830 | `Init` | old |
+| 0x457830 | `FrontEnd_CreateGlobal` (was `Init`) | V |
+| 0x457920 | `FrontEnd_DrawMenuPage` (created U5; was folded into `FrontEnd_DrawPage`) | V |
 | 0x457900 | `FrontEnd_ScalarDeletingDtor` | V |
 | 0x458590 | `FrontEnd_DrawPage` | V |
-| 0x4585F0 | `DrawFrontendFrame` | old |
+| 0x4585F0 | `DrawFrontendFrame` (U5: `void __thiscall (FrontEnd*)`, 4 bogus stack params removed) | V |
 | 0x458650 | `FrontEnd_UpdateDeleteProfileConfirm` | V |
-| 0x4587B0 | `FrontEnd_GotoPage` | V |
+| 0x4587B0 | `FrontEnd_GotoPage` (U5: `__thiscall (FrontEnd*, FRONTEND_PAGE page)`, was stdcall with `doPlayMovies`) | V |
 | 0x4590F0 | `ApplyCheats` | old |
 | 0x459540 | `FrontEnd_CommitProfileName` | V |
 | 0x459590 | `FrontEnd_OnContinueAction` | V |
 | 0x459660 | `FrontEnd_OnCodeEntered` | V |
-| 0x459760 | `relatedToAudio` | old |
+| 0x459760 | `FrontEnd_DestroyGlobal` (was `relatedToAudio`) | V |
 | 0x4597C0 | `FrontEnd_UpdateMenuMode` | V |
 | 0x459E30 | `FrontEnd_UpdateNameEntryMode` | V |
 
@@ -858,10 +1007,10 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4B5F70 | `MssAudio_ExtraSample_Alloc` | V |
 | 0x4B5FB0 | `MssAudio_ExtraSample_Release` | V |
 | 0x4B5FD0 | `MssAudio_Samples2D_ReleaseAll` | V |
-| 0x4B6020 | `MssAudio_GetBankEntryFieldB0OrOne` | V |
-| 0x4B6040 | `MssAudio_GetBankEntryFieldB4` | V |
-| 0x4B6060 | `MssAudio_GetBankEntryFieldB8` | V |
-| 0x4B6080 | `MssAudio_GetBankEntryFieldBC` | V |
+| 0x4B6020 | `MssAudio_GetBankEntrySampleRate` (was `MssAudio_GetBankEntryFieldB0OrOne`) | V |
+| 0x4B6040 | `MssAudio_GetBankEntryRateVariation` (was `…FieldB4`) | V |
+| 0x4B6060 | `MssAudio_GetBankEntryLoopStart` (was `…FieldB8`) | V |
+| 0x4B6080 | `MssAudio_GetBankEntryLoopEnd` (was `…FieldBC`) | V |
 | 0x4B60A0 | `MssAudio_GetBankEntrySize` | V |
 | 0x4B60C0 | `MssAudio_Sample_SetAddress` | V |
 | 0x4B6110 | `MssAudio_Sample_SetVolume` | V |

@@ -60,7 +60,7 @@ All addresses gta2.exe VAs (own analysis of vanilla 11.44).
 | load d3ddll | `0x4cae50` → `0x4d4730(name, ctx)` | `0x4d3770`: `LoadLibraryA`, 40× `GetProcAddress` into slots `0x5952a8..0x595340` (+ `DrawLine` → `0x67535c`); then **`gbh_InitDLL(ctx)`**, `stats = gbh_GetGlobals()` → `0x675360` |
 | first frame | `0x4cc6d0` tail | `Vid_ClearScreen(ctx,0,0,0, 0,0,w,h)`; `Vid_FlipBuffers(ctx)`; `Vid_ClearScreen(...)` again |
 | d3d init | `0x4caea0` | **`gbh_Init(0)`** (after `ShowWindow/UpdateWindow`) |
-| frontend | `0x457830` → `InitFrontend 0x456a60` | load `data\fstyle.sty`, register palettes/textures (`0x4c30a0`), `gbh_SetColourDepth()` + `ConvertColourBank` per 64 palettes (`0x4caeb0`), `gbh_SetAmbient(1.0f)`, `gbh_InitImageTable(25)` + 25× `gbh_LoadImage(tga)` (`0x452e20`) |
+| frontend | `FrontEnd_CreateGlobal 0x457830` → `InitFrontend 0x456a60` | load `data\fstyle.sty`, register palettes/textures (`0x4c30a0`), `gbh_SetColourDepth()` + `ConvertColourBank` per 64 palettes (`0x4caeb0`), `gbh_SetAmbient(1.0f)`, `gbh_InitImageTable(25)` + 25× `gbh_LoadImage(tga)` (`0x452e20`) |
 | shutdown | `0x4cb890` | `gbh_CloseDLL()` + FreeLibrary; `Vid_ShutDown_SYS(ctx)` + FreeLibrary |
 
 Unloaded slots point at `0x4d2cf0` ("A DMA Video Function was called without the

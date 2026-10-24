@@ -124,6 +124,14 @@ struc CLIENT_ID
     .UniqueThread                     resb 4      ; 0x4 void *
 endstruc
 
+; enum /COLLISION_RESULT_KIND  (4 bytes)
+COLLISION_RESULT_KIND.COLLISION_RESULT_NONE equ 0
+COLLISION_RESULT_KIND.COLLISION_RESULT_MAP_WALL_ALONG_X equ 1
+COLLISION_RESULT_KIND.COLLISION_RESULT_MAP_WALL_ALONG_Y equ 2
+COLLISION_RESULT_KIND.COLLISION_RESULT_SPRITE equ 3
+COLLISION_RESULT_KIND.COLLISION_RESULT_FLOOR equ 4
+COLLISION_RESULT_KIND.COLLISION_RESULT_CEILING equ 5
+
 ; enum /CRIME_KIND  (4 bytes)
 CRIME_KIND.CRIME_NONE equ 0
 CRIME_KIND.CRIME_VEHICLE_DAMAGE equ 1
@@ -143,26 +151,29 @@ struc CarDriveOrder
     .driver                           resb 4      ; 0x4 Ped *
     .mode                             resb 4      ; 0x8 CAR_DRIVE_ORDER_MODE
     .maneuver                         resb 4      ; 0xc CAR_DRIVE_MANEUVER
-    .unsure_ramArmed                  resb 1      ; 0x10 byte
+    .ramArmed                         resb 1      ; 0x10 byte
     resb 3
     .targetX                          resb 4      ; 0x14 SCR_f
     .targetY                          resb 4      ; 0x18 SCR_f
     .targetZ                          resb 4      ; 0x1c SCR_f
     .isUrgent                         resb 1      ; 0x20 byte
-    resb 1
+    .unusedZeroed21                   resb 1      ; 0x21 byte
     .followRoadActive                 resb 1      ; 0x22 byte
-    resb 3
+    .unusedInit23                     resb 1      ; 0x23 byte
+    .unusedZeroed24                   resb 1      ; 0x24 byte
+    .unusedZeroed25                   resb 1      ; 0x25 byte
     .arrived                          resb 1      ; 0x26 bool
     resb 3
-    .unsure_approachTicks             resb 2      ; 0x2a ushort
-    .unsure_phaseTicks                resb 2      ; 0x2c ushort
-    .unsure_sideTicks                 resb 2      ; 0x2e ushort
+    .targetLockTicks                  resb 2      ; 0x2a ushort
+    .maneuverTicks                    resb 2      ; 0x2c ushort
+    .sidePushTicks                    resb 2      ; 0x2e ushort
     .targetPed                        resb 4      ; 0x30 Ped *
     .retryCooldown                    resb 2      ; 0x34 ushort
-    resb 6
-    .unsure_blockAttempts             resb 1      ; 0x3c byte
     resb 2
-    .end                              resb 1      ; 0x3f byte
+    .unusedZeroed38                   resb 4      ; 0x38 uint
+    .blockHitCount                    resb 1      ; 0x3c byte
+    resb 2
+    .unused3F                         resb 1      ; 0x3f byte
 endstruc
 
 ; /CarDriveOrderPool  (1280 bytes)
@@ -201,14 +212,14 @@ endstruc
 
 ; /CollisionResult  (40 bytes)
 struc CollisionResult
-    .kind                             resb 4      ; 0x0 int
-    .unsure_wallXTileX                resb 4      ; 0x4 int
-    .unsure_wallXArg2                 resb 4      ; 0x8 int
-    .unsure_wallYTileY                resb 4      ; 0xc int
-    .unsure_wallYArg2                 resb 4      ; 0x10 int
-    .unsure_wallYTileX                resb 4      ; 0x14 int
-    .unsure_wallXTileY                resb 4      ; 0x18 int
-    .hitZ                             resb 4      ; 0x1c int
+    .kind                             resb 4      ; 0x0 COLLISION_RESULT_KIND
+    .wallMinX                         resb 4      ; 0x4 Fix16
+    .wallMaxX                         resb 4      ; 0x8 Fix16
+    .wallMinY                         resb 4      ; 0xc Fix16
+    .wallMaxY                         resb 4      ; 0x10 Fix16
+    .contactX                         resb 4      ; 0x14 Fix16
+    .contactY                         resb 4      ; 0x18 Fix16
+    .hitZ                             resb 4      ; 0x1c Fix16
     .hitSprite                        resb 4      ; 0x20 Sprite *
     .moverSprite                      resb 4      ; 0x24 Sprite *
 endstruc
@@ -502,7 +513,7 @@ endstruc
 
 ; /FrontendPageDecor  (110 bytes)
 struc FrontendPageDecor
-    .kind                             resb 1      ; 0x0 byte
+    .kind                             resb 1      ; 0x0 FRONTEND_DECOR_KIND
     .enabled                          resb 1      ; 0x1 byte
     .x                                resb 2      ; 0x2 ushort
     .y                                resb 2      ; 0x4 ushort
@@ -513,7 +524,7 @@ endstruc
 
 ; /FrontendPageItem  (130 bytes)
 struc FrontendPageItem
-    .kind                             resb 1      ; 0x0 byte
+    .kind                             resb 1      ; 0x0 FRONTEND_ITEM_KIND
     .enabled                          resb 1      ; 0x1 byte
     .x                                resb 2      ; 0x2 ushort
     .y                                resb 2      ; 0x4 ushort
@@ -521,7 +532,7 @@ struc FrontendPageItem
     .fontId                           resb 2      ; 0x6a ushort
     .remap                            resb 2      ; 0x6c ushort
     .choice                           resb 2      ; 0x6e ushort
-    .choice2                          resb 2      ; 0x70 ushort
+    .choiceOnEntry                    resb 2      ; 0x70 ushort
     .choiceEnabled                    resb 12     ; 0x72 byte[12]
     .choiceMax                        resb 2      ; 0x7e ushort
     .action                           resb 2      ; 0x80 ushort
@@ -1229,12 +1240,12 @@ struc PedPathfinder
     .goalX                            resb 1      ; 0x11 byte
     .goalY                            resb 1      ; 0x12 byte
     .goalZ                            resb 1      ; 0x13 byte
-    .unsure_budgetPending             resb 1      ; 0x14 byte
+    .openNodesLeft                    resb 1      ; 0x14 byte
     resb 1
     .floodRing                        resb 2      ; 0x16 short
     .searching                        resb 1      ; 0x18 byte
-    .unsure_goalReached               resb 1      ; 0x19 byte
-    .unsure_goalReached2              resb 1      ; 0x1a byte
+    .searchDone                       resb 1      ; 0x19 byte
+    .targetReached                    resb 1      ; 0x1a byte
     .stepDir                          resb 1      ; 0x1b byte
     .nodeIndex                        resb 2      ; 0x1c word
     .curStepCount                     resb 2      ; 0x1e short
@@ -1246,16 +1257,16 @@ struc PedPathfinder
     .curX                             resb 1      ; 0x25 byte
     .curY                             resb 1      ; 0x26 byte
     .curZ                             resb 1      ; 0x27 byte
-    .unsure_windowOriginX             resb 1      ; 0x28 byte
-    .unsure_windowOriginY             resb 1      ; 0x29 byte
+    .spawnWindowOriginX               resb 1      ; 0x28 byte
+    .spawnWindowOriginY               resb 1      ; 0x29 byte
     resb 4
     .iterBudget                       resb 2      ; 0x2e short
     resb 4
-    .unsure_init34                    resb 2      ; 0x34 short
-    .unsure_init36                    resb 2      ; 0x36 short
+    .unusedInit34                     resb 2      ; 0x34 short
+    .unusedInit36                     resb 2      ; 0x36 short
     .searchInProgress                 resb 1      ; 0x38 byte
     resb 1
-    .unsure_init3a                    resb 2      ; 0x3a short
+    .unusedInit3a                     resb 2      ; 0x3a short
     .requestQueueHead                 resb 4      ; 0x3c PedListNode *
     .nodes                            resb 8976   ; 0x40 PedPathNode[33][34]
     .openList                         resb 3200   ; 0x2350 PedPathOpenEntry[400]
@@ -2196,39 +2207,86 @@ struc AnimatedValue
     .spriteId                         resb 2      ; 0x36 HUD_DIGIT_SPRITE
 endstruc
 
+; /_game/CreditsLine  (108 bytes)
+struc CreditsLine
+    .active                           resb 1      ; 0x0 byte
+    .pad                              resb 1      ; 0x1 byte
+    .x                                resb 2      ; 0x2 ushort
+    .gapAbove                         resb 2      ; 0x4 ushort
+    .style                            resb 2      ; 0x6 ushort
+    .text                             resb 100    ; 0x8 wchar16[50]
+endstruc
+
+; /_game/CreditsLineList  (64802 bytes)
+struc CreditsLineList
+    .count                            resb 2      ; 0x0 ushort
+    .lines                            resb 64800  ; 0x2 CreditsLine[600]
+endstruc
+
+; enum /_game/FRONTEND_DECOR_KIND  (1 bytes)
+FRONTEND_DECOR_KIND.FRONTEND_DECOR_NONE equ 0
+FRONTEND_DECOR_KIND.FRONTEND_DECOR_TEXT equ 1
+FRONTEND_DECOR_KIND.FRONTEND_DECOR_SPRITE equ 3
+
+; enum /_game/FRONTEND_ITEM_KIND  (1 bytes)
+FRONTEND_ITEM_KIND.FRONTEND_ITEM_NONE equ 0
+FRONTEND_ITEM_KIND.FRONTEND_ITEM_BUTTON equ 1
+FRONTEND_ITEM_KIND.FRONTEND_ITEM_SELECTOR equ 2
+
+; enum /_game/FRONTEND_MODE  (4 bytes)
+FRONTEND_MODE.FRONTEND_MODE_MENU equ 1
+FRONTEND_MODE.FRONTEND_MODE_STARTING_GAME equ 2
+FRONTEND_MODE.FRONTEND_MODE_NAME_ENTRY equ 3
+FRONTEND_MODE.FRONTEND_MODE_DELETE_PROFILE_CONFIRM equ 4
+FRONTEND_MODE.FRONTEND_MODE_CODE_ENTRY equ 5
+
+; enum /_game/FRONTEND_PAGE  (2 bytes)
+FRONTEND_PAGE.FRONTEND_PAGE_MAIN_MENU equ 0
+FRONTEND_PAGE.FRONTEND_PAGE_PLAYER_SELECT equ 1
+FRONTEND_PAGE.FRONTEND_PAGE_PLAYER_DEAD equ 2
+FRONTEND_PAGE.FRONTEND_PAGE_AREA_COMPLETE equ 3
+FRONTEND_PAGE.FRONTEND_PAGE_GAME_COMPLETE equ 4
+FRONTEND_PAGE.FRONTEND_PAGE_HIGH_SCORES equ 5
+FRONTEND_PAGE.FRONTEND_PAGE_BONUS_COMPLETE equ 6
+FRONTEND_PAGE.FRONTEND_PAGE_MP_RESULTS equ 7
+FRONTEND_PAGE.FRONTEND_PAGE_INTRO_MOVIE equ 8
+FRONTEND_PAGE.FRONTEND_PAGE_CREDITS equ 9
+FRONTEND_PAGE.FRONTEND_PAGE_NICE_TRY equ 10
+FRONTEND_PAGE.FRONTEND_PAGE_PLAYER_QUIT equ 11
+FRONTEND_PAGE.FRONTEND_PAGE_UNUSED_12 equ 12
+FRONTEND_PAGE.FRONTEND_PAGE_UNUSED_13 equ 13
+FRONTEND_PAGE.FRONTEND_PAGE_PARENTAL_CODE equ 14
+FRONTEND_PAGE.FRONTEND_PAGE_PREINTRO_MOVIE equ 15
+FRONTEND_PAGE.FRONTEND_PAGE_UNUSED_16 equ 16
+
+; enum /_game/FRONTEND_RESULT  (4 bytes)
+FRONTEND_RESULT.FRONTEND_RESULT_QUIT_APP equ 1
+FRONTEND_RESULT.FRONTEND_RESULT_RUNNING equ 2
+FRONTEND_RESULT.FRONTEND_RESULT_START_GAME equ 3
+FRONTEND_RESULT.FRONTEND_RESULT_ATTRACT_DEMO equ 4
+
 ; /_game/FrontEnd  (125760 bytes)
 struc FrontEnd
-    resb 8
-    .field8_0x8                       resb 4      ; 0x8 int
-    resb 3
-    .field12_0xf                      resb 1      ; 0xf byte
-    resb 11
-    .field24_0x1b                     resb 1      ; 0x1b byte
-    resb 227
-    .field252_0xff                    resb 4      ; 0xff undefined4
-    resb 5
-    .resultCode                       resb 4      ; 0x108 int
-    .field259_0x10c                   resb 1      ; 0x10c byte
+    .directInput                      resb 4      ; 0x0 void *
+    .keyboardDevice                   resb 4      ; 0x4 void *
+    .keyState                         resb 256    ; 0x8 byte[256]
+    .resultCode                       resb 4      ; 0x108 FRONTEND_RESULT
+    .keyboardAcquireFailed            resb 1      ; 0x10c bool
     .keyboardActive                   resb 1      ; 0x10d byte
     resb 2
-    .mode                             resb 4      ; 0x110 int
+    .mode                             resb 4      ; 0x110 FRONTEND_MODE
     .cursorBlink                      resb 4      ; 0x114 int
     .cursorBlinkTimer                 resb 4      ; 0x118 int
     .defaultFontId                    resb 2      ; 0x11c short
-    .pageId                           resb 2      ; 0x11e short
-    resb 2
+    .pageId                           resb 2      ; 0x11e FRONTEND_PAGE
+    .unsure_lastPageId                resb 2      ; 0x120 ushort
     .pages                            resb 51306  ; 0x122 FrontendPage[17]
-    .playerName                       resb 16     ; 0xc98c WCHAR[8]
-    .field272_0xc99c                  resb 2      ; 0xc99c short
+    .playerName                       resb 18     ; 0xc98c wchar16[9]
     .nameLen                          resb 1      ; 0xc99e byte
     .textKeyHeld                      resb 1      ; 0xc99f byte
     .lastKeyDik                       resb 2      ; 0xc9a0 short
     .keyRepeatCounter                 resb 2      ; 0xc9a2 short
-    .field277_0xc9a4                  resb 4      ; 0xc9a4 int
-    .field278_0xc9a8                  resb 4      ; 0xc9a8 int
-    .field279_0xc9ac                  resb 4      ; 0xc9ac int
-    .field280_0xc9b0                  resb 4      ; 0xc9b0 int
-    .field281_0xc9b4                  resb 2      ; 0xc9b4 short
+    .codeBuffer                       resb 18     ; 0xc9a4 wchar16[9]
     .codeLen                          resb 1      ; 0xc9b6 byte
     .codeErrorShown                   resb 1      ; 0xc9b7 byte
     .keyLeftEdge                      resb 1      ; 0xc9b8 byte
@@ -2244,10 +2302,10 @@ struc FrontEnd
     .keyDownPrev                      resb 1      ; 0xc9c2 byte
     .keyEnterPrev                     resb 1      ; 0xc9c3 byte
     .keyEscapePrev                    resb 1      ; 0xc9c4 byte
-    .time                             resb 4      ; 0xc9c5 dword
-    .field298_0xc9c9                  resb 1      ; 0xc9c9 byte
-    .field299_0xc9ca                  resb 1      ; 0xc9ca byte
+    .keyDeletePrev                    resb 1      ; 0xc9c5 byte
     resb 2
+    .nextLogicTickMs                  resb 4      ; 0xc9c8 dword
+    .logicTicksSinceDraw              resb 1      ; 0xc9cc byte
     .cheatsAreActive                  resb 1      ; 0xc9cd bool
     resb 2
     .idleTimerStart                   resb 4      ; 0xc9d0 dword
@@ -2258,10 +2316,10 @@ struc FrontEnd
     .deleteConfirmY                   resb 2      ; 0xedf6 short
     .deleteConfirmArmed               resb 1      ; 0xedf8 byte
     .hiScoreTableIndex                resb 1      ; 0xedf9 byte
-    resb 64802
+    .credits                          resb 64802  ; 0xedfa CreditsLineList
     .creditsTick                      resb 2      ; 0x1eb1c short
     resb 2
-    .creditsScrollY                   resb 4      ; 0x1eb20 int
+    .creditsScrollY                   resb 4      ; 0x1eb20 Fix16
     .creditsLineIndex                 resb 2      ; 0x1eb24 short
     .selectedAreaPerProfile           resb 8      ; 0x1eb26 byte[8]
     .selectedBonusPerProfile          resb 8      ; 0x1eb2e byte[8]
@@ -3334,7 +3392,7 @@ endstruc
 ; /auto_structs/MssAudio  (10008 bytes)
 struc MssAudio
     .driver                           resb 4      ; 0x0 undefined4
-    .unsure_musicVolume               resb 1      ; 0x4 byte
+    .unsure_cdDriveLetter             resb 1      ; 0x4 byte
     .audioDir                         resb 80     ; 0x5 char[80]
     .musicEnabled                     resb 1      ; 0x55 byte
     resb 2
@@ -3352,8 +3410,8 @@ struc MssAudio
     resb 1
     .providers                        resb 1024   ; 0x1eb4 undefined4[256]
     .providerNames                    resb 1024   ; 0x22b4 char *[256]
-    .unsure_selectedProvider          resb 4      ; 0x26b4 int
-    .unsure_eaxAvailable              resb 4      ; 0x26b8 int
+    .selected3DProviderIdx            resb 4      ; 0x26b4 int
+    .eaxSupported                     resb 4      ; 0x26b8 int
     .eaxEnvironment                   resb 4      ; 0x26bc int
     .provider3D                       resb 4      ; 0x26c0 undefined4
     .samples3D                        resb 64     ; 0x26c4 undefined4[16]
@@ -3368,9 +3426,9 @@ struc MssBankEntry
     .offset                           resb 4      ; 0x0 int
     .size                             resb 4      ; 0x4 int
     .sampleRate                       resb 4      ; 0x8 int
-    .unsure_fieldB4                   resb 4      ; 0xc int
-    .unsure_fieldB8                   resb 4      ; 0x10 int
-    .unsure_fieldBC                   resb 4      ; 0x14 int
+    .rateVariation                    resb 4      ; 0xc int
+    .loopStart                        resb 4      ; 0x10 int
+    .loopEnd                          resb 4      ; 0x14 int
 endstruc
 
 ; /auto_structs/MultiplayerTag  (40 bytes)
@@ -3683,18 +3741,19 @@ struc SoundManager
     .initialized                      resb 1      ; 0x0 byte
     .IsGamePaused                     resb 1      ; 0x1 bool
     .frameEnabled                     resb 1      ; 0x2 byte
-    .unsure_musicMode                 resb 1      ; 0x3 byte
-    .unsure_fix16_4                   resb 4      ; 0x4 Fix16
-    .unsure_int8                      resb 4      ; 0x8 int
-    .unsure_fix16_c                   resb 4      ; 0xc Fix16
+    .musicLoopTrackD                  resb 1      ; 0x3 byte
+    .speedOfSound                     resb 4      ; 0x4 Fix16
+    .ticksPerSecond                   resb 1      ; 0x8 byte
+    resb 3
+    .ticksPerSecondFix                resb 4      ; 0xc Fix16
     .voiceCount                       resb 1      ; 0x10 byte
     resb 3
     .sampleRate                       resb 4      ; 0x14 int
-    .unsure_flag18                    resb 1      ; 0x18 byte
-    .unsure_flag19                    resb 1      ; 0x19 byte
-    .unsure_flag1a                    resb 1      ; 0x1a byte
-    .unsure_flag1b                    resb 1      ; 0x1b byte
-    .unsure_flag1c                    resb 1      ; 0x1c byte
+    .unusedInit18                     resb 1      ; 0x18 byte
+    .unusedInit19                     resb 1      ; 0x19 byte
+    .unusedInit1a                     resb 1      ; 0x1a byte
+    .unusedInit1b                     resb 1      ; 0x1b byte
+    .num3DVoices                      resb 1      ; 0x1c byte
     .sound3DActive                    resb 1      ; 0x1d byte
     resb 6
     .sfxVolume                        resb 1      ; 0x24 byte
@@ -3712,7 +3771,8 @@ struc SoundManager
     resb 2
     .voices                           resb 1664   ; 0xdc0 byte[1664]
     resb 16
-    .unsure_int1450                   resb 4      ; 0x1450 int
+    .unusedFlag1450                   resb 1      ; 0x1450 byte
+    resb 3
     .randomSeeds                      resb 20     ; 0x1454 uint[5]
     .gameCameraPos                    resb 8      ; 0x1468 SCR_Vector2
     .pedZ                             resb 4      ; 0x1470 SCR_f
@@ -3723,48 +3783,45 @@ struc SoundManager
     .sourceSlotsFrom1                 resb 12228  ; 0x1488 S5[1019]
     .activeSourceIds                  resb 4080   ; 0x444c uint[1020]
     .activeSourceCount                resb 4      ; 0x543c uint
-    .unsure_int5440                   resb 4      ; 0x5440 int
-    .unsure_int5444                   resb 4      ; 0x5444 int
-    .unsure_int5448                   resb 4      ; 0x5448 int
+    .startup2DOutUnused               resb 4      ; 0x5440 int
+    .unusedInt5444                    resb 4      ; 0x5444 int
+    .frameCounter                     resb 4      ; 0x5448 uint
     .slowTick                         resb 1      ; 0x544c byte
     resb 3
-    .relToAudio                       resb 4      ; 0x5450 int
+    .vocalSourceSlot                  resb 4      ; 0x5450 int
     .vocalClient                      resb 16     ; 0x5454 SoundClient
     .vocal                            resb 4      ; 0x5464 VOCAL
     .radioSlots                       resb 140    ; 0x5468 RadioStationSlot[5]
-    .unsure_radioFlag54f4             resb 1      ; 0x54f4 byte
-    resb 1
+    .radioWasInCar                    resb 1      ; 0x54f4 byte
+    .radioInCar                       resb 1      ; 0x54f5 byte
     .radioSignalLevel                 resb 1      ; 0x54f6 byte
     .radioCurrentSlot                 resb 1      ; 0x54f7 byte
-    .unsure_radioFlag54f8             resb 1      ; 0x54f8 byte
+    .radioPrevSlot                    resb 1      ; 0x54f8 byte
     resb 3
-    .radioBand                        resb 1      ; 0x54fc byte
-    resb 7
+    .radioBand                        resb 4      ; 0x54fc int
+    .radioPrevBand                    resb 4      ; 0x5500 int
     .radioChangeRequest               resb 1      ; 0x5504 byte
     resb 1
     .radioRetuneCountdown             resb 2      ; 0x5506 ushort
-    .radioStreamId                    resb 4      ; 0x5508 int
-    .unsure_radioClientKind           resb 4      ; 0x550c int
-    .unsure_radioClientByte10         resb 1      ; 0x5510 byte
-    resb 7
-    .unsure_radioClientInt18          resb 4      ; 0x5518 int
+    .radioSourceSlot                  resb 4      ; 0x5508 int
+    .radioClient                      resb 16     ; 0x550c SoundClient
     .radioFadeTimer                   resb 4      ; 0x551c int
     .policeRadioReady                 resb 1      ; 0x5520 byte
     .policeVariantCounter             resb 1      ; 0x5521 byte
-    resb 6
+    .policeLastCopStars               resb 2      ; 0x5522 short
+    .policeHighestCrimeKind           resb 4      ; 0x5524 CRIME_KIND
     .policeQueueRead                  resb 1      ; 0x5528 byte
     .policeQueueWrite                 resb 1      ; 0x5529 byte
     resb 2
-    .policeQueue                      resb 15     ; 0x552c byte[15]
-    resb 45
-    .policeType8TileX                 resb 1      ; 0x5568 byte
-    .policeType8TileY                 resb 1      ; 0x5569 byte
-    .policeStandbyTimer               resb 2      ; 0x556a ushort
-    .unsure_policeTimer556c           resb 2      ; 0x556c ushort
-    .unsure_policeTimer556e           resb 2      ; 0x556e ushort
-    .unsure_policeTimer5570           resb 2      ; 0x5570 ushort
+    .policeQueue                      resb 60     ; 0x552c uint[15]
+    .policeCopKillTileX               resb 1      ; 0x5568 byte
+    .policeCopKillTileY               resb 1      ; 0x5569 byte
+    .policeCopKillFollowUpTimer       resb 2      ; 0x556a ushort
+    .policeShotsFiredCooldown         resb 2      ; 0x556c ushort
+    .policeCarDescCooldown            resb 2      ; 0x556e ushort
+    .policeLocationReportCooldown     resb 2      ; 0x5570 ushort
     resb 2
-    .unsure_policeCarDescState        resb 4      ; 0x5574 int
+    .policeLastDescribedCarModel      resb 4      ; 0x5574 int
 endstruc
 
 ; /auto_structs/Sprite  (60 bytes)
@@ -4413,7 +4470,7 @@ endstruc
 ; /imported/seuko-mod/CarAI  (120 bytes)
 struc CarAI
     .parentCar                        resb 4      ; 0x0 Car *
-    resb 4
+    .unusedZeroed04                   resb 4      ; 0x4 uint
     .turnTimer                        resb 1      ; 0x8 byte
     .turnTileX                        resb 1      ; 0x9 byte
     .turnTileY                        resb 1      ; 0xa byte
@@ -4424,32 +4481,33 @@ struc CarAI
     .railSpeedCur                     resb 4      ; 0x14 SCR_f
     .railSpeedGoal                    resb 4      ; 0x18 SCR_f
     .railSpeedStep                    resb 4      ; 0x1c SCR_f
-    resb 4
+    .unusedZeroed20                   resb 4      ; 0x20 uint
     .flags                            resb 4      ; 0x24 uint
     .routeSlot                        resb 1      ; 0x28 char
-    resb 1
+    .unusedZeroed29                   resb 1      ; 0x29 byte
     .stillTicks                       resb 1      ; 0x2a byte
-    .unsure_ticksSinceReset           resb 1      ; 0x2b byte
+    .ageTicks                         resb 1      ; 0x2b byte
     .avoidTimer                       resb 1      ; 0x2c byte
-    resb 2
-    .unsure_laneTarget                resb 1      ; 0x2f byte
+    .laneChangeStartLaneA             resb 1      ; 0x2d byte
+    .laneChangeStartLaneB             resb 1      ; 0x2e byte
+    .laneChangeTargetLane             resb 1      ; 0x2f byte
     .haltTimer                        resb 1      ; 0x30 byte
     resb 3
-    .unsure_initOnly34                resb 4      ; 0x34 int
+    .unusedZeroed34                   resb 4      ; 0x34 int
     .routeUTurnExitDir                resb 4      ; 0x38 int
-    .unsure_unstickState              resb 4      ; 0x3c int
-    .unsure_laneDir                   resb 4      ; 0x40 int
+    .isOffRoad                        resb 4      ; 0x3c int
+    .laneAlignDir                     resb 4      ; 0x40 int
     .turnExitDir                      resb 4      ; 0x44 int
-    .unsure_leftTurnExitDir           resb 4      ; 0x48 int
+    .leftTurnExitDir                  resb 4      ; 0x48 int
     .travelDir                        resb 4      ; 0x4c int
     .offRoadTurn                      resb 4      ; 0x50 int
     .laneFollowCooldown               resb 2      ; 0x54 ushort
     .routeStep                        resb 2      ; 0x56 ushort
-    .stuckTicks                       resb 2      ; 0x58 ushort
+    .offRoadTicks                     resb 2      ; 0x58 ushort
     .reverseTicks                     resb 2      ; 0x5a ushort
-    .unsure_initOnly5C                resb 4      ; 0x5c SCR_f
-    .unsure_initOnly60                resb 4      ; 0x60 SCR_f
-    .unsure_initOnly64                resb 4      ; 0x64 SCR_f
+    .unusedZeroed5C                   resb 4      ; 0x5c SCR_f
+    .unusedZeroed60                   resb 4      ; 0x60 SCR_f
+    .unusedZeroed64                   resb 4      ; 0x64 SCR_f
     .nearbyCar                        resb 4      ; 0x68 Car *
     .blockingCar                      resb 4      ; 0x6c Car *
     .obstacleHit                      resb 4      ; 0x70 Sprite *
@@ -5229,19 +5287,19 @@ endstruc
 
 ; /imported/seuko-mod/PedGroup  (68 bytes)
 struc PedGroup
-    .unsure_byte0                     resb 1      ; 0x0 byte
-    .unsure_byte1                     resb 1      ; 0x1 byte
+    .removeDeadMembers                resb 1      ; 0x0 byte
+    .leaderFetchesStragglers          resb 1      ; 0x1 byte
     resb 2
     .members                          resb 36     ; 0x4 Ped *[9]
-    resb 4
+    .membersTerminator                resb 4      ; 0x28 Ped *
     .leader                           resb 4      ; 0x2c Ped *
-    .unsure_attackedFlag              resb 4      ; 0x30 int
+    .busy                             resb 4      ; 0x30 int
     .membersCount                     resb 1      ; 0x34 byte
     .minMembersBeforeSplit            resb 1      ; 0x35 byte
-    .unsure_membersCountCopy          resb 1      ; 0x36 undefined1
+    .unsure_rosterCount               resb 1      ; 0x36 byte
     resb 1
-    .unsure_mode                      resb 4      ; 0x38 int
-    .unsure_enterCarFlag              resb 4      ; 0x3c int
+    .formation                        resb 4      ; 0x38 int
+    .leaderFetching                   resb 4      ; 0x3c int
     .active                           resb 1      ; 0x40 byte
     resb 3
 endstruc

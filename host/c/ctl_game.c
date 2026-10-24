@@ -518,11 +518,11 @@ void ctl_drive_debug(void)
     CarDriveOrder *o = GP(CarDriveOrder, car->driveOrder);
     CarPhysics *ph = GP(CarPhysics, car->physics);
     Sprite *s = GP(Sprite, car->body);
-    printf("ctl: drv f%u pos %.2f,%.2f rot %d | ai fl %06x slot %d step %u unstick %d offr %d stuck %u still %u rev %u obst %x blk %x"
+    printf("ctl: drv f%u pos %.2f,%.2f rot %d | ai fl %06x slot %d step %u offroad %d offr %d offticks %u still %u rev %u obst %x blk %x"
            " | ord mode %d road %u urg %u arr %u retry %u tgt %.2f,%.2f,%.2f | ph gas %u brk %u st %d spd %d | cls %d aif %02x\n",
            r_frames, s ? s->x / 16384.0 : 0, s ? s->y / 16384.0 : 0, s ? s->rotation : 0,
            ai ? ai->flags : 0, ai ? ai->routeSlot : 0, ai ? ai->routeStep : 0,
-           ai ? ai->unsure_unstickState : 0, ai ? ai->offRoadTurn : 0, ai ? ai->stuckTicks : 0,
+           ai ? ai->isOffRoad : 0, ai ? ai->offRoadTurn : 0, ai ? ai->offRoadTicks : 0,
            ai ? ai->stillTicks : 0, ai ? ai->reverseTicks : 0, ai ? ai->obstacleHit : 0,
            ai ? ai->blockingCar : 0, o ? (int)o->mode : -1, o ? o->followRoadActive : 0,
            o ? o->isUrgent : 0, o ? o->arrived : 0, o ? o->retryCooldown : 0,

@@ -589,8 +589,8 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x482980 | `SpriteBounds_SetSize` | verified | stores 3 dwords at +0/+4/+8 |
 | 0x482A30 | `Sprite_SetOwner2` | verified | this+8=param; callers object-init, Weapon_SpawnProjectile |
 | 0x482A40 | `Sprite_SetVec3AtOffsetCAndMarkDirty` | verified | SpriteBounds_SetSize(*(this+0xC)) + Sprite_MarkBoundsDirty(this) |
-| 0x482A70 | `CollisionResult_SetKind4ClearHitSprite` | verified | operates on g_CollisionResult: [0]=4,[8]=0; caller Object_OnMoveBlocked |
-| 0x482A80 | `CollisionResult_SetKind5ClearHitSprite` | verified | same, kind 5 |
+| 0x482A70 | `CollisionResult_SetFloorHit` (was `CollisionResult_SetKind4ClearHitSprite`) | verified | g_CollisionResult.kind = 4 FLOOR, hitSprite = 0; caller Object_OnMoveBlocked (floor landing) |
+| 0x482A80 | `CollisionResult_SetCeilingHit` (was `CollisionResult_SetKind5ClearHitSprite`) | verified | same, kind 5 CEILING |
 | 0x482A90 | `WorldObject_SetMotionState` | verified | this+0x10=param (WorldObject+0x10 = motion per objects_A); caller Object_CreateExplosion |
 | 0x482AD0 | `ObjectAnimState_Init` | verified | ++DAT_00665764 (alloc counter), clears +4..+7; sole caller ObjectAnimStatePool_Pop |
 | 0x482AF0 | `ObjectAnimState_UpdateFreeCounters` | verified | --DAT_00665764, ++DAT_0066576c; sole caller ObjectAnimStatePool_Push |
@@ -648,7 +648,7 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x486950 | `Object_ApplyWallBounceImpulse` | verified | impulse vs wall mass DAT_0066583c, ImpactEvent_Dispatch(this,0) |
 | 0x4869E0 | `Object_CollideWithWallX` | verified (H4) | wall bounce via Object_ApplyWallBounceImpulse; ComputeWallContactPointX |
 | 0x486B20 | `Object_CollideWithWallY` | verified (H4) | mirror of X with ComputeWallContactPointY |
-| 0x486C60 | `Object_ResolveCollisionByKind` | verified | switch g_CollisionResult.kind 1=X wall 2=Y wall 3=sprite (car/ped/object) |
+| 0x486C60 | `Object_ResolveCollisionByKind` | verified | switch g_CollisionResult.kind 1=X wall 2=Y wall 3=sprite (car/ped/object); kinds 4/5 = floor/ceiling (U4) |
 | 0x486D70 | `Object_OnMoveBlocked` | verified (H4) | switch on prefab `wallResponse` (+0x4C): 0/1 ImpactEvent only, 2/3 ResolveCollisionByKind, 4 settle on the hit sprite's z |
 | 0x486E90 | `Object_MoveBallisticWithCollision` | verified | called by UpdatePhysics/Animated when prefab+0x58 != 0; gravity, StepCollisionFalling/Rising/Grounded |
 | 0x4874D0 | `Object_MoveFlatWithCollision` | verified | same callers when prefab+0x58 == 0; no vertical stepping; Projectile_SetImpactSurfaceFromCollision |

@@ -296,10 +296,10 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
 
 ### Which path the game reads (measured in Ghidra + llvm-objdump on vanilla 11.44)
 
-- **Frontend menu: DirectInput `GetDeviceState`, polled.** `InitFrontend` → `dInput8`
-  `@0x453D80` (frontend2.cpp) creates its own keyboard (`GUID_SysKeyboard`,
+- **Frontend menu: DirectInput `GetDeviceState`, polled.** `InitFrontend` → `FrontEnd_CreateKeyboardDevice`
+  `@0x453D80` (was `dInput8`; frontend2.cpp) creates its own keyboard (`GUID_SysKeyboard`,
   `c_dfDIKeyboard` @`0x577EB4`, 256 bytes, coop `6` = NONEXCLUSIVE|FOREGROUND) into
-  `FrontEnd+4` and acquires it. Each frame `0x452050` calls `0x452000`:
+  `FrontEnd+4` (`keyboardDevice`) and acquires it. Each frame `0x452050` calls `0x452000`:
   `GetDeviceState(256, FrontEnd+8)`, re-Acquire on `DIERR_INPUTLOST`/`NOTACQUIRED`, then
   edge-detects 7 keys into `FrontEnd+0xC9B8..0xC9BE`: LEFT `CB`, RIGHT `CD`, UP `C8`,
   DOWN `D0`, RETURN `1C`, ESCAPE `01`, DELETE `D3`. Only while `FrontEnd+0x10D` is set:
@@ -368,7 +368,7 @@ family (`GetDlgItem`, `SendDlgItemMessageA`, `Set/GetDlgItemTextA`, `EnableWindo
 ### Evidence
 
 `--input-selftest` (no renderer needed) drives the game's own code: DirectInput8Create
-through the IAT into `0x5E8FA4`, `dInput8` `@0x453D80` on a zeroed FrontEnd, the in-game
+through the IAT into `g_DirectInput8` `0x5E8FA4`, `FrontEnd_CreateKeyboardDevice` `@0x453D80` on a zeroed FrontEnd, the in-game
 `DInput_CreateKeyboardDevice` `@0x44BB30`, `InitMouseExclusive` `@0x4CAD30`; then per frame the
 frontend poll `0x452050`, `GetDeviceData` on `0x5E8F4C` one record at a time, the mouse
 state. It pushes 10 key taps (one shorter than a frame, one auto-repeat, three held
@@ -443,6 +443,47 @@ import handlers listed in `host/w32_mss32.asm` (docs/host-c.md, "Import shims in
 - **Voices**: `data\audio\vocals\*.wav`, IMA ADPCM (format 0x11, 4-bit, stereo,
   block align 1024), played as streams.
 - Volumes: SFX samples come out at vol 10 (registry `SFXVol` = 11), master 127.
+
+**Call contract of the `MssAudio` wrapper** (`g_MssAudioDevice` 0x66C950, Seq 27 U1 pass
+2026-10-24, read in code, not traced at runtime). Every wrapper indexes a handle array and
+tail-jumps to the AIL import with the remaining arguments unchanged, so this is what the host
+reimplementation sees. The game-side mixer above it is in
+[cars-and-car-ai.md](re/cars-and-car-ai.md) §2.
+
+- **2D voice `v`** (`samples2D[v]`, MssAudio+0x58): `MssAudio_Sample_SetAddress(v, bankBase +
+  entry.offset, entry.size)` 0x4B60C0, `_SetPlaybackRate(v, rate)` 0x4B6150 (SDT rate ± jitter, Doppler
+  applied), `_SetVolume(v, vol)` 0x4B6110, `_SetPan(v, pan)` 0x4B6130 (slewed ±10 per frame),
+  `_SetLoopCount(v, n)` 0x4B6190, `_SetLoopBlock(v, loopStart, loopEnd)` 0x4B6170 (SDT loop points,
+  `MssBankEntry.loopStart` +0x10 / `loopEnd` +0x14, −1 = none), `_Start`, `_End`, `_IsPlaying`
+  (AIL_sample_status).
+- **3D voice** (`samples3D[v]`, +0x26C4, only with a DirectSound3D provider): the same set plus
+  `MssAudio_Sample3D_SetPosition(v, x, 0.0, -y)` 0x4B62D0 — world x → X, world y → −Z, height is
+  always 0 — and `Sample3D_SetDistances`. The game opens 3D only when a provider is enumerated.
+- **Extra sample** (`extraSample` +0x98, one 8-bit HSAMPLE): police-radio phrases
+  (`MssAudio_ExtraSample_PlayEntry(entry)` 0x4B69B0: SDT rate, pan 0x40, loop 1, volume
+  `sfxVolume*0x6E>>7`) and phone chatter (`_ExtraSample_PlayRange(first, last)` 0x4B6A80: rate 0x4682
+  = 18050, one sample spanning several consecutive bank entries).
+- **Streams** (`streams[2]` +0x9C; 0 = music / radio, 1 = vocals): `MssAudio_Stream_OpenTrack(stream,
+  id, plain)` 0x4B70C0. Stream 0 opens `data\gtaudio\<id>.wav` when `plain` (radio band 1), else
+  `<id>A.wav` (band 0), looping forever; stream 1 opens `data\audio\vocals\<name>`, played once. Also
+  `_Stream_SetVolume(stream, vol & 0xFF)` 0x4B6890 (**the volume is masked to a byte** before
+  AIL_set_stream_volume; the radio sets it to 0 on every station switch and the static-noise update
+  raises it again), `_SetPlaybackRate` 0x4B68C0, `_SetPositionMs` 0x4B6910 / `_GetPositionMs`
+  (save / restore a station's position), `_GetLengthMs`, `_Close`.
+- **Frontend music** is the same stream 0 through `MssAudio_MusicStream_Open(track)` 0x4B6700:
+  track 0 `d.wav`, 1 `m.wav`, 2 `a.wav` (names at 0x575214); `SoundManager.musicLoopTrackD` picks
+  d vs m.
+- Startup: `MssAudio_Startup2D` 0x4B7250 (AIL_startup, waveOutOpen 22050 Hz, 16 2D samples, master
+  0x7F); `Mss_Init2DSamples(arg)` 0x4B6F70 (callers pass 1, meaning not decoded); 3D:
+  `MssAudio_Open3DProvider(idx)` 0x4B6550 sets `selected3DProviderIdx` +0x26B4 and `eaxSupported`
+  +0x26B8 (provider answers "EAX environment selection" != −1); `Mss_Init3DSamples` 0x4B72B0 returns
+  the voice count (provider max, capped 16, < 8 = fail).
+- Prototypes (all `__thiscall (MssAudio*, …)`): `Sample_SetVolume/Pan/PlaybackRate/LoopCount` and
+  `Sample3D_SetVolume/PlaybackRate/LoopCount` 0x4B62B0 / 0x4B6320 / 0x4B6360 take `(int voice, int
+  value)`; `Sample(3D)_SetLoopBlock` 0x4B6170 / 0x4B6340 `(int voice, int loopStart, int loopEnd)`;
+  `Stream_SetVolume/SetPlaybackRate/SetPositionMs` `(int stream, int value)`; `MusicStream_IsDone`
+  0x4B66A0 returns bool; `Eax_SetEffectParams` 0x4B6460 `(float, float, undefined4)` (RET 0xC,
+  semantics not decoded).
 
 ### Design
 

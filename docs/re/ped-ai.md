@@ -270,19 +270,20 @@ the same step test for `Car_IsDoorExitClear`.
 | 0x0C | word | `openCount` | ++ in PushOpenNode, −− on pop; no 400 cap |
 | 0x0E–0x10 | byte ×3 | `startX/Y/Z` | FindPath args 4–6; z snapped by `MapBlocks_GetGroundZBelow` |
 | 0x11–0x13 | byte ×3 | `goalX/Y/Z` | FindPath args 7–9 |
-| 0x14 | byte | `unsure_budgetPending` | set per pop while the list is non-empty; no reader |
+| 0x14 | byte | `openNodesLeft` (was `unsure_budgetPending`) | write-only: 1 after a pop that left the open list non-empty (0x49D4D2), 0 before path output (0x49D4F5) |
 | 0x16 | short | `floodRing` | FindSpawnTile pop counter = priority |
 | 0x18 | byte | `searching` | loop condition |
-| 0x19 / 0x1A | byte | `unsure_goalReached` / `2` | set on goal / edge hit; no reader |
+| 0x19 | byte | `searchDone` (was `unsure_goalReached`) | write-only: 1 on **every** search end — goal popped (0x49D588), window-edge exit (0x49CF63), open list exhausted / fallback (0x49D4A9) |
+| 0x1A | byte | `targetReached` (was `unsure_goalReached2`) | write-only: 1 only when the target was reached — goal popped (0x49D58C) or edge exit toward the goal (0x49CF67), not on the fallback |
 | 0x1B | byte | `stepDir` | 1..8 / 0x42 |
 | 0x1C | word | `nodeIndex` | gridX + gridY·34 |
 | 0x1E | short | `curStepCount` | from node +6 |
 | 0x20–0x22 | byte ×3 | `nbrX/Y/Z` | neighbour world tile |
 | 0x23 / 0x24 | byte | `nbrGridX/Y` | window coordinates |
 | 0x25–0x27 | byte ×3 | `curX/Y/Z` | from-tile for CanStepToTile / CanCrossEdge |
-| 0x28 / 0x29 | byte | `unsure_windowOriginX/Y` | FindSpawnTile writes x−16, y−16; never read |
+| 0x28 / 0x29 | byte | `spawnWindowOriginX/Y` (was `unsure_windowOriginX/Y`) | write-only: FindSpawnTile writes x−16, y−16 (0x49D7FD / 0x49D806) |
 | 0x2E | short | `iterBudget` | = 100 per call |
-| 0x34 / 0x36 / 0x3A | short | `unsure_init34/36/3a` | InitFields only (1, 0, 0) |
+| 0x34 / 0x36 / 0x3A | short | `unusedInit34/36/3a` (was `unsure_init34/36/3a`) | write-only, vestigial: InitFields only (1, 0, 0 at 0x49C717 / 0x49C71B / 0x49C71F) |
 | 0x38 | byte | `searchInProgress` | set in the pop loop, cleared on success / abort; FindSpawnTile gate |
 | 0x3C | `PedListNode*` | `requestQueueHead` | `PedQueue_Ctor`, `PedList_AddUniqueAtTail` / `Remove` |
 | 0x40 | `PedPathNode[33][34]` | `nodes` | ClearNodes 0x8C4 dwords; index `x + y*0x22`; start node = index 0x230 |
@@ -326,8 +327,10 @@ byte* outLength)`; `CanCrossEdge(this, int dir)`, `CanStepToTile(this, byte toX,
   `Ang16_ToHeadingClass` 0x472C00 = 1 N (−y), 2 S (+y), 3 E (+x), 4 W (−x)
   ([cars-and-car-ai.md](cars-and-car-ai.md) §4), which agrees, so the edge choice is on the right
   axis. (H3 itself did not resolve the Ang16 threshold constants.)
-- What +0x14, +0x19, +0x1A, +0x28/0x29, +0x34/0x36/0x3A are for: no readers found (dead or debug;
-  they keep `unsure_`).
+- ~~What +0x14, +0x19, +0x1A, +0x28/0x29, +0x34/0x36/0x3A are for~~: **write-only**, verified by an
+  instruction scan of every `PedPathfinder_*` function and every function that references
+  `g_PedPathfinder` (any base register except ESP/EBP; U3, 2026-10-24); named after what the writes
+  mean (table above). The untyped gaps 0x5–7, 0x15, 0x2A–0x2D, 0x30–0x33, 0x39 have no access at all.
 - The `PushOpenNode` early return when `hasSecondLevel` is set and z matches slot 2 (clears the flag,
   pushes nothing): intent unclear.
 - Whether `FindSpawnTile`'s `wide = EBP` at 0x43CD2A is 0 or 1.

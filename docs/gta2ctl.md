@@ -216,7 +216,8 @@ Game facts used (Seq 27's answers, `docs/re/ped-movement-collision.md`):
   wide (measured: ~60 of 90 degrees in the time the turn steers, CarAI flag 0x80), so the car
   left the junction over the kerb and lost its route. While the flag is up, the car is turned
   8 more Ang16 units per tick (about 2 degrees) toward `CarAI.turnExitDir` (+0x44), never past it.
-  Measured on the same route: 22-33 unstick ticks and a lost route before, none after.
+  Measured on the same route: 22-33 ticks in off-road mode (the old "unstick" state, now
+  `CarAI.isOffRoad` / `offRoadTicks`) and a lost route before, none after.
 - **No U-turn routes** (`ctl_find_route`, a CALLHOOK on the `RoadNetwork_FindRoute` call in
   `CarAI_SetRouteTarget`, 0x42AD41): the car AI never executes a route that leaves a junction
   back the way the car came (`CarAI_ApplyRouteTurn` only notes it, +0x38 / flag 0x800), so it

@@ -167,6 +167,8 @@ typedef struct CarManager CarManager;
 typedef struct CarPool CarPool;
 typedef struct MaybeCarEngineHolder MaybeCarEngineHolder;
 typedef struct AnimatedValue AnimatedValue;
+typedef struct CreditsLine CreditsLine;
+typedef struct CreditsLineList CreditsLineList;
 typedef struct FrontEnd FrontEnd;
 typedef struct Game Game;
 typedef struct Menu Menu;
@@ -393,6 +395,17 @@ enum CAR_PHYSICS_MODE_values {
     CAR_PHYSICS_PLAYER = 2,
     CAR_PHYSICS_UNSURE_3 = 3,
     CAR_PHYSICS_UNSURE_KINEMATIC = 4,
+};
+
+// /COLLISION_RESULT_KIND
+typedef uint32_t COLLISION_RESULT_KIND;
+enum COLLISION_RESULT_KIND_values {
+    COLLISION_RESULT_NONE = 0,
+    COLLISION_RESULT_MAP_WALL_ALONG_X = 1,
+    COLLISION_RESULT_MAP_WALL_ALONG_Y = 2,
+    COLLISION_RESULT_SPRITE = 3,
+    COLLISION_RESULT_FLOOR = 4,
+    COLLISION_RESULT_CEILING = 5,
 };
 
 // /CRIME_KIND
@@ -1030,6 +1043,63 @@ enum VOCAL_values {
     TASTE_MY_WRATH__ICE_CREAM_BOY_ = 60,
     HALLELUJAH__ANOTHER_SOUL_SAVED_ = 61,
     DAMNATION__NO_DONATION__NO_SALVATION_ = 62,
+};
+
+// /_game/FRONTEND_DECOR_KIND
+typedef uint8_t FRONTEND_DECOR_KIND;
+enum FRONTEND_DECOR_KIND_values {
+    FRONTEND_DECOR_NONE = 0,
+    FRONTEND_DECOR_TEXT = 1,
+    FRONTEND_DECOR_SPRITE = 3,
+};
+
+// /_game/FRONTEND_ITEM_KIND
+typedef uint8_t FRONTEND_ITEM_KIND;
+enum FRONTEND_ITEM_KIND_values {
+    FRONTEND_ITEM_NONE = 0,
+    FRONTEND_ITEM_BUTTON = 1,
+    FRONTEND_ITEM_SELECTOR = 2,
+};
+
+// /_game/FRONTEND_MODE
+typedef uint32_t FRONTEND_MODE;
+enum FRONTEND_MODE_values {
+    FRONTEND_MODE_MENU = 1,
+    FRONTEND_MODE_STARTING_GAME = 2,
+    FRONTEND_MODE_NAME_ENTRY = 3,
+    FRONTEND_MODE_DELETE_PROFILE_CONFIRM = 4,
+    FRONTEND_MODE_CODE_ENTRY = 5,
+};
+
+// /_game/FRONTEND_PAGE
+typedef uint16_t FRONTEND_PAGE;
+enum FRONTEND_PAGE_values {
+    FRONTEND_PAGE_MAIN_MENU = 0,
+    FRONTEND_PAGE_PLAYER_SELECT = 1,
+    FRONTEND_PAGE_PLAYER_DEAD = 2,
+    FRONTEND_PAGE_AREA_COMPLETE = 3,
+    FRONTEND_PAGE_GAME_COMPLETE = 4,
+    FRONTEND_PAGE_HIGH_SCORES = 5,
+    FRONTEND_PAGE_BONUS_COMPLETE = 6,
+    FRONTEND_PAGE_MP_RESULTS = 7,
+    FRONTEND_PAGE_INTRO_MOVIE = 8,
+    FRONTEND_PAGE_CREDITS = 9,
+    FRONTEND_PAGE_NICE_TRY = 10,
+    FRONTEND_PAGE_PLAYER_QUIT = 11,
+    FRONTEND_PAGE_UNUSED_12 = 12,
+    FRONTEND_PAGE_UNUSED_13 = 13,
+    FRONTEND_PAGE_PARENTAL_CODE = 14,
+    FRONTEND_PAGE_PREINTRO_MOVIE = 15,
+    FRONTEND_PAGE_UNUSED_16 = 16,
+};
+
+// /_game/FRONTEND_RESULT
+typedef uint32_t FRONTEND_RESULT;
+enum FRONTEND_RESULT_values {
+    FRONTEND_RESULT_QUIT_APP = 1,
+    FRONTEND_RESULT_RUNNING = 2,
+    FRONTEND_RESULT_START_GAME = 3,
+    FRONTEND_RESULT_ATTRACT_DEMO = 4,
 };
 
 // /_mainmenu/MAIN_MENU_SOUND
@@ -2441,26 +2511,29 @@ struct CarDriveOrder {
     Ped *driver; /* 0x4 */
     CAR_DRIVE_ORDER_MODE mode; /* 0x8 */
     CAR_DRIVE_MANEUVER maneuver; /* 0xc CAR_DRIVE_MANEUVER; written by CarDriveOrder_Drive state machine, Ped objectives, CarAI_UpdateDriveOrder (0 on urgent teleport) */
-    byte unsure_ramArmed; /* 0x10 set 1 by SIDE_PUSH (8/9) when it goes for the ram; CarAI_ReactToNearbyCar then gives the target car 500 damage on contact (Car_AddDamage) */
+    byte ramArmed; /* 0x10 Set 1 by CarDriveOrder_Drive SIDE_PUSH_A/B when it goes for the ram (0x42E31D / 0x42E727); while set, CarAI_ReactToNearbyCar 0x42FBCF gives g_CarAI_targetCar 500 damage (Car_AddDamage) on every contact. Only cleared by CarDriveOrder_Reset (order alloc/free): once armed it stays armed for the order's life. Was unsure_ramArmed. */
     uint8_t _gap_0x11[0x3];
     SCR_f targetX; /* 0x14 */
     SCR_f targetY; /* 0x18 */
     SCR_f targetZ; /* 0x1c */
     byte isUrgent; /* 0x20 */
-    uint8_t _gap_0x21[0x1];
+    byte unusedZeroed21; /* 0x21 Zeroed by CarDriveOrder_Reset 0x4461CA only; no other access (typed p-code scan + byte-operand scan). U2 2026-10-24. */
     byte followRoadActive; /* 0x22 */
-    uint8_t _gap_0x23[0x3];
+    byte unusedInit23; /* 0x23 Set 1 by CarDriveOrder_Reset 0x4461D0 only; no other access. U2 2026-10-24. */
+    byte unusedZeroed24; /* 0x24 Zeroed by CarDriveOrder_Reset 0x4461D3 only; no other access through a CarDriveOrder (the [ESI+0x24] byte tests in CarAI code are CarAI.flags). U2 2026-10-24. */
+    byte unusedZeroed25; /* 0x25 Zeroed by CarDriveOrder_Reset 0x4461D6 only; no other access. U2 2026-10-24. */
     bool_ arrived; /* 0x26 */
     uint8_t _gap_0x27[0x3];
-    uint16_t unsure_approachTicks; /* 0x2a CarDriveOrder_Drive: counts to 10 in TAIL states, set 100 on FOLLOW; also a cooldown counted down when far (>=2.0) */
-    uint16_t unsure_phaseTicks; /* 0x2c CarDriveOrder_Drive: per-state wait counter (FLANK_WAIT 10, FOLLOW 10/80/100/400 by allied count and cop level) */
-    uint16_t unsure_sideTicks; /* 0x2e CarDriveOrder_Drive SIDE_PUSH: ticks spent alongside before the ram (limit 0/1/10/50 by allied cop count) */
+    uint16_t targetLockTicks; /* 0x2a Contact/lock counter of CarDriveOrder_Drive: ++ to 10 while close (< 2.0) in TAIL/TAIL_OFFSET (0x42F0DF; at >= 10 -> FOLLOW); set 100 on entering/holding FOLLOW (0x42F05C, 0x42F71E); when far (>= 2.0) or isOffRoad it is counted down (0x42EF8A) and only at 0 does the chase re-plan (TAIL_OFFSET / TAIL). So it is a grace period before giving up the current maneuver. Zeroed by CarAI_UpdateDriveOrder 0x42D545 (urgent teleport), CarAI_ReactToNearbyCar 0x42FC32/46, Reset. Was unsure_approachTicks. */
+    uint16_t maneuverTicks; /* 0x2c Per-maneuver wait counter of CarDriveOrder_Drive: FLANK_WAIT 3/4 count to 10 then try the side slot; FOLLOW 5 counts to a limit (400/0 by cop level for 1 ally, 80, 10; 100 for FOLLOW_TARGET) then takes a free side; zeroed on STOPPED and by CarAI_ReactToNearbyCar 0x42FC3B/4F; an ally's counter is read (> 10) and zeroed at 0x42F03E. Was unsure_phaseTicks. */
+    uint16_t sidePushTicks; /* 0x2e CarDriveOrder_Drive SIDE_PUSH 8/9: ticks spent alongside the target before the ram (limit 0/1/10/50 by allied cop count / cop level); zeroed on re-plan and by CarAI_ReactToNearbyCar 0x42FC25. Was unsure_sideTicks. */
     Ped *targetPed; /* 0x30 */
     uint16_t retryCooldown; /* 0x34 */
-    uint8_t _gap_0x36[0x6];
-    byte unsure_blockAttempts; /* 0x3c CarDriveOrder_Drive: ++ each time CUT_IN gets within 1.5 of the target (-> BLOCK_SPIN); SIDE_PUSH gives up the ram when > 3 */
+    uint8_t _gap_0x36[0x2];
+    uint32_t unusedZeroed38; /* 0x38 Zeroed (dword) by CarDriveOrder_Reset 0x4461F5 only; no other access. U2 2026-10-24. */
+    byte blockHitCount; /* 0x3c ++ by CarDriveOrder_Drive 0x42FA1B each time CUT_IN/BLOCK_SPIN gets within 1.5 of the target (-> BLOCK_SPIN); SIDE_PUSH of DRIVE_ORDER_UNSURE_ATTACK_A goes for the ram when > 3 even vs a faster target. PoliceCrew_UpdateChaseDriveOrder 0x4ABCC3 seeds it from target Ped.chaseHitCount each tick (if non-zero) and on STOPPED adds it back to chaseHitCount (0x4ABC66). Was unsure_blockAttempts. */
     uint8_t _gap_0x3d[0x2];
-    byte end; /* 0x3f */
+    byte unused3F; /* 0x3f No access anywhere (typed p-code scan + byte-operand scan); seuko-mod 'end' marker / padding to the 0x40 pool stride. U2 2026-10-24. */
 };
 
 // /CarDriveOrderPool  size 0x500
@@ -2498,17 +2571,18 @@ struct CollisionManager {
 };
 
 // /CollisionResult  size 0x28
+// Last collision found by the map/sprite tests; one global instance g_CollisionResult 0x5E6874 (ctor CollisionResult_Ctor 0x446A00 via StaticInit_CollisionResult 0x50A080). Verified U4 2026-10-24.
 struct CollisionResult {
-    int kind; /* 0x0 1 map wall along X (CollisionResult_SetMapWallAlongX 0x4BA250), 2 along Y (0x4BA280), 3 sprite (CollisionResult_SetHitSprite 0x40FEE0); 0 = none (CollisionResult_Clear 0x4637B0) */
-    int unsure_wallXTileX; /* 0x4 set by SetMapWallAlongX arg1; read as tile x by SoundEvent_SetFromCollisionResult (NorthFace) */
-    int unsure_wallXArg2; /* 0x8 SetMapWallAlongX arg2 */
-    int unsure_wallYTileY; /* 0xc SetMapWallAlongY arg1; WestFace y */
-    int unsure_wallYArg2; /* 0x10 SetMapWallAlongY arg2 */
-    int unsure_wallYTileX; /* 0x14 SetMapWallAlongY arg3; WestFace x */
-    int unsure_wallXTileY; /* 0x18 SetMapWallAlongX arg3; NorthFace y */
-    int hitZ; /* 0x1c CollisionResult_SetHitZ 0x4BA2B0; face tile z */
-    Sprite *hitSprite; /* 0x20 kind 3 (SetHitSprite 0x40FEE0); was label g_CollisionHitSprite 0x5E6894 */
-    Sprite *moverSprite; /* 0x24 CollisionResult_SetMoverSprite 0x49EF10; was label g_CollisionMoverSprite 0x5E6898 */
+    COLLISION_RESULT_KIND kind; /* 0x0 COLLISION_RESULT_KIND; read by CarPhysics_DispatchCollision 0x4A4170, Object_ResolveCollisionByKind 0x486C60, SoundEvent_* 0x40FF20/0x410010/0x4100F0, ImpactEvent_Dispatch 0x486410 (4/5) */
+    Fix16 wallMinX; /* 0x4 kind 1: x start of the wall face segment (SetMapWallAlongX arg1, <= wallMaxX: Segment_IntersectHorizontalLine 0x472950 range check). Sound: tile x for MapBlocks_GetNorthFaceTileMaterial 0x40FFEF */
+    Fix16 wallMaxX; /* 0x8 kind 1: x end of the wall face segment (SetMapWallAlongX arg2). CarPhysics_CollideWithWallX 0x4A3F25 / Object_CollideWithWallX 0x486ADC snap the contact to the nearer end */
+    Fix16 wallMinY; /* 0xc kind 2: y start of the wall face segment (SetMapWallAlongY arg1). Sound: tile y for MapBlocks_GetWestFaceTileMaterial 0x40FFBC */
+    Fix16 wallMaxY; /* 0x10 kind 2: y end of the wall face segment (SetMapWallAlongY arg2) */
+    Fix16 contactX; /* 0x14 contact point x on the wall line. kind 2: the wall line x (SetMapWallAlongY arg3). kind 1: x where a body edge crosses the wall line (written by Segment_IntersectHorizontalLine 0x472AB7 before SetMapWallAlongX). Not set by the map-border path of Sprite_TestMapCollisionAndRecord (stale) */
+    Fix16 contactY; /* 0x18 contact point y on the wall line. kind 1: the wall line y (SetMapWallAlongX arg3). kind 2: y where a body edge crosses the wall line (Segment_IntersectVerticalLine 0x472BDD). Not set by the map-border path (stale) */
+    Fix16 hitZ; /* 0x1c sprite z at the wall hit (CollisionResult_SetHitZ 0x4BA2B0 from Sprite_TestMapCollisionAndRecord / Sprite_TestWallBlockedAndRecordZ); z for the face-material lookup in SoundEvent_*. Not initialised by the ctor */
+    Sprite *hitSprite; /* 0x20 kind 3: the obstacle sprite (SetHitSprite 0x40FEE0); zeroed by Clear and by SetMapWall* /SetFloorHit/SetCeilingHit */
+    Sprite *moverSprite; /* 0x24 the moving sprite whose sweep found the hit (SetMoverSprite 0x49EF10, CarPhysics_TestCollision); read by CarPhysics_OnCollision 0x4A4276. Zeroed only by Clear */
 };
 
 // /ComboEntry  size 0x2c
@@ -2781,7 +2855,7 @@ struct FrontendLevelPaths {
 
 // /FrontendPageItem  size 0x82
 struct FrontendPageItem {
-    byte kind; /* 0x0 */
+    FRONTEND_ITEM_KIND kind; /* 0x0 FRONTEND_ITEM_KIND (1 button, 2 selector) */
     byte enabled; /* 0x1 */
     uint16_t x; /* 0x2 */
     uint16_t y; /* 0x4 */
@@ -2789,7 +2863,7 @@ struct FrontendPageItem {
     uint16_t fontId; /* 0x6a */
     uint16_t remap; /* 0x6c */
     uint16_t choice; /* 0x6e */
-    uint16_t choice2; /* 0x70 */
+    uint16_t choiceOnEntry; /* 0x70 copy of choice written on page entry (FrontEnd_GotoPage page 1: = plyrslot; InitPages/ctor = 0); no reader found in any FrontEnd function: write-only */
     byte choiceEnabled[12]; /* 0x72 */
     uint16_t choiceMax; /* 0x7e */
     uint16_t action; /* 0x80 */
@@ -2797,7 +2871,7 @@ struct FrontendPageItem {
 
 // /FrontendPageDecor  size 0x6e
 struct FrontendPageDecor {
-    byte kind; /* 0x0 */
+    FRONTEND_DECOR_KIND kind; /* 0x0 FRONTEND_DECOR_KIND (1 text, 3 sprite: text[0] = arrow sprite selector) */
     byte enabled; /* 0x1 */
     uint16_t x; /* 0x2 */
     uint16_t y; /* 0x4 */
@@ -3366,12 +3440,12 @@ struct PedPathfinder {
     byte goalX; /* 0x11 */
     byte goalY; /* 0x12 */
     byte goalZ; /* 0x13 */
-    byte unsure_budgetPending; /* 0x14 1 while a FindPath call loops with a non-empty open list; 0 before path output; no reader found */
+    byte openNodesLeft; /* 0x14 WRITE-ONLY: FindPath 0x49d4d2 sets 1 after a pop that left the open list non-empty, 0x49d4f5 clears it before path output. No reader anywhere (instruction scan of all PedPathfinder_* + every g_PedPathfinder user, 2026-10-24). */
     uint8_t _gap_0x15[0x1];
     short floodRing; /* 0x16 FindSpawnTile pop counter, used as priority */
     byte searching; /* 0x18 search loop runs while != 0 */
-    byte unsure_goalReached; /* 0x19 set 1 with 0x1a on goal / edge hit; no reader found */
-    byte unsure_goalReached2; /* 0x1a */
+    byte searchDone; /* 0x19 WRITE-ONLY: 1 on every search end: goal popped (0x49d588), window-edge exit (TryExpandNeighbor 0x49cf63), open list exhausted / fallback (0x49d4a9). No reader (instruction scan 2026-10-24). */
+    byte targetReached; /* 0x1a WRITE-ONLY: 1 only when the search reached its target: goal popped (0x49d58c) or window-edge exit toward the goal (0x49cf67); NOT on the open-list-exhausted fallback. No reader (instruction scan 2026-10-24). */
     byte stepDir; /* 0x1b direction code of the neighbour being pushed: 1 -y,2 +x,3 +y,4 -x,5 +x-y,6 +x+y,7 -x+y,8 -x-y; 0x42 = start node */
     word nodeIndex; /* 0x1c gridX + gridY*34 of current/neighbour node */
     short curStepCount; /* 0x1e stepCount of popped node */
@@ -3383,16 +3457,16 @@ struct PedPathfinder {
     byte curX; /* 0x25 current (from) tile world x for step tests */
     byte curY; /* 0x26 */
     byte curZ; /* 0x27 */
-    byte unsure_windowOriginX; /* 0x28 FindSpawnTile only: x-16; never read */
-    byte unsure_windowOriginY; /* 0x29 */
+    byte spawnWindowOriginX; /* 0x28 WRITE-ONLY: FindSpawnTile 0x49d7fd stores x-16 (world x of grid column 0). No reader (instruction scan 2026-10-24). */
+    byte spawnWindowOriginY; /* 0x29 WRITE-ONLY: FindSpawnTile 0x49d806 stores y-16. No reader. */
     uint8_t _gap_0x2a[0x4];
     short iterBudget; /* 0x2e pops left in this FindPath call (100 per call) */
     uint8_t _gap_0x30[0x4];
-    short unsure_init34; /* 0x34 =1 in InitFields, no reader found */
-    short unsure_init36; /* 0x36 =0 in InitFields, no reader found */
+    short unusedInit34; /* 0x34 WRITE-ONLY: =1 in InitFields 0x49c717, nothing else touches it (instruction scan 2026-10-24); vestigial. */
+    short unusedInit36; /* 0x36 WRITE-ONLY: =0 in InitFields 0x49c71b only; vestigial. */
     byte searchInProgress; /* 0x38 1 from the first pop until success/abort; FindSpawnTile(wide=0) refuses while set */
     uint8_t _gap_0x39[0x1];
-    short unsure_init3a; /* 0x3a =0 in InitFields, no reader found */
+    short unusedInit3a; /* 0x3a WRITE-ONLY: =0 in InitFields 0x49c71f only; vestigial. */
     PedListNode *requestQueueHead; /* 0x3c FIFO of peds waiting for a path; only the head may call FindPath */
     PedPathNode nodes[33][34]; /* 0x40 [gridY][gridX], 33 rows x 34 (x,y used 0..32), start at [16][16] */
     PedPathOpenEntry openList[400]; /* 0x2350 also reused as the reconstruction stack */
@@ -4037,39 +4111,46 @@ struct MaybeCarEngineHolder {
     CarPhysics *arr306; /* 0x4 */
 };
 
+// /_game/CreditsLine  size 0x6c
+// One credits line, 0x6C bytes; 600 of them in CreditsLineList (element ctor 0x449CA0, dtor 0x449CD0 = bare RET). Filled from GXT key 'credits' by Credits_ParseText 0x449D70. Seq27 U5.
+struct CreditsLine {
+    byte active; /* 0x0 1 = parsed entry (Credits_ParseText 0x449D70 sets it); ctor 0x449CA0 clears */
+    byte pad; /* 0x1 */
+    uint16_t x; /* 0x2 always 300 (Credits_ParseText); FrontEnd_DrawCredits ignores it and centres the text: (640 - width)/2 */
+    uint16_t gapAbove; /* 0x4 scroll pixels before this line = 20 per '*' read since the previous entry (the previous entry's terminating '*' counts); summed by FrontEnd_UpdateCreditsScroll 0x453480 / FrontEnd_DrawCredits 0x453590 */
+    uint16_t style; /* 0x6 from '#'+letter: none or W=0 (font role Fe4, palette SPRITE), any other letter=1 (Fe5), B=2, G=3, C=4 (Fe5 + FONT_REMAP 0xD/0xE/0xF). Other values -> DisplayError 0xBC in FrontEnd_DrawCredits 0x453590 */
+    wchar16 text[50]; /* 0x8 text up to the next '*'; NOT bounds-checked (Credits_ParseText). Texts BINKLOGO / MILESLOGO draw sprites (6,1) / (6,0x19) instead */
+};
+
+// /_game/CreditsLineList  size 0xfd22
+// Credits text at FrontEnd+0xEDFA, 0xFD22 bytes: u16 count + CreditsLine[600]. Ctor CreditsLineList_Ctor 0x449CE0 (count=0, 600 x 0x449CA0), dtor 0x449D10; filled by Credits_ParseText 0x449D70, called at the end of FrontEnd_InitPages (0x455323). Seq27 U5.
+struct CreditsLineList {
+    uint16_t count; /* 0x0 parsed entries; Credits_ParseText never checks it against 600 */
+    CreditsLine lines[600]; /* 0x2 */
+};
+
 // /_game/FrontEnd  size 0x1eb40
 struct FrontEnd {
-    uint8_t _gap_0x0[0x8];
-    int field8_0x8; /* 0x8 */
-    uint8_t _gap_0xc[0x3];
-    byte field12_0xf; /* 0xf */
-    uint8_t _gap_0x10[0xb];
-    byte field24_0x1b; /* 0x1b */
-    uint8_t _gap_0x1c[0xe3];
-    undefined4 field252_0xff; /* 0xff */
-    uint8_t _gap_0x103[0x5];
-    int resultCode; /* 0x108 */
-    byte field259_0x10c; /* 0x10c */
+    void *directInput; /* 0x0 IDirectInput8* copied from global relatedToFronte?d 0x5E8FA4 by FrontEnd_CreateKeyboardDevice 0x453D80; vtbl+0xC CreateDevice(GUID_SysKeyboard 0x576C04) creates keyboardDevice. Not released by the frontend. */
+    void *keyboardDevice; /* 0x4 IDirectInputDevice8* keyboard: created 0x453D80 (SetDataFormat c_dfDIKeyboard vtbl+0x2C, SetCooperativeLevel(hwnd, 6 = NONEXCLUSIVE|FOREGROUND) vtbl+0x34), Acquire vtbl+0x1C 0x451FE0, GetDeviceState(256) vtbl+0x24 0x452000, Unacquire+Release 0x451FB0. */
+    byte keyState[256]; /* 0x8 DIK-indexed keyboard state from GetDeviceState (FrontEnd_ReadKeyboardState 0x452000); bit 0x80 = down. Menu keys read [0xC8] UP, [0xD0] DOWN, [0xCB] LEFT, [0xCD] RIGHT, [0x1C] ENTER, [0x01] ESC, [0xD3] DELETE (0x452050); the whole array is scanned for 'any key' (idle timer 0x45A34B, movie skip 0x45A41A, credits 0x453480, name/code entry). */
+    FRONTEND_RESULT resultCode; /* 0x108 FRONTEND_RESULT, returned by FrontEnd_Tick 0x45A320. */
+    bool_ keyboardAcquireFailed; /* 0x10c set 1 when keyboardDevice is NULL or Acquire fails (FrontEnd_AcquireKeyboard 0x451FF4), 0 in InitFrontend 0x456C34. No reader anywhere (whole-program displacement scan, Seq27 U5): write-only. */
     byte keyboardActive; /* 0x10d */
     uint8_t _gap_0x10e[0x2];
-    int mode; /* 0x110 */
+    FRONTEND_MODE mode; /* 0x110 FRONTEND_MODE: switch in FrontEnd_UpdateMode 0x45A250 / FrontEnd_DrawPage 0x458590. */
     int cursorBlink; /* 0x114 */
     int cursorBlinkTimer; /* 0x118 */
     short defaultFontId; /* 0x11c */
-    short pageId; /* 0x11e */
-    uint8_t _gap_0x120[0x2];
+    FRONTEND_PAGE pageId; /* 0x11e current page (FRONTEND_PAGE), set only by FrontEnd_GotoPage 0x4587B0. */
+    uint16_t unsure_lastPageId; /* 0x120 written 0x10 (= 16, the last index of pages[17]) at FrontEnd_InitPages 0x453E30, never read (whole-program displacement scan, Seq27 U5). The meaning is a guess from the value. */
     FrontendPage pages[17]; /* 0x122 */
-    WCHAR playerName[8]; /* 0xc98c */
-    short field272_0xc99c; /* 0xc99c */
+    wchar16 playerName[9]; /* 0xc98c profile-name edit buffer, 8 chars + NUL: copyPlayerName 0x452490 wcsncpy(..,9), FrontEnd_ClearPlayerNameTail 0x4524C0 clears up to index 8, FrontEnd_UpdateNameEntryMode 0x459E30 caps nameLen at 8. A typed char is accepted only if its glyph width is > 2 px (0x459EB5), so the blank 2-px placeholder glyphs cannot be typed. */
     byte nameLen; /* 0xc99e */
     byte textKeyHeld; /* 0xc99f */
     short lastKeyDik; /* 0xc9a0 */
     short keyRepeatCounter; /* 0xc9a2 */
-    int field277_0xc9a4; /* 0xc9a4 */
-    int field278_0xc9a8; /* 0xc9a8 */
-    int field279_0xc9ac; /* 0xc9ac */
-    int field280_0xc9b0; /* 0xc9b0 */
-    short field281_0xc9b4; /* 0xc9b4 */
+    wchar16 codeBuffer[9]; /* 0xc9a4 parental-lock code entry (page 14, mode 5), 8 chars + NUL: written FrontEnd_UpdateCodeEntryMode 0x45A12D, cleared FrontEnd_ClearCodeBufferTail 0x4538F0 / InitFrontend 0x456CB9..0x456CD1, compared with L"WFUSDFCF" in FrontEnd_OnCodeEntered 0x459668, shown as page 14 decor 4 (FrontEnd_GetDecorDisplayText 0x452380). */
     byte codeLen; /* 0xc9b6 */
     byte codeErrorShown; /* 0xc9b7 */
     byte keyLeftEdge; /* 0xc9b8 */
@@ -4085,10 +4166,10 @@ struct FrontEnd {
     byte keyDownPrev; /* 0xc9c2 */
     byte keyEnterPrev; /* 0xc9c3 */
     byte keyEscapePrev; /* 0xc9c4 */
-    dword time; /* 0xc9c5 */
-    byte field298_0xc9c9; /* 0xc9c9 */
-    byte field299_0xc9ca; /* 0xc9ca */
-    uint8_t _gap_0xc9cb[0x2];
+    byte keyDeletePrev; /* 0xc9c5 previous DELETE (DIK 0xD3) bit for keyDeleteEdge, FrontEnd_UpdateMenuKeys 0x45214B..0x452166; cleared InitFrontend 0x456C2E. Was the mistyped dword 'time'. */
+    uint8_t _gap_0xc9c6[0x2];
+    dword nextLogicTickMs; /* 0xc9c8 timeGetTime() deadline of the next 33 ms logic tick: InitFrontend 0x456C57 = now; FrontEnd_Tick 0x45A3D9 += 0x21 after each FrontEnd_UpdateMode. Never resynchronised to 'now'. */
+    byte logicTicksSinceDraw; /* 0xc9cc FrontEnd_Tick 0x45A383: logic runs when now >= nextLogicTickMs OR this == 3 (then ++); a frame is drawn (and this reset to 0) only on a call where no tick is due and this != 0. InitFrontend 0x456C5D = 0. */
     bool_ cheatsAreActive; /* 0xc9cd */
     uint8_t _gap_0xc9ce[0x2];
     dword idleTimerStart; /* 0xc9d0 */
@@ -4099,10 +4180,10 @@ struct FrontEnd {
     short deleteConfirmY; /* 0xedf6 */
     byte deleteConfirmArmed; /* 0xedf8 */
     byte hiScoreTableIndex; /* 0xedf9 */
-    uint8_t _gap_0xedfa[0xfd22];
+    CreditsLineList credits; /* 0xedfa CreditsLineList (u16 count + CreditsLine[600]) from GXT 'credits' (Credits_ParseText, tail of FrontEnd_InitPages 0x455323); page 9 scroll (FrontEnd_UpdateCreditsScroll / FrontEnd_DrawCredits index it with creditsLineIndex). */
     short creditsTick; /* 0x1eb1c */
     uint8_t _gap_0x1eb1e[0x2];
-    int creditsScrollY; /* 0x1eb20 */
+    Fix16 creditsScrollY; /* 0x1eb20 Fix16 screen y of line creditsLineIndex; starts at unkPtr (InitFrontend), -= DAT_005EB4CC per tick; the index advances while y <= -20 (FrontEnd_UpdateCreditsScroll 0x453480). */
     short creditsLineIndex; /* 0x1eb24 */
     byte selectedAreaPerProfile[8]; /* 0x1eb26 */
     byte selectedBonusPerProfile[8]; /* 0x1eb2e */
@@ -4913,16 +4994,16 @@ struct MssBankEntry {
     int offset; /* 0x0 byte offset of the sample in the loaded bank (MssAudio_Sample_SetAddress 0x4B60C0) */
     int size; /* 0x4 sample length in bytes */
     int sampleRate; /* 0x8 Ctor default 0x2B11 = 11025; MssAudio_GetBankEntryFieldB0OrOne */
-    int unsure_fieldB4; /* 0xc */
-    int unsure_fieldB8; /* 0x10 */
-    int unsure_fieldBC; /* 0x14 Ctor default -1 */
+    int rateVariation; /* 0xc SDT u32 rate variation (docs/formats/lessons.md); read by MssAudio_GetBankEntryRateVariation 0x4B6040. */
+    int loopStart; /* 0x10 SDT i32 loop start (bytes); MssAudio_GetBankEntryLoopStart 0x4B6060 -> request loop block. */
+    int loopEnd; /* 0x14 SDT i32 loop end, -1 = none (Ctor default -1); MssAudio_GetBankEntryLoopEnd 0x4B6080. */
 };
 
 // /auto_structs/MssAudio  size 0x2718
 // Miles Sound System wrapper, one static instance g_MssAudioDevice 0x66C950 (Ctor 0x4B6CE0).
 struct MssAudio {
     undefined4 driver; /* 0x0 HDIGDRIVER from AIL_waveOutOpen (MssAudio_OpenWaveOut 0x4B6DE0) */
-    byte unsure_musicVolume; /* 0x4 Ctor sets 99 */
+    byte unsure_cdDriveLetter; /* 0x4 MssAudio_Ctor 0x4B6CE0 = 99 = 'c' (after a 0 store); no other writer. Only reader unsure_Sound_GetCdDriveLetter 0x410660 -> 0x416630, whose two callers (IntroMovieBik, FrontEnd_GetPreIntroMoviePath) ignore the value. Not a volume: music volume is SoundManager+0x25. Guess: CD drive letter of the retail build. */
     char audioDir[80]; /* 0x5 stream path prefix, Ctor copies "data\gtaudio\" */
     byte musicEnabled; /* 0x55 MssAudio_GetEnabledFlag 0x4B6850; streams refuse to open when 0 */
     uint8_t _gap_0x56[0x2];
@@ -4940,8 +5021,8 @@ struct MssAudio {
     uint8_t _gap_0x1eb3[0x1];
     undefined4 providers[256]; /* 0x1eb4 HPROENUM/HPROVIDER from AIL_enumerate_3D_providers (MssAudio_Enumerate3DProviders 0x4B6600) */
     char *providerNames[256]; /* 0x22b4 operator_new(0x50) copies */
-    int unsure_selectedProvider; /* 0x26b4 Ctor -1 */
-    int unsure_eaxAvailable; /* 0x26b8 checked by MssAudio_Eax_SetEnvironment 0x4B6420 */
+    int selected3DProviderIdx; /* 0x26b4 index into providers[] of the open 3D provider, -1 none (MssAudio_Open3DProvider 0x4B6550, reset by Ctor / Release3DSamples). */
+    int eaxSupported; /* 0x26b8 1 when the opened 3D provider answers AIL_3D_provider_attribute('EAX environment selection') != -1 (MssAudio_Open3DProvider 0x4B6550); gates MssAudio_Eax_SetEnvironment 0x4B6420 / SetEffectParams 0x4B6460. */
     int eaxEnvironment; /* 0x26bc */
     undefined4 provider3D; /* 0x26c0 open HPROVIDER, MssAudio_Close3DProvider 0x4B65D0 */
     undefined4 samples3D[16]; /* 0x26c4 H3DSAMPLE handles */
@@ -5360,18 +5441,19 @@ struct SoundManager {
     byte initialized; /* 0x0 */
     bool_ IsGamePaused; /* 0x1 */
     byte frameEnabled; /* 0x2 */
-    byte unsure_musicMode; /* 0x3 */
-    Fix16 unsure_fix16_4; /* 0x4 */
-    int unsure_int8; /* 0x8 */
-    Fix16 unsure_fix16_c; /* 0xc */
+    byte musicLoopTrackD; /* 0x3 1 = the type-2 frontend-music client (SoundMgr_UpdateMusicClient 0x411A50) loops data\gtaudio\d.wav (MssAudio_MusicStream_Open track 0, names at 0x575214: d/m/a.wav), 0 = loops m.wav (track 1). Ctor 0x417EF0 sets 1; cleared when the owner's flag (owner+4) requests a.wav (track 2) and by SoundMgr_DetachSource 0x416C10 when a music client is detached. Never set back to 1. */
+    Fix16 speedOfSound; /* 0x4 Fix16, Ctor 0x417EF0 = 5.0. Doppler 'c' in SoundMgr_ApplyDopplerToFrequency 0x416F20: f' = f*c/(c+v); no shift when |v| >= c. */
+    byte ticksPerSecond; /* 0x8 Ctor 0x417EF0 = 30 (byte; +0x9..0xB unused). Sample length in ticks = bankEntrySize*30/rate (SoundMgr_RecalcRequestRemaining 0x416890, SoundMgr_ApplyRequestsToVoices 0x417410); radio station timer cap = 30*90000 (SoundManager_Radio_TickStationTimers 0x4B1D40). */
+    uint8_t _gap_0x9[0x3];
+    Fix16 ticksPerSecondFix; /* 0xc Fix16 30.0 (Ctor 0x417EF0, Fix16_FromUChar(30)); divisor of the per-tick distance change in SoundMgr_ApplyDopplerToFrequency 0x416F20. */
     byte voiceCount; /* 0x10 */
     uint8_t _gap_0x11[0x3];
     int sampleRate; /* 0x14 */
-    byte unsure_flag18; /* 0x18 */
-    byte unsure_flag19; /* 0x19 */
-    byte unsure_flag1a; /* 0x1a */
-    byte unsure_flag1b; /* 0x1b */
-    byte unsure_flag1c; /* 0x1c */
+    byte unusedInit18; /* 0x18 Ctor 0x417EF0 = 1; no reader found (abs refs, typed this-accesses, all sound functions scanned 2026-10-24). */
+    byte unusedInit19; /* 0x19 Ctor = 1; no reader found. */
+    byte unusedInit1a; /* 0x1a Ctor = 1; no reader found. */
+    byte unusedInit1b; /* 0x1b Ctor = 0; no reader found. */
+    byte num3DVoices; /* 0x1c Out-param of Mss_Init3DSamples 0x4B72B0 (AIL 3D provider 'Maximum supported samples', capped 16, <8 = fail); copied to voiceCount (+0x10) when 3D sound is switched on (SoundMgr_Set3DSoundEnabled 0x416640). Ctor 0. */
     byte sound3DActive; /* 0x1d */
     uint8_t _gap_0x1e[0x6];
     byte sfxVolume; /* 0x24 */
@@ -5389,7 +5471,8 @@ struct SoundManager {
     uint8_t _gap_0xdbe[0x2];
     byte voices[1664]; /* 0xdc0 */
     uint8_t _gap_0x1440[0x10];
-    int unsure_int1450; /* 0x1450 */
+    byte unusedFlag1450; /* 0x1450 byte written 0 by SoundMgr_Ctor 0x417F98 and SoundMgr_ReacquireAudioDevice 0x416D80; no reader found. */
+    uint8_t _gap_0x1451[0x3];
     uint32_t randomSeeds[5]; /* 0x1454 */
     SCR_Vector2 gameCameraPos; /* 0x1468 */
     SCR_f pedZ; /* 0x1470 */
@@ -5400,48 +5483,45 @@ struct SoundManager {
     S5 sourceSlotsFrom1[1019]; /* 0x1488 */
     uint32_t activeSourceIds[1020]; /* 0x444c */
     uint32_t activeSourceCount; /* 0x543c */
-    int unsure_int5440; /* 0x5440 */
-    int unsure_int5444; /* 0x5444 */
-    int unsure_int5448; /* 0x5448 */
+    int startup2DOutUnused; /* 0x5440 &this+0x5440 is pushed to MssAudio_Startup2D 0x4B7250 by initSound (0x41649D); the callee never touches it (RET 4). Ctor 0. */
+    int unusedInt5444; /* 0x5444 Ctor 0; no other access found. */
+    uint32_t frameCounter; /* 0x5448 ++ once per unpaused SoundMgr_Update 0x418050 (before the call); %5 -> slowTick, %10 -> PoliceRadio_PumpQueue 0x41C000 retry, &1 -> alternation in SoundMgr_UpdatePedSpeech / PoliceRadio_QueueCrimeReport / SoundMgr_UpdatePedSource, %0x82 in SoundMgr_UpdateObjectSourceByType. */
     byte slowTick; /* 0x544c */
     uint8_t _gap_0x544d[0x3];
-    int relToAudio; /* 0x5450 */
+    int vocalSourceSlot; /* 0x5450 source slot of the embedded vocal client (+0x5454), returned by SoundMgr_AttachClient in SoundMgr_CreateVocalClient 0x4112B0; PlayVocal 0x4105B0 refuses while 0. */
     SoundClient vocalClient; /* 0x5454 embedded SoundClient kind 10 (SoundMgr_CreateVocalClient 0x4112B0); its source slot is kept in relToAudio +0x5450 */
     VOCAL vocal; /* 0x5464 */
-    RadioStationSlot radioSlots[5]; /* 0x5468 radio station table (Seq 27 sub-agent: SoundMgr_VocalSlots_*, CancelVocalAt, Radio_GetSignalStrength); 0x544C..0x5467 may overlay a slot 0 used as vocal client header */
-    byte unsure_radioFlag54f4; /* 0x54f4 */
-    uint8_t _gap_0x54f5[0x1];
+    RadioStationSlot radioSlots[5]; /* 0x5468 5 radio stations (stride 0x1C), cleared by SoundManager_RadioSlots_Ctor 0x417D90 / SoundManager_Radio_InitOnce 0x4B2F20, added by SoundManager_Radio_AddStation 0x4B2BC0 (script RADIO_STATION), removed by SoundManager_Radio_RemoveStationAt 0x410590 (MissionScript_DeleteItemByCmd). Code that loops i=5..1 addresses slot i-1 as this+0x544C+i*0x1C, which is why +0x544C shows up; there is no vocal table here. */
+    byte radioWasInCar; /* 0x54f4 previous-frame copy of radioInCar (+0x54F5), taken at the start of SoundManager_UpdateRadio 0x4B2D50; 0->1 = just got in (pick station), 1->0 = just left (store station id in Car+0xB0). */
+    byte radioInCar; /* 0x54f5 1 while the local player sits in a radio car (not a train model, not wrecked), else 0 (SoundManager_UpdateRadio 0x4B2D50). Compared with +0x54F4 in SoundManager_Radio_ApplyStation 0x4B25D0. */
     byte radioSignalLevel; /* 0x54f6 */
     byte radioCurrentSlot; /* 0x54f7 */
-    byte unsure_radioFlag54f8; /* 0x54f8 */
+    byte radioPrevSlot; /* 0x54f8 previous-frame copy of radioCurrentSlot (+0x54F7, UpdateRadio 0x4B2D50); ApplyStation / SwitchToOffTrack save the old slot's stream position through it. Values: 0..4 slot, 0x65 emergency-car track, 0x66 off. */
     uint8_t _gap_0x54f9[0x3];
-    byte radioBand; /* 0x54fc */
-    uint8_t _gap_0x54fd[0x7];
+    int radioBand; /* 0x54fc int 0/1: which file variant of the station is streamed. MssAudio_Stream_OpenTrack(0, id, band==1): 1 -> data\gtaudio\<id>.wav, 0 -> <id>A.wav. Set by SoundManager_Radio_UpdateSignalLevel 0x4B2AD0 (hysteresis 0x6F/0x59), PickStationForCar 0x4B2830, TuneNextStation 0x4B2420. */
+    int radioPrevBand; /* 0x5500 previous-frame copy of radioBand (UpdateRadio 0x4B2DC9); a change re-opens the stream (ApplyStation 0x4B26CE). */
     byte radioChangeRequest; /* 0x5504 */
     uint8_t _gap_0x5505[0x1];
     uint16_t radioRetuneCountdown; /* 0x5506 */
-    int radioStreamId; /* 0x5508 */
-    int unsure_radioClientKind; /* 0x550c */
-    byte unsure_radioClientByte10; /* 0x5510 */
-    uint8_t _gap_0x5511[0x7];
-    int unsure_radioClientInt18; /* 0x5518 */
+    int radioSourceSlot; /* 0x5508 source slot of the embedded radio client (+0x550C), SoundMgr_AttachClient in SoundManager_Radio_InitOnce 0x4B2FD5. Not a stream handle. Never detached. */
+    SoundClient radioClient; /* 0x550c embedded SoundClient kind 3 (radio), owner 0; SoundManager_Radio_InitOnce 0x4B2FB5..0x4B2FCA; its slot goes to +0x5508. Was unsure_radioClientKind/Byte10/Int18. */
     int radioFadeTimer; /* 0x551c */
     byte policeRadioReady; /* 0x5520 */
     byte policeVariantCounter; /* 0x5521 */
-    uint8_t _gap_0x5522[0x6];
+    short policeLastCopStars; /* 0x5522 local player's wanted level (Ped_GetCopStars) seen last frame, stored at the end of PoliceRadio_Update 0x41C600; stars > it -> star-change announcement, 0 after >0 -> PoliceRadio_Reset. */
+    CRIME_KIND policeHighestCrimeKind; /* 0x5524 highest CRIME_KIND reported since PoliceRadio_Reset 0x41C200 (kind 9 gang kill only if nothing else); phrase 0x49+kind in PoliceRadio_Update 0x41C600. */
     byte policeQueueRead; /* 0x5528 */
     byte policeQueueWrite; /* 0x5529 */
     uint8_t _gap_0x552a[0x2];
-    byte policeQueue[15]; /* 0x552c */
-    uint8_t _gap_0x553b[0x2d];
-    byte policeType8TileX; /* 0x5568 */
-    byte policeType8TileY; /* 0x5569 */
-    uint16_t policeStandbyTimer; /* 0x556a */
-    uint16_t unsure_policeTimer556c; /* 0x556c */
-    uint16_t unsure_policeTimer556e; /* 0x556e */
-    uint16_t unsure_policeTimer5570; /* 0x5570 */
+    uint32_t policeQueue[15]; /* 0x552c ring of 15 phrase ids (dwords, bank entries 0x45..0x88 played on the extra sample); read +0x5528, write +0x5529; PoliceRadio_QueuePhrase 0x41BF90, PumpQueue 0x41C000, ClearQueue 0x41BF60 (fills 0x79). */
+    byte policeCopKillTileX; /* 0x5568 tile x of the last CRIME_KILL_LAW_ENFORCEMENT event (PoliceRadio_Update 0x41C600). */
+    byte policeCopKillTileY; /* 0x5569 tile y of the last CRIME_KILL_LAW_ENFORCEMENT event. */
+    uint16_t policeCopKillFollowUpTimer; /* 0x556a set to (rand%10+15)*100 ticks on a CRIME_KILL_LAW_ENFORCEMENT event while 0; at 1->0 PoliceRadio_QueueCopKillFollowUp 0x41C100 fires (PoliceRadio_Update 0x41C600). */
+    uint16_t policeShotsFiredCooldown; /* 0x556c cooldown (600..2129 ticks) of the CRIME_FIRE_WEAPON report (phrases 0x79,0x62,0x63,0x67) in PoliceRadio_Update 0x41C600 case 2; also re-armed on a star change; cleared by PoliceRadio_Reset. */
+    uint16_t policeCarDescCooldown; /* 0x556e cooldown (300..1299 ticks) gating PoliceRadio_QueueCarDescription 0x41C350 (PoliceRadio_Update case 0). */
+    uint16_t policeLocationReportCooldown; /* 0x5570 cooldown (150..1216 ticks) of the location report (case 3: 0x79,0x62,0x66,0x58 + PoliceRadio_QueueLocationPhrases) and set after the case-7 crime report; re-armed on a star change. */
     uint8_t _gap_0x5572[0x2];
-    int unsure_policeCarDescState; /* 0x5574 */
+    int policeLastDescribedCarModel; /* 0x5574 car info index last described by PoliceRadio_QueueCarDescription 0x41C350 (0x57 = player on foot, 'no vehicle' phrase sent once); same model + same remap (DAT_005E2B9C) -> no repeat. */
 };
 
 // /auto_structs/Sprite  size 0x3c
@@ -5736,7 +5816,7 @@ struct FrontendImage {
 // /imported/seuko-mod/CarAI  size 0x78
 struct CarAI {
     Car *parentCar; /* 0x0 */
-    uint8_t _gap_0x4[0x4];
+    uint32_t unusedZeroed04; /* 0x4 Zeroed by CarAI_Ctor 0x42A9F2 / CarAI_Reinit 0x42AAC5 only; no other access (typed p-code scan of all functions + untyped owner->ai scan). U2 2026-10-24. */
     byte turnTimer; /* 0x8 */
     byte turnTileX; /* 0x9 */
     byte turnTileY; /* 0xa */
@@ -5747,32 +5827,33 @@ struct CarAI {
     SCR_f railSpeedCur; /* 0x14 Rail speed (trains/trams only): MapBlocks_MoveAlongRailForward/Backward step in CarAI_FollowRoad 0x42FF20 (sole caller Car_UpdateTrain). Ramped toward railSpeedGoal by CarAI_UpdateSpeedRamp 0x42FE80 / CarAI_RaiseCurSpeed 0x42A9B0. Init DAT_005E5194 (0) in CarAI_Ctor/CarAI_Reinit. Full decompile scan (4834 functions): no road-car reader. Was: unsure_trainSpeedCur. */
     SCR_f railSpeedGoal; /* 0x18 Rail target speed: written by PublicTransportManager_GetTrainSpeedForCar (via CarAI_FollowRoad), read by CarAI_UpdateSpeedRamp. Car_ResumeAICruise 0x4222D0 also writes DAT_005E4DC4 here for road cars (crews, taxi/bus passengers, thieves), but no road-car path reads it (dead write unless the car is a train). Was: unsure_trainSpeedGoal. */
     SCR_f railSpeedStep; /* 0x1c Rail acceleration per tick added to railSpeedCur by CarAI_UpdateSpeedRamp (decel uses a constant DAT_005E53B8*DAT_005E50C4). Init DAT_005E5304. Was: unsure_trainSpeedStep. */
-    uint8_t _gap_0x20[0x4];
+    uint32_t unusedZeroed20; /* 0x20 Zeroed by CarAI_Ctor 0x42AA35 / CarAI_Reinit 0x42AB00 only; no other access. U2 2026-10-24. */
     uint32_t flags; /* 0x24 CarAI flag word. Bit 0x10 (meaning not settled; looks like 'stopped for an obstacle / may follow route'): SET by CarAI_OnHitObject 0x42A8F0 (no drive order active, obstacle owner type 0x15 or 0x7A: brake hard), by CarAI_Update 0x432370 when no drive order steers this tick and obstacleHit is a kind-1 sprite of owner type 0x7A (then obstacleHit = NULL), and in several CarAI_FollowLane 0x430CC0 branches; CLEARED by CarAI_Update in the same no-order case otherwise, by CarAI_DriveStep 0x431C10 when car.driverClass == PLAYER, and by Car_Update after the AI tick (0x429EFE: AND CH,0xEF clears 0x1000, see below). READ by CarAI_Update (routeSlot > 0 && 0x10 && driveOrder.followRoadActive == 1 -> CarAI_FollowRoute) and CarAI_FollowLane. Other bits seen: 0x40/0x80 off-road turn, 0x100 lane change, 0x800 route exit, 0x1000 car-collision this tick (CarPhysics_CollideWithCar sets, cleared each tick), 0x2000 lane-follow, 0x10000, 0x100000 police chase (brake to full stop when halted), 0x200000 copied from driver flags / free drive. Bit 0x01: CarAI_ApplyRouteTurn 0x430146 (TEST BL=1 on the low byte) skips the whole turn decode when set; no OR-with-1 writer found in an operand scan (Seq 27 R3). */
     char routeSlot; /* 0x28 */
-    uint8_t _gap_0x29[0x1];
+    byte unusedZeroed29; /* 0x29 Zeroed by CarAI_Ctor 0x42AA40 / CarAI_Reinit 0x42AB11 only (the PoliceCrew +0x29 byte ops are another struct). U2 2026-10-24. */
     byte stillTicks; /* 0x2a */
-    byte unsure_ticksSinceReset; /* 0x2b */
+    byte ageTicks; /* 0x2b Ticks since CarAI_Ctor/Reinit (zeroed there), ++ each CarAI_PreUpdate 0x4327BF saturating at 0xFF. Only reader: CarAI_TryLaneChange 0x42C8E0 - no lane change in the first 21 (0x15) ticks of a car's AI life. Was unsure_ticksSinceReset. */
     byte avoidTimer; /* 0x2c */
-    uint8_t _gap_0x2d[0x2];
-    byte unsure_laneTarget; /* 0x2f */
+    byte laneChangeStartLaneA; /* 0x2d WRITE-ONLY. CarAI_TryLaneChange 0x42CFC7: = current lane index (Car_CountLaneTiles) when starting a change toward lane-1; 0x42D343: = 0 for a change toward lane+1. Zeroed in Ctor/Reinit. No reader. U2 2026-10-24. */
+    byte laneChangeStartLaneB; /* 0x2e WRITE-ONLY, always written with the same value as +0x2D (CarAI_TryLaneChange 0x42CFCA / 0x42D346). No reader. U2 2026-10-24. */
+    byte laneChangeTargetLane; /* 0x2f Lane index the car is moving to while flags 0x100 (lane change) is set: CarAI_TryLaneChange 0x42CFD4 (= lane-1) / 0x42D35C (= lane+1, clamped to laneCount-1); CarAI_UpdateLaneChangeAlign 0x42C094 compares it with the current lane (Car_CountLaneTiles) and steers toward it. Was unsure_laneTarget. */
     byte haltTimer; /* 0x30 */
     uint8_t _gap_0x31[0x3];
-    int unsure_initOnly34; /* 0x34 Zeroed. Only written by CarAI_Ctor / CarAI_Reinit 0x42AAC0; no reader in a decompile scan of every Car* / CarAI* / CarDriveOrder* function (Seq 27 R3). */
+    int unusedZeroed34; /* 0x34 Zeroed by CarAI_Ctor 0x42AA74 / CarAI_Reinit 0x42AB45 only; no reader (typed p-code scan of all functions, U2 2026-10-24; decompile scan Seq 27 R3). */
     int routeUTurnExitDir; /* 0x38 heading class of a U-turn exit asked by the route (CarAI_ApplyRouteTurn, with flags 0x800). WRITE-ONLY: no reader of +0x38 or flag 0x800 in the whole exe (H1 2026-10-23) - the AI never executes route U-turns */
-    int unsure_unstickState; /* 0x3c */
-    int unsure_laneDir; /* 0x40 */
+    int isOffRoad; /* 0x3c 0/1. Set 1 by CarAI_SteerByArrowAheadOffLane 0x42BE47 when neither the car's lane nor the probe tile ahead has an arrow (it then searches the 4 neighbour tiles once and stores the way back in offRoadTurn +0x50). Cleared by CarAI_SteerByArrowAheadOffLane 0x42B965 when an arrow is found again (also re-enables driveOrder.followRoadActive) and by CarAI_ReactToNearbyCar 0x42FBB8 on car contact. While set: CarAI_Update skips CarAI_UpdateDriveOrder, counts offRoadTicks (+0x58, abandon > 200) and steers by offRoadTurn; CarDriveOrder_Drive skips aim/steer and its 'near target' branch. Was unsure_unstickState. */
+    int laneAlignDir; /* 0x40 WRITE-ONLY. CarAI_FollowLane 0x430E91..0x43152A: heading class (1 N 2 S 3 E 4 W) the lane follower aligns to this tick - travelDir when going straight, turnExitDir when turning. Zeroed in Ctor/Reinit. No reader anywhere. Was unsure_laneDir. */
     int turnExitDir; /* 0x44 */
-    int unsure_leftTurnExitDir; /* 0x48 */
+    int leftTurnExitDir; /* 0x48 Heading class the car will leave a junction by after a LEFT turn (travelDir N->W, S->E, E->N, W->S), written by CarAI_ReserveJunction 0x42B3F8..0x42B6D5. Also read there from OTHER cars' AI (0x42B80E: cross traffic whose +0x48 differs is told to yield - blockingCar=this car, avoidTimer=5). Never cleared except Ctor/Reinit, so a stale value from an older turn stays visible to others. Was unsure_leftTurnExitDir. */
     int travelDir; /* 0x4c */
     int offRoadTurn; /* 0x50 */
     uint16_t laneFollowCooldown; /* 0x54 */
     uint16_t routeStep; /* 0x56 */
-    uint16_t stuckTicks; /* 0x58 */
+    uint16_t offRoadTicks; /* 0x58 Off-road tick counter: ++ by CarAI_Update 0x43250F only while isOffRoad (+0x3C) != 0; > 200 -> car.isAbandoned = true; forced 0 for PED_CLASS_MISSION drivers. NEVER reset when the car gets back on a lane (only Ctor/Reinit zero it), so it accumulates over all off-road episodes of the car's life. Was stuckTicks. */
     uint16_t reverseTicks; /* 0x5a */
-    SCR_f unsure_initOnly5C; /* 0x5c Init DAT_005E5194 (Fix16 0). Only written by CarAI_Ctor / CarAI_Reinit 0x42AAC0; no reader in a decompile scan of every Car* / CarAI* / CarDriveOrder* function (Seq 27 R3). */
-    SCR_f unsure_initOnly60; /* 0x60 Init DAT_005E5194 (Fix16 0). Only written by CarAI_Ctor / CarAI_Reinit 0x42AAC0; no reader in a decompile scan of every Car* / CarAI* / CarDriveOrder* function (Seq 27 R3). */
-    SCR_f unsure_initOnly64; /* 0x64 Init DAT_005E5194 (Fix16 0). Only written by CarAI_Ctor / CarAI_Reinit 0x42AAC0; no reader in a decompile scan of every Car* / CarAI* / CarDriveOrder* function (Seq 27 R3). */
+    SCR_f unusedZeroed5C; /* 0x5c Init DAT_005E5194 (Fix16 0) by CarAI_Ctor 0x42AA59 / CarAI_Reinit 0x42AB2A only; no reader (typed p-code scan, U2 2026-10-24). */
+    SCR_f unusedZeroed60; /* 0x60 Init DAT_005E5194 (Fix16 0) by CarAI_Ctor 0x42AA62 / CarAI_Reinit 0x42AB33 only; no reader (typed p-code scan, U2 2026-10-24). */
+    SCR_f unusedZeroed64; /* 0x64 Init DAT_005E5194 (Fix16 0) by CarAI_Ctor 0x42AA6B / CarAI_Reinit 0x42AB3C only; no reader (typed p-code scan, U2 2026-10-24). */
     Car *nearbyCar; /* 0x68 */
     Car *blockingCar; /* 0x6c */
     Sprite *obstacleHit; /* 0x70 */
@@ -6078,19 +6159,19 @@ struct PedGameObjectManager {
 
 // /imported/seuko-mod/PedGroup  size 0x44
 struct PedGroup {
-    byte unsure_byte0; /* 0x0 init=1 */
-    byte unsure_byte1; /* 0x1 init=0 */
+    byte removeDeadMembers; /* 0x0 1 (Init/Reset 0x4035b0/0x403be0): a member that dies is removed from the group (PedGameObject_StateWasted 0x49c120 calls PedGroup_RemovePed when !=0). Police/SWAT/paramedic crews set 0 (0x4aa7b0, 0x4aadd0, 0x4ab060, 0x473170) so their dead stay in the roster (medic revive / crew cleanup). */
+    byte leaderFetchesStragglers; /* 0x1 0 default. When !=0 and the leader is on foot, non-player: if the farthest member (PedGroup_FindFarthestMember) is beyond DAT_005d288c, PedGroup_UpdateEnterCar 0x405240 sends the leader to that member (task FOLLOW_GROUP_LEADER, target2 = member) and sets leaderFetching. Only paramedic crews toggle it (AmbulanceSlot_UpdateParamedics 0x473410: 1 when the patient queue is empty in phase 1, 0 after a revive). */
     uint8_t _gap_0x2[0x2];
     Ped *members[9]; /* 0x4 Ped*[9]; PedGroup_Init zeroes +4..+0x27 (9 dwords), Reset calls Ped_ClearGroup on each */
-    uint8_t _gap_0x28[0x4];
+    Ped *membersTerminator; /* 0x28 10th member slot = NULL terminator. Init/Reset zero only members[0..8]; loops that walk while(members[i]) (EmergencyVehicleSlot_UpdateActive 0x4c5692, KillMembersInCarAndCompact tail) read it with 9 members; writes via members[membersCount] land here when count==9 (RemovePed medic branch, EmergencyVehicleSlot 0x4c5881). Pool memory is BSS so it is 0 unless such a write happened. */
     Ped *leader; /* 0x2c PedGroup_SetLeader writes it; Ped_IsInCar(group+0x2c) in LeaderIsInCar */
-    int unsure_attackedFlag; /* 0x30 ReactToAttacker (0x404efd) sets 1; UpdateEnterCar 0/1 */
+    int busy; /* 0x30 bool-in-int. PedGroup_UpdateEnterCar 0x405240 recomputes it every leader tick: 1 while the leader is boarding/in a car (state 3/5/10) or the leader or any member is engaged (Ped_IsEngaged), else 0. Also forced 1 by PedGroup_ReactToAttacker 0x404efd and AmbulanceSlot_UpdateParamedics. Read only by Ped_ReactToPedObstacle 0x4944e8/0x4945ee: a lower-id blocker whose group is NOT busy makes this ped return without stepping aside. */
     byte membersCount; /* 0x34 */
     byte minMembersBeforeSplit; /* 0x35 PedGroup_SetMinMembersBeforeSplit 0x475ae0 writes byte +0x35 */
-    undefined1 unsure_membersCountCopy; /* 0x36 */
+    byte unsure_rosterCount; /* 0x36 Roster size incl. dead members kept in place: =count in PedGroup_SetMembersCount 0x433360 and KillMembersInCarAndCompact 0x403650 (snapshot BEFORE it nulls killed slots; membersCount is not reduced there), +1 in PedGroupAddPed 0x404c90, -1 in EmergencyVehicleSlot_UpdateActive 0x4c5888; NOT decremented by PedGroup_RemovePed. Only reader: RemovePed medic branch (0x404d40) uses rosterCount-1 as the re-added medic's group slot. Name guesses the intent; the accesses are verified. */
     uint8_t _gap_0x37[0x1];
-    int unsure_mode; /* 0x38 init=2; MakeMembersFollowLeader 0x40463d compares ==1 */
-    int unsure_enterCarFlag; /* 0x3c UpdateEnterCar 0x4052f5 sets 1, 0x405313 clears */
+    int formation; /* 0x38 Follow formation, read by PedGroup_MakeMembersFollowLeader 0x40463d and Ped_UpdateAI 0x44538e. 1 = single file (member i follows member i-1, member 0 the leader); any other value (Init/Reset write 2) = three columns (members 0-2 follow the leader, 3..7 follow members 0..4). Nothing writes 1 (typed users + Ped.group-derived accesses scanned 2026-10-24), so vanilla always uses 2. */
+    int leaderFetching; /* 0x3c 1 while the leader was sent back to a straggler by the leaderFetchesStragglers logic (PedGroup_UpdateEnterCar 0x4052f5); when the straggler is close again it clears the leader's task (Ped_SetTask NO_OBJ) and resets this to 0 (0x405313). */
     byte active; /* 0x40 PedGroup_SetActive/IsActive; pool slot in use */
     uint8_t _gap_0x41[0x3];
 };

@@ -169,10 +169,100 @@ Z: `PedGameObject_UpdateGroundZ` snaps z to the level or to the slope surface (`
 | 0x469F90 | `MapBlocks_SweepBodyIsClear` | stdcall, 9 args, ret 0x24 | steps a temporary body from A to B; **call-site argument order unresolved, do not call** | verified |
 
 `g_CollisionResult` 0x5E6874 record (setters 0x4BA250 / 0x4BA280, verified): kind 1 stores a segment
-in +4/+8 and its line in +0x18; kind 2 a segment in +0xC/+0x10 and its line in +0x14; kind 3 = a
-sprite hit (+0x20 hit sprite, +0x24 mover). Per slice 2's reading of the callers, kind 1 is a wall
-along constant y and kind 2 a wall along constant x — [car-physics.md](car-physics.md) labels them
-"wall X / wall Y". The ped walker does not read the record, only the booleans.
+in +4/+8 (`wallMinX/MaxX`) and its line in +0x18 (`contactY`); kind 2 a segment in +0xC/+0x10
+(`wallMinY/MaxY`) and its line in +0x14 (`contactX`); +0x14 / +0x18 are **also** the crossing point
+written by `Segment_Intersect*`, i.e. (`contactX`, `contactY`) is the contact point on the wall line.
+Kind 1 is a wall along constant y, kind 2 along constant x ([car-physics.md](car-physics.md) "wall X /
+wall Y"); kind 3 = a sprite hit (+0x20 hit sprite, +0x24 mover); kinds 4 FLOOR / 5 CEILING come from
+ballistic objects. The ped walker does not read the record, only the booleans. Full layout below.
+
+### `CollisionResult` — the shared "last hit" record (U4, 2026-10-24)
+
+Read in code (decompile, disassembly, xref lists); nothing reproduced in game. There is exactly one
+`CollisionResult` (0x28 bytes): `g_CollisionResult` 0x5E6874, built at start-up by a CRT static
+initialiser (`StaticInit_CollisionResult` 0x50A080, table slot 0x58191C → `ECX = &g_CollisionResult;
+jmp CollisionResult_Ctor` 0x446A00; both functions created in U4). It is the mailbox of every swept
+mover: cars, objects / projectiles, the taser probe.
+
+1. **Clear.** The mover calls `CollisionResult_Clear` 0x4637B0 (kind 0, hitSprite 0, moverSprite 0;
+   the wall / contact fields and `hitZ` stay stale). Callers: `CarPhysics_StepAndResolveCollisions`
+   0x4A4339, `Object_MoveBallisticWithCollision` 0x486F0E, `Object_MoveFlatWithCollision` 0x48751B,
+   `MapBlocks_SweepBodyIsClear` 0x469FEC, `Weapon_TaserHoldTarget` 0x4CD099.
+2. **Map test.** `Sprite_TestMapCollisionAndRecord` 0x4BD670 → `MapBlocks_IsBodyBlockedByWalls` →
+   face scan → `Sprite_FindEdgeCrossingWallAlongX/Y` 0x4BB860 / 0x4BB910, which test the 4 body edges
+   (`SpriteBounds.corners[0..3]`) against one wall face with `Segment_IntersectHorizontalLine`
+   0x472950 / `Segment_IntersectVerticalLine` 0x472AE0. **The segment helper writes the crossing
+   coordinate straight into the record** (`contactX` at 0x472AB7 / `contactY` at 0x472BDD), then the
+   setter writes the face: kind 1 (`SetMapWallAlongX` 0x4BA250) = face on the line y = `contactY`,
+   x ∈ [`wallMinX`, `wallMaxX`], `contactX` = where the body edge crossed it; kind 2
+   (`SetMapWallAlongY` 0x4BA280) = face on x = `contactX`, y ∈ [`wallMinY`, `wallMaxY`], `contactY` =
+   the crossing. So (`contactX`, `contactY`) is always the contact point on the wall line; min ≤ max
+   is proven by the range check in the segment helpers. After a blocked test the caller stores the
+   sprite z (`SetHitZ` 0x4BA2B0). Map border: kind 1 / 2 with a one-block face `[floor(c), floor(c)+1]`
+   at the 1.0 / 255.0 border line (0x66FFAC / 0x670224), without the segment call (stale crossing,
+   see hazards).
+3. **Sprite test.** `Sprite_FindObstacleAndRecord` 0x4BDFE0 / `MapBlocks_FindDiagonalCollisionDummy`
+   0x466170 / `Object_TestSpriteHitAndRecord` 0x483060 → `SetHitSprite` 0x40FEE0: kind 3, `hitSprite`.
+   `CarPhysics_TestCollision` 0x4A006F also records the mover (`SetMoverSprite` 0x49EF10).
+4. **Ballistic objects.** `Object_OnMoveBlocked` 0x486D70 turns a floor landing (the
+   `Object_StepCollisionFalling` flag) into kind 4 (`SetFloorHit` 0x482A70) and a ceiling hit
+   (`Object_StepCollisionRising` flag) into kind 5 (`SetCeilingHit` 0x482A80), both clearing
+   `hitSprite` (flag locals of `Object_MoveBallisticWithCollision` 0x486E90 passed as args 4 / 5).
+
+Readers: response — `CarPhysics_DispatchCollision` 0x4A4170 (1 / 2 / 3), `CarPhysics_CollideWithWallX/Y`
+0x4A3DF0 / 0x4A3FB0, `Object_ResolveCollisionByKind` 0x486C60 → `Object_CollideWithWallX/Y`,
+`CarPhysics_NudgeOutOfCollision` 0x4A2D70, `CarPhysics_OnCollision` 0x4A4270 (`moverSprite` → whose
+physics to replay). Wall response: if `Sprite_ComputeWallContactPoint*` finds a body corner on the
+wall, normal = (0, y − contactY) (resp. x); otherwise the contact point is re-projected into the new
+pose and snapped to the nearer face end (`wallMin/Max`). Sound — `SoundEvent_SetFromCollisionResult`
+0x40FF20 (car), `SoundEvent_InitFromPedHit` 0x410010, `SoundEvent_InitFromObjectHit` 0x4100F0: kind 1 →
+`MapBlocks_GetNorthFaceTileMaterial(wallMinX, contactY, hitZ)`, kind 2 →
+`GetWestFaceTileMaterial(contactX, wallMinY, hitZ)`, kind 3 → car / ped / object (model 0xA6 =
+diagonal dummy → map surface); `ImpactEvent_Dispatch` 0x486410: kind 4 →
+`SoundEventQueue_AddImpactEventSurfaceBelow`, 5 → `AddImpactEvent`, else `AddHitDefaultVolume`.
+`Projectile_SetImpactSurfaceFromCollision` 0x483500: kind 1 / 2 + heading → face code 1..4 in
+`DAT_00665794`. In `CarPhysics_StepAndResolveCollisions` a ped hit (`CollisionResult_IsHitPed`
+0x49EF20) or an object with `prefab->wallResponse == 3`
+(`CollisionResult_IsHitObjectWallResponse3` 0x446AA0) raises the iteration cap from 2 to max 4.
+The ped walker itself does not read the record, only the booleans.
+
+| off | name (was) | type | meaning | evidence VA | conf. |
+|---|---|---|---|---|---|
+| 0x0 | `kind` | int → `COLLISION_RESULT_KIND` (new enum: 0 NONE, 1 MAP_WALL_ALONG_X, 2 MAP_WALL_ALONG_Y, 3 SPRITE, 4 FLOOR, 5 CEILING) | what was hit | setters 0x4BA250 / 0x4BA280 / 0x40FEE0 / 0x482A70 / 0x482A80, Clear 0x4637B0; 4 / 5 via the 0x486E90 flags + the sound choice in 0x486410 | verified |
+| 0x4 | `wallMinX` (unsure_wallXTileX) | Fix16 | kind 1: x start of the face | SetMapWallAlongX arg1; lower bound in 0x472950; snap 0x4A3F17 / 0x486AD1 | verified |
+| 0x8 | `wallMaxX` (unsure_wallXArg2) | Fix16 | kind 1: x end | arg2; 0x4A3F25 / 0x486ADC | verified |
+| 0xC | `wallMinY` (unsure_wallYTileY) | Fix16 | kind 2: y start | SetMapWallAlongY arg1; 0x4A40D7 / 0x486C11; sound 0x40FFBC | verified |
+| 0x10 | `wallMaxY` (unsure_wallYArg2) | Fix16 | kind 2: y end | arg2; 0x4A40E5 / 0x486C1C | verified |
+| 0x14 | `contactX` (unsure_wallYTileX) | Fix16 | contact x: kind 2 wall line, kind 1 crossing | SetMapWallAlongY arg3 **and** 0x472AB7; point x in 0x4A3E78 | verified |
+| 0x18 | `contactY` (unsure_wallXTileY) | Fix16 | contact y: kind 1 wall line, kind 2 crossing | SetMapWallAlongX arg3 **and** 0x472BDD; point y in 0x4A3E73 | verified |
+| 0x1C | `hitZ` | int → Fix16 | sprite z at the wall hit | SetHitZ 0x4BA2B0 from `sprite->z` (0x4BD670 / 0x4BD610) | verified |
+| 0x20 | `hitSprite` | Sprite* | kind 3 obstacle; zeroed by Clear, SetMapWall*, SetFloorHit / SetCeilingHit | SetHitSprite 0x40FEE0 | verified |
+| 0x24 | `moverSprite` | Sprite* | the moving sprite whose sweep found the hit; zeroed only by Clear | SetMoverSprite 0x49EF10, read 0x4A4276 | verified |
+
+Functions (U4): `CollisionResult_Ctor` 0x446A00 and `StaticInit_CollisionResult` 0x50A080 (created);
+`CollisionResult_IsHitObjectWallResponse3` 0x446AA0 (was `unsure_CollisionHit_IsObjectPrefabSolidVsCar3`),
+`CollisionResult_SetFloorHit` 0x482A70 / `_SetCeilingHit` 0x482A80 (were `…SetKind4ClearHitSprite` /
+`…SetKind5ClearHitSprite`), all `__fastcall (CollisionResult*)`; `_SetMapWallAlongX/Y` `(this, Fix16
+wallMin, Fix16 wallMax, Fix16 wallLine)`, `_SetHitZ(this, Fix16 z)`, `_SetHitSprite` / `_SetMoverSprite`
+`(this, Sprite*)`; `Sprite_FindEdgeCrossingWallAlongX/Y` `bool __thiscall (Sprite*, Fix16 min, Fix16 max,
+Fix16 line)`; `Segment_IntersectHorizontalLine/VerticalLine` `bool __stdcall (Fix16* min, Fix16* max,
+Fix16* line, Vec2* edgeA, Vec2* edgeB)`. Several plate comments outside U4 (0x486C60, 0x4A2D70,
+0x486410, 0x410010, 0x466170, 0x4BDFE0, 0x4BD670) still say `g_CollisionKind`, the old label name of
+`g_CollisionResult`.
+
+| VA | hazard | trigger | severity | status |
+|---|---|---|---|---|
+| 0x4BD670 border path + 0x4A3DF0 / 0x4A3FB0 / 0x4869E0 / 0x486B20 | map-border walls set kind 1 / 2 without the segment helpers, so the crossing coordinate (`contactX` for kind 1, `contactY` for kind 2) is left from an older hit; the slide branch of CollideWithWall* re-projects it → wrong torque / nudge at the map edge | car / object touching the 1.0 / 255.0 border when `Sprite_ComputeWallContactPoint*` finds no corner on the wall | low (cosmetic) | verified by code (the only writers of 0x5E6888 / 0x5E688C are 0x472AB7 / 0x472BDD and the setters); effect not reproduced |
+| 0x472950 / 0x472AE0 | the segment helpers write `contactX/Y` even for callers that never record a hit (`Sprite_IsSegmentTouchingBox` 0x4BB9C0, `CollisionBox_IntersectsSegment` 0x463690); such a call between a recording and a reader would clobber the live contact point | depends on call order, not traced | low | hypothesis (static xrefs only) |
+| 0x446A00 | ctor leaves `hitZ` uninitialised (BSS zero) and fills the wall fields with `Fix16_Neg(*0x5E672C)` (−1.0 if the 1.0 initialiser 0x508917 ran first, else 0) | — | none (Clear / setters run before every read) | verified by code |
+| 0x4A4310 | hit-sprite history `aiStack_10[4]`: index ≤ 3 because the loop stops at `cap (≤ 4) <= count` | — | none (cleared) | verified by code |
+
+Open (U4): why only `wallResponse == 3` (not 2, both bounce) gets the extra car iteration
+(hypothesis: 3 = heavy / solid objects); the face-code meaning of `DAT_00665794` (heading thresholds
+0x6658D0 / 0x665AD0 / 0x6659A4 not decoded); the init order of 0x5E672C vs the ctor. Side notes:
+`Fix16_Neg` 0x403780 is typed `__stdcall (Fix16* a, Fix16* out)` but the ctor calls it as `ECX = a,
+push out` (thiscall); `CarPhysics_DebugAssertCollisionKind` 0x4A0080 checks `kind == 3 && hit sprite
+type 3`.
 
 ## 4. Ped vs cars, peds and objects
 

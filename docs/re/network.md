@@ -784,9 +784,9 @@ pending table until we catch up.
 - The RNG is CRT `rand()` (`Crt_Rand` `0x4D71F7`, state `0x595410`), seeded to 1 in `Game_Ctor`
   (`ResetRandomSeedTo1`). `NetGameSettings.+0x114` is **not** used as a seed.
 - `draw()` cannot reach `Crt_Rand` (378 functions walked, `n5_reach.txt`). `Game_StepByStatus` can,
-  for example through `audio()` → `SoundMgr_ReseedRandoms` (5 rolls per tick). That is safe only
+  for example through `SoundMgr_Update_Thunk()` 0x410520 (was `audio`) → `SoundMgr_ReseedRandoms` (5 rolls per tick). That is safe only
   because `Cheats_DisableDebugFlagsForMultiplayer` forces `g_unsure_skipAudio` = 0: **a patch that
-  skips `audio()` on one machine desyncs at once.**
+  skips `SoundMgr_Update_Thunk()` on one machine desyncs at once.**
 - Pause is impossible in MP: `ToggleGamePause` `0x45BAA0` needs `Game+0x23` (player count) == 1.
   Debug keys are forced off.
 - The tick length is fixed and the physics is Fix16, so frame-time and x87 differences do not leak

@@ -109,6 +109,54 @@ Setters: `MapBlocks_SetZone*` 0x462ce0..0x462e20; MAP_ZONE decl → `MapBlocks_S
   `+0x50 nextSerial`. Slot: `+0 serial`, `+4 active`, `+8 state` (1..6), `+0xC targetCar`,
   `+0x10/14/18 spawnX/Y/Z` (tile + 0.5), `+0x1C truck`, `+0x20 driver`, `+0x24 timer`.
 
+### `PedGroup` (0x44, pool `g_PedGroups` 0x5D28C8 × 20) (V unless marked)
+
+Source: Seq 27 U3 pass (2026-10-24): every decompiled use of the struct, an instruction scan of
+every `MOV reg,[x+0x164]` (`Ped.group`) followed by `[reg+disp]`, read in code only (nothing
+reproduced at runtime). `PedGroupPool_Alloc` 0x404C40 hands groups out. A leader (+0x2C,
+`groupSlot` 99) and up to 9 members (`members[9]` at +4, `membersCount` +0x34). `Ped_UpdateAI`
+0x445330 drives it per ped: the leader runs `PedGroup_UpdateEnterCar` 0x405240, a member runs
+`PedGroup_UpdateMember` 0x405760.
+
+| off | name (was) | type | meaning | evidence VA | conf. |
+|---|---|---|---|---|---|
+| 0x00 | `removeDeadMembers` (unsure_byte0) | byte | 1 (default): a dying member is removed from the group; police / SWAT / paramedic crews clear it and keep their dead in `members[]` | read `PedGameObject_StateWasted` 0x49C120; = 0 at 0x4AA7B0 / 0x4AADD0 / 0x4AB060 / 0x473170; = 1 Init 0x4035B0 | high |
+| 0x01 | `leaderFetchesStragglers` (unsure_byte1) | byte | non-player leader walks back to the farthest member when it is beyond `DAT_005d288c` | read 0x405240; only writer `AmbulanceSlot_UpdateParamedics` 0x473410 (1 when the patient queue is empty in phase 1, 0 after a revive) | high |
+| 0x04 | `members[9]` | Ped*[9] | | | V |
+| 0x28 | `membersTerminator` (gap) | Ped* | NULL sentinel for `while (members[i])` loops; Init / Reset zero only members[0..8] | 0x4C5692, `KillMembersInCarAndCompact` tail; members[count] writes 0x4C5881 | medium |
+| 0x2C | `leader` | Ped* | | | V |
+| 0x30 | `busy` (unsure_attackedFlag) | int (bool) | 1 while the leader boards / sits in a car (state 3 / 5 / 10, members get door spots via `g_PedGroupDoorCursor` 0x58F512) or the leader or any member is engaged; also forced by `PedGroup_ReactToAttacker` 0x404EF0 and the paramedics. Only reader: `Ped_ReactToPedObstacle` 0x494280 — when the blocking ped has the lower id and its group is **not** busy, this ped skips the step-aside | writes 0x405240 (×3), 0x404EFD, 0x473410; reads 0x4944E8 / 0x4945EE | high |
+| 0x34 | `membersCount` | byte | | | V |
+| 0x36 | `unsure_rosterCount` (unsure_membersCountCopy, was undefined1) | byte | roster size incl. dead members kept in place; not reduced by `PedGroup_RemovePed` | = count 0x433360 / 0x403650, +1 0x404C90, −1 0x4C5888, read RemovePed 0x404D40 (slot = roster − 1) | accesses high, intent medium |
+| 0x38 | `formation` (unsure_mode) | int | 1 = single file (member i follows i−1); anything else = three columns (members 0–2 follow the leader, 3..7 follow 0..4). Init / Reset write 2 and **nothing writes 1**, so vanilla always uses columns. `Ped_UpdateAI` 0x44538E also sets `DAT_005e5bc8 = (formation != 1)` for members | reads 0x40463D, 0x44538E | high (1 is dead code) |
+| 0x3C | `leaderFetching` (unsure_enterCarFlag) | int | 1 while the leader was sent back to a straggler (task FOLLOW_GROUP_LEADER, target2 = member); cleared and the task dropped once the member is close | 0x4052F5 set, 0x405313 clear | high |
+
+Untouched: the 2-byte pad at +0x2, +0x37 and +0x41..0x43 (no access found). Prototypes fixed in U3
+(no renames): `PedGroup_KillMembersInCarAndCompact` 0x403650 returns `bool`; `PedGroup_RemovePed`
+0x404D40 is `void __thiscall (PedGroup*, Ped*)` (a bogus 3rd parameter removed: RET 4);
+`PedGroup_SetLeader` 0x404400, `_SetMember` 0x404420, `_FindFarthestMember` 0x404490 (`Fix16*
+outDist`), `_FindNearestAttackingMember` 0x404AD0, `_PromoteLeader` 0x404CE0,
+`_SetMinMembersBeforeSplit` 0x475AE0 (`byte minMembers`) and the `bool` predicates 0x4037A0, 0x4038F0,
+0x403D10, 0x404480, 0x404840, 0x4048A0 now carry `PedGroup*` / `Ped*` parameters. 19 older
+custom-storage PedGroup functions still have an `undefined` return with unassigned storage (the
+decompiler treats them as void, probably right, not verified one by one).
+
+**PedGroup hazards** (all static analysis, verified by code; none reproduced):
+
+| # | VA | what | trigger | severity |
+|---|---|---|---|---|
+| 1 | 0x4C5872 (`EmergencyVehicleSlot_UpdateActive` 0x4C55D0) | **Off-by-one leader promotion → NULL deref.** After `KillMembersInCarAndCompact` killed the leader and some members survive, it does `leader = members[membersCount]` — one past the last slot, which is NULL (compaction nulls the tail; the kill does not reduce `membersCount`). `PedGroup_ClearAllObjectives` then calls `Ped_SetObjective(NULL)`, which reads `[ECX+0x278]` at 0x43BBC8 → access violation; the same call also hits the NULL slots of killed members | emergency crew (cop car / ambulance / fire truck) with the leader inside the car and ≥ 1 member on foot when the car becomes invalid, `membersCount != 1` | high (crash) if reachable — reachability is a hypothesis |
+| 2 | 0x403650 | `KillMembersInCarAndCompact` nulls killed slots and compacts but never lowers `membersCount`; every later `for i < membersCount` loop (ClearAllObjectives, Disband, UpdateMember …) sees NULL members | same path as #1 | high (root cause of #1) |
+| 3 | 0x404C90 `PedGroupAddPed`, 0x440350 `PedGroupCreate` | **No bound on `members[9]`.** AddPed writes `members[membersCount]` unchecked; `Script_Op_SET_CHAR_AI_PARAM` 0x47B9A0 (opcode 0x99) passes an unchecked byte count to `PedGroupCreate`. Count 9 lands on `membersTerminator`, 10 overwrites `leader`, larger counts run over `busy` / `membersCount` into the next pool slot. Only `Ped_RecruitNearbyIntoGroup` 0x444930 clamps to 9 | mission script creating a group > 9, or ADD_EXISTING_CHAR_TO_GROUP (235) on a full group | medium (script-controlled memory corruption) |
+| 4 | 0x47BAC0 `Script_Op_GROUP_MEMBERSHIP` | `Ped_GetGroup(oldLeader)` used without a NULL check before AddPed / RemovePed | script op 235 / 236 on a ped without a group | low–medium |
+| 5 | 0x4C5692, `KillMembersInCarAndCompact` tail | unbounded `while (members[i] != NULL)` loops rely on +0x28 being NULL; after a members[9] write (#3) they run into `leader` and beyond | full 9-member crew + an overflow write | low |
+
+Open: the intent of `rosterCount` (why RemovePed's medic branch uses roster − 1 as the slot — maybe
+itself an off-by-one); whether #1 is reachable in play (a runtime probe on
+`EmergencyVehicleSlot_UpdateActive` would settle it); what `DAT_005e5bc8` controls downstream;
+a raw write of `formation = 1` through another pointer path (`g_PedGroups + i*0x44 + 0x38`) was not
+scanned exhaustively.
+
 ### `PedSprite`, `S36`, `S32` — not ped structures (V)
 
 - `PedSprite` (gzf 2021, 0x20) is a truncated view of **`Sprite`** (0x3C), the collision/render
@@ -595,6 +643,8 @@ missing ones added.
 - Per-edge spawn heading constants (Ang16 copies set by CRT stubs at 0x5052d0..) not resolved.
 - Empty ped pool (200) and empty sprite pool (400): `PedManager_AllocPed` has no empty check;
   behaviour untested.
+- PedGroup: `rosterCount` intent and the reachability of the leader-promotion crash (§1 `PedGroup`,
+  hazards #1–#2).
 - Paramedic objective branches 0x0 / 0x1C / 0x23 only partly read; fire spread between cars not
   searched.
 - Occupations 6, 20, 21, 28, 30: no setter in the exe.

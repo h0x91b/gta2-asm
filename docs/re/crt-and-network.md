@@ -183,7 +183,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x402F00` | `File_CloseGlobal` | medium | fcloses g_File if g_FileIsOpen then clears flag; called from error() |
 | `0x403130` | `File_GetCharSkipBlanks` | medium | getc loop skipping space/CR/tab; returns 0 on newline/EOF; caller Seq_ReadLabelLine |
 | `0x4035A0` | `PedGroup_ResetDoorCursor` | high | sets DAT_0058f512=1; that byte is the seat/door cursor used in PedGroup enter-car update 0x405240 |
-| `0x4035B0` | `PedGroup_Init` | high | fastcall zeroes PedGroup fields (leader 0x2c,count 0x34, mode 0x38=2); called by PedGroupPool_Alloc |
+| `0x4035B0` | `PedGroup_Init` | high | fastcall zeroes PedGroup fields (leader 0x2c, count 0x34, `formation` 0x38 = 2 = columns; 1 = single file is never set, U3); called by PedGroupPool_Alloc |
 | `0x4035E0` | `PedGroup_ClearAllObjectives` | high | Ped_SetObjective+Ped_SetTask NO_OBJ for leader and every member |
 | `0x403650` | `PedGroup_KillMembersInCarAndCompact` | high | Ped_OnDeath on members with currentCar, nulls slots, compacts member array; returns bool |
 | `0x4037A0` | `PedGroup_AllMembersOnFoot` | medium | returns 0 if any member's currentCar(+0x16c) nonzero, else 1 |
@@ -216,7 +216,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x404450` | `PedGroup_FindMemberNotEngaged` | medium | scans members from last to first, returns first with Ped_IsEngaged false else 0 |
 | `0x404480` | `PedGroup_LeaderIsEngaged` | high | Ped_IsEngaged(group+0x2c leader) |
 | `0x404490` | `PedGroup_FindFarthestMember` | medium | max Chebyshev Fix16 distance of members to leader; returns ped, out distance |
-| `0x4045D0` | `PedGroup_MakeMembersFollowLeader` (was `unsure_PedGroup_MakeMembersFollowLeader`) | unsure | if leader on foot: sets members task 9 and Ped_SetTarget2Ped leader/neighbour, clears bit 11 |
+| `0x4045D0` | `PedGroup_MakeMembersFollowLeader` (was `unsure_PedGroup_MakeMembersFollowLeader`) | high (U3) | if leader on foot: sets members task 9 and Ped_SetTarget2Ped leader/neighbour by `formation` (1 single file, else three columns), clears bit 11 |
 | `0x4046F0` | `PedGroup_UpdateMemberFollowLeader` | high | member idx: if leader has gameObject and dist<DAT_005d304c sets task 9 follow, else resets task |
 | `0x404840` | `PedGroup_AllMembersInCar` | medium | no members: leader in car; else all members Ped_GetState==10 |
 | `0x4048A0` | `PedGroup_AllMembersInCarOrDead` | medium | all members have state 10 or 9 |
@@ -226,7 +226,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x404CE0` | `PedGroup_PromoteLeader` | medium | adds old leader as member, sets new leader slot 99, resets all member tasks; caller PedGroupSetLeader |
 | `0x404EF0` | `PedGroup_ReactToAttacker` | medium | sets members/leader to kill attacker (KILL_CHAR_ON_FOOT, Ped_SetTarget2Ped); caller Ped_ReactToAttacker |
 | `0x405240` | `PedGroup_UpdateEnterCar` | medium | leader state 3/10/5: sends members to enter car (ENTER_CAR task, door cursor 0x58f512); caller Ped_UpdateAI |
-| `0x405760` | `PedGroup_UpdateMember` (was `unsure_PedGroup_UpdateMember`) | unsure | per-member AI: Ped_SetEngaged, follow/attack by task, uses 0x4045d0 and 0x404ad0; caller Ped_UpdateAI |
+| `0x405760` | `PedGroup_UpdateMember` (was `unsure_PedGroup_UpdateMember`) | high (U3) | per-member AI: Ped_SetEngaged, follow/attack by task, uses 0x4045d0 and 0x404ad0; caller Ped_UpdateAI |
 | `0x405A40` | `NetDlg_Dtor` | high | sets vtable PTR_0056e598 only; called by 0x406bc0 scalar-deleting dtor |
 | `0x405A50` | `NetDlg_SetHwnd` | high | stores HWND at this+0x20218; called from NetDlg_OnInitDialog |
 | `0x405A60` | `NetDlg_GetHwnd` | high | returns this+0x20218, used as hDlg in SendDlgItemMessage/GetDlgItem |
@@ -549,7 +549,7 @@ Evidence is in each function's Ghidra plate comment. `unsure_` = honest guess, `
 
 | Address | Name | Confidence | Evidence |
 |---|---|---|---|
-| `0x449CE0` / `0x449D10` | `unsure_FrontEndItemList_Ctor` / `_Dtor` | unsure | 600 x 0x6C array at +2; InitFrontend / FrontEnd_Dtor |
+| `0x449CE0` / `0x449D10` | `CreditsLineList_Ctor` / `_Dtor` (was `unsure_FrontEndItemList_Ctor` / `_Dtor`) | high (U5) | 600 x 0x6C `CreditsLine` array at +2 (FrontEnd.credits +0xEDFA); InitFrontend / FrontEnd_Dtor |
 | `0x449EF0` / `0x44A020` | `CrimeEventQueue_Dtor` / `thunk_CrimeEventQueue_Dtor` | high | 10 x 0x14 at +4, called from CrimeEventQueue_ScalarDeletingDtor |
 | `0x449F50` | `CrimeStats_Dtor` | unsure | bare RET called from Player_Dtor |
 | `0x44DBF0` / `0x4504D0` | `ofstream_Dtor` / `DebugLog_Dtor` | medium | ios_Dtor on vbase +8; DebugLog_WriteCoopHeader + ofstream_Close + free |

@@ -123,6 +123,27 @@ Rules so a future importer can read the sheets back:
 The sheets are game-derived: keep them out of git (`formats-out/` is ignored) and out of the
 disposable task worktree.
 
+## Frontend limits a translation must respect
+
+Read in code (Seq 27 U5 pass, 2026-10-24; details and VAs in
+[hud-and-menus.md](hud-and-menus.md) §6.6–§6.7), not tested with a translated GXT:
+
+- **Menu labels ≤ 49 characters.** `FrontEnd_InitPages` 0x453E20 copies every item / decor text
+  with `_wcsncpy(dst, gxt, 50)` into `wchar[50]`; a string of 50+ characters is left without a NUL
+  and the draw reads on into the item's `fontId` / `remap` fields. Russian runs about 20 % longer
+  than English, so check the long keys.
+- **`credits` grammar.** The single key `credits` is parsed by `Credits_ParseText` 0x449D70 with no
+  bounds checks: `*` = 20 px gap and line end, `#W` / `#B` / `#G` / `#C` (or any other letter) =
+  style, `BINKLOGO` / `MILESLOGO` = logo sprites. Every entry must be closed by `*` (the reader
+  does not stop at NUL), each line ≤ 49 characters, ≤ 600 entries (the shipped text has ≤ 535,
+  max 28 chars). Anything else writes past the FrontEnd object into the heap.
+- **Name entry needs real glyphs.** A typed character is accepted only if its glyph is wider than
+  2 px (0x459EB5) and the scancode has an entry in the `g_SKeyboard` layout table
+  (`SKeyboard_GetCharForScancode`). The 2-px placeholder glyphs cannot be typed.
+- **No restart needed.** The frontend is destroyed and recreated around every game
+  (`FrontEnd_DestroyGlobal` / `FrontEnd_CreateGlobal`), and `InitFrontend` reloads the GXT each
+  time, so a language switch shows on the next menu entry.
+
 ## Remaining work, in order
 
 1. Draw `wil-font1` Cyrillic (the HUD/brief font): enough for a first in-game test.
