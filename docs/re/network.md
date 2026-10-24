@@ -287,14 +287,19 @@ agree on this table independently.
 | 2 player added | `Network_SetPlayerAddedHandler` `0x4099B0` | `NetDlg_OnPlayerAdded` `0x406CC0` | ADDPLAYERTOGROUP, JoinSession | `(ctx, slot->name, &slot->playerData)` |
 | 3 player removed | `Network_SetPlayerRemovedHandler` `0x409AC0` | `NetDlg_OnPlayerDeleted` `0x406F20` | 0x21 for another player, **also in game** | `wchar16* name` |
 | 4 exit game | `Network_SetExitGameCallback` `0x409F70` | `ExitGameCallback` `0x461A50` (ctx `Game*`) | state 2 system messages | `int reason` 0/1/2 |
-| 5 session list | `Network_SetSessionListHandler` `0x409620` | `NetDlg_OnSessionListUpdated` `0x406BE0` | `UpdateLobby` state 1 | `{wchar16* names[16]; uint count}` |
-| 6 ping | `Network_SetPingHandler` `0x409B90` | `NetDlg_OnPlayerPingUpdate` `0x405B50` | `Network_UpdatePlayerPing` | `{wchar name[260]; uint avgPing}` |
-| 7 chat | `Network_SetChatHandler` `0x409D70` | `NetDlg_OnChatReceived` `0x405CA0` | DPSYS_CHAT | `{wchar msg[128]; wchar sender[16]}` |
+| 5 session list | `Network_SetSessionListHandler` `0x409620` | `NetDlg_OnSessionListUpdated` `0x406BE0` | `UpdateLobby` state 1 | `NetEvtSessionList*` (0x44: `wchar16* names[16]; uint count` +0x40) |
+| 6 ping | `Network_SetPingHandler` `0x409B90` | `NetDlg_OnPlayerPingUpdate` `0x405B50` | `Network_UpdatePlayerPing` | `NetEvtPing*` (0x20C: `wchar16 playerName[260]; uint avgPingMs` +0x208) |
+| 7 chat | `Network_SetChatHandler` `0x409D70` | `NetDlg_OnChatReceived` `0x405CA0` | DPSYS_CHAT | `NetEvtChat*` (0x120: `wchar16 text[128]; wchar16 senderName[16]` +0x100) |
 | 8 group data | `Network_SetGroupDataHandler` `0x409DE0` | `NetDlg_OnSettingsReceived` `0x408900` | 0x102, end of JoinSession | `NetDataRef* groupData` (`Network+0x86C`) |
 | 9 game start | `Network_SetGameStartHandler` `0x409E90` | `NetDlg_OnGameStart` `0x407800` | wire 8 | none |
 
-`Network_DispatchEvent` `0x4098E0` accepts ids 1..10. `NetDlg_Run` registers 1-3 and 5-9 and
-**never unregisters them** (NET-12).
+`Network_DispatchEvent` `0x4098E0` accepts ids 1..10 and NULL-checks every callback (verified), so
+an unregistered event is simply dropped. `NetDlg_Run` registers 1-3 and 5-9 and **never unregisters
+them** (NET-12). The three event argument structs are typed in Ghidra under `/net` (Seq 27 P1):
+`NetEvtSessionList` (sender `0x40C54D..0x40C586`, reader `0x406BE0`), `NetEvtPing` (`0x409B65` /
+`0x409B74` / `0x409B80`, reader `0x405BA7`), `NetEvtChat` (`0x40B711..0x40B722`, reader `0x405CA0`;
+neither string is terminated when full, NET-04). Whether `Network_UpdateLobby` caps `count` at 16
+before filling `names[16]` was not checked (hypothesis: the enum callback caps at 16).
 
 ### 3.5 Struct `Network` (0xCB8)
 
@@ -404,12 +409,19 @@ Sub-structs (category `/net`):
 ### 4.1 Flow
 
 1. **Construction.** `NetDlg_Ctor` `0x407D10` runs on Startup's stack: vtable `0x56E598`, page 0,
-   previous page 3, defaults, `settings.+0x114 = GetTickCount()`. The 11.44 tail
+   previous page 3, defaults (gameType 1, scoreLimit 1, the rest 0), `settings.+0x114 = GetTickCount()`.
+   **`settings.gameSpeed` is not initialised** (no store to `+0x2008C`): it is stack garbage until
+   `NetDlg_LoadSettingsFromRegistry` `0x406470` runs in WM_INITDIALOG (NET-75). The 11.44 tail
    `Patch1144_NetDlg_AllocMapTable` `0x56DCAB` `HeapAlloc`s `maps`. Then `NetDlg_Ctor_Frag`
    `0x407D8B` runs `NetDlg_LoadPlayerNameFromRegistry` `0x406270` (ANSI `PlayerName` → wide) and
-   `NetDlg_ReadMmpMapFiles` `0x407930` (`*.mmp` → `NetDlgMapEntry[]`, sorted by description).
+   `NetDlg_ReadMmpMapFiles` `0x407930` (`*.mmp` → `NetDlgMapEntry[]`; `HeapReAlloc` to
+   `(mapCount+1)*0x518` per good map, so one spare slot is always there for the next file; bubble
+   sort by description at the end). The table is never freed (NET-74).
 2. **`NetDlg_Run` `0x4089C0`.** Registers the 8 handlers with context = dialog, then
    `DialogBoxParamA(hInst, 0x67, NULL, NetDlg_DialogProc)`. It returns 1 only for `EndDialog(1)`.
+   After that Startup reads only `NetDlg_CopySettings` (settings → `g_NetGameSettings` `0x673E30`)
+   and `maps[settings.mapIndex].gmpFile/styFile/scrFile` through `NetDlg_GetSelected*File`
+   `0x406550/70/90`; then `NetDlg_Dtor` `0x405A40`, which only rewrites the vtable.
 3. **`NetDlg_DialogProc` `0x408920`.**
    - `WM_INITDIALOG`: `Patch1144_NetDlg_SetIconHook` `0x3F158C`, then `NetDlg_OnInitDialog` `0x408840`.
      That loads the lobby GXT into `g_NetDialogLocaleSettings`, does `SetWindowLong(DWL_USER)`,
@@ -473,22 +485,44 @@ Sub-structs (category `/net`):
 
 ### 4.3 Structs
 
-**`NetDlg`** (0x20220, the stack gap in Startup):
+**`NetDlg`** (0x20220, the stack gap in Startup, probed by `__chkstk`; never on the heap). Rebuilt in
+Ghidra by Seq 27 P1 with no undefined bytes. **In 11.44 only 0x538 of the 0x20220 bytes are live.**
+Vanilla kept `NetDlgMapEntry maps[100]` inline at `+0x4..+0x1FCE4` (4 + 100·0x518; 100 is the 11.x
+changelog's "Removed 100 MMP file limit"); 11.44 moved the table to the heap and turned +0x4 into
+the pointer. The vanilla this-relative offsets survive in the hooks with base `maps-4`
+(`0x56DC50 LEA EBX,[EBX+ECX*8-4]`, then `[EBX+0x518]` at `0x407617` = `maps[idx].playerCount`).
+Two scans found no access to the dead range: every displacement ≥ 0x100 in all `NetDlg_*` /
+`Patch1144_Net*` / `*Mmp*` / Startup functions, and a program-wide scan for base+displacement
+`0x1F000..0x1FD63` (non-ESP): 0 hits.
 
-| Off | Type | Name | Notes |
-|---|---|---|---|
-| 0x0 | void* | vtable | `0x56E598` |
-| 0x4 | NetDlgMapEntry* | maps | 11.44 heap block; vanilla had `NetDlgMapEntry[100]` inline up to 0x1FD64 (now dead bytes) |
-| 0x1FD64 | int | mapCount | |
-| 0x1FD68 | int | exitFlag | set by `OnGameStart`, read by `OnTimer` |
-| 0x1FD6C | int | playerCount | own counter, not `Network_GetPlayerCount` (NET-45) |
-| 0x1FD70 / 0x1FD74 | WNDPROC | origWndProcClientChat / origWndProcHostChat | |
-| 0x1FD78 | wchar_t[260] | playerName | |
-| 0x1FF84 | NetGameSettings | settings | the 0x120 blob |
-| 0x200A4 | HWND[90] | pageControls | 30 per page, stride 0x78 |
-| 0x2020C / 0x20210 | int | currentPage / previousPage | |
-| 0x20218 | HWND | hwnd | |
-| 0x2021C | HINSTANCE | hInstance | |
+| Off | Name (was) | Type | Meaning | Evidence VA |
+|---|---|---|---|---|
+| 0x0 | vtable | void* | `0x56E598`, slot 0 `NetDlg_ScalarDeletingDtor` `0x406BC0` | `0x407D16`, `0x405A40` |
+| 0x4 | maps | NetDlgMapEntry* | 11.44 heap table: `HeapAlloc(0x676CD4, 9, 0x518)`, grown by `HeapReAlloc`; never freed | `0x56DCBE`, `0x407B1A`, `0x406550` |
+| 0x8 | dead_vanillaMapTable (`_gap`) | byte[0x1FCDC] | rest of the vanilla `maps[100]`; no access in 11.44 | scans above |
+| 0x1FCE4 | unsure_dead_vanillaTail (gap) | byte[0x80] | between the vanilla table end and `mapCount`; no access; vanilla meaning unknown | scans above |
+| 0x1FD64 | mapCount (was int) | uint | valid `.mmp` maps; compared unsigned | `0x407B34` inc, `0x406484`, `0x407402` |
+| 0x1FD68 | exitFlag | int (bool) | set by `OnGameStart`, read by `OnTimer` → `EndDialog(1)` | `0x406254`, `0x406260` |
+| 0x1FD6C | playerCount | int | own counter, not `Network_GetPlayerCount` (NET-45) | `0x406210/30/40` |
+| 0x1FD70 | origWndProcClientChat | WNDPROC | original WNDPROC of edit `0x41D` | `0x408792`, `0x4078EE` |
+| 0x1FD74 | origWndProcHostChat | WNDPROC | original WNDPROC of edit `0x401` | `0x4087AA`, `0x40790A` |
+| 0x1FD78 | playerName | wchar_t[260] | registry `Network\PlayerName` as UTF-16 | `0x4061D7`, `0x40632B` |
+| 0x1FF80 | unused_0x1ff80 (`unsure_field_0x1ff80`) | uint | only `= 0` in the ctor | `0x407D3F` |
+| 0x1FF84 | settings | NetGameSettings | the 0x120 blob | `0x40645A`, `0x4073EB`, `0x4075E7`, `0x4080D5` |
+| 0x200A4 | pageControls (was HWND[90]) | HWND[3][30] | 30 per page, stride 0x78 | `0x4086B8`, `0x405ABF`, `0x405ADE` |
+| 0x2020C | currentPage | NETDLG_PAGE | | `0x405B02`, `0x405B10`, `0x405F2D` |
+| 0x20210 | previousPage | NETDLG_PAGE | write-only; ctor 3 (NONE) | `0x405AFC`, `0x407D35` |
+| 0x20214 | unused_0x20214 (`unsure_field_0x20214`) | short | only `= 0` in the ctor | `0x407D28` |
+| 0x20216 | pad_0x20216 | byte[2] | alignment | |
+| 0x20218 | hwnd | HWND | dialog HWND (`NetDlg_SetHwnd` in WM_INITDIALOG) | `0x405A54` |
+| 0x2021C | hInstance | HINSTANCE | `NetDlg_Run` arg | `0x4089D2`, `0x408701`, `0x408A4D` |
+
+Enums (Ghidra `/auto_structs`): `NETDLG_PAGE` BROWSER 0, HOST 1, CLIENT 2, NONE 3 (ShowPage callers,
+ctor `0x407D35`); `NETDLG_SETTING` MAP 1, SCORE_LIMIT 2, GAME_TYPE 3, RANDOM_SEED 4, GAME_SPEED 5,
+POLICE 6, TIME_LIMIT 7 (jump table `0x4077D8`, the first argument of `NetDlg_SetSetting`). The event
+argument structs `NetEvtSessionList` / `NetEvtPing` / `NetEvtChat` are in §3.4. All 51 `NetDlg_*`
+prototypes are typed in Ghidra; the `_Frag` tails and `Patch1144_NetLobby_*` hooks keep untyped
+prototypes on purpose (context in arbitrary registers, see their plates).
 
 **`NetGameSettings`** (0x120): the group-data blob, `NetDlg+0x1FF84`, and `g_NetGameSettings`. The
 size is proven by the `rep movsd ecx=0x48` copies (`0x40645A`, `0x4073F1`, `0x40744E`) and by
@@ -911,7 +945,7 @@ pending table until we catch up.
 | `0x45DB70` | `Gang_PickWeaponByRespect` | always the basic weapon |
 | `0x45E000` / `0x45E3A0` | `GeneratorManager_Finalize` / `Generator_TurnOn` | generators fire next frame |
 | `0x4A4780` / `0x4A47F0` / `0x4A51C0` | player car history | disabled |
-| `0x4A8A90` / `0x4A8B00` | `PlayerData_UnlockLevel` / `UnlockAllLevels` | no profile save |
+| `0x4A8A90` / `0x4A8B00` | `PlayerData_UnlockLevel` / `PlayerData_UnlockAllLevels` | no profile save |
 | `0x4C5F70` / `0x4C8880` / `0x4C8910` | chat input | key 0x44 opens chat; A-Z/0-9 consumed |
 | `0x4C78A0` | `Hud_DrawPlayerNames` | remote names over peds if `show_player_names` |
 | `0x4C9C20` | `Hud_DrawPlayerPanel` | local frags/tag time + every remote player's money and score |
@@ -1030,7 +1064,9 @@ patching the game.
 | NET-71 | `0x461810` | Tokens split on spaces, but `-R` accepts a quoted name with spaces → later switches are read from the middle of the name (bounded, no overrun). | cosmetic | medium | N1 #10 |
 | NET-72 | `0x4D11C2`, `0x4D0C4C` | The CoInitialize HRESULT (0/1) is stored as `mutex` and later passed to `ReleaseMutex`/`CloseHandle`. Harmless on Windows; **our `CloseHandle` shim must ignore values < 0x10** so it never closes a real file token. | host trap | high | N1 #12 |
 | NET-73 | `0x407870` `NetDlg_ChatEditSubclassProc` | The original WNDPROC is chosen by page, not by hwnd; on page 0 every message to both edits returns 0, WM_NCDESTROY included (leak). | leak | high | N3 B19 |
-| NET-74 | `0x4D1029`, `0x40BD20`, `0x40B140`, `0x40BBAB`, `0x408840` | Leaks: the `UseConnectiond` blob; connection entry names/blobs; `modemNames` realloc; JoinSession's GetGroupData retry; the lobby GXT on 3 of 4 exits. | leak | high | N1 #7, N2 B13, N3 B18 |
+| NET-74 | `0x4D1029`, `0x40BD20`, `0x40B140`, `0x40BBAB`, `0x408840`, `0x405A40` / `0x56DCAB` | Leaks: the `UseConnectiond` blob; connection entry names/blobs; `modemNames` realloc; JoinSession's GetGroupData retry; the lobby GXT on 3 of 4 exits; the 11.44 heap map table `NetDlg.maps` ((mapCount+1)·0x518 bytes, once per process: `NetDlg_Dtor` only rewrites the vtable, no `HeapFree` references it). | leak | high | N1 #7, N2 B13, N3 B18, P1 H1 |
+| NET-75 | `0x407D10` `NetDlg_Ctor` | `settings.gameSpeed` (+0x2008C) is never initialised by the ctor; it is stack garbage until `NetDlg_LoadSettingsFromRegistry` in WM_INITDIALOG. Harmless in vanilla (LoadSettings always runs first, and gameSpeed is dead in game, NET-51), but a host `NetDlg_Run` replacement that skips the dialog must set it. | host trap | high (verified by code) | P1 H2 |
+| NET-76 | `0x408900..0x40891A`, `0x4088BE`, `0x408915` | MSVC relies on the tiny getters/setters leaving **ECX** intact (`mov ecx,[esp+4]; call GetPage; …; call ApplyRemoteSettings` with no reload); the decompiler shows an uninitialised `this` there (decompile artifact, not a game bug). A C32/NASM replacement of `NetDlg_GetPage`, `NetDlg_SetHwnd`, `NetDlg_GetHwnd` or `NetDlg_Get/Inc/DecPlayerCount` **must preserve ECX**, or `NetDlg_OnSettingsReceived` / `NetDlg_OnInitDialog` / `NetDlg_OnPlayerAdded` (`extraout_ECX`) call the next method on garbage. | host trap (hooks) | high (verified in disassembly) | P1 H3 |
 
 ### 8.7 Count
 
@@ -1042,8 +1078,8 @@ patching the game.
 | Hang | NET-23..29 | 7 |
 | Desync | NET-30..46 | 17 |
 | Gameplay / robustness | NET-47..57 | 11 |
-| Cosmetic / leak / host trap | NET-58..74 | 17 |
-| **Total** | | **74** |
+| Cosmetic / leak / host trap | NET-58..76 | 19 |
+| **Total** | | **76** |
 
 Highest value for "fix the network bugs": NET-01, NET-02, NET-03 (remote), NET-11, NET-12, NET-30,
 NET-32, NET-38, NET-44, NET-47. Many of them are host-fixable: a strict input filter (§9.3)
@@ -1084,9 +1120,28 @@ arguments, so multiplayer is unreachable.
   | Settings | fill `dlg->settings`, then `Network_PublishSettings` |
   | Start | `Network_SendStartAndLockSession` |
 
-  It then returns 1 with `NetDlg+0x1FF84` (settings), `NetDlg+0x20088` (local map index), the map
-  table at `NetDlg+4` and a connected `g_NetworkSession` valid. Register our own handlers there and
-  clear them before returning (NET-12).
+  **What the replacement must fill before returning 1** (0 = cancel, and WinMain exits; Seq 27 P1):
+
+  1. `dlg->settings` (`+0x1FF84`, 0x120): `mmpFileName` (lower-case `.mmp` name, NUL-terminated;
+     `Patch1144_LoadGXT_MmpOverrides` opens `data\<mmpName>` for GXT/GCI overrides), `mapIndex`
+     (`NetDlg+0x20088`, a valid index into **this process's** `dlg->maps`), `gameType` 1..3,
+     `scoreLimit` > 0 (NET-50), `timeLimit` (minutes), `police` 0/1 and `gameSpeed` 0..2 (NET-75;
+     dead in game). `unsure_randomSeed` has no reader.
+  2. `dlg->maps[mapIndex].gmpFile/styFile/scrFile`: Startup builds `data\%s` from them. `NetDlg_Ctor`
+     → `NetDlg_ReadMmpMapFiles` already fills them if the mmp-scan prerequisites above work from the
+     pak (NET-20); otherwise the replacement writes its own entries into `maps`.
+  3. The Network session state is not in NetDlg: do what `NetDlg_OnCommand` does (table above), on
+     the host finish with `Network_SendStartAndLockSession`. Startup next reads
+     `Network_GetPlayerCount` and `Network_GetLocalPlayerIndex`, so `g_NetworkSession` must be
+     connected.
+  4. Optional, and the fix for NET-12: with `NetDlg_Run` replaced its 8 `Network_Set*Handler`
+     registrations never happen. `Network_DispatchEvent` NULL-checks every callback, so that is safe
+     and the stale-NetDlg callbacks in game disappear. Register our own handlers if the UI needs the
+     events, and clear them before returning.
+  5. Registry `Network\PlayerName` is written by `NetDlg_SetPlayerName`; the in-game name comes from
+     DirectPlay (`Network_GetPlayerName`), not from NetDlg.
+
+  Hooking any of the small NetDlg getters instead: preserve ECX (NET-76).
 - **Timing.** `timeGetTime` monotonic from process start (NET-28); 33 ms ticks.
 - **Handles.** `CloseHandle` of 0/1 must be a no-op (NET-72).
 - **Exit.** WM_DESTROY → `Network_CloseSession` (`DeletePlayerFromGroup`/`DestroyGroup`/

@@ -27,6 +27,8 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00591f68,g_FrontendImages,,USER_DEFINED,.data.exp,,/imported/renderer-doc/FrontendImage[25],3400
 0x00592dc8,g_GangRespectIterIdx,,USER_DEFINED,.data.exp,,/int,4
 0x005931f8,g_ScriptNextThreadId,,USER_DEFINED,.data.exp,,/undefined2,2
+0x00593230,g_DefaultOverallHiScores,,USER_DEFINED,.data.exp,,/auto_structs/HiScoreEntry[10],240
+0x00593320,g_DefaultLevelHiScores,,USER_DEFINED,.data.exp,,/auto_structs/HiScoreEntry[120],2880
 0x00594df8,g_UpperCaseTable_GIS,,USER_DEFINED,.data.exp,,/undefined,1
 0x00594ef8,g_UpperCaseTable_F,,USER_DEFINED,.data.exp,,/undefined,1
 0x00594ff8,g_trafficLightPhaseTicks,,USER_DEFINED,.data.exp,,/byte[9],9
@@ -467,7 +469,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00665788,g_ObjectSpawner,,USER_DEFINED,.data.exp,,/ObjectSpawner *,4
 0x00665b40,g_ObjectPrefabsContainer,,USER_DEFINED,.data.exp,,/imported/seuko-mod/ObjectPrefabsContainer *,4
 0x006692c0,g_ObjectPrefabRows24,,USER_DEFINED,.data.exp,,/ObjectPrefabRow24[24],2016
-0x00669ae4,g_ParkingZone,,USER_DEFINED,.data.exp,,/ParkingZone *,4
+0x00669ae4,g_ParkController,,USER_DEFINED,.data.exp,,/ParkController *,4
 0x00669e70,g_ParticlePool,,USER_DEFINED,.data.exp,,/ParticlePool *,4
 0x00669e74,g_ParticleManager,,USER_DEFINED,.data.exp,,/ParticleManager *,4
 0x00669e78,g_ParticleStatePool20,,USER_DEFINED,.data.exp,,/ParticleStatePool20 *,4

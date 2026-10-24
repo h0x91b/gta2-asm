@@ -506,7 +506,7 @@ Background images (`g_FrontendImages` @ 0x591F68, 25 × 0x88, all `data\frontend
 | `Menu_LoadDebugLevelFromRegistry` 0x45E8D0 | `Reg_Debug_GetString` 0x4B5420 | `"mapname"`, `"stylename"`, `"scriptname"`, `"savename"` (only the debug-skip-frontend path) |
 
   The frontend does not read the sound/video/key options itself; those live in gta2manager.
-- Everything else the frontend persists is in the save files (`player\plyslotN.sgv`, via `PlayerData_SaveProfileSlot` / `ProfileSlot_Reset` from `FrontEnd_CommitProfileName` / `FrontEnd_DeleteCurrentProfile`); format in §8.
+- Everything else the frontend persists is in the profile files (`player\plyslot<N>.dat`, via `PlayerData_SaveProfileSlot` / `PlayerProfile_Reset` from `FrontEnd_CommitProfileName` / `FrontEnd_DeleteCurrentProfile`); format in §8.1.
 
 The frontend does not read the sound, video or key options itself: gta2manager edits those in the registry, and the game reads them at startup (§7). Profile progress and high scores live in files (§8).
 
@@ -638,7 +638,7 @@ SFXVol seed 0x0B is much lower than the 0x7F default — probably the installer'
 
 ### 7.2 When settings are read and written
 
-1. **`WinMain` 0x4D1170**: `GetGameVersion` → `Debug_LoadFlagsFromRegistry` (Debug flags, Network `show_player_names`, Sound `do_3d_sound`) → `Menu_LoadDebugLevelFromRegistry` (Debug mapname/stylename/scriptname/savename) → `RegisterClass` → **`ReadRendererSettings`** (Screen: renderdevice, videodevice, rendername, videoname, then LoadFrameRateLighting + LoadWindowMode) → parse args → `Startup_ConnectMultiplayerFromRegistry` (multiplayer connect, Network UseProtocol/UseConnection) → create window sized from `window_width/height` → `diutil` (DirectInput; **controls loaded in `DInput_InitDevices` → 0x44BF30**) → **`InitVideo`** (`Video_ReloadSettingsAndRemode` re-reads Screen settings and applies mode/gamma; then InitRenderer, `Gamma_ApplyFromRegistry`) → `InitRendererDevice` → **`InitInputAndAudio`** (keybrd, plydat = profile .dat files, then Sound CDVol/SFXVol/do_3d_sound) → intro-movie check (`do_play_movie`).
+1. **`WinMain` 0x4D1170**: `GetGameVersion` → `Debug_LoadFlagsFromRegistry` (Debug flags, Network `show_player_names`, Sound `do_3d_sound`) → `Menu_LoadDebugLevelFromRegistry` (Debug mapname/stylename/scriptname/savename) → `RegisterClass` → **`ReadRendererSettings`** (Screen: renderdevice, videodevice, rendername, videoname, then LoadFrameRateLighting + LoadWindowMode) → parse args → `Startup_ConnectMultiplayerFromRegistry` (multiplayer connect, Network UseProtocol/UseConnection) → create window sized from `window_width/height` → `diutil` (DirectInput; **controls loaded in `DInput_InitDevices` → 0x44BF30**) → **`InitVideo`** (`Video_ReloadSettingsAndRemode` re-reads Screen settings and applies mode/gamma; then InitRenderer, `Gamma_ApplyFromRegistry`) → `InitRendererDevice` → **`InitInputAndAudio`** (keybrd, `PlayerData_CreateGlobalInstance` 0x4A93B0 = profile .dat files + hiscores.hsc, then Sound CDVol/SFXVol/do_3d_sound) → intro-movie check (`do_play_movie`).
 2. **Frontend** (isExit): `?Intro`/`FrontEnd_GotoPage` read Player\plyrslot; `LocaleSettings_Ctor` reads Option\language; `get_text_speed` reads Option\text_speed on demand. Options screens write through the same getters/setters (none found in the exe).
 3. **InitGame 0x461DE0**: re-checks Sound\do_3d_sound and writes the active state back (`Reg_Sound_SetFlag`).
 4. **Per frame**: `Gamma_RetryTick` (GameTick) retries `SetGamma` while `relatedToGamma` counts down from 0x1E; `Video_ReloadSettingsIfChanged` is called after each InitGame/Init (WinMain) and compares newly read values with the old globals.
@@ -665,7 +665,7 @@ SFXVol seed 0x0B is much lower than the 0x7F default — probably the installer'
 * **Savegame file:** `player\plyslot<N>.svg`, N = `Menu_GetProfileSlot` (0..7). Built in `MissionScript_SaveGame` (0x47EF40) with `sprintf("player\\plyslot%d.svg")` when the caller passes an empty name; `FrontEnd_BuildSaveSlotPath` does the same for the frontend. When a caller gives a path (`Menu_GetSavePath` = `Menu.unk2`/savePath, set by `Menu_SetSavePath`) that is used instead. Writes through `File_WriteWhole` (create "wb") + `File_AppendWhole` ("ab"), reads through `File_Open/File_Read`; the host serves the first from its overlay (`~/Library/Application Support/gta2-resurrected/player/`).
 * **Format:** `[0x748-byte SaveGameHeader]` then three sections `[u32 size][size bytes]`, each possibly size 0 (the data block is skipped when size==0): (1) `g_MapBlocks` delta A = `*(MapBlocks+0x40008) + *(MapBlocks+0x40000)*4`, size `(this+0x360 - off)*4`; (2) delta B = `*(+0x4000C)+*(+0x40004)*0xC`, size `(this+0x354-off)*0xC`; (3) `this+4`, size `*(this+0x324) << 3`. These are the *dynamic tail* of the map's block/column tables (blocks added at runtime, i.e. modified map). Extracted by `MapBlocks_GetEditBuffersForSave`, re-applied by `MapBlocks_RestoreEditsFromSave`. Layout semantics = hypothesis (Seq 37/map owner can confirm). No checksum, no version.
 * **Functions:** save: `MissionScript_SaveGame` 0x47EF40 (was `SaveGame`) ← `Script_Op_SAVE_GAME` 0x47FE50 (opcode 277, unused in bil.scr), `Script_Op_PERFORM_SAVE_GAME` 0x47FE80 (opcode 438: the church/save point; costs $50000, "svmiss"/"svscore"/"svdone" HUD messages via `Hud_Brief_EnqueueNoArg`, refuses when a mission is active), `SomeSwitch` 0x41D0B0 case 9 (debug key via Player_OnKeyDown); helpers MissionScript_SaveScriptCounters (collect patched script commands), SaveGame_CopyMenuPathsToHeader (fill the three path strings + area/bonus bytes), SaveGame_CollectPickups (collect weapon pickups), `Player::Player_SaveCheckpoint`. Load: `FrontEnd_LoadSavedGameSlot` 0x455850 (reads the first 0x52 header bytes, validates that each path starts with `data\`, calls `Menu_SetSavePath/GmpPath/StyPath/ScrPath/StartArea/BonusLevelId/IsBonusLevel`; DisplayError codes 0xA6/0xA7/0xA8 on a bad path) → game start → `InitGame` → `LoadGMP_and_STY_Files` 0x45B469 → `MissionScript_LoadSaveGame` 0x47F0B0 when `Menu_GetSavePath` is non-empty. Other callers of `Menu_SetSavePath`: `FrontEnd_SelectLevel`/`FrontEnd_UpdateMenuMode` clear it (`DAT_0056E5B4` = ""), `Replay_ReadHeader`, `Menu_LoadDebugLevelFromRegistry` (Debug\savename).
-* **Other persistent files**: `player\plyslot<N>.dat` — profile/unlock data, 0x7E bytes, written by `PlayerData_SaveProfileSlot` (callers FrontEnd_CommitProfileName, FrontEnd_DeleteCurrentProfile, UnlockAllLevels, WinMain-via-PlayerData_UpdateProfileLevelScore on level end, PlayerData_Ctor); `player\hiscores.hsc` — 0xF0 + 3×0x3F0 bytes of high scores, `PlayerData_SaveHiScores` (`HiScores_BuildPath` builds the name). Both go through `File_WriteWhole`. Owner: whoever takes `plydat`/`PlayerData_Ctor` (0x4A8xxx).
+* **Profiles and high scores** (`player\plyslot<N>.dat`, `player\hiscores.hsc`): `PlayerData`, see §8.1 below. Not part of the `.svg` savegame.
 * **K menu quick save** (`host/c/menu/root.c`) calls `MissionScript_SaveGame` 0x47EF40 directly (credit seuko-mod `save-game.cpp`); that is the full "save here" entry point for mods.
 
 
@@ -693,6 +693,120 @@ SFXVol seed 0x0B is much lower than the 0x7F default — probably the installer'
 
 Verified: sum of the sections == 0x748 == the length passed to the writer (`local_10 = 0x748` in MissionScript_SaveGame, `iParm1 = 0x748` in MissionScript_LoadSaveGame) and the read of the first 0x52 bytes in FrontEnd_LoadSavedGameSlot lines up with +0x00/+0x19/+0x32/+0x4B..+0x4D.
 
+
+### 8.1 Profiles and high scores: `PlayerData` (`plydat.cpp`, Seq 27 P2)
+
+`PlayerData` is the persistent profile + high-score store. It is not per-player runtime state and
+not the mission savegame (`plyslot<N>.svg` above, unrelated). All facts below are verified from the
+decompile/disassembly; nothing was reproduced live.
+
+- **Instance.** `g_PlayerData` 0x66B404, one heap object. `PlayerData_CreateGlobalInstance` 0x4A93B0
+  (was `plydat`): `operator_new(0x2BC0)` (size source) + `PlayerData_Ctor` 0x4A9290,
+  `DisplayError(OUT_OF_MEMORY,"plydat.cpp",0x4F5)` on failure; called once from `InitInputAndAudio`
+  0x461885. Freed by `PlayerData_DestroyGlobalInstance` 0x4A9270 from `Game_ShutdownOnce` 0x4620B5.
+- **Ctor order.** Vector-construct `levelHiScores[12]` (`HiScoreTable_Ctor` 0x4A8F70 clears) and the 3
+  single tables; `profiles[8]` with `PlayerProfile_Ctor` 0x4A8F80 (= `PlayerProfile_Reset` 0x4A8700:
+  all zero, `levels[0].unlocked = 1`); zero the crime/earned/wanted bests; for each slot 0..7 load
+  `player\plyslot<N>.dat` if it exists (`Profile_DatFileExists` 0x4A88C0), else write a fresh one;
+  load `player\hiscores.hsc` (`HiScores_FileExists` 0x4A9050), else `PlayerData_ResetHiScoresToDefaults`
+  0x4A8ED0 and write it; last, `PlayerData_InitUnusedDefaultHiScores` 0x4A8B80 fills the dead table.
+- **Level end** (WinMain 0x4D166F / 0x4D16C2 / 0x4D1716: quit, death and completion alike):
+  `PlayerData_UpdateProfileLevelScore(player)` 0x4A8F90 takes the "score" from
+  `AnimatedValue_Get(&player->score.money)` (so the score is the player's money), raises `bestScore`,
+  sets `lastScore` and saves the `.dat`. Then `PlayerData_UpdateHiScoresAfterLevel` 0x4A90A0 inserts
+  (name, lastScore) into the level table and (name, sum of the 12 bestScores) into the overall table;
+  for main levels only it raises the per-area bests from `Menu_GetCrimeStat(0..9)`,
+  `Menu_GetTotalEarned` and `Menu_GetWantedStarSeconds`; it re-saves `hiscores.hsc` if anything changed.
+- **Frontend readers.** `FrontEnd_GetCurrentProfileLevelTable` 0x452500 (unlock flags);
+  `FrontEnd_GetItemDisplayText`, `FrontEnd_LoadProfileNameForEdit`, `FrontEnd_CommitProfileName`,
+  `FrontEnd_DrawMenuPage` 0x457A6E (name); `FrontEnd_DrawLevelStatsPanel` 0x457140 draws the "best"
+  column from `bestCrimeStats[area][5..9]` (0x4572C7..0x45765C), `bestTotalEarned` (0x45737D, the
+  "car_cst" row, `$%d`) and `bestWantedStarSeconds` (0x45770C, "evsnrtg").
+- **High-score page index** (`FrontEnd_DrawMenuPage` 0x457AB9..0x457B78, index at `FrontEnd+0xEDF9`;
+  verified from the asm, the decompiler shows misleading `bestCrimeStats`/`ioPackBuffer` casts there):
+
+  | Page index | Table |
+  |---|---|
+  | 0, 1, 2 | `levelHiScores[i*4]` = main level of area i |
+  | 3..5 | `levelHiScores[1..3]` (area 0 bonus levels) |
+  | 6..8 | `levelHiScores[5..7]` (area 1 bonus) |
+  | 9..11 | `levelHiScores[9..11]` (area 2 bonus) |
+
+  `overallHiScores` has no frontend reader (hypothesis-level: only the 0x23D0 scalar scan, 5 hits, all
+  in `PlayerData_*`).
+- **Cheats tied to the profile name.** `PlayerData_ApplyMuchCashCheat` 0x4A9210 (MUCHCASH = $500000,
+  single-player only, from `startGame`); `ApplyCheats` → `PlayerData_UnlockAllLevels` 0x4A8B00 /
+  `PlayerData_UnlockLevel` 0x4A8A90; `FrontEnd_GotoPage` unlocks the next area after a completion
+  (`UnlockLevel(area+1, 0)`).
+- **Host.** Both files go through the overlay (`~/Library/Application Support/gta2-resurrected/player/`);
+  on first run the ctor creates all 8 `.dat` files and `hiscores.hsc` there. Deleting them resets
+  profiles and high scores.
+
+**File layouts** (both packed into `ioPackBuffer` = this+0 and written with `File_WriteWhole`; no
+checksum, no version, no size check):
+
+`player\plyslot<N>.dat`, **0x7E bytes** (`PlayerData_SaveProfileSlot` 0x4A89E0, `PlayerData_LoadProfileSlot` 0x4A8910):
+
+| Off | Size | Field |
+|---|---|---|
+| 0x00 | 18 | `wchar name[9]` (up to 8 chars + NUL; all 9 wchar stored raw) |
+| 0x12 | 12 × 9 | per level, packed: `u8 unlocked; u32 bestScore; u32 lastScore`. Level index = `area*4 + stage`, stage 0 = main level, 1..3 = bonus levels |
+
+`player\hiscores.hsc`, **0xCC0 bytes** = 0xF0 + 3 × 0x3F0 (`PlayerData_SaveHiScores` 0x4A8D80, `PlayerData_LoadHiScores` 0x4A8CB0):
+
+| Off | Size | Field |
+|---|---|---|
+| 0x000 | 0xF0 | `overallHiScores` (`HiScoreTable` = 10 × `HiScoreEntry {wchar name[10]; u32 score}`) |
+| 0xF0 + a·0x3F0 | 4 × 0xF0 | area a = 0..2: `levelHiScores[a*4 .. a*4+3]` |
+| +0x3C0 | 0x28 | `bestCrimeStats[a][10]` |
+| +0x3E8 | 4 | `bestTotalEarned[a]` |
+| +0x3EC | 4 | `bestWantedStarSeconds[a]` |
+
+**`PlayerData` fields** (0x2BC0, 9 components, no gaps):
+
+| Off | Name (was) | Type | Meaning | Evidence VA |
+|---|---|---|---|---|
+| 0x0 | `ioPackBuffer` (was `[0xCC0]` + `_gap_0xcc0[0xB40]`) | byte[0x1800] | file image buffer; at most 0xCC0 used, 0xCC0..0x17FF never accessed (size is a hypothesis about the source, e.g. `char buf[6144]`) | 0x4A89E0, 0x4A8D80 |
+| 0x1800 | `bestCrimeStats` | uint[3][10] | [area][CRIME_KIND] best per-level crime counts, main levels only | 0x4A91AD, 0x4572C7.., 0x4A8D32 |
+| 0x1878 | `bestTotalEarned` | uint[3] | [area] best `Menu_GetTotalEarned` | 0x4A91AD, 0x45737D |
+| 0x1884 | `bestWantedStarSeconds` | uint[3] | [area] best `Menu_GetWantedStarSeconds` | 0x4A91CC, 0x45770C |
+| 0x1890 | `levelHiScores` | HiScoreTable[12] | index area*4+stage | 0x4A9119, 0x457AF2 |
+| 0x23D0 | `overallHiScores` | HiScoreTable | name + total best score; saved, never drawn | 0x4A9154 |
+| 0x24C0 | `unusedDefaultHiScores` (`unsure_extraHiScoresA`) | HiScoreTable | filled with ALAN..JACKSON / 1000000..10000 on every start; dead | 0x4A92E0, 0x4A8B8A |
+| 0x25B0 | `unusedHiScores` (`unsure_extraHiScoresB`) | HiScoreTable | only constructed; dead | 0x4A92EB |
+| 0x26A0 | `profiles` | PlayerProfile[8] | slots = plyslot0..7.dat; current = `Menu_GetProfileSlot` | ctor |
+
+Sub-structs: `PlayerProfile` 0xA4 = `ProfileLevelRecord levels[12]` + `wchar16 name[9]` (+0x90) +
+`pad[2]` (+0xA2, never read or written); `ProfileLevelRecord` 0xC = `unlocked` / `bestScore` /
+`lastScore`; `HiScoreTable` 0xF0, sorted by score descending (`HiScoreTable_Insert` 0x4A8630).
+Defaults: `g_DefaultOverallHiScores` 0x593230 (`HiScoreEntry[10]`, ALISDAIR 50000 … WILLIAM 5000),
+`g_DefaultLevelHiScores` 0x593320 (`HiScoreEntry[120]`, 12 identical blocks of 10).
+
+New functions: `HiScoreTable_Dtor` 0x4A85F0, `PlayerProfile_Dtor` 0x4A86F0 (both bare RET),
+`PlayerProfile_Ctor` 0x4A8F80. Renames: `PlayerProfile_Reset` (`ProfileSlot_Reset`),
+`PlayerData_UnlockAllLevels` (`UnlockAllLevels`), `PlayerData_InitUnusedDefaultHiScores`
+(`PlayerData_InitDefaultHiScores`), `PlayerData_CreateGlobalInstance` (`plydat`). All 28 functions
+are typed; `PlayerData_UpdateProfileLevelScore` takes `Player*`.
+
+The file helpers it uses work on the globals `g_File` 0x5D25F0 / `g_FileIsOpen` 0x5D25F4:
+`FILE* __stdcall File_Open(char* path)` 0x403160, `void __stdcall File_Read(void* buf, size_t* len)`
+0x402FB0, `void File_Close(void)` 0x402EB0. The old 4-argument cdecl prototypes were the source of
+the `unaff_EDI/unaff_ESI` garbage in every loader (`PlayerData_Load*`, `MissionScript_LoadSaveGame`).
+
+**Hazards**
+
+| VA | What | Trigger | Severity | Conf |
+|---|---|---|---|---|
+| 0x4A8910, 0x4A8CB0 | No size/version/sanity check: a short file hits `File_Read`'s `fread != 1 → error(0xF)` (0x402FB0); a wrong-sized but long-enough file is accepted silently | truncated or corrupt `player\*.dat` / `hiscores.hsc` in the overlay | low–medium (startup failure; delete the overlay files) | V (both loaders + File_Read) |
+| 0x4A8700 + 0x4A8910 | `PlayerProfile.name` has no guaranteed NUL: Reset clears only 0x90..0xA1 and `pad` stays heap garbage. The game caps names at 8 chars, but a hand-edited `.dat` with 9 makes `wcscmp` (MUCHCASH), `GetGTATextWidth` and `HiScoreTable_Insert` run into `pad` and the next profile | external edit of `plyslot<N>.dat` | low | V (Reset stores; `FrontEnd_UpdateNameEntryMode` cap) |
+| 0x4A8F90 | `UpdateProfileLevelScore` saves the `.dat` with no `isMultiplayer` check, unlike `UnlockLevel`/`UnlockAllLevels` | level end in MP, if those WinMain sites run there | low | H (MP path of the call sites not traced) |
+| 0x4A90A0 | the level table gets the money at level end on every exit path (quit, death, completion) | — | info (design) | V |
+| 0x4A8780 | total best score is an unchecked sum of 12 uints, can wrap | MUCHCASH-style money | very low | V |
+
+**Still unknown.** Why the buffer is 0x1800 (only 0xCC0 used); purpose of the two dead tables
+(probably a cut MP or "today's best" table; dead status verified by whole-program scalar scan); the
+names behind `PTR_DAT_00574478` / `PTR_PTR_00574468` (entries 6/7 of the dead ALAN.. list); whether
+"car_cst" (`Menu_GetTotalEarned`, `$%d`) really is "total earned" or a car/damage cost.
 
 ## 9. Hooks for mods
 
@@ -1386,7 +1500,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4A71F2 | `Player_OnKeyDown_Frag` | high | tail POP/POP/POP/RET 4 of Player_OnKeyDown, reached by JMP from Patch1144_OnKeyDown_LaunchManagerHook 0x56DD79 (section 4 of crt-and-network.md) |
 | 0x4A8600 | `HiScoreTable_Clear` | high | 10x0x18 table cleared with default name |
 | 0x4A8630 | `HiScoreTable_Insert` | high | sorted insert (name,score) into 10-entry table, returns inserted |
-| 0x4A8700 | `ProfileSlot_Reset` | med | zeroes 0xa4 slot, unlocks first level; FrontEnd_DeleteCurrentProfile |
+| 0x4A8700 | `PlayerProfile_Reset` (was `ProfileSlot_Reset`) | high | zeroes 0xa4 slot except `pad`, unlocks first level; FrontEnd_DeleteCurrentProfile, PlayerProfile_Ctor (§8.1) |
 | 0x4A8780 | `PlayerProfile_GetTotalBestScore` | med | sums ints of 12 level records |
 | 0x4A87B0 | `PlayerData_DtorMembers` | high | vector dtors for profiles/levelHiScores; caller scalar deleting dtor |
 | 0x4A8820 | `Profile_BuildDatPath` | high | builds "player\plyslot<N>.dat" |
@@ -1395,7 +1509,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4A89E0 | `PlayerData_SaveProfileSlot` | high | packs 0x7E-byte image, File_WriteWhole |
 | 0x4A8A90 | `PlayerData_UnlockLevel` | med | sets unlock byte of level (area*4+stage), saves slot |
 | 0x4A8B60 | `HiScores_BuildPath` | high | copies "player\hiscores.hsc" |
-| 0x4A8B80 | `PlayerData_InitDefaultHiScores` | med | default names ALAN..JACKSON / scores into PlayerData+0x24c0 |
+| 0x4A8B80 | `PlayerData_InitUnusedDefaultHiScores` (was `PlayerData_InitDefaultHiScores`) | high | default names ALAN..JACKSON / scores into PlayerData+0x24c0 `unusedDefaultHiScores`, a dead table (§8.1) |
 | 0x4A8CB0 | `PlayerData_LoadHiScores` | high | reads hiscores.hsc |
 | 0x4A8D80 | `PlayerData_SaveHiScores` | high | writes hiscores.hsc |
 | 0x4A8ED0 | `PlayerData_ResetHiScoresToDefaults` | med | clears + inserts built-in default entries |

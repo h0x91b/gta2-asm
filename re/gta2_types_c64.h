@@ -60,6 +60,7 @@ typedef struct FrontendPageItem FrontendPageItem;
 typedef struct FrontendSaveSlotInfo FrontendSaveSlotInfo;
 typedef struct Generator Generator;
 typedef struct GeneratorManager GeneratorManager;
+typedef struct GmpTileAnimRecord GmpTileAnimRecord;
 typedef struct GridEntry GridEntry;
 typedef struct GridStrip GridStrip;
 typedef struct HudArrow HudArrow;
@@ -91,7 +92,7 @@ typedef struct MissionCleanupEntry MissionCleanupEntry;
 typedef struct ObjectPrefabRow24 ObjectPrefabRow24;
 typedef struct ObjectSpawner ObjectSpawner;
 typedef struct OwnerSlot OwnerSlot;
-typedef struct ParkingZone ParkingZone;
+typedef struct ParkController ParkController;
 typedef struct Particle Particle;
 typedef struct ParticleManager ParticleManager;
 typedef struct ParticlePool ParticlePool;
@@ -284,6 +285,9 @@ typedef struct DPNAME DPNAME;
 typedef struct DPSESSIONDESC2 DPSESSIONDESC2;
 typedef struct NetConnectionEntry NetConnectionEntry;
 typedef struct NetDataRef NetDataRef;
+typedef struct NetEvtChat NetEvtChat;
+typedef struct NetEvtPing NetEvtPing;
+typedef struct NetEvtSessionList NetEvtSessionList;
 typedef struct NetFrameInput NetFrameInput;
 typedef struct NetMsgHeader NetMsgHeader;
 typedef struct NetPacketDesc NetPacketDesc;
@@ -407,6 +411,15 @@ enum CRIME_KIND_values {
     CRIME_KILL_GANG_MEMBER = 9,
 };
 
+// /DOOR_SIDE
+typedef uint32_t DOOR_SIDE;
+enum DOOR_SIDE_values {
+    DOOR_SIDE_LEFT = 1,
+    DOOR_SIDE_RIGHT = 2,
+    DOOR_SIDE_TOP = 3,
+    DOOR_SIDE_BOTTOM = 4,
+};
+
 // /EMERGENCY_CREW_TYPE
 typedef uint32_t EMERGENCY_CREW_TYPE;
 enum EMERGENCY_CREW_TYPE_values {
@@ -442,6 +455,15 @@ enum OBJECT_KIND_values {
     OBJECT_KIND_SHOP = 10,
     OBJECT_KIND_LIGHT = 11,
     OBJECT_KIND_SOUND_EMITTER = 12,
+};
+
+// /PARK_STATE
+typedef uint32_t PARK_STATE;
+enum PARK_STATE_values {
+    PARK_STATE_IDLE = 0,
+    PARK_STATE_WAIT_DOOR_EDGE = 1,
+    PARK_STATE_PULLING_IN = 2,
+    PARK_STATE_FINISHED = 3,
 };
 
 // /PED_CLASS
@@ -1430,6 +1452,27 @@ enum WEAPON_INDEX_values {
     WEAPON_VEHICLE_WEAPON_27 = 27,
 };
 
+// /auto_structs/NETDLG_PAGE
+typedef uint32_t NETDLG_PAGE;
+enum NETDLG_PAGE_values {
+    NETDLG_PAGE_BROWSER = 0,
+    NETDLG_PAGE_HOST = 1,
+    NETDLG_PAGE_CLIENT = 2,
+    NETDLG_PAGE_NONE = 3,
+};
+
+// /auto_structs/NETDLG_SETTING
+typedef uint32_t NETDLG_SETTING;
+enum NETDLG_SETTING_values {
+    NETDLG_SETTING_MAP = 1,
+    NETDLG_SETTING_SCORE_LIMIT = 2,
+    NETDLG_SETTING_GAME_TYPE = 3,
+    NETDLG_SETTING_RANDOM_SEED = 4,
+    NETDLG_SETTING_GAME_SPEED = 5,
+    NETDLG_SETTING_POLICE = 6,
+    NETDLG_SETTING_TIME_LIMIT = 7,
+};
+
 // /defines/define_WINVER
 typedef uint64_t define_WINVER;
 enum define_WINVER_values {
@@ -2411,6 +2454,12 @@ typedef _s_UnwindMapEntry UnwindMapEntry;
 typedef uint32_t DWORD;
 typedef uint32_t /* HINSTANCE__ * */ HINSTANCE;
 typedef uint32_t /* HWND__ * */ HWND;
+typedef int32_t LONG_PTR;
+typedef LONG_PTR LPARAM;
+typedef LONG_PTR LRESULT;
+typedef uint32_t UINT;
+typedef uint32_t UINT_PTR;
+typedef UINT_PTR WPARAM;
 /* function type dt_b293fec6 omitted */
 typedef char INT8;
 typedef uint32_t UINT32;
@@ -2429,6 +2478,8 @@ typedef uint8_t Uint8;
 typedef char CHAR;
 typedef uint32_t /* void * */ HANDLE;
 typedef uint16_t WCHAR;
+/* function type _winuser_h_functions_WNDPROC omitted */
+typedef uint32_t /* _winuser_h_functions_WNDPROC (*) */ WNDPROC;
 
 /* ---- composites, dependency order */
 
@@ -2931,6 +2982,17 @@ struct GeneratorManager {
     uint8_t pad[3]; /* 0x14a9 */
 };
 
+// /GmpTileAnimRecord  size 0x6
+// One record of the .gmp ANIM chunk (DMA 'GTA2 Map Format' tile_animation, variable length 6+2*frameCount). Lives in MapBlocks+0x340 tileAnims (malloc'd chunk copy, ANIM_section 0x464670); walked by MapBlocks_StartTileAnims 0x464550.
+struct GmpTileAnimRecord {
+    uint16_t baseTile; /* 0x0 tile index whose StyleData.tileRemap slot this animates (TileAnim_InitFromMapData 0x4C32B9 -> entry+0x10) */
+    uint8_t frameRate; /* 0x2 game ticks per frame (0x4C32A7 -> entry+4 frameDelay). 0 = ~65536 ticks per frame (timer underflow, see TileAnim_Step) */
+    uint8_t repeatCount; /* 0x3 plays this many times then the entry is freed; 0 = forever (0x4C32B0 -> entry+6). All vanilla maps: 0 */
+    uint8_t frameCount; /* 0x4 number of frames (0x4C32C0: entry+2 lastFrame = frameCount-1; 0 -> 0xFFFF, OOB) */
+    uint8_t unused; /* 0x5 never read by the game; 1 in every vanilla .gmp */
+    /* 0x6 uint16_t frames[0] (zero-length) */
+};
+
 // /GridEntry  size 0x8
 struct GridEntry {
     uint32_t /* void * */ sprite; /* 0x0 */
@@ -3271,21 +3333,27 @@ struct OwnerSlot {
     uint8_t _gap_0x5[0x3];
 };
 
-// /ParkingZone  size 0x48
-struct ParkingZone {
-    uint32_t /* void * */ car; /* 0x0 */
-    uint8_t _gap_0x4[0x8];
-    int state; /* 0xc */
-    uint32_t /* void * */ block; /* 0x10 */
-    uint8_t _gap_0x14[0x24];
-    int direction; /* 0x38 */
-    uint8_t timer; /* 0x3c */
-    uint8_t flag; /* 0x3d */
-    uint8_t counter; /* 0x3e */
-    uint8_t scriptFlag; /* 0x3f */
-    uint8_t unk40; /* 0x40 */
+// /ParkController  size 0x48
+// park.cpp: the single garage-PARK controller (g_ParkController 0x669AE4, operator_new(0x48) in Game_Ctor). Mission op PARK(car, door) -> ParkController_Start; ParkController_Update each GameTick pulls the car through the door, then kills passengers, puts the driver outside, removes the car. Only one park at a time.
+struct ParkController {
+    uint32_t /* Car * */ car; /* 0x0 Car being parked (PARK arg 1). Set by ParkController_Start 0x489BC0, cleared at finish 0x489680 (state 3). Read by ParkController_IsCar 0x493540 / IsCarInside 0x434AF0 */
+    uint32_t /* Car * */ lastParkedCar; /* 0x4 Car of the previous finished park (state 3 copies car here before clearing it, 0x489680). Door_CarMayOpen mode 6 -> ParkController_IsLastParkedCar 0x44C870 */
+    uint32_t lastParkedCarId; /* 0x8 Car.id (+0x6C) of lastParkedCar, guards against a reused Car slot (0x44C870) */
+    PARK_STATE state; /* 0xc PARK_STATE. 1 by ParkController_Start, 2/3 by ParkController_Update, 0 by ParkController_Reset. ==3 -> HAS_PARK_FINISHED (0x476AC0) */
+    uint32_t /* DoorSlot * */ door; /* 0x10 Garage door (PARK arg 2, DOOR_DATA). Door_GetBlockPos / Door_HasTwoFaces in Start; Door_CloseBothFaces + Door_ClearByte2C at finish (0x489680) */
+    uint32_t /* Ped * */ lastDriver; /* 0x14 Last non-null car->driver (+0x54) seen in state 1 (0x489680). At finish, if the car has no driver and this ped stands inside the area, it is moved to exitPos (unless noRespawn) */
+    Vec2 areaMin; /* 0x18 Garage interior rectangle min (x,y), Fix16 blocks. Built by ParkController_Start from the door block + side + margin (1.0, or 2.0 for long cars), +1 block across for a double door. Sprite_FindCornersInsideRect(min,max) in Update; AssertAreaClear checks it for walls */
+    Vec2 areaMax; /* 0x20 Garage interior rectangle max (x,y), see areaMin */
+    Vec2 pullStep; /* 0x28 Per-tick pull-in force: (midpoint of the two inside corners - car centre), normalised * 0.1 (DAT_00669C9C), passed to CarPhysics_ApplyMassKick(physics, &pullStep) at 0x4898CB / 0x489AAC. Zero -> straight to state 2 */
+    Vec2 exitPos; /* 0x30 Where the driver is put on foot at finish: 0.8 block outside the door face, 0.5 along it (Start 0x48A167); Ped_PlaceInWorldOnFoot in Update */
+    DOOR_SIDE doorSide; /* 0x38 DOOR_SIDE of the door's face A (Door_GetBlockPos 4th out = DoorFace.side). Chooses area/exit geometry (Start) and exit heading (ParkController_GetExitHeading) */
+    uint8_t settleTicks; /* 0x3c Countdown from 30 (0x1E, Ctor/Start) once all 4 corners are inside; reaches 0 -> state 3 (0x489680) */
+    uint8_t carInside; /* 0x3d Latched 1 when all 4 corners are inside the area or no pull is needed (0x489680). Then the car stops being pulled and ParkController_IsCarInside makes Ped_Obj2_EnterCar fail for it. Cleared by Start */
+    uint8_t parkSerial; /* 0x3e Incremented by every ParkController_Start (255 wraps to 1, never 0) and returned by it; Script_Op_PARK ignores the value. Only reader is Start itself */
+    uint8_t noRespawn; /* 0x3f 1 = PARK_NO_RESPAWN (opcode 0x118, ParkController_SetNoRespawn 0x476AD0): at finish the driver is NOT placed outside, he is removed with the car. Never cleared back to 0 (see report hazard) */
+    uint8_t isLongCar; /* 0x40 Car_IsLongerThanCraneLimit (sprite length > 1.0 block) at Start; widens the area margin from 1.0 to 2.0 blocks */
     uint8_t _gap_0x41[0x3];
-    int unk44; /* 0x44 */
+    uint32_t pullTicks; /* 0x44 Ticks spent in state 2; reset by Start; >= 300 (~10 s) forces state 3 even if the car is not inside (0x489680) */
 };
 
 // /Particle  size 0x4c
@@ -3768,23 +3836,33 @@ struct TaxiNodePool {
 };
 
 // /TileAnimEntry  size 0x18
+// One running tile animation (tileanim.cpp), element of TileAnimPool.entries[50]. Every GameTick TileAnim_Step counts ticksLeft down and, at 0, moves curFrame one step towards lastFrame and writes StyleData.tileRemap[remapTile] = frame (TileAnim_ApplyFrame 0x4C3260). Two sources: .gmp ANIM records (TileAnimManager_AddFromMap 0x4C3470, frames from mapRecord) and doors (TileAnimManager_StartAnim 0x4C3430, frames are tile indices firstFrame..lastFrame). Ctor 0x4C33A0 zeroes all, dtor 0x4C33D0 clears mapRecord/next.
 struct TileAnimEntry {
-    uint8_t _gap_0x0[0x12];
-    short animId; /* 0x12 */
-    uint32_t /* void * */ next; /* 0x14 */
+    uint16_t firstFrame; /* 0x0 frame the anim (re)starts at: 0 for map anims (0x4C32C6), DoorInfo first/last tile for doors (TileAnim_Setup 0x4C3403); copied to curFrame by TileAnim_Restart 0x4C32EB and on wrap 0x4C334F */
+    uint16_t lastFrame; /* 0x2 end frame, inclusive: frameCount-1 for map anims (0x4C32CB); lastFrame < firstFrame plays backwards (TileAnim_Step 0x4C3317, door close) */
+    uint16_t frameDelay; /* 0x4 ticks per frame; reloads ticksLeft (0x4C335A, Restart 0x4C32E0) */
+    uint16_t repeatsLeft; /* 0x6 0 = loop forever; else decremented at each wrap, hitting 0 -> Step returns done and the entry is freed (0x4C3338..0x4C334B). Doors pass 1 */
+    uint16_t curFrame; /* 0x8 current frame: index into mapRecord->frames, or the tile index itself when mapRecord == NULL (TileAnim_ApplyFrame 0x4C3269/0x4C3284) */
+    uint16_t ticksLeft; /* 0xa countdown, decremented first thing every tick (0x4C3303); advance at 0 */
+    uint32_t /* GmpTileAnimRecord * */ mapRecord; /* 0xc source ANIM record (map anims, 0x4C32A4) or NULL for script/door anims (TileAnim_Setup 0x4C341C) */
+    uint16_t remapTile; /* 0x10 StyleData.tileRemap slot written each frame: GMP baseTile or the DoorInfo remap tile (0x4C326D/0x4C3288, 0x4C33FA) */
+    short animId; /* 0x12 serial from g_TileAnimManager->nextAnimId (TileAnim_AssignId 0x4C3248); nothing reads it */
+    uint32_t /* TileAnimEntry * */ next; /* 0x14 free/used list link (TileAnimPool_PopFreeToUsed 0x4C3384, TileAnimPool_Init 0x4C34D6) */
 };
 
 // /TileAnimManager  size 0x2
+// g_TileAnimManager 0x671C08 (2 bytes, new in Game_Ctor 0x45CA8E, deleted in Game_Dtor 0x45D603). Only state: nextAnimId (starts 1). Its methods (StartAnim, AddFromMap, Update, 0x4C3370) take it in ECX but all work on g_TileAnimPool.
 struct TileAnimManager {
     short nextAnimId; /* 0x0 */
 };
 
 // /TileAnimPool  size 0x4bc
+// g_TileAnimPool 0x671C0C, operator_new(0x4BC) in TileAnimManager_Ctor (tileanim.cpp:0xDC). Fixed pool of 50 TileAnimEntry: freeHead / usedHead singly linked through entry.next (Init 0x4C34B0 chains entries[0..49]); PopFreeToUsed pushes on the used head WITHOUT a NULL check (51st anim crashes, 0x4C3384). Update walks the used list and moves finished entries back to the free list.
 struct TileAnimPool {
     uint32_t /* TileAnimEntry * */ freeHead; /* 0x0 */
     uint32_t /* TileAnimEntry * */ usedHead; /* 0x4 */
     TileAnimEntry entries[50]; /* 0x8 */
-    short count; /* 0x4b8 */
+    uint16_t activeCount; /* 0x4b8 number of anims on the used list, recounted by every TileAnimPool_Update (0x4C350C reset, 0x4C3516 ++); written only, never read */
     uint8_t _gap_0x4ba[0x2];
 };
 
@@ -3947,7 +4025,7 @@ struct StyleData {
     uint32_t /* void * */ sprite_graphics; /* 0x34 */
     uint32_t spriteGraphicsRaw; /* 0x38 */
     int tiles; /* 0x3c */
-    uint32_t unsure_tileRemap; /* 0x40 */
+    uint32_t /* uint16_t * */ tileRemap; /* 0x40 ushort[1024+] tile -> displayed tile (identity unless animated); read by StyleData_GetTileRemap 0x4BF6B0 (tile & 0xFFFF), written by StyleData_SetTileRemap 0x4BF770 (TileAnim, doors). Was unsure_tileRemap. */
     uint32_t tilesRaw; /* 0x44 */
     uint32_t deltaStore; /* 0x48 */
     uint32_t deltaIndexRaw; /* 0x4c */
@@ -4728,6 +4806,7 @@ struct HiScoreEntry {
 };
 
 // /auto_structs/HiScoreTable  size 0xf0
+// 10 entries sorted by score desc (HiScoreTable_Insert 0x4A8630); Clear sets name L"" (0x5733D8) and score 0.
 struct HiScoreTable {
     HiScoreEntry entries[10]; /* 0x0 top 10 */
 };
@@ -4830,7 +4909,7 @@ struct MapBlocks {
     uint32_t /* void * */ zoneInfo; /* 0x334 */
     uint32_t /* void * */ mapObjects; /* 0x338 */
     uint32_t /* void * */ lights; /* 0x33c */
-    uint32_t /* void * */ tileAnims; /* 0x340 */
+    uint32_t /* GmpTileAnimRecord * */ tileAnims; /* 0x340 */
     uint32_t mapObjectCount; /* 0x344 */
     uint32_t lightCount; /* 0x348 */
     uint32_t blockCountLoaded; /* 0x34c */
@@ -5039,26 +5118,27 @@ struct NetGameSettings {
 };
 
 // /auto_structs/NetDlg  size 0x20220
-// Network lobby dialog (resource 0x67, vtable 0x56E598), stack object in Startup_ConnectMultiplayerFromRegistry (size 0x20220 = frame gap). 3 pages of 30 Win32 controls (g_NetDlgControlTable). Seq 27 N3.
+// Network lobby dialog object (DialogBoxParamA resource 0x67, vtable 0x56E598). Lives on the stack of Startup_ConnectMultiplayerFromRegistry 0x4D0ED0 (frame gap 0x20220, __chkstk); passed to the dialog as DWL_USER (GetWindowLongA(hDlg,8)) and as context of Network events 1-3,5-9 (NetDlg_Run 0x4089C0). 3 pages x 30 Win32 controls from g_NetDlgControlTable 0x58F518. In 11.44 only 0x538 of its 0x20220 bytes are live: the vanilla inline map table (+0x4..0x1FCE4) moved to the heap. Seq 27 N3 + P1.
 struct NetDlg {
-    uint32_t /* void * */ vtable; /* 0x0 0x56E598, slot 0 NetDlg_ScalarDeletingDtor */
-    uint32_t /* NetDlgMapEntry * */ maps; /* 0x4 11.44: HeapAlloc'ed NetDlgMapEntry[mapCount+1] (Patch1144_NetSession_AllocSlotBlock, grown by HeapReAlloc in NetDlg_ReadMmpMapFiles). Vanilla kept NetDlgMapEntry[100] inline at +4..+0x1FD64, now unused */
-    uint8_t _gap_0x8[0x1fd5c];
-    int mapCount; /* 0x1fd64 valid .mmp maps (NetDlg_ReadMmpMapFiles) */
-    int exitFlag; /* 0x1fd68 set by NetDlg_OnGameStart; NetDlg_OnTimer then EndDialog(1) */
-    int playerCount; /* 0x1fd6c host page only: ++ in NetDlg_OnPlayerAdded, -- in NetDlg_OnPlayerDeleted, 0 on Cancel */
-    uint32_t /* void * */ origWndProcClientChat; /* 0x1fd70 original WNDPROC of edit 0x41D (page 2 chat input), subclassed by NetDlg_ChatEditSubclassProc */
-    uint32_t /* void * */ origWndProcHostChat; /* 0x1fd74 original WNDPROC of edit 0x401 (page 1 chat input) */
-    uint16_t playerName[260]; /* 0x1fd78 registry Network/PlayerName (NetDlg_LoadPlayerNameFromRegistry / NetDlg_SetPlayerName) */
-    int unsure_field_0x1ff80; /* 0x1ff80 zeroed by NetDlg_Ctor, no other access found */
-    NetGameSettings settings; /* 0x1ff84 game settings blob: published with SetGroupData (Network_PublishSettings), copied to 0x673E30 by Startup_ConnectMultiplayerFromRegistry */
-    HWND pageControls[90]; /* 0x200a4 HWND[3 pages][30], created from g_NetDlgControlTable by NetDlg_CreateControls; NetDlg_ShowPage hides/shows a page */
-    int currentPage; /* 0x2020c 0 session browser, 1 host lobby, 2 client lobby */
-    int previousPage; /* 0x20210 NetDlg_ShowPage; ctor 3 */
-    short unsure_field_0x20214; /* 0x20214 zeroed by NetDlg_Ctor only */
-    uint8_t _gap_0x20216[0x2];
-    HWND hwnd; /* 0x20218 dialog HWND (NetDlg_SetHwnd in WM_INITDIALOG) */
-    HINSTANCE hInstance; /* 0x2021c NetDlg_Run arg; DialogBoxParamA / CreateWindowExA instance */
+    uint32_t /* void * */ vtable; /* 0x0 0x56E598, slot 0 NetDlg_ScalarDeletingDtor 0x406BC0 (NetDlg_Ctor 0x407D16, NetDlg_Dtor 0x405A40) */
+    uint32_t /* NetDlgMapEntry * */ maps; /* 0x4 11.44: HeapAlloc(0x676CD4, 9, 0x518) in Patch1144_NetDlg_AllocMapTable 0x56DCAB, grown to (mapCount+1)*0x518 by HeapReAlloc in NetDlg_ReadMmpMapFiles 0x407B1A (one spare slot = the next .mmp being read). Never freed (NetDlg_Dtor only resets the vtable). */
+    uint8_t dead_vanillaMapTable[130268]; /* 0x8 Vanilla NetDlgMapEntry[100] lived at +0x4..+0x1FCE4 (100 = changelog 11.x 'Removed 100 MMP file limit'; vanilla this-relative offsets survive in the 11.44 hooks as maps-4, e.g. 0x56DC50 / [EBX+0x518] at 0x407617). 11.44 moved the table to the heap (+0x4 is now the pointer); no instruction touches these bytes (displacement scan of all NetDlg_* /Patch1144_Net* code + program-wide scan 0x1F000..0x1FD63 = 0 hits, Seq 27 P1). */
+    uint8_t unsure_dead_vanillaTail[128]; /* 0x1fce4 0x80 bytes between the end of the vanilla maps[100] and mapCount; never accessed in 11.44 (same scans). Vanilla meaning unknown (11.44 code over the vanilla sites lost it). */
+    uint32_t mapCount; /* 0x1fd64 valid .mmp maps: 0 in ctor 0x407D4B, ++ per readable map in NetDlg_ReadMmpMapFiles 0x407B34; unsigned bound in NetDlg_LoadSettingsFromRegistry 0x406484, NetDlg_InitControls 0x4071FB, NetDlg_FindMapByName_Frag 0x407402 */
+    int exitFlag; /* 0x1fd68 bool-in-int: NetDlg_SetExitFlag 0x406254 (only from NetDlg_OnGameStart 0x407800 = host's start packet); NetDlg_OnTimer 0x406E40 then frees the lobby GXT and EndDialog(1) */
+    int playerCount; /* 0x1fd6c host page only: ++ NetDlg_OnPlayerAdded (0x406210), -- NetDlg_OnPlayerDeleted (0x406230, even if the name was not found, NET-45), 0 on Cancel (0x406240). Compared unsigned (>1 enables Reject, NetDlg_EnableStartReject_Frag 0x40667C; == maps[mapIndex].playerCount enables Start) */
+    WNDPROC origWndProcClientChat; /* 0x1fd70 original WNDPROC of edit 0x41D (page 2 chat input), saved by NetDlg_CreateControls 0x408792, called by NetDlg_ChatEditSubclassProc 0x4078EE */
+    WNDPROC origWndProcHostChat; /* 0x1fd74 original WNDPROC of edit 0x401 (page 1 chat input), 0x4087AA / 0x40790A */
+    uint16_t playerName[260]; /* 0x1fd78 registry Network/PlayerName as UTF-16 (NetDlg_LoadPlayerNameFromRegistry 0x406270 MultiByteToWideChar 0x104; NetDlg_SetPlayerName 0x40632B _wcscpy, unbounded); shown in edit 0x3EC by NetDlg_ShowPlayerName 0x4061D7 */
+    uint32_t unused_0x1ff80; /* 0x1ff80 only written: = 0 in NetDlg_Ctor 0x407D3F; no other access in 11.44 (displacement scan) */
+    NetGameSettings settings; /* 0x1ff84 lobby game settings (0x120 blob): defaults NetDlg_Ctor 0x407D5D..0x407D80, registry NetDlg_LoadSettingsFromRegistry 0x406470, published by NetDlg_SetSetting 0x4077AE (Network_PublishSettings = SetGroupData), overwritten on clients by NetDlg_ApplyRemoteSettings 0x4073EB, sent as Network_HostSession player data 0x4080D5, copied to g_NetGameSettings 0x673E30 by NetDlg_CopySettings 0x40645A */
+    HWND pageControls[3][30]; /* 0x200a4 HWND[page][30] from CreateWindowExA over g_NetDlgControlTable (NetDlg_CreateControls 0x4086B8); NetDlg_ShowPage 0x405ABF hides page currentPage, shows the new one (stride 0x78) */
+    NETDLG_PAGE currentPage; /* 0x2020c NetDlg_ShowPage 0x405B02, NetDlg_GetPage 0x405B10, NetDlg_AppendChatLine 0x405F2D; ctor 0 (0x407D2F) */
+    NETDLG_PAGE previousPage; /* 0x20210 write-only: NetDlg_ShowPage 0x405AFC, ctor NETDLG_PAGE_NONE 3 (0x407D35) */
+    short unused_0x20214; /* 0x20214 only written: word 0 in NetDlg_Ctor 0x407D28; no other access in 11.44 */
+    uint8_t pad_0x20216[2]; /* 0x20216 alignment padding before hwnd */
+    HWND hwnd; /* 0x20218 dialog HWND: NetDlg_SetHwnd 0x405A54 from NetDlg_OnInitDialog; NULL-checked only by NetDlg_ClearListView 0x405B20 */
+    HINSTANCE hInstance; /* 0x2021c NetDlg_Run 0x4089D2 arg; DialogBoxParamA 0x408A4D and CreateWindowExA 0x408701 */
 };
 
 // /auto_structs/NetDlgControlDef  size 0x74
@@ -5255,31 +5335,32 @@ struct OwnerSlotTable {
 
 // /auto_structs/ProfileLevelRecord  size 0xc
 struct ProfileLevelRecord {
-    uint8_t unlocked; /* 0x0 */
+    uint8_t unlocked; /* 0x0 1 = selectable on the level-select page (PlayerData_UnlockLevel 0x4A8A90, PlayerData_UnlockAllLevels 0x4A8B00, FrontEnd_GetCurrentProfileLevelTable 0x452500) */
     uint8_t pad[3]; /* 0x1 */
-    uint32_t bestScore; /* 0x4 */
-    uint32_t lastScore; /* 0x8 */
+    uint32_t bestScore; /* 0x4 max score ever for this level (PlayerData_UpdateProfileLevelScore 0x4A8FBC) */
+    uint32_t lastScore; /* 0x8 score of the last play, inserted into levelHiScores at level end (PlayerData_UpdateHiScoresAfterLevel) */
 };
 
 // /auto_structs/PlayerProfile  size 0xa4
+// One profile slot (8 in PlayerData.profiles). Ctor PlayerProfile_Ctor 0x4A8F80 = PlayerProfile_Reset 0x4A8700. File image (plyslot<N>.dat, 0x7E bytes): name 9 wchar, then 12 x {u8 unlocked, u32 best, u32 last} packed.
 struct PlayerProfile {
-    ProfileLevelRecord levels[12]; /* 0x0 12 level records */
-    uint16_t name[9]; /* 0x90 9 wchar */
-    uint8_t pad[2]; /* 0xa2 */
+    ProfileLevelRecord levels[12]; /* 0x0 index area*4+stage (stage 0 main, 1..3 bonus); PlayerProfile_Reset unlocks levels[0] only */
+    uint16_t name[9]; /* 0x90 profile name, up to 8 chars + NUL (name entry caps at 8, FrontEnd_UpdateNameEntryMode); .dat stores all 9 wchar raw */
+    uint8_t pad[2]; /* 0xa2 alignment pad: never read or written by Reset/Load/Save (heap garbage after operator_new). A 9-char name from a hand-edited .dat has no NUL and runs into it */
 };
 
 // /auto_structs/PlayerData  size 0x2bc0
+// g_PlayerData 0x66B404: persistent profile + high-score store, operator_new(0x2BC0) in PlayerData_CreateGlobalInstance 0x4A93B0 (plydat.cpp), freed by PlayerData_DestroyGlobalInstance 0x4A9270. Files: player\plyslot<N>.dat (8 profiles, 0x7E bytes each) and player\hiscores.hsc (0xCC0 bytes).
 struct PlayerData {
-    uint8_t ioPackBuffer[3264]; /* 0x0 S28_SaveProfileSlot / SaveHiScores pack here before File_WriteWhole */
-    uint8_t _gap_0xcc0[0xb40];
-    uint32_t bestCrimeStats[3][10]; /* 0x1800 [area][10] */
-    uint32_t bestTotalEarned[3]; /* 0x1878 */
-    uint32_t bestWantedStarSeconds[3]; /* 0x1884 */
-    HiScoreTable levelHiScores[12]; /* 0x1890 index area*4+stage */
-    HiScoreTable overallHiScores; /* 0x23d0 */
-    HiScoreTable unsure_extraHiScoresA; /* 0x24c0 ctor'd by InitS28, default names ALAN..JACKSON, never saved */
-    HiScoreTable unsure_extraHiScoresB; /* 0x25b0 ctor'd by InitS28, no other user */
-    PlayerProfile profiles[8]; /* 0x26a0 8 player slots */
+    uint8_t ioPackBuffer[6144]; /* 0x0 file image buffer: PlayerData_SaveProfileSlot 0x4A89E0 packs the 0x7E-byte plyslot<N>.dat here, PlayerData_SaveHiScores 0x4A8D80 packs the 0xCC0-byte hiscores.hsc here (0xF0 overall + 3 x 0x3F0 per area), then File_WriteWhole(this). Bytes 0xCC0..0x17FF never accessed (displacement scan of every g_PlayerData user). */
+    uint32_t bestCrimeStats[3][10]; /* 0x1800 [area 0..2][CRIME_KIND 0..9] best per-level crime counts (Menu_GetCrimeStat), updated for main levels only by PlayerData_UpdateHiScoresAfterLevel 0x4A91AD..; only kinds 5..9 shown (FrontEnd_DrawLevelStatsPanel 0x4572C7..0x45765C). Saved in hiscores.hsc. */
+    uint32_t bestTotalEarned[3]; /* 0x1878 [area] best Menu_GetTotalEarned of the area's main level (0x4A91AD); 'car_cst' row of the stats panel (0x45737D) */
+    uint32_t bestWantedStarSeconds[3]; /* 0x1884 [area] best Menu_GetWantedStarSeconds of the area's main level (0x4A91CC); 'evsnrtg' row (0x45770C) */
+    HiScoreTable levelHiScores[12]; /* 0x1890 index area*4+stage (stage 0 = main level, 1..3 = bonus levels); filled with the 10 default entries at 0x593320 when hiscores.hsc is missing. Hi-score page index 0..2 -> [i*4], 3..11 -> bonus tables (FrontEnd_DrawMenuPage 0x457AF2..0x457B78) */
+    HiScoreTable overallHiScores; /* 0x23d0 overall table: profile name + PlayerProfile_GetTotalBestScore (0x4A9154); defaults at 0x593230. Saved/loaded first in hiscores.hsc; no frontend reader found */
+    HiScoreTable unusedDefaultHiScores; /* 0x24c0 ctor'd by PlayerData_Ctor 0x4A92E0 and filled with ALAN..JACKSON / 1000000..10000 by PlayerData_InitUnusedDefaultHiScores 0x4A8B80 on every start; no other access (scalar scan for 0x24C0/0x24D4), never saved or drawn. Was unsure_extraHiScoresA */
+    HiScoreTable unusedHiScores; /* 0x25b0 only HiScoreTable_Ctor in PlayerData_Ctor 0x4A92EB; no other access. Was unsure_extraHiScoresB */
+    PlayerProfile profiles[8]; /* 0x26a0 8 profile slots = player\plyslot<0..7>.dat, current = Menu_GetProfileSlot; loaded (or created) by PlayerData_Ctor */
 };
 
 // /auto_structs/PoliceCrew  size 0x38
@@ -6237,6 +6318,27 @@ struct NetConnectionEntry {
     uint32_t /* wchar16 * */ name; /* 0x10 operator_new copy of DPNAME.lpszShortName, or L"dummy prot" for the registry connection */
     uint32_t /* void * */ connection; /* 0x14 DirectPlay address blob for InitializeConnection */
     uint32_t connectionSize; /* 0x18 */
+};
+
+// /net/NetEvtChat  size 0x120
+// Network event 7 argument (Network_HandleSystemMessage case 0x109, 0x40B722) -> NetDlg_OnChatReceived 0x405CA0 (reads +0 and +0x100). Seq 27 P1.
+struct NetEvtChat {
+    uint16_t text[128]; /* 0x0 wcsncpy(128) of DPMSG_CHAT text, NOT terminated when full (NET-04) */
+    uint16_t senderName[16]; /* 0x100 +0x100: wcsncpy(16) of the sender's slot name, not terminated when full */
+};
+
+// /net/NetEvtPing  size 0x20c
+// Network event 6 argument (Network_UpdatePlayerPing 0x409B80, stack) -> NetDlg_OnPlayerPingUpdate 0x405B50. Seq 27 P1.
+struct NetEvtPing {
+    uint16_t playerName[260]; /* 0x0 wcscpy of the player's name (Network_UpdatePlayerPing 0x409B65) */
+    uint32_t avgPingMs; /* 0x208 +0x208: lifetime mean ping (0x409B74); NetDlg_OnPlayerPingUpdate 0x405BA7 prints it with %d */
+};
+
+// /net/NetEvtSessionList  size 0x44
+// Network event 5 argument (Network_UpdateLobby 0x40C586, stack copy) -> NetDlg_OnSessionListUpdated 0x406BE0. Seq 27 P1.
+struct NetEvtSessionList {
+    uint32_t /* wchar16 * */ names[16]; /* 0x0 session names (copies of sessions[i].lpszSessionName), filled by Network_UpdateLobby 0x40C54D loop */
+    uint32_t count; /* 0x40 NetDlg_OnSessionListUpdated 0x406C11 loop bound (+0x40) */
 };
 
 // /net/NetMsgHeader  size 0x5

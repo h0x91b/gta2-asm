@@ -34,7 +34,7 @@ predicate), [re/ped-ai.md](re/ped-ai.md) (objectives / tasks).
   seated.
 - Cops keep the KILL task on a non-player: the give-up test in `Ped_UpdateThreats`
   (0x43FC6A..0x43FC87) drops it only when the target has no wanted stars **and** is a player.
-  The function Ghidra calls `Ped_HasWeapons` 0x41B0A0 is `ped->player != 0` (+0x15C), not a
+  `Ped_IsPlayerControlled` 0x41B0A0 (was `Ped_HasWeapons`) is `ped->player != 0` (+0x15C), not a
   weapon test.
 
 ## What the mod changes

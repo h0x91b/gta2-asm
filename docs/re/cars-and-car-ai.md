@@ -785,7 +785,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x41B090 | PedGameObject_GetState2 | H | returns +0xC; sole caller UpdatePedSource |
 | 0x41B0B0 | Ped_ConsumePendingSpeechEvent | V | read +0x250 then zero |
 | 0x41B0D0 | SoundMgr_UpdatePedSpeech | V | event 1..0x1C -> sample ranges 0xD2..0x13x |
-| 0x41B7B0 | SoundMgr_UpdatePedSource | V | callees Ped_HasWeapons, Player_GetCurrentCar, Sprite_GetSpeed, 41B0D0 |
+| 0x41B7B0 | SoundMgr_UpdatePedSource | V | callees Ped_IsPlayerControlled (was Ped_HasWeapons), Player_GetCurrentCar, Sprite_GetSpeed, 41B0D0 |
 | 0x41BF60 | PoliceRadio_ClearQueue | V | fills 15 entries with 0x79, idx 0 |
 | 0x41BF90 | PoliceRadio_QueuePhrase | V | ring buffer, id clamp 0x45..0x88 |
 | 0x41C000 | PoliceRadio_PumpQueue | V | plays next phrase when ExtraSample finished |

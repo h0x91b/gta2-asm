@@ -90,7 +90,9 @@ named `*_Frag`/`*Fragment` (for example `0x40653E`, `0x40667C`, `0x406C92`, `0x4
 - `Patch1144_NetDlg_AllocMapTable` `0x56DCAB` (was `Patch1144_NetSession_AllocSlotBlock`): `HeapAlloc(…, 0x518)` into `NetDlg+4`. It moves
   the per-map lobby slot table out of the dialog object into a heap block. The seven
   `Patch1144_NetLobby_*Hook` stubs (`0x56DBE0-0x56DC4C`) redirect the old `this+0x30C`/`+0x410`
-  table accesses to that block. Plausibly this raised the map-count limit (medium confidence).
+  table accesses to that block. This lifted vanilla's inline `NetDlgMapEntry[100]` limit (11.x
+  changelog "Removed 100 MMP file limit"; verified, Seq 27 P1: the dead vanilla table ends at
+  `NetDlg+0x1FCE4`, see [network.md](network.md) §4.3). The block is never freed (NET-74).
 - `Patch1144_Mmp_StrToLowerInPlace` `0x56DD18`: lowercases `.mmp` map file names
   (`NetDlg_ReadMmpMapFiles`).
 - `Patch1144_NetDlg_SetMapNameNAText` `0x56DE0C`: shows `N/A: %s` for a map the player does not
@@ -124,7 +126,7 @@ named `*_Frag`/`*Fragment` (for example `0x40653E`, `0x40667C`, `0x406C92`, `0x4
 ## 5. Network architecture
 
 The full reference is now [network.md](network.md) (Seq 27 networking pass): startup, the `Network`
-object, the `NetDlg` lobby, the byte-exact wire format, the lockstep, MP game logic, 74 merged bugs
+object, the `NetDlg` lobby, the byte-exact wire format, the lockstep, MP game logic, 76 merged bugs
 and the DirectPlay surface our host must provide. In short:
 
 - DMA's source file is `NetworkX.cpp` (it appears in the `DisplayError` calls).

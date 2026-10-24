@@ -56,15 +56,15 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00402b20,ReadWholeFile,,USER_DEFINED,__stdcall,ANALYSIS,238,,"void * __stdcall ReadWholeFile(char * param_1, size_t * param_2)"
 0x00402cf0,File_WriteWhole,,USER_DEFINED,__stdcall,ANALYSIS,157,,"undefined __stdcall File_WriteWhole(char * param_1, void * param_2, size_t * param_3)"
 0x00402da0,File_AppendWhole,,USER_DEFINED,__stdcall,ANALYSIS,157,,"undefined __stdcall File_AppendWhole(char * param_1, void * param_2, size_t * param_3)"
-0x00402eb0,File_Close,,USER_DEFINED,__cdecl,USER_DEFINED,55,,int __cdecl File_Close(FILE * _File)
+0x00402eb0,File_Close,,USER_DEFINED,__cdecl,USER_DEFINED,55,,void __cdecl File_Close(void)
 0x00402f00,File_CloseGlobal,,USER_DEFINED,__stdcall,ANALYSIS,34,,undefined __stdcall File_CloseGlobal(void)
 0x00402f30,error,,USER_DEFINED,__stdcall,ANALYSIS,35,,"undefined __stdcall error(GTA_ERROR_CODE param_1, undefined4 param_2, undefined4 param_3)"
 0x00402f60,File_Skip,,USER_DEFINED,__stdcall,ANALYSIS,68,,undefined __stdcall File_Skip(long * param_1)
-0x00402fb0,File_Read,,USER_DEFINED,__cdecl,USER_DEFINED,71,,"size_t __cdecl File_Read(void * _DstBuf, size_t _ElementSize, size_t _Count, FILE * _File)"
+0x00402fb0,File_Read,,USER_DEFINED,__stdcall,USER_DEFINED,71,,"void __stdcall File_Read(void * buf, size_t * len)"
 0x00403000,File_TryRead,,USER_DEFINED,__stdcall,USER_DEFINED,61,,"uint __stdcall File_TryRead(ChunkHeader * buf, FILE * hFile, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6, undefined4 param_7)"
 0x00403040,File_ReadRest,,USER_DEFINED,__stdcall,USER_DEFINED,233,,"undefined __stdcall File_ReadRest(void * dest, uint * param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6, undefined4 param_7)"
 0x00403130,File_GetCharSkipBlanks,,USER_DEFINED,__stdcall,ANALYSIS,48,,uint __stdcall File_GetCharSkipBlanks(FILE * param_1)
-0x00403160,File_Open,,USER_DEFINED,__cdecl,USER_DEFINED,79,,"FILE * __cdecl File_Open(char * _Filename, char * _Mode)"
+0x00403160,File_Open,,USER_DEFINED,__stdcall,USER_DEFINED,79,,FILE * __stdcall File_Open(char * path)
 0x004031c0,LoadDirectInputFuncs,,USER_DEFINED,__stdcall,ANALYSIS,979,,"undefined __stdcall LoadDirectInputFuncs(undefined4 * param_1, undefined4 * param_2)"
 0x004035a0,PedGroup_ResetDoorCursor,,USER_DEFINED,__stdcall,ANALYSIS,8,,undefined __stdcall PedGroup_ResetDoorCursor(void)
 0x004035b0,PedGroup_Init,,USER_DEFINED,__fastcall,USER_DEFINED,46,,undefined __fastcall PedGroup_Init(PedGroup * group)
@@ -154,72 +154,72 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00405760,PedGroup_UpdateMember,,USER_DEFINED,__thiscall,USER_DEFINED,589,,"undefined __thiscall PedGroup_UpdateMember(PedGroup * this, byte memberIdx)"
 0x004059b0,malloc,,USER_DEFINED,__cdecl,USER_DEFINED,46,,void * __cdecl malloc(size_t _Size)
 0x004059f0,MallocAligned64K,,USER_DEFINED,__stdcall,USER_DEFINED,66,,"void * __stdcall MallocAligned64K(uint size, void * * rawOut)"
-0x00405a40,NetDlg_Dtor,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall NetDlg_Dtor(NetDlg * param_1)
-0x00405a50,NetDlg_SetHwnd,,USER_DEFINED,__thiscall,USER_DEFINED,13,,"undefined __thiscall NetDlg_SetHwnd(NetDlg * this, undefined4 param_2)"
-0x00405a60,NetDlg_GetHwnd,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined4 __fastcall NetDlg_GetHwnd(NetDlg * param_1)
+0x00405a40,NetDlg_Dtor,,USER_DEFINED,__fastcall,USER_DEFINED,7,,void __fastcall NetDlg_Dtor(NetDlg * this)
+0x00405a50,NetDlg_SetHwnd,,USER_DEFINED,__thiscall,USER_DEFINED,13,,"void __thiscall NetDlg_SetHwnd(NetDlg * this, HWND hDlg)"
+0x00405a60,NetDlg_GetHwnd,,USER_DEFINED,__fastcall,USER_DEFINED,7,,HWND __fastcall NetDlg_GetHwnd(NetDlg * this)
 0x00405a80,LocaleSettings_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"void * * __thiscall LocaleSettings_ScalarDeletingDtor(LocaleSettings * this, byte param_2)"
-0x00405aa0,NetDlg_ShowPage,,USER_DEFINED,__thiscall,USER_DEFINED,111,,"undefined __thiscall NetDlg_ShowPage(NetDlg * this, int param_2)"
-0x00405b10,NetDlg_GetPage,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined4 __fastcall NetDlg_GetPage(NetDlg * param_1)
-0x00405b20,NetDlg_ClearListView,,USER_DEFINED,__thiscall,USER_DEFINED,34,,"undefined __thiscall NetDlg_ClearListView(NetDlg * this, int param_2)"
-0x00405b50,NetDlg_OnPlayerPingUpdate,,USER_DEFINED,__stdcall,USER_DEFINED,325,,"void __stdcall NetDlg_OnPlayerPingUpdate(NetDlg * dlg, void * pingEvent)"
-0x00405ca0,NetDlg_OnChatReceived,,USER_DEFINED,__stdcall,USER_DEFINED,131,,"void __stdcall NetDlg_OnChatReceived(NetDlg * dlg, void * chatEvent)"
-0x00405ec0,NetDlg_AppendChatLine,,USER_DEFINED,__thiscall,USER_DEFINED,314,,"undefined __thiscall NetDlg_AppendChatLine(NetDlg * this, undefined4 param_2, undefined4 param_3)"
-0x004061c0,NetDlg_ShowPlayerName,,USER_DEFINED,__fastcall,USER_DEFINED,73,,undefined __fastcall NetDlg_ShowPlayerName(NetDlg * param_1)
-0x00406210,NetDlg_IncPlayerCount,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall NetDlg_IncPlayerCount(NetDlg * param_1)
-0x00406220,NetDlg_GetPlayerCount,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined4 __fastcall NetDlg_GetPlayerCount(NetDlg * param_1)
-0x00406230,NetDlg_DecPlayerCount,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined __fastcall NetDlg_DecPlayerCount(NetDlg * param_1)
-0x00406240,NetDlg_ResetPlayerCount,,USER_DEFINED,__fastcall,USER_DEFINED,11,,undefined __fastcall NetDlg_ResetPlayerCount(NetDlg * param_1)
-0x00406250,NetDlg_SetExitFlag,,USER_DEFINED,__thiscall,USER_DEFINED,13,,"undefined __thiscall NetDlg_SetExitFlag(NetDlg * this, undefined4 param_2)"
-0x00406260,NetDlg_GetExitFlag,,USER_DEFINED,__fastcall,USER_DEFINED,7,,undefined4 __fastcall NetDlg_GetExitFlag(NetDlg * param_1)
-0x00406270,NetDlg_LoadPlayerNameFromRegistry,,USER_DEFINED,__fastcall,USER_DEFINED,172,,undefined __fastcall NetDlg_LoadPlayerNameFromRegistry(NetDlg * param_1)
-0x00406320,NetDlg_SetPlayerName,,USER_DEFINED,__thiscall,USER_DEFINED,159,,"undefined __thiscall NetDlg_SetPlayerName(NetDlg * this, short * param_2)"
-0x004063c0,NetDlg_SendChatFromEdit,,USER_DEFINED,__thiscall,USER_DEFINED,138,,"undefined __thiscall NetDlg_SendChatFromEdit(NetDlg * this, int param_2, undefined4 param_3)"
-0x00406450,NetDlg_CopySettings,,USER_DEFINED,__thiscall,USER_DEFINED,28,,"undefined __thiscall NetDlg_CopySettings(NetDlg * this, undefined4 * param_2)"
-0x00406470,NetDlg_LoadSettingsFromRegistry,,USER_DEFINED,__fastcall,USER_DEFINED,204,,undefined __fastcall NetDlg_LoadSettingsFromRegistry(NetDlg * param_1)
+0x00405aa0,NetDlg_ShowPage,,USER_DEFINED,__thiscall,USER_DEFINED,111,,"void __thiscall NetDlg_ShowPage(NetDlg * this, NETDLG_PAGE page)"
+0x00405b10,NetDlg_GetPage,,USER_DEFINED,__fastcall,USER_DEFINED,7,,NETDLG_PAGE __fastcall NetDlg_GetPage(NetDlg * this)
+0x00405b20,NetDlg_ClearListView,,USER_DEFINED,__thiscall,USER_DEFINED,34,,"void __thiscall NetDlg_ClearListView(NetDlg * this, int listViewId)"
+0x00405b50,NetDlg_OnPlayerPingUpdate,,USER_DEFINED,__stdcall,USER_DEFINED,325,,"void __stdcall NetDlg_OnPlayerPingUpdate(NetDlg * dlg, NetEvtPing * ev)"
+0x00405ca0,NetDlg_OnChatReceived,,USER_DEFINED,__stdcall,USER_DEFINED,131,,"void __stdcall NetDlg_OnChatReceived(NetDlg * dlg, NetEvtChat * ev)"
+0x00405ec0,NetDlg_AppendChatLine,,USER_DEFINED,__thiscall,USER_DEFINED,314,,"void __thiscall NetDlg_AppendChatLine(NetDlg * this, int logIdIgnored, char * text)"
+0x004061c0,NetDlg_ShowPlayerName,,USER_DEFINED,__fastcall,USER_DEFINED,73,,void __fastcall NetDlg_ShowPlayerName(NetDlg * this)
+0x00406210,NetDlg_IncPlayerCount,,USER_DEFINED,__fastcall,USER_DEFINED,7,,void __fastcall NetDlg_IncPlayerCount(NetDlg * this)
+0x00406220,NetDlg_GetPlayerCount,,USER_DEFINED,__fastcall,USER_DEFINED,7,,int __fastcall NetDlg_GetPlayerCount(NetDlg * this)
+0x00406230,NetDlg_DecPlayerCount,,USER_DEFINED,__fastcall,USER_DEFINED,7,,void __fastcall NetDlg_DecPlayerCount(NetDlg * this)
+0x00406240,NetDlg_ResetPlayerCount,,USER_DEFINED,__fastcall,USER_DEFINED,11,,void __fastcall NetDlg_ResetPlayerCount(NetDlg * this)
+0x00406250,NetDlg_SetExitFlag,,USER_DEFINED,__thiscall,USER_DEFINED,13,,"void __thiscall NetDlg_SetExitFlag(NetDlg * this, int exitFlag)"
+0x00406260,NetDlg_GetExitFlag,,USER_DEFINED,__fastcall,USER_DEFINED,7,,int __fastcall NetDlg_GetExitFlag(NetDlg * this)
+0x00406270,NetDlg_LoadPlayerNameFromRegistry,,USER_DEFINED,__fastcall,USER_DEFINED,172,,void __fastcall NetDlg_LoadPlayerNameFromRegistry(NetDlg * this)
+0x00406320,NetDlg_SetPlayerName,,USER_DEFINED,__thiscall,USER_DEFINED,159,,"void __thiscall NetDlg_SetPlayerName(NetDlg * this, wchar16 * name)"
+0x004063c0,NetDlg_SendChatFromEdit,,USER_DEFINED,__thiscall,USER_DEFINED,138,,"void __thiscall NetDlg_SendChatFromEdit(NetDlg * this, int editId, int logId)"
+0x00406450,NetDlg_CopySettings,,USER_DEFINED,__thiscall,USER_DEFINED,28,,"void __thiscall NetDlg_CopySettings(NetDlg * this, NetGameSettings * out)"
+0x00406470,NetDlg_LoadSettingsFromRegistry,,USER_DEFINED,__fastcall,USER_DEFINED,204,,void __fastcall NetDlg_LoadSettingsFromRegistry(NetDlg * this)
 0x0040653e,NetDlg_CopyMapNameFragment,,USER_DEFINED,__fastcall,ANALYSIS,18,,undefined __fastcall NetDlg_CopyMapNameFragment(char * param_1)
-0x00406550,NetDlg_GetSelectedGmpFile,,USER_DEFINED,__fastcall,USER_DEFINED,24,,int __fastcall NetDlg_GetSelectedGmpFile(NetDlg * param_1)
-0x00406570,NetDlg_GetSelectedStyFile,,USER_DEFINED,__fastcall,USER_DEFINED,28,,int __fastcall NetDlg_GetSelectedStyFile(NetDlg * param_1)
-0x00406590,NetDlg_GetSelectedScrFile,,USER_DEFINED,__fastcall,USER_DEFINED,28,,int __fastcall NetDlg_GetSelectedScrFile(NetDlg * param_1)
-0x004065b0,NetDlg_ReportMmpFileOpenError,,USER_DEFINED,__stdcall,ANALYSIS,63,,"undefined __stdcall NetDlg_ReportMmpFileOpenError(undefined4 param_1, undefined4 param_2)"
-0x004065f0,NetDlg_SetPlayersRequiredText,,USER_DEFINED,__stdcall,ANALYSIS,111,,"undefined __stdcall NetDlg_SetPlayersRequiredText(int param_1, HWND param_2)"
-0x00406660,NetDlg_UpdateStartRejectButtons,,USER_DEFINED,__fastcall,USER_DEFINED,28,,undefined __fastcall NetDlg_UpdateStartRejectButtons(NetDlg * param_1)
+0x00406550,NetDlg_GetSelectedGmpFile,,USER_DEFINED,__fastcall,USER_DEFINED,24,,char * __fastcall NetDlg_GetSelectedGmpFile(NetDlg * this)
+0x00406570,NetDlg_GetSelectedStyFile,,USER_DEFINED,__fastcall,USER_DEFINED,28,,char * __fastcall NetDlg_GetSelectedStyFile(NetDlg * this)
+0x00406590,NetDlg_GetSelectedScrFile,,USER_DEFINED,__fastcall,USER_DEFINED,28,,char * __fastcall NetDlg_GetSelectedScrFile(NetDlg * this)
+0x004065b0,NetDlg_ReportMmpFileOpenError,,USER_DEFINED,__stdcall,USER_DEFINED,63,,"void __stdcall NetDlg_ReportMmpFileOpenError(char * mmpFile, char * missingFile)"
+0x004065f0,NetDlg_SetPlayersRequiredText,,USER_DEFINED,__stdcall,USER_DEFINED,111,,"void __stdcall NetDlg_SetPlayersRequiredText(int playerCount, HWND hDlg)"
+0x00406660,NetDlg_UpdateStartRejectButtons,,USER_DEFINED,__fastcall,USER_DEFINED,28,,void __fastcall NetDlg_UpdateStartRejectButtons(NetDlg * this)
 0x0040667c,NetDlg_EnableStartReject_Frag,,USER_DEFINED,__fastcall,ANALYSIS,100,,"undefined __fastcall NetDlg_EnableStartReject_Frag(undefined4 param_1, int param_2)"
-0x004066e0,NetDlg_SetCopsCheckBox,,USER_DEFINED,__stdcall,ANALYSIS,62,,"undefined __stdcall NetDlg_SetCopsCheckBox(int param_1, HWND param_2)"
-0x00406720,NetDlg_SetCopsText,,USER_DEFINED,__stdcall,ANALYSIS,75,,"undefined __stdcall NetDlg_SetCopsText(int param_1, HWND param_2)"
-0x00406770,NetDlg_SetScoreLimitText,,USER_DEFINED,__thiscall,USER_DEFINED,323,,"undefined __thiscall NetDlg_SetScoreLimitText(NetDlg * this, int param_2, undefined4 param_3, HWND param_4)"
-0x004068c0,NetDlg_SetGameSpeedText,,USER_DEFINED,__stdcall,ANALYSIS,177,,"undefined __stdcall NetDlg_SetGameSpeedText(int param_1, HWND param_2)"
-0x00406980,NetDlg_SetGameTypeText,,USER_DEFINED,__stdcall,ANALYSIS,398,,"undefined __stdcall NetDlg_SetGameTypeText(int param_1, undefined4 param_2, HWND param_3)"
-0x00406b10,NetDlg_SetTimeLimitText,,USER_DEFINED,__stdcall,ANALYSIS,106,,"undefined __stdcall NetDlg_SetTimeLimitText(undefined4 param_1, HWND param_2)"
-0x00406b80,NetDlg_SetTimeLimitEditText,,USER_DEFINED,__stdcall,ANALYSIS,62,,"undefined __stdcall NetDlg_SetTimeLimitEditText(undefined4 param_1, HWND param_2)"
-0x00406bc0,NetDlg_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"undefined4 * __thiscall NetDlg_ScalarDeletingDtor(NetDlg * this, byte param_2)"
-0x00406be0,NetDlg_OnSessionListUpdated,,USER_DEFINED,__stdcall,USER_DEFINED,178,,"void __stdcall NetDlg_OnSessionListUpdated(NetDlg * dlg, void * sessionList)"
+0x004066e0,NetDlg_SetCopsCheckBox,,USER_DEFINED,__stdcall,USER_DEFINED,62,,"void __stdcall NetDlg_SetCopsCheckBox(int police, HWND hDlg)"
+0x00406720,NetDlg_SetCopsText,,USER_DEFINED,__stdcall,USER_DEFINED,75,,"void __stdcall NetDlg_SetCopsText(int police, HWND hDlg)"
+0x00406770,NetDlg_SetScoreLimitText,,USER_DEFINED,__thiscall,USER_DEFINED,323,,"void __thiscall NetDlg_SetScoreLimitText(NetDlg * this, int gameType, int scoreLimit, HWND hDlg)"
+0x004068c0,NetDlg_SetGameSpeedText,,USER_DEFINED,__stdcall,USER_DEFINED,177,,"void __stdcall NetDlg_SetGameSpeedText(int gameSpeed, HWND hDlg)"
+0x00406980,NetDlg_SetGameTypeText,,USER_DEFINED,__stdcall,USER_DEFINED,398,,"void __stdcall NetDlg_SetGameTypeText(int gameType, int scoreLimit, HWND hDlg)"
+0x00406b10,NetDlg_SetTimeLimitText,,USER_DEFINED,__stdcall,USER_DEFINED,106,,"void __stdcall NetDlg_SetTimeLimitText(int timeLimit, HWND hDlg)"
+0x00406b80,NetDlg_SetTimeLimitEditText,,USER_DEFINED,__stdcall,USER_DEFINED,62,,"void __stdcall NetDlg_SetTimeLimitEditText(int timeLimit, HWND hDlg)"
+0x00406bc0,NetDlg_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"NetDlg * __thiscall NetDlg_ScalarDeletingDtor(NetDlg * this, byte flags)"
+0x00406be0,NetDlg_OnSessionListUpdated,,USER_DEFINED,__stdcall,USER_DEFINED,178,,"void __stdcall NetDlg_OnSessionListUpdated(NetDlg * dlg, NetEvtSessionList * list)"
 0x00406c92,NetDlg_EnableJoinButton_Frag,,USER_DEFINED,__thiscall,USER_DEFINED,32,,"undefined __thiscall NetDlg_EnableJoinButton_Frag(NetDlg * this, BOOL param_2)"
 0x00406cc0,NetDlg_OnPlayerAdded,,USER_DEFINED,__stdcall,USER_DEFINED,375,,"void __stdcall NetDlg_OnPlayerAdded(NetDlg * dlg, wchar_t * playerName, int unused)"
-0x00406e40,NetDlg_OnTimer,,USER_DEFINED,__stdcall,ANALYSIS,211,,undefined __stdcall NetDlg_OnTimer(HWND param_1)
+0x00406e40,NetDlg_OnTimer,,USER_DEFINED,__stdcall,USER_DEFINED,211,,void __stdcall NetDlg_OnTimer(HWND hDlg)
 0x00406f20,NetDlg_OnPlayerDeleted,,USER_DEFINED,__stdcall,USER_DEFINED,266,,"void __stdcall NetDlg_OnPlayerDeleted(NetDlg * dlg, wchar_t * playerName)"
 0x00407030,NetDlg_OnSessionClosed,,USER_DEFINED,__stdcall,USER_DEFINED,52,,void __stdcall NetDlg_OnSessionClosed(NetDlg * dlg)
-0x00407070,NetDlg_InitControls,,USER_DEFINED,__fastcall,USER_DEFINED,412,,undefined __fastcall NetDlg_InitControls(NetDlg * param_1)
+0x00407070,NetDlg_InitControls,,USER_DEFINED,__fastcall,USER_DEFINED,412,,void __fastcall NetDlg_InitControls(NetDlg * this)
 0x0040720d,NetDlg_InitControls_Frag,,USER_DEFINED,__stdcall,ANALYSIS,341,,undefined __stdcall NetDlg_InitControls_Frag(void)
 0x00407362,NetDlg_UpdateSettingTexts_Frag,,USER_DEFINED,__stdcall,ANALYSIS,105,,undefined __stdcall NetDlg_UpdateSettingTexts_Frag(void)
-0x004073d0,NetDlg_ApplyRemoteSettings,,USER_DEFINED,__thiscall,USER_DEFINED,49,,"undefined __thiscall NetDlg_ApplyRemoteSettings(NetDlg * this, undefined4 * param_2)"
+0x004073d0,NetDlg_ApplyRemoteSettings,,USER_DEFINED,__thiscall,USER_DEFINED,49,,"void __thiscall NetDlg_ApplyRemoteSettings(NetDlg * this, NetGameSettings * remote)"
 0x00407402,NetDlg_FindMapByName_Frag,,USER_DEFINED,__fastcall,ANALYSIS,119,,"undefined __fastcall NetDlg_FindMapByName_Frag(undefined4 param_1, uint param_2)"
 0x00407476,NetDlg_UpdateClientSettingTexts_Frag,,USER_DEFINED,__fastcall,ANALYSIS,15,,"undefined __fastcall NetDlg_UpdateClientSettingTexts_Frag(undefined4 param_1, LPCSTR param_2)"
 0x0040748d,NetDlg_ShowMissingMapError_Frag,,USER_DEFINED,__fastcall,ANALYSIS,304,,undefined __fastcall NetDlg_ShowMissingMapError_Frag(char * param_1)
-0x004075c0,NetDlg_SetSetting,,USER_DEFINED,__thiscall,USER_DEFINED,65,,"undefined __thiscall NetDlg_SetSetting(NetDlg * this, undefined4 param_2, int param_3)"
+0x004075c0,NetDlg_SetSetting,,USER_DEFINED,__thiscall,USER_DEFINED,65,,"void __thiscall NetDlg_SetSetting(NetDlg * this, NETDLG_SETTING which, int value)"
 0x00407605,NetDlg_SelectMap_Frag,,USER_DEFINED,__fastcall,ANALYSIS,99,,"undefined __fastcall NetDlg_SelectMap_Frag(undefined4 param_1, int param_2, undefined4 param_3, undefined4 param_4, int param_5, undefined4 param_6)"
 0x00407800,NetDlg_OnGameStart,,USER_DEFINED,__stdcall,USER_DEFINED,107,,void __stdcall NetDlg_OnGameStart(NetDlg * dlg)
 0x00407870,NetDlg_ChatEditSubclassProc,,USER_DEFINED,__stdcall,USER_DEFINED,187,,"LRESULT __stdcall NetDlg_ChatEditSubclassProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)"
-0x00407930,NetDlg_ReadMmpMapFiles,,USER_DEFINED,__fastcall,USER_DEFINED,664,,undefined __fastcall NetDlg_ReadMmpMapFiles(NetDlg * param_1)
-0x00407c90,NetDlg_OnHScroll,,USER_DEFINED,__stdcall,ANALYSIS,87,,"undefined __stdcall NetDlg_OnHScroll(HWND param_1, HWND param_2, undefined4 param_3)"
-0x00407d10,NetDlg_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,123,,undefined4 * __fastcall NetDlg_Ctor(NetDlg * param_1)
+0x00407930,NetDlg_ReadMmpMapFiles,,USER_DEFINED,__fastcall,USER_DEFINED,664,,void __fastcall NetDlg_ReadMmpMapFiles(NetDlg * this)
+0x00407c90,NetDlg_OnHScroll,,USER_DEFINED,__stdcall,USER_DEFINED,87,,"void __stdcall NetDlg_OnHScroll(HWND hDlg, HWND hTrackbar, int scrollCode)"
+0x00407d10,NetDlg_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,123,,NetDlg * __fastcall NetDlg_Ctor(NetDlg * this)
 0x00407d8b,NetDlg_Ctor_Frag,,USER_DEFINED,__fastcall,ANALYSIS,26,,undefined __fastcall NetDlg_Ctor_Frag(int param_1)
-0x00407db0,NetDlg_OnCommand,,USER_DEFINED,__stdcall,ANALYSIS,2251,,"undefined __stdcall NetDlg_OnCommand(HWND param_1, int param_2, undefined4 param_3, int param_4)"
-0x004086a0,NetDlg_CreateControls,,USER_DEFINED,__thiscall,USER_DEFINED,404,,"undefined __thiscall NetDlg_CreateControls(NetDlg * this, HWND param_2)"
-0x00408840,NetDlg_OnInitDialog,,USER_DEFINED,__stdcall,ANALYSIS,178,,"undefined4 __stdcall NetDlg_OnInitDialog(HWND param_1, undefined4 param_2, void * param_3)"
-0x00408900,NetDlg_OnSettingsReceived,,USER_DEFINED,__stdcall,USER_DEFINED,29,,"void __stdcall NetDlg_OnSettingsReceived(NetDlg * dlg, void * * settingsBlobPtr)"
-0x00408920,NetDlg_DialogProc,,USER_DEFINED,__stdcall,ANALYSIS,121,,"undefined4 __stdcall NetDlg_DialogProc(HWND param_1, uint param_2, uint param_3, HWND param_4)"
-0x00408954,NetDlg_CommandThunk,,USER_DEFINED,__stdcall,ANALYSIS,36,,"undefined4 __stdcall NetDlg_CommandThunk(HWND param_1, undefined4 param_2, uint param_3, undefined4 param_4)"
-0x004089c0,NetDlg_Run,,USER_DEFINED,__thiscall,USER_DEFINED,174,,"uint __thiscall NetDlg_Run(NetDlg * this, undefined4 param_2)"
+0x00407db0,NetDlg_OnCommand,,USER_DEFINED,__stdcall,USER_DEFINED,2251,,"void __stdcall NetDlg_OnCommand(HWND hDlg, int ctrlId, HWND hCtl, int notifyCode)"
+0x004086a0,NetDlg_CreateControls,,USER_DEFINED,__thiscall,USER_DEFINED,404,,"void __thiscall NetDlg_CreateControls(NetDlg * this, HWND hDlg)"
+0x00408840,NetDlg_OnInitDialog,,USER_DEFINED,__stdcall,USER_DEFINED,178,,"int __stdcall NetDlg_OnInitDialog(HWND hDlg, uint wParam, NetDlg * dlg)"
+0x00408900,NetDlg_OnSettingsReceived,,USER_DEFINED,__stdcall,USER_DEFINED,29,,"void __stdcall NetDlg_OnSettingsReceived(NetDlg * dlg, NetDataRef * groupData)"
+0x00408920,NetDlg_DialogProc,,USER_DEFINED,__stdcall,USER_DEFINED,121,,"int __stdcall NetDlg_DialogProc(HWND hDlg, uint msg, uint wParam, int lParam)"
+0x00408954,NetDlg_CommandThunk,,USER_DEFINED,__stdcall,USER_DEFINED,36,,"int __stdcall NetDlg_CommandThunk(HWND hDlg, uint msg, uint wParam, int lParam)"
+0x004089c0,NetDlg_Run,,USER_DEFINED,__thiscall,USER_DEFINED,174,,"int __thiscall NetDlg_Run(NetDlg * this, HINSTANCE hInstance)"
 0x00408a90,Network_AddConnectionEntry,,USER_DEFINED,__thiscall,USER_DEFINED,242,,"void __thiscall Network_AddConnectionEntry(Network * this, NetConnectionEntry * entry)"
 0x00408b90,Network_EnumConnectionsCallback,,USER_DEFINED,__stdcall,USER_DEFINED,166,,"int __stdcall Network_EnumConnectionsCallback(GUID * spGuid, void * connection, uint connectionSize, DPNAME * name, uint flags, Network * ctx)"
 0x00408c40,Network_ReleaseDirectPlay,,USER_DEFINED,__fastcall,USER_DEFINED,57,,void __fastcall Network_ReleaseDirectPlay(Network * this)
@@ -608,7 +608,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0041b060,SoundMgr_TickPedSpeechCooldown,,USER_DEFINED,__stdcall,ANALYSIS,29,,undefined __stdcall SoundMgr_TickPedSpeechCooldown(void)
 0x0041b080,Sprite_GetSpeed,,USER_DEFINED,__thiscall,USER_DEFINED,12,,"undefined __thiscall Sprite_GetSpeed(Sprite * this, undefined4 * param_2)"
 0x0041b090,PedGameObject_GetState2,,USER_DEFINED,__fastcall,USER_DEFINED,4,,undefined4 __fastcall PedGameObject_GetState2(PedGameObject * param_1)
-0x0041b0a0,Ped_HasWeapons,,USER_DEFINED,__fastcall,USER_DEFINED,12,,bool __fastcall Ped_HasWeapons(Ped * param_1)
+0x0041b0a0,Ped_IsPlayerControlled,,USER_DEFINED,__fastcall,USER_DEFINED,12,,bool __fastcall Ped_IsPlayerControlled(Ped * param_1)
 0x0041b0b0,Ped_ConsumePendingSpeechEvent,,USER_DEFINED,__fastcall,USER_DEFINED,17,,undefined4 __fastcall Ped_ConsumePendingSpeechEvent(Ped * param_1)
 0x0041b0d0,SoundMgr_UpdatePedSpeech,,USER_DEFINED,__thiscall,USER_DEFINED,1608,,"undefined __thiscall SoundMgr_UpdatePedSpeech(SoundManager * this, int * param_2)"
 0x0041b7b0,SoundMgr_UpdatePedSource,,USER_DEFINED,__thiscall,USER_DEFINED,1908,,"undefined __thiscall SoundMgr_UpdatePedSource(SoundManager * this, int * param_2)"
@@ -1301,7 +1301,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004349a0,Ped_IsCarDoorTakenByOtherDriver,,USER_DEFINED,__thiscall,USER_DEFINED,103,,"uint __thiscall Ped_IsCarDoorTakenByOtherDriver(Ped * this, Car * param_2)"
 0x00434a10,Menu_IncBonusTokenCount,,USER_DEFINED,__fastcall,USER_DEFINED,7,,void __fastcall Menu_IncBonusTokenCount(Menu * menu)
 0x00434a30,Ped_Obj2_DriveAttackTarget,,USER_DEFINED,__fastcall,USER_DEFINED,185,,undefined __fastcall Ped_Obj2_DriveAttackTarget(Ped * param_1)
-0x00434af0,ParkingZone_IsCarFlagged,,USER_DEFINED,__thiscall,USER_DEFINED,27,,"uint __thiscall ParkingZone_IsCarFlagged(ParkingZone * this, Car * car)"
+0x00434af0,ParkController_IsCarInside,,USER_DEFINED,__thiscall,USER_DEFINED,27,,"bool __thiscall ParkController_IsCarInside(ParkController * this, Car * car)"
 0x00434b10,IsMultiplayer,,USER_DEFINED,__stdcall,USER_DEFINED,6,,bool __stdcall IsMultiplayer(void)
 0x00434b20,IsGameModeTag,,USER_DEFINED,__stdcall,USER_DEFINED,16,,bool __stdcall IsGameModeTag(void)
 0x00434b40,Ped_Task_PauseAfterCrossing,,USER_DEFINED,__fastcall,USER_DEFINED,18,,undefined __fastcall Ped_Task_PauseAfterCrossing(Ped * param_1)
@@ -1733,7 +1733,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0044c830,DoorFacePool_Alloc,,USER_DEFINED,__fastcall,USER_DEFINED,21,,DoorFace * __fastcall DoorFacePool_Alloc(DoorFacePool * param_1)
 0x0044c840,BlockInfo_Clear,,USER_DEFINED,__fastcall,USER_DEFINED,28,,void __fastcall BlockInfo_Clear(BlockInfo * param_1)
 0x0044c860,Door_IsFaceAOpen,,USER_DEFINED,__fastcall,ANALYSIS,9,,uint __fastcall Door_IsFaceAOpen(int * * param_1)
-0x0044c870,ParkingZone_IsTargetCar,,USER_DEFINED,__thiscall,USER_DEFINED,35,,"uint __thiscall ParkingZone_IsTargetCar(ParkingZone * this, uint param_2)"
+0x0044c870,ParkController_IsLastParkedCar,,USER_DEFINED,__thiscall,USER_DEFINED,35,,"bool __thiscall ParkController_IsLastParkedCar(ParkController * this, Car * car)"
 0x0044c8a0,DoorFace_Setup,,USER_DEFINED,__fastcall,USER_DEFINED,361,,"undefined __fastcall DoorFace_Setup(DoorFace * param_1, uint param_2, byte param_3, undefined1 param_4, undefined1 param_5, undefined1 param_6, undefined4 param_7, char param_8)"
 0x0044ca20,Door_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,77,,undefined __fastcall Door_Ctor(DoorSlot * param_1)
 0x0044ca70,Door_CarMayOpen,,USER_DEFINED,__thiscall,USER_DEFINED,238,,"bool __thiscall Door_CarMayOpen(DoorSlot * this, Car * car)"
@@ -2022,7 +2022,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0045c470,Game_AnyPlayerCameraNearSprite,,USER_DEFINED,default,USER_DEFINED,92,,"uint Game_AnyPlayerCameraNearSprite(Game * game, uint uParm1, undefined4 param_3, undefined4 param_4)"
 0x0045c4d0,Game_Ctor,Game,USER_DEFINED,__thiscall,USER_DEFINED,3562,,"Game * __thiscall Game_Ctor(Game * this, int playerCount, char localPlayerIndex)"
 0x0045d350,ScriptStackNodePool_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"undefined4 * __thiscall ScriptStackNodePool_ScalarDeletingDtor(ScriptStackNodePool * this, byte param_2)"
-0x0045d370,ParkingZone_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,26,,"void * __thiscall ParkingZone_ScalarDeletingDtor(ParkingZone * this, byte param_2)"
+0x0045d370,ParkController_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,26,,"void * __thiscall ParkController_ScalarDeletingDtor(ParkController * this, byte flags)"
 0x0045d3a0,HudManager_DtorLabels,,USER_DEFINED,__fastcall,USER_DEFINED,11,,undefined __fastcall HudManager_DtorLabels(HudManager * param_1)
 0x0045d3b0,HudManager_Dtor,HudManager,USER_DEFINED,__thiscall,ANALYSIS,30,,"void * __thiscall HudManager_Dtor(HudManager * this, byte param_1)"
 0x0045d3d0,Game_Dtor,Game,USER_DEFINED,__thiscall,USER_DEFINED,1208,,void __thiscall Game_Dtor(Game * this)
@@ -2260,7 +2260,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004642a0,MapBlocks_GetEditBuffersForSave,,USER_DEFINED,default,USER_DEFINED,131,,"void MapBlocks_GetEditBuffersForSave(void * this, int * piParm1, int * param_3, int * param_4, int * param_5, int * param_6, int * * param_7, int * param_8)"
 0x00464330,MapBlocks_AllocZoneInfoSlots,,USER_DEFINED,__fastcall,USER_DEFINED,418,,void __fastcall MapBlocks_AllocZoneInfoSlots(MapBlocks * s11)
 0x004644e0,MapBlocks_IndexZones,,USER_DEFINED,__thiscall,USER_DEFINED,112,,"undefined __thiscall MapBlocks_IndexZones(MapBlocks * this, uint param_2)"
-0x00464550,MapBlocks_StartTileAnims,,USER_DEFINED,__thiscall,USER_DEFINED,61,,"undefined __thiscall MapBlocks_StartTileAnims(MapBlocks * this, int param_2)"
+0x00464550,MapBlocks_StartTileAnims,,USER_DEFINED,__thiscall,USER_DEFINED,61,,"void __thiscall MapBlocks_StartTileAnims(MapBlocks * this, int animChunkBytes)"
 0x00464590,MapChunk_MOBJ,,USER_DEFINED,__thiscall,USER_DEFINED,80,,"int __thiscall MapChunk_MOBJ(MapBlocks * this, size_t param_2)"
 0x004645f0,MapChunk_LGHT,,USER_DEFINED,__thiscall,USER_DEFINED,73,,"undefined __thiscall MapChunk_LGHT(MapBlocks * this, size_t param_2)"
 0x00464640,ZONE_section,,USER_DEFINED,__thiscall,USER_DEFINED,46,,"undefined __thiscall ZONE_section(MapBlocks * this, size_t param_2)"
@@ -2554,8 +2554,8 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00476a90,Door_GetState,,USER_DEFINED,__fastcall,USER_DEFINED,4,,undefined4 __fastcall Door_GetState(DoorSlot * param_1)
 0x00476aa0,Door_SetAutomatic,,USER_DEFINED,__fastcall,USER_DEFINED,5,,undefined __fastcall Door_SetAutomatic(DoorSlot * param_1)
 0x00476ab0,Door_SetManual,,USER_DEFINED,__fastcall,USER_DEFINED,5,,undefined __fastcall Door_SetManual(DoorSlot * param_1)
-0x00476ac0,ParkingZone_IsFinished,,USER_DEFINED,__fastcall,USER_DEFINED,8,,bool __fastcall ParkingZone_IsFinished(ParkingZone * this)
-0x00476ad0,ParkingZone_SetNoRespawn,,USER_DEFINED,__fastcall,USER_DEFINED,5,,undefined __fastcall ParkingZone_SetNoRespawn(ParkingZone * param_1)
+0x00476ac0,ParkController_IsFinished,,USER_DEFINED,__fastcall,USER_DEFINED,8,,bool __fastcall ParkController_IsFinished(ParkController * this)
+0x00476ad0,ParkController_SetNoRespawn,,USER_DEFINED,__fastcall,USER_DEFINED,5,,void __fastcall ParkController_SetNoRespawn(ParkController * this)
 0x00476ae0,Light_SetIntensity,,USER_DEFINED,__thiscall,USER_DEFINED,22,,"undefined __thiscall Light_SetIntensity(Light * this, uint param_2)"
 0x00476b00,Light_SetColor,,USER_DEFINED,__thiscall,USER_DEFINED,10,,"undefined __thiscall Light_SetColor(Light * this, undefined4 param_2)"
 0x00476b10,Menu_SetBonusTokenCount,,USER_DEFINED,__thiscall,USER_DEFINED,13,,"undefined __thiscall Menu_SetBonusTokenCount(Menu * this, undefined4 param_2)"
@@ -3035,19 +3035,19 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00488f10,ObjectPrefabs_ZeroGangDecalSpriteColors,,USER_DEFINED,__fastcall,USER_DEFINED,87,,undefined __fastcall ObjectPrefabs_ZeroGangDecalSpriteColors(ObjectPrefabsContainer * param_1)
 0x00488f70,ObjectPrefabs_InitPickupClones,,USER_DEFINED,__fastcall,USER_DEFINED,1457,,undefined __fastcall ObjectPrefabs_InitPickupClones(ObjectPrefabsContainer * param_1)
 0x00489530,ObjectPrefabs_InitAll,,USER_DEFINED,__fastcall,USER_DEFINED,63,,undefined __fastcall ObjectPrefabs_InitAll(ObjectPrefabsContainer * param_1)
-0x00489560,ParkingZone_GetPedExitAngle,,USER_DEFINED,__stdcall,ANALYSIS,85,,"undefined __stdcall ParkingZone_GetPedExitAngle(undefined2 * param_1, undefined4 param_2)"
+0x00489560,ParkController_GetExitHeading,,USER_DEFINED,__stdcall,USER_DEFINED,85,,"Ang16 * __stdcall ParkController_GetExitHeading(Ang16 * out, DOOR_SIDE side)"
 0x004895d0,CarPhysics_StopMotion,,USER_DEFINED,__fastcall,USER_DEFINED,16,,undefined __fastcall CarPhysics_StopMotion(CarPhysics * param_1)
 0x004895e0,Car_ClearFlag8,,USER_DEFINED,__fastcall,USER_DEFINED,8,,undefined __fastcall Car_ClearFlag8(Car * param_1)
 0x004895f0,Door_ClearByte2C,,USER_DEFINED,__fastcall,USER_DEFINED,5,,undefined __fastcall Door_ClearByte2C(DoorSlot * param_1)
-0x00489600,Pair_BothNonNull,,USER_DEFINED,__fastcall,USER_DEFINED,18,,byte __fastcall Pair_BothNonNull(int * pair)
-0x00489620,ParkingZone_GetBlockByte4,,USER_DEFINED,__fastcall,USER_DEFINED,6,,uint __fastcall ParkingZone_GetBlockByte4(ParkingZone * param_1)
-0x00489630,ParkingZone_GetBlockByte5,,USER_DEFINED,__fastcall,USER_DEFINED,6,,uint __fastcall ParkingZone_GetBlockByte5(ParkingZone * param_1)
-0x00489640,ParkingZone_GetBlockByte6,,USER_DEFINED,__fastcall,USER_DEFINED,6,,uint __fastcall ParkingZone_GetBlockByte6(ParkingZone * param_1)
-0x00489650,ParkingZone_ResetState,,USER_DEFINED,__fastcall,USER_DEFINED,44,,undefined __fastcall ParkingZone_ResetState(ParkingZone * param_1)
-0x00489680,ParkingZone_Update,,USER_DEFINED,__fastcall,USER_DEFINED,1084,,undefined __fastcall ParkingZone_Update(ParkingZone * param_1)
-0x00489ac0,ParkingZone_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,79,,ParkingZone * __fastcall ParkingZone_Ctor(void)
-0x00489b10,ParkingZone_ValidateBlocks,ParkingZone,USER_DEFINED,__thiscall,ANALYSIS,169,,undefined __thiscall ParkingZone_ValidateBlocks(ParkingZone * this)
-0x00489bc0,ParkingZone_Init,ParkingZone,USER_DEFINED,__thiscall,ANALYSIS,1479,,"uint __thiscall ParkingZone_Init(ParkingZone * this, int param_1, void * param_2)"
+0x00489600,Door_HasTwoFaces,,USER_DEFINED,__fastcall,USER_DEFINED,18,,bool __fastcall Door_HasTwoFaces(DoorSlot * door)
+0x00489620,Door_GetBlockX,,USER_DEFINED,__fastcall,USER_DEFINED,6,,byte __fastcall Door_GetBlockX(DoorSlot * door)
+0x00489630,Door_GetBlockY,,USER_DEFINED,__fastcall,USER_DEFINED,6,,byte __fastcall Door_GetBlockY(DoorSlot * door)
+0x00489640,Door_GetBlockZ,,USER_DEFINED,__fastcall,USER_DEFINED,6,,byte __fastcall Door_GetBlockZ(DoorSlot * door)
+0x00489650,ParkController_Reset,,USER_DEFINED,__fastcall,USER_DEFINED,44,,void __fastcall ParkController_Reset(ParkController * this)
+0x00489680,ParkController_Update,,USER_DEFINED,__fastcall,USER_DEFINED,1084,,void __fastcall ParkController_Update(ParkController * this)
+0x00489ac0,ParkController_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,79,,ParkController * __fastcall ParkController_Ctor(ParkController * this)
+0x00489b10,ParkController_AssertAreaClear,,USER_DEFINED,__thiscall,USER_DEFINED,169,,void __thiscall ParkController_AssertAreaClear(ParkController * this)
+0x00489bc0,ParkController_Start,,USER_DEFINED,__thiscall,USER_DEFINED,1479,,"byte __thiscall ParkController_Start(ParkController * this, Car * car, DoorSlot * door)"
 0x0048a1a0,Fix16_DivAssign,,USER_DEFINED,__stdcall,USER_DEFINED,43,,"Fix16 * __stdcall Fix16_DivAssign(Fix16 * a, Fix16 * b)"
 0x0048a1d0,Particle_UpdateStub2A,,USER_DEFINED,__stdcall,ANALYSIS,3,,undefined __stdcall Particle_UpdateStub2A(void)
 0x0048a1e0,Particle_UpdateStub2C,,USER_DEFINED,__stdcall,ANALYSIS,3,,undefined __stdcall Particle_UpdateStub2C(void)
@@ -3164,7 +3164,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004932d0,PedGameObject_OnExplosiveProjectileHit,,USER_DEFINED,__thiscall,USER_DEFINED,158,,"uint __thiscall PedGameObject_OnExplosiveProjectileHit(PedGameObject * this, WorldObject * param_2)"
 0x00493390,PedGameObject_KnockDown,,USER_DEFINED,__thiscall,USER_DEFINED,388,,"void __thiscall PedGameObject_KnockDown(PedGameObject * this, Ang16 angle, Fix16 speed, Fix16 zVelocity, char mode)"
 0x00493520,PedGameObject_ResetTickCountersAndSpriteIds,,USER_DEFINED,__stdcall,ANALYSIS,18,,undefined __stdcall PedGameObject_ResetTickCountersAndSpriteIds(void)
-0x00493540,ParkingZone_IsCar,,USER_DEFINED,__thiscall,USER_DEFINED,14,,"byte __thiscall ParkingZone_IsCar(ParkingZone * this, Car * car)"
+0x00493540,ParkController_IsCar,,USER_DEFINED,__thiscall,USER_DEFINED,14,,"bool __thiscall ParkController_IsCar(ParkController * this, Car * car)"
 0x00493550,PedGameObject_ResetMoveScratch,,USER_DEFINED,__stdcall,ANALYSIS,145,,undefined __stdcall PedGameObject_ResetMoveScratch(void)
 0x00493640,PedGameObject_Deinit,,USER_DEFINED,__fastcall,USER_DEFINED,76,,undefined __fastcall PedGameObject_Deinit(PedGameObject * param_1)
 0x00493710,PedGameObject_EnterJumpMode,,USER_DEFINED,__fastcall,USER_DEFINED,104,,void __fastcall PedGameObject_EnterJumpMode(PedGameObject * obj)
@@ -3464,31 +3464,34 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004a81e0,Player_OnLevelStart,,USER_DEFINED,default,USER_DEFINED,349,,"void Player_OnLevelStart(Player * save, int param_2, undefined4 param_3, undefined4 param_4, undefined4 param_5, undefined4 param_6, int howMuchLivesToAdd)"
 0x004a8340,Player_ToggleCarControl,,USER_DEFINED,__fastcall,ANALYSIS,128,,undefined __fastcall Player_ToggleCarControl(Player * param_1)
 0x004a83c0,Player_Ctor,Player,USER_DEFINED,__thiscall,USER_DEFINED,552,,"Player * __thiscall Player_Ctor(Player * this, byte playerIndex)"
-0x004a8600,HiScoreTable_Clear,,USER_DEFINED,__fastcall,USER_DEFINED,39,,undefined __fastcall HiScoreTable_Clear(HiScoreTable * param_1)
-0x004a8630,HiScoreTable_Insert,,USER_DEFINED,__thiscall,USER_DEFINED,181,,"uint __thiscall HiScoreTable_Insert(HiScoreTable * this, wchar_t * param_2, uint param_3)"
-0x004a8700,ProfileSlot_Reset,,USER_DEFINED,__fastcall,ANALYSIS,73,,undefined __fastcall ProfileSlot_Reset(undefined * param_1)
-0x004a8780,PlayerProfile_GetTotalBestScore,,USER_DEFINED,__fastcall,USER_DEFINED,33,,int __fastcall PlayerProfile_GetTotalBestScore(PlayerProfile * param_1)
-0x004a87b0,PlayerData_DtorMembers,,USER_DEFINED,__fastcall,USER_DEFINED,109,,undefined __fastcall PlayerData_DtorMembers(PlayerData * param_1)
-0x004a8820,Profile_BuildDatPath,,USER_DEFINED,__stdcall,ANALYSIS,158,,"undefined __stdcall Profile_BuildDatPath(uint param_1, undefined4 * param_2)"
-0x004a88c0,Profile_DatFileExists,,USER_DEFINED,__stdcall,ANALYSIS,78,,undefined4 __stdcall Profile_DatFileExists(uint param_1)
-0x004a8910,PlayerData_LoadProfileSlot,,USER_DEFINED,__thiscall,USER_DEFINED,199,,"undefined __thiscall PlayerData_LoadProfileSlot(PlayerData * this, uint param_2)"
-0x004a89e0,PlayerData_SaveProfileSlot,,USER_DEFINED,__thiscall,USER_DEFINED,168,,"undefined __thiscall PlayerData_SaveProfileSlot(PlayerData * this, uint param_2)"
-0x004a8a90,PlayerData_UnlockLevel,,USER_DEFINED,__thiscall,USER_DEFINED,100,,"undefined __thiscall PlayerData_UnlockLevel(PlayerData * this, uint param_2, uint param_3)"
-0x004a8b00,UnlockAllLevels,,USER_DEFINED,__fastcall,USER_DEFINED,90,,void __fastcall UnlockAllLevels(PlayerData * s28)
-0x004a8b60,HiScores_BuildPath,,USER_DEFINED,__stdcall,ANALYSIS,23,,undefined __stdcall HiScores_BuildPath(undefined4 * param_1)
-0x004a8b80,PlayerData_InitDefaultHiScores,,USER_DEFINED,__fastcall,USER_DEFINED,301,,undefined __fastcall PlayerData_InitDefaultHiScores(PlayerData * param_1)
-0x004a8cb0,PlayerData_LoadHiScores,,USER_DEFINED,__thiscall,USER_DEFINED,204,,"undefined __thiscall PlayerData_LoadHiScores(PlayerData * this, FILE * param_2)"
-0x004a8d80,PlayerData_SaveHiScores,,USER_DEFINED,__fastcall,USER_DEFINED,230,,undefined __fastcall PlayerData_SaveHiScores(PlayerData * param_1)
-0x004a8ed0,PlayerData_ResetHiScoresToDefaults,,USER_DEFINED,__fastcall,USER_DEFINED,128,,undefined __fastcall PlayerData_ResetHiScoresToDefaults(PlayerData * param_1)
-0x004a8f50,PlayerData_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"void * __thiscall PlayerData_ScalarDeletingDtor(PlayerData * this, byte param_2)"
-0x004a8f70,HiScoreTable_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,12,,short * __fastcall HiScoreTable_Ctor(HiScoreTable * param_1)
-0x004a8f90,PlayerData_UpdateProfileLevelScore,,USER_DEFINED,__thiscall,USER_DEFINED,187,,"undefined __thiscall PlayerData_UpdateProfileLevelScore(PlayerData * this, int param_2)"
-0x004a9050,HiScores_FileExists,,USER_DEFINED,__stdcall,ANALYSIS,69,,undefined4 __stdcall HiScores_FileExists(void)
-0x004a90a0,PlayerData_UpdateHiScoresAfterLevel,,USER_DEFINED,__fastcall,USER_DEFINED,360,,undefined __fastcall PlayerData_UpdateHiScoresAfterLevel(PlayerData * param_1)
-0x004a9210,PlayerData_ApplyMuchCashCheat,,USER_DEFINED,__fastcall,USER_DEFINED,83,,undefined __fastcall PlayerData_ApplyMuchCashCheat(PlayerData * param_1)
-0x004a9270,PlayerData_DestroyGlobalInstance,,USER_DEFINED,__stdcall,ANALYSIS,28,,undefined __stdcall PlayerData_DestroyGlobalInstance(void)
-0x004a9290,PlayerData_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,275,,undefined __fastcall PlayerData_Ctor(PlayerData * param_1)
-0x004a93b0,plydat,,USER_DEFINED,__cdecl,ANALYSIS,120,,undefined __cdecl plydat(void)
+0x004a85f0,HiScoreTable_Dtor,,USER_DEFINED,__thiscall,USER_DEFINED,1,,void __thiscall HiScoreTable_Dtor(HiScoreTable * this)
+0x004a8600,HiScoreTable_Clear,,USER_DEFINED,__thiscall,USER_DEFINED,39,,void __thiscall HiScoreTable_Clear(HiScoreTable * this)
+0x004a8630,HiScoreTable_Insert,,USER_DEFINED,__thiscall,USER_DEFINED,181,,"bool __thiscall HiScoreTable_Insert(HiScoreTable * this, wchar16 * name, uint score)"
+0x004a86f0,PlayerProfile_Dtor,,USER_DEFINED,__thiscall,USER_DEFINED,1,,void __thiscall PlayerProfile_Dtor(PlayerProfile * this)
+0x004a8700,PlayerProfile_Reset,,USER_DEFINED,__thiscall,USER_DEFINED,73,,void __thiscall PlayerProfile_Reset(PlayerProfile * this)
+0x004a8780,PlayerProfile_GetTotalBestScore,,USER_DEFINED,__thiscall,USER_DEFINED,33,,uint __thiscall PlayerProfile_GetTotalBestScore(PlayerProfile * this)
+0x004a87b0,PlayerData_DtorMembers,,USER_DEFINED,__thiscall,USER_DEFINED,109,,void __thiscall PlayerData_DtorMembers(PlayerData * this)
+0x004a8820,Profile_BuildDatPath,,USER_DEFINED,__stdcall,USER_DEFINED,158,,"void __stdcall Profile_BuildDatPath(uint slot, char * outPath)"
+0x004a88c0,Profile_DatFileExists,,USER_DEFINED,__stdcall,USER_DEFINED,78,,bool __stdcall Profile_DatFileExists(uint slot)
+0x004a8910,PlayerData_LoadProfileSlot,,USER_DEFINED,__thiscall,USER_DEFINED,199,,"void __thiscall PlayerData_LoadProfileSlot(PlayerData * this, uint slot)"
+0x004a89e0,PlayerData_SaveProfileSlot,,USER_DEFINED,__thiscall,USER_DEFINED,168,,"void __thiscall PlayerData_SaveProfileSlot(PlayerData * this, uint slot)"
+0x004a8a90,PlayerData_UnlockLevel,,USER_DEFINED,__thiscall,USER_DEFINED,100,,"void __thiscall PlayerData_UnlockLevel(PlayerData * this, uint area, uint stage)"
+0x004a8b00,PlayerData_UnlockAllLevels,,USER_DEFINED,__thiscall,USER_DEFINED,90,,void __thiscall PlayerData_UnlockAllLevels(PlayerData * this)
+0x004a8b60,HiScores_BuildPath,,USER_DEFINED,__stdcall,USER_DEFINED,23,,void __stdcall HiScores_BuildPath(char * outPath)
+0x004a8b80,PlayerData_InitUnusedDefaultHiScores,,USER_DEFINED,__thiscall,USER_DEFINED,301,,void __thiscall PlayerData_InitUnusedDefaultHiScores(PlayerData * this)
+0x004a8cb0,PlayerData_LoadHiScores,,USER_DEFINED,__thiscall,USER_DEFINED,204,,void __thiscall PlayerData_LoadHiScores(PlayerData * this)
+0x004a8d80,PlayerData_SaveHiScores,,USER_DEFINED,__thiscall,USER_DEFINED,230,,void __thiscall PlayerData_SaveHiScores(PlayerData * this)
+0x004a8ed0,PlayerData_ResetHiScoresToDefaults,,USER_DEFINED,__thiscall,USER_DEFINED,128,,void __thiscall PlayerData_ResetHiScoresToDefaults(PlayerData * this)
+0x004a8f50,PlayerData_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"void * __thiscall PlayerData_ScalarDeletingDtor(PlayerData * this, byte flags)"
+0x004a8f70,HiScoreTable_Ctor,,USER_DEFINED,__thiscall,USER_DEFINED,12,,HiScoreTable * __thiscall HiScoreTable_Ctor(HiScoreTable * this)
+0x004a8f80,PlayerProfile_Ctor,,USER_DEFINED,__thiscall,USER_DEFINED,8,,PlayerProfile * __thiscall PlayerProfile_Ctor(PlayerProfile * this)
+0x004a8f90,PlayerData_UpdateProfileLevelScore,,USER_DEFINED,__thiscall,USER_DEFINED,187,,"void __thiscall PlayerData_UpdateProfileLevelScore(PlayerData * this, Player * player)"
+0x004a9050,HiScores_FileExists,,USER_DEFINED,__stdcall,USER_DEFINED,69,,bool __stdcall HiScores_FileExists(void)
+0x004a90a0,PlayerData_UpdateHiScoresAfterLevel,,USER_DEFINED,__thiscall,USER_DEFINED,360,,void __thiscall PlayerData_UpdateHiScoresAfterLevel(PlayerData * this)
+0x004a9210,PlayerData_ApplyMuchCashCheat,,USER_DEFINED,__thiscall,USER_DEFINED,83,,void __thiscall PlayerData_ApplyMuchCashCheat(PlayerData * this)
+0x004a9270,PlayerData_DestroyGlobalInstance,,USER_DEFINED,__cdecl,USER_DEFINED,28,,void __cdecl PlayerData_DestroyGlobalInstance(void)
+0x004a9290,PlayerData_Ctor,,USER_DEFINED,__thiscall,USER_DEFINED,275,,PlayerData * __thiscall PlayerData_Ctor(PlayerData * this)
+0x004a93b0,PlayerData_CreateGlobalInstance,,USER_DEFINED,__cdecl,USER_DEFINED,120,,void __cdecl PlayerData_CreateGlobalInstance(void)
 0x004a9430,PoliceManager_Init,PoliceManager,USER_DEFINED,__thiscall,USER_DEFINED,202,,void __thiscall PoliceManager_Init(PoliceManager * this)
 0x004a9500,PoliceManager_OnCrewPedAttach,PoliceManager,USER_DEFINED,__thiscall,USER_DEFINED,140,,"bool __thiscall PoliceManager_OnCrewPedAttach(PoliceManager * this, Ped * ped)"
 0x004a9590,PoliceManager_IsBeingPursued,PoliceManager,USER_DEFINED,__thiscall,USER_DEFINED,115,,"bool __thiscall PoliceManager_IsBeingPursued(PoliceManager * this, Ped * criminal)"
@@ -4009,23 +4012,25 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004c3040,TextureCache_RegisterTileTextures,,USER_DEFINED,__fastcall,USER_DEFINED,91,,undefined __fastcall TextureCache_RegisterTileTextures(TextureCache * param_1)
 0x004c30a0,TextureCache_RegisterAllTextures,,USER_DEFINED,__fastcall,USER_DEFINED,238,,void __fastcall TextureCache_RegisterAllTextures(TextureCache * cache)
 0x004c3190,TextureCache_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,165,,TextureCache * __fastcall TextureCache_Ctor(TextureCache * cache)
-0x004c3240,TileAnim_AssignId,,USER_DEFINED,__fastcall,USER_DEFINED,21,,undefined __fastcall TileAnim_AssignId(TileAnimEntry * param_1)
-0x004c3260,TileAnim_ApplyFrame,,USER_DEFINED,__fastcall,USER_DEFINED,58,,undefined __fastcall TileAnim_ApplyFrame(TileAnimEntry * param_1)
-0x004c32a0,TileAnim_InitFromMapData,,USER_DEFINED,__thiscall,USER_DEFINED,50,,"undefined __thiscall TileAnim_InitFromMapData(TileAnimEntry * this, undefined2 * param_2)"
-0x004c32e0,TileAnim_Restart,,USER_DEFINED,__fastcall,USER_DEFINED,20,,undefined __fastcall TileAnim_Restart(TileAnimEntry * param_1)
-0x004c3300,TileAnim_Step,,USER_DEFINED,unknown,DEFAULT,102,,undefined TileAnim_Step()
-0x004c3370,StartGame_NoOp4C3370,,USER_DEFINED,__stdcall,ANALYSIS,1,,undefined __stdcall StartGame_NoOp4C3370(void)
-0x004c3380,TileAnimPool_PopFreeToUsed,,USER_DEFINED,__fastcall,USER_DEFINED,26,,undefined4 __fastcall TileAnimPool_PopFreeToUsed(TileAnimPool * param_1)
-0x004c33f0,TileAnim_Setup,,USER_DEFINED,__thiscall,USER_DEFINED,54,,"undefined __thiscall TileAnim_Setup(TileAnimEntry * this, undefined2 param_2, undefined2 param_3, undefined2 param_4, undefined2 param_5, undefined2 param_6)"
-0x004c3430,TileAnimManager_StartAnim,,USER_DEFINED,__stdcall,ANALYSIS,57,,"undefined __stdcall TileAnimManager_StartAnim(undefined2 param_1, undefined2 param_2, undefined2 param_3, undefined2 param_4, undefined2 param_5)"
-0x004c3470,TileAnimPool_AddFromMap,,USER_DEFINED,__stdcall,ANALYSIS,31,,undefined __stdcall TileAnimPool_AddFromMap(undefined2 * param_1)
-0x004c3490,TileAnimPool_DtorBody,,USER_DEFINED,__fastcall,USER_DEFINED,32,,undefined __fastcall TileAnimPool_DtorBody(TileAnimPool * param_1)
-0x004c34b0,TileAnimPool_Init,,USER_DEFINED,__fastcall,USER_DEFINED,71,,void * * __fastcall TileAnimPool_Init(TileAnimPool * param_1)
-0x004c3500,TileAnimPool_Update,,USER_DEFINED,__fastcall,USER_DEFINED,134,,undefined __fastcall TileAnimPool_Update(TileAnimPool * param_1)
-0x004c3590,TileAnimManager_Update,,USER_DEFINED,__stdcall,ANALYSIS,11,,undefined __stdcall TileAnimManager_Update(void)
+0x004c3240,TileAnim_AssignId,,USER_DEFINED,__fastcall,USER_DEFINED,21,,void __fastcall TileAnim_AssignId(TileAnimEntry * entry)
+0x004c3260,TileAnim_ApplyFrame,,USER_DEFINED,__fastcall,USER_DEFINED,58,,void __fastcall TileAnim_ApplyFrame(TileAnimEntry * entry)
+0x004c32a0,TileAnim_InitFromMapData,,USER_DEFINED,__thiscall,USER_DEFINED,50,,"void __thiscall TileAnim_InitFromMapData(TileAnimEntry * this, GmpTileAnimRecord * record)"
+0x004c32e0,TileAnim_Restart,,USER_DEFINED,__fastcall,USER_DEFINED,20,,void __fastcall TileAnim_Restart(TileAnimEntry * entry)
+0x004c3300,TileAnim_Step,,USER_DEFINED,__fastcall,USER_DEFINED,102,,bool __fastcall TileAnim_Step(TileAnimEntry * entry)
+0x004c3370,TileAnimManager_StartGameStub,,USER_DEFINED,__thiscall,USER_DEFINED,1,,void __thiscall TileAnimManager_StartGameStub(TileAnimManager * this)
+0x004c3380,TileAnimPool_PopFreeToUsed,,USER_DEFINED,__fastcall,USER_DEFINED,26,,TileAnimEntry * __fastcall TileAnimPool_PopFreeToUsed(TileAnimPool * pool)
+0x004c33a0,TileAnimEntry_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,42,,TileAnimEntry * __fastcall TileAnimEntry_Ctor(TileAnimEntry * entry)
+0x004c33d0,TileAnimEntry_Dtor,,USER_DEFINED,__fastcall,USER_DEFINED,9,,void __fastcall TileAnimEntry_Dtor(TileAnimEntry * entry)
+0x004c33f0,TileAnim_Setup,,USER_DEFINED,__thiscall,USER_DEFINED,54,,"void __thiscall TileAnim_Setup(TileAnimEntry * this, ushort remapTile, ushort firstFrame, ushort lastFrame, ushort frameDelay, ushort repeatCount)"
+0x004c3430,TileAnimManager_StartAnim,,USER_DEFINED,__thiscall,USER_DEFINED,57,,"void __thiscall TileAnimManager_StartAnim(TileAnimManager * this, ushort remapTile, ushort firstTile, ushort lastTile, ushort frameDelay, ushort repeatCount)"
+0x004c3470,TileAnimManager_AddFromMap,,USER_DEFINED,__thiscall,USER_DEFINED,31,,"void __thiscall TileAnimManager_AddFromMap(TileAnimManager * this, GmpTileAnimRecord * record)"
+0x004c3490,TileAnimPool_Dtor,,USER_DEFINED,__fastcall,USER_DEFINED,32,,void __fastcall TileAnimPool_Dtor(TileAnimPool * pool)
+0x004c34b0,TileAnimPool_Ctor,,USER_DEFINED,__fastcall,USER_DEFINED,71,,TileAnimPool * __fastcall TileAnimPool_Ctor(TileAnimPool * pool)
+0x004c3500,TileAnimPool_Update,,USER_DEFINED,__fastcall,USER_DEFINED,134,,void __fastcall TileAnimPool_Update(TileAnimPool * pool)
+0x004c3590,TileAnimManager_Update,,USER_DEFINED,__thiscall,USER_DEFINED,11,,void __thiscall TileAnimManager_Update(TileAnimManager * this)
 0x004c35a0,TileAnimManager_Ctor,TileAnimManager,USER_DEFINED,__thiscall,USER_DEFINED,131,,TileAnimManager * __thiscall TileAnimManager_Ctor(TileAnimManager * this)
-0x004c3630,TileAnimPool_ScalarDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"undefined4 * __thiscall TileAnimPool_ScalarDtor(TileAnimPool * this, byte param_2)"
-0x004c3650,TileAnimPool_FreeGlobal,,USER_DEFINED,__stdcall,ANALYSIS,28,,undefined __stdcall TileAnimPool_FreeGlobal(void)
+0x004c3630,TileAnimPool_ScalarDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"TileAnimPool * __thiscall TileAnimPool_ScalarDtor(TileAnimPool * this, byte flags)"
+0x004c3650,TileAnimPool_FreeGlobal,,USER_DEFINED,__stdcall,USER_DEFINED,28,,void __stdcall TileAnimPool_FreeGlobal(void)
 0x004c3670,FrameTimer_StoreStartTime,,USER_DEFINED,__fastcall,USER_DEFINED,14,,void __fastcall FrameTimer_StoreStartTime(FrameTimer * param_1)
 0x004c3680,FrameTimer_AddElapsedSinceStart,,USER_DEFINED,__fastcall,USER_DEFINED,24,,void __fastcall FrameTimer_AddElapsedSinceStart(FrameTimer * param_1)
 0x004c36a0,FrameTimer_Clear,,USER_DEFINED,__fastcall,USER_DEFINED,13,,void __fastcall FrameTimer_Clear(FrameTimer * param_1)
@@ -4876,7 +4881,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0056dc4c,Patch1144_NetLobby_SlotEntryAddr414Hook,,USER_DEFINED,__fastcall,ANALYSIS,19,,"undefined __fastcall Patch1144_NetLobby_SlotEntryAddr414Hook(undefined4 param_1, int param_2, undefined4 param_3, undefined4 param_4, int param_5, undefined4 param_6)"
 0x0056dcab,Patch1144_NetDlg_AllocMapTable,,USER_DEFINED,__stdcall,ANALYSIS,32,,undefined __stdcall Patch1144_NetDlg_AllocMapTable(void)
 0x0056dcda,Patch1144_EntryStub,,USER_DEFINED,__stdcall,ANALYSIS,42,,int __stdcall Patch1144_EntryStub(void)
-0x0056dd18,Patch1144_Mmp_StrToLowerInPlace,,USER_DEFINED,__stdcall,ANALYSIS,26,,undefined __stdcall Patch1144_Mmp_StrToLowerInPlace(byte * param_1)
+0x0056dd18,Patch1144_Mmp_StrToLowerInPlace,,USER_DEFINED,__stdcall,USER_DEFINED,26,,void __stdcall Patch1144_Mmp_StrToLowerInPlace(char * s)
 0x0056dd67,Patch1144_OnKeyDown_LaunchManagerHook,,USER_DEFINED,__stdcall,ANALYSIS,23,,undefined __stdcall Patch1144_OnKeyDown_LaunchManagerHook(void)
 0x0056de0c,Patch1144_NetDlg_SetMapNameNAText,,USER_DEFINED,__stdcall,ANALYSIS,60,,undefined __stdcall Patch1144_NetDlg_SetMapNameNAText(void)
 0x0056de95,Patch1144_NetDlg_AutoCreateHook,,USER_DEFINED,__stdcall,ANALYSIS,41,,"undefined __stdcall Patch1144_NetDlg_AutoCreateHook(HWND param_1, undefined4 param_2)"

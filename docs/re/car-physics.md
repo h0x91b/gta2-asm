@@ -694,7 +694,7 @@ Mostly the `Sprite` (0x3C body) module (bounds object, corner math, draw). "high
 | `0x4BAC60` | `Sprite_GetDrawQuadFlags` | |
 | `0x4BACF0` | `Sprite_DrawDebugIds` | `g_doShowIds` / `g_doShowObjectIds` |
 | `0x4BB020` | `Sprite_ContainsAnyWorldRectPoint` | |
-| `0x4BB4D0` | `Sprite_FindCornersInsideRect` | ParkingZone_Update |
+| `0x4BB4D0` | `Sprite_FindCornersInsideRect` | ParkController_Update |
 | `0x4BB860` / `0x4BB910` | `Sprite_FindEdgeCrossingWallAlongX` / `…AlongY` | |
 | `0x4BB9C0` | `Sprite_IsSegmentTouchingBox` | |
 | `0x4BBBE0` | `Sprite_IsTouchingGroundSurfaceOverBodyZ` | |

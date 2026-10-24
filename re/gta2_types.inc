@@ -358,6 +358,12 @@ struc CrusherManager
     .count                            resb 4      ; 0x90 int
 endstruc
 
+; enum /DOOR_SIDE  (4 bytes)
+DOOR_SIDE.DOOR_SIDE_LEFT equ 1
+DOOR_SIDE.DOOR_SIDE_RIGHT equ 2
+DOOR_SIDE.DOOR_SIDE_TOP equ 3
+DOOR_SIDE.DOOR_SIDE_BOTTOM equ 4
+
 ; /DoorFace  (16 bytes)
 struc DoorFace
     .state                            resb 4      ; 0x0 int
@@ -573,6 +579,16 @@ struc GeneratorManager
     .activeCount                      resb 4      ; 0x14a4 int
     .sliceSize                        resb 1      ; 0x14a8 byte
     .pad                              resb 3      ; 0x14a9 byte[3]
+endstruc
+
+; /GmpTileAnimRecord  (6 bytes)
+struc GmpTileAnimRecord
+    .baseTile                         resb 2      ; 0x0 ushort
+    .frameRate                        resb 1      ; 0x2 byte
+    .repeatCount                      resb 1      ; 0x3 byte
+    .frameCount                       resb 1      ; 0x4 byte
+    .unused                           resb 1      ; 0x5 byte
+    .frames: ; 0x6 ushort[0] (zero-length)
 endstruc
 
 ; /GridEntry  (8 bytes)
@@ -924,6 +940,12 @@ struc OwnerSlot
     resb 3
 endstruc
 
+; enum /PARK_STATE  (4 bytes)
+PARK_STATE.PARK_STATE_IDLE equ 0
+PARK_STATE.PARK_STATE_WAIT_DOOR_EDGE equ 1
+PARK_STATE.PARK_STATE_PULLING_IN equ 2
+PARK_STATE.PARK_STATE_FINISHED equ 3
+
 ; enum /PED_CLASS  (4 bytes)
 PED_CLASS.PED_CLASS_PLAYER equ 2
 PED_CLASS.PED_CLASS_AMBIENT equ 3
@@ -1088,21 +1110,26 @@ PURSUIT_STATE.PURSUIT_ACTIVE equ 3
 PURSUIT_STATE.PURSUIT_ENDED equ 4
 PURSUIT_STATE.PURSUIT_SEARCHING equ 5
 
-; /ParkingZone  (72 bytes)
-struc ParkingZone
-    .car                              resb 4      ; 0x0 void *
-    resb 8
-    .state                            resb 4      ; 0xc int
-    .block                            resb 4      ; 0x10 void *
-    resb 36
-    .direction                        resb 4      ; 0x38 int
-    .timer                            resb 1      ; 0x3c byte
-    .flag                             resb 1      ; 0x3d byte
-    .counter                          resb 1      ; 0x3e byte
-    .scriptFlag                       resb 1      ; 0x3f byte
-    .unk40                            resb 1      ; 0x40 byte
+; /ParkController  (72 bytes)
+struc ParkController
+    .car                              resb 4      ; 0x0 Car *
+    .lastParkedCar                    resb 4      ; 0x4 Car *
+    .lastParkedCarId                  resb 4      ; 0x8 dword
+    .state                            resb 4      ; 0xc PARK_STATE
+    .door                             resb 4      ; 0x10 DoorSlot *
+    .lastDriver                       resb 4      ; 0x14 Ped *
+    .areaMin                          resb 8      ; 0x18 Vec2
+    .areaMax                          resb 8      ; 0x20 Vec2
+    .pullStep                         resb 8      ; 0x28 Vec2
+    .exitPos                          resb 8      ; 0x30 Vec2
+    .doorSide                         resb 4      ; 0x38 DOOR_SIDE
+    .settleTicks                      resb 1      ; 0x3c byte
+    .carInside                        resb 1      ; 0x3d byte
+    .parkSerial                       resb 1      ; 0x3e byte
+    .noRespawn                        resb 1      ; 0x3f byte
+    .isLongCar                        resb 1      ; 0x40 byte
     resb 3
-    .unk44                            resb 4      ; 0x44 int
+    .pullTicks                        resb 4      ; 0x44 dword
 endstruc
 
 ; /Particle  (76 bytes)
@@ -1534,9 +1561,16 @@ endstruc
 
 ; /TileAnimEntry  (24 bytes)
 struc TileAnimEntry
-    resb 18
+    .firstFrame                       resb 2      ; 0x0 ushort
+    .lastFrame                        resb 2      ; 0x2 ushort
+    .frameDelay                       resb 2      ; 0x4 ushort
+    .repeatsLeft                      resb 2      ; 0x6 ushort
+    .curFrame                         resb 2      ; 0x8 ushort
+    .ticksLeft                        resb 2      ; 0xa ushort
+    .mapRecord                        resb 4      ; 0xc GmpTileAnimRecord *
+    .remapTile                        resb 2      ; 0x10 ushort
     .animId                           resb 2      ; 0x12 short
-    .next                             resb 4      ; 0x14 void *
+    .next                             resb 4      ; 0x14 TileAnimEntry *
 endstruc
 
 ; /TileAnimManager  (2 bytes)
@@ -1549,7 +1583,7 @@ struc TileAnimPool
     .freeHead                         resb 4      ; 0x0 TileAnimEntry *
     .usedHead                         resb 4      ; 0x4 TileAnimEntry *
     .entries                          resb 1200   ; 0x8 TileAnimEntry[50]
-    .count                            resb 2      ; 0x4b8 short
+    .activeCount                      resb 2      ; 0x4b8 ushort
     resb 2
 endstruc
 
@@ -1742,7 +1776,7 @@ struc StyleData
     .sprite_graphics                  resb 4      ; 0x34 void *
     .spriteGraphicsRaw                resb 4      ; 0x38 undefined4
     .tiles                            resb 4      ; 0x3c int
-    .unsure_tileRemap                 resb 4      ; 0x40 undefined4
+    .tileRemap                        resb 4      ; 0x40 ushort *
     .tilesRaw                         resb 4      ; 0x44 undefined4
     .deltaStore                       resb 4      ; 0x48 undefined4
     .deltaIndexRaw                    resb 4      ; 0x4c undefined4
@@ -3260,7 +3294,7 @@ struc MapBlocks
     .zoneInfo                         resb 4      ; 0x334 void *
     .mapObjects                       resb 4      ; 0x338 void *
     .lights                           resb 4      ; 0x33c void *
-    .tileAnims                        resb 4      ; 0x340 void *
+    .tileAnims                        resb 4      ; 0x340 GmpTileAnimRecord *
     .mapObjectCount                   resb 4      ; 0x344 uint
     .lightCount                       resb 4      ; 0x348 uint
     .blockCountLoaded                 resb 4      ; 0x34c uint
@@ -3440,24 +3474,40 @@ struc MultiplayerTag
     resb 2
 endstruc
 
+; enum /auto_structs/NETDLG_PAGE  (4 bytes)
+NETDLG_PAGE.NETDLG_PAGE_BROWSER equ 0
+NETDLG_PAGE.NETDLG_PAGE_HOST equ 1
+NETDLG_PAGE.NETDLG_PAGE_CLIENT equ 2
+NETDLG_PAGE.NETDLG_PAGE_NONE equ 3
+
+; enum /auto_structs/NETDLG_SETTING  (4 bytes)
+NETDLG_SETTING.NETDLG_SETTING_MAP equ 1
+NETDLG_SETTING.NETDLG_SETTING_SCORE_LIMIT equ 2
+NETDLG_SETTING.NETDLG_SETTING_GAME_TYPE equ 3
+NETDLG_SETTING.NETDLG_SETTING_RANDOM_SEED equ 4
+NETDLG_SETTING.NETDLG_SETTING_GAME_SPEED equ 5
+NETDLG_SETTING.NETDLG_SETTING_POLICE equ 6
+NETDLG_SETTING.NETDLG_SETTING_TIME_LIMIT equ 7
+
 ; /auto_structs/NetDlg  (131616 bytes)
 struc NetDlg
     .vtable                           resb 4      ; 0x0 void *
     .maps                             resb 4      ; 0x4 NetDlgMapEntry *
-    resb 130396
-    .mapCount                         resb 4      ; 0x1fd64 int
+    .dead_vanillaMapTable             resb 130268 ; 0x8 byte[130268]
+    .unsure_dead_vanillaTail          resb 128    ; 0x1fce4 byte[128]
+    .mapCount                         resb 4      ; 0x1fd64 uint
     .exitFlag                         resb 4      ; 0x1fd68 int
     .playerCount                      resb 4      ; 0x1fd6c int
-    .origWndProcClientChat            resb 4      ; 0x1fd70 void *
-    .origWndProcHostChat              resb 4      ; 0x1fd74 void *
+    .origWndProcClientChat            resb 4      ; 0x1fd70 WNDPROC
+    .origWndProcHostChat              resb 4      ; 0x1fd74 WNDPROC
     .playerName                       resb 520    ; 0x1fd78 wchar_t[260]
-    .unsure_field_0x1ff80             resb 4      ; 0x1ff80 int
+    .unused_0x1ff80                   resb 4      ; 0x1ff80 uint
     .settings                         resb 288    ; 0x1ff84 NetGameSettings
-    .pageControls                     resb 360    ; 0x200a4 HWND[90]
-    .currentPage                      resb 4      ; 0x2020c int
-    .previousPage                     resb 4      ; 0x20210 int
-    .unsure_field_0x20214             resb 2      ; 0x20214 short
-    resb 2
+    .pageControls                     resb 360    ; 0x200a4 HWND[3][30]
+    .currentPage                      resb 4      ; 0x2020c NETDLG_PAGE
+    .previousPage                     resb 4      ; 0x20210 NETDLG_PAGE
+    .unused_0x20214                   resb 2      ; 0x20214 short
+    .pad_0x20216                      resb 2      ; 0x20216 byte[2]
     .hwnd                             resb 4      ; 0x20218 HWND
     .hInstance                        resb 4      ; 0x2021c HINSTANCE
 endstruc
@@ -3566,15 +3616,14 @@ endstruc
 
 ; /auto_structs/PlayerData  (11200 bytes)
 struc PlayerData
-    .ioPackBuffer                     resb 3264   ; 0x0 byte[3264]
-    resb 2880
+    .ioPackBuffer                     resb 6144   ; 0x0 byte[6144]
     .bestCrimeStats                   resb 120    ; 0x1800 uint[3][10]
     .bestTotalEarned                  resb 12     ; 0x1878 uint[3]
     .bestWantedStarSeconds            resb 12     ; 0x1884 uint[3]
     .levelHiScores                    resb 2880   ; 0x1890 HiScoreTable[12]
     .overallHiScores                  resb 240    ; 0x23d0 HiScoreTable
-    .unsure_extraHiScoresA            resb 240    ; 0x24c0 HiScoreTable
-    .unsure_extraHiScoresB            resb 240    ; 0x25b0 HiScoreTable
+    .unusedDefaultHiScores            resb 240    ; 0x24c0 HiScoreTable
+    .unusedHiScores                   resb 240    ; 0x25b0 HiScoreTable
     .profiles                         resb 1312   ; 0x26a0 PlayerProfile[8]
 endstruc
 
@@ -5502,6 +5551,24 @@ endstruc
 struc NetDataRef
     .data                             resb 4      ; 0x0 void *
     .len                              resb 4      ; 0x4 uint
+endstruc
+
+; /net/NetEvtChat  (288 bytes)
+struc NetEvtChat
+    .text                             resb 256    ; 0x0 wchar16[128]
+    .senderName                       resb 32     ; 0x100 wchar16[16]
+endstruc
+
+; /net/NetEvtPing  (524 bytes)
+struc NetEvtPing
+    .playerName                       resb 520    ; 0x0 wchar16[260]
+    .avgPingMs                        resb 4      ; 0x208 uint
+endstruc
+
+; /net/NetEvtSessionList  (68 bytes)
+struc NetEvtSessionList
+    .names                            resb 64     ; 0x0 wchar16 *[16]
+    .count                            resb 4      ; 0x40 uint
 endstruc
 
 ; /net/NetFrameInput  (8 bytes)

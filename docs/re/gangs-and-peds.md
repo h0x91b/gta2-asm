@@ -668,7 +668,7 @@ missing ones added.
 | 0x434140 | WorldObject_IsPowergenOrInvisibleDead | U | +0x18 ∈ {0x11A,0x11D}; ApproachAndAttackTarget |
 | 0x4341B0 | CarDoor_GetPedInDoor | U | returns +8; pairs with CarDoor_SetPedInDoor |
 | 0x434A10 | Menu_IncBonusTokenCount | V | ++Menu.bonusTokenCount (+0x574); only in Ped_PickUp BONUS_TOKEN branch |
-| 0x434AF0 | ParkingZone_IsCarFlagged | U | this=g_ParkingZone; car==*this && byte+0x3D; Ped_Obj2_EnterCar |
+| 0x434AF0 | ParkController_IsCarInside (was ParkingZone_IsCarFlagged) | V | this=g_ParkController; car==*this && carInside (+0x3D); Ped_Obj2_EnterCar |
 | 0x4350C0 | Ped_UpdateWeaponProbeModeOnHitSprite | V | Weapon_SetProbeMode by Chebyshev dist; Projectile_OnHitSprite |
 | 0x435180 | Ped_UpdateWeaponProbeModeOnHitWorld | V | + PlayerScore_TrackAccuracy(1); Projectile_OnHitWorld, Object_ExplodeOnProjectileHit |
 | 0x435220 | Ped_OnProjectileMissed | V | PlayerScore_TrackAccuracy(0), probe 0; Object_UpdatePhysics |

@@ -52,7 +52,7 @@ per rendered frame ([hud-and-menus.md](hud-and-menus.md) §1).
 **Logic, `GameTick` 0x45C1F0 (re-checked):** Player_Update ×N → SoundEventQueue_Reset →
 CollisionManager visit reset → `if (g_lightingEnabled) LightManager_Update` (flashing lights) →
 CraneManager_Update → CrusherManager_Update → GeneratorManager → DummyPedManager →
-PublicTransportManager → ParkingZone → CarManager_Update → TrafficLights → ObjectSpawner →
+PublicTransportManager → ParkController → CarManager_Update → TrafficLights → ObjectSpawner →
 **MissionScript_ExecuteScriptThreads** (this is where opcodes edit blocks, doors, lights, ambient) →
 emergency services → UpdateParticles → **TileAnimManager_Update** → DrawGUI (HUD logic) →
 FrameCounter_Advance → **DoorManager_Update** → FireEngineManager → FloatingScore. Doors run after
@@ -101,7 +101,7 @@ Formats match [tools/formats/map.ts](../../tools/formats/map.ts) and the DMA spe
 | 0x330 / 0x334 | `zoneInfoSlot` / `zoneInfo` | one slot byte per zone; `MapZoneInfo` (0x16) records, record 0 = default |
 | 0x338 / 0x344 | `mapObjects` / `mapObjectCount` | MOBJ, 6-byte records |
 | 0x33C / 0x348 | `lights` / `lightCount` | LGHT, 16-byte records |
-| 0x340 | `tileAnims` | ANIM chunk |
+| 0x340 | `tileAnims` | ANIM chunk copy, records are `GmpTileAnimRecord` (§2.6; still `void*` in Ghidra) |
 | 0x34C / 0x350 / 0x354 | `blockCountLoaded` / `blockCapacity` (= loaded + 200) / `blockCountLive` | |
 | 0x358 / 0x35C / 0x360 | `columnWordsLoaded` / `columnWordCapacity` (= loaded + 0x400) / `columnWordsLive` | |
 | 0x364..0x36C | `zoneIter`, `zoneIterType`, `zoneIterX/Y`, `zoneIterUsePoint` | FindFirst/NextZoneOfType iterator |
@@ -160,15 +160,99 @@ overwrites `editCount` and then `zoneData` **(re-checked)**. Spare capacity of 2
 0x400 column words is checked only at load (hypothesis for the run-time part: no check was found
 in the clone functions).
 
-### 2.6 Animated tiles
+### 2.6 Animated tiles (`tileanim.cpp`, Seq 27 P4)
 
-ANIM record `{u16 base, u8 rate, u8 repeat, u8 len, u8 pad, u16 tiles[len]}` →
-`TileAnimPool_AddFromMap` (pool of 50 × 0x18). `GameTick` → `TileAnimManager_Update` →
-`TileAnim_Step` per entry; `TileAnim_ApplyFrame` writes `StyleData.tileRemap[base] = tiles[cur]`
-(`style+0x40`, `u16[1024]`). **Map blocks are never touched**: every face using tile `base` is
-drawn with the remapped graphic, because the renderer resolves every face through
-`StyleData_GetTileRemap` 0x4BF6B0 (§3.3). Doors use the same mechanism (§7.1). V by the mapdata
-slice; the renderer side is re-checked.
+Tile animation **never touches map blocks**. It only rewrites one slot of the style's tile-remap
+table, `StyleData.tileRemap[remapTile] = frameTile` (`StyleData_SetTileRemap` 0x4BF770, `u16`
+array at `StyleData+0x40`, indexed by `tile & 0xFFFF`). Every face drawer (19 call sites:
+Left/Right/Top/Bottom/Lid, the partial, diagonal and ramp drawers, `MapRenderer_DrawSideTriangle`)
+resolves its tile through `StyleData_GetTileRemap` 0x4BF6B0 (§3.3), so every face whose map word
+says tile `base` is drawn with whatever tile the animation currently puts there. Other users of the
+remap: `StyleData_IsTileRemapped` 0x4BF690, `DoorFace_Setup` 0x44C8F8 and `DoorInfo_Register`
+0x44C7B0 (setters). All V from disassembly/decompile; nothing reproduced live.
+
+- **Objects.** `g_TileAnimManager` 0x671C08 (2 bytes, new in `Game_Ctor` 0x45CA8E, deleted in
+  `Game_Dtor` 0x45D603); only state `nextAnimId`, starts at 1. Its ctor 0x4C35A0 lazily creates
+  `g_TileAnimPool` 0x671C0C with `operator_new(0x4BC)` (tileanim.cpp:0xDC): 50 × `TileAnimEntry`
+  (0x18) + `freeHead`, `usedHead`, `activeCount`. The manager's methods take it in ECX but work on
+  the pool global.
+- **Map animations (load).** `MapBlocks_ReadChunk` → `ANIM_section` 0x464670 mallocs a copy of the
+  chunk into `MapBlocks+0x340` (`tileAnims`); `MapBlocks_StartTileAnims` 0x464550 walks it with stride
+  `6 + 2*frameCount` and calls `TileAnimManager_AddFromMap` 0x4C3470 (was `TileAnimPool_AddFromMap`,
+  ECX = `g_TileAnimManager` at 0x464566) per record: `TileAnimPool_PopFreeToUsed` 0x4C3380 (also
+  assigns the id), `TileAnim_InitFromMapData` 0x4C32A0 (first = 0, last = frameCount−1, delay =
+  frameRate, repeats = repeatCount, remapTile = baseTile, mapRecord = record), `TileAnim_Restart`
+  0x4C32E0 (curFrame = first, ticksLeft = delay, frame 0 shown at once).
+- **Door animations (script).** `DoorFace_Open` 0x44C560 / `DoorFace_Close` 0x44C610 call
+  `TileAnimManager_StartAnim` 0x4C3430 (remapTile, firstTile, lastTile, frameDelay, repeatCount = 1);
+  §7.1 has which `DoorInfo` slots they use. `TileAnim_Setup` 0x4C33F0 leaves `mapRecord = NULL`: the
+  frame value **is** the tile index, counting through consecutive tiles first..last.
+- **Each tick.** `GameTick` 0x45C32D → `TileAnimManager_Update` 0x4C3590 → `TileAnimPool_Update`
+  0x4C3500 → `TileAnim_Step` 0x4C3300 per used entry: `ticksLeft--`; at 0 `curFrame` moves one step
+  toward `lastFrame` (down when `last < first`; all compares unsigned). Past the end with
+  `repeatsLeft == 0` it wraps and loops forever; with `repeatsLeft != 0` it is decremented and at 0
+  Step returns true, the entry goes back to the free list and **the last frame stays in the remap
+  table** (that is how an opened door stays open visually, and how any map record with `repeat > 0`
+  ends on its last frame). Otherwise it wraps to `firstFrame`, then `TileAnim_ApplyFrame` 0x4C3260
+  and `ticksLeft = frameDelay`.
+- **Timing.** One step per logic tick (~30 Hz): `frameRate` is "ticks per frame", whole-tick
+  granularity, no interpolation.
+
+Measured from all 13 `.gmp` in `data.pak`: 1 to 16 ANIM records per map (bil 16, ste 14, wil 11,
+MP/bonus maps 1-2); `repeat` = 0 everywhere; frameRate 1..48; frameCount 2..151 (bil's flicker
+records are 151 frames); the `unused` byte is 1 in every record and never read; `frames[0]` usually
+equals `base`; frame tiles seen 1..918.
+
+**For an HD texture pack / renderer replacement.** The animation only changes *which tile index* a
+slot shows, and every frame is an ordinary tile index of the same style. So **key HD textures by
+the tile index AFTER `StyleData_GetTileRemap`** (i.e. the index passed on to
+`TextureCache_GetTileTexture` 0x46BB50, §3.3), and replace every frame tile: animated faces then
+animate with no extra work. Keying on the face's map tile freezes animated faces (water, neon,
+doors). `StyleData_GetTileRemap` is the cleanest hook point.
+
+**`TileAnimEntry`** (0x18; pool stride 0x18 × 0x32 at 0x4C34BE/0x4C34C3):
+
+| Off | Name (was) | Type | Meaning | Evidence VA |
+|---|---|---|---|---|
+| 0x0 | `firstFrame` (gap) | u16 | (re)start frame: 0 for map anims, DoorInfo tile for doors | Setup 0x4C3403, 0x4C32C6, Restart 0x4C32E4, wrap 0x4C334F |
+| 0x2 | `lastFrame` (gap) | u16 | end frame, inclusive; `< firstFrame` plays backwards | 0x4C32CB, Setup 0x4C340B, Step 0x4C3310 |
+| 0x4 | `frameDelay` (gap) | u16 | ticks per frame | 0x4C32AC, Setup 0x4C3414, reload 0x4C335A |
+| 0x6 | `repeatsLeft` (gap) | u16 | 0 = forever; doors pass 1 | 0x4C32B5, Setup 0x4C3418, Step 0x4C3338..0x4C3345 |
+| 0x8 | `curFrame` (gap) | u16 | index into `mapRecord->frames`, or the tile itself if `mapRecord == NULL` | Restart 0x4C32EB, Step 0x4C331C/0x4C3329, ApplyFrame 0x4C3269/0x4C3284 |
+| 0xA | `ticksLeft` (gap) | u16 | countdown, decremented first each tick | Step 0x4C3303, Restart 0x4C32E7 |
+| 0xC | `mapRecord` (gap) | `GmpTileAnimRecord*` | source ANIM record, NULL for doors | 0x4C32A4, Setup 0x4C341C, ApplyFrame 0x4C3263 |
+| 0x10 | `remapTile` (gap) | u16 | `tileRemap` slot written each frame | 0x4C32BC, Setup 0x4C33FA, ApplyFrame 0x4C326D/0x4C3288 |
+| 0x12 | `animId` | short | serial from `nextAnimId`; no reader | AssignId 0x4C3248 |
+| 0x14 | `next` | `TileAnimEntry*` | free/used list link | PopFreeToUsed 0x4C3384/0x4C338C, pool ctor 0x4C34D6 |
+
+**`GmpTileAnimRecord`** (6 bytes + `u16 frames[frameCount]`; DMA "GTA2 Map Format" `tile_animation`):
+`+0` u16 `baseTile` (0x4C32B9), `+2` u8 `frameRate` (0x4C32A7), `+3` u8 `repeatCount` (0x4C32B0),
+`+4` u8 `frameCount` (0x4C32C0, also the stride at 0x464572), `+5` u8 `unused`, `+6` `frames[]`
+(ApplyFrame 0x4C3271 `[rec + cur*2 + 6]`).
+
+**`TileAnimPool`** (0x4BC): `freeHead` +0, `usedHead` +4, `entries[50]` +8, `activeCount` +0x4B8 (was
+`count`; recounted by every Update, 0x4C350C/0x4C3516, never read), padding +0x4BA.
+
+Function changes (P4): `TileAnimManager_StartGameStub` 0x4C3370 (was `StartGame_NoOp4C3370`, empty
+RET), `TileAnimManager_AddFromMap` 0x4C3470, `TileAnimPool_Dtor` 0x4C3490 (was `TileAnimPool_DtorBody`),
+`TileAnimPool_Ctor` 0x4C34B0 (was `TileAnimPool_Init`), new `TileAnimEntry_Ctor` 0x4C33A0 (zeroes all)
+and `TileAnimEntry_Dtor` 0x4C33D0 (clears `mapRecord`, `next`); `TileAnim_Step` is
+`bool __fastcall (TileAnimEntry*)`, true = finished.
+
+**Hazards** (verified by code, not reproduced):
+
+| VA | What | Trigger | Severity | Conf |
+|---|---|---|---|---|
+| 0x4C3382/0x4C3384 | `PopFreeToUsed` never checks `freeHead == NULL`: the 51st simultaneous animation reads `NULL->next` and crashes | map anims + in-flight door anims > 50 (bil 16 map anims + ~35 door faces at once; 22 door slots × up to 2 faces = 44 possible; window per door = (\|last−first\|+1) × delay ticks) | low vanilla / medium for mods and custom maps | V (no test in disassembly) |
+| 0x4C3303 + 0x4C32E7 | `frameRate` 0: `ticksLeft` starts at 0, first DEC → 0xFFFF, each frame lasts 65536 ticks (~36 min) | custom map rate 0, door speed 0 | low | V; no vanilla map has rate 0 |
+| 0x4C32C5 / 0x4C3329 | `frameCount` 0 → `lastFrame = 0xFFFF`: never ends, reads `frames[cur]` up to 128 KB past the record | custom map anim_length 0 | low (mods) | V; vanilla minimum 2 |
+| 0x4C331C/0x4C3324 | backwards anim with `lastFrame == 0`: curFrame 0 → 0xFFFF, `0xFFFF < 0` false, never finishes, entry leaks, slot gets tile 0xFFFF | door close with DoorInfo first tile 0 | low | code path V; vanilla DoorInfo values not checked (H) |
+| — | doors sharing one DoorInfo (or an open and a close of it running at once) write the same remap slot; they look identical because the remap is global per tile | several doors of one DoorInfo animating | cosmetic | by construction |
+
+**Still unknown:** what `TileAnimManager_StartGameStub` was meant to do (compiled-out reset or debug
+hook, H); `animId` purpose (debug handle?); whether savegames restore `tileRemap` (door visuals after
+a load; belongs to save/door code); an `activeCount` reader through a copied pool pointer (none found;
+only Ctor, Update, StartAnim, AddFromMap, FreeGlobal reference the global).
 
 ## 3. Drawing the city: `MapRenderer_DrawFrame` 0x472110 (re-checked)
 
@@ -343,7 +427,9 @@ H: the exact meaning of the queue index vs. the sprite's z-level was not checked
 ### 7.1 Doors (re-checked: DoorFace_Open/Close)
 
 A door is two map faces, not a sprite. `DECLARE_DOOR_INFO` → `g_DoorInfoTable` 0x5E9340 (5 × 10 B:
-tile range, two tile-remap slots, speed). `DOOR_DATA_*` (Script_Decl 0x477D20/0x477EE0) →
+`+0` first tile, `+2` last tile, `+4` close remap slot, `+6` open remap slot, `+8` byte frame delay;
+Seq 27 P4: `DoorFace_Open` reads 0x5E9346, `DoorFace_Close` reads 0x5E9344, so open and close use
+**different** remap slots). `DOOR_DATA_*` (Script_Decl 0x477D20/0x477EE0) →
 `DoorManager_RegisterSingleDoor` / `…NoCheck` (opcode 375 DOOR_DATA_SINGLE_1, one `Door_AddFace`; gta2_re 10.5
 calls them RegisterDoubleDoor, swapped — Seq 48) or `DoorManager_RegisterRotatedDoubleDoor` / `…NoCheck`
 (opcode 378, two faces: tile + side neighbour) → Door slot (0x38 B, 22 slots, `g_DoorManager`) with one or two `DoorFace` (16 B, pool
@@ -352,9 +438,11 @@ calls them RegisterDoubleDoor, swapped — Seq 48) or `DoorManager_RegisterRotat
 
 - `DoorFace_Open` 0x44C560: state = 2; `MapBlocks_ChangeBlockField` on the face with the remap slot
   tile | 0x1000 (| 0x2000 for the B face), and on the opposite side of the same block
-  (`HeadingClass_Opposite` 0x462B90); `TileAnimManager_StartAnim(first → last)`.
+  (`HeadingClass_Opposite` 0x462B90); `TileAnimManager_StartAnim(slot +6, first → last, delay +8,
+  repeat 1)`.
 - `DoorFace_Close` 0x44C610: state = 1; face word = tile | 0x1C00 (wall + bullet wall + flat); the
-  animation reversed.
+  animation reversed on slot +4 (last → first). Both are direct tile frames (`mapRecord` NULL, §2.6);
+  the last frame stays in the remap after the entry is freed.
 - Collision follows the face word's wall bits, so there is no separate door collision for ground
   units; object 0xA7 decides who may pass (`DoorManager_ShouldDoorBlock`).
 - Triggers: car touches 0xA7 → `DoorManager_OnCarTouchDoorObject` → `Door_OnCarTouch` (if
@@ -407,7 +495,7 @@ tiles: §2.6.
 | Draw distance / zoom out | view rect in DrawFrame 0x472110 and `renderDistanceArr[1500]` | more than 1500 cells overflows `MapRenderer` with no check: clamp w, h in DrawFrame, or enlarge the 0x2F04 allocation in Game_Ctor **and** every `+0x2EFC/+0x2F00` site |
 | Layer count | `while (L < 7)` in DrawFrame | the map is 8 high; more needs the queue count too |
 | Retexture a tile everywhere | `StyleData.tileRemap[tile]` (`StyleData_SetTileRemap`) | no map edit, no capacity used; how water, neon and doors animate |
-| Override map face textures | `TextureCache_GetTileTexture` 0x46BB50 / `StyleData_GetTileRemap` 0x4BF6B0 | every face drawer goes through both |
+| Override map face textures | `TextureCache_GetTileTexture` 0x46BB50 / `StyleData_GetTileRemap` 0x4BF6B0 | every face drawer goes through both; key replacements by the tile index **after** the remap, or animated faces freeze (§2.6) |
 | Edit one cell at run time | `MapBlocks_ChangeBlockField` 0x463F60 (thiscall ECX = `g_MapBlocks`) | saved with the game; ≤ 100 distinct cells, 200 spare blocks, 0x400 spare column words (raise the last two via the `+200`/`+0x400` immediates in `DMAP_section` 0x4646A0) |
 | Custom / procedural blocks | hook `MapBlocks_GetBlock` 0x4653C0, `GetBlockClamped` 0x465490 (renderer), `GetBlockForCollision` 0x465410 (collision) | keep writing `g_pLastBlockInfo` |
 | Per-cell draw override | `DrawTileBlock` 0x471F20, before the slope dispatch | e.g. replace a lid |
@@ -415,7 +503,7 @@ tiles: §2.6.
 | Flat / different "sun" shading | `MapRenderer_SetShadingLevel` 0x46B620, or overwrite `shade*` after it | |
 | Full bright / no lights | write 1.0 (0x4000) to `ambientCurrent` each frame; or `lighting` 0x67358C = 0 and `g_lightingEnabled` 0x595011 = 0 | the latter removes ambient and all point lights |
 | More / fewer / brighter lights | `LightGrid_SubmitLightsToRenderer` 0x461400 (range ±2 cells, clamp 0x3F), `Light_Init` 0x469010 (every level light), `Light_TickFlash` | |
-| Animated tile speed | `TileAnim_InitFromMapData` 0x4C32A0 (rate byte), or live pool entries `+4` delay | the tick runs per game tick |
+| Animated tile speed | `TileAnim_InitFromMapData` 0x4C32A0 (rate byte), or live pool entries `+4` `frameDelay` | the tick runs per game tick; `repeat` > 0 ends on the last frame; doors use `repeat` 1 with direct tile frames; the pool of 50 has no exhaustion check (§2.6) |
 | Traffic / ped density defaults | the 11 immediates in `MapBlocks_AllocZoneInfoSlots` 0x464330; `MapBlocks_SetZoneInfoAll` 0x465280 | |
 | Sprite draw cull / order | `LayerDrawQueues_Enqueue` 0x44B990 (z cull `DAT_005E8C10`), `LayerDrawQueue_InsertSorted` 0x4C4BF0, layer function 0x4BD2E0 | |
 | Collision pool crash | enlarge: loop count 0xFFF in `CollisionEntryPool_Ctor` 0x4468C0 + `operator_new(0x8004)` in `CollisionManager_Ctor` 0x4471B0 (strip pool 5999 / 0x11944) | a NULL guard needs a code cave in both callers |

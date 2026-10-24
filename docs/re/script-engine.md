@@ -1071,7 +1071,7 @@ M medium (inferred from callers / field use), U `unsure_` (see the comment in Gh
 | 0x476900 | `Crane_SetHomeCrane` | U | `Crane+0x78`, CRANE_DATA |
 | 0x476950 / 0x476960 | `Generator_SetObjectType` / `Generator_GetObjectType` | M | `Generator+0`, DECIDE_POWERUP_FOR_CRANE / SWITCH_GENERATOR_* |
 | 0x4769A0 / 0x4769C0 | `Door_SetModeAndTargetCopy1` / `_Twin2` | U | byte-identical to `Door_SetModeAndTarget` |
-| 0x476AD0 | `ParkingZone_SetNoRespawn` | V | `ParkingZone+0x3F`, PARK_NO_RESPAWN (0x118) |
+| 0x476AD0 | `ParkController_SetNoRespawn` | V | `ParkController+0x3F` `noRespawn`, PARK_NO_RESPAWN (0x118); never cleared (see "Garage parking" below) |
 | 0x476B10 | `Menu_SetBonusTokenCount` | U | save load writes `Menu+0x574` |
 | 0x476B20 / B30 / B80 / 0x47F520 | `PlayerCheckpoint_Ctor` / `InitSubE4` / `InitSub5E4` / `SaveGameHeader_Ctor` | U | static-init ctor chain of a Fix16/Ang16 aggregate (probably the 0x748-byte save header) |
 | 0x476BC0 | `MissionCleanup_CleanUpMission` (was `MissionScript_CleanupMissionEntities`) | V | `this` = `MissionCleanupList*` (`g_MissionCleanup`); MISSION_HAS_FINISHED: removes the 50 tracked cars / objects / peds |
@@ -1082,6 +1082,113 @@ M medium (inferred from callers / field use), U `unsure_` (see the comment in Gh
 | 0x47AB91 | `Script_Op_CHANGE_GANG_CHAR_RESPECT_Frag` | V | tail after 11.44 patch JMP to 0x3F1xxx; Ghidra split (opcodes 0xE1 / 0x106 / 0x189) |
 | 0x47D615 | `Script_Op_PUT_CAR_ON_TRAILER_Frag` | V | tail after 11.44 patch JMP to 0x3F1xxx; Ghidra split |
 | 0x47E8FC | `Script_Op_DO_BASIC_KF_TEMPLATE_Frag` | V | not a real function: inner block of the handler reached only by its conditional jump at 0x47E8ED (no patch); the handler's decompile already contains it. Boundary fix pending (delete this function in the GUI) |
+
+## Garage parking: `PARK` / `PARK_NO_RESPAWN` (`park.cpp`, Seq 27 P3)
+
+`ParkController` (0x48 bytes, was `ParkingZone`) is not a zone and not a pool. It is the single
+controller behind `PARK(car, door)` (opcode 260) and `PARK_NO_RESPAWN` (280 = 0x118), DMA
+`GTA2 Scripting.txt` l.2147-2163 / 2513-2522: the car drives up to a garage door, is pulled inside,
+its passengers are killed, the driver is put outside the closed door and the car is removed. Only
+one park runs at a time. Everything below is verified from decompile/disassembly; nothing was
+reproduced live.
+
+- **Allocation.** `Game_Ctor` 0x45C4D0: `operator_new(0x48)` (size source) → `ParkController_Ctor`
+  0x489AC0 → `g_ParkController` 0x669AE4 (`DisplayError(OUT_OF_MEMORY,"game.cpp",0x76b)` on
+  failure). `Game_Dtor` frees it through `ParkController_ScalarDeletingDtor` 0x45D370.
+- **Start.** `Script_Op_PARK` 0x47C360 (both opcodes) reads cmd+8 (car var) and cmd+0xA (door var)
+  and calls `ParkController_Start(g_ParkController, car, door)` 0x489BC0 (door pushed first, car
+  last, 0x47C374..0x47C392); for 0x118 it then calls `ParkController_SetNoRespawn` 0x476AD0.
+  `Start` sets car/door, `state = WAIT_DOOR_EDGE`, clears `pullTicks`/`lastDriver`/`carInside`,
+  `settleTicks = 30`, `++parkSerial` (255 wraps to 1), `isLongCar = Car_IsLongerThanCraneLimit(car)`
+  (sprite length > 1.0 block, const 0x5E7528). `Door_GetBlockPos` 0x44C730 gives the door block
+  x, y, z and `doorSide` (= `DoorFace.side` of face A).
+  - Margin `m = isLongCar ? 2.0 : 1.0`. Per `DOOR_SIDE` it builds the interior rectangle
+    `areaMin..areaMax`: the door block, 1 block deep + m into the building, widened by m on both
+    sides, one more block across when `Door_HasTwoFaces` (double door).
+  - `exitPos`: 0.8 block outside the door face, 0.5 along it (constants 0x669DB4 = 0.8,
+    0x669CA0 = 0.5, 0x669B74 = 1.0, 0x669C5C = 2.0).
+  - `ParkController_AssertAreaClear` 0x489B10 → `MapBlocks_AreaHasWallFaces(minX, maxX-1/64, minY,
+    maxY-1/64, doorZ)`; any wall is fatal: `DisplayError(0xBCA,"park.cpp",0x3E, door x,y,z)`. This
+    is DMA's "not enough space → ASSERT".
+- **Per tick.** `GameTick` → `ParkController_Update` 0x489680, before `CarManager_Update` and the
+  script threads:
+  - **1 WAIT_DOOR_EDGE.** `car->body == NULL` → FINISHED at once. Non-null `car->driver` (+0x54) is
+    remembered in `lastDriver`. `Sprite_FindCornersInsideRect(body, areaMin, areaMax)` counts
+    corners strictly inside; exactly the pair (0,1) or (2,3), or 3 corners, triggers the setup:
+    `Car_SetNoCollide` (flag 2), `Car_AddFlag8`, `Player_DisableControlsAndStop` for a player
+    driver, `Car_SetLocked`, `CarPhysics_StopMotion`, `pullStep = normalise(mid(inside corners) −
+    car centre) * 0.1` (0x669C9C), `CarPhysics_ApplyMassKick(physics, &pullStep)`, state 2. A zero
+    `pullStep` sets `carInside = 1` instead. All 4 corners already inside → state 2 **without** the
+    setup (`3 < count` → `LAB_00489ab2`).
+  - **2 PULLING_IN.** `Car_EnsurePhysics`, `++pullTicks`; ≥ 300 ticks (~10 s) forces FINISHED. An AI
+    driver gets `PED_OBJECTIVE_WAIT_IN_CAR`. While < 4 corners are inside and `carInside == 0`:
+    `StopMotion` + `ApplyMassKick(&pullStep)` every tick (0x4898CB, 0x489A71, 0x489AAC), DMA's
+    "pulled in at a constant rate". All 4 inside → `carInside = 1`, `settleTicks` 30 → 0 → FINISHED.
+  - **3 FINISHED.** If the car still has a body: clear car flags 2 and 8, `Door_CloseBothFaces` +
+    `Door_ClearByte2C`, `Car_SetLockedPermanently`, `Car_ResetLightsAndEngine`,
+    `PedList_KillAndFreeAll(&car->passengers)`, `Player_EnableControls` for a player driver. Unless
+    `noRespawn`: driver → `Ped_PlaceInWorldOnFoot(exitPos, car z)`, `Car_OnDriverLeft`, heading
+    `ParkController_GetExitHeading(doorSide)`, `car->driver = 0`, `objectBumpCooldown = 20`; with no
+    driver, `lastDriver` is moved out the same way, but only if he stands inside the area. Then
+    `Car_RequestRemoveNow`. Always: `lastParkedCar = car`, `lastParkedCarId = car->id`,
+    `car = NULL`, `ParkController_Reset` (state IDLE).
+- **Readers.** `Script_Op_HAS_PARK_FINISHED` 0x47C8A0 → `ParkController_IsFinished` 0x476AC0
+  (state == 3); `Door_CarMayOpen` mode 6 → `ParkController_IsLastParkedCar` 0x44C870 (the door
+  re-opens for the car just parked); `Ped_Obj2_EnterCar` 0x43D1C0 → `ParkController_IsCarInside`
+  0x434AF0 (nobody may enter a car already pulled in; the player's objective is cleared);
+  `Ped_ReactToCarOrObjectObstacle` → `ParkController_IsCar` 0x493540.
+- **Exit headings** (`ParkController_GetExitHeading` 0x489560, statics set by CRT initialisers via
+  `Ang16_MulFix16(deg)`): 0x669BD8 = 270° (init 0x53D531), 0x669DBC = 90° (0x53D441),
+  0x669CFC = 180° (0x53D4D1), 0x669C98 = 0 (0x53D1F0).
+
+### `ParkController` fields (0x48, every byte named except padding 0x41..0x43)
+
+| Off | Name (was) | Type | Meaning | Evidence VA |
+|---|---|---|---|---|
+| 0x00 | `car` | `Car*` | car being parked (PARK arg 1) | Start 0x489BC0, Update 0x489680, IsCar 0x493540 |
+| 0x04 | `lastParkedCar` (gap) | `Car*` | car of the previous finished park | Update state 3; IsLastParkedCar 0x44C870 |
+| 0x08 | `lastParkedCarId` (gap) | dword | `car->id` (+0x6C), guards against a reused Car slot | Update state 3; 0x44C870 |
+| 0x0C | `state` | `PARK_STATE` | IDLE 0, WAIT_DOOR_EDGE 1, PULLING_IN 2, FINISHED 3 | Start, Update, Reset, IsFinished 0x476AC0 |
+| 0x10 | `door` (`block`) | `DoorSlot*` | garage door (PARK arg 2, DOOR_DATA) | Script_Op_PARK cmd+0xA; Door_GetBlockPos, Door_CloseBothFaces |
+| 0x14 | `lastDriver` (gap) | `Ped*` | last non-null `car->driver` seen in state 1 | Update state 1 / 3 |
+| 0x18 | `areaMin` (gap) | `Vec2` | garage interior rectangle min, Fix16 blocks | Start; Sprite_FindCornersInsideRect; AssertAreaClear |
+| 0x20 | `areaMax` (gap) | `Vec2` | rectangle max | same |
+| 0x28 | `pullStep` (gap) | `Vec2` | per-tick pull force, length 0.1 | Update 0x489A2x; ApplyMassKick 0x4898C4 / 0x489A70 / 0x489AA0 |
+| 0x30 | `exitPos` (gap) | `Vec2` | where the driver is put on foot | Start 0x48A167; Update |
+| 0x38 | `doorSide` (`direction`) | `DOOR_SIDE` | side of face A: LEFT 1 (west), RIGHT 2 (east), TOP 3 (north), BOTTOM 4 (south) | Door_GetBlockPos; switch in Start; GetExitHeading |
+| 0x3C | `settleTicks` (`timer`) | byte | countdown from 30 once all corners are inside | Ctor/Start; Update |
+| 0x3D | `carInside` (`flag`) | byte | latched when the car is fully in | Update; IsCarInside 0x434AF0; Start clears |
+| 0x3E | `parkSerial` (`counter`) | byte | ++ per Start (0xFF→1), returned in AL, ignored by the caller | Start |
+| 0x3F | `noRespawn` (`scriptFlag`) | byte | PARK_NO_RESPAWN: driver removed with the car | SetNoRespawn 0x476AD0; Update state 3 |
+| 0x40 | `isLongCar` (`unk40`) | byte | widens the margin 1.0 → 2.0 | Start |
+| 0x44 | `pullTicks` (`unk44`) | dword | ticks in state 2, timeout at 300 | Start; Update |
+
+`DOOR_SIDE` was checked against the Start geometry: side 1 puts the area at +x and the exit at
+x−0.8; 2 area at −x, exit x+1.8; 3 area at +y, exit y−0.8; 4 area at −y, exit y+1.8.
+
+Door getters that used to carry ParkingZone names (always called with `this->door`, a `DoorSlot`
+whose +0 / +4 are `DoorFace*` face A / face B): `Door_HasTwoFaces` 0x489600 (was
+`Pair_BothNonNull`), `Door_GetBlockX/Y/Z` 0x489620 / 0x489630 / 0x489640 (were
+`ParkingZone_GetBlockByte4/5/6`, `DoorFace.x/y/z` of face A). `Door_GetBlockPos` 0x44C730 is really
+`(DoorSlot*, byte* x, byte* y, byte* z, DOOR_SIDE* side)`, all from face A.
+
+### Hazards (verified by code, not reproduced)
+
+| VA | What | Trigger | Severity | Conf |
+|---|---|---|---|---|
+| 0x489BC0 / 0x476AD0 | **`noRespawn` is sticky**: only the Ctor clears it, Start and Reset never touch +0x3F. After one `PARK_NO_RESPAWN` every later plain `PARK` in the same game also removes the driver with the car; if that is the player, the player ped is removed | PARK_NO_RESPAWN, later a PARK with the player driving | medium, latent (DMA's 15 bil*.mis PARKs are all plain; other levels not checked) | V (complete write lists of Start, Reset, Ctor) |
+| 0x489BC0 | PARK while a park runs overwrites car and door with no cleanup; the old car keeps NoCollide + flag 8 + Locked, player controls stay disabled if he drove it | two overlapping PARKs | low (DMA: one park at a time) | V (no state check) |
+| 0x489680 state 1 | `car->body == NULL` → FINISHED, so `HAS_PARK_FINISHED` is TRUE for a park that never happened | car destroyed before the door | low–medium | V; that scripts also test CHECK_CAR_DEAD is a hypothesis |
+| 0x489680 / 0x476AC0 | `HAS_PARK_FINISHED` is TRUE for one script pass only: state 3 set in tick N, reset to IDLE early in tick N+1 | a thread that does not poll every tick | low (DMA examples poll in a WHILE loop, bil_ze2.mis:218) | V (GameTick order 0x45C1F0 + decompile) |
+| 0x489680 state 1 | all 4 corners already inside → state 2 without NoCollide/controls-off/lock; car stays drivable for the 30 settle ticks | car placed or teleported inside the area | low | V |
+| 0x489680 state 2 | the 300-tick timeout finishes the park even half outside; the car is removed in the doorway | car blocked for 10 s | low (by design) | V |
+
+Still unknown: car flag 8 (`Car_AddFlag8` / `Car_ClearFlag8`) meaning; `Door_ClearByte2C`
+(DoorSlot+0x2C, set to 1 by `Door_SpawnObjects`; hypothesis: "door animation / objects active");
+`parkSerial` has no reader (debug leftover?); why WAIT_DOOR_EDGE accepts exactly the corner pairs
+(0,1)/(2,3) (presumably front/rear pairs of `SpriteBounds.corners`, corner order not verified).
+`CarPhysics_ApplyMassKick` 0x4A0930 takes a second stack argument `Vec2* force` that its Ghidra
+prototype lacks (`forceAccum += force * mass`).
 
 ## Open questions
 

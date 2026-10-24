@@ -382,9 +382,11 @@ Open:
   (`Object_LandOnSpriteSurface`), 0 other rest (random in `AddVelocityImpulseRandomizeState`); +0x14
   launch speed copy (`SpawnPhysicsObject` and map hits); +0x0 head of the attached-children list
   (`Object_TickAttachedChildren`). Strong but not settled; the struct belongs to Seq 44, not edited.
-- ParkingZone getters 0x489620…: bytes 4/5/6 of the "block" record read as x/y/z (byte 6 is the z
-  for `MapBlocks_AreaHasWallFaces`), but the parameter is typed `ParkingZone*` while the caller
-  passes `this->block`. `ParkingZone_GetPedExitAngle`: Ang16 constants not in static_constants.csv.
+- Resolved (Seq 27 P3): the old "ParkingZone getters" 0x489620… are door getters
+  `Door_GetBlockX/Y/Z` (DoorFace.x/y/z of the `DoorSlot`'s face A; the caller passes
+  `ParkController.door`), and `ParkController_GetExitHeading` 0x489560 (was
+  `ParkingZone_GetPedExitAngle`) returns 270°/90°/180°/0 from CRT-initialised Ang16 statics. The
+  whole PARK controller is in [script-engine.md](script-engine.md), "Garage parking".
 - `Door_ClearByte2C` 0x4895F0 (DoorSlot raw +0x2C): not decoded.
 - `PedGameObject_PickWalkSubModeAndTimer`: `relToS24_unk33` is the 0..20 per-tick counter, so the
   switch spreads walk modes pseudo-randomly; sub-modes 3 and 4 are still open.
@@ -665,14 +667,14 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x488E70 | `ObjectPrefabs_ZeroSpriteColor` | verified (H4) | colour 1 → 0 in the gang decal sprites (CODE_OBJ frames) |
 | 0x488EF0 | `ObjectPrefab_CreatePosition` | verified | SpritePool_Alloc + ApplyToPosition; caller Object_InitFromPrefab |
 | 0x488F10 | `ObjectPrefabs_ZeroGangDecalSpriteColors` | verified | ids 0x11F..0x125 = OBJECT_TYPE_GANG_DECAL_* (enum) |
-| 0x489560 | `ParkingZone_GetPedExitAngle` | hypothesis | switch direction 1..3 → short from 4 globals |
+| 0x489560 | `ParkController_GetExitHeading` (was `ParkingZone_GetPedExitAngle`) | verified (P3) | `Ang16* __stdcall (Ang16* out, DOOR_SIDE side)`; 270°/90°/180°/0 from statics 0x669BD8/0x669DBC/0x669CFC/0x669C98 |
 | 0x4895D0 | `CarPhysics_StopMotion` (was `CarPhysics_ClearParkingMotion`) | verified (H4) | angVel (+0x74) = 0, linVel (+0x40) = 0 |
 | 0x4895E0 | `Car_ClearFlag8` | verified | Car_ClearFlags(8) |
-| 0x4895F0 | `Door_ClearByte2C` | hypothesis | block->+0x2C=0 after Door_CloseBothFaces |
-| 0x489600 | `Pair_BothNonNull` | verified | p[0]&&p[1]; only caller ParkingZone_Init |
-| 0x489620 | `ParkingZone_GetBlockByte4` | hypothesis | byte at [*p+4/5/6]; only caller ParkingZone_ValidateBlocks |
-| 0x489650 | `ParkingZone_ResetState` | verified | zero +0xC,+0x10 and 4 Vec2 |
-| 0x489680 | `ParkingZone_Update` | verified | called from GameTick; state (+0xC) 1/2/3 machine: car drives in, ped exits (Ped_SetSpriteField40), car removed (Car_RequestRemoveNow) |
+| 0x4895F0 | `Door_ClearByte2C` | hypothesis | DoorSlot+0x2C = 0 after Door_CloseBothFaces (park finish); `Door_SpawnObjects` sets it to 1 |
+| 0x489600 | `Door_HasTwoFaces` (was `Pair_BothNonNull`) | verified | DoorSlot faceA (+0) && faceB (+4); only caller ParkController_Start |
+| 0x489620 / 0x489630 / 0x489640 | `Door_GetBlockX` / `Y` / `Z` (were `ParkingZone_GetBlockByte4/5/6`) | verified (P3) | `byte __fastcall (DoorSlot*)`: DoorFace.x/y/z of face A; caller ParkController_AssertAreaClear |
+| 0x489650 | `ParkController_Reset` (was `ParkingZone_ResetState`) | verified | zero state (+0xC), door (+0x10) and the 4 Vec2 |
+| 0x489680 | `ParkController_Update` | verified | called from GameTick; `PARK_STATE` 1/2/3 machine: car pulled in, passengers killed, driver put outside, car removed (Car_RequestRemoveNow); see script-engine.md "Garage parking" |
 | 0x48A250 | `Vec2_DivAssignFix16` | verified | 2× Fix16_DivAssign |
 | 0x48A270 | `Vec2_GetMaxAbsComponent` | verified | max( |
 | 0x48A350 | `MapBlocks_HasGroundAt` | verified | block+0xB & 3 |
@@ -719,7 +721,7 @@ Status as recorded in the plate comment; evidence abridged. `unsure_` names are 
 | 0x4930F0 | `PedGameObject_OnTouchWorldObject` | verified | thiscall(go, WorldObject*), switch on obj+0x18 OBJECT_TYPE: 139 CONVEYOR_BELT (push +0x4C/+0x50 = DAT_0066A438 × offsets), 141 CONVEYOR_BELT_END → Ped_OnDeat... |
 | 0x493390 | `PedGameObject_KnockDown` | verified | go+0x16=1; ObjectSpawner_SpawnMovingObject(…0x6E…) stored in Ped+0x184, owner slot in Ped+0x267; Ped_SetState FALL_ON_GROUND, Ped_SetState2 0x18/0x19/SMOKING... |
 | 0x493520 | `PedGameObject_ResetTickCountersAndSpriteIds` | verified | body: relToS24_unk33=0; relToS24_unk34=0; nextSpriteId=0; unk33 is the 0..20 counter bumped in PedGameObject_Tick; sole caller DummyPedManager_Ctor |
-| 0x493540 | `ParkingZone_IsCar` | verified | return param == *(uint*)this; caller Ped_ReactToCarOrObjectObstacle |
+| 0x493540 | `ParkController_IsCar` | verified | return car == this->car; caller Ped_ReactToCarOrObjectObstacle |
 | 0x493550 | `PedGameObject_ResetMoveScratch` | verified | first call in PedGameObject_Tick; sets DAT_00593228/0059322c=1, DAT_0066a3c1..c8=0, copies Fix16 zero (DAT_0066a4d8) into the pose globals playerPedX_/0066a7... |
 | 0x493640 | `PedGameObject_Deinit` | verified | pairs with PedGameObject_Init; CollisionGrid_RemoveSprite + SpritePool_Free(+0x80), Car_FreeAttachments(+0x88), +0xb0=-1; caller PedGameObjectPool_Release |
 | 0x493710 | `PedGameObject_EnterJumpMode` | verified | called from Ped_Jump 0x433C40; sets sub-mode +0x10=0xF, anim +0x6c=5, +0x38 = jump speed, +0x8c = Z byte |
