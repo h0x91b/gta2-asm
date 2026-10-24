@@ -71,7 +71,7 @@ int32_t pm_mouse_sens;
 static int reports;
 void pm_report(void) { reports++; }
 
-uint8_t mods_passenger_enter;
+uint8_t mods_passenger_enter, mods_city_fights;
 uint8_t map_minimap_on, map_rotate, map_fog_on, map_key_dik;   /* map.c */
 
 static long mods_bonus = -1;
