@@ -321,7 +321,7 @@ static const char help_text[] =
     "spawn car MODEL [REMAP] | spawn ped REMAP [ROLE] [--behave=normal|hostile|follow] | "
     "spawn thief [STARS] | hunt [ID] | hunt steal CAR_ID | "
     "spawn object TYPE [REMAP] (spawn: [--at=X,Y[,Z]] [--rot=DEG]) | "
-    "wait FIELD OP VALUE [TIMEOUT] | wait frames N | shot PATH | peek ADDR [N] | log TEXT | sms TEXT | sms_echo on|off | quit | help";
+    "wait FIELD OP VALUE [TIMEOUT] | wait frames N | shot PATH | peek ADDR [N] | sprites on|off|reset|summary|keys|peds | log TEXT | sms TEXT | sms_echo on|off | quit | help";
 
 static const char *role_names[] = {
     "auto", "civilian", "gang", "cop", "swat", "fbi", "army", "medic", "fireman",
@@ -694,6 +694,12 @@ static void start_command(client_t *c, char *line)
         for (int i = 0; i < (int)n; i++)
             jb_printf(&b, "%s\"0x%08x\"", i ? "," : "", rd32((gptr)(a + 4 * i)));
         jb_printf(&b, "]");
+        done(c, &b);
+    } else if (!strcmp(cmd, "sprites")) {      /* HD-sprite RE probe (docs/re/sprites-hd.md) */
+        begin_ok(&b);
+        const char *why = sp_ctl(&b, argc, argv);
+        if (why)
+            return reply_error(c, why);
         done(c, &b);
     } else if (!strcmp(cmd, "log")) {
         while (rest && (*rest == ' ' || *rest == '\t'))

@@ -36,4 +36,19 @@ struct c32_foot_input {
     int32_t mouse_sens;                 /* controls.mouse_sensitivity, percent */
 };
 
+/* sprite_probe's tag (c32/sprite_probe.c -> host/c/sprite_probe.c): the sprite Sprite_Draw
+ * is drawing right now, read by the host's gbh_DrawQuad while active is 1 */
+#define SP_OWNER_CAR 1
+#define SP_OWNER_PED 2
+struct c32_sprite_tag {
+    uint32_t active;                    /* 1 while the original Sprite_Draw runs */
+    uint32_t seq;                       /* +1 per Sprite_Draw call (tells two draws apart) */
+    uint32_t sprite;                    /* Sprite* */
+    uint32_t deltas;                    /* cars: Car.deltasBitstate at entry */
+    uint16_t type, id, kind, remap;     /* Sprite +0x30, +0x22, +0x34, +0x24 */
+    uint8_t shrink, owner;              /* Sprite +0x38; 0 / SP_OWNER_CAR / SP_OWNER_PED */
+    uint8_t graphic, ped_remap, armed;  /* peds: Ped.graphicType, Ped.remap, a weapon selected */
+    uint8_t anim, anim_frame, walk_sub; /* peds: PedGameObject +0x6C, +0x68, +0x10 */
+};
+
 #endif

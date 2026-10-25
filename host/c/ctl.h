@@ -32,6 +32,11 @@ void ctl_lists_json(jbuf *b);                   /* ,"cars":[...],"peds":[...] */
 int ctl_ped_json(jbuf *b, int id);              /* ,"ped":{...}; 0 = no live ped with that id */
 int ctl_hunt_json(jbuf *b, int id);             /* ,"hunt":{...},"target":{...},"hunters":[...] */
 
+/* ---- HD-sprite RE probe (sprite_probe.c, c32/sprite_probe.c) ------------------------- */
+extern uint8_t sp_enabled;                      /* gta2ctl `sprites on` */
+void sp_quad(uint32_t flags, gptr tex, uint32_t w, uint32_t h, gptr pixels, uint32_t pal);
+const char *sp_ctl(jbuf *b, int argc, char **argv);   /* `sprites ...`; 0 or an error */
+
 /* ---- game access (ctl_game.c) -------------------------------------------------------- */
 Ped *ctl_ped(void);                             /* the local player's ped, or 0 */
 int ctl_pos(int32_t *x, int32_t *y, int32_t *z);   /* the player's (or his car's) position */

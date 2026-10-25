@@ -19,6 +19,7 @@
 #include <string.h>
 
 #include "renderer.h"
+#include "ctl.h"
 
 #pragma STDC FP_CONTRACT OFF
 
@@ -410,6 +411,8 @@ static uint64_t draw_prim(const uint32_t *a, int n)
     if (t) {
         if (!(tex = tex_get(t)))
             return 0;
+        if (sp_enabled && n == 4)       /* gta2ctl sprites: HD-sprite RE probe */
+            sp_quad(flags, a[1], t->width, t->height, t->pixels, tex_cache[t->cache].pal);
         /* Opaque mode (no 0x380 bit) draws index 0 as the solid black of pal[0]: d3ddll
          * uploads such a texture to an opaque page with no alpha (UploadTextureToCacheSlot
          * 0xe02810 -> ConvertIndexedPixelsToSurface 0xe061d0, alpha mask 0), so nothing is
