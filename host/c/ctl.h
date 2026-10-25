@@ -36,6 +36,7 @@ int ctl_hunt_json(jbuf *b, int id);             /* ,"hunt":{...},"target":{...},
 extern uint8_t sp_enabled;                      /* gta2ctl `sprites on` */
 void sp_quad(uint32_t flags, gptr tex, uint32_t w, uint32_t h, gptr pixels, uint32_t pal);
 const char *sp_ctl(jbuf *b, int argc, char **argv);   /* `sprites ...`; 0 or an error */
+const char *tp_ctl(jbuf *b, int argc, char **argv);   /* `text ...` (text_probe.c, glyph-hook RE) */
 
 /* ---- game access (ctl_game.c) -------------------------------------------------------- */
 Ped *ctl_ped(void);                             /* the local player's ped, or 0 */

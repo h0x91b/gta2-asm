@@ -321,7 +321,7 @@ static const char help_text[] =
     "spawn car MODEL [REMAP] | spawn ped REMAP [ROLE] [--behave=normal|hostile|follow] | "
     "spawn thief [STARS] | hunt [ID] | hunt steal CAR_ID | "
     "spawn object TYPE [REMAP] (spawn: [--at=X,Y[,Z]] [--rot=DEG]) | "
-    "wait FIELD OP VALUE [TIMEOUT] | wait frames N | shot PATH | peek ADDR [N] | sprites on|off|reset|summary|keys|peds | log TEXT | sms TEXT | sms_echo on|off | quit | help";
+    "wait FIELD OP VALUE [TIMEOUT] | wait frames N | shot PATH | peek ADDR [N] | sprites on|off|reset|summary|keys|peds | text on|off|summary|swap A B|noswap | log TEXT | sms TEXT | sms_echo on|off | quit | help";
 
 static const char *role_names[] = {
     "auto", "civilian", "gang", "cop", "swat", "fbi", "army", "medic", "fireman",
@@ -698,6 +698,12 @@ static void start_command(client_t *c, char *line)
     } else if (!strcmp(cmd, "sprites")) {      /* HD-sprite RE probe (docs/re/sprites-hd.md) */
         begin_ok(&b);
         const char *why = sp_ctl(&b, argc, argv);
+        if (why)
+            return reply_error(c, why);
+        done(c, &b);
+    } else if (!strcmp(cmd, "text")) {         /* glyph-hook RE probe (docs/re/fonts-localization.md) */
+        begin_ok(&b);
+        const char *why = tp_ctl(&b, argc, argv);
         if (why)
             return reply_error(c, why);
         done(c, &b);
