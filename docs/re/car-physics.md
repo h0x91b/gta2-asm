@@ -276,6 +276,7 @@ requires `gear2_speed ≤ gear3_speed ≤ max_speed`). Decimal GCI values are **
 | `vehicle-data.md` | wall restitution 0.1 (provisional) | 0.25 for walls, 0.5 car–car, 1.0 peds/objects |
 | `vehicle-data.md` | skid thresholds `1 ∓ Q14(0.1)` | confirmed (0x5E54A0 = 0x666) |
 | `car-deltas.md` | deltas when magnitude ≥ 1, side from sin/cos | impulse > 0.3, side from the sprite contact classifier |
+| this doc, §5 | a car simulates with its own `nyc.gci` row | **not for AI traffic**: `Car_GetPhysicsModel` 0x4220A0 gives every non-player-driven road car (no drive order or following the road) row 24 (tank 85), direct drive orders of police/army models row 25, mini cars 26; trains, the player's and driverless cars use their own (V disassembly, L probe 2026-10-26; [custom-cars.md](custom-cars.md) §4). `Car_GetMass` / `GetMaxSpeed` / `GetAntiStrength` read the own row regardless |
 
 Existing DB names changed in this pass (was → now, reason in the plate comment):
 `CarPhysics_DampAngularVelocity` → `CarPhysics_DampVelocity` (also damps linear velocity);

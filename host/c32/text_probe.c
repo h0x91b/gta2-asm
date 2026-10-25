@@ -7,14 +7,15 @@
  * Seams (Seq 27, disassembly):
  *   StyleData_GetFontGlyphSpriteId 0x4BF550, thiscall(StyleData*, font, glyph), RET 8:
  *     fontBases[font] + glyph, glyph = code - 0x21 (gxt.md §6)
- *   StyleData_GetFontGlyphWidth 0x4BF570, thiscall(StyleData*, ushort *font, ushort *glyph), RET 8:
- *     16 / 32 for the kanji fonts, else the width of sprite fontBases[*font] + *glyph
+ *   StyleData_GetFontGlyphWidth 0x4BF570, thiscall(StyleData*, ushort *font, ushort *code), RET 8:
+ *     16 / 32 for the kanji fonts, else the width of sprite fontBases[*font] + *code - 0x21 (the
+ *     char code itself, not the glyph offset: index [base + code] * 8 - 0x108, Seq 27 R1)
  *   LocaleSettings_ToUpperChar 0x4C21A0, thiscall(LocaleSettings*, code), RET 4: per-language
  */
 #include "c32.h"
 
 typedef uint32_t (G2_THISCALL *glyph_id_fn)(void *self, uint32_t font, uint32_t glyph);
-typedef uint32_t (G2_THISCALL *glyph_w_fn)(void *self, uint16_t *font, uint16_t *glyph);
+typedef uint32_t (G2_THISCALL *glyph_w_fn)(void *self, uint16_t *font, uint16_t *code);
 typedef uint32_t (G2_THISCALL *upper_fn)(void *self, uint32_t code);
 static glyph_id_fn GetFontGlyphSpriteId;
 static glyph_w_fn GetFontGlyphWidth;
@@ -25,7 +26,7 @@ static upper_fn ToUpperChar;
 struct tp_site {
     uint32_t ret;                       /* caller's return address */
     uint16_t fn, font;                  /* 1 glyph id, 2 width, 3 upper; font (0 for upper) */
-    uint16_t lo, hi;                    /* glyph offset (or char code) range seen */
+    uint16_t lo, hi;                    /* range seen: glyph offset (glyph id), char code (others) */
     uint32_t count;
 };
 uint8_t tp_on;
@@ -70,16 +71,16 @@ static uint32_t G2_THISCALL hk_glyph_id(void *self, uint32_t font, uint32_t glyp
     return GetFontGlyphSpriteId(self, font, glyph);
 }
 
-static uint32_t G2_THISCALL hk_glyph_w(void *self, uint16_t *font, uint16_t *glyph)
+static uint32_t G2_THISCALL hk_glyph_w(void *self, uint16_t *font, uint16_t *code)
 {
     if (tp_on) {
-        record((uint32_t)__builtin_return_address(0), 2, *font, *glyph);
-        if (*glyph == tp_swap_from) {
-            uint16_t g = tp_swap_to;
-            return GetFontGlyphWidth(self, font, &g);
+        record((uint32_t)__builtin_return_address(0), 2, *font, *code);
+        if (tp_swap_from != 0xFFFF && *code == tp_swap_from + 0x21) {
+            uint16_t c = (uint16_t)(tp_swap_to + 0x21);
+            return GetFontGlyphWidth(self, font, &c);
         }
     }
-    return GetFontGlyphWidth(self, font, glyph);
+    return GetFontGlyphWidth(self, font, code);
 }
 
 static uint32_t G2_THISCALL hk_upper(void *self, uint32_t code)

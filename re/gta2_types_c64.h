@@ -846,6 +846,7 @@ enum CAR_MODEL_values {
     EDSELFBI = 84,
     HOTDOG_D4 = 85,
     KRSNABUS = 86,
+    NO_MODEL = 87,
 };
 
 // /_car/CAR_SIREN_STATE
@@ -1796,6 +1797,7 @@ enum CAR_MODEL4_values {
     CAR_MODEL4_EDSELFBI = 84,
     CAR_MODEL4_HOTDOG_D4 = 85,
     CAR_MODEL4_KRSNABUS = 86,
+    CAR_MODEL4_NO_MODEL = 87,
 };
 
 // /imported/seuko-mod/CAR_PHYSICS_BITMASK

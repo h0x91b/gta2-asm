@@ -815,7 +815,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00420920,Car_MakeRecycled,,USER_DEFINED,__fastcall,USER_DEFINED,44,,undefined __fastcall Car_MakeRecycled(Car * param_1)
 0x00420950,Car_AttachRoofLightObject,,USER_DEFINED,__thiscall,USER_DEFINED,150,,"undefined __thiscall Car_AttachRoofLightObject(Car * this, undefined4 param_2, int param_3)"
 0x004209f0,Car_TickLastDamageTimer,,USER_DEFINED,__fastcall,USER_DEFINED,32,,undefined __fastcall Car_TickLastDamageTimer(Car * param_1)
-0x00420a10,CarManager_BuildTrafficModelLists,,USER_DEFINED,__fastcall,ANALYSIS,300,,CarInfo * __fastcall CarManager_BuildTrafficModelLists(short param_1)
+0x00420a10,CarManager_BuildTrafficModelLists,,USER_DEFINED,__fastcall,USER_DEFINED,300,,void __fastcall CarManager_BuildTrafficModelLists(CarManager * carManager)
 0x00420b50,Ped_GetOwnerSlot,,USER_DEFINED,__fastcall,USER_DEFINED,7,,byte __fastcall Ped_GetOwnerSlot(Ped * this)
 0x00420b60,Ped_GetId,,USER_DEFINED,__fastcall,USER_DEFINED,7,,int __fastcall Ped_GetId(Ped * this)
 0x00420b70,Ped_GetPedClass,,USER_DEFINED,__fastcall,USER_DEFINED,7,,PED_CLASS __fastcall Ped_GetPedClass(Ped * ped)
@@ -952,7 +952,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00421e70,Car_GetVelocity,,USER_DEFINED,__thiscall,USER_DEFINED,77,,"undefined4 * __thiscall Car_GetVelocity(Car * this, undefined4 * param_2)"
 0x00421ec0,Car_GetFrameDisplacementLength,,USER_DEFINED,__thiscall,USER_DEFINED,38,,"Fix16 * __thiscall Car_GetFrameDisplacementLength(Car * this, Fix16 * out)"
 0x00421ef0,Car_GetMinHalfExtent,,USER_DEFINED,__thiscall,USER_DEFINED,73,,"undefined4 * __thiscall Car_GetMinHalfExtent(Car * this, undefined4 * param_2)"
-0x00421f40,Car_NeedsRemapChange,,USER_DEFINED,default,USER_DEFINED,58,,"uint Car_NeedsRemapChange(Car * car, int iParm1, byte param_3)"
+0x00421f40,Car_NeedsRemapChange,,USER_DEFINED,__thiscall,USER_DEFINED,58,,"bool __thiscall Car_NeedsRemapChange(Car * this, byte remap)"
 0x00421f80,Car_NeedsRemapChangeWithTrailer,,USER_DEFINED,__thiscall,USER_DEFINED,69,,"uint __thiscall Car_NeedsRemapChangeWithTrailer(Car * this, int param_2)"
 0x00421fd0,Car_ApplyRemap,,USER_DEFINED,__thiscall,USER_DEFINED,75,,"undefined __thiscall Car_ApplyRemap(Car * this, int param_2)"
 0x00422020,Car_PickRandomRemap,,USER_DEFINED,__fastcall,USER_DEFINED,125,,undefined __fastcall Car_PickRandomRemap(Car * param_1)
@@ -1008,7 +1008,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00423940,Car_UpdateAiHonk,Car,USER_DEFINED,__thiscall,ANALYSIS,257,,"undefined __thiscall Car_UpdateAiHonk(Car * this, int param_1)"
 0x00423a50,Car_AllocPhysicsIfNeeded,,USER_DEFINED,__fastcall,USER_DEFINED,26,,undefined __fastcall Car_AllocPhysicsIfNeeded(Car * param_1)
 0x00423a70,Car_AreAllDoorsSettled,,USER_DEFINED,__fastcall,USER_DEFINED,37,,int __fastcall Car_AreAllDoorsSettled(Car * param_1)
-0x00423aa0,Car_InitDoors,,USER_DEFINED,unknown,DEFAULT,138,,undefined Car_InitDoors()
+0x00423aa0,Car_InitDoors,,USER_DEFINED,__fastcall,USER_DEFINED,138,,void __fastcall Car_InitDoors(Car * car)
 0x00423b30,Car_UpdateDoors,,USER_DEFINED,__fastcall,USER_DEFINED,32,,undefined __fastcall Car_UpdateDoors(Car * param_1)
 0x00423b50,Car_UpdateForHireLight,,USER_DEFINED,__fastcall,USER_DEFINED,88,,undefined __fastcall Car_UpdateForHireLight(Car * param_1)
 0x00423b80,Car_UpdateSirenFlash,,USER_DEFINED,__fastcall,ANALYSIS,330,,undefined __fastcall Car_UpdateSirenFlash(Car * param_1)
@@ -1198,10 +1198,10 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x00432850,StyleData_GetTotalCars,,USER_DEFINED,__fastcall,USER_DEFINED,10,,uint __fastcall StyleData_GetTotalCars(StyleData * param_1)
 0x00432860,Vec2_SetB,,USER_DEFINED,__stdcall,USER_DEFINED,20,,"void __stdcall Vec2_SetB(Vec2 * self, Fix16 * x, Fix16 * y)"
 0x00432880,CarPhysicsData_ComputeInertia,,USER_DEFINED,__stdcall,ANALYSIS,541,,"undefined __stdcall CarPhysicsData_ComputeInertia(int param_1, int param_2, uint param_3, int param_4)"
-0x00432aa0,CarPhysicsData_Build,,USER_DEFINED,default,USER_DEFINED,439,,void CarPhysicsData_Build(byte carId)
+0x00432aa0,CarPhysicsData_Build,,USER_DEFINED,__thiscall,USER_DEFINED,439,,"void __thiscall CarPhysicsData_Build(CarPhysicsData * this, byte carId)"
 0x00432c60,CarEngineData_ConvertMass,,USER_DEFINED,__fastcall,USER_DEFINED,49,,void __fastcall CarEngineData_ConvertMass(CarEngineData * engine)
 0x00432cd0,CarModelTable_ValidateEngineData,,USER_DEFINED,__fastcall,USER_DEFINED,50,,undefined __fastcall CarModelTable_ValidateEngineData(CarModelTable * param_1)
-0x00432d10,CarEngineData_LoadGci,,USER_DEFINED,__cdecl,ANALYSIS,379,,byte * __cdecl CarEngineData_LoadGci(void)
+0x00432d10,CarEngineData_LoadGci,,USER_DEFINED,__thiscall,USER_DEFINED,379,,void __thiscall CarEngineData_LoadGci(CarModelTable * this)
 0x00432ea0,CarModelTable_BuildPhysicsData,,USER_DEFINED,__fastcall,USER_DEFINED,200,,undefined __fastcall CarModelTable_BuildPhysicsData(CarModelTable * param_1)
 0x00432f70,CarPhysicsData_ArrayDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,77,,"void * __thiscall CarPhysicsData_ArrayDeletingDtor(CarPhysicsData * this, byte param_2)"
 0x00432fc0,CarModelTable_Load,,USER_DEFINED,__thiscall,USER_DEFINED,49,,"undefined __thiscall CarModelTable_Load(CarModelTable * this, char * param_2, uint param_3, int param_4, undefined4 param_5, undefined4 param_6, undefined4 param_7)"
@@ -1870,8 +1870,8 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004538f0,FrontEnd_ClearCodeBufferTail,,USER_DEFINED,__fastcall,USER_DEFINED,56,,undefined __fastcall FrontEnd_ClearCodeBufferTail(FrontEnd * param_1)
 0x00453930,FrontEnd_ShutdownMenuSound,,USER_DEFINED,__stdcall,ANALYSIS,40,,undefined __stdcall FrontEnd_ShutdownMenuSound(void)
 0x00453960,FrontEnd_InitMenuSound,,USER_DEFINED,__stdcall,ANALYSIS,68,,undefined __stdcall FrontEnd_InitMenuSound(void)
-0x004539b0,Font_GetLineHeight,,USER_DEFINED,__stdcall,ANALYSIS,24,,uint __stdcall Font_GetLineHeight(void)
-0x004539d0,Font_GetGlyphWidth,,USER_DEFINED,__stdcall,ANALYSIS,29,,uint __stdcall Font_GetGlyphWidth(void)
+0x004539b0,Font_GetLineHeight,,USER_DEFINED,__stdcall,USER_DEFINED,24,,uint __stdcall Font_GetLineHeight(ushort fontId)
+0x004539d0,Font_GetGlyphWidth,,USER_DEFINED,__stdcall,USER_DEFINED,29,,"uint __stdcall Font_GetGlyphWidth(ushort fontId, ushort code)"
 0x004539f0,Frontend_DrawText,,USER_DEFINED,__stdcall,ANALYSIS,54,,"undefined __stdcall Frontend_DrawText(ushort * param_1, int param_2, undefined4 param_3, uint param_4, undefined4 param_5)"
 0x00453a30,FrontEnd_SetKeyboardActive,,USER_DEFINED,__thiscall,USER_DEFINED,15,,"void __thiscall FrontEnd_SetKeyboardActive(FrontEnd * this, byte * active)"
 0x00453a40,FrontEnd_PackLevelId,,USER_DEFINED,__stdcall,ANALYSIS,21,,"uint __stdcall FrontEnd_PackLevelId(uint param_1, byte param_2)"
@@ -3800,7 +3800,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004b9e50,SpriteManager_ResetDrawCounter,,USER_DEFINED,__fastcall,USER_DEFINED,7,,void __fastcall SpriteManager_ResetDrawCounter(SpriteManager * param_1)
 0x004b9e60,Fix16_MinMaxOf4,,USER_DEFINED,__stdcall,ANALYSIS,147,,"undefined __stdcall Fix16_MinMaxOf4(int * param_1, int * param_2, int * param_3, int * param_4, int * param_5, int * param_6)"
 0x004b9f00,CarSpriteCache_ScalarDeletingDtor,,USER_DEFINED,__thiscall,USER_DEFINED,30,,"void * __thiscall CarSpriteCache_ScalarDeletingDtor(CarSpriteCache * this, byte param_2)"
-0x004b9f20,StyleData_GetLastSpriteIndex,,USER_DEFINED,__thiscall,USER_DEFINED,6,,uint __thiscall StyleData_GetLastSpriteIndex(void * this)
+0x004b9f20,StyleData_GetLastSpriteIndex,,USER_DEFINED,__thiscall,USER_DEFINED,6,,uint __thiscall StyleData_GetLastSpriteIndex(StyleData * this)
 0x004b9f30,Sprite_SetCollisionMoverGlobal,,USER_DEFINED,__stdcall,ANALYSIS,12,,undefined __stdcall Sprite_SetCollisionMoverGlobal(undefined4 param_1)
 0x004b9f40,MapBlocks_IsWaterTileAt,,USER_DEFINED,__thiscall,USER_DEFINED,54,,"uint __thiscall MapBlocks_IsWaterTileAt(MapBlocks * this, int param_2, int param_3, int param_4)"
 0x004b9f80,CollisionBlockBounds_ClampToMap,,USER_DEFINED,__stdcall,ANALYSIS,65,,undefined __stdcall CollisionBlockBounds_ClampToMap(void)
@@ -3952,16 +3952,16 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004bf330,StyleData_GetSpriteCountByType,,USER_DEFINED,__thiscall,USER_DEFINED,84,,"ushort __thiscall StyleData_GetSpriteCountByType(StyleData * this, SPRITE_TYPE spriteType)"
 0x004bf3a0,StyleData_GetPaletteCountByType,,USER_DEFINED,__thiscall,USER_DEFINED,102,,"ushort __thiscall StyleData_GetPaletteCountByType(StyleData * this, int paletteType)"
 0x004bf430,StyleData_GetPaletteIndex,,USER_DEFINED,__thiscall,USER_DEFINED,143,,"uint __thiscall StyleData_GetPaletteIndex(StyleData * this, int param_2, undefined4 param_3)"
-0x004bf4e0,StyleData_GetPhysicalPaletteColumn,,USER_DEFINED,__stdcall,USER_DEFINED,31,,"int __stdcall StyleData_GetPhysicalPaletteColumn(StyleData * s3, int iParm1, uint param_3)"
+0x004bf4e0,StyleData_GetPhysicalPaletteColumn,,USER_DEFINED,__thiscall,USER_DEFINED,31,,"uint * __thiscall StyleData_GetPhysicalPaletteColumn(StyleData * this, uint physicalPalette)"
 0x004bf530,StyleData_GetPhysicalPalette,,USER_DEFINED,__thiscall,USER_DEFINED,19,,"uint __thiscall StyleData_GetPhysicalPalette(StyleData * this, uint param_2)"
-0x004bf550,StyleData_GetFontGlyphSpriteId,,USER_DEFINED,__thiscall,USER_DEFINED,25,,"uint __thiscall StyleData_GetFontGlyphSpriteId(StyleData * this, uint param_2, short param_3)"
-0x004bf570,StyleData_GetFontGlyphWidth,,USER_DEFINED,__thiscall,USER_DEFINED,93,,"uint __thiscall StyleData_GetFontGlyphWidth(StyleData * this, ushort * param_2, ushort * param_3)"
-0x004bf5d0,StyleData_GetFontSpaceWidth,,USER_DEFINED,__thiscall,USER_DEFINED,82,,"uint __thiscall StyleData_GetFontSpaceWidth(StyleData * this, ushort * param_2)"
-0x004bf630,StyleData_GetFontLineHeight,,USER_DEFINED,__thiscall,USER_DEFINED,82,,"uint __thiscall StyleData_GetFontLineHeight(StyleData * this, ushort * param_2)"
+0x004bf550,StyleData_GetFontGlyphSpriteId,,USER_DEFINED,__thiscall,USER_DEFINED,25,,"uint __thiscall StyleData_GetFontGlyphSpriteId(void * this, uint fontId, short glyphOffset)"
+0x004bf570,StyleData_GetFontGlyphWidth,,USER_DEFINED,__thiscall,USER_DEFINED,93,,"uint __thiscall StyleData_GetFontGlyphWidth(void * this, ushort * pFontId, ushort * pCode)"
+0x004bf5d0,StyleData_GetFontSpaceWidth,,USER_DEFINED,__thiscall,USER_DEFINED,82,,"uint __thiscall StyleData_GetFontSpaceWidth(void * this, ushort * pFontId)"
+0x004bf630,StyleData_GetFontLineHeight,,USER_DEFINED,__thiscall,USER_DEFINED,82,,"uint __thiscall StyleData_GetFontLineHeight(void * this, ushort * pFontId)"
 0x004bf690,StyleData_IsTileRemapped,,USER_DEFINED,__thiscall,USER_DEFINED,25,,"uint __thiscall StyleData_IsTileRemapped(StyleData * this, uint param_2)"
 0x004bf6b0,StyleData_GetTileRemap,,USER_DEFINED,__thiscall,USER_DEFINED,19,,"uint __thiscall StyleData_GetTileRemap(StyleData * this, uint param_2)"
 0x004bf6d0,StyleData_FindFreeTileRemapSlot,,USER_DEFINED,__fastcall,USER_DEFINED,38,,uint __fastcall StyleData_FindFreeTileRemapSlot(StyleData * param_1)
-0x004bf740,StyleData_GetPhysicalPaletteCount,,USER_DEFINED,__fastcall,USER_DEFINED,5,,undefined2 __fastcall StyleData_GetPhysicalPaletteCount(StyleData * iParm1)
+0x004bf740,StyleData_GetPhysicalPaletteCount,,USER_DEFINED,__fastcall,USER_DEFINED,5,,ushort __fastcall StyleData_GetPhysicalPaletteCount(StyleData * this)
 0x004bf750,StyleData_GetMapObjectInfo,,USER_DEFINED,__thiscall,USER_DEFINED,29,,"int __thiscall StyleData_GetMapObjectInfo(StyleData * this, ushort param_2)"
 0x004bf770,StyleData_SetTileRemap,,USER_DEFINED,__thiscall,USER_DEFINED,24,,"undefined __thiscall StyleData_SetTileRemap(StyleData * this, uint param_2, undefined2 param_3)"
 0x004bf790,SumU16,,USER_DEFINED,__fastcall,USER_DEFINED,25,,"short __fastcall SumU16(ushort * values, uint count)"
@@ -3997,7 +3997,7 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004c0380,SpriteGraphic_CopyRows,,USER_DEFINED,__thiscall,USER_DEFINED,67,,"void __thiscall SpriteGraphic_CopyRows(SpriteEntry * this, byte * dest)"
 0x004c03d0,S3FillArray,,USER_DEFINED,__fastcall,USER_DEFINED,21,,void * __fastcall S3FillArray(int * param_1)
 0x004c03f0,AllCarsInfo_Clear,,USER_DEFINED,__fastcall,USER_DEFINED,25,,AllCarsInfo * __fastcall AllCarsInfo_Clear(AllCarsInfo * param_1)
-0x004c0410,parseCarInfoChunk,,USER_DEFINED,default,USER_DEFINED,353,,"void parseCarInfoChunk(StyleData * s3, int iParm1, undefined4 uParm2)"
+0x004c0410,StyleData_ParseCarInfoChunk,,USER_DEFINED,default,USER_DEFINED,353,,"void StyleData_ParseCarInfoChunk(StyleData * s3, int iParm1, undefined4 uParm2)"
 0x004c0580,StyleChunk_CARI,,USER_DEFINED,default,USER_DEFINED,43,,"void StyleChunk_CARI(StyleData * this, size_t size)"
 0x004c05b0,StyleData_ReadChunk,,USER_DEFINED,__stdcall,USER_DEFINED,610,,"void __stdcall StyleData_ReadChunk(ChunkHeader * header, void * chunk_size)"
 0x004c0820,LoadSty,,USER_DEFINED,__stdcall,USER_DEFINED,166,,undefined __stdcall LoadSty(char * styFileName)
@@ -4015,15 +4015,15 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004c20e0,Gxt_CompareKeys,,USER_DEFINED,__cdecl,USER_DEFINED,62,,"int __cdecl Gxt_CompareKeys(char * key, LocaleSingle * entry)"
 0x004c2120,Gxt_FindTextW,,USER_DEFINED,__thiscall,USER_DEFINED,44,,"wchar_t * __thiscall Gxt_FindTextW(LocaleSettings * this, char * key)"
 0x004c2150,GxtChunk_TDAT,,USER_DEFINED,__thiscall,ANALYSIS,63,,"undefined __thiscall GxtChunk_TDAT(void * this, uint param_1)"
-0x004c21a0,LocaleSettings_ToUpperChar,,USER_DEFINED,__thiscall,USER_DEFINED,129,,"uint __thiscall LocaleSettings_ToUpperChar(LocaleSettings * this, uint param_2)"
-0x004c2250,LocaleSettings_ToUpperString,,USER_DEFINED,unknown,DEFAULT,48,,undefined LocaleSettings_ToUpperString(undefined4 param_1)
+0x004c21a0,LocaleSettings_ToUpperChar,,USER_DEFINED,__thiscall,USER_DEFINED,129,,"uint __thiscall LocaleSettings_ToUpperChar(void * this, uint code)"
+0x004c2250,LocaleSettings_ToUpperString,,USER_DEFINED,__thiscall,USER_DEFINED,48,,"wchar_t * __thiscall LocaleSettings_ToUpperString(void * this, wchar_t * text)"
 0x004c2280,Gxt_WideToAnsiStatic,,USER_DEFINED,__stdcall,USER_DEFINED,65,,char * __stdcall Gxt_WideToAnsiStatic(wchar_t * text)
 0x004c22d0,Text_AnsiToWideStaticN,,USER_DEFINED,__stdcall,ANALYSIS,46,,"undefined2 * __stdcall Text_AnsiToWideStaticN(char * param_1, int param_2)"
 0x004c2300,Text_AnsiToWideStatic,,USER_DEFINED,__stdcall,ANALYSIS,46,,undefined2 * __stdcall Text_AnsiToWideStatic(char * param_1)
 0x004c2330,LocaleSettings_ReadGxtChunk,,USER_DEFINED,__thiscall,USER_DEFINED,98,,"void __thiscall LocaleSettings_ReadGxtChunk(LocaleSettings * this, char * tag, uint size)"
 0x004c23a0,Gxt_FindTextW_thunk,,USER_DEFINED,__thiscall,USER_DEFINED,5,Gxt_FindTextW,"wchar_t * __thiscall Gxt_FindTextW_thunk(LocaleSettings * this, char * key)"
 0x004c23b0,Gxt_FindTextAnsi,,USER_DEFINED,__thiscall,USER_DEFINED,19,,"char * __thiscall Gxt_FindTextAnsi(LocaleSettings * this, char * key)"
-0x004c23d0,Text_GetSpaceWidth,,USER_DEFINED,__stdcall,ANALYSIS,24,,uint __stdcall Text_GetSpaceWidth(void)
+0x004c23d0,Text_GetSpaceWidth,,USER_DEFINED,__stdcall,USER_DEFINED,24,,uint __stdcall Text_GetSpaceWidth(ushort fontId)
 0x004c23f0,Gxt_ClearKeyTable,,USER_DEFINED,__fastcall,USER_DEFINED,16,,void __fastcall Gxt_ClearKeyTable(LocaleSettings * param_1)
 0x004c2400,LocaleSettings_FreeKeyTable,,USER_DEFINED,__fastcall,USER_DEFINED,26,,undefined __fastcall LocaleSettings_FreeKeyTable(LocaleSettings * param_1)
 0x004c2420,LocaleSettings_ClearText,,USER_DEFINED,__fastcall,USER_DEFINED,16,,void __fastcall LocaleSettings_ClearText(S2 * param_1)
@@ -4044,14 +4044,14 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004c2a00,TextureCache_RegisterUserSpriteSlots,,USER_DEFINED,__thiscall,USER_DEFINED,186,,"undefined4 __thiscall TextureCache_RegisterUserSpriteSlots(TextureCache * this, ushort param_2, uint param_3)"
 0x004c2ac0,TextureCache_GetSpriteTexture,,USER_DEFINED,__fastcall,USER_DEFINED,196,,"void * __fastcall TextureCache_GetSpriteTexture(TextureCache * cache, DWORD edx, SPRITE_TYPE spriteType, uint spriteId, PALETTE_BASE paletteBase, uint remap)"
 0x004c2ba0,TextureCache_GetSpriteTextureSlot,,USER_DEFINED,__thiscall,USER_DEFINED,19,,"undefined4 __thiscall TextureCache_GetSpriteTextureSlot(TextureCache * this, uint param_2)"
-0x004c2bc0,TextureCache_SetUserTextureRowAndHeight,,USER_DEFINED,__thiscall,USER_DEFINED,106,,"int __thiscall TextureCache_SetUserTextureRowAndHeight(void * this, uint slot, ushort row, short height)"
+0x004c2bc0,TextureCache_SetUserTextureRowAndHeight,,USER_DEFINED,__thiscall,USER_DEFINED,106,,"int __thiscall TextureCache_SetUserTextureRowAndHeight(TextureCache * this, uint slot, ushort row, short height)"
 0x004c2c30,TextureCache_AssignUserSlotPalette,,USER_DEFINED,__thiscall,USER_DEFINED,73,,"undefined __thiscall TextureCache_AssignUserSlotPalette(TextureCache * this, uint param_2, uint param_3)"
-0x004c2c80,TextureCache_SetSpriteSlotPalette,,USER_DEFINED,__thiscall,USER_DEFINED,90,,"void __thiscall TextureCache_SetSpriteSlotPalette(void * this, ushort slot, ushort width, ushort height, uint virtualPalette)"
-0x004c2ce0,TextureCache_SetScratchTexture,,USER_DEFINED,__thiscall,USER_DEFINED,122,,"int __thiscall TextureCache_SetScratchTexture(void * this, ushort width, ushort height, void * pixels, uint virtualPalette)"
+0x004c2c80,TextureCache_SetSpriteSlotPalette,,USER_DEFINED,__thiscall,USER_DEFINED,90,,"void __thiscall TextureCache_SetSpriteSlotPalette(TextureCache * this, ushort slot, ushort width, ushort height, uint virtualPalette)"
+0x004c2ce0,TextureCache_SetScratchTexture,,USER_DEFINED,__thiscall,USER_DEFINED,122,,"int __thiscall TextureCache_SetScratchTexture(TextureCache * this, ushort width, ushort height, void * pixels, uint virtualPalette)"
 0x004c2d60,TextureCache_FreeAll,,USER_DEFINED,__fastcall,USER_DEFINED,330,,undefined __fastcall TextureCache_FreeAll(TextureCache * param_1)
 0x004c2eb0,StyleData_GetTilePixels,,USER_DEFINED,__thiscall,USER_DEFINED,33,,"int __thiscall StyleData_GetTilePixels(StyleData * this, uint param_2)"
 0x004c2ee0,StyleData_HasTiles,,USER_DEFINED,__fastcall,USER_DEFINED,9,,uint __fastcall StyleData_HasTiles(StyleData * param_1)
-0x004c2ef0,CarSpriteCache_GetEntryPixelBuf,,USER_DEFINED,__thiscall,USER_DEFINED,18,,"undefined4 __thiscall CarSpriteCache_GetEntryPixelBuf(CarSpriteCache * this, ushort * param_2)"
+0x004c2ef0,CarSpriteCache_GetEntryPixelBuf,,USER_DEFINED,__thiscall,USER_DEFINED,18,,"byte * __thiscall CarSpriteCache_GetEntryPixelBuf(CarSpriteCache * this, ushort * slot)"
 0x004c2f10,TextureTable_Init,,USER_DEFINED,__fastcall,USER_DEFINED,24,,undefined __fastcall TextureTable_Init(TextureTable * table)
 0x004c2f30,TextureTable_AllocForTypes,,USER_DEFINED,__thiscall,USER_DEFINED,52,,"undefined __thiscall TextureTable_AllocForTypes(TextureTable * this, void * param_2, void * param_3)"
 0x004c2f70,TextureCacheUserSlot_Init,,USER_DEFINED,__fastcall,USER_DEFINED,18,,undefined __fastcall TextureCacheUserSlot_Init(TextureCacheUserSlot * slot)

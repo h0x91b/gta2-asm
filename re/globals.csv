@@ -172,10 +172,10 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e4088,g_aiProbing,,USER_DEFINED,.data.exp,,/byte,1
 0x005e408c,g_trafficModelsGoodCount,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e4090,g_trafficModelsAverageCount,,USER_DEFINED,.data.exp,,/undefined4,4
-0x005e4098,g_trafficModelsAverage,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e4098,g_trafficModelsAverage,,USER_DEFINED,.data.exp,,/uint[256],1024
 0x005e4498,g_trafficModelsBadCount,,USER_DEFINED,.data.exp,,/undefined4,4
-0x005e44a0,g_trafficModelsGood,,USER_DEFINED,.data.exp,,/undefined4,4
-0x005e48a0,g_trafficModelsBad,,USER_DEFINED,.data.exp,,/undefined4,4
+0x005e44a0,g_trafficModelsGood,,USER_DEFINED,.data.exp,,/uint[256],1024
+0x005e48a0,g_trafficModelsBad,,USER_DEFINED,.data.exp,,/uint[256],1024
 0x005e4ca0,g_CarPool,,USER_DEFINED,.data.exp,,/_car/CarPool *,4
 0x005e4ca4,g_CarManager,,USER_DEFINED,.data.exp,,/_car/CarManager *,4
 0x005e4ca8,g_TrafficSpawner,,USER_DEFINED,.data.exp,,/TrafficSpawner *,4

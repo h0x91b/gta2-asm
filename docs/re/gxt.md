@@ -401,11 +401,14 @@ not yet applied: needs a Structure Editor Clear of HudManager +0x2854..+0x2A1B).
 
 ## 10. Open questions
 
-- Readers of `LocaleSettings.textLength` (+0xC): none found in the loader/lookup; a full scan of
-  the ~120 `g_LocaleSettings` xrefs was not done. Harmless either way (32-bit).
-- Real size of `wcharBuf` 0x5E9F08; exact brief anchor and clipping (0x4C9430).
+- ~~Readers of `LocaleSettings.textLength` (+0xC)~~: none (V, scan of all 141 `g_LocaleSettings` loads, Seq 27 R1).
+- ~~Real size of `wcharBuf` 0x5E9F08; brief anchor and clipping~~: 640 wchar (bounded by `fileNameBuffer` 0x5EA408);
+  `Hud_Brief_Draw` 0x4C9430 draws at x 64, bottom-anchored (y = 480 - lineHeight x lines), wrap width 576, no clipping
+  (V, Seq 27 R1; [fonts-localization.md](fonts-localization.md) "RE status").
 - Purpose of speaker icons 6–9 (0x216B, 0x216D, 0x216E, 0x2170) — gang assignment H.
-- Font roles Fe5–Fe13 (xref-based), and whether the frontend ever reads `DefaultFontId`.
+- ~~Font roles Fe5–Fe13, `DefaultFontId` in the frontend~~: Fe4 = frontend default (`defaultFontId` +0x11C, name entry,
+  credits), Fe5 selected item / credits, Fe7 / Fe9 / Fe10 menu page and stats, Fe8 / Fe11 / Fe13 `FrontEnd_InitPages`,
+  Fe6 and Fe12 never read; the frontend never reads `DefaultFontId` 0x672F24 (V, Seq 27 R1).
 - `FrontEnd_DrawBonusRatingText` (bonus-rating text, `Script_Op_SET_BONUS_RATING_TEXT_ID`) and `FrontEnd_DrawKeyHint`
   (key-help labels) have no direct callers: dead or indirect.
 - Why 2066 of 2184 numeric keys are not referenced by the display opcodes of the shipped scripts

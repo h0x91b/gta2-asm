@@ -3,8 +3,8 @@
 What it takes to show text the shipped fonts cannot draw (Cyrillic first), the options with their
 trade-offs, and how to draw glyphs so a later importer can use them. Facts come from
 [gxt.md](gxt.md) (§4 encoding, §6 drawing and fonts, §7 limits); this page is the plan built on
-them. Status 2026-10-21: text editing works and was checked in the game; font sheets can be
-exported; **nothing below is implemented yet** beyond that.
+them. Status 2026-10-26: **RE complete** (Seq 27 phase 3, §"RE status and implementation steps" at the end);
+text editing works and was checked in the game; font sheets can be exported; nothing else is implemented yet.
 
 ## Why it is a font problem, not a text problem
 
@@ -35,10 +35,11 @@ one in-game set covers all three levels.
 | `wil-font5` | zone names | upper only | 33 capitals |
 | `wil-font6` | pause-screen title | upper only | 33 capitals |
 | `fstyle-font4/8/11/13` | frontend menus | upper only (like font 6) | 33 capitals |
-| `fstyle-font5` | credits | upper only | 33 capitals |
+| `fstyle-font4/5` | credits (roles Fe4 0x67066C, Fe5 0x67064C) | upper only | 33 capitals |
 | `fstyle-font10` | stats screen | upper only | 33 capitals |
 | `fstyle-font0`, `fstyle-font3` | big/small frontend text, full 0x21–0xAC | upper + lower | 66 |
-| `fstyle-font6/7/9/12` | other frontend roles (xref-based guess, gxt.md §6) | upper only | 33 capitals |
+| `fstyle-font7/9` | menu decor (`FrontEnd_DrawMenuPage`) | upper only | 33 capitals |
+| `fstyle-font6/12` | roles Fe6 / Fe12 are set but never read | — | leave alone |
 | `wil-font3/4`, `fstyle-font1/2` | Japanese placeholders (1 glyph) | — | leave alone |
 
 The game upper-cases big labels, car and zone names itself (`LocaleSettings_ToUpperString`
@@ -72,8 +73,9 @@ tight fit (estimate, not checked glyph by glyph). The `.gxt` then uses our own t
 
 Our host already replaces the renderer, so it can draw glyphs the `.sty` does not have:
 
-- hook `StyleData_GetFontGlyphSpriteId` 0x4BF550 (or the glyph fetch inside `DrawGTAText`) so codes
-  ≥ 0x400 come from our own atlas textures instead of `.sty` sprites;
+- detour the glyph branch of `DrawGTAText` at 0x4CC308 so codes ≥ 0x400 come from our own atlas textures
+  instead of `.sty` sprites (hooking `StyleData_GetFontGlyphSpriteId` 0x4BF550 alone is not enough: the
+  branch then reads a real SpriteEntry and texture by that id; see the steps at the end);
 - hook `StyleData_GetFontGlyphWidth` 0x4BF570 the same way, or `GetGTATextWidth` and
   `Text_WordWrap` measure the wrong width and centring/wrapping break;
 - add Cyrillic upper-casing next to `LocaleSettings_ToUpperChar` 0x4C21A0 (U+0430–U+044F → −0x20,
@@ -145,14 +147,58 @@ Read in code (Seq 27 U5 pass, 2026-10-24; details and VAs in
   (`FrontEnd_DestroyGlobal` / `FrontEnd_CreateGlobal`), and `InitFrontend` reloads the GXT each
   time, so a language switch shows on the next menu entry.
 
-## Remaining work, in order
+## RE status and implementation steps
 
-1. Draw `wil-font1` Cyrillic (the HUD/brief font): enough for a first in-game test.
-2. Font-sheet importer: PNG cells → glyph bitmaps + widths, palette-quantised to the font's colours,
-   validated against the manifest.
-3. Option 2 in the host: atlas textures, the two glyph hooks, Cyrillic upper-casing; draw a test
-   brief with a few Russian words and screenshot it.
-4. Let `gxt --import` accept Cyrillic (today it refuses characters the shipped fonts lack) — per
-   font, once glyphs exist.
-5. The capitals for the other fonts; then the translation itself (2595 keys per language file,
-   `credits` included).
+RE complete (Seq 27 phase 3, 2026-10-26; R1 static analysis, the live probe `gta2ctl text`). (V) read in code, (L) live.
+
+**The seam.** All text is drawn by `DrawGTAText` 0x4CC100 (9 callers, all wrappers: `Hud_DrawScaledText*`,
+`Frontend_DrawText`, `FrontEnd_DrawCredits`, `FrontEnd_DrawMenuPage` x2, `Frontend_DrawTextInCells`, `FrontEnd_DrawKeyHint`,
+`FrontEnd_DrawHighScoreRows`); there is no inlined copy of the glyph lookup elsewhere (V). Per character:
+
+| Function | VA | Convention | Callers | Live (L, 2026-10-25/26) |
+|---|---|---|---|---|
+| `StyleData_GetFontGlyphSpriteId` | 0x4BF550 | thiscall(StyleData*, fontId, short glyph = code - 0x21), `RET 8`, 16-bit, no bound | `DrawGTAText` 0x4CC313 only (plus kanji init, a dead function) | only caller seen 0x4CC318, fonts 1, 4, 5, 7, 8, 9 (menu and HUD) |
+| `StyleData_GetFontGlyphWidth` | 0x4BF570 | thiscall(StyleData*, ushort *fontId, ushort *code), `RET 8`: kanji 16/32, else `SPRX[fontBase + code - 0x21].w`, no bound | `GetGTATextWidth` 0x4CB119, `Font_GetGlyphWidth` 0x4539E0 (stdcall wrapper for `Text_WordWrap` and frontend name / code entry) | callers 0x4CB11E, 0x4539E5 |
+| `LocaleSettings_ToUpperChar` | 0x4C21A0 | thiscall(LocaleSettings*, code), `RET 4`; tables only for 0x80..0xFF, every other code passes unchanged | `LocaleSettings_ToUpperString` 0x4C2250 only (big labels, car names, zone names, debug labels, MP names; not menus, credits, briefs) | caller 0x4C226C |
+
+Live check (L, `gta2ctl text swap`, HUD pager "HELLO EVERYONE THE END"): glyph E drawn as X, then as I, came out as
+"HXLLO XVXRYONX THX XND" / "HILLO IVIRYONI THI IND"; the advance follows the substituted glyph because `DrawGTAText`
+takes it from the SpriteEntry of the returned id. The width function only measures (centring, wrapping, name entry),
+so the left-anchored pager did not exercise it. Menu, HUD and pager fonts all came through the single `DrawGTAText` site.
+
+**Why the hooks are mandatory.** A Cyrillic code (U+0410..) gives glyph offset ~0x3EF: sprite id fontBase + 0x3EF lies
+past the 2089 sprites of `wil.sty`, so both the id path and the width path read past the sprite index (V; the crash
+itself not run). The hooks must treat every code outside the font's real range (`fontBases[f+2] - fontBases[f+1]`
+glyphs, `StyleChunk_FONB` 0x4BFDD0), not only Cyrillic: shipped f/i/s.gxt and MP chat contain such codes too.
+
+**Other answers.**
+- Text baked into images: none that matters. Frontend `.tga`s are photos and logos (`demoinfo.tga`, the only one with
+  English paragraphs, is never shown); WASTED / BUSTED / MISSION COMPLETE / KILL FRENZY are GXT keys drawn with fonts;
+  `user` sprites hold single letters and the BINK / MILES logos (V, rendered). Not checked: street signs in tiles and
+  the `.bik` intros (U).
+- Buffers: `wcharBuf` 0x5E9F08 and `g_BriefDebugTextBuf` 0x5E9A08 are 640 wchar; briefs wrap into 640 wchar after
+  `Text_WordWrap` inserts line breaks (no bound); car name 33, zone and pickup 65, big label 100 wchar (V). Brief anchor
+  (`Hud_Brief_Draw` 0x4C9430): x 64, bottom-anchored, wrap width 576, no clipping (V). `LocaleSettings.textLength`
+  has no readers (V, scan of 141 loads).
+- Language: the letter comes only from the registry (`Option\language`, `LocaleSettings_Ctor` 0x4C2620, compare chain
+  0x4C2675..0x4C268B, anything unknown -> `e`); `LoadGXT` 0x4C2540 builds `data\%c.gxt` / `GBL%c`. A new letter `r`
+  needs one detour in that chain; nothing else tests the letter except `LocaleSettings_IsJapanese` (V). **Recommended:
+  replace the content of `e.gxt`** (overlay file or a VFS alias), zero exe patches.
+- Typing (name entry, chat): `keybrd` 0x461200 reads `{eng,ger,...}_kb.cfg` byte by byte, so Cyrillic cannot come from a
+  layout file; hook `SKeyboard_GetCharForScancode` 0x4611F0 (thiscall, `RET 4`, u16) to return Unicode from SDL. Name
+  entry accepts a character only if its glyph is wider than 2 px (0x459EB5), so the width hook must answer for it.
+- Upper-case-only fonts: menus and credits are not upper-cased by the game, so their Russian text must be written in
+  capitals, or the glyph hook maps а..я to А..Я for those font ids.
+
+**Implementation steps, in order** (the implementation task I would open):
+1. Draw `wil-font1` Cyrillic (HUD, briefs, pager) on the font sheet; then the capitals of the other fonts.
+2. Font-sheet importer: PNG cells -> glyph bitmaps + widths, palette-quantised to the font's colours.
+3. C32 + host: a detour at 0x4CC308 that, for codes >= 0x400 (and any out-of-range code), supplies an atlas SpriteEntry
+   (w, h) in ESI and a host texture in EDI and joins at 0x4CC350 like the kanji branches (whether EBP must be reloaded
+   from [ESP+0x70] first is U: check it in the disassembly); a detour on `StyleData_GetFontGlyphWidth` returning atlas
+   widths (blank width for unknown codes); Cyrillic in `LocaleSettings_ToUpperChar` (U+0430..U+044F -> -0x20, ё -> Ё).
+   `host/c32/text_probe.c` already detours all three and is the starting point.
+4. `gxt --import` accepts Cyrillic per font once glyphs exist; a Russian `e.gxt` in the overlay.
+5. `SKeyboard_GetCharForScancode` hook for typing names.
+6. The translation itself (2595 keys per language file, `credits` included; mind the limits above and in
+   "Frontend limits").
