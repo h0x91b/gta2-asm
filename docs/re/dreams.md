@@ -3,13 +3,15 @@
 The RE needed for three user goals, tracked by Seq 27. Per dream: what is known (with VAs and doc links), what is open,
 and the next step. Marks: (V) verified in code or live, (U) unverified / hypothesis.
 
-Status 2026-10-25: phase 1 (HD sprites) running: three RE agents (H1 texture path + hook design, H2 remaps/palettes/deltas,
-H3 ped animation, sprite ids, logical size). The previous Ghidra round (code holes, Script/Ped/Hud prototypes) is finishing in parallel.
+Status 2026-10-25: phase 1 (HD sprites) closing: H2 (remaps, palettes, deltas) and H3 (ped frames, car sprite ids, logical
+size) done, the live probe `gta2ctl sprites` (8f6bf00) confirmed the draw key; H1 (texture path) still running, then
+`sprites-hd.md`. Phase 2 (custom cars) running in parallel: C1 model limits + per-model tables, C2 traffic picker, C3 model ->
+assets + tooling.
 
 | Dream | Phase | Deliverable | State |
 |---|---|---|---|
-| 1. HD sprites (peds and cars first) | 1 | [sprites-hd.md](sprites-hd.md) | RE running |
-| 2. Own car models in ambient traffic | 2 | [custom-cars.md](custom-cars.md) | not started |
+| 1. HD sprites (peds and cars first) | 1 | [sprites-hd.md](sprites-hd.md) | RE mostly done, doc pending |
+| 2. Own car models in ambient traffic | 2 | [custom-cars.md](custom-cars.md) | RE running |
 | 3. Russian version | 3 | [fonts-localization.md](fonts-localization.md) update | not started |
 
 ## 1. HD sprites
@@ -22,10 +24,18 @@ Known before this program:
 - Our renderer implements `gbh_RegisterTexture` / `gbh_DrawQuad` in `host/c/renderer_gbh.c` ([renderer-sdl.md](renderer-sdl.md),
   [renderer-api.md](../renderer-api.md)).
 
-Open: the sprite → texture cache keying and eviction, what a draw carries, remaps/palettes, deltas, ped animation frame →
-sprite id, whether sprite size feeds game logic, the hook design.
+Found in phase 1 (details go to `sprites-hd.md`):
+- The draw key is fully known at `Sprite_Draw` 0x4BE060 entry: spriteType +0x30, spriteId +0x22 (category relative),
+  paletteKind +0x34, remap +0x24, shrink +0x38, and for cars the delta mask Car+8. Live (V, `gta2ctl sprites`, Downtown,
+  ~1000 frames, 32 736 sprite quads, 430 keys): every key always came with the same pixels + palette, 0 conflicts; the
+  shadow quad uses the body's texture; the car light overlay is a separate texture.
+- Peds: frame = block (0 dummy / 158 gang / 316 emergency) + offset 0..157 (H3 table; live: no id outside its block,
+  walk/run/stand/jump/enter/exit offsets match; the sprite id lags the anim state by one tick).
+- Deltas exist only for car sprites and are applied to pixels in the 48-slot car sprite cache (H2); remaps are full
+  palettes, so an HD pack needs per-pixel palette indices or per-remap art, not a tint.
+- HD rule: never change the logical sprite w/h (collision, z-layer, skid, crusher, HUD read it); swap only the texture.
 
-Next step: phase 1 research (three parallel RE agents), then `sprites-hd.md`.
+Open: H1 (texture registration and eviction), unseen cases live (cops/medics, armed peds, burning/wrecked cars = shrink).
 
 ## 2. Custom cars in traffic
 
@@ -33,7 +43,7 @@ Known before this program: `nyc.gci` → `CarModelTable_Load` 0x432FC0 ([formats
 traffic model choice `CarManager_PickTrafficModel` 0x424980 (U, name only); physics in [car-physics.md](car-physics.md),
 car AI and sound in [cars-and-car-ai.md](cars-and-car-ai.md).
 
-Open: everything in phase 2.
+Open: everything in phase 2 (C1/C2/C3 running).
 
 ## 3. Russian
 
