@@ -14,7 +14,7 @@
 # else in IN_PAK is kept as it is, and the result is packed by tools/mkpak.sh (Stored).
 set -e
 root="$(cd "$(dirname "$0")/.." && pwd)"
-main="$(git -C "$root" worktree list --porcelain | sed -n '1s/^worktree //p')"
+main="$(git -C "$root" worktree list --porcelain 2>/dev/null | sed -n '1s/^worktree //p')"
 setup="${1:-$main/setup.ebin}"
 in_pak="${2:-$root/data.pak}"
 out_pak="${3:-$root/data-music.pak}"

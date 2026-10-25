@@ -19,11 +19,24 @@ License terms below are quoted as each source states them; this is not legal adv
 
 ### GTA2 11.44 — community bug-fix build by Vike the Hube, distributed by gtamp.com
 
-- **Where:** the installer at [gtamp.com/gta2](https://gtamp.com/gta2/); the change log is
-  `gta2-changelog.txt` in the game folder ("Bugfixed version of GTA2 by Vike the Hube", 11.44
-  dated 2013-09-07).
+- **Where:** the installer at [gtamp.com/gta2](https://gtamp.com/gta2/),
+  https://gtamp.com/GTA2/gta2-installer.exe (NSIS 3, 17 620 859 bytes, SHA-256
+  `1b9e8200…7fecda`, served since 2017-02-06); the change log is `gta2-changelog.txt` in the
+  game folder ("Bugfixed version of GTA2 by Vike the Hube", 11.44 dated 2013-09-07).
 - **What we use:** this exact build is our target (`gta2.exe` SHA-256 `dd5381c7…a5a2`); every
-  address in the repository is a virtual address of it.
+  address in the repository is a virtual address of it. `tools/get-game.sh` downloads the
+  installer and unpacks it with 7-Zip (never run): its 279 files are the whole game,
+  byte-identical to the canonical `data.pak`.
+
+### GTA2 Rockstar Classics freeware release (2004), via the Internet Archive
+
+- **Where:** [archive.org/details/gta2_rockstar-classics](https://archive.org/details/gta2_rockstar-classics),
+  https://archive.org/download/gta2_rockstar-classics/GTA2INSTALLER.exe (InstallShield 7,
+  362 331 961 bytes, SHA-256 `0cd38049…b083a0`, SHA-1 `8c10c0d2…b29893` as the item lists it).
+- **What we use:** only the radio / menu music `data/GTAudio/*.wav`, which the 11.44 installer
+  lacks (`tools/add-music.sh`, called by `tools/get-game.sh`). Its `gta2.exe` is version 9.6 and
+  is not used.
+- **Terms:** released by Rockstar Games as freeware in 2004; © Rockstar Games.
 
 ### DMA Design's format and scripting documents (via gtamp.com)
 

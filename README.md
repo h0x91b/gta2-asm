@@ -12,13 +12,27 @@ No game files are included. You need your own copy of GTA2.
 
 - Apple Silicon Mac with Rosetta 2, Xcode command line tools, NASM (`brew install nasm`)
 - SDL3 built for x86_64 (see "Toolchain" in [AGENTS.md](AGENTS.md))
-- GTA2 **version 11.44**: the full installed game folder (`gta2.exe`, `data/`, ...).
-  The community 11.44 installer from gtamp.com is the build this project targets.
+- GTA2 **version 11.44**, the community build from gtamp.com. `tools/get-game.sh` downloads
+  it (see below); you do not need the game installed.
 
 ## Make `data.pak`
 
 The game is read from one file, `data.pak`, in the repository root: a zip with zero
-compression of the whole game folder. Build it from your installed game:
+compression of the whole game folder. One command downloads the game and builds it (needs
+`brew install sevenzip unshield`):
+
+```sh
+tools/get-game.sh
+```
+
+It fetches two freely distributed installers and never runs them: the GTA2 11.44 installer
+from [gtamp.com](https://gtamp.com/gta2/) (17 MB, the game) and Rockstar's 2004 freeware
+installer from the [Internet Archive](https://archive.org/details/gta2_rockstar-classics)
+(345 MB; only its radio and menu music is used, its `gta2.exe` is the older 9.6). Every
+download is checked by size and SHA-256. They stay in `downloads/` (git-ignored), so a second
+run works offline; `--no-music` skips the big one, `--force` replaces an existing `data.pak`.
+
+Or build it from a GTA2 11.44 folder you already have:
 
 ```sh
 tools/mkpak.sh /path/to/GTA2 data.pak
@@ -28,10 +42,9 @@ The script leaves your game folder untouched. Inside the pak it renames every `.
 to `.ebin`, and it warns if `gta2.exe` is not vanilla 11.44 (SHA-256 `dd5381c7…a5a2`).
 `data.pak` is git-ignored: never commit it.
 
-The 11.44 install has no radio or menu music (`data/GTAudio/`). It is in the 2004
-Rockstar Classics freeware installer ([archive.org](https://archive.org/details/gta2_rockstar-classics),
-`GTA2INSTALLER.exe`, 345 MB). Keep it as `setup.ebin` in the repository root (git-ignored;
-it is never run) and add its 22 music files to your pak (needs `brew install unshield`):
+The 11.44 install has no radio or menu music (`data/GTAudio/`). `tools/get-game.sh` adds
+it; for a pak of your own, keep the freeware installer (`GTA2INSTALLER.exe`) as `setup.ebin` in
+the repository root (git-ignored; it is never run) and add its 22 music files:
 
 ```sh
 tools/add-music.sh setup.ebin data.pak data.pak

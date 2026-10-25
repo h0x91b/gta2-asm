@@ -135,6 +135,11 @@ tables in `host/w32_renderer.asm`, `docs/renderer-sdl.md`); the full API is in
 - The canonical pak includes the radio / menu music `data/GTAudio/*.wav` (22 files, 320 MB),
   which the 11.44 install lacks: `tools/add-music.sh` takes it from the freeware installer
   `setup.ebin` (InstallShield 7, unpacked with `unshield`; git-ignored, in the main checkout).
+- **`tools/get-game.sh` builds a working pak from downloads alone**: gtamp.com's 11.44 NSIS
+  installer (unpacked by `7zz`, never run) is the whole game, byte-identical to the canonical
+  pak's files; the archive.org freeware installer (9.6 exe, unused) adds the music. The
+  canonical pak's 64 extra entries are the user's old mods, saves and replays, not needed.
+  Downloads are cached in git-ignored `downloads/` and verified by size + SHA-256.
 - **The loader runs from the pak alone** (`host/c/vfs.c`): it indexes the central
   directory once, maps `gta2.ebin` from it, and serves every game file read (Win32
   file shims, registry seed, mss32 streams, `LoadLibraryA` probes) from it,

@@ -5,6 +5,7 @@
 # quit. Every step prints the game's JSON reply; the first failure stops the test.
 #
 #   tests/ctl/smoke.sh [OUT_DIR]      default: $TMPDIR/gta2ctl-smoke-<pid>
+#   GTA2_PAK=PATH                     the game pak (default: <repo>/data.pak)
 #
 # Needs a built tree (host/build.sh). OUT_DIR gets game.log, telemetry.jsonl, config.yaml
 # and the screenshots. Exit 0 = all steps passed.
@@ -15,11 +16,13 @@ OUT=${1:-${TMP%/}/gta2ctl-smoke-$$}
 mkdir -p "$OUT"
 OUT=$(cd "$OUT" && pwd)
 CTL="$ROOT/tools/gta2ctl/gta2ctl"
+PAK=${GTA2_PAK:-$ROOT/data.pak}
+case $PAK in /*) ;; *) PAK=$PWD/$PAK ;; esac
 export GTA2_CTL="${TMP%/}/gta2ctl-smoke-$$.sock"
 [ -x "$CTL" ] && [ -x "$ROOT/host/loader" ] || { echo "build first: host/build.sh" >&2; exit 1; }
 
 printf 'mods:\n  car_enter_bonus: 333\n' > "$OUT/config.yaml"
-(cd "$ROOT/host" && exec arch -x86_64 ./loader ../data.pak --entry --ctl="$GTA2_CTL" \
+(cd "$ROOT/host" && exec arch -x86_64 ./loader "$PAK" --entry --ctl="$GTA2_CTL" \
     --config="$OUT/config.yaml" --telemetry="$OUT/telemetry.jsonl,every=30" \
     --keys=150:RETURN,250:RETURN) > "$OUT/game.log" 2>&1 &
 GAME=$!
