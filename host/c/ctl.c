@@ -320,7 +320,7 @@ static const char help_text[] =
     "key NAME [FRAMES] | keydown NAME | keyup NAME | mouse DX [DY] | "
     "spawn car MODEL [REMAP] | spawn ped REMAP [ROLE] [--behave=normal|hostile|follow] | "
     "spawn object TYPE [REMAP] (spawn: [--at=X,Y[,Z]] [--rot=DEG]) | "
-    "wait FIELD OP VALUE [TIMEOUT] | wait frames N | shot PATH | log TEXT | sms TEXT | sms_echo on|off | quit | help";
+    "wait FIELD OP VALUE [TIMEOUT] | wait frames N | shot PATH | peek ADDR [N] | log TEXT | sms TEXT | sms_echo on|off | quit | help";
 
 static const char *role_names[] = {
     "auto", "civilian", "gang", "cop", "swat", "fbi", "army", "medic", "fireman",
@@ -653,6 +653,20 @@ static void start_command(client_t *c, char *line)
         sms_echo = !strcmp(argv[1], "on");
         begin_ok(&b);
         jb_printf(&b, ",\"sms_echo\":%s", sms_echo ? "true" : "false");
+        done(c, &b);
+    } else if (!strcmp(cmd, "peek")) {         /* N dwords of the gta2.exe image (RE probes) */
+        char *end = 0;
+        unsigned long a = argc >= 2 ? strtoul(argv[1], &end, 16) : 0;
+        double n = 1;
+        if (argc < 2 || !end || *end || (argc >= 3 && !num(argv[2], &n)) || n < 1 || n > 64)
+            return reply_error(c, "usage: peek ADDR(hex) [N 1..64]");
+        if (a & 3 || a < 0x3F0000 || a + 4 * (unsigned long)n > 0x67A000)
+            return reply_error(c, "peek: ADDR must be dword-aligned inside the image 0x3F0000..0x67A000");
+        begin_ok(&b);
+        jb_printf(&b, ",\"addr\":\"0x%lx\",\"dwords\":[", a);
+        for (int i = 0; i < (int)n; i++)
+            jb_printf(&b, "%s\"0x%08x\"", i ? "," : "", rd32((gptr)(a + 4 * i)));
+        jb_printf(&b, "]");
         done(c, &b);
     } else if (!strcmp(cmd, "log")) {
         while (rest && (*rest == ' ' || *rest == '\t'))

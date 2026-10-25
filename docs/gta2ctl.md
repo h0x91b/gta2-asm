@@ -104,6 +104,7 @@ Coordinates are blocks (floats, 1.0 = one map block); headings are degrees, **0 
 | `wait FIELD OP VALUE [TIMEOUT]` | default 1800 frames | OP `== != < <= > >=` (or `eq ne lt le gt ge`); VALUE a number or `true`/`false`. `"result":"met"` with the field's value, or `timeout`. A field that does not exist right now (`money` in the frontend) is not met |
 | `wait frames N` | N frames | `"result":"done"` |
 | `shot PATH` | | the current frame as BMP (the `--shot` writer) |
+| `peek ADDR [N]` | | `N` (1..64) dwords of the gta2.exe image at hex `ADDR` (dword-aligned, `0x3F0000`..`0x67A000`) as `dwords:["0x..."]`: for checking a global or a CRT-initialised constant live |
 | `log TEXT` | | `ctl: log [frame N] TEXT` into the game's log |
 | `sms TEXT` | | shows TEXT in the game as a mission brief (the "SMS" with the speaker's face, bottom left), at once, replacing our previous one; on screen for ~0.1 s per character (`text_speed`). Printable ASCII only (no Cyrillic); `_` and `#` become `-` (a blank glyph and the highlight toggle) |
 | `sms_echo on\|off` | | every following command (except `state` and `ping`) also arrives as an `sms` with its own text: a script's steps can be followed in the game window |
@@ -136,7 +137,7 @@ The flat fields of `state`, of every telemetry line and of `wait`. Outside a gam
 | `ped_id` | int | the player's ped id |
 | `dead` | bool | `Player.isDeadOrBusted` (wasted or busted, ~70 ticks until the respawn) |
 
-`cars[]`: `id model remap x y z dist has_driver speed`, nearest first, the player's car left
+`cars[]`: `id model remap x y z dist has_driver speed scale` (`scale` = Car+0x68, 1.0 except MINI_CAR script cars at 0.5), nearest first, the player's car left
 out. `peds[]`: `id remap occupation x y z dist in_car alive health state objective task target`,
 the player left out. `alive` is `Ped.lifeState == 99` and stays true for a corpse: a ped that
 died has `state` 9 (WASTED) and, until the ambulance, `objective` 28. `task` / `target`: the AI

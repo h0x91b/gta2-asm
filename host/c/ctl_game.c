@@ -277,10 +277,10 @@ void ctl_lists_json(jbuf *b)
         Car *car = GP(Car, list[i].p);
         Sprite *s = GP(Sprite, car->body);
         jb_printf(b, "%s{\"id\":%u,\"model\":%u,\"remap\":%d,\"x\":%.3f,\"y\":%.3f,\"z\":%.3f,"
-                  "\"dist\":%.3f,\"has_driver\":%s,\"speed\":%.3f}", i ? "," : "",
+                  "\"dist\":%.3f,\"has_driver\":%s,\"speed\":%.3f,\"scale\":%.3f}", i ? "," : "",
                   car->id, car->carModel, s->remap, scr_to_f(s->x), scr_to_f(s->y),
                   scr_to_f(s->z), scr_to_f(list[i].d), car->driver ? "true" : "false",
-                  car_speed(car));
+                  car_speed(car), scr_to_f(car->scale));
     }
     n = 0;
     int guard = 400;
