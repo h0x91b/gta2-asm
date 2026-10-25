@@ -248,20 +248,93 @@ gptr ctl_car_by_id(uint32_t id)
     return 0;
 }
 
+#define HUNT_MAX 32
+
+/* stars of Ped.wantedPoints, as Ped_GetCopStars 0x434C00 */
+static int ped_stars(int16_t pts)
+{
+    static const int16_t at[6] = { 600, 1600, 3000, 5000, 8000, 12000 };
+    int n = 0;
+    while (n < 6 && pts >= at[n])
+        n++;
+    return n;
+}
+
 /* one entry of `peds` / the `ped` command: where, who, and what it is doing (task target
  * = the ped it is attacking or following, -1 none) */
 static void ped_json(jbuf *b, Ped *ped, const char *sep, double dist)
 {
     int32_t px, py, pz;
     ped_pos(ped, &px, &py, &pz);
-    gptr target = ped->taskTargetPed;
+    gptr target = ped->taskTargetPed, obj = ped->objectiveTargetPed;
     jb_printf(b, "%s{\"id\":%d,\"remap\":%u,\"occupation\":%u,\"x\":%.3f,\"y\":%.3f,"
               "\"z\":%.3f,\"dist\":%.3f,\"in_car\":%s,\"alive\":%s,\"health\":%d,"
-              "\"state\":%u,\"objective\":%u,\"task\":%u,\"target\":%d}", sep,
+              "\"state\":%u,\"objective\":%u,\"task\":%u,\"target\":%d,"
+              "\"obj_target\":%d,\"wanted\":%d}", sep,
               ped->id, ped->remap, ped->occupation, scr_to_f(px), scr_to_f(py),
               scr_to_f(pz), dist, ped->currentCar ? "true" : "false",
               ped->lifeState == PED_ALIVE ? "true" : "false", ped->health, ped->state,
-              ped->objective, ped->task, target ? GP(Ped, target)->id : -1);
+              ped->objective, ped->task, target ? GP(Ped, target)->id : -1,
+              obj ? GP(Ped, obj)->id : -1, ped_stars(ped->wantedPoints));
+}
+
+/* the wanted thief (c32/wanted_thief.c), as the image exports it */
+struct wt_status {
+    uint32_t ped;
+    int32_t id, stars, slot, state, crews, police_crews, swat_crews, hunters, roadblocks;
+    uint32_t frames;
+};
+
+/* `hunt [ID]`: ,"hunt":{the C32 wt_status},"target":{ped},"hunters":[peds with ID as task
+ * or objective target, nearest to it first]. ID default: the wanted thief. 0 = no such ped */
+int ctl_hunt_json(jbuf *b, int id)
+{
+    const struct wt_status *wt = c32_find("wt_status");
+    if (wt) {
+        jb_printf(b, ",\"hunt\":{\"active\":%s,\"id\":%d,\"stars\":%d,\"slot\":%d,"
+                  "\"state\":%d,\"crews\":%d,\"police_crews\":%d,\"swat_crews\":%d,"
+                  "\"hunters\":%d,\"roadblocks\":%d,\"frames\":%u}",
+                  wt->ped ? "true" : "false", wt->id, wt->stars, wt->slot, wt->state,
+                  wt->crews, wt->police_crews, wt->swat_crews, wt->hunters, wt->roadblocks,
+                  wt->frames);
+        if (id < 0 && wt->ped)
+            id = wt->id;
+    }
+    gptr mgr = rd32(G_PED_MGR), tp = 0;
+    int guard = 400;
+    for (gptr p = mgr ? rd32(mgr + 4) : 0; p && guard--; p = GP(Ped, p)->nextPed)
+        if (GP(Ped, p)->id == id)
+            tp = p;
+    if (!tp)
+        return 0;
+    int32_t tx, ty, tz;
+    ped_pos(GP(Ped, tp), &tx, &ty, &tz);
+    jb_printf(b, ",\"target\":");
+    ped_json(b, GP(Ped, tp), "", 0.0);
+    near_t list[HUNT_MAX];
+    int n = 0;
+    guard = 400;
+    for (gptr p = rd32(mgr + 4); p && guard--; p = GP(Ped, p)->nextPed) {
+        Ped *ped = GP(Ped, p);
+        int32_t px, py, pz;
+        if (p == tp || ped->lifeState != PED_ALIVE ||
+            (ped->taskTargetPed != tp && ped->objectiveTargetPed != tp) || n == HUNT_MAX)
+            continue;
+        ped_pos(ped, &px, &py, &pz);
+        list[n].p = p;
+        list[n++].d = ctl_dist(tx, ty, px, py);
+    }
+    for (int i = 1; i < n; i++)         /* nearest first */
+        for (int j = i; j > 0 && list[j - 1].d > list[j].d; j--) {
+            near_t t = list[j];
+            list[j] = list[j - 1];
+            list[j - 1] = t;
+        }
+    jb_printf(b, ",\"hunters\":[");
+    for (int i = 0; i < n; i++)
+        ped_json(b, GP(Ped, list[i].p), i ? "," : "", scr_to_f(list[i].d));
+    jb_printf(b, "]");
+    return 1;
 }
 
 void ctl_lists_json(jbuf *b)

@@ -30,6 +30,7 @@ void jb_str(jbuf *b, const char *s);            /* a quoted, escaped JSON string
 void ctl_fields_json(jbuf *b, const ctl_state *s);   /* "name":value,... (no braces) */
 void ctl_lists_json(jbuf *b);                   /* ,"cars":[...],"peds":[...] */
 int ctl_ped_json(jbuf *b, int id);              /* ,"ped":{...}; 0 = no live ped with that id */
+int ctl_hunt_json(jbuf *b, int id);             /* ,"hunt":{...},"target":{...},"hunters":[...] */
 
 /* ---- game access (ctl_game.c) -------------------------------------------------------- */
 Ped *ctl_ped(void);                             /* the local player's ped, or 0 */

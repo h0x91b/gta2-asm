@@ -104,6 +104,7 @@ static struct slot *cur;
 static int rb_z, sdx, sdy, cur_dir;
 
 static char toast[48];
+static void prune_one(PoliceRoadblock *rb);
 
 static void toast_fmt(const char *fmt, ...)
 {
@@ -190,9 +191,9 @@ static int try_tile(int tx, int ty, int kind)
     return cur->rb.active != 0;
 }
 
-/* the next free slot, on the first road tile ahead of the player, else on the nearest road
- * tile around them (rings out to RB_RING) */
-static const char *place(int kind)
+/* the next free slot, on the first road tile ahead of ped (the player for the menu), else
+ * on the nearest road tile around them (rings out to RB_RING) */
+static const char *place_near(Ped *ped, int kind)
 {
     ensure();
     cur = 0;
@@ -201,7 +202,6 @@ static const char *place(int kind)
             cur = &slots[i];
     if (!cur)
         return "All roadblocks in use";
-    Ped *ped = player_ped();
     if (!ped)
         return "No player";
     SCR_Vector3 *pos = &ped->position;
@@ -242,6 +242,28 @@ static const char *place(int kind)
     return toast;
 }
 
+static const char *place(int kind)
+{
+    return place_near(player_ped(), kind);
+}
+
+/* for other C32 modules (wanted_thief.c): a roadblock on the road ahead of ped, kind 0
+ * police, 1 FBI, 2 army. -> the slot, or -1 (none placed; why is in the log) */
+int rb_place_near(Ped *ped, int kind)
+{
+    return place_near(ped, kind) == toast ? (int)(cur - slots) : -1;   /* toast = placed */
+}
+
+/* take that slot's roadblock down again (PoliceRoadblock_Remove), as "Remove roadblocks" */
+void rb_remove_slot(int i)
+{
+    if (!inited || i < 0 || i >= RB_SLOTS || !slots[i].rb.active)
+        return;
+    prune_one(&slots[i].rb);
+    PoliceRoadblock_Remove(&slots[i].rb);
+    count_up();
+}
+
 /* PoliceRoadblock_Remove on every active slot, as the game ends its own ones */
 static const char *clear(void)
 {
@@ -259,20 +281,22 @@ static const char *clear(void)
 
 /* drop what the game took back, as PoliceRoadblock_Update does: cars no longer of the
  * roadblock class, guards that left the game or are no longer ROAD_BLOCK_GUARD */
+static void prune_one(PoliceRoadblock *rb)
+{
+    for (int j = 0; j < 6; j++) {
+        if (rb->cars[j] && rb->cars[j]->driverClass != CLASS_ROADBLOCK)
+            rb->cars[j] = 0;
+        Ped *g = rb->guards[j];
+        if (g && (g->occupation != OCC_RB_GUARD || !(Ped_IsAttachedToGame(g) & 0xFF)))
+            rb->guards[j] = 0;
+    }
+}
+
 static void prune(void)
 {
-    for (int i = 0; i < RB_SLOTS; i++) {
-        PoliceRoadblock *rb = &slots[i].rb;
-        if (!rb->active)
-            continue;
-        for (int j = 0; j < 6; j++) {
-            if (rb->cars[j] && rb->cars[j]->driverClass != CLASS_ROADBLOCK)
-                rb->cars[j] = 0;
-            Ped *g = rb->guards[j];
-            if (g && (g->occupation != OCC_RB_GUARD || !(Ped_IsAttachedToGame(g) & 0xFF)))
-                rb->guards[j] = 0;
-        }
-    }
+    for (int i = 0; i < RB_SLOTS; i++)
+        if (slots[i].rb.active)
+            prune_one(&slots[i].rb);
 }
 
 /* Once per gameplay frame, from the host's DM_FRAME (host/c/menu/roadblocks.c): req 1 =

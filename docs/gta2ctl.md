@@ -99,6 +99,9 @@ Coordinates are blocks (floats, 1.0 = one map block); headings are degrees, **0 
 | `mouse DX [DY]` | | relative mouse motion in pixels, added to the accumulator SDL motion events feed (the DirectInput mouse and mouse turning read it); in-process, the real cursor never moves |
 | `spawn car MODEL [REMAP]` | | REMAP -1 random (default), 0 none, i = the model's i-th remap; `id` = the car id for `enter_car` |
 | `spawn ped REMAP [ROLE] [--behave=normal\|hostile\|follow]` | | ROLE: `auto civilian gang cop swat fbi army medic fireman elvis mugger thief psycho criminal still` or its number (the K menu's roles) |
+| `spawn thief [STARS]` | | the K menu's "Wanted thief": a car thief in red whom the police hunt at STARS 1..6 (default: the menu's, 4) without touching the player's stars; `id` = his ped id. 1.5 blocks in front unless `--at`. [wanted-thief.md](wanted-thief.md) |
+| `hunt [ID]` | | `"hunt":{active,id,stars,slot,state,crews,police_crews,swat_crews,hunters,roadblocks,frames}` (the C32 `wt_status`; `state` = `PURSUIT_STATE`: 0 idle, 1 responding, 3 active, 4 ended, 5 searching), `"target":{ped}` and `"hunters":[peds]`: every live ped whose task or objective target is ID (default: the wanted thief), nearest to him first. Works for any ped, e.g. the player's id at 4 stars. `"error":"no such ped ..."` when he is gone |
+| `hunt steal CAR_ID` | | the wanted thief gets the ENTER_CAR order on that car (the one `Ped_UpdateCarThief` gives itself for the nearest ambient car); for tests of the car chase and roadblocks |
 | `spawn object TYPE [REMAP]` | | an `OBJECT_TYPE` number |
 | (spawn options) `--at=X,Y[,Z] --rot=DEG` | | default: in front of the player (1.5 blocks, 1 for a ped), facing his way, like the K menu. Mind the walls: a car spawned into one has no door to get in through |
 | `wait FIELD OP VALUE [TIMEOUT]` | default 1800 frames | OP `== != < <= > >=` (or `eq ne lt le gt ge`); VALUE a number or `true`/`false`. `"result":"met"` with the field's value, or `timeout`. A field that does not exist right now (`money` in the frontend) is not met |
@@ -138,11 +141,13 @@ The flat fields of `state`, of every telemetry line and of `wait`. Outside a gam
 | `dead` | bool | `Player.isDeadOrBusted` (wasted or busted, ~70 ticks until the respawn) |
 
 `cars[]`: `id model remap x y z dist has_driver speed scale` (`scale` = Car+0x68, 1.0 except MINI_CAR script cars at 0.5), nearest first, the player's car left
-out. `peds[]`: `id remap occupation x y z dist in_car alive health state objective task target`,
+out. `peds[]`: `id remap occupation x y z dist in_car alive health state objective task target obj_target wanted`,
 the player left out. `alive` is `Ped.lifeState == 99` and stays true for a corpse: a ped that
 died has `state` 9 (WASTED) and, until the ambulance, `objective` 28. `task` / `target`: the AI
 task (`PED_OBJECTIVE`, 20 = KILL_CHAR_ON_FOOT) and the ped id it is aimed at (`taskTargetPed`, −1
-none) — who is attacking whom.
+none) — who is attacking whom. `obj_target`: the objective's target ped (`objectiveTargetPed`, a
+police crew's KILL_CHAR_ON_FOOT / DRIVE_AND_ATTACK_CHAR lives there), `wanted`: that ped's stars
+(`Ped.wantedPoints`, the thresholds of `Ped_GetCopStars`).
 
 Telemetry example (`--telemetry=t.jsonl,every=30`):
 

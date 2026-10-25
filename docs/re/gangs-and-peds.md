@@ -422,6 +422,10 @@ respect > 79 already attack cops. What does **not** exist: police *pursuit* of n
 `[4]`) only if `pedClass == 2` (`cmp` 0x445715, `JNZ` 0x44571c) and `Ped.id != 0` (0x445722,
 `JZ` 0x445728); wanted points are only ever given to player-class peds. Crime events
 (`CrimeEvent_Report` 0x44a200, `__thiscall` with the queue in ECX, RET 8) feed the radio chatter and the current player's `CrimeStats` only (details: [cars-and-car-ai.md](cars-and-car-ai.md) §2d).
+The pursuit machinery itself (`PoliceManager_UpdatePursuitTargets` 0x4aa030, `PoliceCrew_Update`
+0x4ad600, `DispatchCrewToPursuit` 0x4a9ef0) takes any `Ped*`; the other player gates are
+`PoliceManager_AssignCarCrewToCriminal` 0x4aabb0 (`Ped_IsPlayerControlled`) and the predicate's
+sighting. A mod that hunts a ped by filling a slot itself: [../wanted-thief.md](../wanted-thief.md).
 
 ## 7. Emergency services (V)
 

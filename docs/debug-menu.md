@@ -313,6 +313,12 @@ Files are in `host/c/menu/` unless a path is given.
     the role is a short cycle that applies to any look (a cop in Elvis' remap is a valid debug
     case), and "auto" keeps the common case one key. The behaviour is orthogonal to both, so it
     gets its own key instead of a third list.
+  - **Wanted thief: N stars** (`wanted_thief.c`, the hunt in C32 `c32/wanted_thief.c`):
+    LEFT / RIGHT pick 1..6 stars (default 4), RETURN spawns a car thief in red (remap 17)
+    1.5 blocks in front of the player whom the police hunt as they hunt a player with that
+    many stars: patrol cars join with sirens, crews and a SWAT van come, cops on foot shoot,
+    roadblocks go up ahead of a car he steals. The player's stars stay as they are. One at a
+    time; a new one ends the old hunt. [wanted-thief.md](wanted-thief.md).
   - **Object** (`spawn_object.c`): every world object type the level's prefab table
     holds (the game's static tables plus the style's map objects; 122 in Downtown), named
     from the GXT for pickups (`c%02d`, like the game's pickup message) and from the

@@ -26,6 +26,7 @@
  *   Around the same spawn call the zone record's policePedRatio (GetDensity 0x465250) is
  *   raised to the game's default 40 and g_FootCopPedCount (0x5E5BD3, a 0/1 flag) is lent
  *   while fewer than FOOT_COPS walk; both are put back after the call.
+ * - The wanted thief (wanted_thief.c): any cop attacks him, mod on or off.
  *
  * Off by default, and off = the vanilla result: both detours return what the original
  * returned. config.yaml `mods: city_fights: on` or K menu → Mods → "City fights" (host side:
@@ -119,9 +120,13 @@ static void cf_note(const char *what, const Ped *self, const Ped *cand)
             (int)self->occupation, cand->id, (int)cand->occupation);
 }
 
+int wt_hunted(const Ped *cand);         /* wanted_thief.c */
+
 static uint32_t G2_THISCALL hk_should_react(Ped *self, Ped *cand)
 {
     uint32_t r = Ped_ShouldReactToPed(self, cand);
+    if (cand && self != cand && !self->gang && is_cop(self) && wt_hunted(cand))
+        return (r & ~0xFFu) | 1;        /* the wanted thief: every cop goes for him */
     if (!city_fights || !cand || self == cand)
         return r;
     if (!self->gang && is_cop(self)) {

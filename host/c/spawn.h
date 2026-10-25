@@ -36,4 +36,11 @@ uint32_t km_spawn_ped(int remap, int role, int behave, int32_t x, int32_t y, int
  * -> WorldObject*, 0 = "Blocked here" (something in the way, a full pool) */
 uint32_t km_spawn_object(int type, int remap, int32_t x, int32_t y, int32_t z, int rot);
 
+/* the K menu's "Wanted thief": a car thief in red (remap 17) whom the police hunt as a
+ * player with stars 1..6 (0 = the menu's current choice, default 4); the hunt starts on
+ * the next DM_FRAME (host/c32/wanted_thief.c). One at a time. -> Ped* */
+uint32_t km_spawn_wanted_thief(int stars, int32_t x, int32_t y, int32_t z, int rot);
+/* the wanted thief gets the order to steal that car (a Car*) on the next DM_FRAME (tests) */
+void km_wanted_thief_steal(uint32_t car);
+
 #endif

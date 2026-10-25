@@ -319,6 +319,7 @@ static const char help_text[] =
     "enter_car nearest|ID [TIMEOUT] [--straight] [--key] [--passenger] | exit_car [TIMEOUT] [--key] | "
     "key NAME [FRAMES] | keydown NAME | keyup NAME | mouse DX [DY] | "
     "spawn car MODEL [REMAP] | spawn ped REMAP [ROLE] [--behave=normal|hostile|follow] | "
+    "spawn thief [STARS] | hunt [ID] | hunt steal CAR_ID | "
     "spawn object TYPE [REMAP] (spawn: [--at=X,Y[,Z]] [--rot=DEG]) | "
     "wait FIELD OP VALUE [TIMEOUT] | wait frames N | shot PATH | peek ADDR [N] | log TEXT | sms TEXT | sms_echo on|off | quit | help";
 
@@ -345,13 +346,17 @@ static void cmd_spawn(client_t *c, int argc, char **argv)
     char *pos[MAX_ARGS];
     int np = positional(argc, argv, pos), id = 0, remap, role = 0, behave = 0;
     const char *kind = np > 1 ? pos[1] : "";
-    if (np < 3 || !inum(pos[2], &id))
-        return reply_error(c, "usage: spawn car MODEL [REMAP] | ped REMAP [ROLE] | object TYPE [REMAP]");
+    if (np == 2 && !strcmp(kind, "thief"))
+        id = 0;                         /* spawn thief: the menu's stars */
+    else if (np < 3 || !inum(pos[2], &id))
+        return reply_error(c, "usage: spawn car MODEL [REMAP] | ped REMAP [ROLE] | thief [STARS] "
+                              "| object TYPE [REMAP]");
     int32_t at[4];
     const char *at_s = opt(argc, argv, "--at"), *rot_s = opt(argc, argv, "--rot");
     int is_car = !strcmp(kind, "car"), is_ped = !strcmp(kind, "ped");
-    if (!is_car && !is_ped && strcmp(kind, "object"))
-        return reply_error(c, "spawn: car, ped or object");
+    int is_thief = !strcmp(kind, "thief");
+    if (!is_car && !is_ped && !is_thief && strcmp(kind, "object"))
+        return reply_error(c, "spawn: car, ped, thief or object");
     if (!ctl_ped())
         return reply_error(c, "not in a game");
     if (at_s) {
@@ -363,7 +368,7 @@ static void cmd_spawn(client_t *c, int argc, char **argv)
         ctl_pos(&px, &py, &pz);
         at[0] = f_to_scr(x), at[1] = f_to_scr(y), at[2] = n > 2 ? f_to_scr(z) : pz;
         at[3] = 0;
-    } else if (!km_spawn_pos(at, is_ped ? 0x4000 : 0x6000)) {
+    } else if (!km_spawn_pos(at, is_ped ? 0x4000 : 0x6000)) {   /* thief: 1.5 as the menu */
         return reply_error(c, km_spawn_why);
     }
     if (rot_s) {
@@ -394,6 +399,12 @@ static void cmd_spawn(client_t *c, int argc, char **argv)
         if (b)
             behave = !strcmp(b, "hostile") ? 1 : !strcmp(b, "follow") ? 2 : 0;
         va = km_spawn_ped(id, role, behave, at[0], at[1], at[2], at[3]);
+        if (va)
+            obj_id = GP(Ped, va)->id;
+    } else if (is_thief) {
+        if (id < 0 || id > 6)
+            return reply_error(c, "spawn thief [STARS]: 1..6");
+        va = km_spawn_wanted_thief(id, at[0], at[1], at[2], at[3]);
         if (va)
             obj_id = GP(Ped, va)->id;
     } else {
@@ -459,6 +470,22 @@ static void start_command(client_t *c, char *line)
         begin_ok(&b);
         if (!ctl_ped_json(&b, (int)id))
             return reply_error(c, "no such ped (removed)");
+        done(c, &b);
+    } else if (!strcmp(cmd, "hunt") && argc > 1 && !strcmp(argv[1], "steal")) {
+        double id;
+        gptr car;
+        if (argc < 3 || !num(argv[2], &id) || !(car = ctl_car_by_id((uint32_t)id)))
+            return reply_error(c, "usage: hunt steal CAR_ID (a live car)");
+        km_wanted_thief_steal(car);
+        begin_ok(&b);
+        done(c, &b);
+    } else if (!strcmp(cmd, "hunt")) {
+        double id = -1;
+        if (argc > 1 && !num(argv[1], &id))
+            return reply_error(c, "usage: hunt [ID] (default: the wanted thief)");
+        begin_ok(&b);
+        if (!ctl_hunt_json(&b, (int)id))
+            return reply_error(c, "no such ped (no wanted thief, or removed)");
         done(c, &b);
     } else if (!strcmp(cmd, "teleport")) {
         double x, y, z = 0;
