@@ -421,7 +421,7 @@ respect > 79 already attack cops. What does **not** exist: police *pursuit* of n
 `Ped_Update` registers a wanted ped (`PoliceManager_RegisterCriminal` 0x4a9d60, pursuit targets
 `[4]`) only if `pedClass == 2` (`cmp` 0x445715, `JNZ` 0x44571c) and `Ped.id != 0` (0x445722,
 `JZ` 0x445728); wanted points are only ever given to player-class peds. Crime events
-(`CrimeEvent_Report` 0x44a200) feed the radio chatter and the current player's `CrimeStats` only.
+(`CrimeEvent_Report` 0x44a200, `__thiscall` with the queue in ECX, RET 8) feed the radio chatter and the current player's `CrimeStats` only (details: [cars-and-car-ai.md](cars-and-car-ai.md) §2d).
 
 ## 7. Emergency services (V)
 
@@ -537,7 +537,7 @@ Used by the K menu's "Call ambulance" / "Call fire truck" (`host/c32/emergency.c
 | **Gangs vs cops** | set `highRespectFlag` (+0x110) to 1 per gang for a permanent war on cops, or patch the branch in 0x4371d0 |
 | **Cops vs gangs, shooting** | already native for attacking gangsters (`flags & 0x800`); to make cops attack any gang member add `cand.gang != 0` to the cop branch of 0x4371d0 |
 | **City fights (implemented)** | the K menu / config mod `host/c32/city_fights.c`: detours on 0x4371d0 and 0x4404f0 plus raiders, see [../city-fights.md](../city-fights.md) |
-| **Cops vs gangs, pursuit with stars** | NOP the `JNZ` at 0x44571c and `JZ` at 0x445728 in `Ped_Update`, give gang peds wanted points (e.g. after `Ped_UpdateWeaponFiring`), and guard `CrimeEvent_Report` 0x44a200 against `ped->player == NULL` first; `PoliceCrew_Update` 0x4ad600 is not yet checked for player-only assumptions |
+| **Cops vs gangs, pursuit with stars** | NOP the `JNZ` at 0x44571c and `JZ` at 0x445728 in `Ped_Update`, give gang peds wanted points (e.g. after `Ped_UpdateWeaponFiring`), and guard `CrimeEvent_Report` 0x44a200 (`__thiscall`, queue in ECX, RET 8) against `ped->player == NULL` first; `PoliceCrew_Update` 0x4ad600 is not yet checked for player-only assumptions |
 | max attackers per victim | `attackersLastTick < 4` / `attackersThisTick < 4` in 0x4371d0 |
 | respect cheats | `*(s8*)(*(u32*)0x5EB898 + i*0x144 + 0x11C + player)`; or the immediates in `Gang_IsHostileToPlayer` 0x45dae0 (−19), `Gang_PickWeaponByRespect` 0x45db70 (−59/−100), kill deltas 5/1 in 0x434ff0 and 1 in 0x426fa0 / 0x427290 / 0x43d1c0 |
 | ambient crowd size | `DummyPedManager.targetCount` (50), the `>>1` at `copLevel > 3` in 0x4415e0, `zone.pedDensity` (on-screen limit = density / 25) |
@@ -612,7 +612,7 @@ pass verified them.
 | 0x475910 / 0x475950 | Gang_SetArrowTarget / Gang_SetHasRespectMeter | |
 | 0x482540 | Object_IsBurningFlame (was unsure_Object_IsActiveFlame) | object type 0x71 |
 | 0x497df0 | PedGameObject_UpdateAnimFrame | frame = graphicType base (0/158/316) + anim, remap re-applied |
-| 0x497c20 / 0x4338e0 / 0x433880 / 0x4355c0 | PedGameObject_Init / Sprite_SetOwnerPed / PedGameObject_PlaceBody / PedGameObjectPool_Release | |
+| 0x497c20 / 0x4338e0 / 0x433880 / 0x4355c0 | PedGameObject_Init / PedGameObject_SetPed (was Sprite_SetOwnerPed) / PedGameObject_PlaceBody / PedGameObjectPool_Release | |
 | 0x4b9a10 | Ped_ThreatSearchCandidateFilter (was unsure_Ped_ThreatGridCandidateFilter) | |
 | 0x4b9b00 / 0x420700 / 0x4206c0 / 0x4bafd0 | Sprite_SetRemap / _SetNoRemapState / _SetFrame / Sprite_ResizeToFrame | |
 | 0x4bf430 | StyleData_GetPaletteIndex | ped remap → palette |
@@ -660,7 +660,7 @@ missing ones added.
 | 0x433560 | Box3_ZRangesOverlap | U | Fix16_RangesOverlap on +0x10/+0x14 of two blocks; Ped_Obj2_EnterCar |
 | 0x4337F0 | Sprite_SetUnlitFlag | U | `byte+0x2C \|= 4`; 27 callers (particles, Ped_ApplyInvulnerabilitySpriteFlag) |
 | 0x433830 | S3Bytes_Clear | V | zeroes a/b/c; caller InitPeds |
-| 0x433A70 | unsure_GameObject_InitAnimState | U | +0x68=0, +0x6C=arg; Ped_InitSpawnedState |
+| 0x433A70 | PedGameObject_StartAnim (was unsure_GameObject_InitAnimState) | V | `thiscall(go, anim)`: animFrame +0x68=0, anim +0x6C=arg; Ped_InitSpawnedState |
 | 0x433A90 | PedGameObject_GetGroundType | U | returns +0x44; flee/cross-road tasks |
 | 0x433AA0 | PedGameObject_IsWalkingAroundObstacle | U | +0x69 != 0; Ped_Obj2_ApproachAndAttackTarget |
 | 0x4340A0 | WorldObject_GetPickupAmmo | U | +0x26; Ped_PickUp, SaveGame_CollectPickups |

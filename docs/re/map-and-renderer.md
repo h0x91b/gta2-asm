@@ -433,8 +433,10 @@ Seq 27 P4: `DoorFace_Open` reads 0x5E9346, `DoorFace_Close` reads 0x5E9344, so o
 `DoorManager_RegisterSingleDoor` / `…NoCheck` (opcode 375 DOOR_DATA_SINGLE_1, one `Door_AddFace`; gta2_re 10.5
 calls them RegisterDoubleDoor, swapped — Seq 48) or `DoorManager_RegisterRotatedDoubleDoor` / `…NoCheck`
 (opcode 378, two faces: tile + side neighbour) → Door slot (0x38 B, 22 slots, `g_DoorManager`) with one or two `DoorFace` (16 B, pool
-`g_pDoorFacePool` 0x5E9374: `state` 1 closed / 2 open, block `x, y, z`, `doorInfoIdx`, `side`
-1-4); `Door_SpawnObjects` spawns object 0xA9 (visible door) and 0xA7 (trigger).
+`g_pDoorFacePool` 0x5E9374: `state` 1 closed / 2 open, block `x, y, z`, `doorInfoIdx`, `side` (+8) =
+enum `DOOR_SIDE`: 1 left/west, 2 right/east, 3 top/north, 4 bottom/south); `DoorSlot` (0x38): `+0`
+`DoorFace* faceA`, `+4` `DoorFace* faceB` (NULL for a single door), `+0x2C` byte (see `Door_ClearByte2C`),
+the rest unknown; `Door_GetBlockPos` 0x44C730 reads x/y/z/side from face A; `Door_SpawnObjects` spawns object 0xA9 (visible door) and 0xA7 (trigger).
 
 - `DoorFace_Open` 0x44C560: state = 2; `MapBlocks_ChangeBlockField` on the face with the remap slot
   tile | 0x1000 (| 0x2000 for the B face), and on the opposite side of the same block

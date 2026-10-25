@@ -556,7 +556,7 @@ entry +0x410, with Patch1144_LoadGXT reading it as a name. This page follows N1/
 | `0x405B50` | `NetDlg_OnPlayerPingUpdate` (new function) |
 | `0x405CA0` | `NetDlg_OnChatReceived` (new, was undisassembled) |
 | `0x406BE0` | `NetDlg_OnSessionListUpdated` (new) |
-| `0x406CC0` | `NetDlg_OnPlayerAdded` (new) |
+| `0x406CC0` | `NetDlg_OnPlayerAdded` (new; third parameter is `NetDataRef* playerData` = `&slot->playerData`) |
 | `0x406F20` | `NetDlg_OnPlayerDeleted` (new) |
 | `0x407030` | `NetDlg_OnSessionClosed` (new) |
 | `0x407800` | `NetDlg_OnGameStart` (new) |

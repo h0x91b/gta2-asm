@@ -90,8 +90,9 @@ glyph art is the same work as in option 1, but drawn into PNGs instead of repack
 
 Set language `j` and ship a `j.gxt` plus our own `kanji.dat`: header `KANJ` + u16 100, chunk `KIDX`
 (u16 code → glyph index; codes < 0x100 are looked up shifted into the high byte; `0xFFFF` →
-fallback entry `0x2100`) and `KBIT` (16×16 1-bpp bitmaps, 32 bytes each) (`KanjiFont_*`, gxt.md
-§2, §6). All HUD text roles switch to the kanji fonts, so everything is drawn monospaced 16 or 32 px
+fallback entry `0x2100`) and `KBIT` (16×16 1-bpp bitmaps, 32 bytes each; the 32-px font is the same
+bitmap doubled 2×, not a second set) (`KanjiFont_*`, gxt.md §2, §6). **Ship a full 0x10000-entry
+KIDX**: the lookup has no bounds check (see the hazards in gxt.md §6). All HUD text roles switch to the kanji fonts, so everything is drawn monospaced 16 or 32 px
 wide in two colours. Works without code changes but looks like a terminal; the KIDX/KBIT reading was
 analysed, not run.
 

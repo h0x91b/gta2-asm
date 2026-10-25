@@ -478,16 +478,18 @@ reimplementation sees. The game-side mixer above it is in
   track 0 `d.wav`, 1 `m.wav`, 2 `a.wav` (names at 0x575214); `SoundManager.musicLoopTrackD` picks
   d vs m.
 - Startup: `MssAudio_Startup2D` 0x4B7250 (AIL_startup, waveOutOpen 22050 Hz, 16 2D samples, master
-  0x7F); `Mss_Init2DSamples(arg)` 0x4B6F70 (callers pass 1, meaning not decoded); 3D:
+  0x7F); `MssAudio_Init2DSamples(arg)` 0x4B6F70 (was `Mss_Init2DSamples`; callers pass 1, the argument is unused); 3D:
   `MssAudio_Open3DProvider(idx)` 0x4B6550 sets `selected3DProviderIdx` +0x26B4 and `eaxSupported`
-  +0x26B8 (provider answers "EAX environment selection" != −1); `Mss_Init3DSamples` 0x4B72B0 returns
-  the voice count (provider max, capped 16, < 8 = fail).
+  +0x26B8 (provider answers "EAX environment selection" != −1); `MssAudio_Init3DSamples(byte* outCount)` 0x4B72B0 (was `Mss_Init3DSamples`) returns
+  true / false and writes the voice count to `outCount` (provider max, capped 16, < 8 = fail). It is
+  reachable (from `SoundMgr_Set3DSoundEnabled` 0x416640) but with no provider it just returns false and
+  the game falls back to 2D.
 - Prototypes (all `__thiscall (MssAudio*, …)`): `Sample_SetVolume/Pan/PlaybackRate/LoopCount` and
   `Sample3D_SetVolume/PlaybackRate/LoopCount` 0x4B62B0 / 0x4B6320 / 0x4B6360 take `(int voice, int
   value)`; `Sample(3D)_SetLoopBlock` 0x4B6170 / 0x4B6340 `(int voice, int loopStart, int loopEnd)`;
   `Stream_SetVolume/SetPlaybackRate/SetPositionMs` `(int stream, int value)`; `MusicStream_IsDone`
-  0x4B66A0 returns bool; `Eax_SetEffectParams` 0x4B6460 `(float, float, undefined4)` (RET 0xC,
-  semantics not decoded).
+  0x4B66A0 returns bool; `Eax_SetEffectParams` 0x4B6460 `(float effectVolume, float decayTime, float damping)` (RET 0xC,
+  stored at `MssAudio+0x2704..0x270C`, was `unsure_listenerPos`; no caller in 11.44).
 
 ### Design
 
@@ -544,7 +546,7 @@ reimplementation sees. The game-side mixer above it is in
 `set_sample_loop_block`, `start_sample`, `end_sample`, `sample_status`; streams:
 `open/close/start_stream`, `stream_status`, `set_stream_loop_count`,
 `(set_)stream_volume`, `(set_)stream_playback_rate`, `(set_)stream_ms_position`.
-The 16 `*3D*` exports stay on the silent default (never reached: no provider).
+The 16 `*3D*` exports stay on the silent default (never reached: no provider, so `MssAudio_Init3DSamples` returns false).
 
 ### Proof: `--audio-dump=PATH.wav`
 
@@ -563,6 +565,25 @@ number of sample starts / streams and peak + rms per second. Measured:
   out. Dump rms in the car ~3500-4100 against ~600 (engine only) with the vanilla pak.
 
 Listen live: `host/build.sh --load --entry` and move through the menu.
+
+### Host vs game contract: mismatches (struct pass 4, 2026-10-25)
+
+Found by reading both sides (`MssAudio` in Ghidra against `host/c/audio.c` + `host/w32_mss32.asm`),
+**not run**. What real Miles does in the two marked cases is a **hypothesis**, not tested against the
+real `mss32.dll`. Every other point checked matched: `SMP_*` status codes (1/2/4/8, tests `== 4`,
+`!= 2`, `== 2`), `AIL_set_preference` (the four prefs the game sets are ignored, only #2 is used),
+`waveOutOpen` fields, 3D path consistently off, `AIL_delay` pumping at 60 Hz, stream loop counts, pan
+0..127 with 64 centre, the A3D registry key.
+
+| # | Game side | Host side | Mismatch | Sev. |
+|---|---|---|---|---|
+| H1 | `SoundManager_Radio_ApplyStation` 0x4B25D0 calls `Stream_SetPlaybackRate(rate*2)` (when `playbackRateFlag`) **before** `GetLengthMs` 0x4B6960 / `SetPositionMs` 0x4B6910 (0x4B2645, 0x4B27ED) | `ail_stream_ms_position`, `ail_set_stream_ms_position` compute ms from `v->rate`, the *playback* rate | After the game doubles the rate the host reports half the length, seeks twice too far and reports double time, so the radio resumes at the wrong position (or wraps via `ms % len`). Real Miles reports ms from the file's own data rate (**hypothesis**). Fix idea: keep `src_rate` in the voice and use it in the two ms functions | medium-low |
+| H2 | `SoundMgr_ApplyRequestsToVoices` 0x417410 calls `Sample_SetLoopCount` + `Sample_SetLoopBlock(start, end)` for **every** request (0x417C82 / 0x417C95) | `mix_voice`, `ail_set_sample_loop_block` | The host ends a play-once voice at `loopEnd` when `loopEnd < len`. Whether real Miles also truncates a `loop_count 1` sample at `loop_end` is unknown (**hypothesis**: no, the loop block only matters when looping). Only SDT entries with a real `loopEnd` and a finite count are affected | low |
+| H3 | `Stream_SetVolume` 0x4B6890 masks to 8 bits, other callers pass up to 127 | `ail_set_stream_volume` stores the value unclamped | Miles clamps to 127, the host does not: 128..255 would give > 100 % gain. Game volumes seen are 0..127 (CD volume 0x4C), so no live effect | none now |
+
+The game-side hazards found in the same pass (bank loader crash when both `.SDT` files are missing,
+unchecked path buffers, the blocking music fade of up to 127 × `AIL_delay(1)`, the stale `extraSample`
+handle after a 3D reopen) are in [re/cars-and-car-ai.md](re/cars-and-car-ai.md) §2.
 
 ### Gaps
 

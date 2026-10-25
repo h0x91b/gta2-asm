@@ -2449,6 +2449,11 @@ enum NET_STATE_values {
 /* function type FuncDef9 omitted */
 typedef _s_FuncInfo FuncInfo;
 typedef _s_HandlerType HandlerType;
+typedef uint32_t /* void * */ H3DSAMPLE;
+typedef uint32_t /* void * */ HDIGDRIVER;
+typedef uint32_t /* void * */ HPROVIDER;
+typedef uint32_t /* void * */ HSAMPLE;
+typedef uint32_t /* void * */ HSTREAM;
 typedef _s_TryBlockMapEntry TryBlockMapEntry;
 typedef _s_UnwindMapEntry UnwindMapEntry;
 typedef uint32_t DWORD;
@@ -2767,13 +2772,15 @@ struct DoorFace {
     uint8_t y; /* 0x5 */
     uint8_t z; /* 0x6 */
     uint8_t doorInfoIdx; /* 0x7 */
-    int side; /* 0x8 */
+    DOOR_SIDE side; /* 0x8 DOOR_SIDE of this face (1 left/west, 2 right/east, 3 top/north, 4 bottom/south); Door_GetBlockPos out, ParkController_Start switch */
     uint32_t unk0C; /* 0xc */
 };
 
 // /DoorSlot  size 0x38
 struct DoorSlot {
-    uint8_t raw[56]; /* 0x0 */
+    uint32_t /* DoorFace * */ faceA; /* 0x0 Primary door face; Door_GetBlockPos 0x44C730 reads x/y/z/side from it */
+    uint32_t /* DoorFace * */ faceB; /* 0x4 Second face of a double door, NULL for a single door (Door_HasTwoFaces 0x489600) */
+    uint8_t _gap_0x8[0x30];
 };
 
 // /DoorManager  size 0x4d4
@@ -3225,13 +3232,18 @@ union IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion {
 
 // /KanjiFont  size 0x28
 struct KanjiFont {
-    uint32_t field0; /* 0x0 */
-    uint32_t field4; /* 0x4 */
-    uint32_t field8; /* 0x8 */
-    uint8_t _gap_0xc[0x18];
-    uint8_t marker24; /* 0x24 */
-    uint8_t marker25; /* 0x25 */
-    uint8_t _gap_0x26[0x2];
+    uint32_t /* uint16_t * */ kidxTable; /* 0x0 KIDX chunk of data\kanji.dat: ushort[kidxCount], glyph code (u16) -> glyph number in kbitTable; 0xFFFF = missing -> kidxTable[0x2100]. Evidence 0x45FF70, 0x460CC0 (lookup + fallback). Size >= 0x4202 B needed for the fallback; NOT range-checked against the code (a code >= kidxCount reads past the buffer). */
+    uint32_t /* uchar * */ kbitTable; /* 0x4 KBIT chunk: 32-byte 16x16 1bpp glyph bitmaps (2 B/row, MSB first). Large font reuses the same bitmap doubled 2x. Evidence 0x45FF70, 0x460CC0 (glyph*0x20+kbitTable), 0x4600E0. */
+    uint32_t kidxCount; /* 0x8 number of u16 entries in kidxTable = KIDX chunk size/2 (0x45FF70). Only written (ctor 0 / ReadChunk / FreeTables 0), never read as a bound. */
+    uint32_t /* uchar * */ smallPixels; /* 0xc 8bpp texture surface of the Kanji16 sprite (stride 0x100, 16x17 used): *(SpriteEntry.ptr) of the sprite for g_FontRole_Kanji16 glyph 0. Set by KanjiFont_BindFontSprites 0x460DE0, written by Expand1bppSmall 0x4600E0. */
+    uint32_t /* SpriteEntry * */ smallSprite; /* 0x10 SpriteEntry of Kanji16 font glyph 0 (w/h = quad size 16x17). DrawGTAText 0x4CC2BB reads w/h via KanjiFont_GetSmallSpriteEntry 0x4CBA00. Set 0x460DE0. */
+    uint32_t /* void * */ smallTexture; /* 0x14 GbhTexture* of that sprite (TextureCache_GetSpriteTexture, palette base FONT_REMAP 8): passed to gbh_LockTexture/UnlockTexture and gbh_DrawQuad. Set 0x460DE0, read 0x460CC0, getter 0x4CBA10. */
+    uint32_t /* uchar * */ largePixels; /* 0x18 same as smallPixels for the Kanji32 sprite (32x34 used, stride 0x100). Set 0x460DE0, written by Expand1bppLarge 0x460480. */
+    uint32_t /* SpriteEntry * */ largeSprite; /* 0x1c SpriteEntry of Kanji32 font glyph 0 (32x34 quad). Getter 0x4CBA20. */
+    uint32_t /* void * */ largeTexture; /* 0x20 GbhTexture* of the Kanji32 sprite. Getter 0x4CBA30. */
+    uint8_t fillColour; /* 0x24 palette index (FONT_REMAP bank) written for set bits of the glyph bitmap. Ctor 0xFE; KanjiFont_SetDefaultColors 0xFF; SetRemapColors: remap 0 -> 0x88, 5 -> 0x27, 6 -> 0x47 (other remaps keep the previous value). Read by Expand* /Outline 0x4600E0, 0x460030. */
+    uint8_t outlineColour; /* 0x25 palette index painted on the 4-neighbours of fill pixels (outline). Ctor 0xF7; default 0xF1; remap 0 -> 0x83, 5 -> 0x23, 6 -> 0x43. 0x460030. */
+    uint8_t pad26[2]; /* 0x26 alignment padding (operator_new(0x28) at 0x45D2BC, never touched) */
 };
 
 // /MapChangeEntry  size 0x8
@@ -4718,18 +4730,18 @@ struct CollisionStripPool {
 
 // /auto_structs/CrimeEvent  size 0x14
 struct CrimeEvent {
-    int type; /* 0x0 */
-    int field1_0x4; /* 0x4 */
-    int field2_0x8; /* 0x8 */
-    int field3_0xc; /* 0xc */
-    int field4_0x10; /* 0x10 */
+    CRIME_KIND kind; /* 0x0 CRIME_KIND 1..9; 0 = empty slot (CrimeEvent_Set(e,0,0) after a pop). Evidence CrimeEvent_Set 0x44A060, Pop 0x44A160 return = kind!=0 */
+    int actorPedId; /* 0x4 Ped.id (Ped+0x200) of the ACTOR (the ped passed to CrimeEvent_Report: shooter / killer = Player_GetControlledPed). Only used by CrimeEvent_Set to look the ped up; NOT returned by GetFields. 0 = no ped. Evidence 0x44A23B/0x44A26B */
+    Fix16 posX; /* 0x8 Fix16 world X of the actor at PUSH time (Ped_GetX, snapshot, not updated). Read by PoliceRadio_Update 0x41C661 via Fix16_ToIntB -> tile X */
+    Fix16 posY; /* 0xc Fix16 world Y of the actor at push time; PoliceRadio_Update -> tile Y */
+    Fix16 posZ; /* 0x10 Fix16 world Z of the actor at push time (Ped_GetZ); copied by GetFields but no consumer reads it (PoliceRadio_Update passes it in a dead local) */
 };
 
 // /auto_structs/CrimeEventQueue  size 0xcc
 struct CrimeEventQueue {
-    short field0_0x0; /* 0x0 */
-    short readIndex; /* 0x2 */
-    CrimeEvent arr10[10]; /* 0x4 */
+    uint16_t writeIndex; /* 0x0 next slot to write, 0..9 (wraps). Push 0x44A110. Queue is empty when writeIndex == readIndex */
+    uint16_t readIndex; /* 0x2 next slot to read, 0..9. When Push makes writeIndex == readIndex the OLDEST event is dropped (readIndex++), so at most 9 live events */
+    CrimeEvent events[10]; /* 0x4 ring of 10 CrimeEvent (0x14 each); allocated 0xCC in Game_Ctor 0x45D1D5, ctor 0x44A1F0 */
 };
 
 // /auto_structs/DoorFacePool  size 0x2c4
@@ -5056,7 +5068,7 @@ struct MissionScript {
 struct MssBankEntry {
     int offset; /* 0x0 byte offset of the sample in the loaded bank (MssAudio_Sample_SetAddress 0x4B60C0) */
     int size; /* 0x4 sample length in bytes */
-    int sampleRate; /* 0x8 Ctor default 0x2B11 = 11025; MssAudio_GetBankEntryFieldB0OrOne */
+    int sampleRate; /* 0x8 0x8 SDT rate in Hz (Ctor default 0x2B11 = 11025); MssAudio_GetBankEntrySampleRate 0x4B6020, ExtraSample_PlayEntry 0x4B69B0 and the SoundManager request rate use it */
     int rateVariation; /* 0xc SDT u32 rate variation (docs/formats/lessons.md); read by MssAudio_GetBankEntryRateVariation 0x4B6040. */
     int loopStart; /* 0x10 SDT i32 loop start (bytes); MssAudio_GetBankEntryLoopStart 0x4B6060 -> request loop block. */
     int loopEnd; /* 0x14 SDT i32 loop end, -1 = none (Ctor default -1); MssAudio_GetBankEntryLoopEnd 0x4B6080. */
@@ -5065,33 +5077,35 @@ struct MssBankEntry {
 // /auto_structs/MssAudio  size 0x2718
 // Miles Sound System wrapper, one static instance g_MssAudioDevice 0x66C950 (Ctor 0x4B6CE0).
 struct MssAudio {
-    uint32_t driver; /* 0x0 HDIGDRIVER from AIL_waveOutOpen (MssAudio_OpenWaveOut 0x4B6DE0) */
+    HDIGDRIVER driver; /* 0x0 HDIGDRIVER from AIL_waveOutOpen(&this->driver,0,-1,&WAVEFORMAT) in MssAudio_OpenWaveOut 0x4B6DE0 (AIL_waveOutOpen writes the handle straight into +0, the MssAudio* is the out pointer). Host token 0xA0D000, never dereferenced. 0 until opened; 0 skips AIL_set_digital_master_volume in Startup2D 0x4B7250. */
     uint8_t unsure_cdDriveLetter; /* 0x4 MssAudio_Ctor 0x4B6CE0 = 99 = 'c' (after a 0 store); no other writer. Only reader unsure_Sound_GetCdDriveLetter 0x410660 -> 0x416630, whose two callers (IntroMovieBik, FrontEnd_GetPreIntroMoviePath) ignore the value. Not a volume: music volume is SoundManager+0x25. Guess: CD drive letter of the retail build. */
     char audioDir[80]; /* 0x5 stream path prefix, Ctor copies "data\gtaudio\" */
-    uint8_t musicEnabled; /* 0x55 MssAudio_GetEnabledFlag 0x4B6850; streams refuse to open when 0 */
+    uint8_t musicEnabled; /* 0x55 0x55 Ctor 1 (briefly 0 before): when 0 every music-stream wrapper and Stream_OpenTrack(0) are no-ops, MusicStream_IsDone returns false. Never cleared by any code in 11.44 (read MssAudio_GetEnabledFlag 0x4B6850). */
     uint8_t _gap_0x56[0x2];
-    uint32_t samples2D[16]; /* 0x58 HSAMPLE handles, Mss_Init2DSamples 0x4B6F70 */
-    uint32_t extraSample; /* 0x98 HSAMPLE, MssAudio_ExtraSample_Alloc 0x4B5F70 */
-    uint32_t streams[2]; /* 0x9c HSTREAM; [0] music/radio track, [1] vocals (MssAudio_Stream_OpenTrack 0x4B70C0) */
-    uint8_t bankLoaded; /* 0xa4 MssAudio_LoadBank 0x4B6B40 */
+    HSAMPLE samples2D[16]; /* 0x58 16 HSAMPLE (AIL_allocate_sample_handle + init_sample + set_sample_type(MONO_16 =1, signed =1)), Mss_Init2DSamples 0x4B6F70; index = SoundManager voice index (voiceCount 0x10). 0 = free. Wrappers Sample_* 0x4B60C0..0x4B6200 skip a 0 handle. */
+    HSAMPLE extraSample; /* 0x98 the one 8-bit unsigned mono HSAMPLE (set_sample_type 0,0), MssAudio_ExtraSample_Alloc 0x4B5F70: police-radio phrases (PlayEntry 0x4B69B0) and phone chatter (PlayRange 0x4B6A80). Left stale (not re-allocated) if waveOutClose runs while it is set (Init2DSamples with use3D, never reached without a 3D provider). */
+    HSTREAM streams[2]; /* 0x9c HSTREAM[2]: [0] radio / frontend music (data\gtaudio\<id>[A].WAV, loop 0 = forever), [1] vocals (data\audio\vocals\<name>, loop 1 = once). MssAudio_Stream_OpenTrack 0x4B70C0; 0 = closed or the file is missing (every Stream_* wrapper skips 0). */
+    uint8_t bankLoaded; /* 0xa4 0xa4 set 1 by MssAudio_LoadBank 0x4B6B40 after the .RAW + .SDT reads; 0 makes Sample_SetAddress / Sample3D_SetInfo / ExtraSample_Play* silent no-ops. Cleared at the start of every LoadBank. */
     uint8_t _gap_0xa5[0x3];
     MssBankEntry bankEntries[320]; /* 0xa8 */
-    uint32_t /* void * */ bankBuffer; /* 0x1ea8 AIL_mem_alloc_lock(DAT_005D1420) in MssAudio_OpenWaveOut */
+    uint32_t /* void * */ bankBuffer; /* 0x1ea8 0x1ea8 AIL_mem_alloc_lock(0x5D1420) in MssAudio_OpenWaveOut 0x4B6DE0 (size constant, Ghidra shows it as &DAT_005d1420); one allocation per OpenWaveOut, freed in Shutdown. LoadBank refuses a .RAW larger than 0x5D1420. */
     uint32_t /* void * */ bankBase; /* 0x1eac same as bankBuffer; base for MssBankEntry.offset */
-    uint8_t num2DSamples; /* 0x1eb0 Ctor 16 */
-    uint8_t channels; /* 0x1eb1 1 mono / 2 stereo */
-    uint8_t num3DSamples; /* 0x1eb2 set by Mss_Init3DSamples 0x4B72B0 (8..16) */
+    uint8_t num2DSamples; /* 0x1eb0 0x1eb0 Ctor 0x10, Startup2D 0x10, Release3DSamples 0x10: number of live samples2D handles (SoundManager.voiceCount 0x10 in 2D mode). */
+    uint8_t channels; /* 0x1eb1 1 mono / 2 stereo: MssAudio_OpenWaveOut sets 2 when param_2 != 0 (Startup2D always passes 1); Ctor 2. Also feeds the WAVEFORMAT (avg bytes = ch*rate*2, block = ch*2, bits = ch<<3) and bits in Sample3D_SetInfo 0x4B6220. */
+    uint8_t num3DSamples; /* 0x1eb2 0x1eb2 number of live H3DSAMPLEs (8..16, Mss_Init3DSamples 0x4B72B0 sets it from 'Maximum supported samples'); 0 after Release3DSamples. */
     uint8_t _gap_0x1eb3[0x1];
-    uint32_t providers[256]; /* 0x1eb4 HPROENUM/HPROVIDER from AIL_enumerate_3D_providers (MssAudio_Enumerate3DProviders 0x4B6600) */
-    uint32_t /* char * */ providerNames[256]; /* 0x22b4 operator_new(0x50) copies */
-    int selected3DProviderIdx; /* 0x26b4 index into providers[] of the open 3D provider, -1 none (MssAudio_Open3DProvider 0x4B6550, reset by Ctor / Release3DSamples). */
+    HPROVIDER providers[256]; /* 0x1eb4 HPROVIDER[256] from AIL_enumerate_3D_providers(&next,&providers[i],&name), MssAudio_Enumerate3DProviders 0x4B6600 (the loop writes the slot as ppcVar5-0x100 of providerNames). Host enumerates none, so providerCount stays 0. */
+    uint32_t /* char * */ providerNames[256]; /* 0x22b4 0x22b4 operator_new(0x50) copies of each provider name, NEVER freed, copied with no length check (a name > 79 chars overruns the heap block, 0x4B6600). */
+    int selected3DProviderIdx; /* 0x26b4 0x26b4 index into providers[] of the open 3D provider, -1 none (Open3DProvider 0x4B6550 sets it first and resets it to -1 when AIL_open_3D_provider fails; Ctor / Release3DSamples -1). */
     int eaxSupported; /* 0x26b8 1 when the opened 3D provider answers AIL_3D_provider_attribute('EAX environment selection') != -1 (MssAudio_Open3DProvider 0x4B6550); gates MssAudio_Eax_SetEnvironment 0x4B6420 / SetEffectParams 0x4B6460. */
-    int eaxEnvironment; /* 0x26bc */
-    uint32_t provider3D; /* 0x26c0 open HPROVIDER, MssAudio_Close3DProvider 0x4B65D0 */
-    uint32_t samples3D[16]; /* 0x26c4 H3DSAMPLE handles */
-    float unsure_listenerPos[3]; /* 0x2704 Ctor -1.0f x3 */
-    uint32_t providerCount; /* 0x2710 */
-    uint8_t use3D; /* 0x2714 OpenWaveOut param2 */
+    int eaxEnvironment; /* 0x26bc last value written by MssAudio_Eax_SetEnvironment 0x4B6420 (accepted < 0x1A); MssAudio_Open3DProvider sets 0x11 when the provider supports EAX. Ctor 0. */
+    HPROVIDER provider3D; /* 0x26c0 the open 3D provider (AIL_open_3D_provider ok in MssAudio_Open3DProvider 0x4B6550; MssAudio_Close3DProvider 0x4B65D0 closes it then Sleep(1500)). 0 = none. */
+    H3DSAMPLE samples3D[16]; /* 0x26c4 16 H3DSAMPLE (AIL_allocate_3D_sample_handle), Mss_Init3DSamples 0x4B72B0 fills num3DSamples (8..16) of them. 0 = free. */
+    float eaxEffectVolume; /* 0x2704 last 'EAX effect volume' set by MssAudio_Eax_SetEffectParams 0x4B6460 (accepted range 0.0 <= v < 1.0); Ctor / Release3DSamples = -1.0f (unset). Not a listener position (WAS unsure_listenerPos[0]). Eax_SetEffectParams has no caller in 11.44. */
+    float eaxDecayTime; /* 0x2708 last 'EAX decay time' (accepted 0.1 <= v < 20.0), same function; -1.0f = unset (WAS unsure_listenerPos[1]). */
+    float eaxDamping; /* 0x270c last 'EAX damping' (accepted 0.0 <= v < 2.0), same function; -1.0f = unset (WAS unsure_listenerPos[2]). */
+    uint32_t providerCount; /* 0x2710 0x2710 number of providers AIL_enumerate_3D_providers returned (Enumerate3DProviders 0x4B6600, capped 256); 0 on the host. */
+    uint8_t use3D; /* 0x2714 OpenWaveOut param_3 (also AIL_set_preference(0x21)); 0 from Ctor and Startup2D, so the 2D path never reopens the device. */
     uint8_t _gap_0x2715[0x3];
 };
 
@@ -6143,11 +6157,12 @@ struct ObjectPrefabsContainer {
 };
 
 // /imported/seuko-mod/PedGameObject  size 0xb4
+// Ped body object (pool of 400 x 0xB4 in PedGameObjectManager, g_PedGameObjectPool 0x66A3B4, operator_new(0x11944) in DummyPedManager_Ctor 0x441748; Ped+0x168). Size verified: eh_vector_constructor_iterator stride 0xB4 x 400 in PedGameObjectPool_Ctor 0x435550.
 struct PedGameObject {
-    uint8_t _gap_0x0[0x4];
-    uint8_t unk_0x4; /* 0x4 */
-    uint8_t unk_0x5; /* 0x5 */
-    uint8_t unk_0x6; /* 0x6 */
+    uint32_t serial; /* 0x0 Spawn serial: PedGameObject_Init 0x497C20 does *(uint*)obj = nextSpriteId++ (g 0x66A3BC, zeroed by PedGameObject_ResetTickCountersAndSpriteIds 0x493520); PedGameObject_Ctor 0x497A60 zeroes it. No reader found (typed decompile scan of the whole program, 2026-10-25) so it is write-only bookkeeping. */
+    uint8_t unsure_inUse; /* 0x4 Init 0x497C20 writes 1, Ctor 0x497A60 writes 0, Deinit 0x493640 does not touch it, no reader found: looks like a live/in-use flag (guess from the 0->1 init pair only). */
+    uint8_t appliedRemap; /* 0x5 Last ped remap applied to the body: 0xFF = none (Ctor/Init), Ped_ApplyRemapToSprite 0x433C10 stores it (and calls Sprite_SetRemap on the body when != 0xFF). Write-only: PedGameObject_UpdateAnimFrame re-reads Ped.remap (+0x244) every tick instead. */
+    uint8_t unused_0x6; /* 0x6 Ctor/Init write 0, no reader or other writer found. */
     uint8_t _gap_0x7[0x1];
     PED_STATE state1; /* 0x8 */
     PED_STATE2 state2; /* 0xc */
@@ -6161,15 +6176,15 @@ struct PedGameObject {
     int walkAroundPhase; /* 0x24 */
     Ang16 walkAroundHeading; /* 0x28 */
     Ang16 walkAroundTurnStep; /* 0x2a */
-    Ang16 unk_0x2c; /* 0x2c */
+    Ang16 unusedWalkAroundAngle; /* 0x2c Ang16 zeroed together with walkAroundHeading/TurnStep (+0x28/+0x2A) in Ctor, Init and PedGameObject_ResetWalkAroundState 0x491E60 (written twice there); never read. Probably a leftover third walk-around angle. */
     uint8_t _gap_0x2e[0x2];
-    int unk_0x30; /* 0x30 */
-    short unk_0x34; /* 0x34 */
+    int unused_0x30; /* 0x30 Ctor 0x497A60 / Init 0x497C20 write 4, nothing else reads or writes it. Same offset as Sprite.spriteType but unrelated: PedGameObject is not a Sprite. */
+    short unused_0x34; /* 0x34 Ctor/Init write 0, PedGameObject_StateWasted 0x49C120 writes 0 when the ped goes down (downedFlag path); never read. */
     uint8_t _gap_0x36[0x2];
     SCR_f speed; /* 0x38 */
     SCR_f walkSpeedTarget; /* 0x3c */
     short spriteRotation; /* 0x40 */
-    Ang16 unk_0x42; /* 0x42 */
+    Ang16 headingJitter; /* 0x42 Ang16 random heading wobble of the wander walk: PedGameObject_JitterHeading 0x4955F0 re-rolls it ((rand%16 - c) * c) with 9/32 chance per tick, flips it back if its sign differs from the previous one, then calls PedGameObject_AddHeading(go, jitter) which adds it to spriteRotation (+0x40). Verified from the disassembly (PUSH of [go+0x42], CALL 0x4928A0 at 0x4956F0). */
     uint8_t groundType; /* 0x44 */
     uint8_t slopeType; /* 0x45 */
     short stateTimer; /* 0x46 */
@@ -6186,7 +6201,7 @@ struct PedGameObject {
     uint8_t objectBumpCooldown; /* 0x5c */
     uint8_t _gap_0x5d[0x3];
     int detourAxis; /* 0x60 */
-    int unk_0x64; /* 0x64 */
+    int unused_0x64; /* 0x64 Ctor/Init write 0 (right after detourAxis +0x60), never read. */
     uint8_t animFrame; /* 0x68 */
     uint8_t walkingAroundObstacle; /* 0x69 */
     uint8_t stepAsideTimer; /* 0x6a */
@@ -6198,7 +6213,7 @@ struct PedGameObject {
     uint8_t detourTileY; /* 0x73 */
     Ang16 stepAsideHeading; /* 0x74 */
     uint8_t _gap_0x76[0x2];
-    uint32_t /* PedGameObject * */ nextMaybe; /* 0x78 */
+    uint32_t /* PedGameObject * */ poolNext; /* 0x78 Free-list link of the PedGameObjectManager pool: PedGameObjectPool_Ctor 0x435550 chains element i -> i+1 (stride 0xB4) and ends with NULL, Pop 0x4355A0 takes it, Release 0x4355C0 pushes it; Init/Ctor zero it. Only meaningful while the object is free. */
     uint32_t /* Ped * */ ped; /* 0x7c */
     uint32_t /* Sprite * */ body; /* 0x80 */
     uint32_t /* Car * */ car; /* 0x84 */
@@ -6213,12 +6228,12 @@ struct PedGameObject {
     SCR_f teleportX; /* 0xa4 */
     SCR_f teleportY; /* 0xa8 */
     SCR_f teleportZ; /* 0xac */
-    int unk_0xb0; /* 0xb0 */
+    int flameSoundTimer; /* 0xb0 Burning-ped crackle countdown: -1 = not burning (Init/Deinit/PedGameObject_RemoveFlames), 10 when Ped_SpawnFireOnSprite 0x433250 attaches a flame object. SoundMgr_UpdatePedSource 0x41B7B0 (every sound tick while >= 0): at 0 it plays a random sample 0xE9..0xEE (volume 30..52) and reloads rand%30+20, else decrements. Verified: all writers/readers listed. */
 };
 
 // /imported/seuko-mod/PedGameObjectManager  size 0x11944
 struct PedGameObjectManager {
-    uint32_t /* PedGameObject * */ nextFreeMaybe; /* 0x0 */
+    uint32_t /* PedGameObject * */ freeHead; /* 0x0 Head of the free list of PedGameObject (via PedGameObject.poolNext). Pop 0x4355A0 does NOT test for NULL: an exhausted pool (400 live peds) reads NULL+0x78 and crashes. */
     PedGameObject objects[400]; /* 0x4 */
 };
 

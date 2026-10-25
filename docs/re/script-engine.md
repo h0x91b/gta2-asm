@@ -1187,8 +1187,8 @@ Still unknown: car flag 8 (`Car_AddFlag8` / `Car_ClearFlag8`) meaning; `Door_Cle
 (DoorSlot+0x2C, set to 1 by `Door_SpawnObjects`; hypothesis: "door animation / objects active");
 `parkSerial` has no reader (debug leftover?); why WAIT_DOOR_EDGE accepts exactly the corner pairs
 (0,1)/(2,3) (presumably front/rear pairs of `SpriteBounds.corners`, corner order not verified).
-`CarPhysics_ApplyMassKick` 0x4A0930 takes a second stack argument `Vec2* force` that its Ghidra
-prototype lacks (`forceAccum += force * mass`).
+`CarPhysics_ApplyMassKick` 0x4A0930 is `void __thiscall (CarPhysics* this, Vec2* force)`, RET 4
+(`forceAccum += force * CarPhysics_GetMass(this)`; the Ghidra prototype now has the argument).
 
 ## Open questions
 

@@ -95,7 +95,8 @@ InitFrontend / LoadGMP_and_STY_Files 0x45B469 (sets g_Patch1144 flag 0x676204 = 
 - **Japanese** (`j`, `LocaleSettings_IsJapanese` 0x452E60): `Game_Ctor` also creates a
   `KanjiFont` (0x28 B) from `data\kanji.dat` = header `KANJ` + u16 100, chunks `KIDX` (u16 code →
   glyph index table) and `KBIT` (16×16 1-bpp bitmaps, 32 B each) (`KanjiFont_LoadKanjiDat`
-  0x460F10, `KanjiFont_ReadChunk` 0x45FF70). Neither `j.gxt` nor `kanji.dat` is in `data.pak`.
+  0x460F10, `KanjiFont_ReadChunk` 0x45FF70; created only when `LocaleSettings_IsJapanese`, else
+  `g_KanjiFont` 0x661E98 stays NULL and none of it runs). Neither `j.gxt` nor `kanji.dat` is in `data.pak`.
 
 ## 3. Lookup (V)
 
@@ -224,6 +225,57 @@ Japanese path: if `fontId` is Kanji16/Kanji32, `KanjiFont_UploadGlyphSmall/Large
 (0x460CC0/0x460D30) look up the unit (a unit < 0x100 is shifted to the high byte) in the KIDX
 table, `0xFFFF` → fallback `table[0x2100]`, upload a 16×17 / 32×34 bitmap per character; fixed
 advance 16/32. `#` switches the `KanjiFont` colour bytes.
+
+**`KanjiFont` in detail** (struct pass 4, 2026-10-25; V = code read, nothing seen at runtime).
+`KanjiFont` is 0x28 B (`operator_new(0x28)` at 0x45D2BC, ctor `KanjiFont_Ctor` 0x460FB0, dtor
+`KanjiFont_ScalarDeletingDtor` 0x45AC90 → `KanjiFont_FreeTables`):
+
+| off | field | meaning |
+|---|---|---|
+| 0x00 / 0x04 | `kidxTable` (ushort*) / `kbitTable` (byte*) | `KIDX` chunk (`new ushort[size/2]`) / `KBIT` chunk (raw glyph bitmaps), `KanjiFont_ReadChunk`; other chunk tags are skipped |
+| 0x08 | `kidxCount` | `size/2`; only a "loaded" marker, never a bound |
+| 0x0C / 0x10 / 0x14 | `smallPixels` / `smallSprite` / `smallTexture` | glyph 0 of font role `g_FontRole_Kanji16`: pixel buffer (`SpriteEntry.ptr`), `SpriteEntry*`, `GbhTexture*` |
+| 0x18 / 0x1C / 0x20 | `largePixels` / `largeSprite` / `largeTexture` | same for `g_FontRole_Kanji32` |
+| 0x24 / 0x25 | `fillColour` / `outlineColour` | palette indices in the FONT_REMAP bank |
+
+- **File**: `data\kanji.dat` = `KANJ` + version 100, then chunks `tag[4] + u32 size` until EOF.
+  A glyph is 16×16, 1 bpp, 32 B (2 B per row, MSB first). The 32-px font is the same bitmap
+  **doubled 2×** (`KanjiFont_Expand1bppLarge` 0x460480: every set bit writes a 2×2 block), not a
+  separate set.
+- **Lookup** (`UploadGlyphSmall/Large` 0x460CC0 / 0x460D30, per character from `DrawGTAText`):
+  `code` = the wchar, shifted into the high byte if `< 0x100` (ASCII 'A' → index 0x4100);
+  `idx = kidxTable[code]`; `0xFFFF` → `kidxTable[0x2100]`; bitmap = `kbitTable + idx*0x20`. Then
+  `gbh_LockTexture`, `Expand1bpp*` writes fill-colour pixels (stride 0x100) into the font sprite's
+  pixel buffer, `KanjiFont_OutlineGlyphBitmap` 0x460030 paints `outlineColour` on the 4-neighbours of
+  every fill pixel, `gbh_UnlockTexture`; `DrawGTAText` draws a quad (16×17 or 32×34 from the glyph-0
+  `SpriteEntry`).
+- **Texture source**: `KanjiFont_BindFontSprites` 0x460DE0 (from `LoadGMP_and_STY_Files` 0x45B5E0
+  after every `.sty` load when `g_KanjiFont != NULL`) takes glyph 0 of the two font roles and the
+  texture from `TextureCache_GetSpriteTexture(FONT_REMAP 8, remap 8)`. So the kanji texture is a
+  **re-used font sprite slot**: a host renderer must treat it as rewritten between Lock/Unlock **once
+  per drawn character** (8-bit indices, 0 = transparent).
+- **Colours**: ctor 0xFE/0xF7 (replaced at once); `KanjiFont_SetDefaultColors` 0x4CBA40 → fill 0xFF /
+  outline 0xF1; `KanjiFont_SetRemapColors` 0x460DA0: remap 0 → 0x88/0x83, 5 → 0x27/0x23, 6 →
+  0x47/0x43, **any other remap leaves the previous pair**. `DrawGTAText` calls Default when the
+  caller's palette base is not 8, Remap(remap) when it is 8, and again at each `#`.
+- A host font replacement must keep: the Lock/write/Unlock contract, the 16×17 / 32×34 geometry,
+  those palette indices, the fixed 16/32 advance. Alternative: hook `KanjiFont_UploadGlyph*` and
+  draw into the texture yourself.
+
+Hazards (V by code read, not run):
+1. **No bounds check on the KIDX lookup**: index is `code & 0xFFFF`, the buffer has `kidxCount`
+   entries, and the fallback reads `kidxTable[0x2100]`. A `kanji.dat` with a KIDX smaller than
+   0x20000 B (or < 0x2101 entries) reads past the heap block; `idx*0x20` is not checked against the
+   KBIT size either. Own files only: ship a full 0x10000-entry KIDX.
+2. **Stale bottom outline row** (hypothesis, medium confidence): `Expand1bppSmall` writes rows 0–15,
+   the outline pass covers 17 rows and paints row 16, and nothing clears row 16 (Large: rows 32–33 of
+   34). If the host does not clear the texture on `gbh_LockTexture`, a previous glyph's pixels stay
+   under a glyph with a blank bottom row (faint wrong outline fragments).
+3. An odd KIDX chunk size allocates `(size>>1)*2` but reads `size` bytes: 1-byte heap overflow.
+4. `KanjiFont_LoadKanjiDat` does not check that `kanji.dat` exists (the `File_Open` failure path was
+   not traced); `kanji.dat` is not in `data.pak`.
+Unknown: the meaning of KIDX codes (Shift-JIS vs own mapping; no real file to test), and whether
+callers can pass remaps other than 0/5/6.
 
 ## 7. HUD text widgets and limits (V unless marked)
 

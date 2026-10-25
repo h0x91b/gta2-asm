@@ -1457,9 +1457,9 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4CB990 | `Gamma_ApplyFromRegistry` | V |
 | 0x4CB9C0 | `Gamma_RetryTick` | V |
 | 0x4CBA00 | `KanjiFont_GetSmallSpriteEntry` | V |
-| 0x4CBA10 | `KanjiFont_GetSmallField14` | V |
+| 0x4CBA10 | `KanjiFont_GetSmallTexture` (was `KanjiFont_GetSmallField14`) | V |
 | 0x4CBA20 | `KanjiFont_GetLargeSpriteEntry` | V |
-| 0x4CBA30 | `KanjiFont_GetLargeField20` | V |
+| 0x4CBA30 | `KanjiFont_GetLargeTexture` (was `KanjiFont_GetLargeField20`) | V |
 | 0x4CBA40 | `KanjiFont_SetDefaultColors` | old |
 | 0x4CBA50 | `DrawSprite2D` | old |
 | 0x4CBDB0 | `DrawSprite2DAt` | old |

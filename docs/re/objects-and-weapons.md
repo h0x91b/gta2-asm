@@ -343,9 +343,10 @@ world-object movement. New names there (Seq 46, details in Ghidra comments):
   `PedGameObject_ResetTickCountersAndSpriteIds` 0x493520.
 
 Struct facts for `PedGameObject` (+0x10 walk sub-state, +0x14 target heading, +0x46 state timer,
-+0x58 flag bits, +0xB0 ped sound countdown: `SoundMgr_UpdatePedSource` 0x41B7B0 writes
-`rand%30+20` and decrements it, −1 = idle, H4) and `Ped` were sent to the Ped owner (Seq 27);
-`PedGameObject` was not edited.
++0x58 flag bits, +0xB0 `flameSoundTimer`: `SoundMgr_UpdatePedSource` 0x41B7B0 writes
+`rand%30+20` and decrements it, −1 = idle, set to 10 by `Ped_SpawnFireOnSprite`; V in pass 4) and `Ped` were sent to the Ped owner (Seq 27);
+`PedGameObject` was named in struct pass 4 (2026-10-25), see
+[ped-movement-collision.md](ped-movement-collision.md) ("Struct pass 4", pool lifecycle, hazards).
 StateWalk and the walker documented in ped-movement-collision.md were left as they were.
 
 ## 8. Census and open questions

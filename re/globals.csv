@@ -553,10 +553,10 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00670644,g_FontRole_Fe13,,USER_DEFINED,.data.exp,,/undefined2,2
 0x00670648,g_FontRole_Fe9,,USER_DEFINED,.data.exp,,/undefined2,2
 0x0067064c,g_FontRole_Fe5,,USER_DEFINED,.data.exp,,/undefined2,2
-0x00670650,g_FontRole_Kanji32,,USER_DEFINED,.data.exp,,/undefined2,2
+0x00670650,g_FontRole_Kanji32,,USER_DEFINED,.data.exp,,/short,2
 0x00670654,g_FontRole_G6_Fe3,,USER_DEFINED,.data.exp,,/undefined2,2
 0x00670658,g_FontRole_Fe6,,USER_DEFINED,.data.exp,,/undefined,1
-0x0067065c,g_FontRole_Kanji16,,USER_DEFINED,.data.exp,,/undefined2,2
+0x0067065c,g_FontRole_Kanji16,,USER_DEFINED,.data.exp,,/short,2
 0x00670660,g_FontRole_Fe11,,USER_DEFINED,.data.exp,,/undefined2,2
 0x00670664,g_FontRole_Fe8,,USER_DEFINED,.data.exp,,/undefined2,2
 0x00670668,g_FontRole_G1,,USER_DEFINED,.data.exp,,/undefined2,2

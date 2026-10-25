@@ -56,8 +56,61 @@ Full layout of the rest of `PedGameObject` (2026-10-22 pass; V = behaviour + cal
 `+0x55` detourTimer (V), `+0x5C` objectBumpCooldown (H), `+0x60` detourAxis (H), `+0x68` animFrame,
 `+0x6C` anim, `+0x70`/`+0x71` animTick / animTicksPerFrame (V), `+0x72`/`+0x73` detour tile (V),
 `+0x84` Car* (V), `+0x88` CarAttachment* list (V), `+0x8C` jumpStartZ, `+0x90` fallSpeed,
-`+0x94` fallZVelocity (V), `+0xA0` onTopOfCarLayer (H). Written only by init/deinit, no reader
-found: `+4/+5/+6`, `+0x2C`, `+0x30`, `+0x34`, `+0x42`, `+0x64`, `+0xB0` (named `unk_*`).
+`+0x94` fallZVelocity (V), `+0xA0` onTopOfCarLayer (H).
+
+Struct pass 4 (2026-10-25) named the leftovers:
+- `+0x00` `serial` (uint): `PedGameObject_Init` 0x497C20 writes `nextSpriteId++` (global 0x66A3BC, reset by
+  `PedGameObject_ResetTickCountersAndSpriteIds` 0x493520); no reader found.
+- `+0x04` `unsure_inUse` (byte, 0 in Ctor, 1 in Init; hypothesis, no reader), `+0x05` `appliedRemap`
+  (0xFF in Ctor/Init, written by `Ped_ApplyRemapToSprite` 0x433C10 when it calls `Sprite_SetRemap`;
+  no reader: `UpdateAnimFrame` uses `Ped.remap` +0x244), `+0x06` `unused_0x06`.
+- **`+0x42` `headingJitter` (Ang16) is read**: `PedGameObject_JitterHeading` 0x4955F0 rerolls
+  `(rand%16 − c)·c`, flips the sign if it differs from the previous one and adds it to the heading
+  `+0x40` through `PedGameObject_AddHeading` 0x4928A0 (V by asm: `PUSH EAX` from [ESI], `CALL
+  0x4928A0` at 0x4956F0).
+- **`+0xB0` `flameSoundTimer` (int) is read and written**: −1 in Init / Deinit / `RemoveFlames`
+  0x491DE0; 10 in `Ped_SpawnFireOnSprite` 0x433250; `SoundMgr_UpdatePedSource` 0x41B7B0 plays a random
+  sample 0xE9..0xEE (volume 30..52) at 0 and recharges `rand%30+20`, else decrements. It recharges
+  even when the ped is out of hearing range (harmless).
+- Still write-only (V by scan, only typed accesses; a read through an untyped pointer is not ruled out):
+  `+0x2C` `unusedWalkAroundAngle` (zeroed with the walk-around state), `+0x30` `unused_0x30` (4 in
+  Ctor/Init; same offset as `Sprite.spriteType`, but this is not a Sprite), `+0x34` `unused_0x34`
+  (0; `StateWasted` 0x49C120 zeroes it), `+0x64` `unused_0x64`. `bit1` (+0x58) is accessed as a dword,
+  bytes 0x59..0x5B are padding.
+- `+0x78` `poolNext` (free-list link, was `nextMaybe`); `PedGameObjectManager` (0x11944 = 4 + 400 ×
+  0xB4, size confirmed from `operator_new(0x11944)` in `DummyPedManager_Ctor` 0x441748 and the
+  vector-constructor step 0xB4 × 400 in `PedGameObjectPool_Ctor` 0x435550) starts with `freeHead`
+  (was `nextFreeMaybe`).
+
+#### Lifecycle and pool (V)
+
+`Ped_CreateSprite` 0x4360C0 → `PedGameObjectPool_Pop` 0x4355A0 (takes the free-list head, calls
+`PedGameObject_Init`) → `PedGameObject_AllocSprite` 0x493850 (`SpritePool_Alloc`, `SPRITE_TYPE_PED`,
+`Sprite_SetOwnerSprite(body, obj)`, sound client). Back: `PedGameObjectPool_Release` 0x4355C0 →
+`PedGameObject_Deinit` 0x493640 (removes the body from `CollisionGrid` and `SpritePool`,
+`Car_FreeAttachments`, `+0xB0` = −1), then the object is pushed on the free list.
+`Sprite.owner` points back at the PedGameObject (`Sprite_ShouldDrawShadow` 0x4BAC10 reads
+owner `+8/+0xC/+0x10` = state1 / state2 / walk sub-mode for peds).
+
+**Hazard: no exhaustion check.** `PedGameObjectPool_Pop` does `obj = *freeHead; *freeHead =
+obj->poolNext` (0x4355A1–0x4355AA): with 400 live objects the free list is empty and it reads
+NULL+0x78; the `if (sprite == NULL)` test in `Ped_CreateSprite` is dead. Read from the disassembly,
+never crashed on purpose; reachability depends on the ped limit elsewhere (not checked). A mod that
+spawns peds on top of the game's own must stay under 400.
+
+**Prototype notes** (these were wrong or missing in Ghidra, they matter for hooks): all are
+`__thiscall` with `PedGameObject* this` unless `__fastcall` is noted. `PedGameObject_SetPed` 0x4338E0
+(writes +0x7C; was `Sprite_SetOwnerPed`), `_SetWalkSubMode` 0x433A60 (+0x10; was `_SetState3`),
+`_StartAnim` 0x433A70 (was `unsure_GameObject_InitAnimState`), `_SetCar` 0x433900 (RET 4, was a
+`__fastcall` with a bogus EDX), `_GetPos{X,Y,Z}` 0x4339C0/E0/0x433A00 `Fix16* (this, Fix16* out)`,
+`_SetSpriteRotation` 0x433A30 (was in namespace `GameObject`), `_AddHeading` 0x4928A0 `(this, Ang16
+delta)` RET 4, `_CanStepAlongHeading` 0x492C30 `(this, Ang16 heading)` RET 4 returning
+`CanMoveToTile`, `_HandleCarImpact` 0x497570 `(this, Car* car, int unused, Fix16 impulseX, Fix16
+impulseY)` RET 0x10. `PedGameObject_GetCar` 0x403900, `_GetState2` 0x41B090, `_GetPed` 0x433A20,
+`_GetSprite` 0x4338D0 are `__fastcall (go)`. `Ped_SetGameObjectField3C` 0x403A50 writes
+`walkSpeedTarget` (+0x3C): candidate name `Ped_SetWalkSpeedTarget` (caller `Ped_ElvisHandling`).
+Not typed yet: `PedGameObject_TryAnswerPhone` 0x4930C0, `IsTileEdgeOpen` 0x492190, `CanMoveToTile`
+0x492420 parameters.
 
 `Ped.rotation` (+0x12C) and the pose copy inside the Ped are **mirrors** of the PedGameObject and the
 body, rewritten every tick by `Ped_TickGameObjectAndSeatInCar`. Writing them moves nothing.

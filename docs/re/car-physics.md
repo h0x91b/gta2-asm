@@ -360,7 +360,7 @@ comment in Ghidra has the evidence.
 | `0x49FF70` | `CarPhysics_UpdateZOnRailway` |  | verified |
 | `0x4A0560` | `CarPhysics_DoSkidmarks` | skidmarks for car + trailer | verified |
 | `0x4A0850` | `CarPhysics_ApplyForceAtPoint` | force at point, +0x48 linear, +0x7c torque | verified |
-| `0x4A0930` | `CarPhysics_ApplyMassKick` | +0x48 += f(mass) | verified |
+| `0x4A0930` | `CarPhysics_ApplyMassKick` | `void __thiscall (CarPhysics* this, Vec2* force)`, RET 4: `forceAccum` (+0x48) += force × `CarPhysics_GetMass(this)`. Callers: `ParkController_Update`, `CarPhysics_NudgeOutOf*`, `CarPhysics_ApplySlopeGravity` | verified |
 | `0x4A0C60` | `CarPhysics_ForcesToAccel` | a = F/m ; angAccel = -T/I | verified |
 | `0x4A0CC0` | `CarPhysics_IntegrateVelocity` | v += a, w += alpha, ClearForces, dead zones | verified |
 | `0x4A1BA0` | `CarPhysics_UpdateStationaryTimer` | framesStationary++ ; true when >= 20 | verified |
@@ -495,7 +495,7 @@ comment in Ghidra has the evidence.
 | `0x447480` | `Collision_CheckAndNotifyAllForSprite` | broad phase over rows DAT_00662bac..bfc | verified |
 | `0x447740` | `Collision_FindObstacle` | returns first obstacle sprite overlapping arg, 16 callers | verified |
 | `0x482CC0` | `CarPhysics_CollideWithObjectAtPoint` | sets contact pos, calls CollideWithObject | verified |
-| `0x497570` | `PedGameObject_HandleCarImpact` (was `unsure_PedSprite_HandleCarImpact`) | ped reaction to being hit (Seq 27 domain) | hypothesis |
+| `0x497570` | `PedGameObject_HandleCarImpact` (was `unsure_PedSprite_HandleCarImpact`) | `void __thiscall (PedGameObject* this, Car* car, int unused_param3, Fix16 impulseX, Fix16 impulseY)`, RET 0x10: ped reaction to being hit (reads `car+0x54` driver, `+0x5C` ai, `+0x7C` driverClass without a NULL check; param 3 is not read). The only call with `car = 0`, in `Object_ResolveCollisionWithPed` 0x4867E0 (0x486931), is unreachable: it compares a value with itself (`Fix16_IsNotEqual(&local_48.x, &DAT_00665894)` right after `local_48.x = DAT_00665894`), so objects that hit a ped never start the fling through that branch (leftover or bug; code read, not run) | prototype verified, rest hypothesis |
 | `0x49E270` | `CarPhysics_CheckCarAndTrailerCollisions` | grid query for car and trailer sprites on g_CollisionGridNotify | verified |
 | `0x49E330` | `CarPhysics_ApplyAngularImpulse` | torqueAccum(+0x7C) -= arg * g_CurCarPhysicsData->inertia (CarPhysicsData+0). Callers: the three unsure_CarPhysics_NudgeOutOf* (collision… | verified |
 | `0x49E360` | `Vec2_DivInt` (was `unsure_Fix16Vec2_DivScalar`) | Vec2 / scalar | hypothesis |

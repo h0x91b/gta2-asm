@@ -371,7 +371,7 @@ struc DoorFace
     .y                                resb 1      ; 0x5 byte
     .z                                resb 1      ; 0x6 byte
     .doorInfoIdx                      resb 1      ; 0x7 byte
-    .side                             resb 4      ; 0x8 int
+    .side                             resb 4      ; 0x8 DOOR_SIDE
     .unk0C                            resb 4      ; 0xc undefined4
 endstruc
 
@@ -384,7 +384,9 @@ endstruc
 
 ; /DoorSlot  (56 bytes)
 struc DoorSlot
-    .raw                              resb 56     ; 0x0 byte[56]
+    .faceA                            resb 4      ; 0x0 DoorFace *
+    .faceB                            resb 4      ; 0x4 DoorFace *
+    resb 48
 endstruc
 
 ; enum /EMERGENCY_CREW_TYPE  (4 bytes)
@@ -818,13 +820,18 @@ IMAGE_RESOURCE_DIRECTORY_ENTRY_DirectoryUnion_size equ 8
 
 ; /KanjiFont  (40 bytes)
 struc KanjiFont
-    .field0                           resb 4      ; 0x0 uint
-    .field4                           resb 4      ; 0x4 uint
-    .field8                           resb 4      ; 0x8 uint
-    resb 24
-    .marker24                         resb 1      ; 0x24 byte
-    .marker25                         resb 1      ; 0x25 byte
-    resb 2
+    .kidxTable                        resb 4      ; 0x0 ushort *
+    .kbitTable                        resb 4      ; 0x4 uchar *
+    .kidxCount                        resb 4      ; 0x8 uint
+    .smallPixels                      resb 4      ; 0xc uchar *
+    .smallSprite                      resb 4      ; 0x10 SpriteEntry *
+    .smallTexture                     resb 4      ; 0x14 void *
+    .largePixels                      resb 4      ; 0x18 uchar *
+    .largeSprite                      resb 4      ; 0x1c SpriteEntry *
+    .largeTexture                     resb 4      ; 0x20 void *
+    .fillColour                       resb 1      ; 0x24 uchar
+    .outlineColour                    resb 1      ; 0x25 uchar
+    .pad26                            resb 2      ; 0x26 uchar[2]
 endstruc
 
 ; /MapChangeEntry  (8 bytes)
@@ -3110,18 +3117,18 @@ endstruc
 
 ; /auto_structs/CrimeEvent  (20 bytes)
 struc CrimeEvent
-    .type                             resb 4      ; 0x0 int
-    .field1_0x4                       resb 4      ; 0x4 int
-    .field2_0x8                       resb 4      ; 0x8 int
-    .field3_0xc                       resb 4      ; 0xc int
-    .field4_0x10                      resb 4      ; 0x10 int
+    .kind                             resb 4      ; 0x0 CRIME_KIND
+    .actorPedId                       resb 4      ; 0x4 int
+    .posX                             resb 4      ; 0x8 Fix16
+    .posY                             resb 4      ; 0xc Fix16
+    .posZ                             resb 4      ; 0x10 Fix16
 endstruc
 
 ; /auto_structs/CrimeEventQueue  (204 bytes)
 struc CrimeEventQueue
-    .field0_0x0                       resb 2      ; 0x0 short
-    .readIndex                        resb 2      ; 0x2 short
-    .arr10                            resb 200    ; 0x4 CrimeEvent[10]
+    .writeIndex                       resb 2      ; 0x0 ushort
+    .readIndex                        resb 2      ; 0x2 ushort
+    .events                           resb 200    ; 0x4 CrimeEvent[10]
 endstruc
 
 ; /auto_structs/DoorFacePool  (708 bytes)
@@ -3425,14 +3432,14 @@ endstruc
 
 ; /auto_structs/MssAudio  (10008 bytes)
 struc MssAudio
-    .driver                           resb 4      ; 0x0 undefined4
+    .driver                           resb 4      ; 0x0 HDIGDRIVER
     .unsure_cdDriveLetter             resb 1      ; 0x4 byte
     .audioDir                         resb 80     ; 0x5 char[80]
     .musicEnabled                     resb 1      ; 0x55 byte
     resb 2
-    .samples2D                        resb 64     ; 0x58 undefined4[16]
-    .extraSample                      resb 4      ; 0x98 undefined4
-    .streams                          resb 8      ; 0x9c undefined4[2]
+    .samples2D                        resb 64     ; 0x58 HSAMPLE[16]
+    .extraSample                      resb 4      ; 0x98 HSAMPLE
+    .streams                          resb 8      ; 0x9c HSTREAM[2]
     .bankLoaded                       resb 1      ; 0xa4 byte
     resb 3
     .bankEntries                      resb 7680   ; 0xa8 MssBankEntry[320]
@@ -3442,14 +3449,16 @@ struc MssAudio
     .channels                         resb 1      ; 0x1eb1 byte
     .num3DSamples                     resb 1      ; 0x1eb2 byte
     resb 1
-    .providers                        resb 1024   ; 0x1eb4 undefined4[256]
+    .providers                        resb 1024   ; 0x1eb4 HPROVIDER[256]
     .providerNames                    resb 1024   ; 0x22b4 char *[256]
     .selected3DProviderIdx            resb 4      ; 0x26b4 int
     .eaxSupported                     resb 4      ; 0x26b8 int
     .eaxEnvironment                   resb 4      ; 0x26bc int
-    .provider3D                       resb 4      ; 0x26c0 undefined4
-    .samples3D                        resb 64     ; 0x26c4 undefined4[16]
-    .unsure_listenerPos               resb 12     ; 0x2704 float[3]
+    .provider3D                       resb 4      ; 0x26c0 HPROVIDER
+    .samples3D                        resb 64     ; 0x26c4 H3DSAMPLE[16]
+    .eaxEffectVolume                  resb 4      ; 0x2704 float
+    .eaxDecayTime                     resb 4      ; 0x2708 float
+    .eaxDamping                       resb 4      ; 0x270c float
     .providerCount                    resb 4      ; 0x2710 uint
     .use3D                            resb 1      ; 0x2714 byte
     resb 3
@@ -5256,10 +5265,10 @@ POWERUP_TYPE.POWERUP_TYPE_16 equ 16
 
 ; /imported/seuko-mod/PedGameObject  (180 bytes)
 struc PedGameObject
-    resb 4
-    .unk_0x4                          resb 1      ; 0x4 byte
-    .unk_0x5                          resb 1      ; 0x5 byte
-    .unk_0x6                          resb 1      ; 0x6 byte
+    .serial                           resb 4      ; 0x0 uint
+    .unsure_inUse                     resb 1      ; 0x4 byte
+    .appliedRemap                     resb 1      ; 0x5 byte
+    .unused_0x6                       resb 1      ; 0x6 byte
     resb 1
     .state1                           resb 4      ; 0x8 PED_STATE
     .state2                           resb 4      ; 0xc PED_STATE2
@@ -5273,15 +5282,15 @@ struc PedGameObject
     .walkAroundPhase                  resb 4      ; 0x24 int
     .walkAroundHeading                resb 2      ; 0x28 Ang16
     .walkAroundTurnStep               resb 2      ; 0x2a Ang16
-    .unk_0x2c                         resb 2      ; 0x2c Ang16
+    .unusedWalkAroundAngle            resb 2      ; 0x2c Ang16
     resb 2
-    .unk_0x30                         resb 4      ; 0x30 int
-    .unk_0x34                         resb 2      ; 0x34 short
+    .unused_0x30                      resb 4      ; 0x30 int
+    .unused_0x34                      resb 2      ; 0x34 short
     resb 2
     .speed                            resb 4      ; 0x38 SCR_f
     .walkSpeedTarget                  resb 4      ; 0x3c SCR_f
     .spriteRotation                   resb 2      ; 0x40 short
-    .unk_0x42                         resb 2      ; 0x42 Ang16
+    .headingJitter                    resb 2      ; 0x42 Ang16
     .groundType                       resb 1      ; 0x44 byte
     .slopeType                        resb 1      ; 0x45 byte
     .stateTimer                       resb 2      ; 0x46 short
@@ -5298,7 +5307,7 @@ struc PedGameObject
     .objectBumpCooldown               resb 1      ; 0x5c byte
     resb 3
     .detourAxis                       resb 4      ; 0x60 int
-    .unk_0x64                         resb 4      ; 0x64 int
+    .unused_0x64                      resb 4      ; 0x64 int
     .animFrame                        resb 1      ; 0x68 byte
     .walkingAroundObstacle            resb 1      ; 0x69 bool
     .stepAsideTimer                   resb 1      ; 0x6a byte
@@ -5310,7 +5319,7 @@ struc PedGameObject
     .detourTileY                      resb 1      ; 0x73 byte
     .stepAsideHeading                 resb 2      ; 0x74 Ang16
     resb 2
-    .nextMaybe                        resb 4      ; 0x78 PedGameObject *
+    .poolNext                         resb 4      ; 0x78 PedGameObject *
     .ped                              resb 4      ; 0x7c Ped *
     .body                             resb 4      ; 0x80 Sprite *
     .car                              resb 4      ; 0x84 Car *
@@ -5325,12 +5334,12 @@ struc PedGameObject
     .teleportX                        resb 4      ; 0xa4 SCR_f
     .teleportY                        resb 4      ; 0xa8 SCR_f
     .teleportZ                        resb 4      ; 0xac SCR_f
-    .unk_0xb0                         resb 4      ; 0xb0 int
+    .flameSoundTimer                  resb 4      ; 0xb0 int
 endstruc
 
 ; /imported/seuko-mod/PedGameObjectManager  (72004 bytes)
 struc PedGameObjectManager
-    .nextFreeMaybe                    resb 4      ; 0x0 PedGameObject *
+    .freeHead                         resb 4      ; 0x0 PedGameObject *
     .objects                          resb 72000  ; 0x4 PedGameObject[400]
 endstruc
 

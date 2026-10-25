@@ -103,7 +103,7 @@ Doppler: `SoundMgr_ApplyDopplerToFrequency` 0x416F20, f' = f·c/(c+v) with c = `
 | SM+0x8 | `ticksPerSecond` (unsure_int8) | byte | 30 (+0x9..0xB unused) | 0x416890, 0x417410, 0x4B1D40 (cap 30·90000) | high |
 | SM+0xC | `ticksPerSecondFix` (unsure_fix16_c) | Fix16 | 30.0, Doppler divisor | Ctor `Fix16_FromUChar(30)`, 0x416F20 | high |
 | SM+0x18/19/1A/1B | `unusedInit18/19/1a/1b` (unsure_flag18..1b) | byte | Ctor writes 1/1/1/0, no reader | Ctor 0x417EF0 | high (unread) |
-| SM+0x1C | `num3DVoices` (unsure_flag1c) | byte | out-param of `Mss_Init3DSamples` 0x4B72B0 (provider max, capped 16, < 8 = fail); copied to `voiceCount` | via `SoundMgr_Set3DSoundEnabled` 0x416640 | high |
+| SM+0x1C | `num3DVoices` (unsure_flag1c) | byte | out-param of `MssAudio_Init3DSamples` 0x4B72B0 (was `Mss_Init3DSamples`) (provider max, capped 16, < 8 = fail); copied to `voiceCount` | via `SoundMgr_Set3DSoundEnabled` 0x416640 | high |
 | SM+0x1D | `sound3DActive` | byte | the global label `g_sound3DActive` 0x5DCBE5 duplicates this field (safe to delete) | — | high |
 | SM+0x1450 | `unusedFlag1450` (unsure_int1450) | byte | written 0, no reader | 0x417F98 / 0x416D80 | high |
 | SM+0x5440 | `startup2DOutUnused` (unsure_int5440) | int | `LEA EAX,[ESI+0x5440]; PUSH`, callee ignores it | 0x41649D | high |
@@ -146,14 +146,60 @@ a wrecked car the radio is "off" (slot 0x66 → track 0xC with a 0x3C fade).
 
 ### 2d. Police radio
 
-`PoliceRadio_Update` 0x41C600 runs every unpaused frame. It drains `g_CrimeEventQueue` (entries are
-`CRIME_KIND`, pushed by `CrimeEvent_Report` 0x44A200), keeps the highest kind (9 only as a fallback)
-and reacts to wanted-level changes against `policeLastCopStars`. Three cooldowns throttle the reports
+`PoliceRadio_Update` 0x41C600 runs every unpaused frame (from `SoundManager_UpdateRadio`, also with
+MSS audio off). It drains `g_CrimeEventQueue` (entries are `CRIME_KIND`, pushed by
+`CrimeEvent_Report` 0x44A200, see "Crime event queue" below), keeps the highest kind and its tile
+x/y (9 is meant as a fallback only, but see the bug note below) and reacts to wanted-level changes against `policeLastCopStars`. Three cooldowns throttle the reports
 (`policeShotsFiredCooldown`, `policeCarDescCooldown`, `policeLocationReportCooldown`). A cop kill
 (kind 8) arms `policeCopKillFollowUpTimer`; on expiry `PoliceRadio_QueueCopKillFollowUp` 0x41C100
 queues 0x79, 0x5F, 0x5B, 0x78 (when > 3 slots are free). Phrase ids 0x45..0x88 go into the 15-dword
 `policeQueue` and are played one by one on the extra sample (`PoliceRadio_PumpQueue` 0x41C000 →
 `ExtraSample_PlayEntry`).
+
+#### Crime event queue (V = code read, not run; struct pass 4, 2026-10-25)
+
+`g_CrimeEventQueue` 0x5E79EC points to a `CrimeEventQueue` (0xCC B = `operator_new` size in
+`Game_Ctor` 0x45D1D5, `CrimeEventQueue_Ctor` 0x44A1F0, deleted in `Game_Dtor`): `+0` `writeIndex`
+(ushort), `+2` `readIndex`, `+4` `events[10]`; `CrimeEvent` is 0x14 B: `+0` `kind` (`CRIME_KIND`),
+`+4` `actorPedId`, `+8/+0xC/+0x10` `posX/posY/posZ` (Fix16). It is a pure producer → police-radio
+channel: it does not feed the wanted level (stars come from `PoliceManager` / ped wanted points).
+
+- **Producer**: only `CrimeEvent_Report` 0x44A200, `void __thiscall (CrimeEventQueue* queue /*ECX*/,
+  CRIME_KIND kind, Ped* ped)`, RET 8. Every caller does `MOV ECX,[0x5E79EC]` right before the call.
+  Hook trap: a C32 hook declared `__stdcall (kind, ped)` (the old Ghidra signature) leaves ECX garbage
+  (hypothesis from the convention, not tried); use `__thiscall` / ECX = `*(CrimeEventQueue**)0x5E79EC`.
+- **Callers** (V, xrefs): kind 1 `PlayerScore_OnCarDamaged` / `_OnCarRammed`; 2 every `Weapon_Fire*`
+  and `CarWeapon_Fire*`, molotov/grenade throw, electrogun; 3 `PlayerScore_OnCarDestroyed` /
+  `_OnFullBusDestroyed`; 4 `_OnBusHijacked`; 5 `_OnCarjack`. Kinds 6..9 come from **one** site,
+  `PlayerScore_OnPedKilled` 0x4B84FB (gang rival → 9; plain civilian killed with weapon 1 or 3 → 6,
+  other civilian → 7; law enforcement / army / FBI / SWAT / medic / fireman → 8), gated by
+  `Crime_IsPedKillCredited`; the actor passed is the **player's controlled ped, not the victim**.
+- **What `Report` does**: skips (does nothing at all) actors whose `Ped_GetOccupation` is POLICE 0x18,
+  SWAT 0x19, FBI 0x1A, ARMY_IN_VEHICLE 0x1B, POLICE_ON_FOOT 0x1D, 0x1E, ARMY_ON_FOOT 0x1F,
+  ROAD_BLOCK_GUARD 0x25 (jump table 0x44A29C; MEDIC / FIREMAN / GUARD / TANK_DRIVER are *not* excluded).
+  Kind < 3: pushed only if `CrimeEventQueue_ContainsKind` finds none of that kind queued (dedup within
+  the frame). Kind ≥ 3: `Ped_SetWitnessMark(actor)` 0x4331D0, always pushed, and for a
+  player-controlled actor `PoliceManager_UpdateCriminalPosition`. For every kind, a player-controlled
+  actor also gets `CrimeStats_CountCrime`. The **push is not gated on the actor being the player**:
+  an AI ped firing a weapon or destroying a car queues an event too (stats stay player-only; whether
+  AI peds reach those call sites in play was not traced).
+- **Ring** (`CrimeEventQueue_Push` 0x44A110 / `_Pop` 0x44A160): push stores at `writeIndex`, advances
+  mod 10, and if it caught `readIndex` advances that too: empty = `write == read`, **max 9 live
+  events, overflow silently drops the oldest**. Pop copies `kind, x, y, z` (not the ped id) out,
+  clears the slot, advances `readIndex` unless empty, returns `kind != 0`.
+  `CrimeEvent_Set` snapshots the actor's x/y/z **at push time** (`Ped_GetById` without a NULL check;
+  fine today because callers pass a live ped's id).
+- **Consumer**: `PoliceRadio_Update` pops until empty and keeps the highest kind with its tile
+  position (`Fix16_ToIntB(posX/posY)`; `posZ` and the actor id are never used); everything that is not
+  the frame's top event is discarded.
+- **Bug (V by control flow, not run)**: if the first drained event is kind 9 (gang kill) and nothing
+  is taken yet, it is taken, and `else if (best < kind)` can never beat 9 afterwards, so a cop kill
+  (8) queued later in the same frame is ignored: the opposite of "9 only as a fallback". Radio phrase
+  only; low severity.
+- `Crime_IsCarDestroyCredited` 0x44A2C0 / `Crime_IsPedKillCredited` 0x44A370 get the queue in ECX but
+  never use it: they are gates (`explosionDamageLatch`, `DAT_0066A3C9`, crusher list,
+  `Game_PlayerCameraSeesSprite`), not queue methods; the meaning of the two latches is unsettled.
+- Unknown: `Ped_SetWitnessMark` semantics; whether non-player peds ever hit kinds 1/2 in play.
 
 ### 2e. Functions settled in U1
 
@@ -182,6 +228,32 @@ queues 0x79, 0x5F, 0x5B, 0x78 (when > 3 slots are free). Phrase ids 0x45..0x88 g
 
 MssAudio wrapper prototypes are listed with the call contract in win32-shims.md.
 
+Struct pass 4 (2026-10-25, code read only): `MssAudio` (0x2718, a static object built by a CRT
+initialiser; `MssAudio_Ctor` 0x4B6CE0 has no code xref, size trusted from the last field) now types
+its handles with the `/Miles` typedefs `HDIGDRIVER` (+0, also the `AIL_waveOutOpen` out pointer, so
+`this` is passed as out param in `OpenWaveOut` 0x4B6DE0), `HSAMPLE samples2D[16]` (+0x58),
+`HSAMPLE extraSample` (+0x98), `HSTREAM streams[2]` (+0x9C), `HPROVIDER providers[256]` (+0x1EB4),
+`HPROVIDER provider3D` (+0x26C0), `H3DSAMPLE samples3D[16]` (+0x26C4). They are plain `void*`
+typedefs (no opaque Miles structs). Handle 0 = free; every wrapper skips it and tail-jumps into the
+`AIL_*` import. Details the host needs:
+- `OpenWaveOut` builds a WAVEFORMAT (tag 1, 2 ch, 22050 Hz), sets preferences 1 = 0x25, 0xF = 0,
+  0x21 = `use3D`, 0x1F = 1 (meanings not decoded), allocates the 6.1 MB bank buffer
+  (`AIL_mem_alloc_lock(0x5D1420)`). Sample types: 2D voices MONO_16 PCM_SIGNED, the extra sample
+  MONO_8 unsigned.
+- `LoadBank(styleName)` 0x4B6B40 reads `data\audio\<name>.RAW` + `.SDT` and **falls back to `bil`** when
+  the level bank cannot be opened; a RAW larger than 0x5D1420 is refused; `bankEntries` are 0x140 ×
+  0x18 B from the SDT.
+- `PlayRange(first, last)` (phone chatter) needs `first < last` and a finished previous play;
+  `ExtraSample_End` 0x4B6A60 and `_Stop` 0x4B6B20 are byte-identical.
+- `Stream_OpenTrack`: opening stream 0 with `musicEnabled == 0` does nothing; a 0 result (missing
+  file) is stored silently. `Stream_GetPlaybackRate` returns 0x5622 when the stream is 0.
+- `SoundMgr_ApplyRequestsToVoices` passes a **loop count with 0 = forever** (request +0x30) and the
+  loop block (+0x34 / +0x38).
+- `MssBankEntry.sampleRate` is `MssAudio_GetBankEntrySampleRate`; `Mss_A3D_DisableSplash` 0x4B5ED0
+  (writes `HKCU\Software\Aureal\A3D` `SplashScreen=0`, `SplashAudio=0`) is not an `MssAudio_` method.
+Host-vs-game mismatches (H1-H3, found by code read): [../win32-shims.md](../win32-shims.md) "Host vs
+game contract".
+
 ### 2f. Sound hazards and open questions (U1)
 
 | VA | what | trigger | severity | status |
@@ -190,6 +262,12 @@ MssAudio wrapper prototypes are listed with the call contract in win32-shims.md.
 | 0x4B2FD5 | the radio client is attached once and never detached (`SoundManager_Reset` skips it) | permanent: 1 of the 1019 slots stays used | none | verified by code (two xrefs of +0x5508, both in InitOnce) |
 | 0x416630 / MssAudio+4 | the "CD drive letter" (`'c'`) is read by the intro-movie path builders and ignored | — | none (dead remnant) | verified by code (0x452990..0x4529DA) |
 | 0x4B6890 | `MssAudio_Stream_SetVolume` masks the volume `&0xFF` | — | info for `host/c/audio.c` | verified by code |
+| 0x4B6B40 | `MssAudio_LoadBank`: with neither the level's `.SDT` nor `BIL.SDT` it `_fclose`s the already closed RAW handle and then `fread`s from NULL | a pak lacking a level's .SDT **and** bil.sdt | low (pak has all) | code path read |
+| 0x4B6B40 | `LoadBank` path buffers are fixed stack arrays, copy length unchecked | style name longer than ~36 chars (mods) | low | code read |
+| 0x4B6600 | `Enumerate3DProviders` copies each provider name into a 0x50-byte `operator_new` block unchecked, never freed | 3D only, name > 79 chars | low | code read |
+| 0x4B6F70 / 0x4B6DE0 | `Init2DSamples` with `use3D` closes and reopens the device, but `extraSample` is not re-allocated (`Alloc` skips a non-zero handle): stale handle | only after a 3D provider was opened (unreachable on the host) | low | code read |
+| 0x4B67E0 / 0x4B7000 | music fade-out = up to 127 × `AIL_delay(1)`, blocking the game thread ~1.3 s at CD volume 0x4C (2 s at max); from `SoundMgr_DetachSource` 0x416C63 | leaving frontend music | cosmetic, same in the original | code read |
+| 0x4B66A0 | `MusicStream_IsDone` is false forever when `musicEnabled == 0` | — | none | code read |
 
 Open:
 
@@ -201,8 +279,11 @@ Open:
 - +0x18..0x1B, +0x1450, +0x5444: unread in every scan run (absolute refs, typed `this` accesses in
   196 functions, disp ≥ 0x100 in sound functions); a read through an unusual base register is not
   ruled out 100 %.
-- `Mss_Init2DSamples(arg)` (callers pass 1) and `MssAudio_Eax_SetEffectParams` are typed but their
-  arguments are not named by meaning. `MssAudio.unsure_listenerPos[3]` (+0x2704) is only set to −1.0.
+- `MssAudio_Init2DSamples(arg)` 0x4B6F70 (was `Mss_Init2DSamples`; callers pass 1, the argument is
+  unused). `MssAudio+0x2704..0x270C` (was `unsure_listenerPos[3]`, a wrong guess) are
+  `eaxEffectVolume / eaxDecayTime / eaxDamping`, stored by `MssAudio_Eax_SetEffectParams` 0x4B6460
+  `(float effectVolume, float decayTime, float damping)` (checked against the Miles attribute names
+  "EAX effect volume / decay time / damping"); −1.0 = unset. That function has no caller in 11.44.
 - Decompiler artefact: callers of `PoliceRadio_GetFreeQueueSlots` show `QueuePhrase(this_0x, …)`
   because Ghidra assumes the fastcall callee clobbers ECX; it only reads it.
 - Duplicate names: `CarSound_AddDoors` is at both 0x4143B0 and 0x4156B0 (the thunk); global label
