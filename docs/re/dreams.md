@@ -3,11 +3,12 @@
 The RE needed for three user goals, tracked by Seq 27. Per dream: what is known (with VAs and doc links), what is open,
 and the next step. Marks: (V) verified in code or live, (U) unverified / hypothesis.
 
-Status 2026-10-25: program started. Phase 1 (HD sprites) is next.
+Status 2026-10-25: phase 1 (HD sprites) running: three RE agents (H1 texture path + hook design, H2 remaps/palettes/deltas,
+H3 ped animation, sprite ids, logical size). The previous Ghidra round (code holes, Script/Ped/Hud prototypes) is finishing in parallel.
 
 | Dream | Phase | Deliverable | State |
 |---|---|---|---|
-| 1. HD sprites (peds and cars first) | 1 | [sprites-hd.md](sprites-hd.md) | started |
+| 1. HD sprites (peds and cars first) | 1 | [sprites-hd.md](sprites-hd.md) | RE running |
 | 2. Own car models in ambient traffic | 2 | [custom-cars.md](custom-cars.md) | not started |
 | 3. Russian version | 3 | [fonts-localization.md](fonts-localization.md) update | not started |
 
