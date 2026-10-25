@@ -4,13 +4,13 @@ The RE needed for three user goals, tracked by Seq 27. Per dream: what is known 
 and the next step. Marks: (V) verified in code or live, (U) unverified / hypothesis.
 
 Status 2026-10-25: phase 1 (HD sprites) closing: H2 (remaps, palettes, deltas) and H3 (ped frames, car sprite ids, logical
-size) done, the live probe `gta2ctl sprites` (8f6bf00) confirmed the draw key; H1 (texture path) still running, then
+size), H1 (texture path) done, the live probe `gta2ctl sprites` (8f6bf00) confirmed the draw key; written up in
 `sprites-hd.md`. Phase 2 (custom cars) running in parallel: C1 model limits + per-model tables, C2 traffic picker, C3 model ->
 assets + tooling.
 
 | Dream | Phase | Deliverable | State |
 |---|---|---|---|
-| 1. HD sprites (peds and cars first) | 1 | [sprites-hd.md](sprites-hd.md) | RE mostly done, doc pending |
+| 1. HD sprites (peds and cars first) | 1 | [sprites-hd.md](sprites-hd.md) | RE done |
 | 2. Own car models in ambient traffic | 2 | [custom-cars.md](custom-cars.md) | RE running |
 | 3. Russian version | 3 | [fonts-localization.md](fonts-localization.md) update | not started |
 
@@ -24,7 +24,7 @@ Known before this program:
 - Our renderer implements `gbh_RegisterTexture` / `gbh_DrawQuad` in `host/c/renderer_gbh.c` ([renderer-sdl.md](renderer-sdl.md),
   [renderer-api.md](../renderer-api.md)).
 
-Found in phase 1 (details go to `sprites-hd.md`):
+Found in phase 1 ([sprites-hd.md](sprites-hd.md); the hook design is its §7):
 - The draw key is fully known at `Sprite_Draw` 0x4BE060 entry: spriteType +0x30, spriteId +0x22 (category relative),
   paletteKind +0x34, remap +0x24, shrink +0x38, and for cars the delta mask Car+8. Live (V, `gta2ctl sprites`, Downtown,
   ~1000 frames, 32 736 sprite quads, 430 keys): every key always came with the same pixels + palette, 0 conflicts; the
@@ -35,7 +35,14 @@ Found in phase 1 (details go to `sprites-hd.md`):
   palettes, so an HD pack needs per-pixel palette indices or per-remap art, not a tint.
 - HD rule: never change the logical sprite w/h (collision, z-layer, skid, crusher, HUD read it); swap only the texture.
 
-Open: H1 (texture registration and eviction), unseen cases live (cops/medics, armed peds, burning/wrecked cars = shrink).
+- Textures: static handles per (sprite, remap) registered once per style load; only the 48 car delta slots change
+  content, so the key must come from `Sprite_Draw`, not from the texture handle (H1).
+
+Still unknown: live coverage of shrink/wrecks, the emergency ped block, armed peds; HUD/font sprites (not in scope).
+
+Implementation task I would open: "HD sprite pack loader": turn the probe into the real hook (C32 tag already there),
+host-side HD lookup by key with palette-index HD art + remap palettes, car delta overlay composition and cache,
+UV normalisation by the logical size; first milestone = one HD ped frame set and one HD car with its deltas.
 
 ## 2. Custom cars in traffic
 
