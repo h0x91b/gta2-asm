@@ -1,6 +1,8 @@
 address,name,section,datatype,size
 0x0057960c,UnwindMapEntry_ARRAY_0057960c,.rdata,/UnwindMapEntry[2],16
+0x0057961c,FuncInfo_0057961c,.rdata,/FuncInfo,28
 0x00579638,UnwindMapEntry_00579638,.rdata,/UnwindMapEntry,8
+0x00579640,FuncInfo_00579640,.rdata,/FuncInfo,28
 0x0057965c,UnwindMapEntry_0057965c,.rdata,/UnwindMapEntry,8
 0x00579664,FuncInfo_00579664,.rdata,/FuncInfo,28
 0x00579680,UnwindMapEntry_00579680,.rdata,/UnwindMapEntry,8

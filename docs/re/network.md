@@ -196,7 +196,7 @@ offsets they use are the same, because IDirectPlay4 only appends methods.)
 
 ### 3.2 Flow
 
-1. **Construction.** Static init `0x56C775` → `Network_Ctor` `0x40A2C0`: vtable `0x56E740` (one entry,
+1. **Construction.** Static init `0x56C770` (`StaticInit_NetworkSession`, pass 5; the thunk entry, earlier quoted as `0x56C775`) → `Network_Ctor` `0x40A2C0`: vtable `0x56E740` (one entry,
    `Network_ScalarDeletingDtor`), tables zeroed, send/receive buffers 2 × 0x1800, six unused 0x800
    buffers, `hReceiveEvent` = auto-reset event (never waited on), state 5. `Network_Dtor` `0x40A3A0`
    runs from atexit `0x56DB75`.

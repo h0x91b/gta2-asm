@@ -298,6 +298,38 @@ doors, generators, gangs, lights, trigger threads). Afterwards come
 `MissionScript_RestoreAnsweredPhones` and `ScriptThread_DisableBasicKfsFromSave` (state from the
 save file).
 
+**Calling conventions for hooks (V, pass 5 prototypes).**
+
+- `Script_Op_*` (199 typed handlers): `void __fastcall (ScriptThread* thread)`, ECX = thread (the dispatch stub's
+  `mov ecx, edx`). Nobody reads EAX: the engine reads `SCR_CMD_HEADER.return_value`, so a hook must never
+  return a value to the dispatcher. 8 handlers were wrongly `__stdcall(void)` and start with `MOV EDX,ECX`
+  (`S_OP_I`, `S_OP_S`, `I_OP_S`, `INCREMENT`, `DECREMENT`, `CHECK_CAR_DAMAGE_LEVEL`, `CHECK_CAR_MODEL`,
+  `HAS_CHAR_BEEN_ARRESTED`); `EXPLODE_POS` 0x479E10 and `SWITCH_ROAD` 0x47C6F0 had a bogus 2nd parameter
+  (EDX nobody sets), they take only `thread`. `CHANGE_GANG_CHAR_RESPECT` and `GIVE_WEAPON` are 11.44 patch
+  stubs that `JMP` into the `Patch1144_*` hook in the `.text` slack. The mid-function fragments
+  (`Script_Op_GIVE_WEAPON_Frag` 0x4797BB, `…CHANGE_GANG_CHAR_RESPECT_Frag` 0x47AB91,
+  `…PUT_CAR_ON_TRAILER_Frag` 0x47D615, `…WARP_FROM_CAR_TO_POINT` 0x47DAD0,
+  `…DoEasyPhoneTemplate_RespectTail` 0x480195, `Patch1144_*Hook`) have no prologue and reuse the caller's
+  registers: no convention applies, hook the parent as one unit.
+- `Script_Decl_*` (all 36): `void __thiscall (MissionScript* this, SCR_CMD_HEADER* cmd[, SCR_CMD_HEADER* slot])`,
+  `RET 8` where there are two stack arguments (`PLAYER_PED`: `SCR_PLAYER_PED* cmd`, no `slot`).
+  `ScriptThread_PreExecOpCode` does `MOV ECX,ESI` (ESI = MissionScript) and pushes the same cmd pointer
+  (EAX) once or twice (call site 0x481453..0x481627): the second argument is the slot the created object is
+  written to (`cmd+8`). A replacement for a `RET 8` handler must take two stack arguments or the stack
+  unbalances.
+- `MissionScript_*` are all `__thiscall`, `this` in ECX. `MissionScript_GetCmd` 0x476200 is
+  `SCR_CMD_HEADER* (ushort pointerIndex)`; it used to carry a bogus 3rd parameter that fed `unaff_EDI`
+  garbage into the decompiles of all 258 callers. Same fake-parameter class fixed in `SaveGame` 0x47EF40
+  (`(char* saveFileName)`, fake `edx` removed), `LoadSaveGame` 0x47F0B0, `Load` 0x47F280, `ParseStrings`
+  0x475D30 (`(ushort stringsLen)`), `CheckWeaponHitWatch` 0x4765A0. `MissionScript_SpawnThread` 0x47F200 is
+  `ScriptThread* __stdcall (ushort startCmd, byte flag)` and returns the thread in EAX. The `Find*ThreadEntry`
+  / `FindPhoneThreadByObjId` functions return `ScriptThreadTrigger*`; `FindStringById` / `FindStringByName`
+  return `SCR_STRING_HEADER*`. `Patch1144_Script_GetCharPlayer` 0x3F10B0 is entered with the pointer in
+  EAX (no convention).
+- Only `SCR_PLAYER_PED` exists as a typed argument struct; the other handlers still read `g_ScriptCurCmd + N`
+  (190+ structs would be needed). U: `MissionScript_DeleteItemByCmd` case 2 calls `RemoveWeaponHitWatch`
+  with `this` from `g_MissionScript` (the decompile lost ECX; not checked in asm).
+
 **Per-frame step: `ScriptThread_Update` `0x481120`** (gta2_re `PoolUpdate_511840`). It returns 1
 when the thread is stopped or `next_cmd == 0xFFFF`. Otherwise it first runs
 `ScriptThread_MissionFailOnArrest` (`0x47F550`, was `JobFailed`), then:
@@ -900,7 +932,7 @@ getter), so those were **not** applied; they are listed further down.
 | `0x4c6860` | Hud_Brief_ClearAllBriefsWithPriority | Hud_Brief_704::ClearAllBriefsWithPriority_5D4890 | 2 handlers agree |
 | `0x4c9310` | Hud_Pager_C_Array_CreateTimer | Hud_Pager_C_Array::CreateTimer_5D31F0 | 2 handlers agree |
 | `0x4c9360` | Hud_Pager_C_Array_AddOnScreenCounter | Hud_Pager_C_Array::AddOnScreenCounter_5D3220 | 2 handlers agree |
-| `0x4ca8e0` | Hud_Arrow_7C_Array_AllocArrow | Hud_Arrow_7C_Array::AllocArrow_5D1050 | 2 handlers agree |
+| `0x4ca8e0` | Hud_ArrowPool_AllocArrow | Hud_Arrow_7C_Array::AllocArrow_5D1050 | 2 handlers agree |
 
 **Candidates, not applied** (one handler votes for them; about half are wrong in the spot check):
 
@@ -1136,7 +1168,7 @@ reproduced live.
   (state == 3); `Door_CarMayOpen` mode 6 → `ParkController_IsLastParkedCar` 0x44C870 (the door
   re-opens for the car just parked); `Ped_Obj2_EnterCar` 0x43D1C0 → `ParkController_IsCarInside`
   0x434AF0 (nobody may enter a car already pulled in; the player's objective is cleared);
-  `Ped_ReactToCarOrObjectObstacle` → `ParkController_IsCar` 0x493540.
+  `PedGameObject_ReactToCarOrObjectObstacle` → `ParkController_IsCar` 0x493540.
 - **Exit headings** (`ParkController_GetExitHeading` 0x489560, statics set by CRT initialisers via
   `Ang16_MulFix16(deg)`): 0x669BD8 = 270° (init 0x53D531), 0x669DBC = 90° (0x53D441),
   0x669CFC = 180° (0x53D4D1), 0x669C98 = 0 (0x53D1F0).

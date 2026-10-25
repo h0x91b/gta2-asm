@@ -56,6 +56,8 @@ typedef struct CraneManager CraneManager;
 typedef struct CrimeStats CrimeStats;
 typedef struct Crusher Crusher;
 typedef struct CrusherManager CrusherManager;
+typedef struct DIDATAFORMAT DIDATAFORMAT;
+typedef struct DIOBJECTDATAFORMAT DIOBJECTDATAFORMAT;
 typedef struct DoorFace DoorFace;
 typedef struct DoorManager DoorManager;
 typedef struct DoorSlot DoorSlot;
@@ -2779,6 +2781,24 @@ struct Crusher {
 struct CrusherManager {
     Crusher crushers[3]; /* 0x0 */
     int count; /* 0x90 */
+};
+
+// /DIDATAFORMAT  size 0x18
+struct DIDATAFORMAT {
+    uint32_t dwSize; /* 0x0 0x18 */
+    uint32_t dwObjSize; /* 0x4 0x10 */
+    uint32_t dwFlags; /* 0x8 DIDF_* */
+    uint32_t dwDataSize; /* 0xc size of the device state packet */
+    uint32_t dwNumObjs; /* 0x10 number of rgodf entries */
+    DIOBJECTDATAFORMAT *rgodf; /* 0x14 object format array */
+};
+
+// /DIOBJECTDATAFORMAT  size 0x10
+struct DIOBJECTDATAFORMAT {
+    GUID *pguid; /* 0x0 GUID of the object (NULL = any) */
+    uint32_t dwOfs; /* 0x4 offset in the data packet */
+    uint32_t dwType; /* 0x8 DIDFT_* flags | instance<<8 */
+    uint32_t dwFlags; /* 0xc DIDOI_* flags */
 };
 
 // /DoorFace  size 0x10
@@ -5639,7 +5659,7 @@ struct Sprite {
     uint8_t _gap_0x2d[0x3];
     SPRITE_TYPE spriteType; /* 0x30 SPRITE_TYPE of the sprite (was collisionKind): the style sprite base Sprite_Draw 0x4BE060 passes to TextureCache_GetSpriteTexture; set by Sprite_SetSpriteType 0x4206F0 (cars 2, peds 3, objects = ObjectPrefab.defaultSpriteType 1/4/5, particles 8); also the 'what is this sprite' tag read by Sprite_GetSpriteType 0x416B40 (58 callers). [H4, 2026-10-23] */
     int paletteKind; /* 0x34 render palette kind, 1-based: 2 sprite, 3 car remap, 4 ped remap, 8 font (Sprite_SetRemap / Sprite_SetNoRemapState 0x420700) */
-    byte field22_0x38; /* 0x38 */
+    byte shrink; /* 0x38 px cropped from each side of the drawn sprite (Sprite_Draw: w-2*shrink via a scratch texture); += by Sprite_AddSpriteShrinkClamped 0x4BAB10 (Car_OnWrecked, Object_SinkAndDieInWater), clamped to min(w,h)/2. H3 (V). */
     byte cachedZLayer; /* 0x39 */
     uint8_t _gap_0x3a[0x2];
 };
@@ -5710,7 +5730,7 @@ struct SubScript {
 struct TextureCacheUserSlot {
     void *pixels; /* 0x0 sprite pixel base (TextureCache_RegisterUserSpriteSlots 0x4C2A00 stores SpriteEntry.ptr); +row*0x100 = gbh texture data ptr (0x4C2BC0) */
     int texture; /* 0x4 gbh texture handle (gbh_RegisterTexture in 0x4C2A00; gbh_FreeTexture in TextureCache_FreeAll 0x4C2D60) */
-    short unsure_width; /* 0x8 cached value written to texture+0x10 (width field per 0x4C2C80/0x4C2CE0) by TextureCache_SetUserTextureRowAndHeight 0x4C2BC0 */
+    short height; /* 0x8 cached value written to texture+0x10 (GbhTexture.height) by TextureCache_SetUserTextureRowAndHeight 0x4C2BC0 (disasm 0x4C2BF8/0x4C2C17: arg3 -> +8 and -> tex+0x10). Width stays the registered sprite width. HUD digit strips: row selects the strip row, height its visible height. Was unsure_width. [H1 2026-10-25] */
     uint16_t row; /* 0xa cached row: texture+0x14 = pixels + row*0x100 (0x4C2BC0) */
 };
 

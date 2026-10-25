@@ -184,6 +184,46 @@ Game+0x20..0x22: `playerIterCursor`, `cameraIterPlayer`, `cameraIterAux` (iterat
 - `PedGameObject+0x10` (movement sub-state: 0xF jump, 0x24 entering a car) and `+0x6C` (body
   animation state, 5 = jump) are not decoded; the old `PED_STATE4` enum was meant for `+0x6C`.
 
+**Ped prototypes for hooks (pass 5, V unless marked).** 259 of 308 `Ped_*` prototypes had `undefined*` returns or
+`param_N`; they are now `__thiscall` with `this` in ECX and custom-storage returns (EAX/AX/AL).
+
+- **The 16 handlers take no EDX parameter.** `Ped_Obj1_{EnterTrain, PatrolOnFoot, DestroyObject, EnterCar,
+  LeaveCar, LeaveTrain, EjectFromCarAndFall, BustedTakenAwayInCopCar}` and `Ped_Update{Mugger, TrainPassenger,
+  Threats, CarThief, TaxiPassenger, BusPassenger, EjectedDriver, OccupationBehaviour}` were typed
+  `fastcall(Ped*, uint param_2 @EDX)`; all are `void __thiscall (Ped* this)`, RET 0, and the first EDX mention in
+  each body is a write. A hook that expects an EDX argument is wrong.
+- **Wrong old returns.** `Ped_ShouldReactToPed` 0x4371D0 returned `Ped*` but is `bool (Ped* other)` (low byte only);
+  `Ped_AreAllied` 0x4462F0 is `bool __stdcall (Ped* a, Ped* b)`, both on the stack, no `this`; `Ped_CreateSprite`
+  0x4360C0 is `bool (Fix16 x, y, z)`; `Ped_GetZ` 0x416B50 is `Fix16* (Ped*, Fix16* out)` and returns `out`
+  (RET 4); the rotation / move-target / aim / speed getters are `Ang16*` / `Fix16* out` and return `out`;
+  `Ped_UpdateAimRotation` 0x43E3A0 is `Ang16* (Ang16* out)` (`Weapon_FireSmg` 0x4CE4DE does `MOV CX,[EAX]` on
+  the result); `Ped_JitterAimRotation` 0x43ABA0 is `void (WEAPON_STRUCT* weapon)` (EDX unused);
+  `Ped_InitAsGroupMemberCloneOf` 0x4402C0 is `void (Ped* this, Ped* leader, WEAPON_INDEX weapon)`, RET 8;
+  `Ped_IsGroupmateOrCopOfGroup` 0x434BA0 is `bool (Ped*, PedGroup* group)`; the first parameter of 0x403940 is
+  `byte groupSlot` (RET 4, one parameter).
+- **Renames (wrong `this` type or wrong meaning).** `Ped_GetPosX` 0x436160 → `Ped_GetSpeed(Fix16* out)`: it calls
+  `Sprite_GetSpeed(gameObject)` / `Car_GetFrameDisplacementLength(currentCar)` / ZERO (22 callers); X is
+  `Ped_GetX` 0x403A00, and `Ped_GetSpriteSpeed` 0x433C20 is the same without the car fallback.
+  `Ped_ResolveSpriteObstacle` 0x499F00, `Ped_ReactToPedObstacle` 0x494280, `…ToObjectObstacle` 0x4993B0,
+  `…ToCarOrObjectObstacle` 0x4948C0 → `PedGameObject_*` (`this` is the PedGameObject: `path[]` at go+0x10/0x18/0x20/0x69,
+  ped at +0x7C, body at +0x80). `Ped_ElvisHandling` 0x403FB0 → `PedGroup_ElvisHandling(PedGroup* this, Ped* killer)`,
+  `RET 4`: callers `Ped_Remove` 0x43E7B8 / 0x43E7CF and `Ped_OnDeath` 0x4412AF set `ECX = [ped+0x164]` (Ped.group) and
+  push `[ped+0x1A8]` (killer); the body reads `+0x2C` = PedGroup.leader. The old signature had a bogus 3rd
+  parameter.
+- **Name hazards.** Two functions were called `Ped_GetId` (0x420B60 and 0x4C4F20, byte-identical
+  `MOV EAX,[ECX+0x200]; RET`); the `re/` export and the NASM `.inc` would collide, so 0x4C4F20 is now
+  `Ped_GetIdTwin` (V, Ghidra; 5 references vs 18 to 0x420B60). `Ped_IsPlayerWithOccupation` 0x433380 takes no
+  occupation: it returns `pedClass == PLAYER && occupation != 1` (name misleading, kept). `Ped_TakeTrainStop`
+  0x4117D0 and `…2` 0x4117F0 are byte-identical read-and-clear of Ped+0x13C. `Ped_SetGameObjectField3C` 0x403A50
+  only typed (writes `walkSpeedTarget`), not renamed.
+- **Still untyped** (`unsure_argN`): `Ped_OnProjectileMissed`, `AddPatrolPoint` (3 bytes, probably an `S3Bytes`
+  x,y,z), `TakeDamage` (3rd, short), `OnProjectileHit`, `ElectroFingersZap` (6 params), `RecruitNearbyIntoGroup` 2nd,
+  `Obj2_ApproachAndAttackTarget` (1 stack param), `MoveTowardTarget` 3rd, `FindThreatArea/Target/LineOfSight` 2nd,
+  `CreateSpriteInAreaSpiral` / `ResetForRespawn` `byte* unsure_area` (rect at +1..+4). `Ped_ThreatSearchCandidateFilter`
+  0x4B9A10 `this` is `void* candidate` (reads +8 as a Sprite*; a spiral-search callback, not a Ped).
+  `Ped_UpdateThreats`, `CopyFrom`, `MoveTowardTarget`, `Init` show `path[]` hits in the decompiler: that is the real
+  `Ped.path`, not a wrong `this`.
+
 ## 8. Ped pathfinding (`PedPathfinder`, Seq H3)
 
 Source: Seq H3 (2026-10-23), decompile and asm of every `PedPathfinder_*` function,

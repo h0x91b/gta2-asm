@@ -214,7 +214,7 @@ HUD font roles (`Font_AssignRolesByLocale` 0x4CA520; Japanese switches to kanji 
 
 ### 3.1 Brief queue (the "pager" with the speaker icon)
 
-- `Hud_Brief_Enqueue(priority, key, arg)` 0x4C6690 (stdcall, ECX = queue). It takes a free node.
+- `Hud_Brief_Enqueue(priority, key, arg)` 0x4C6690 (`__thiscall`, ECX = queue, RET 0xC). It takes a free node.
   If none is free, it steals the oldest node of `history`, then the active tail (the lowest,
   oldest brief is dropped silently). The key is at most 7 chars. A higher priority, or priority 3,
   pre-empts the head; a started head goes to history, not back into the queue. Otherwise the node
@@ -253,6 +253,33 @@ HUD font roles (`Font_AssignRolesByLocale` 0x4CA520; Japanese switches to kanji 
   `Hud_Arrow_ShouldShow` 0x4CA770 hides gang arrows unless the player is in that gang's zone
   and respect ≥ minRespect (yellow 40, red 80, green −19: H on the meaning); `show_all_arrows`
   shows everything.
+  **Arrow pool convention (V, pass 5)**: the pool methods are `__thiscall` with ECX = `HudArrowPool*`
+  = `&g_HudManager->arrowPool` (`g_HudManager` + 0x1F18; all 8 callers of `Hud_ArrowPool_AllocArrow`
+  0x4CA8E0 do `ADD ECX,0x1F18`). `Hud_ArrowPool_ClaimFreeArrow` 0x4C5E70 is
+  `HudArrow* (HudArrowPool*, int* outIndex)`, 0 when no slot is free. `AllocArrow` is
+  `HudArrow* (HudArrowPool*)` (was named `Hud_Arrow_7C_Array_AllocArrow`, typed `fastcall(HudManager*)`).
+  **Bug (V, read from code, not run): `AllocArrow` returns NULL when all 17 arrows are busy**, and it
+  calls `Hud_Arrow_Reset` 0x4CA610 on the result itself (`MOV ESI,EAX; MOV ECX,ESI; CALL 0x4CA610`,
+  no TEST, 0x4CA8EE), as do its 8 callers (POINT_ARROW_AT, SET_ARROW_COLOUR, …): an 18th live arrow
+  writes at address 0+. `Hud_Pager_C_Array_CreateTimer` returns −1 when its 4 slots are full; callers'
+  handling not checked.
+- **Register-convention (usercall) HUD functions (V, pass 5)**; a hook has to read the register, not
+  the stack: `Hud_Arrow_ColourFromPhoneObjectType` 0x4C5EA0 (EAX object type → EAX colour),
+  `Hud_Arrow_ColourName` 0x4C5EE0 (EAX colour → `wchar_t*`: 0x575684 / 0x57568C / 0x575690, default
+  0x574144), `Hud_Arrow_RespectThresholdForColour` 0x4C5F10 (EAX colour → AL signed char: 1 → 40,
+  2 → 80, 3 → −19, else 0), `Hud_Weapon_Draw` 0x4C9A40 (AL = display ammo byte, DI = weapon id, no
+  stack params), `Hud_PowerupIcon_Draw` 0x4C9B40 (EBX = type, EDI = x, one stack param, RET 4).
+- **Other HUD conventions (V)**: `Hud_QuitConfirm_ConsumesKey` / `Hud_ChatInput_ConsumesKey` are
+  `bool __stdcall (uint keyCode)` and ignore ECX; `Hud_IsKeyConsumedByOverlay` 0x4C6DE0, the thunk
+  0x4C6E20 and `Hud_HandleOverlayKeyDown` 0x4CA5D0 (`bool (HudManager*, uint keyCode, int unsure_flag)`)
+  are `__thiscall` on `HudManager*`. `Hud_DrawChatInput`, `GangRespectBars_Draw`, `DrawPlayerNames`,
+  `Health_Draw`, `DrawPlayerPanel` are `void __stdcall (void)`: their entry `PUSH ECX` only reserves
+  stack. `Hud_PauseOverlay_Draw` 0x4C9FA0 and `Hud_DebugLabel_Draw` 0x4C8B90 are `fastcall` on their
+  struct. `Hud_Arrow_InitOrbitRadiusBase` 0x4C6FF0 is `thiscall(HudArrow*, int slotFromEnd)` (caller
+  pushes 16 − slot). `Hud_MulIntByFix16` 0x4C60D0 is `Fix16* stdcall (Fix16* out, int n, Fix16* a)`.
+  `Hud_Pager_Draw` / `DrawCounterDigits` / `DrawTimerDigits` and `Hud_ZoneName_Show`'s two pointers
+  keep untyped `param_N` (meaning not settled). The `Hud_Pager_C_*` names keep a "C" that is the
+  struct stride 0xC (proposal: `Hud_PagerSlot_*` / `Hud_PagerArray_*`, not renamed to avoid churn).
 - **Wanted stars**: count = `Ped_GetCopStars` (0..6); blink every 2 ticks; bounce ±4 px while
   pursued.
 - **Timers and counters** (`HudPagerArray`, 4 slots): DISPLAY_TIMER →
@@ -1375,7 +1402,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4C8690 | `Player_HandleQuitConfirmKey` | old |
 | 0x4C8880 | `ChatInput_HandleKey` | old |
 | 0x4C8910 | `Hud_DrawChatInput` | old |
-| 0x4C8990 | `Hud_ChatInput_DrawLine` | V |
+| 0x4C8990 | `Hud_ChatInput_DrawLine` | V (not a real function: tail fragment of `Hud_DrawChatInput`, starts with `ADD ESP,0x10`; Ghidra object left in place) |
 | 0x4C8A20 | `ChatInput_Open` | old |
 | 0x4C8A40 | `Hud_BigLabel_Draw` | V |
 | 0x4C8AA0 | `Hud_DebugLabel_Init` | old |
@@ -1413,7 +1440,7 @@ predates Seq 41 and was kept as is (checked by reading, but not re-verified in d
 | 0x4CA770 | `Hud_Arrow_ShouldShow` | V |
 | 0x4CA860 | `Hud_Arrow_Tick` | V |
 | 0x4CA890 | `Hud_ArrowPool_Tick` | V |
-| 0x4CA8E0 | `Hud_Arrow_7C_Array_AllocArrow` | old |
+| 0x4CA8E0 | `Hud_ArrowPool_AllocArrow` | old |
 | 0x4CA910 | `Hud_ArrowPool_RegisterGangPhoneArrow` | V |
 | 0x4CAB50 | `DrawGUI` | old |
 | 0x4CABE0 | `Hud_RelayoutAllText` | old |

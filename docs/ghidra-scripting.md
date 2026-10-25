@@ -109,3 +109,27 @@ From Seq 27 (Ghidra owner) runs, 2026-10:
   "Script does not exist" dialog in the user's GUI, and the run, with its transaction, waits on it:
   nobody can `save_program` until the dialog is answered (measured 2026-10-22, six minutes blocked).
   `getCurrentTransactionInfo().getOpenSubTransactions()` names the holder.
+
+From the pass 5 hole-filling and prototype runs, 2026-10-25:
+
+- **A noreturn callee eats the fall-through of every call site.** `DisplayError` 0x450530 is noreturn, so Ghidra
+  cleared the flow after each call, including real continuations reached through a `JNZ` target. Repair:
+  `disassemble(addr after call)` + `CreateFunctionCmd.fixupFunctionBody`, iterated (new code holds new
+  `DisplayError` calls). The dead `add esp,N` tails with no incoming xref must then be cleared again
+  (`clearListing`) and stay undefined. Do not trust sizes or decompiles of functions around `if (!x) DisplayError(...)`
+  from before this repair.
+- **A function can carry a degenerate stored body** (1 instruction) while the code is all there: `get_function` and
+  the decompiler lie for it (`Ang16_ClampSymmetric`, `_Bisect`, `_SignedDeltaDivFix16`). Check body size against the
+  flow walk; repair with `set_body` from the flow.
+- **Jump-table case bodies are holes until the table is typed as a pointer array** and `COMPUTED_JUMP` references are
+  added; a bulk "create function over every undefined run" pass makes bogus functions over the tables (and over
+  `8b ff` / `8d 49 00` alignment padding). Validate each candidate (clean prologue/RET, no privileged opcodes,
+  targets in `.text`) before creating.
+- **Do not create functions for the 19,764 static-initialiser thunks** (reasons in crt-and-network.md §2).
+- **Register-convention (usercall) functions need custom storage on the return too** (`AL`, `AX`, `EAX`); derive the
+  convention from `RET n`, ECX/EDX use at entry and whether any caller reads EAX before overwriting it (scan the 8
+  instructions after each `CALL`, follow `JMP` into wrappers). A `PUSH ECX` at entry may be a stack reservation, not
+  a `this`. A fake last parameter fed from `unaff_EDI`/`extraout_*` at every call site (e.g. `MissionScript_GetCmd`)
+  means the convention is wrong, not the callers.
+- `save_program` times out while other agents hold the transaction; the request may still be running, so retry and
+  check "No unsaved changes".

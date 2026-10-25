@@ -125,7 +125,7 @@ reproduced at runtime). `PedGroupPool_Alloc` 0x404C40 hands groups out. A leader
 | 0x04 | `members[9]` | Ped*[9] | | | V |
 | 0x28 | `membersTerminator` (gap) | Ped* | NULL sentinel for `while (members[i])` loops; Init / Reset zero only members[0..8] | 0x4C5692, `KillMembersInCarAndCompact` tail; members[count] writes 0x4C5881 | medium |
 | 0x2C | `leader` | Ped* | | | V |
-| 0x30 | `busy` (unsure_attackedFlag) | int (bool) | 1 while the leader boards / sits in a car (state 3 / 5 / 10, members get door spots via `g_PedGroupDoorCursor` 0x58F512) or the leader or any member is engaged; also forced by `PedGroup_ReactToAttacker` 0x404EF0 and the paramedics. Only reader: `Ped_ReactToPedObstacle` 0x494280 — when the blocking ped has the lower id and its group is **not** busy, this ped skips the step-aside | writes 0x405240 (×3), 0x404EFD, 0x473410; reads 0x4944E8 / 0x4945EE | high |
+| 0x30 | `busy` (unsure_attackedFlag) | int (bool) | 1 while the leader boards / sits in a car (state 3 / 5 / 10, members get door spots via `g_PedGroupDoorCursor` 0x58F512) or the leader or any member is engaged; also forced by `PedGroup_ReactToAttacker` 0x404EF0 and the paramedics. Only reader: `PedGameObject_ReactToPedObstacle` 0x494280 — when the blocking ped has the lower id and its group is **not** busy, this ped skips the step-aside | writes 0x405240 (×3), 0x404EFD, 0x473410; reads 0x4944E8 / 0x4945EE | high |
 | 0x34 | `membersCount` | byte | | | V |
 | 0x36 | `unsure_rosterCount` (unsure_membersCountCopy, was undefined1) | byte | roster size incl. dead members kept in place; not reduced by `PedGroup_RemovePed` | = count 0x433360 / 0x403650, +1 0x404C90, −1 0x4C5888, read RemovePed 0x404D40 (slot = roster − 1) | accesses high, intent medium |
 | 0x38 | `formation` (unsure_mode) | int | 1 = single file (member i follows i−1); anything else = three columns (members 0–2 follow the leader, 3..7 follow 0..4). Init / Reset write 2 and **nothing writes 1**, so vanilla always uses columns. `Ped_UpdateAI` 0x44538E also sets `DAT_005e5bc8 = (formation != 1)` for members | reads 0x40463D, 0x44538E | high (1 is dead code) |
@@ -561,6 +561,7 @@ pass verified them.
 |---|---|---|
 | 0x403920 | Ped_SetPedClass (was Ped_SetBitState2) | writes `pedClass` |
 | 0x403b40 / 0x450cb0 | Ped_SetObjectiveDone / Ped_GetObjectiveStatus | `Ped+0x225` |
+| 0x403fb0 | PedGroup_ElvisHandling (was Ped_ElvisHandling; `void __thiscall (PedGroup* this, Ped* killer)`, RET 4) | Elvis group reaction to a kill, see ped-ai.md §7 |
 | 0x404120 | PedGroup_SwapMemberWithLeader (was unsure_PedGroup_SwapMemberWithLeader) | dead leader/medic replacement |
 | 0x40fea0 | Sprite_GetOwnerSpriteIfPed | body kind 3 → owner |
 | 0x41f9f0 | Car_RequestFireTruckAndSpawnFlames | wreck → fire truck |

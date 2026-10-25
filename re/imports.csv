@@ -1,4 +1,6 @@
 iat_address,dll,name,ordinal
+,<EXTERNAL>,EXT_FUN_0c000000,
+,<EXTERNAL>,EXT_FUN_0c4d2659,
 0x0056e000,ADVAPI32.DLL,IsTextUnicode,
 0x0056e004,ADVAPI32.DLL,RegDeleteValueA,
 0x0056e008,ADVAPI32.DLL,RegOpenKeyExA,

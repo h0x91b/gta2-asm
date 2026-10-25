@@ -358,6 +358,24 @@ struc CrusherManager
     .count                            resb 4      ; 0x90 int
 endstruc
 
+; /DIDATAFORMAT  (24 bytes)
+struc DIDATAFORMAT
+    .dwSize                           resb 4      ; 0x0 uint
+    .dwObjSize                        resb 4      ; 0x4 uint
+    .dwFlags                          resb 4      ; 0x8 uint
+    .dwDataSize                       resb 4      ; 0xc uint
+    .dwNumObjs                        resb 4      ; 0x10 uint
+    .rgodf                            resb 4      ; 0x14 DIOBJECTDATAFORMAT *
+endstruc
+
+; /DIOBJECTDATAFORMAT  (16 bytes)
+struc DIOBJECTDATAFORMAT
+    .pguid                            resb 4      ; 0x0 GUID *
+    .dwOfs                            resb 4      ; 0x4 uint
+    .dwType                           resb 4      ; 0x8 uint
+    .dwFlags                          resb 4      ; 0xc uint
+endstruc
+
 ; enum /DOOR_SIDE  (4 bytes)
 DOOR_SIDE.DOOR_SIDE_LEFT equ 1
 DOOR_SIDE.DOOR_SIDE_RIGHT equ 2
@@ -3902,7 +3920,7 @@ struc Sprite
     resb 3
     .spriteType                       resb 4      ; 0x30 SPRITE_TYPE
     .paletteKind                      resb 4      ; 0x34 int
-    .field22_0x38                     resb 1      ; 0x38 byte
+    .shrink                           resb 1      ; 0x38 byte
     .cachedZLayer                     resb 1      ; 0x39 byte
     resb 2
 endstruc
@@ -3973,7 +3991,7 @@ endstruc
 struc TextureCacheUserSlot
     .pixels                           resb 4      ; 0x0 void *
     .texture                          resb 4      ; 0x4 int
-    .unsure_width                     resb 2      ; 0x8 short
+    .height                           resb 2      ; 0x8 short
     .row                              resb 2      ; 0xa ushort
 endstruc
 

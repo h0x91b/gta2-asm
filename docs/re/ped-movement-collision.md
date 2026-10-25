@@ -108,7 +108,7 @@ delta)` RET 4, `_CanStepAlongHeading` 0x492C30 `(this, Ang16 heading)` RET 4 ret
 `CanMoveToTile`, `_HandleCarImpact` 0x497570 `(this, Car* car, int unused, Fix16 impulseX, Fix16
 impulseY)` RET 0x10. `PedGameObject_GetCar` 0x403900, `_GetState2` 0x41B090, `_GetPed` 0x433A20,
 `_GetSprite` 0x4338D0 are `__fastcall (go)`. `Ped_SetGameObjectField3C` 0x403A50 writes
-`walkSpeedTarget` (+0x3C): candidate name `Ped_SetWalkSpeedTarget` (caller `Ped_ElvisHandling`).
+`walkSpeedTarget` (+0x3C): candidate name `Ped_SetWalkSpeedTarget` (caller `PedGroup_ElvisHandling`).
 Not typed yet: `PedGameObject_TryAnswerPhone` 0x4930C0, `IsTileEdgeOpen` 0x492190, `CanMoveToTile`
 0x492420 parameters.
 
@@ -178,7 +178,7 @@ free    → pos += Ang16_PolarToXY(heading, speed) + push; SetPosition   0x49AE9
 blocked → player: PedGameObject_SlideAlongWallPlayer 0x4995A0 (re-test at octant
           headings, half step); npc: PedGameObject_TurnAwayFromWallNpc 0x4994D0
 push := 0                                                              0x49AF09
-z follow PedGameObject_UpdateGroundZ; Ped_ResolveSpriteObstacle 0x499F00 (cars/peds/objects, §4)
+z follow PedGameObject_UpdateGroundZ; PedGameObject_ResolveSpriteObstacle 0x499F00 (cars/peds/objects, §4)
 0x49B0A5: if the heading was changed for this move, restore it
 ```
 
@@ -330,7 +330,7 @@ the bounds dirty (`Sprite_MarkBoundsDirty` 0x4B99F0). The ped tick removes the b
 step and inserts it after. A host move outside the tick must do the same, one-to-one: an insert
 without a remove leaks nodes until the pool empties.
 
-After the map step, `Ped_ResolveSpriteObstacle` 0x499F00 `thiscall(go, char flag)` →
+After the map step, `PedGameObject_ResolveSpriteObstacle` 0x499F00 `thiscall(go, char flag)` →
 `Sprite_FindObstacleAndRecord` 0x4BDFE0 → `Collision_FindObstacle` 0x447740
 **`thiscall(grid, Sprite* body, int preferredKind)` ret 8** (preferredKind is a kind value, not
 a mask) → `Sprite_ShouldCollideWithSprite` 0x4B9A30 (filter) → `Sprite_CollisionCheck` 0x4BCAC0
@@ -380,8 +380,8 @@ objects (`Weapon_Fire` 0x4D0530) moving and colliding per tick, no hitscan.
 | 0x497410 | `PedGameObject_IsInTileCenter` | `bool(void)`, reads the pose globals | sub-tile 20..44 px → skip tests | verified |
 | 0x4995A0 | `PedGameObject_SlideAlongWallPlayer` | `void __fastcall(PedGameObject*)` | octant re-tests, half step | verified |
 | 0x4994D0 | `PedGameObject_TurnAwayFromWallNpc` | `void __fastcall(PedGameObject*)` | | verified |
-| 0x499F00 | `Ped_ResolveSpriteObstacle` | `void __thiscall(PedGameObject*, char)` | sprite obstacles + response | verified |
-| 0x494280 / 0x4948C0 / 0x4993B0 | `Ped_ReactToPedObstacle` / `…ToCarOrObjectObstacle` / `…ToObjectObstacle` | thiscall | responses (§4) | verified flow |
+| 0x499F00 | `PedGameObject_ResolveSpriteObstacle` | `void __thiscall(PedGameObject*, char)` | sprite obstacles + response | verified |
+| 0x494280 / 0x4948C0 / 0x4993B0 | `PedGameObject_ReactToPedObstacle` / `…ToCarOrObjectObstacle` / `…ToObjectObstacle` | thiscall | responses (§4) | verified flow |
 | 0x447740 | `Collision_FindObstacle` | `int __thiscall(grid, Sprite*, int kind)` ret 8 | first obstacle overlapping the body | verified |
 | 0x447C00 / 0x447C40 | `CollisionGrid_InsertSprite` / `CollisionGrid_RemoveSprite` | `thiscall(grid, Sprite*)` | bbox insert / remove | verified |
 | 0x41FC20 | `Ang16_PolarToXY` | `void __stdcall(short* ang, SCR_f* len, SCR_f* outX, SCR_f* outY)` ret 0x10 | x = sin·len, y = cos·len | verified |

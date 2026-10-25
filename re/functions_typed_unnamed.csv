@@ -4,9 +4,10 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x0041d8f0,ComboEntry_Reset,,DEFAULT,__fastcall,USER_DEFINED,5,ComboEntry_Reset,undefined __fastcall ComboEntry_Reset(ComboEntry * param_1)
 0x00433040,CarModelTable_Free,,DEFAULT,__fastcall,USER_DEFINED,5,CarModelTable_Free,undefined __fastcall CarModelTable_Free(CarModelTable * param_1)
 0x0044a1e0,CrimeStats_RearmOneShots,,DEFAULT,__fastcall,USER_DEFINED,5,CrimeStats_RearmOneShots,undefined __fastcall CrimeStats_RearmOneShots(CrimeStats * param_1)
+0x0045c020,Hud_PagerSlot_Reset,,DEFAULT,__fastcall,USER_DEFINED,5,Hud_PagerSlot_Reset,void __fastcall Hud_PagerSlot_Reset(HudPagerEntry * this)
 0x0045c1e0,LightManager_Update,,DEFAULT,__fastcall,USER_DEFINED,5,LightManager_Update,void __fastcall LightManager_Update(LightManager * this)
 0x004744b0,GetTickCount,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::GetTickCount,DWORD __stdcall GetTickCount(void)
-0x004805f6,Script_Op_LEVELSTART,,DEFAULT,__fastcall,USER_DEFINED,8,Script_Op_LEVELSTART,undefined __fastcall Script_Op_LEVELSTART(ScriptThread * param_1)
+0x004805f6,Script_Op_LEVELSTART,,DEFAULT,__fastcall,USER_DEFINED,8,Script_Op_LEVELSTART,void __fastcall Script_Op_LEVELSTART(ScriptThread * thread)
 0x0049ff70,CarPhysics_UpdateZOnRailway,CarPhysics,DEFAULT,__thiscall,USER_DEFINED,5,CarPhysics::CarPhysics_UpdateZOnRailway,"uint __thiscall CarPhysics_UpdateZOnRailway(CarPhysics * this, int step)"
 0x004a50e0,AnimatedValue_Set,,DEFAULT,__fastcall,USER_DEFINED,5,AnimatedValue_Set,"void __fastcall AnimatedValue_Set(AnimatedValue * param_1, int * param_1_00, int param_3)"
 0x004b75a0,AnimatedValue_Get,,DEFAULT,__fastcall,USER_DEFINED,5,AnimatedValue_Get,int __fastcall AnimatedValue_Get(AnimatedValue * param_1)
@@ -15,6 +16,84 @@ address,name,namespace,name_source,calling_convention,signature_source,size,thun
 0x004d2b02,VerQueryValueA,VERSION.DLL,DEFAULT,__stdcall,USER_DEFINED,6,VERSION.DLL::VerQueryValueA,"BOOL __stdcall VerQueryValueA(LPCVOID pBlock, LPCSTR lpSubBlock, LPVOID * lplpBuffer, PUINT puLen)"
 0x004d2b08,GetFileVersionInfoA,VERSION.DLL,DEFAULT,__stdcall,USER_DEFINED,6,VERSION.DLL::GetFileVersionInfoA,"BOOL __stdcall GetFileVersionInfoA(LPCSTR lptstrFilename, DWORD dwHandle, DWORD dwLen, LPVOID lpData)"
 0x004d2b0e,GetFileVersionInfoSizeA,VERSION.DLL,DEFAULT,__stdcall,USER_DEFINED,6,VERSION.DLL::GetFileVersionInfoSizeA,"DWORD __stdcall GetFileVersionInfoSizeA(LPCSTR lptstrFilename, LPDWORD lpdwHandle)"
+0x004d2b14,FreeLibrary,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::FreeLibrary,BOOL __stdcall FreeLibrary(HMODULE hLibModule)
+0x004d2b1a,GetProcAddress,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::GetProcAddress,"FARPROC __stdcall GetProcAddress(HMODULE hModule, LPCSTR lpProcName)"
+0x004d2b20,OutputDebugStringA,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::OutputDebugStringA,void __stdcall OutputDebugStringA(LPCSTR lpOutputString)
+0x004d2b26,LoadLibraryA,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::LoadLibraryA,HMODULE __stdcall LoadLibraryA(LPCSTR lpLibFileName)
+0x004d2b2c,GetVersionExA,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::GetVersionExA,BOOL __stdcall GetVersionExA(LPOSVERSIONINFOA lpVersionInformation)
+0x004d2b32,WideCharToMultiByte,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::WideCharToMultiByte,"int __stdcall WideCharToMultiByte(UINT CodePage, DWORD dwFlags, LPCWSTR lpWideCharStr, int cchWideChar, LPSTR lpMultiByteStr, int cbMultiByte, LPCSTR lpDefaultChar, LPBOOL lpUsedDefaultChar)"
+0x004d2b38,MultiByteToWideChar,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::MultiByteToWideChar,"int __stdcall MultiByteToWideChar(UINT CodePage, DWORD dwFlags, LPCSTR lpMultiByteStr, int cbMultiByte, LPWSTR lpWideCharStr, int cchWideChar)"
+0x004d2b3e,GetFileAttributesA,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::GetFileAttributesA,DWORD __stdcall GetFileAttributesA(LPCSTR lpFileName)
+0x004d2b44,GetPrivateProfileStringA,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::GetPrivateProfileStringA,"DWORD __stdcall GetPrivateProfileStringA(LPCSTR lpAppName, LPCSTR lpKeyName, LPCSTR lpDefault, LPSTR lpReturnedString, DWORD nSize, LPCSTR lpFileName)"
+0x004d2b4a,FindClose,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::FindClose,BOOL __stdcall FindClose(HANDLE hFindFile)
+0x004d2b50,FindNextFileA,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::FindNextFileA,"BOOL __stdcall FindNextFileA(HANDLE hFindFile, LPWIN32_FIND_DATAA lpFindFileData)"
+0x004d2b56,FindFirstFileA,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::FindFirstFileA,"HANDLE __stdcall FindFirstFileA(LPCSTR lpFileName, LPWIN32_FIND_DATAA lpFindFileData)"
+0x004d2b5c,GetTickCount,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::GetTickCount,DWORD __stdcall GetTickCount(void)
+0x004d2b62,Sleep,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::Sleep,void __stdcall Sleep(DWORD dwMilliseconds)
+0x004d2b68,CreateEventA,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::CreateEventA,"HANDLE __stdcall CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, BOOL bManualReset, BOOL bInitialState, LPCSTR lpName)"
+0x004d2b6e,CloseHandle,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::CloseHandle,BOOL __stdcall CloseHandle(HANDLE hObject)
+0x004d2b74,lstrlenA,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::lstrlenA,int __stdcall lstrlenA(LPCSTR lpString)
+0x004d2b7a,LocalFree,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::LocalFree,HLOCAL __stdcall LocalFree(HLOCAL hMem)
+0x004d2b80,FormatMessageA,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::FormatMessageA,"DWORD __stdcall FormatMessageA(DWORD dwFlags, LPCVOID lpSource, DWORD dwMessageId, DWORD dwLanguageId, LPSTR lpBuffer, DWORD nSize, va_list * Arguments)"
+0x004d2b86,GetLastError,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::GetLastError,DWORD __stdcall GetLastError(void)
+0x004d2b8c,OpenMutexA,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::OpenMutexA,"HANDLE __stdcall OpenMutexA(DWORD dwDesiredAccess, BOOL bInheritHandle, LPCSTR lpName)"
+0x004d2b92,ReleaseMutex,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::ReleaseMutex,BOOL __stdcall ReleaseMutex(HANDLE hMutex)
+0x004d2b98,CreateMutexA,KERNEL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,KERNEL32.DLL::CreateMutexA,"HANDLE __stdcall CreateMutexA(LPSECURITY_ATTRIBUTES lpMutexAttributes, BOOL bInitialOwner, LPCSTR lpName)"
+0x004d2b9e,ShowWindow,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::ShowWindow,"BOOL __stdcall ShowWindow(HWND hWnd, int nCmdShow)"
+0x004d2ba4,SendDlgItemMessageA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::SendDlgItemMessageA,"LRESULT __stdcall SendDlgItemMessageA(HWND hDlg, int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam)"
+0x004d2baa,SendMessageA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::SendMessageA,"LRESULT __stdcall SendMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)"
+0x004d2bb0,GetDlgItem,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::GetDlgItem,"HWND __stdcall GetDlgItem(HWND hDlg, int nIDDlgItem)"
+0x004d2bb6,SetDlgItemTextA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::SetDlgItemTextA,"BOOL __stdcall SetDlgItemTextA(HWND hDlg, int nIDDlgItem, LPCSTR lpString)"
+0x004d2bbc,GetDlgItemTextA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::GetDlgItemTextA,"UINT __stdcall GetDlgItemTextA(HWND hDlg, int nIDDlgItem, LPSTR lpString, int cchMax)"
+0x004d2bc2,SetWindowTextA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::SetWindowTextA,"BOOL __stdcall SetWindowTextA(HWND hWnd, LPCSTR lpString)"
+0x004d2bc8,GetWindowTextA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::GetWindowTextA,"int __stdcall GetWindowTextA(HWND hWnd, LPSTR lpString, int nMaxCount)"
+0x004d2bce,MessageBoxA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::MessageBoxA,"int __stdcall MessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)"
+0x004d2bd4,EnableWindow,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::EnableWindow,"BOOL __stdcall EnableWindow(HWND hWnd, BOOL bEnable)"
+0x004d2bda,EndDialog,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::EndDialog,"BOOL __stdcall EndDialog(HWND hDlg, INT_PTR nResult)"
+0x004d2be0,GetWindowLongA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::GetWindowLongA,"LONG __stdcall GetWindowLongA(HWND hWnd, int nIndex)"
+0x004d2be6,CallWindowProcA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::CallWindowProcA,"LRESULT __stdcall CallWindowProcA(WNDPROC lpPrevWndFunc, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)"
+0x004d2bec,GetParent,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::GetParent,HWND __stdcall GetParent(HWND hWnd)
+0x004d2bf2,GetDlgCtrlID,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::GetDlgCtrlID,int __stdcall GetDlgCtrlID(HWND hWnd)
+0x004d2bf8,KillTimer,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::KillTimer,"BOOL __stdcall KillTimer(HWND hWnd, UINT_PTR uIDEvent)"
+0x004d2bfe,SetWindowLongA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::SetWindowLongA,"LONG __stdcall SetWindowLongA(HWND hWnd, int nIndex, LONG dwNewLong)"
+0x004d2c04,CreateWindowExA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::CreateWindowExA,"HWND __stdcall CreateWindowExA(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam)"
+0x004d2c0a,SetTimer,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::SetTimer,"UINT_PTR __stdcall SetTimer(HWND hWnd, UINT_PTR nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc)"
+0x004d2c10,DialogBoxParamA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::DialogBoxParamA,"INT_PTR __stdcall DialogBoxParamA(HINSTANCE hInstance, LPCSTR lpTemplateName, HWND hWndParent, DLGPROC lpDialogFunc, LPARAM dwInitParam)"
+0x004d2c16,DestroyWindow,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::DestroyWindow,BOOL __stdcall DestroyWindow(HWND hWnd)
+0x004d2c1c,GetKeyboardLayoutNameA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::GetKeyboardLayoutNameA,BOOL __stdcall GetKeyboardLayoutNameA(LPSTR pwszKLID)
+0x004d2c22,wsprintfA,USER32.DLL,DEFAULT,__cdecl,USER_DEFINED,6,USER32.DLL::wsprintfA,"int __cdecl wsprintfA(LPSTR param_1, LPCSTR param_2, ...)"
+0x004d2c28,ShowCursor,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::ShowCursor,int __stdcall ShowCursor(BOOL bShow)
+0x004d2c2e,UpdateWindow,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::UpdateWindow,BOOL __stdcall UpdateWindow(HWND hWnd)
+0x004d2c34,SetWindowPos,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::SetWindowPos,"BOOL __stdcall SetWindowPos(HWND hWnd, HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags)"
+0x004d2c3a,ReleaseDC,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::ReleaseDC,"int __stdcall ReleaseDC(HWND hWnd, HDC hDC)"
+0x004d2c40,GetDC,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::GetDC,HDC __stdcall GetDC(HWND hWnd)
+0x004d2c46,GetClientRect,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::GetClientRect,"BOOL __stdcall GetClientRect(HWND hWnd, LPRECT lpRect)"
+0x004d2c4c,GetWindowRect,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::GetWindowRect,"BOOL __stdcall GetWindowRect(HWND hWnd, LPRECT lpRect)"
+0x004d2c52,SetForegroundWindow,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::SetForegroundWindow,BOOL __stdcall SetForegroundWindow(HWND hWnd)
+0x004d2c58,PostMessageA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::PostMessageA,"BOOL __stdcall PostMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)"
+0x004d2c5e,FindWindowExA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::FindWindowExA,"HWND __stdcall FindWindowExA(HWND hWndParent, HWND hWndChildAfter, LPCSTR lpszClass, LPCSTR lpszWindow)"
+0x004d2c64,DefWindowProcA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::DefWindowProcA,"LRESULT __stdcall DefWindowProcA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)"
+0x004d2c6a,PostQuitMessage,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::PostQuitMessage,void __stdcall PostQuitMessage(int nExitCode)
+0x004d2c70,DispatchMessageA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::DispatchMessageA,LRESULT __stdcall DispatchMessageA(MSG * lpMsg)
+0x004d2c76,TranslateMessage,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::TranslateMessage,BOOL __stdcall TranslateMessage(MSG * lpMsg)
+0x004d2c7c,PeekMessageA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::PeekMessageA,"BOOL __stdcall PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)"
+0x004d2c82,GetSystemMetrics,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::GetSystemMetrics,int __stdcall GetSystemMetrics(int nIndex)
+0x004d2c88,RegisterClassA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::RegisterClassA,ATOM __stdcall RegisterClassA(WNDCLASSA * lpWndClass)
+0x004d2c8e,LoadCursorA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::LoadCursorA,"HCURSOR __stdcall LoadCursorA(HINSTANCE hInstance, LPCSTR lpCursorName)"
+0x004d2c94,LoadIconA,USER32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,USER32.DLL::LoadIconA,"HICON __stdcall LoadIconA(HINSTANCE hInstance, LPCSTR lpIconName)"
+0x004d2c9a,GetDeviceCaps,GDI32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,GDI32.DLL::GetDeviceCaps,"int __stdcall GetDeviceCaps(HDC hdc, int index)"
+0x004d2ca0,RegCloseKey,ADVAPI32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,ADVAPI32.DLL::RegCloseKey,LSTATUS __stdcall RegCloseKey(HKEY hKey)
+0x004d2ca6,IsTextUnicode,ADVAPI32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,ADVAPI32.DLL::IsTextUnicode,"BOOL __stdcall IsTextUnicode(void * lpv, int iSize, LPINT lpiResult)"
+0x004d2cac,RegQueryValueExA,ADVAPI32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,ADVAPI32.DLL::RegQueryValueExA,"LSTATUS __stdcall RegQueryValueExA(HKEY hKey, LPCSTR lpValueName, LPDWORD lpReserved, LPDWORD lpType, LPBYTE lpData, LPDWORD lpcbData)"
+0x004d2cb2,RegCreateKeyExA,ADVAPI32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,ADVAPI32.DLL::RegCreateKeyExA,"LSTATUS __stdcall RegCreateKeyExA(HKEY hKey, LPCSTR lpSubKey, DWORD Reserved, LPSTR lpClass, DWORD dwOptions, REGSAM samDesired, LPSECURITY_ATTRIBUTES lpSecurityAttributes, PHKEY phkResult, LPDWORD lpdwDisposition)"
+0x004d2cb8,RegSetValueExA,ADVAPI32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,ADVAPI32.DLL::RegSetValueExA,"LSTATUS __stdcall RegSetValueExA(HKEY hKey, LPCSTR lpValueName, DWORD Reserved, DWORD dwType, BYTE * lpData, DWORD cbData)"
+0x004d2cbe,GetUserNameA,ADVAPI32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,ADVAPI32.DLL::GetUserNameA,"BOOL __stdcall GetUserNameA(LPSTR lpBuffer, LPDWORD pcbBuffer)"
+0x004d2cc4,RegOpenKeyExA,ADVAPI32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,ADVAPI32.DLL::RegOpenKeyExA,"LSTATUS __stdcall RegOpenKeyExA(HKEY hKey, LPCSTR lpSubKey, DWORD ulOptions, REGSAM samDesired, PHKEY phkResult)"
+0x004d2cca,RegDeleteValueA,ADVAPI32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,ADVAPI32.DLL::RegDeleteValueA,"LSTATUS __stdcall RegDeleteValueA(HKEY hKey, LPCSTR lpValueName)"
+0x004d2cd0,ShellExecuteA,SHELL32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,SHELL32.DLL::ShellExecuteA,"HINSTANCE __stdcall ShellExecuteA(HWND hwnd, LPCSTR lpOperation, LPCSTR lpFile, LPCSTR lpParameters, LPCSTR lpDirectory, INT nShowCmd)"
+0x004d2cd6,CoCreateInstance,OLE32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,OLE32.DLL::CoCreateInstance,"HRESULT __stdcall CoCreateInstance(IID * rclsid, LPUNKNOWN pUnkOuter, DWORD dwClsContext, IID * riid, LPVOID * ppv)"
+0x004d2cdc,CoUninitialize,OLE32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,OLE32.DLL::CoUninitialize,void __stdcall CoUninitialize(void)
+0x004d2ce2,CoInitialize,OLE32.DLL,DEFAULT,__stdcall,USER_DEFINED,6,OLE32.DLL::CoInitialize,HRESULT __stdcall CoInitialize(LPVOID pvReserved)
 0x004d5dc5,_free,,DEFAULT,__cdecl,USER_DEFINED,5,_free,void __cdecl _free(void * _Memory)
 0x004d6c1a,_atol,,DEFAULT,__cdecl,USER_DEFINED,5,_atol,long __cdecl _atol(char * _Str)
 0x004d6ce7,_free,,DEFAULT,__cdecl,USER_DEFINED,5,_free,void __cdecl _free(void * _Memory)

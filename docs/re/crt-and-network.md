@@ -42,8 +42,78 @@ The PE timestamp says 2004-04-27, while the original 1999 release was built with
 | `0x4D0000-0x4D47xx` | Game code: weapons tail, `WndProc`, `WinMain` (+ the false split `WinMain_AfterNoppedMutexCheck_Frag`, was `WinMain2`), `Startup_ConnectMultiplayerFromRegistry`, video/renderer DLL loading (`LoadRenderDll`, `InitVideoDll`). |
 | `0x4D48D0-0x4D5CC5` | Old MSVC iostream (about 50 functions). The game uses it only for logs: `do_miss_logging` → `ofstream_Open`, and `DebugLog_WriteLine` → `ostream_OperatorShiftString`. |
 | `0x4D5CE1-0x4E3Fxx` | MSVC 7.0 CRT in library link order: heap (`malloc`, `sbheap.c`), C++ EH (`frame.cpp`, `Unwind@` funclets), stdio, lowio, `output.c`/`input.c`, float conversion (`cvt.c`, `intrncvt.c`, `strgtold`, `x10fout`), mbctype, time/tz, environment, signals. |
-| `0x51C730`, `0x52E0A0` | Two static-initialiser functions reached only through data pointers (`0x584498`, `0x586D48`, presumably the `__xc` initialiser table): `StaticInit_DebugFlagsDefaults` and `StaticInit_RandomDebugLog`. They are game code, not CRT. |
+| `0x51C730`, `0x52E0A0` | Two static-initialiser functions reached only through data pointers (`0x584498`, `0x586D48`: slots of the static-initialiser table `0x57C008..0x58F4E4`, see "`.text` coverage" below): `StaticInit_DebugFlagsDefaults` and `StaticInit_RandomDebugLog`. They are game code, not CRT. |
 | `0x56DBE0-0x56DFxx` | Code that the 11.44 community patch put into `.text` raw slack past VirtualSize `0x56DBC0` (§4). |
+
+### `.text` coverage and deliberate holes (pass 5, 2026-10-25; V unless marked)
+
+Ghidra pass 5 closed the undefined holes in `.text`. What is left undefined or function-less is on purpose:
+
+- **`DisplayError` 0x450530 is `noreturn`** (it ends in `CALL Crt_Exit` 0x4D73A7, no RET; `Crt_Exit` and `__exit`
+  0x4D73B8 are noreturn too), so Ghidra stops the flow after every call. About 181 call sites in
+  `0x4029E5..0x45FFB9` and 124 in `0x460000..0x56DCDA` leave the compiler's dead `add esp,N` (+ sometimes
+  `pop edi/esi/ebx; ret`) tail, 3-5 bytes, **left undefined on purpose**: marking it as code would extend a noreturn
+  function with unreachable instructions. The real continuation (reached through a `JNZ`/`JMP` target, e.g.
+  `0x4AFE6E jnz 0x4AFE87` in `PublicTransportManager_SpawnInitialTrains`) is code and was re-attached to its owner
+  (124 sites, 72 owners fixed with `fixupFunctionBody`; before that ~259 continuations were missing, so `re/` data
+  exported before pass 5 is incomplete around every `if (!x) DisplayError(...)`, and function sizes differ).
+- **Static-initialiser thunks `0x4E0000..0x56DB70` (about 413 KB) are not created as functions.** One table of
+  19,764 function pointers at `0x57C008..0x58F4E4` lists them (last slot `0x58F4E0` = `___initmbctable` 0x4E0BA4);
+  each thunk has one DATA xref and runs from `__cinit`/`_initterm` before WinMain. Shapes (all decoded): about
+  7,080 `push imm; mov ecx,&G; call Fix16_FromRaw` 0x401AD0 (raw Q14), 5,466 `Fix16_FromInt` 0x401AF0 (+`Fix16_Neg`),
+  3,224 `mov eax,[S]; mov [G],eax` copies, about 7,900 derived constants (Fix16 add/sub/mul/div/MulInt/DivInt,
+  `Ang16_Neg` 1,107, `Ang16_MulFix16` 1,916, `Ang16_Assign`, `Vec2_Set`), 322 with `_atexit` 0x4D63C4
+  (global C++ objects that register a destructor), about 20 real object constructors. Reasons not to create
+  them: +19.7 K `re/functions.csv` rows, 7,000-entry caller lists for `Fix16_FromRaw`/`Fix16_FromInt` burying the
+  ~300 real callers, nothing for the decompiler (one global written each; the values are in
+  `re/static_constants.csv`). The 19 non-trivial ones are named `StaticInit_*`: `PedGroups` 0x4E7A90,
+  `SoundClientPool` 0x4F0380, `SoundManager` 0x4F3350, `DebugLog2` 0x51A630, `DebugLog` 0x51A650, `Keyboard`
+  0x525010, `MissLogStream` 0x532630, `MssAudioDevice` 0x550020, `NetworkSession` 0x56C770, `ScreenFix16_A..D`
+  0x553080/0x5530B0/0x5530E0/0x553110 (Fix16 expressions on 640x480), `unsure_Ang16Consts_A..C`
+  0x4FFCD0/0x4FFD00/0x4FFD50, `unsure_FlagA/B` 0x541B70/0x541B80; `MapBlocks_InitSlopeTable` 0x52B3B0 is the
+  `SlopeTableEntry_Set` static init. If ever wanted: create them by script from the table, name
+  `StaticInit_<global>`, tag `STATIC_INIT`, exclude the tag from the `re/` export.
+- **`0x3F1000..0x401000` is the 11.44 patch block plus filler.** `0x3F1C28..0x3F32A7` is a `dword[1440]` table
+  `g_Patch1144_RespectCurveTable` (0x3FFF, 0x3FFF, 0x3FFF, 0x3FFE, … decreasing), read by
+  `Patch1144_Script_Op_CHANGE_GANG_CHAR_RESPECT_ExtHook` (`mov ecx,[ecx*4+0x3F1C28]` at 0x3F1C18, index clamped to
+  0x5A0 = 1440). Other patch data: `g_Patch1144_Int32Max` 0x3F1000 (0x7FFFFFFF), `g_Patch1144_FirstActiveCameraConst`
+  0x3F113B (6), `g_Patch1144_TrafficSideTable` 0x3F130D (byte[7]). `0x3F32A8..0x400FFF` is 56,664 × `0x90` + 2 × `0x00`
+  (about 56 KB of NOP alignment) and stays undefined; nothing points into it.
+- **Dead code that is now a function** (no xref and no raw dword in the image; static evidence only, a pointer
+  built at run time would escape the test): about 118 functions in `0x401000..0x460000` (the `Node3D_*` model
+  loader/drawer 0x401000..0x402840, `File.cpp` helpers 0x402A60..0x402EF0, `BrianTest_*` 0x41CFA0..0x41D080 gated
+  by `g_doBrianTest`, dead Car/CarPhysics accessors, element constructors/destructors reached only through
+  `_eh_vector_*_iterator_` data pointers) and about 416 in `0x460000..0x56DCDA` (empty `ret` / `xor eax,eax; ret`
+  virtual stubs, getters, CRT functions nothing calls, about 190 `jmp [IAT]` import thunks at `0x4D2B14..0x4D4888`).
+  Notable: `0x4C0AD0` (5,296 B, 341 calls: `Fix16_FromInt` ×203, `ObjectSpawner_SpawnObject` ×57,
+  `Car_SetCategoryWithTrailer` ×16, `CarManager_SpawnCarOnGround` ×14; U: a dead test-scene builder next to the
+  `MikeDebug_*` stubs, unreachable in vanilla, left `FUN_004c0ad0`), `0x483200` (602 B sprite/slope helper),
+  `0x474C60` (494 B, `MikeDebug_*` time-span code).
+- **CRT repairs**: `_memmove` 0x4D6EB0 (to 0x4D71EC), `_memcpy` 0x4D9400 (to 0x4D973C), `__output` 0x4DBC47
+  (126 → 1909 B, jump table 0x4DC3BC), the scanf engine at 0x4DDD7A (924 B; its name `caseD_8` is wrong) had
+  case bodies reachable only through `jmp [reg*4+table]`; the tables are typed as pointer arrays and the
+  bogus functions over them were removed (`FUN_004d2676`, 371 B, was data). Check any new `FUN_` in
+  `0x4D2000..0x4D6000` and `0x4D6F00..0x4D7200` before trusting it. The DirectInput format tables are data:
+  `c_dfDIKeyboard_rgodf` 0x4D17C0 (256×16), `c_dfDIJoystick_rgodf` 0x4D27C0 (44×16), `c_dfDIMouse_rgodf` 0x4D2A80
+  (7×16), headers `c_dfDIKeyboard` / `c_dfDIJoystick` / `c_dfDIMouse` 0x577EB4 / 0x5780BC / 0x5782C4
+  (`DIDATAFORMAT`), `GUID_*` labels 0x576C24..0x576CC4.
+- **Patch-block body repairs**: `NetDlg_SetSetting` 0x4075C0 (65 → 431 B), `MapBlock_HasArrow` 0x40C6D0 (31 → 290),
+  `Ped_Remove` 0x43E650 (461 → 532), `NetDlg_AppendChatLine` 0x405EC0 (`push addr / ret` islands 0x406048,
+  0x406175), `NetDlg_ReadMmpMapFiles` 0x407930 (merged the former `FUN_00407b55`, NOP sled 0x407B40..0x407C8D),
+  `Ang16_ClampSymmetric` 0x40EA70, `Ang16_Bisect` 0x40EB10, `Ang16_SignedDeltaDivFix16` 0x40EBB0 (these three had a
+  1-instruction stored body, so `get_function`/decompile lied).
+- **Remaining holes** (49 undefined runs ≥ 16 non-pad bytes in `0x460000..0x56DCDA`, 6.2 KB, none game code
+  of interest): CRT SEH handler blocks at `0x4DE73F` (706 B) and `0x4E0309` (702 B), `0x4E001D` (643 B,
+  `__ld12told`-like), CRT `_isspace/_ungetc/__ismbbtype/__ismbblead` slow paths `0x4E10B4/0x4E0FB4/0x4E1EDA/0x4E1F7F`,
+  `0x48E266` (503 B, inside `FUN_0048e220`, continuation after an unfound computed jump), `0x480F80` (416 B, the byte
+  index table of the 193-way opcode switch at 0x480C50: should be `byte[]`, not code), `0x4E381C` (356 B, a second block
+  of `ff 25` IAT thunks), `0x4D1658` (308 B), `0x4D1400` (619 B computed jump, data-adjacent, not analysed), and
+  `0x56C804..0x56DBFF` (`90…c3` padding stubs). 22 switch tables have targets that are separate functions
+  (`caseD_*`, `ScriptExecOpCode_Case*` 0x4806BE/0x48073E/0x4807AE, `Script_Op_LEVELSTART` 0x4805F6): merging them into
+  their owner is a separate refactor that would change names used in these docs.
+- **Bugs.** None game-visible from this pass. U: `Patch1144` `NetDlg_ReadMmpMapFiles` loop 0x407BEF..0x407C8D swaps
+  0x146-dword map records with `rep movsd` and EBP-relative indexing that relies on the patched frame (`MOV ESP,EBP`
+  epilogue); not checked further.
 
 ### Process startup
 
@@ -179,6 +249,11 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x4010E0` | `unsure_Node3D_RelocatePointers` | unsure | recursive: adds delta to child/sibling/data pointers (+0x10..+0x24), per-mesh relocate, stores param at +0x3c; file-load fixup |
 | `0x4023E0` | `Node3D_ProjectVerticesToScreen` | medium | projects float vertex list by matrix to screen via g_ViewCamera center and Fix16 scale, tracks min/max bounds; no xrefs |
 | `0x4029A0` | `File_Write` | high | fastcall wrapper over fwrite(buf,size,count,FILE); mirror of fread at 0x402980 |
+| `0x402A60` | `File_FormatDriveString` | high | dead (no caller): `sprintf(generalCharBuf, "%c:")` (pass 5) |
+| `0x402A80` | `unsure_File_VerifySizeAndReopen` | unsure | dead; File.cpp 0x6D..0x7A. As decompiled it calls `DisplayError` when `fopen(path,"wb")` succeeds (U: inverted `jz/jnz` in the decompile or a real inversion; no caller) |
+| `0x402C20` | `File_ReadWholeBounded` | medium | dead; File.cpp 0xC5..0xD5, `DisplayError(0x3FE)` if the file is too big |
+| `0x402E50` | `File_CreateEmpty` | medium | dead; File.cpp 0x12D/0x131 |
+| `0x402EF0` | `unsure_File_GetModeBit4` | unsure | dead; bit 4 of `g_File+0xC` |
 | `0x4029C0` | `File_GetSize` | high | ftell/fseek END/ftell/fseek back with DisplayError File.cpp lines 0x38-0x3e; used by ReadWholeFile |
 | `0x402CF0` | `File_WriteWhole` | high | copyScriptNameToBuffer, fopen "wb", write once, fclose, DisplayError File.cpp |
 | `0x402DA0` | `File_AppendWhole` | high | same as File_WriteWhole but fopen "ab"; only MissionScript_SaveGame calls it |
@@ -199,8 +274,8 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x403960` | `Ped_ClearEngaged` | high | flags &= ~4 (PED_FLAG_ENGAGED) |
 | `0x4039C0` | `Ped_GetEnterCarAsPassenger` | high | returns Ped+0x248 enterCarAsPassenger; pair of Ped_SetEnterCarAsPassenger |
 | `0x4039D0` | `Ped_GetTaskStatus` (was `Ped_GetCarEnterExitStage`) | high | returns byte +0x226 (unsure_carEnterExitStage) |
-| `0x403A20` | `Ped_ClearMeleeHitCount` (was `Ped_ClearField228`) | medium | zeroes byte Ped+0x228 (field82_0x228); caller Ped_ElvisHandling |
-| `0x403A50` | `Ped_SetGameObjectField3C` | medium | writes gameObject(+0x168)+0x3c; caller Ped_ElvisHandling |
+| `0x403A20` | `Ped_ClearMeleeHitCount` (was `Ped_ClearField228`) | medium | zeroes byte Ped+0x228 (field82_0x228); caller PedGroup_ElvisHandling |
+| `0x403A50` | `Ped_SetGameObjectField3C` | medium | writes gameObject(+0x168)+0x3c; caller PedGroup_ElvisHandling |
 | `0x403A90` | `Ped_GetTask` | high | returns Ped+0x25c task; Ped_GetObjective is +0x258 |
 | `0x403AB0` | `Ped_GetObjectiveTargetCar` | high | returns Ped+0x150 objectiveTargetCar |
 | `0x403AD0` | `Ped_GetObjectiveTargetPed` | high | returns Ped+0x148 objectiveTargetPed |
@@ -478,7 +553,7 @@ mattered. `coordinator` means the coordinator checked it.
 | `0x4DC638` | `_tolower` | high | locale-aware tolower; callers __stricmp/__strnicmp; A-Z +0x20, LCMapString |
 | `0x4DC9B6` | `__input` | high | scanf engine; sscanf caller; %d/%s/%[ parsing, _ungetc, _inc |
 | `0x4DD5EC` | `__woutput` | high | wide printf engine; swprintf caller; same structure as __output; write_char/_multi_char/_string |
-| `0x4DDDBC` | `CRT_RunInitTable_Empty` | high | loops over empty function-pointer table (start==end) from startup; _initterm-like |
+| `0x4DDDBC` | `CRT_RunInitTable_Empty` | high | loops over empty function-pointer table (start==end) from startup; _initterm-like (U: not the table that runs the 19,764 static initialisers, `0x57C008..0x58F4E4`, §2; unchecked which `_initterm` walks that one) |
 | `0x4DE0F8` | `__mbstowcs_lk` | medium | MultiByteToWideChar(cp,9,-1); ANSI copy fallback when locale C |
 | `0x4DE277` | `_asctime_FormatBuf` | medium | formats 'Sun Mon dd hh:mm:ss yyyy' into static buffer (asctime body) |
 | `0x4DE558` | `__resetstkoflw` | high | VirtualQuery/GetSystemInfo/VirtualProtect PAGE_GUARD on stack page |

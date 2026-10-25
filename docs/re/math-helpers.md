@@ -44,7 +44,7 @@ Seq 33 car-physics pass (its comments are kept in Ghidra) and Seq 37's ped work.
 ### Why `Ang16_MulFix16` has 1947 references
 
 `Ang16_MulFix16` (0x401CB0) is the census's top unnamed function, but 1916 of its calls are CRT
-static initialisers between 0x4E0000 and 0x56C000. A header defines a per-degree angle constant
+static initialisers (thunks between 0x4E0000 and 0x56DB70, one slot each in the table `0x57C008..0x58F4E4`, see crt-and-network.md §2). A header defines a per-degree angle constant
 (4 units) as a `static`, so **each translation unit has its own copy** (0x5D5040, 0x664E00,
 0x66A030, 0x5E4E74, …, each initialised from a `short 4` such as .rdata 0x573F40), and every
 degree constant in the game is built at start-up as `copy * Fix16(degrees)`:

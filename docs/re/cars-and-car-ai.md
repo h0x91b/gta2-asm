@@ -952,7 +952,7 @@ All 348 functions that were unnamed at the start, by slice (names as exported to
 | 0x420740 | Sprite_GetBodyWidth | H | Fix16Holder_Load(*(this+0xc)); CrusherSlot_Update, Car_IsSpriteZDifferent |
 | 0x4207E0 | ListHead_Init | V | *this=0; Car_InitAttachments(&attachments), Crane_Init, WeaponManager_Ctor(&hitCarList), CarManager_Ctor(2 globals) |
 | 0x420B50 | Ped_GetOwnerSlot | V | Ped+0x267 |
-| 0x420B60 | Ped_GetId | V | Ped+0x200 |
+| 0x420B60 | Ped_GetId | V | Ped+0x200 (byte-identical twin at 0x4C4F20, renamed `Ped_GetIdTwin` to avoid a duplicate name) |
 | 0x420C30 | OwnerSlot_IsValid | V | slot<13 |
 | 0x420D80 | CarDeltas_Ctor | V | Car_Ctor: FUN(&car->deltasBitstate) |
 | 0x420D90 | CarDeltas_Reset | V | Car_Reset, Car_BecomeWreck on &deltasBitstate |

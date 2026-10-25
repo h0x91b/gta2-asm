@@ -1,6 +1,10 @@
 address,name,namespace,name_source,section,in_function,datatype,size
-0x003f1000,EXE,,USER_DEFINED,.text,,/undefined,1
-0x003f130d,g_recycledCarBudgetByPlayerCount,,USER_DEFINED,.text,,,
+0x003f1000,EXE,,USER_DEFINED,.text,,/dword,4
+0x003f1000,g_Patch1144_Int32Max,,USER_DEFINED,.text,,/dword,4
+0x003f113b,g_Patch1144_FirstActiveCameraConst,,USER_DEFINED,.text,,/byte,1
+0x003f130d,g_recycledCarBudgetByPlayerCount,,USER_DEFINED,.text,,/byte[7],7
+0x003f130d,g_Patch1144_TrafficSideTable,,USER_DEFINED,.text,,/byte[7],7
+0x003f1c28,g_Patch1144_RespectCurveTable,,USER_DEFINED,.text,,/dword[1440],5760
 0x00434daa,prt_434daa_5c0dd4ac,Ped_GetSelectedWeapon::override,USER_DEFINED,.text,Ped_GetSelectedWeapon,,
 0x00461de0,?MainMenu,,USER_DEFINED,.text,InitGame,,
 0x00475d72,buf4k,MissionScript_ParseStrings,USER_DEFINED,.text,MissionScript_ParseStrings,,
@@ -10,12 +14,34 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x004c6060,?ShowBigOnScreenLabel,,USER_DEFINED,.text,ShowBigOnScreenLabel,,
 0x004c8c20,?showDebugLabel,,USER_DEFINED,.text,Hud_DebugLabel_Show,,
 0x004d04f4,prt_4d04f4_b293fec6,Ped_UpdateWeaponFiring::override,USER_DEFINED,.text,Ped_UpdateWeaponFiring,,
+0x004d17c0,c_dfDIKeyboard_rgodf,,USER_DEFINED,.text,,/DIOBJECTDATAFORMAT[256],4096
+0x004d27c0,c_dfDIJoystick_rgodf,,USER_DEFINED,.text,,/DIOBJECTDATAFORMAT[44],704
+0x004d2a80,c_dfDIMouse_rgodf,,USER_DEFINED,.text,,/DIOBJECTDATAFORMAT[7],112
+0x004dd5ec,__woutput,,USER_DEFINED,.text,,/undefined,1
+0x004deddd,__NMSG_WRITE,,USER_DEFINED,.text,,,
+0x004df28f,_parse_cmdline,,USER_DEFINED,.text,,,
+0x004df772,__alloc_osfhnd,,USER_DEFINED,.text,,,
 0x0056e980,floatEncodingMask,,USER_DEFINED,.rdata,,/double,8
 0x00575904,MaxAmmoArray,,USER_DEFINED,.rdata,,/byte[28],28
 0x00575920,g_WeaponDefaultAmmo,,USER_DEFINED,.rdata,,/byte[28],28
+0x00576c24,GUID_Unknown,,USER_DEFINED,.rdata,,/undefined,1
+0x00576c34,GUID_POV,,USER_DEFINED,.rdata,,/undefined,1
+0x00576c44,GUID_Key,,USER_DEFINED,.rdata,,/undefined,1
+0x00576c54,GUID_Button,,USER_DEFINED,.rdata,,/undefined,1
+0x00576c64,GUID_Slider,,USER_DEFINED,.rdata,,/undefined,1
+0x00576c74,GUID_RzAxis,,USER_DEFINED,.rdata,,/undefined,1
+0x00576c84,GUID_RyAxis,,USER_DEFINED,.rdata,,/undefined,1
+0x00576c94,GUID_RxAxis,,USER_DEFINED,.rdata,,/undefined,1
+0x00576ca4,GUID_ZAxis,,USER_DEFINED,.rdata,,/undefined,1
+0x00576cb4,GUID_YAxis,,USER_DEFINED,.rdata,,/undefined,1
+0x00576cc4,GUID_XAxis,,USER_DEFINED,.rdata,,/undefined,1
+0x00577eb4,c_dfDIKeyboard,,USER_DEFINED,.rdata,,/DIDATAFORMAT,24
+0x005780bc,c_dfDIJoystick,,USER_DEFINED,.rdata,,/DIDATAFORMAT,24
+0x005782c4,c_dfDIMouse,,USER_DEFINED,.rdata,,/DIDATAFORMAT,24
 0x005787c8,vftable,type_info,IMPORTED,.rdata,,/pointer,4
 0x0058f512,g_PedGroupDoorCursor,,USER_DEFINED,.data.exp,,/byte,1
 0x0058f518,g_NetDlgControlTable,,USER_DEFINED,.data.exp,,/auto_structs/NetDlgControlDef[90],10440
+0x00591e74,g_CarDoorDeltaBaseIds,,USER_DEFINED,.data.exp,,/byte[4],4
 0x00591e7c,g_PedOffscreenTicksLimitInit,,USER_DEFINED,.data.exp,,/undefined2,2
 0x00591e84,nextPedId,,USER_DEFINED,.data.exp,,/uint,4
 0x00591e88,relToS24_unk17,,USER_DEFINED,.data.exp,,/undefined1,1
@@ -23,6 +49,9 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x00591e8a,relToS24_unk20,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00591e8b,relToS24_unk26,,USER_DEFINED,.data.exp,,/undefined1,1
 0x00591e8c,relToS24_unk27,,USER_DEFINED,.data.exp,,/undefined,1
+0x00591e90,g_CarDeltaLightMaskDefault,,USER_DEFINED,.data.exp,,/uint,4
+0x00591e94,g_CarDeltaLightMaskFBI,,USER_DEFINED,.data.exp,,/uint,4
+0x00591e98,g_CarDeltaLightMaskRoofDecal,,USER_DEFINED,.data.exp,,/uint,4
 0x00591f48,CHEATS_CODE,,USER_DEFINED,.data.exp,,/int[8],32
 0x00591f68,g_FrontendImages,,USER_DEFINED,.data.exp,,/imported/renderer-doc/FrontendImage[25],3400
 0x00592dc8,g_GangRespectIterIdx,,USER_DEFINED,.data.exp,,/int,4
@@ -239,6 +268,7 @@ address,name,namespace,name_source,section,in_function,datatype,size
 0x005e7ae0,UnknownPtrOrScalar,,USER_DEFINED,.data.exp,,/undefined4,4
 0x005e7d70,g_CrusherManager,,USER_DEFINED,.data.exp,,/CrusherManager *,4
 0x005e8108,g_FrameCounter,,USER_DEFINED,.data.exp,,/FrameCounter *,4
+0x005e85bc,g_CarDeltaLightMask,,USER_DEFINED,.data.exp,,/uint,4
 0x005e85c0,g_CarSpriteCache,,USER_DEFINED,.data.exp,,/auto_structs/CarSpriteCache *,4
 0x005e8b80,g_LayerDrawQueues,,USER_DEFINED,.data.exp,,/auto_structs/LayerDrawQueues *,4
 0x005e8f04,DirectInputDeviceObjectDataCount,,USER_DEFINED,.data.exp,,/dword,4
