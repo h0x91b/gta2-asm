@@ -236,6 +236,7 @@ static void c32_passenger_fmt(char *end)
 
 uint8_t mods_city_fights;               /* config.c key table (default off), K menu row */
 static uint8_t *cf_on;                  /* exported city_fights */
+static gptr cf_census;                  /* exported cf_frame: the census log line */
 
 /* DM_FRAME: the C32 hooks read their own byte (thousands of predicate calls a tick, no
  * mode switch each); the host byte is the one the config and the menu write */
@@ -247,6 +248,11 @@ static void c32_city_fights_sync(void)
         *cf_on = mods_city_fights;
         printf("c32: city_fights %s\n", mods_city_fights ? "on" : "off");
     }
+    if (!mods_city_fights)
+        return;
+    if (!cf_census && !(cf_census = (gptr)(uintptr_t)c32_find("cf_frame")))
+        c32_fail("the image exports no cf_frame");
+    call32(cf_census, 0, 0, 0, 0, 0);
 }
 DM_FRAME(5, c32_city_fights_sync);
 

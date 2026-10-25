@@ -37,12 +37,33 @@ predicate), [re/ped-ai.md](re/ped-ai.md) (objectives / tasks).
   `Ped_IsPlayerControlled` 0x41B0A0 (was `Ped_HasWeapons`) is `ped->player != 0` (+0x15C), not a
   weapon test.
 
+## Why cops ignored gangs in normal play (found 2026-10-25)
+
+`tests/ctl/city_fights.sh` passed because it spawns its own cop. In a real game there was
+nobody to do the attacking: **Downtown has no foot cops at all.** Every one of the 51
+`MAP_ZONE` declarations in `wil.scr` sets the police-ped ratio (10th value) to 0
+(`bun tools/formats/cli.ts scr data/wil.scr --mis`; Residential has 14 of 16 at 0,
+Industrial 21 of 38), and `DummyPedManager_SpawnAmbientPed` 0x4404F0 picks a foot cop only when
+`random(1000) < … + zone.policePedRatio`. The patrol cars' crews do run the predicate (seated),
+but stay in their car and drive on.
+
+Measured with the census line (below), mod on, no spawned peds, 3 spots (start pavement,
+(99, 20) on Zaibatsu turf, (120, 60)), ~8 minutes: **0 foot cops in all 27 samples**, 2 cops
+seated in patrol cars in 6 of them, the predicate asked for a cop observer 182 times, never with
+a gang candidate. A bug in the mod's premise, not in the game: the fix below.
+
+After the fix (same start, 2 minutes at the first two spots): 12 foot cops spawned (2-3 at
+once), `cop vs gang: ped 295 (occ 29) attacks ped 291 (occ 19)` and the raiders shooting back
+(`gang vs cop: ped 276 (occ 19) attacks ped 299 (occ 29)`), census `cops 2 on foot …, nearest
+foot cop-gang 1 blocks, widened cop 5 gang 38`.
+
 ## What the mod changes
 
 | Hook | Where | Change when on |
 |---|---|---|
 | entry detour | `Ped_ShouldReactToPed` 0x4371D0 (displaces `sub esp,0xC; push esi; mov esi,[esp+0x14]`) | the original runs first; a **no** becomes a yes for a cop observer vs any gang member, and a gang observer vs any cop. Skipped: the player as candidate or observer with a player-centric threat search (3..6), invisible candidates, same group, a victim already attacked by ≥ 4 (the game's own cap) |
 | entry detour | `DummyPedManager_SpawnAmbientPed` 0x4404F0 (stdcall, `ret 0x10`; displaces `sub esp,0x18; push ebx; push ebp; push esi`) | `g_ArmedGangPedCount` is lowered by up to 8 around the call and restored after it, so the cap is 12 armed members instead of 4 and the counter stays exact |
+| (same detour) | `DummyPedManager_SpawnAmbientPed` | **foot cops**: the spawn point's zone record (`GetDensity` 0x465250) gets `policePedRatio` raised to the game's default 40 per mille for the call and put back, and the one-at-a-time flag `g_FootCopPedCount` (0x5E5BD3) is lent while fewer than 3 `POLICE_ON_FOOT` walk; each new one logs `foot cop #N (cap 3)` |
 | mid hook | 0x440825 in the same function (`mov ecx,[esi+0x17C]`, between the gang's remap and `Gang_PickWeaponByRespect`) | one armed member in 3 becomes a **raider**: `ped->gang` and `ped->remap` switch to another gang of the level, so he wears its colours and carries its weapon on the local gang's turf |
 
 Rival gangs fighting is the game's own rule; the mod only makes them meet. The raider's
@@ -52,7 +73,11 @@ stream is the same as vanilla until a raider is actually made.
 Log lines (`c32: city_fights: …`): each new attacker/victim pair of a widened or gang-vs-gang
 decision (the last 16 pairs are remembered, so a long fight logs once), each raider
 (`ped 196 raids zaib turf as a loon member`) and each armed member above the vanilla cap.
-`cf_stats` (exported) counts them.
+`cf_stats` (exported) counts them. Every 900 frames (~30 s) a **census** line
+(`cf_frame`, called from the host's sync `DM_FRAME`): peds alive, cops on foot / in cars, gang
+members on foot, the nearest foot cop to a gang member, peds fighting a non-player, and what the
+predicate was asked since the last line (cop observers, with a gang candidate, seated; gang
+observers; widened so far).
 
 ## Verification (2026-10-24, Downtown)
 
@@ -78,9 +103,10 @@ RETURN again → `c32: city_fights off` (run without config, keys through `gta2c
 
 ## Limits and ideas
 
-- Cops in cars still ignore gang fights (vanilla: a seated crew only scans for the player).
-  Foot cops stay one at a time (`g_FootCopPedCount` is a flag, not a counter, so the
-  lend-and-restore trick of the gang cap does not apply).
+- Cops in cars still ignore gang fights: a seated crew is asked by the predicate, but its
+  crew AI keeps it in the car.
+- The foot-cop floor overrides a level's design choice (Downtown: none). It only acts while
+  the mod is on.
 - Cops attack every gang member they see, not only armed ones; the K menu has no knob for it.
 - Possible next steps: police *pursuit* of gang members with stars (the `JNZ` at 0x44571C in
   `Ped_Update`, [re/gangs-and-peds.md](re/gangs-and-peds.md) §8), a cap / ratio knob for the
