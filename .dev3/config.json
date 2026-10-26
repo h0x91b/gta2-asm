@@ -1,6 +1,9 @@
 {
   "devScript": "host/build.sh --load --entry",
-  "clonePaths": ["data.pak"],
+  "clonePaths": [
+    "data.pak",
+    "moorhuhn.pak"
+  ],
   "defaultBaseBranch": "master",
   "defaultCompareRefMode": "remote",
   "portCount": 0
